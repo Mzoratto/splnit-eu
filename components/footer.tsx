@@ -5,11 +5,30 @@ import { FormEvent, useState } from "react";
 import { Icon } from "@iconify/react";
 
 export function Footer() {
-  const [subscribed, setSubscribed] = useState(false);
+  const [email, setEmail] = useState("");
+  const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">(
+    "idle",
+  );
 
-  function handleSubmit(event: FormEvent<HTMLFormElement>) {
+  async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    setSubscribed(true);
+    setStatus("loading");
+
+    const response = await fetch("/api/newsletter", {
+      body: JSON.stringify({ email }),
+      headers: {
+        "Content-Type": "application/json",
+      },
+      method: "POST",
+    });
+
+    if (response.ok) {
+      setEmail("");
+      setStatus("success");
+      return;
+    }
+
+    setStatus("error");
   }
 
   return (
@@ -36,26 +55,41 @@ export function Footer() {
               <p className="mb-2 text-xs font-semibold text-zinc-900">
                 Měsíční přehled EU předpisů
               </p>
-              {subscribed ? (
+              {status === "success" ? (
                 <p className="inline-flex items-center gap-1.5 rounded-full bg-emerald-50 px-3 py-1.5 text-xs font-medium text-emerald-700">
                   <Icon icon="solar:check-circle-linear" aria-hidden="true" />
                   Odebírání aktivní
                 </p>
               ) : (
-                <form className="flex max-w-xs gap-2" onSubmit={handleSubmit}>
-                  <input
-                    type="email"
-                    required
-                    placeholder="Email"
-                    className="min-w-0 flex-1 rounded-full border border-zinc-200 px-3.5 py-1.5 text-xs text-zinc-900 placeholder:text-zinc-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  />
-                  <button
-                    type="submit"
-                    className="shrink-0 rounded-full bg-zinc-900 px-4 py-1.5 text-xs font-medium text-white transition-colors hover:bg-zinc-800"
-                  >
-                    Odebírat
-                  </button>
-                </form>
+                <div className="space-y-2">
+                  <form className="flex max-w-xs gap-2" onSubmit={handleSubmit}>
+                    <input
+                      type="email"
+                      required
+                      placeholder="Email"
+                      value={email}
+                      onChange={(event) => {
+                        setEmail(event.target.value);
+                        if (status === "error") {
+                          setStatus("idle");
+                        }
+                      }}
+                      className="min-w-0 flex-1 rounded-full border border-zinc-200 px-3.5 py-1.5 text-xs text-zinc-900 placeholder:text-zinc-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    />
+                    <button
+                      type="submit"
+                      disabled={status === "loading"}
+                      className="shrink-0 rounded-full bg-zinc-900 px-4 py-1.5 text-xs font-medium text-white transition-colors hover:bg-zinc-800 disabled:cursor-not-allowed disabled:opacity-60"
+                    >
+                      {status === "loading" ? "Ukládám" : "Odebírat"}
+                    </button>
+                  </form>
+                  {status === "error" ? (
+                    <p className="text-xs text-red-600">
+                      Odběr se nepodařilo uložit.
+                    </p>
+                  ) : null}
+                </div>
               )}
             </div>
           </div>
