@@ -29,36 +29,36 @@ export async function listActiveIntegrationTargets() {
 }
 
 export async function upsertIntegrationConnection(input: {
-  accessTokenEnc: string;
+  accessTokenEnc?: string | null;
   clerkOrgId: string;
   config?: Record<string, unknown>;
   provider: string;
-  refreshTokenEnc: string;
-  tokenExpiresAt: Date;
+  refreshTokenEnc?: string | null;
+  tokenExpiresAt?: Date | null;
 }) {
   const db = getDb();
 
   await db
     .insert(integrations)
     .values({
-      accessTokenEnc: input.accessTokenEnc,
+      accessTokenEnc: input.accessTokenEnc ?? null,
       clerkOrgId: input.clerkOrgId,
       config: input.config ?? {},
       provider: input.provider,
-      refreshTokenEnc: input.refreshTokenEnc,
+      refreshTokenEnc: input.refreshTokenEnc ?? null,
       status: "connected",
-      tokenExpiresAt: input.tokenExpiresAt,
+      tokenExpiresAt: input.tokenExpiresAt ?? null,
     })
     .onConflictDoUpdate({
       target: [integrations.clerkOrgId, integrations.provider],
       set: {
-        accessTokenEnc: input.accessTokenEnc,
+        accessTokenEnc: input.accessTokenEnc ?? null,
         config: input.config ?? {},
         lastErrorMsg: null,
         provider: input.provider,
-        refreshTokenEnc: input.refreshTokenEnc,
+        refreshTokenEnc: input.refreshTokenEnc ?? null,
         status: "connected",
-        tokenExpiresAt: input.tokenExpiresAt,
+        tokenExpiresAt: input.tokenExpiresAt ?? null,
       },
     });
 }

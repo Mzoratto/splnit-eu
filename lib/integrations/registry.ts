@@ -1,11 +1,11 @@
 import type { IntegrationAdapter, IntegrationProvider } from "./types";
 import { awsAdapterPlaceholder } from "./aws/tests";
-import { githubAdapterPlaceholder } from "./github/tests";
+import { githubAdapter } from "./github/tests";
 import { microsoft365Adapter } from "./microsoft365/tests";
 
 const adapters: Partial<Record<IntegrationProvider, IntegrationAdapter>> = {
   aws: awsAdapterPlaceholder,
-  github: githubAdapterPlaceholder,
+  github: githubAdapter,
   microsoft365: microsoft365Adapter,
 };
 

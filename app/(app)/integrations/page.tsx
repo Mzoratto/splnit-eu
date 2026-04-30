@@ -14,7 +14,7 @@ const integrations = [
     href: "/integrations/github",
     icon: GitBranch,
     name: "GitHub",
-    status: "coming_soon",
+    status: "available",
   },
   {
     description: "CloudTrail, S3 šifrování, IAM MFA, root MFA a VPC Flow Logs.",

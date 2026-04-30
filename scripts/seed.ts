@@ -9,6 +9,7 @@ import {
   tests,
 } from "../lib/db/schema";
 import { FRAMEWORK_LIBRARY } from "../lib/frameworks/registry";
+import { GITHUB_TEST_DEFINITIONS } from "../lib/integrations/github/test-definitions";
 import { MICROSOFT365_TEST_DEFINITIONS } from "../lib/integrations/microsoft365/test-definitions";
 
 loadEnvConfig(process.cwd());
@@ -136,8 +137,18 @@ async function seedFrameworkControls(
 async function seedIntegrationTests(controlIds: Map<string, string>) {
   const db = getDb();
   let count = 0;
+  const definitions = [
+    ...MICROSOFT365_TEST_DEFINITIONS.map((definition) => ({
+      ...definition,
+      integrationType: "microsoft365",
+    })),
+    ...GITHUB_TEST_DEFINITIONS.map((definition) => ({
+      ...definition,
+      integrationType: "github",
+    })),
+  ];
 
-  for (const definition of MICROSOFT365_TEST_DEFINITIONS) {
+  for (const definition of definitions) {
     const controlId = controlIds.get(definition.controlKey);
 
     if (!controlId) {
@@ -150,7 +161,7 @@ async function seedIntegrationTests(controlIds: Map<string, string>) {
       .where(
         and(
           eq(tests.controlId, controlId),
-          eq(tests.integrationType, "microsoft365"),
+          eq(tests.integrationType, definition.integrationType),
           eq(tests.checkLogic, definition.checkLogic),
         ),
       )
@@ -170,7 +181,7 @@ async function seedIntegrationTests(controlIds: Map<string, string>) {
       await db.insert(tests).values({
         checkLogic: definition.checkLogic,
         controlId,
-        integrationType: "microsoft365",
+        integrationType: definition.integrationType,
         isActive: true,
         name: definition.name,
         passCriteria: definition.passCriteria,
