@@ -159,8 +159,8 @@ Boris Cherny (creator of Claude Code) keeps his team's file around 100 lines. Un
 ### Commands
 - Install: `npm install`
 - Build: `npm run build`
-- Test (all): `TODO` (no test script found in `package.json`)
-- Test (single file): `TODO` (no test framework found)
+- Test (all): `npm run test:e2e`
+- Test (single file): `npx playwright test tests/e2e/<file>.spec.ts`
 - Lint: `npm run lint`
 - Typecheck: `npm run typecheck`
 - Run locally: `npm run dev`
@@ -171,14 +171,14 @@ Prefer single-file or single-test runs during iteration. Full suites are for the
 
 ### Layout
 - Source lives in: `app/` routes, `components/`, `lib/`, `inngest/`, `messages/`
-- Tests live in: `TODO` (no test directory found)
+- Tests live in: `tests/e2e/`
 - Do not modify: `node_modules/`, `.next/`, generated `next-env.d.ts`, generated Drizzle migration files unless intentionally changing schema
 
 ### Conventions specific to this repo
 - Naming: route groups under `app/(marketing)`, `app/(auth)`, `app/(app)`; domain modules under `lib/<domain>/`
 - Import style: TypeScript modules with `@/*` path alias
 - Error handling pattern: route handlers return `NextResponse.json(...)`; integration helpers throw `Error` for missing required runtime configuration
-- Testing pattern and framework: `TODO` (no test framework found)
+- Testing pattern and framework: Playwright E2E specs in `tests/e2e/`; the test server runs with Clerk disabled through `playwright.config.ts`
 
 ### Forbidden
 - Do not initialize database clients or service SDKs at module scope; use lazy getters so `next build` works without runtime env vars.
