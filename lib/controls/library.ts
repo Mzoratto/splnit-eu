@@ -1,4 +1,4 @@
-export type FrameworkSlug = "nis2" | "ai-act" | "gdpr" | "iso27001";
+export type FrameworkSlug = "nis2" | "ai-act" | "gdpr" | "iso27001" | "csrd";
 
 export type ControlCategory =
   | "access_control"
@@ -9,7 +9,11 @@ export type ControlCategory =
   | "supplier"
   | "physical"
   | "business_continuity"
-  | "ai_governance";
+  | "ai_governance"
+  | "governance"
+  | "esg_environment"
+  | "esg_social"
+  | "esg_governance";
 
 export type ControlSeed = {
   key: string;
@@ -27,7 +31,7 @@ export type ControlSeed = {
   }[];
 };
 
-export const CONTROL_LIBRARY: ControlSeed[] = [
+const BASE_CONTROL_LIBRARY: ControlSeed[] = [
   {
     key: "ctrl_mfa_all_users",
     titleCs: "MFA povoleno pro všechny uživatele",
@@ -783,6 +787,274 @@ export const CONTROL_LIBRARY: ControlSeed[] = [
       { frameworkSlug: "iso27001", articleRef: "A.9.2.3", level: "mandatory" },
     ],
   },
+];
+
+const ISO27001_EXTENSION_CONTROLS: ControlSeed[] = [
+  {
+    key: "ctrl_isms_scope_defined",
+    titleCs: "Rozsah ISMS je definovaný a schválený",
+    titleEn: "ISMS scope is defined and approved",
+    descriptionCs:
+      "Organizace má schválený rozsah ISMS včetně aktiv, lokalit, procesů, technologií a výjimek.",
+    category: "governance",
+    testType: "manual",
+    requiresEvidence: true,
+    isAutomated: false,
+    frameworkMappings: [],
+  },
+  {
+    key: "ctrl_statement_of_applicability",
+    titleCs: "Statement of Applicability je aktuální",
+    titleEn: "Statement of Applicability is current",
+    descriptionCs:
+      "SoA uvádí použitelnost všech Annex A kontrol, odůvodnění výjimek a odkaz na důkaz.",
+    category: "governance",
+    testType: "manual",
+    requiresEvidence: true,
+    isAutomated: false,
+    frameworkMappings: [],
+  },
+  {
+    key: "ctrl_security_roles_responsibilities",
+    titleCs: "Bezpečnostní role a odpovědnosti jsou přiřazené",
+    titleEn: "Security roles and responsibilities are assigned",
+    descriptionCs:
+      "Vlastníci aktiv, kontrol a bezpečnostních procesů jsou jasně určeni a pravidelně potvrzují odpovědnosti.",
+    category: "governance",
+    testType: "manual",
+    requiresEvidence: true,
+    isAutomated: false,
+    frameworkMappings: [],
+  },
+  {
+    key: "ctrl_security_policy_approved",
+    titleCs: "Politika informační bezpečnosti je schválená",
+    titleEn: "Information security policy is approved",
+    descriptionCs:
+      "Vrcholové vedení schválilo bezpečnostní politiku a politika je dostupná všem relevantním pracovníkům.",
+    category: "governance",
+    testType: "manual",
+    requiresEvidence: true,
+    isAutomated: false,
+    frameworkMappings: [],
+  },
+  {
+    key: "ctrl_risk_treatment_plan",
+    titleCs: "Plán ošetření rizik je udržovaný",
+    titleEn: "Risk treatment plan is maintained",
+    descriptionCs:
+      "Rizika mají vlastníka, opatření, termín, akceptaci zbytkového rizika a vazbu na použité kontroly.",
+    category: "governance",
+    testType: "manual",
+    requiresEvidence: true,
+    isAutomated: false,
+    frameworkMappings: [],
+  },
+  {
+    key: "ctrl_internal_audit_program",
+    titleCs: "Interní audit ISMS probíhá podle programu",
+    titleEn: "ISMS internal audit programme is operated",
+    descriptionCs:
+      "Interní audity jsou plánované, nezávislé, zaznamenané a nálezy mají přiřazené nápravné akce.",
+    category: "governance",
+    testType: "manual",
+    requiresEvidence: true,
+    isAutomated: false,
+    frameworkMappings: [],
+  },
+  {
+    key: "ctrl_management_review",
+    titleCs: "Vedení provádí pravidelný přezkum ISMS",
+    titleEn: "Management performs ISMS reviews",
+    descriptionCs:
+      "Management review hodnotí výsledky auditů, incidenty, rizika, metriky a zlepšovací opatření.",
+    category: "governance",
+    testType: "manual",
+    requiresEvidence: true,
+    isAutomated: false,
+    frameworkMappings: [],
+  },
+  {
+    key: "ctrl_document_control",
+    titleCs: "Řízená dokumentace má vlastníky a verze",
+    titleEn: "Controlled documents have owners and versions",
+    descriptionCs:
+      "Politiky, postupy a záznamy mají řízené verze, schvalování, revize a pravidla uchování.",
+    category: "governance",
+    testType: "manual",
+    requiresEvidence: true,
+    isAutomated: false,
+    frameworkMappings: [],
+  },
+  {
+    key: "ctrl_control_exceptions_tracked",
+    titleCs: "Výjimky z kontrol jsou evidované a schválené",
+    titleEn: "Control exceptions are tracked and approved",
+    descriptionCs:
+      "Výjimky obsahují důvod, vlastníka, kompenzační opatření a termín přezkumu.",
+    category: "governance",
+    testType: "manual",
+    requiresEvidence: true,
+    isAutomated: false,
+    frameworkMappings: [],
+  },
+  {
+    key: "ctrl_threat_intelligence",
+    titleCs: "Threat intelligence je sledovaná a vyhodnocovaná",
+    titleEn: "Threat intelligence is monitored and assessed",
+    descriptionCs:
+      "Relevantní bezpečnostní hrozby jsou sledované, vyhodnocené a převáděné do úkolů pro odpovědné týmy.",
+    category: "incident",
+    testType: "hybrid",
+    requiresEvidence: true,
+    isAutomated: false,
+    frameworkMappings: [],
+  },
+  {
+    key: "ctrl_information_transfer_rules",
+    titleCs: "Pravidla přenosu informací jsou definovaná",
+    titleEn: "Information transfer rules are defined",
+    descriptionCs:
+      "Interní i externí přenosy citlivých informací mají schválené kanály, ochranu a odpovědnosti.",
+    category: "data_protection",
+    testType: "manual",
+    requiresEvidence: true,
+    isAutomated: false,
+    frameworkMappings: [],
+  },
+  {
+    key: "ctrl_mobile_device_management",
+    titleCs: "Mobilní zařízení jsou řízená",
+    titleEn: "Mobile devices are managed",
+    descriptionCs:
+      "Notebooky, telefony a tablety mají správu konfigurací, šifrování, uzamčení a možnost vzdáleného smazání.",
+    category: "access_control",
+    testType: "hybrid",
+    requiresEvidence: true,
+    isAutomated: false,
+    frameworkMappings: [],
+  },
+  {
+    key: "ctrl_remote_work_policy",
+    titleCs: "Práce na dálku má bezpečnostní pravidla",
+    titleEn: "Remote working security rules are defined",
+    descriptionCs:
+      "Práce mimo kancelář řeší zařízení, domácí síť, VPN, ukládání dokumentů a hlášení incidentů.",
+    category: "access_control",
+    testType: "manual",
+    requiresEvidence: true,
+    isAutomated: false,
+    frameworkMappings: [],
+  },
+  {
+    key: "ctrl_identity_lifecycle_policy",
+    titleCs: "Životní cyklus identit je řízený",
+    titleEn: "Identity lifecycle is controlled",
+    descriptionCs:
+      "Nástup, změna role, offboarding a pravidelný přezkum přístupů jsou vynucené procesem.",
+    category: "access_control",
+    testType: "hybrid",
+    requiresEvidence: true,
+    isAutomated: true,
+    frameworkMappings: [],
+  },
+  {
+    key: "ctrl_supplier_monitoring",
+    titleCs: "Dodavatelské služby jsou pravidelně monitorované",
+    titleEn: "Supplier services are periodically monitored",
+    descriptionCs:
+      "Služby klíčových dodavatelů jsou přezkoumávané podle smluvních SLA, incidentů, změn a rizika.",
+    category: "supplier",
+    testType: "manual",
+    requiresEvidence: true,
+    isAutomated: false,
+    frameworkMappings: [],
+  },
+  {
+    key: "ctrl_backup_policy",
+    titleCs: "Politika záloh definuje rozsah a obnovu",
+    titleEn: "Backup policy defines scope and recovery",
+    descriptionCs:
+      "Zálohy mají definovaný rozsah, frekvenci, retenci, šifrování, testy obnovy a odpovědné vlastníky.",
+    category: "business_continuity",
+    testType: "manual",
+    requiresEvidence: true,
+    isAutomated: false,
+    frameworkMappings: [],
+  },
+  {
+    key: "ctrl_clock_sync",
+    titleCs: "Systémové hodiny jsou synchronizované",
+    titleEn: "System clocks are synchronized",
+    descriptionCs:
+      "Servery, cloudové služby a bezpečnostní nástroje používají spolehlivý časový zdroj pro korelaci logů.",
+    category: "incident",
+    testType: "hybrid",
+    requiresEvidence: true,
+    isAutomated: false,
+    frameworkMappings: [],
+  },
+  {
+    key: "ctrl_secure_development_policy",
+    titleCs: "Bezpečný vývoj je řízený politikou",
+    titleEn: "Secure development is governed by policy",
+    descriptionCs:
+      "Vývojový proces zahrnuje bezpečnostní požadavky, review, testování, oddělení prostředí a řízení změn.",
+    category: "asset_management",
+    testType: "manual",
+    requiresEvidence: true,
+    isAutomated: false,
+    frameworkMappings: [],
+  },
+];
+
+const CSRD_DATA_POINT_CONTROLS: ControlSeed[] = [
+  ["ctrl_csrd_double_materiality", "Dvojí materialita je vyhodnocená", "Double materiality assessment is completed", "Vyhodnocení dopadu firmy na ESG témata i dopadu ESG témat na firmu.", "esg_governance", "ESRS 1"],
+  ["ctrl_csrd_governance_oversight", "ESG dohled vedení je doložený", "ESG board oversight is documented", "Role vedení, odpovědnosti, eskalace a schvalování ESG reportingu jsou doložené.", "esg_governance", "ESRS 2 GOV"],
+  ["ctrl_csrd_esg_policy", "ESG politika a cíle jsou schválené", "ESG policy and targets are approved", "Organizace má schválené ESG cíle, vlastníky a proces pravidelného přezkumu.", "esg_governance", "ESRS 2 MDR"],
+  ["ctrl_csrd_scope1_emissions", "Scope 1 emise jsou evidované", "Scope 1 emissions are tracked", "Přímé emise ze zdrojů pod kontrolou firmy jsou měřené a doložitelné.", "esg_environment", "ESRS E1"],
+  ["ctrl_csrd_scope2_emissions", "Scope 2 emise jsou evidované", "Scope 2 emissions are tracked", "Nepřímé emise z nakoupené energie jsou počítané podle zvoleného metodického přístupu.", "esg_environment", "ESRS E1"],
+  ["ctrl_csrd_scope3_emissions", "Scope 3 emise jsou odhadované", "Scope 3 emissions are estimated", "Relevantní emise v hodnotovém řetězci mají datový zdroj, metodu výpočtu a vlastníka.", "esg_environment", "ESRS E1"],
+  ["ctrl_csrd_energy_consumption", "Spotřeba energie je měřená", "Energy consumption is measured", "Spotřeba energie podle lokalit a zdrojů je pravidelně evidovaná.", "esg_environment", "ESRS E1"],
+  ["ctrl_csrd_water_usage", "Spotřeba vody je evidovaná", "Water usage is tracked", "Spotřeba vody a významné vodní dopady mají datový zdroj a odpovědného vlastníka.", "esg_environment", "ESRS E3"],
+  ["ctrl_csrd_waste_management", "Odpadové toky jsou evidované", "Waste streams are tracked", "Vznik, recyklace, likvidace a nebezpečný odpad jsou vedené v auditovatelné evidenci.", "esg_environment", "ESRS E5"],
+  ["ctrl_csrd_pollution_incidents", "Environmentální incidenty jsou sledované", "Pollution incidents are tracked", "Úniky, sankce a environmentální incidenty jsou evidované včetně nápravných opatření.", "esg_environment", "ESRS E2"],
+  ["ctrl_csrd_biodiversity_impact", "Dopady na biodiverzitu jsou posouzené", "Biodiversity impacts are assessed", "Relevantní lokality a dopady na biodiverzitu jsou posouzené nebo odůvodněně vyloučené.", "esg_environment", "ESRS E4"],
+  ["ctrl_csrd_climate_risk_assessment", "Klimatická rizika jsou posouzená", "Climate risks are assessed", "Fyzická a přechodová klimatická rizika jsou posouzená a navázaná na řízení rizik.", "esg_environment", "ESRS E1"],
+  ["ctrl_csrd_workforce_headcount", "Data o pracovní síle jsou aktuální", "Workforce data is current", "Počty zaměstnanců, pracovní poměry a lokality jsou měřené a schválené.", "esg_social", "ESRS S1"],
+  ["ctrl_csrd_health_safety", "BOZP ukazatele jsou evidované", "Health and safety metrics are tracked", "Úrazy, absence, školení a opatření BOZP jsou vedené v auditovatelné evidenci.", "esg_social", "ESRS S1"],
+  ["ctrl_csrd_training_hours", "Školení a rozvoj jsou měřené", "Training and development is measured", "Hodiny školení, povinná školení a rozvojové aktivity mají datový zdroj.", "esg_social", "ESRS S1"],
+  ["ctrl_csrd_diversity_metrics", "Diverzitní metriky jsou připravené", "Diversity metrics are prepared", "Diverzitní data jsou měřená v souladu s právními limity a pravidly ochrany osobních údajů.", "esg_social", "ESRS S1"],
+  ["ctrl_csrd_worker_grievance", "Kanál pro stížnosti pracovníků je dostupný", "Worker grievance channel is available", "Pracovníci mají dostupný kanál pro podněty, stížnosti a eskalaci.", "esg_social", "ESRS S1"],
+  ["ctrl_csrd_supply_chain_due_diligence", "Due diligence dodavatelů je nastavená", "Supplier due diligence is in place", "Rizika v dodavatelském řetězci jsou hodnocená podle významnosti a typu služby.", "esg_governance", "ESRS G1"],
+  ["ctrl_csrd_supplier_esg_questionnaire", "Dodavatelský ESG dotazník je používán", "Supplier ESG questionnaire is used", "Klíčoví dodavatelé dostávají standardizovaný ESG dotazník a odpovědi jsou vyhodnocené.", "esg_governance", "ESRS G1"],
+  ["ctrl_csrd_customer_privacy", "Ochrana zákaznických dat je zahrnutá v ESG", "Customer privacy is included in ESG governance", "Soukromí zákazníků a bezpečnost dat jsou součástí governance a reportovacích odpovědností.", "esg_governance", "ESRS S4"],
+  ["ctrl_csrd_business_conduct_policy", "Politika obchodního jednání je schválená", "Business conduct policy is approved", "Etika, střety zájmů, dary a vztahy s partnery jsou upravené politikou.", "esg_governance", "ESRS G1"],
+  ["ctrl_csrd_anti_corruption_training", "Protikorupční školení je evidované", "Anti-corruption training is tracked", "Relevantní role absolvují školení k úplatkářství, korupci a střetu zájmů.", "esg_governance", "ESRS G1"],
+  ["ctrl_csrd_tax_transparency", "Daňová a platební transparentnost je doložitelná", "Tax and payment transparency is documented", "Daňové přístupy, platby a významné veřejné podpory jsou připravené k reportingu.", "esg_governance", "ESRS G1"],
+  ["ctrl_csrd_report_approval", "Schvalování ESG reportu je auditovatelné", "ESG report approval is auditable", "Report má vlastníky, kontrolu dat, schválení vedením a stopu změn.", "esg_governance", "CSRD"],
+].map(([key, titleCs, titleEn, descriptionCs, category, articleRef]) => ({
+  key,
+  titleCs,
+  titleEn,
+  descriptionCs,
+  category: category as ControlCategory,
+  testType: "manual",
+  requiresEvidence: true,
+  isAutomated: false,
+  frameworkMappings: [
+    {
+      frameworkSlug: "csrd",
+      articleRef,
+      level: "mandatory",
+    },
+  ],
+}));
+
+export const CONTROL_LIBRARY: ControlSeed[] = [
+  ...BASE_CONTROL_LIBRARY,
+  ...ISO27001_EXTENSION_CONTROLS,
+  ...CSRD_DATA_POINT_CONTROLS,
 ];
 
 export function getControlMappingsForFramework(frameworkSlug: FrameworkSlug) {

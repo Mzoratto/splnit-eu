@@ -1,3 +1,7 @@
-import { getControlMappingsForFramework } from "@/lib/controls/library";
+import {
+  ISO27001_ANNEX_A_MAPPINGS,
+  ISO27001_CERTIFICATION_BODIES,
+} from "@/lib/frameworks/iso27001-annex-a";
 
-export const ISO27001_CONTROL_MAPPINGS = getControlMappingsForFramework("iso27001");
+export const ISO27001_CONTROL_MAPPINGS = ISO27001_ANNEX_A_MAPPINGS;
+export const ISO27001_CERTIFICATION_LINKS = ISO27001_CERTIFICATION_BODIES;

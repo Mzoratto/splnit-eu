@@ -294,6 +294,114 @@ export const FRAMEWORK_QUESTIONS: Record<FrameworkSlug, FrameworkQuestion[]> = {
       help: "Schválení, testování, rollback a vlastník změny.",
       controlKeys: ["ctrl_change_management"],
     },
+    {
+      id: "isms_governance",
+      text: "Máte definovaný rozsah ISMS, SoA a plán ošetření rizik?",
+      help: "Certifikační audit bude hledat rozsah, Statement of Applicability a vazbu rizik na opatření.",
+      controlKeys: [
+        "ctrl_isms_scope_defined",
+        "ctrl_statement_of_applicability",
+        "ctrl_risk_treatment_plan",
+      ],
+    },
+    {
+      id: "isms_review",
+      text: "Probíhá interní audit a přezkum vedením?",
+      help: "ISO 27001 vyžaduje doložitelný cyklus interních auditů, náprav a management review.",
+      controlKeys: ["ctrl_internal_audit_program", "ctrl_management_review"],
+    },
+    {
+      id: "document_control",
+      text: "Máte řízenou dokumentaci a schvalované výjimky?",
+      help: "Politiky, postupy, výjimky a záznamy musí mít vlastníka, verzi a revizi.",
+      controlKeys: ["ctrl_document_control", "ctrl_control_exceptions_tracked"],
+    },
+    {
+      id: "remote_and_mobile",
+      text: "Jsou mobilní zařízení a práce na dálku bezpečnostně řízené?",
+      help: "Zahrňte MDM, šifrování, vzdálené smazání, VPN a pravidla domácí práce.",
+      controlKeys: ["ctrl_mobile_device_management", "ctrl_remote_work_policy"],
+    },
+  ],
+  csrd: [
+    {
+      id: "materiality",
+      text: "Máte provedenou dvojí materialitu a schválené ESG priority?",
+      help: "CSRD vyžaduje vyhodnotit dopady firmy i finanční dopad ESG témat na firmu.",
+      controlKeys: [
+        "ctrl_csrd_double_materiality",
+        "ctrl_csrd_esg_policy",
+        "ctrl_csrd_governance_oversight",
+      ],
+    },
+    {
+      id: "emissions",
+      text: "Měříte Scope 1, Scope 2 a relevantní Scope 3 emise?",
+      help: "U každého čísla musí být jasný zdroj dat, metoda a vlastník.",
+      controlKeys: [
+        "ctrl_csrd_scope1_emissions",
+        "ctrl_csrd_scope2_emissions",
+        "ctrl_csrd_scope3_emissions",
+      ],
+    },
+    {
+      id: "resource_use",
+      text: "Evidujete energii, vodu, odpad a environmentální incidenty?",
+      help: "Základní environmentální data musí být auditovatelná a pravidelně aktualizovaná.",
+      controlKeys: [
+        "ctrl_csrd_energy_consumption",
+        "ctrl_csrd_water_usage",
+        "ctrl_csrd_waste_management",
+        "ctrl_csrd_pollution_incidents",
+      ],
+    },
+    {
+      id: "environmental_risk",
+      text: "Posuzujete klimatická rizika a dopady na biodiverzitu?",
+      help: "Pokud téma není relevantní, udržujte zdůvodnění v materialitním posouzení.",
+      controlKeys: [
+        "ctrl_csrd_climate_risk_assessment",
+        "ctrl_csrd_biodiversity_impact",
+      ],
+    },
+    {
+      id: "workforce",
+      text: "Máte data o pracovní síle, BOZP, školení a diverzitě?",
+      help: "Sociální metriky musí respektovat lokální pracovněprávní a privacy limity.",
+      controlKeys: [
+        "ctrl_csrd_workforce_headcount",
+        "ctrl_csrd_health_safety",
+        "ctrl_csrd_training_hours",
+        "ctrl_csrd_diversity_metrics",
+        "ctrl_csrd_worker_grievance",
+      ],
+    },
+    {
+      id: "supply_chain",
+      text: "Hodnotíte ESG rizika v dodavatelském řetězci?",
+      help: "Dodavatelský dotazník a due diligence pomáhají odpovídat enterprise zákazníkům.",
+      controlKeys: [
+        "ctrl_csrd_supply_chain_due_diligence",
+        "ctrl_csrd_supplier_esg_questionnaire",
+      ],
+    },
+    {
+      id: "governance",
+      text: "Máte politiku obchodního jednání a protikorupční školení?",
+      help: "Governance část pokrývá etiku, střety zájmů, korupci a schvalování.",
+      controlKeys: [
+        "ctrl_csrd_business_conduct_policy",
+        "ctrl_csrd_anti_corruption_training",
+        "ctrl_csrd_customer_privacy",
+        "ctrl_csrd_tax_transparency",
+      ],
+    },
+    {
+      id: "report_approval",
+      text: "Je ESG report schvalovaný s auditovatelnou stopou dat?",
+      help: "Před exportem musí být jasné, kdo data dodal, ověřil a schválil.",
+      controlKeys: ["ctrl_csrd_report_approval"],
+    },
   ],
 };
 

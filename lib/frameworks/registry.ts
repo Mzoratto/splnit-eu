@@ -5,7 +5,7 @@ export type FrameworkSeed = {
   nameCs: string;
   nameEn: string;
   descriptionCs: string;
-  regulator: "NÚKIB" | "ČTÚ" | "ÚOOÚ" | "ISO";
+  regulator: "NÚKIB" | "ČTÚ" | "ÚOOÚ" | "ISO" | "MŽP";
   mandatoryDeadline: string | null;
   version: string;
 };
@@ -50,5 +50,15 @@ export const FRAMEWORK_LIBRARY: FrameworkSeed[] = [
     regulator: "ISO",
     mandatoryDeadline: null,
     version: "ISO/IEC 27001:2022",
+  },
+  {
+    slug: "csrd",
+    nameCs: "CSRD",
+    nameEn: "CSRD",
+    descriptionCs:
+      "ESG reporting, dvojí materialita, datová evidence a dodavatelské dotazníky.",
+    regulator: "MŽP",
+    mandatoryDeadline: null,
+    version: "Directive (EU) 2022/2464",
   },
 ];

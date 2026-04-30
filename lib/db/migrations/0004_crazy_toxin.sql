@@ -1,0 +1,2 @@
+ALTER TABLE "framework_controls" DROP CONSTRAINT "framework_controls_framework_id_control_id_unique";--> statement-breakpoint
+ALTER TABLE "framework_controls" ADD CONSTRAINT "framework_controls_framework_id_control_id_article_ref_unique" UNIQUE("framework_id","control_id","article_ref");

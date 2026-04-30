@@ -76,7 +76,7 @@ export const frameworkCards: FrameworkCard[] = [
     icon: "solar:leaf-linear",
     regulator: "MŽP",
     deadline: "2026+",
-    status: "Brzy",
+    status: "Dostupné",
     description: "ESG reporting pro dodavatele velkých korporací.",
   },
   {

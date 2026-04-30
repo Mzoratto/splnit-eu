@@ -72,7 +72,7 @@ export const comparisonGroups = [
       ["EU AI Act", "-", "volitelné", "✓"],
       ["GDPR", "✓", "✓", "✓"],
       ["ISO 27001", "-", "volitelné", "✓"],
-      ["CSRD", "-", "-", "brzy"],
+      ["CSRD", "-", "-", "lite"],
       ["DORA", "-", "-", "brzy"],
     ],
   },

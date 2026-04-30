@@ -9,6 +9,7 @@ import {
   tests,
 } from "../lib/db/schema";
 import { FRAMEWORK_LIBRARY } from "../lib/frameworks/registry";
+import { ISO27001_ANNEX_A_MAPPINGS } from "../lib/frameworks/iso27001-annex-a";
 import { AWS_TEST_DEFINITIONS } from "../lib/integrations/aws/test-definitions";
 import { GITHUB_TEST_DEFINITIONS } from "../lib/integrations/github/test-definitions";
 import { MICROSOFT365_TEST_DEFINITIONS } from "../lib/integrations/microsoft365/test-definitions";
@@ -104,6 +105,10 @@ async function seedFrameworkControls(
     }
 
     for (const [index, mapping] of control.frameworkMappings.entries()) {
+      if (mapping.frameworkSlug === "iso27001") {
+        continue;
+      }
+
       const frameworkId = frameworkIds.get(mapping.frameworkSlug);
 
       if (!frameworkId) {
@@ -120,7 +125,11 @@ async function seedFrameworkControls(
           sortOrder: index,
         })
         .onConflictDoUpdate({
-          target: [frameworkControls.frameworkId, frameworkControls.controlId],
+          target: [
+            frameworkControls.frameworkId,
+            frameworkControls.controlId,
+            frameworkControls.articleRef,
+          ],
           set: {
             articleRef: mapping.articleRef,
             requirementLevel: mapping.level,
@@ -130,6 +139,47 @@ async function seedFrameworkControls(
 
       count += 1;
     }
+  }
+
+  const isoFrameworkId = frameworkIds.get("iso27001");
+
+  if (!isoFrameworkId) {
+    throw new Error("Missing framework id for iso27001");
+  }
+
+  await db
+    .delete(frameworkControls)
+    .where(eq(frameworkControls.frameworkId, isoFrameworkId));
+
+  for (const [index, mapping] of ISO27001_ANNEX_A_MAPPINGS.entries()) {
+    const controlId = controlIds.get(mapping.controlKey);
+
+    if (!controlId) {
+      throw new Error(`Missing control id for ${mapping.controlKey}`);
+    }
+
+    await db
+      .insert(frameworkControls)
+      .values({
+        articleRef: mapping.articleRef,
+        controlId,
+        frameworkId: isoFrameworkId,
+        requirementLevel: "mandatory",
+        sortOrder: index,
+      })
+      .onConflictDoUpdate({
+        target: [
+          frameworkControls.frameworkId,
+          frameworkControls.controlId,
+          frameworkControls.articleRef,
+        ],
+        set: {
+          requirementLevel: "mandatory",
+          sortOrder: index,
+        },
+      });
+
+    count += 1;
   }
 
   return count;

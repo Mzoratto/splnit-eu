@@ -1,11 +1,23 @@
 import Link from "next/link";
 import { auth } from "@clerk/nextjs/server";
 import { notFound } from "next/navigation";
-import { ArrowRight, Download, FileText, Gauge, ShieldCheck } from "lucide-react";
+import {
+  ArrowRight,
+  Download,
+  ExternalLink,
+  FileText,
+  Gauge,
+  ShieldCheck,
+} from "lucide-react";
 import { generateGapReportAction } from "@/app/(app)/frameworks/[frameworkSlug]/actions";
 import { CONTROL_LIBRARY } from "@/lib/controls/library";
 import { hasDatabaseUrl } from "@/lib/db";
 import { getFrameworkDetail } from "@/lib/db/queries/framework-assessment";
+import { CSRD_SUPPLY_CHAIN_QUESTIONNAIRE } from "@/lib/frameworks/csrd";
+import {
+  ISO27001_ANNEX_A_MAPPINGS,
+  ISO27001_CERTIFICATION_BODIES,
+} from "@/lib/frameworks/iso27001-annex-a";
 import { FRAMEWORK_LIBRARY } from "@/lib/frameworks/registry";
 
 type FrameworkControl = {
@@ -53,6 +65,30 @@ function getStatusClass(status: string | null) {
 }
 
 function getFallbackControls(frameworkSlug: string): FrameworkControl[] {
+  if (frameworkSlug === "iso27001") {
+    return ISO27001_ANNEX_A_MAPPINGS.flatMap((mapping) => {
+      const control = CONTROL_LIBRARY.find(
+        (item) => item.key === mapping.controlKey,
+      );
+
+      if (!control) {
+        return [];
+      }
+
+      return {
+        articleRef: mapping.articleRef,
+        category: control.category,
+        description: control.descriptionCs ?? null,
+        isAutomated: control.isAutomated,
+        key: control.key,
+        requirementLevel: "mandatory",
+        status: "unknown",
+        title: control.titleCs,
+        updatedAt: null,
+      };
+    });
+  }
+
   return CONTROL_LIBRARY.flatMap((control) => {
     const mapping = control.frameworkMappings.find(
       (item) => item.frameworkSlug === frameworkSlug,
@@ -186,6 +222,8 @@ export default async function FrameworkDetailPage({
   const gapReport: GapReport | null = detail?.gapReport ?? null;
   const canGenerateReport =
     Boolean(detail?.orgFramework) && Boolean(process.env.BLOB_READ_WRITE_TOKEN);
+  const isIso27001 = seedFramework.slug === "iso27001";
+  const isCsrd = seedFramework.slug === "csrd";
 
   return (
     <section className="space-y-8">
@@ -271,6 +309,77 @@ export default async function FrameworkDetailPage({
         </article>
       </div>
 
+      {isIso27001 ? (
+        <section className="grid gap-4 lg:grid-cols-[1fr_1fr]">
+          <article className="rounded-lg border border-border bg-surface p-5">
+            <div className="flex items-center gap-2">
+              <Download className="h-5 w-5 text-primary" aria-hidden="true" />
+              <h2 className="text-lg font-semibold">
+                ISO 27001 certification package
+              </h2>
+            </div>
+            <p className="mt-3 text-sm leading-6 text-foreground/64">
+              ZIP export obsahuje Statement of Applicability, splněné kontroly,
+              dostupné důkazy, aktivní politiky a odkazy na certifikační orgány.
+            </p>
+            <a
+              href="/api/frameworks/iso27001/certification-package"
+              className="mt-5 inline-flex items-center gap-2 rounded-md border border-border px-4 py-3 text-sm font-medium hover:bg-surface-muted"
+            >
+              Stáhnout ZIP
+              <Download className="h-4 w-4" aria-hidden="true" />
+            </a>
+          </article>
+
+          <article className="rounded-lg border border-border bg-surface p-5">
+            <div className="flex items-center gap-2">
+              <ExternalLink className="h-5 w-5 text-primary" aria-hidden="true" />
+              <h2 className="text-lg font-semibold">Certifikační odkazy</h2>
+            </div>
+            <div className="mt-4 grid gap-3">
+              {ISO27001_CERTIFICATION_BODIES.map((body) => (
+                <a
+                  key={body.url}
+                  href={body.url}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="inline-flex items-center justify-between gap-3 rounded-md border border-border px-4 py-3 text-sm font-medium hover:bg-surface-muted"
+                >
+                  {body.name}
+                  <ExternalLink className="h-4 w-4" aria-hidden="true" />
+                </a>
+              ))}
+            </div>
+          </article>
+        </section>
+      ) : null}
+
+      {isCsrd ? (
+        <section className="rounded-lg border border-border bg-surface">
+          <div className="border-b border-border p-5">
+            <h2 className="text-lg font-semibold">
+              Supply-chain questionnaire template
+            </h2>
+            <p className="mt-2 text-sm leading-6 text-foreground/64">
+              Výchozí sada otázek pro dodavatele a enterprise zákazníky.
+            </p>
+          </div>
+          <ol className="grid gap-3 p-5 md:grid-cols-2">
+            {CSRD_SUPPLY_CHAIN_QUESTIONNAIRE.map((question, index) => (
+              <li
+                key={question}
+                className="rounded-md bg-surface-muted p-4 text-sm leading-6"
+              >
+                <span className="font-mono text-xs text-primary">
+                  {(index + 1).toString().padStart(2, "0")}
+                </span>{" "}
+                {question}
+              </li>
+            ))}
+          </ol>
+        </section>
+      ) : null}
+
       <section className="rounded-lg border border-border bg-surface">
         <div className="flex items-center gap-2 border-b border-border p-5">
           <Gauge className="h-5 w-5 text-primary" aria-hidden="true" />
@@ -279,7 +388,7 @@ export default async function FrameworkDetailPage({
         <div className="divide-y divide-border">
           {controls.map((control) => (
             <article
-              key={control.key}
+              key={`${control.articleRef ?? "control"}-${control.key}`}
               className="grid gap-4 p-5 md:grid-cols-[1fr_auto]"
             >
               <div>

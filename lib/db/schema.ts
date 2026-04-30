@@ -97,7 +97,7 @@ export const frameworkControls = pgTable(
     requirementLevel: text("requirement_level").notNull().default("mandatory"),
     sortOrder: integer("sort_order").default(0),
   },
-  (table) => [unique().on(table.frameworkId, table.controlId)],
+  (table) => [unique().on(table.frameworkId, table.controlId, table.articleRef)],
 );
 
 export const tests = pgTable("tests", {
