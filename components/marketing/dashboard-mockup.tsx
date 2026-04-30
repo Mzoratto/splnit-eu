@@ -3,7 +3,7 @@ import { Icon } from "@iconify/react";
 export function DashboardMockup() {
   return (
     <div
-      className="fade-up relative mx-auto mt-16 max-w-5xl translate-y-8 opacity-0"
+      className="relative mx-auto mt-16 max-w-5xl"
       id="dashboard-wrap"
     >
       <div

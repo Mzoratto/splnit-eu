@@ -82,7 +82,7 @@ export default function HomePage() {
                 </span>
               </div>
 
-              <h1 className="mb-6 text-5xl font-semibold leading-[1.05] tracking-[-0.04em] md:text-[72px]">
+              <h1 className="mb-6 text-5xl font-semibold leading-[1.05] tracking-[-0.04em] [font-family:ui-sans-serif,system-ui,sans-serif] md:text-[72px]">
                 <span className="block text-zinc-900">
                   Splňte EU předpisy.
                 </span>
@@ -91,12 +91,17 @@ export default function HomePage() {
                 </span>
               </h1>
 
-              <p className="mx-auto mb-10 max-w-xl text-base leading-7 text-zinc-600 md:max-w-2xl md:text-xl md:leading-relaxed">
-                Centralizovaná platforma pro české firmy. Automatizujte soulad s{" "}
-                <strong className="font-medium text-zinc-900">GDPR</strong>,{" "}
-                <strong className="font-medium text-zinc-900">NIS2</strong> a{" "}
-                <strong className="font-medium text-zinc-900">ISO 27001</strong>{" "}
-                bez tabulek a bez konzultantů.
+              <p className="mx-auto mb-10 max-w-lg text-sm leading-6 text-zinc-600 md:max-w-2xl md:text-xl md:leading-relaxed">
+                <span className="md:hidden">
+                  Automatizujte GDPR, NIS2 a ISO 27001 bez tabulek.
+                </span>
+                <span className="hidden md:inline">
+                  Centralizovaná platforma pro české firmy. Automatizujte soulad s{" "}
+                  <strong className="font-medium text-zinc-900">GDPR</strong>,{" "}
+                  <strong className="font-medium text-zinc-900">NIS2</strong> a{" "}
+                  <strong className="font-medium text-zinc-900">ISO 27001</strong>{" "}
+                  bez tabulek a bez konzultantů.
+                </span>
               </p>
 
               <div className="mb-6 flex flex-col items-center justify-center gap-3 sm:flex-row">

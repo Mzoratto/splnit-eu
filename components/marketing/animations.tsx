@@ -112,7 +112,9 @@ export function MarketingAnimations() {
       }
     }
 
-    void runMotion();
+    const motionTimeout = window.setTimeout(() => {
+      void runMotion();
+    }, 2500);
 
     const sidebarItems = document.querySelectorAll<HTMLElement>(".sidebar-item");
     let currentSidebar = 0;
@@ -144,6 +146,7 @@ export function MarketingAnimations() {
 
     return () => {
       cancelled = true;
+      window.clearTimeout(motionTimeout);
       window.clearInterval(sidebarInterval);
       window.clearInterval(toggleInterval);
       scrollTriggers.forEach((trigger) => trigger.kill());
