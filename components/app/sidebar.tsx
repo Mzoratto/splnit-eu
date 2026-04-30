@@ -7,6 +7,7 @@ import {
   BarChart3,
   BookOpenCheck,
   Boxes,
+  FileQuestion,
   FileArchive,
   Landmark,
   LayoutDashboard,
@@ -27,6 +28,7 @@ const navigation = [
   { href: "/vendors", label: "Dodavatelé", icon: Boxes },
   { href: "/incidents", label: "Incidenty", icon: AlertTriangle },
   { href: "/risks", label: "Rizika", icon: BarChart3 },
+  { href: "/questionnaires", label: "Dotazníky", icon: FileQuestion },
   { href: "/team", label: "Tým", icon: Users },
   { href: "/settings/organisation", label: "Nastavení", icon: Settings },
 ];
@@ -36,7 +38,7 @@ const mobileNavigation = [
   navigation[1],
   navigation[2],
   navigation[4],
-  navigation[10],
+  navigation[11],
 ];
 
 function isActivePath(pathname: string, href: string) {
