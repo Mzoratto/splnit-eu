@@ -16,7 +16,7 @@ export const plans: Plan[] = [
     monthly: 0,
     annual: 0,
     cta: "Začít zdarma",
-    href: "/registrace",
+    href: "/sign-up",
     features: [
       "1 předpis",
       "Manuální kontroly",
@@ -32,7 +32,7 @@ export const plans: Plan[] = [
     annual: 49,
     featured: true,
     cta: "Zahájit 14denní zkušební verzi",
-    href: "/registrace",
+    href: "/sign-up",
     features: [
       "2 předpisy (NIS2 + 1 další)",
       "3 integrace",

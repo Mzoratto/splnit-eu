@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useMemo, useState } from "react";
 import { Icon } from "@iconify/react";
 import { comparisonGroups, faqs, plans } from "@/lib/marketing/pricing";
+import { PricingCta } from "@/components/marketing/pricing-cta";
 
 export function PricingCards() {
   const [annual, setAnnual] = useState(false);
@@ -78,20 +79,19 @@ export function PricingCards() {
               </ul>
               {plan.featured ? (
                 <div className="rounded-full bg-gradient-to-b from-blue-400 to-blue-700 p-px">
-                  <Link
+                  <PricingCta
                     href={plan.href}
-                    className="block rounded-full bg-blue-600 py-2.5 text-center text-sm font-medium text-white transition-colors hover:bg-blue-500"
-                  >
-                    {plan.cta}
-                  </Link>
+                    label={plan.cta}
+                    planName={plan.name}
+                    featured
+                  />
                 </div>
               ) : (
-                <Link
+                <PricingCta
                   href={plan.href}
-                  className="block rounded-full border border-zinc-200 bg-white py-2.5 text-center text-sm font-medium text-zinc-800 shadow-sm transition-colors hover:bg-zinc-50"
-                >
-                  {plan.cta}
-                </Link>
+                  label={plan.cta}
+                  planName={plan.name}
+                />
               )}
             </div>
           );
