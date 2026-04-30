@@ -4,6 +4,7 @@ import { Icon } from "@iconify/react";
 import { LeadCapture } from "@/components/marketing/lead-capture";
 import { MarketingShell } from "@/components/marketing/marketing-shell";
 import { RegulationSelector } from "@/components/marketing/regulation-selector";
+import { SoftwareApplicationJsonLd } from "@/components/marketing/software-json-ld";
 import { frameworkCards, timeline } from "@/lib/marketing/frameworks";
 
 export const metadata: Metadata = {
@@ -19,6 +20,11 @@ export const metadata: Metadata = {
 export default function RegulationsPage() {
   return (
     <MarketingShell>
+      <SoftwareApplicationJsonLd
+        pageName="Splnit.eu EU Předpisy"
+        path="/predpisy"
+        description="Přehled EU předpisů pro české firmy a automatizace souladu v platformě Splnit.eu."
+      />
       <main>
         <section data-hero className="px-5 pb-20 pt-32 text-center">
           <div className="mx-auto max-w-4xl">

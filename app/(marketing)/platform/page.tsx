@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { Icon } from "@iconify/react";
 import { MarketingShell } from "@/components/marketing/marketing-shell";
+import { SoftwareApplicationJsonLd } from "@/components/marketing/software-json-ld";
 
 export const metadata: Metadata = {
   title:
@@ -52,6 +53,11 @@ const evidence = [
 export default function PlatformPage() {
   return (
     <MarketingShell>
+      <SoftwareApplicationJsonLd
+        pageName="Splnit.eu Platforma"
+        path="/platform"
+        description="Platforma Splnit.eu automatizuje compliance testy, evidence vault a Trust Center pro NIS2, EU AI Act, GDPR a ISO 27001."
+      />
       <main>
         <section data-hero className="bg-white px-5 pb-20 pt-32">
           <div className="mx-auto max-w-7xl">

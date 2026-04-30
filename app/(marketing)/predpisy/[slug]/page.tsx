@@ -3,6 +3,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { Icon } from "@iconify/react";
 import { MarketingShell } from "@/components/marketing/marketing-shell";
+import { SoftwareApplicationJsonLd } from "@/components/marketing/software-json-ld";
 import {
   frameworkDetails,
   getFrameworkDetail,
@@ -47,6 +48,11 @@ export default async function RegulationDetailPage({
 
   return (
     <MarketingShell>
+      <SoftwareApplicationJsonLd
+        pageName={`Splnit.eu ${framework.name}`}
+        path={`/predpisy/${framework.slug}`}
+        description={`${framework.name}: český přehled povinností a automatizace souladu v platformě Splnit.eu.`}
+      />
       <main>
         <section data-hero className="px-5 pb-16 pt-32">
           <div className="mx-auto max-w-5xl">

@@ -11,22 +11,28 @@ export function MarketingAnimations() {
     if (!reduced) {
       gsap.registerPlugin(ScrollTrigger);
 
-      gsap.to(".rev-word", {
-        y: "0%",
-        duration: 1,
-        ease: "power3.out",
-        stagger: 0.06,
-        delay: 0.15,
-      });
+      const revWords = gsap.utils.toArray<HTMLElement>(".rev-word");
+      if (revWords.length) {
+        gsap.to(revWords, {
+          y: "0%",
+          duration: 1,
+          ease: "power3.out",
+          stagger: 0.06,
+          delay: 0.15,
+        });
+      }
 
-      gsap.to(".fade-up", {
-        y: 0,
-        opacity: 1,
-        duration: 0.75,
-        ease: "power2.out",
-        stagger: 0.08,
-        delay: 0.7,
-      });
+      const fadeUpElements = gsap.utils.toArray<HTMLElement>(".fade-up");
+      if (fadeUpElements.length) {
+        gsap.to(fadeUpElements, {
+          y: 0,
+          opacity: 1,
+          duration: 0.75,
+          ease: "power2.out",
+          stagger: 0.08,
+          delay: 0.7,
+        });
+      }
 
       gsap.utils.toArray<HTMLElement>(".scroll-animate").forEach((element) => {
         gsap.to(element, {

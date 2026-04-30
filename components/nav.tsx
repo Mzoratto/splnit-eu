@@ -8,6 +8,7 @@ import { Icon } from "@iconify/react";
 const links = [
   { href: "/platform", label: "Platforma" },
   { href: "/predpisy", label: "EU Předpisy" },
+  { href: "/blog", label: "Blog" },
   { href: "/zakaznici", label: "Zákazníci" },
   { href: "/cenik", label: "Ceník" },
 ];
