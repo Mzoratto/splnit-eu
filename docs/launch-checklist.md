@@ -12,8 +12,9 @@ Code-level readiness is tracked in the repository. The items below require dashb
 ## Security
 
 - Enable Cloudflare WAF for `splnit.eu`.
-- Rate limit `/api/scanner` to 30 requests/minute.
 - Rate limit `/api/webhooks/*` to 50 requests/minute.
+- Add a 30 requests/minute limit for `/api/scanner` when a scanner endpoint exists.
+- Set `CRON_SECRET` in Vercel production; cron endpoints fail closed without it.
 - Confirm Sentry source map uploads with `SENTRY_AUTH_TOKEN`, `SENTRY_ORG`, and `SENTRY_PROJECT` in Vercel.
 
 ## Compliance

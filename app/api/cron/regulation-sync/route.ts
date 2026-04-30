@@ -1,13 +1,11 @@
 import { NextResponse } from "next/server";
+import { getCronAuthError } from "@/lib/http/cron";
 import { syncRegulationUpdateSources } from "@/lib/regulations/sync";
 
 async function syncRegulationUpdates(request: Request) {
-  const authHeader = request.headers.get("authorization");
-  if (
-    process.env.CRON_SECRET &&
-    authHeader !== `Bearer ${process.env.CRON_SECRET}`
-  ) {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  const authError = getCronAuthError(request);
+  if (authError) {
+    return authError;
   }
 
   const result = await syncRegulationUpdateSources();

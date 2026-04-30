@@ -1,13 +1,11 @@
 import { NextResponse } from "next/server";
 import { sendEvidenceExpiryAlerts } from "@/lib/evidence/expiry-alerts";
+import { getCronAuthError } from "@/lib/http/cron";
 
-export async function POST(request: Request) {
-  const authHeader = request.headers.get("authorization");
-  if (
-    process.env.CRON_SECRET &&
-    authHeader !== `Bearer ${process.env.CRON_SECRET}`
-  ) {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+async function sendExpiryAlerts(request: Request) {
+  const authError = getCronAuthError(request);
+  if (authError) {
+    return authError;
   }
 
   const result = await sendEvidenceExpiryAlerts();
@@ -16,4 +14,12 @@ export async function POST(request: Request) {
     ok: true,
     ...result,
   });
+}
+
+export async function GET(request: Request) {
+  return sendExpiryAlerts(request);
+}
+
+export async function POST(request: Request) {
+  return sendExpiryAlerts(request);
 }
