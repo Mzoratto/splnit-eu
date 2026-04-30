@@ -2,6 +2,7 @@ import { and, desc, eq, inArray } from "drizzle-orm";
 import { getDb } from "@/lib/db";
 import {
   frameworks,
+  consultantClients,
   integrationRuns,
   organisations,
   orgFrameworks,
@@ -234,14 +235,30 @@ export async function getPublicTrustCenter(input: {
       .orderBy(desc(integrationRuns.ranAt))
       .limit(1),
   ]);
+  const brandingRows = await db
+    .select({
+      accentColor: consultantClients.whiteLabelAccentColor,
+      logoUrl: consultantClients.whiteLabelLogoUrl,
+    })
+    .from(consultantClients)
+    .where(
+      and(
+        eq(consultantClients.clientOrgId, row.trustCenter.clerkOrgId),
+        eq(consultantClients.status, "active"),
+      ),
+    )
+    .limit(1);
+  const branding = brandingRows[0] ?? null;
 
   return {
     accessGranted: !row.trustCenter.ndaRequired || access.granted,
     accessRequest: access.request,
-    accentColor: row.trustCenter.accentColor ?? "#1b7f5a",
+    accentColor:
+      row.trustCenter.accentColor ?? branding?.accentColor ?? "#1b7f5a",
     clerkOrgId: row.trustCenter.clerkOrgId,
     frameworks: frameworkRows,
     lastTestedAt: runRows[0]?.ranAt ?? null,
+    logoUrl: row.trustCenter.logoUrl ?? branding?.logoUrl ?? null,
     ndaRequired: row.trustCenter.ndaRequired,
     organisationName: row.organisation.name,
     subdomain: row.trustCenter.subdomain,

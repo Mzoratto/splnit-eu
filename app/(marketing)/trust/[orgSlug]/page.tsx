@@ -61,7 +61,20 @@ export default async function TrustCenterPage({
       >
         <div className="mx-auto max-w-6xl px-5 py-14">
           <div className="flex items-center gap-3">
-            <ShieldCheck className="h-7 w-7 text-white" aria-hidden="true" />
+            {trustData.logoUrl ? (
+              <span
+                aria-hidden="true"
+                className="h-9 w-9 rounded-md bg-white/12 object-contain p-1"
+                style={{
+                  backgroundImage: `url(${trustData.logoUrl})`,
+                  backgroundPosition: "center",
+                  backgroundRepeat: "no-repeat",
+                  backgroundSize: "contain",
+                }}
+              />
+            ) : (
+              <ShieldCheck className="h-7 w-7 text-white" aria-hidden="true" />
+            )}
             <span className="text-sm uppercase tracking-[0.16em] text-white/70">
               Trust Center
             </span>
@@ -204,6 +217,7 @@ function loadDemoTrustCenter(orgSlug: string) {
       status: "active",
     })),
     lastTestedAt: new Date(Date.now() - 11 * 60 * 1000),
+    logoUrl: null,
     ndaRequired: false,
     organisationName: "Demo organizace",
     subdomain: "demo",

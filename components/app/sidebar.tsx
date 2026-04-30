@@ -5,6 +5,7 @@ import { usePathname } from "next/navigation";
 import {
   AlertTriangle,
   BarChart3,
+  BriefcaseBusiness,
   BookOpenCheck,
   Boxes,
   FileQuestion,
@@ -29,6 +30,7 @@ const navigation = [
   { href: "/incidents", label: "Incidenty", icon: AlertTriangle },
   { href: "/risks", label: "Rizika", icon: BarChart3 },
   { href: "/questionnaires", label: "Dotazníky", icon: FileQuestion },
+  { href: "/clients", label: "Klienti", icon: BriefcaseBusiness },
   { href: "/team", label: "Tým", icon: Users },
   { href: "/settings/organisation", label: "Nastavení", icon: Settings },
 ];
@@ -38,7 +40,7 @@ const mobileNavigation = [
   navigation[1],
   navigation[2],
   navigation[4],
-  navigation[11],
+  navigation[12],
 ];
 
 function isActivePath(pathname: string, href: string) {

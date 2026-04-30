@@ -304,6 +304,31 @@ export const trustCenters = pgTable("trust_centers", {
   lastUpdated: timestamp("last_updated", { withTimezone: true }).defaultNow(),
 });
 
+export const consultantClients = pgTable(
+  "consultant_clients",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    consultantOrgId: text("consultant_org_id")
+      .notNull()
+      .references(() => organisations.clerkOrgId, { onDelete: "cascade" }),
+    clientOrgId: text("client_org_id")
+      .notNull()
+      .references(() => organisations.clerkOrgId, { onDelete: "cascade" }),
+    accessLevel: text("access_level").notNull().default("manage"),
+    status: text("status").notNull().default("active"),
+    inviteEmail: text("invite_email"),
+    whiteLabelLogoUrl: text("white_label_logo_url"),
+    whiteLabelAccentColor: text("white_label_accent_color"),
+    createdAt: timestamp("created_at", { withTimezone: true }).defaultNow(),
+    updatedAt: timestamp("updated_at", { withTimezone: true }).defaultNow(),
+  },
+  (table) => [
+    unique().on(table.consultantOrgId, table.clientOrgId),
+    index("idx_consultant_clients_consultant").on(table.consultantOrgId),
+    index("idx_consultant_clients_client").on(table.clientOrgId),
+  ],
+);
+
 export const trustCenterRequests = pgTable("trust_center_requests", {
   id: uuid("id").primaryKey().defaultRandom(),
   clerkOrgId: text("clerk_org_id").notNull(),
