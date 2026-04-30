@@ -4,6 +4,7 @@ import { auth } from "@clerk/nextjs/server";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { z } from "zod";
+import { createAuditLog } from "@/lib/db/queries/audit-logs";
 import { upsertIntegrationConnection } from "@/lib/db/queries/integrations";
 import { validateAwsRoleConnection } from "@/lib/integrations/aws/client";
 
@@ -39,6 +40,7 @@ function requireActiveOrganisation(session: Awaited<ReturnType<typeof auth>>) {
 
   return {
     clerkOrgId: session.orgId,
+    userId: session.userId,
   };
 }
 
@@ -51,7 +53,7 @@ export async function connectAwsIntegrationAction(formData: FormData) {
   });
   const identity = await validateAwsRoleConnection(parsed);
 
-  await upsertIntegrationConnection({
+  const integration = await upsertIntegrationConnection({
     clerkOrgId: session.clerkOrgId,
     config: {
       accountId: identity.accountId,
@@ -62,7 +64,21 @@ export async function connectAwsIntegrationAction(formData: FormData) {
     },
     provider: "aws",
   });
+  await createAuditLog({
+    action: "integration.connected",
+    clerkOrgId: session.clerkOrgId,
+    clerkUserId: session.userId,
+    entityId: integration.id,
+    entityType: "integration",
+    metadata: {
+      accountId: identity.accountId,
+      provider: "aws",
+      region: identity.region,
+      roleArn: parsed.roleArn,
+    },
+  });
 
   revalidatePath("/integrations");
+  revalidatePath("/settings/audit-log");
   revalidatePath("/integrations/aws");
 }

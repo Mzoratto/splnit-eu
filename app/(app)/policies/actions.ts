@@ -4,6 +4,7 @@ import { auth } from "@clerk/nextjs/server";
 import { put } from "@vercel/blob";
 import { revalidatePath } from "next/cache";
 import { z } from "zod";
+import { createAuditLog } from "@/lib/db/queries/audit-logs";
 import { getOrganisationByClerkOrgId } from "@/lib/db/queries/organisations";
 import { insertGeneratedPolicy } from "@/lib/db/queries/policies";
 import { renderPolicyPdf } from "@/lib/pdf/policy-document";
@@ -23,14 +24,17 @@ function formatDate(date: Date) {
   return date.toISOString().slice(0, 10);
 }
 
-async function getActiveOrgId() {
+async function getActiveSession() {
   const session = await auth();
 
   if (!session.userId || !session.orgId) {
     throw new Error("Active Clerk organisation is required.");
   }
 
-  return session.orgId;
+  return {
+    clerkOrgId: session.orgId,
+    userId: session.userId,
+  };
 }
 
 export async function generatePolicyAction(type: string) {
@@ -45,8 +49,8 @@ export async function generatePolicyAction(type: string) {
     throw new Error("BLOB_READ_WRITE_TOKEN is required to generate policies.");
   }
 
-  const clerkOrgId = await getActiveOrgId();
-  const organisation = await getOrganisationByClerkOrgId(clerkOrgId);
+  const session = await getActiveSession();
+  const organisation = await getOrganisationByClerkOrgId(session.clerkOrgId);
 
   if (!organisation) {
     throw new Error("Organisation profile is required to generate policies.");
@@ -64,7 +68,7 @@ export async function generatePolicyAction(type: string) {
     template,
   });
   const blob = await put(
-    `policies/${clerkOrgId}/${parsedType}-${generatedAt.getTime()}.pdf`,
+    `policies/${session.clerkOrgId}/${parsedType}-${generatedAt.getTime()}.pdf`,
     pdf,
     {
       access: "private",
@@ -72,9 +76,9 @@ export async function generatePolicyAction(type: string) {
     },
   );
 
-  await insertGeneratedPolicy({
+  const policyId = await insertGeneratedPolicy({
     blobUrl: blob.url,
-    clerkOrgId,
+    clerkOrgId: session.clerkOrgId,
     content: {
       generatedAt: generatedAt.toISOString(),
       reviewDate,
@@ -87,6 +91,22 @@ export async function generatePolicyAction(type: string) {
     type: template.type,
   });
 
+  if (policyId) {
+    await createAuditLog({
+      action: "policy.generated",
+      clerkOrgId: session.clerkOrgId,
+      clerkUserId: session.userId,
+      entityId: policyId,
+      entityType: "policy",
+      metadata: {
+        expiresAt: reviewDate,
+        title: template.titleCs,
+        type: template.type,
+      },
+    });
+  }
+
   revalidatePath("/policies");
+  revalidatePath("/settings/audit-log");
   revalidatePath(`/policies/${template.type}`);
 }

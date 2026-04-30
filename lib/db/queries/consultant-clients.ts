@@ -132,7 +132,7 @@ export async function linkConsultantClient(input: {
     throw new Error("Client organisation not found.");
   }
 
-  await db
+  const rows = await db
     .insert(consultantClients)
     .values({
       accessLevel: input.accessLevel,
@@ -149,7 +149,16 @@ export async function linkConsultantClient(input: {
         status: "active",
         updatedAt: new Date(),
       },
-    });
+    })
+    .returning({ id: consultantClients.id });
+
+  const relationshipId = rows[0]?.id;
+
+  if (!relationshipId) {
+    throw new Error("Failed to link consultant client.");
+  }
+
+  return relationshipId;
 }
 
 export async function updateConsultantClientBranding(input: {

@@ -42,16 +42,24 @@ export async function createManualEvidence(input: {
     throw new Error(`Unknown control: ${input.controlKey}`);
   }
 
-  await db.insert(evidence).values({
-    blobUrl: input.blobUrl,
-    clerkOrgId: input.clerkOrgId,
-    collectedBy: input.collectedBy,
-    controlId: control.id,
-    description: input.description,
-    expiresAt: input.expiresAt,
-    source: input.source,
-    type: input.fileType,
-  });
+  const insertedRows = await db
+    .insert(evidence)
+    .values({
+      blobUrl: input.blobUrl,
+      clerkOrgId: input.clerkOrgId,
+      collectedBy: input.collectedBy,
+      controlId: control.id,
+      description: input.description,
+      expiresAt: input.expiresAt,
+      source: input.source,
+      type: input.fileType,
+    })
+    .returning({ id: evidence.id });
+  const evidenceId = insertedRows[0]?.id;
+
+  if (!evidenceId) {
+    throw new Error("Failed to create evidence record.");
+  }
 
   await db
     .insert(orgControlStatuses)
@@ -69,6 +77,11 @@ export async function createManualEvidence(input: {
         updatedAt: new Date(),
       },
     });
+
+  return {
+    controlId: control.id,
+    evidenceId,
+  };
 }
 
 export async function listEvidenceVault(clerkOrgId: string) {

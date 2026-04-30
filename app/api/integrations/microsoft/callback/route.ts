@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { exchangeMicrosoftCode } from "@/lib/integrations/microsoft365/oauth";
 import { encryptSecret } from "@/lib/crypto";
+import { createAuditLog } from "@/lib/db/queries/audit-logs";
 import { upsertIntegrationConnection } from "@/lib/db/queries/integrations";
 
 export async function GET(request: Request) {
@@ -16,7 +17,7 @@ export async function GET(request: Request) {
   const token = await exchangeMicrosoftCode(code, redirectUri);
   const tokenExpiresAt = new Date(Date.now() + token.expires_in * 1000);
 
-  await upsertIntegrationConnection({
+  const integration = await upsertIntegrationConnection({
     accessTokenEnc: encryptSecret(token.access_token, state),
     clerkOrgId: state,
     config: {
@@ -26,6 +27,16 @@ export async function GET(request: Request) {
     provider: "microsoft365",
     refreshTokenEnc: encryptSecret(token.refresh_token, state),
     tokenExpiresAt,
+  });
+  await createAuditLog({
+    action: "integration.connected",
+    clerkOrgId: state,
+    entityId: integration.id,
+    entityType: "integration",
+    metadata: {
+      provider: "microsoft365",
+      tokenType: "oauth2",
+    },
   });
 
   return NextResponse.redirect(new URL("/integrations/microsoft365", url.origin));

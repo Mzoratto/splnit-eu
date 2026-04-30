@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { createAuditLog } from "@/lib/db/queries/audit-logs";
 import { upsertIntegrationConnection } from "@/lib/db/queries/integrations";
 import { getGitHubInstallation } from "@/lib/integrations/github/app";
 
@@ -16,7 +17,7 @@ export async function GET(request: Request) {
 
   const installation = await getGitHubInstallation(installationId);
 
-  await upsertIntegrationConnection({
+  const integration = await upsertIntegrationConnection({
     clerkOrgId,
     config: {
       accountType: installation.account?.type ?? null,
@@ -24,6 +25,17 @@ export async function GET(request: Request) {
       owner: installation.account?.login ?? null,
     },
     provider: "github",
+  });
+  await createAuditLog({
+    action: "integration.connected",
+    clerkOrgId,
+    entityId: integration.id,
+    entityType: "integration",
+    metadata: {
+      installationId,
+      owner: installation.account?.login ?? null,
+      provider: "github",
+    },
   });
 
   return NextResponse.redirect(new URL("/integrations/github", url.origin));

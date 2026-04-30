@@ -43,6 +43,13 @@
       "when": 1777578153928,
       "tag": "0005_goofy_hulk",
       "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "7",
+      "when": 1777581246228,
+      "tag": "0006_white_dazzler",
+      "breakpoints": true
     }
   ]
 }

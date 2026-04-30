@@ -4,6 +4,7 @@ import { auth } from "@clerk/nextjs/server";
 import { put } from "@vercel/blob";
 import { revalidatePath } from "next/cache";
 import { z } from "zod";
+import { createAuditLog } from "@/lib/db/queries/audit-logs";
 import { updateControlStatus } from "@/lib/db/queries/controls";
 import { createManualEvidence } from "@/lib/db/queries/evidence";
 
@@ -56,15 +57,29 @@ export async function updateControlStatusAction(
   });
   const session = await getActiveSession();
 
-  await updateControlStatus({
+  const result = await updateControlStatus({
     clerkOrgId: session.clerkOrgId,
     controlKey,
     notes: parsed.notes || null,
     status: parsed.status,
   });
+  await createAuditLog({
+    action: "control.status_changed",
+    clerkOrgId: session.clerkOrgId,
+    clerkUserId: session.userId,
+    entityId: result.controlId,
+    entityType: "control",
+    metadata: {
+      controlKey,
+      notesPresent: Boolean(parsed.notes),
+      recalculatedFrameworks: result.recalculatedFrameworks,
+      status: parsed.status,
+    },
+  });
 
   revalidatePath("/dashboard");
   revalidatePath("/evidence");
+  revalidatePath("/settings/audit-log");
   revalidatePath(`/controls/${controlKey}`);
 }
 
@@ -101,7 +116,7 @@ export async function uploadEvidenceAction(
     },
   );
 
-  await createManualEvidence({
+  const result = await createManualEvidence({
     blobUrl: blob.url,
     clerkOrgId: session.clerkOrgId,
     collectedBy: session.userId,
@@ -111,8 +126,24 @@ export async function uploadEvidenceAction(
     fileType: file.type || "application/octet-stream",
     source: source || "manual_upload",
   });
+  await createAuditLog({
+    action: "evidence.uploaded",
+    clerkOrgId: session.clerkOrgId,
+    clerkUserId: session.userId,
+    entityId: result.evidenceId,
+    entityType: "evidence",
+    metadata: {
+      controlId: result.controlId,
+      controlKey,
+      expiresAt: expiresAt || null,
+      fileSize: file.size,
+      fileType: file.type || "application/octet-stream",
+      source: source || "manual_upload",
+    },
+  });
 
   revalidatePath("/dashboard");
   revalidatePath("/evidence");
+  revalidatePath("/settings/audit-log");
   revalidatePath(`/controls/${controlKey}`);
 }

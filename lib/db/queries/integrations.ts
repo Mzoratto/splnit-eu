@@ -43,7 +43,7 @@ export async function upsertIntegrationConnection(input: {
 }) {
   const db = getDb();
 
-  await db
+  const rows = await db
     .insert(integrations)
     .values({
       accessTokenEnc: input.accessTokenEnc ?? null,
@@ -65,7 +65,16 @@ export async function upsertIntegrationConnection(input: {
         status: "connected",
         tokenExpiresAt: input.tokenExpiresAt ?? null,
       },
-    });
+    })
+    .returning({ id: integrations.id, provider: integrations.provider });
+
+  const integration = rows[0];
+
+  if (!integration) {
+    throw new Error("Failed to save integration connection.");
+  }
+
+  return integration;
 }
 
 export async function getIntegrationDetail(input: {
@@ -211,6 +220,7 @@ export async function disconnectIntegrationConnection(input: {
 
   return {
     disconnected: true,
+    integrationId: integration.id,
     resetControls: controlIds.length,
   };
 }

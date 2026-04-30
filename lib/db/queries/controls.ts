@@ -147,6 +147,7 @@ export async function updateControlStatus(input: {
   );
 
   return {
+    controlId: control.id,
     recalculatedFrameworks: frameworkRows.length,
   };
 }

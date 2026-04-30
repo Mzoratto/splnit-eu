@@ -8,6 +8,7 @@ import {
   linkConsultantClient,
   updateConsultantClientBranding,
 } from "@/lib/db/queries/consultant-clients";
+import { createAuditLog } from "@/lib/db/queries/audit-logs";
 import { getOrganisationByClerkOrgId } from "@/lib/db/queries/organisations";
 import { requirePlan } from "@/lib/stripe/plans";
 
@@ -44,6 +45,7 @@ async function requireConsultantOrganisation() {
 
   return {
     clerkOrgId: session.orgId,
+    userId: session.userId,
   };
 }
 
@@ -55,14 +57,27 @@ export async function linkClientAction(formData: FormData) {
     inviteEmail: getStringValue(formData, "inviteEmail"),
   });
 
-  await linkConsultantClient({
+  const consultantClientId = await linkConsultantClient({
     accessLevel: parsed.accessLevel,
     clientOrgId: parsed.clientOrgId,
     consultantOrgId: session.clerkOrgId,
     inviteEmail: parsed.inviteEmail || null,
   });
+  await createAuditLog({
+    action: parsed.inviteEmail ? "user.invited" : "consultant_client.linked",
+    clerkOrgId: session.clerkOrgId,
+    clerkUserId: session.userId,
+    entityId: consultantClientId ?? parsed.clientOrgId,
+    entityType: "consultant_client",
+    metadata: {
+      accessLevel: parsed.accessLevel,
+      clientOrgId: parsed.clientOrgId,
+      inviteEmail: parsed.inviteEmail || null,
+    },
+  });
 
   revalidatePath("/clients");
+  revalidatePath("/settings/audit-log");
 }
 
 export async function updateClientBrandingAction(

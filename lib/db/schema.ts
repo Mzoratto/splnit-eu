@@ -403,6 +403,26 @@ export const regulationUpdateReads = pgTable(
   ],
 );
 
+export const auditLogs = pgTable(
+  "audit_logs",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    clerkOrgId: text("clerk_org_id")
+      .notNull()
+      .references(() => organisations.clerkOrgId, { onDelete: "cascade" }),
+    clerkUserId: text("clerk_user_id"),
+    action: text("action").notNull(),
+    entityType: text("entity_type").notNull(),
+    entityId: text("entity_id").notNull(),
+    metadata: jsonb("metadata").$type<Record<string, unknown>>().default({}),
+    createdAt: timestamp("created_at", { withTimezone: true }).defaultNow(),
+  },
+  (table) => [
+    index("idx_audit_logs_org_created_at").on(table.clerkOrgId, table.createdAt),
+    index("idx_audit_logs_entity").on(table.entityType, table.entityId),
+  ],
+);
+
 export type Organisation = typeof organisations.$inferSelect;
 export type Framework = typeof frameworks.$inferSelect;
 export type Control = typeof controls.$inferSelect;
@@ -410,3 +430,4 @@ export type Test = typeof tests.$inferSelect;
 export type Integration = typeof integrations.$inferSelect;
 export type IntegrationRun = typeof integrationRuns.$inferSelect;
 export type Evidence = typeof evidence.$inferSelect;
+export type AuditLog = typeof auditLogs.$inferSelect;
