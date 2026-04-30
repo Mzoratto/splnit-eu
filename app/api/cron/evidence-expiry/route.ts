@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { sendEvidenceExpiryAlerts } from "@/lib/evidence/expiry-alerts";
 
 export async function POST(request: Request) {
   const authHeader = request.headers.get("authorization");
@@ -9,8 +10,10 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
+  const result = await sendEvidenceExpiryAlerts();
+
   return NextResponse.json({
     ok: true,
-    note: "Evidence expiry query and email dispatch are implemented in a later slice.",
+    ...result,
   });
 }

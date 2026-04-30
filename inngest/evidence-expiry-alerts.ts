@@ -1,4 +1,5 @@
 import { inngest } from "./client";
+import { sendEvidenceExpiryAlerts } from "@/lib/evidence/expiry-alerts";
 
 export const evidenceExpiryAlerts = inngest.createFunction(
   {
@@ -7,9 +8,6 @@ export const evidenceExpiryAlerts = inngest.createFunction(
     triggers: { cron: "0 8 * * *" },
   },
   async () => {
-    return {
-      queued: false,
-      reason: "Database query and Resend delivery are implemented in the next slice.",
-    };
+    return sendEvidenceExpiryAlerts();
   },
 );
