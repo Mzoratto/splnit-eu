@@ -7,6 +7,7 @@ import {
 } from "@/lib/db/schema";
 
 const PASSING_WEIGHT: Record<string, number> = {
+  manual_review: 0.5,
   pass: 1,
   warning: 0.5,
 };
@@ -40,12 +41,30 @@ export async function recalculateFrameworkScore(
     statuses.map((status) => [status.controlId, status.status] as const),
   );
 
-  const weightedPassing = mappings.reduce((total, mapping) => {
+  const applicableMappings = mappings.filter(
+    (mapping) => statusMap.get(mapping.controlId) !== "not_applicable",
+  );
+
+  if (applicableMappings.length === 0) {
+    await db
+      .update(orgFrameworks)
+      .set({ score: 100 })
+      .where(
+        and(
+          eq(orgFrameworks.clerkOrgId, clerkOrgId),
+          eq(orgFrameworks.frameworkId, frameworkId),
+        ),
+      );
+
+    return 100;
+  }
+
+  const weightedPassing = applicableMappings.reduce((total, mapping) => {
     const status = statusMap.get(mapping.controlId) ?? "unknown";
     return total + (PASSING_WEIGHT[status] ?? 0);
   }, 0);
 
-  const score = Math.round((weightedPassing / mappings.length) * 100);
+  const score = Math.round((weightedPassing / applicableMappings.length) * 100);
 
   await db
     .update(orgFrameworks)
