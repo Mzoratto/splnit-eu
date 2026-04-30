@@ -1,7 +1,13 @@
-import type { FrameworkSeed } from "@/lib/frameworks/registry";
-
 export type PublicTrustFramework = {
-  framework: FrameworkSeed;
+  framework: {
+    descriptionCs?: string | null;
+    mandatoryDeadline?: Date | string | null;
+    nameCs: string;
+    nameEn?: string | null;
+    regulator?: string | null;
+    slug: string;
+    version?: string | null;
+  };
   score: number | null;
   status: string;
 };

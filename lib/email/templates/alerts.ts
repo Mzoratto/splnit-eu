@@ -51,3 +51,38 @@ export function regulationUpdateText(input: {
     .filter(Boolean)
     .join("\n");
 }
+
+export function trustCenterRequestSubject(organisationName: string) {
+  return `Nová Trust Center žádost: ${organisationName}`;
+}
+
+export function trustCenterRequestText(input: {
+  organisationName: string;
+  requesterEmail: string;
+  requesterCompany?: string | null;
+  reviewUrl: string;
+}) {
+  return [
+    `Organizace: ${input.organisationName}`,
+    `Žadatel: ${input.requesterEmail}`,
+    input.requesterCompany ? `Firma: ${input.requesterCompany}` : null,
+    `Schválení: ${input.reviewUrl}`,
+  ]
+    .filter(Boolean)
+    .join("\n");
+}
+
+export function trustCenterAccessSubject(organisationName: string) {
+  return `Přístup do Trust Center: ${organisationName}`;
+}
+
+export function trustCenterAccessText(input: {
+  organisationName: string;
+  accessUrl: string;
+}) {
+  return [
+    `Organizace: ${input.organisationName}`,
+    "Přístup je platný 24 hodin.",
+    `Odkaz: ${input.accessUrl}`,
+  ].join("\n");
+}
