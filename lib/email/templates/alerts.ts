@@ -103,3 +103,18 @@ export function vendorQuestionnaireText(input: {
     `Odkaz: ${input.assessmentUrl}`,
   ].join("\n");
 }
+
+export function accessReviewReminderSubject(organisationName: string) {
+  return `Quarterly access review: ${organisationName}`;
+}
+
+export function accessReviewReminderText(input: {
+  accessReviewsUrl: string;
+  organisationName: string;
+}) {
+  return [
+    `Organizace: ${input.organisationName}`,
+    "Je čas spustit kvartální přístupovou revizi pro Microsoft 365 a GitHub.",
+    `Odkaz: ${input.accessReviewsUrl}`,
+  ].join("\n");
+}
