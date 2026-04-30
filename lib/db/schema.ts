@@ -378,11 +378,30 @@ export const regulationUpdates = pgTable("regulation_updates", {
   summaryCs: text("summary_cs"),
   summaryEn: text("summary_en"),
   sourceUrl: text("source_url"),
+  source: text("source").notNull().default("unknown"),
   severity: text("severity").notNull().default("info"),
   affectsPlans: text("affects_plans").array(),
   publishedAt: timestamp("published_at", { withTimezone: true }).notNull(),
   createdAt: timestamp("created_at", { withTimezone: true }).defaultNow(),
 });
+
+export const regulationUpdateReads = pgTable(
+  "regulation_update_reads",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    updateId: uuid("update_id")
+      .notNull()
+      .references(() => regulationUpdates.id, { onDelete: "cascade" }),
+    clerkOrgId: text("clerk_org_id")
+      .notNull()
+      .references(() => organisations.clerkOrgId, { onDelete: "cascade" }),
+    readAt: timestamp("read_at", { withTimezone: true }).defaultNow(),
+  },
+  (table) => [
+    unique().on(table.updateId, table.clerkOrgId),
+    index("idx_regulation_update_reads_org").on(table.clerkOrgId),
+  ],
+);
 
 export type Organisation = typeof organisations.$inferSelect;
 export type Framework = typeof frameworks.$inferSelect;

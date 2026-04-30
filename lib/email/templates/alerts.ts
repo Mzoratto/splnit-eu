@@ -38,11 +38,13 @@ export function regulationUpdateText(input: {
   organisationName: string;
   title: string;
   summary?: string | null;
+  source: string;
   sourceUrl?: string | null;
   publishedAt: Date;
 }) {
   return [
     `Organizace: ${input.organisationName}`,
+    `Zdroj: ${input.source}`,
     `Aktualizace: ${input.title}`,
     `Publikováno: ${input.publishedAt.toISOString().slice(0, 10)}`,
     input.summary ? `Shrnutí: ${input.summary}` : null,

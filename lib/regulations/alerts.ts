@@ -41,7 +41,10 @@ export async function sendRegulationUpdateAlerts(
   let emailsSent = 0;
 
   for (const update of updates) {
-    const recipients = await listRegulationAlertRecipients(update.affectsPlans);
+    const recipients = await listRegulationAlertRecipients({
+      affectsPlans: update.affectsPlans,
+      frameworkSlug: update.frameworkSlug,
+    });
 
     for (const recipient of recipients) {
       if (!recipient.email) {
@@ -54,6 +57,7 @@ export async function sendRegulationUpdateAlerts(
         text: regulationUpdateText({
           organisationName: recipient.organisationName,
           publishedAt: update.publishedAt,
+          source: update.source,
           sourceUrl: update.sourceUrl,
           summary: update.summaryCs,
           title: update.title,

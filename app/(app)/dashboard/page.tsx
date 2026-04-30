@@ -1,6 +1,13 @@
 import Link from "next/link";
 import { auth } from "@clerk/nextjs/server";
-import { AlertTriangle, ArrowRight, Clock3, Newspaper } from "lucide-react";
+import {
+  AlertTriangle,
+  ArrowRight,
+  CheckCircle2,
+  Clock3,
+  Newspaper,
+} from "lucide-react";
+import { markRegulationUpdateReadAction } from "@/app/(app)/dashboard/actions";
 import { CONTROL_LIBRARY } from "@/lib/controls/library";
 import { hasDatabaseUrl } from "@/lib/db";
 import { getDashboardData } from "@/lib/db/queries/dashboard";
@@ -15,9 +22,13 @@ const fallbackFrameworkScores = [
 const fallbackUpdates = [
   {
     frameworkName: "NIS2",
+    id: "demo-regulation-update",
+    isRead: true,
     publishedAt: new Date("2026-04-15T08:00:00.000Z"),
     severity: "info",
-    summary: "Tento panel naplní synchronizace NÚKIB feedu v PR-015.",
+    source: "NÚKIB",
+    sourceUrl: null,
+    summary: "Tento panel naplní synchronizace regulačních zdrojů.",
     title: "Feed regulačních aktualizací je připravený",
   },
 ];
@@ -233,18 +244,22 @@ export default async function DashboardPage() {
           </div>
           <div className="divide-y divide-border">
             {updates.map((update) => (
-              <article
-                key={`${update.title}-${update.publishedAt.toISOString()}`}
-                className="p-5"
-              >
+              <article key={update.id} className="p-5">
                 <div className="flex items-start justify-between gap-3">
                   <h3 className="text-sm font-medium">{update.title}</h3>
-                  <span className="rounded-md bg-surface-muted px-2 py-1 text-[11px]">
-                    {update.severity}
-                  </span>
+                  <div className="flex shrink-0 items-center gap-2">
+                    {!update.isRead ? (
+                      <span className="rounded-md bg-primary/12 px-2 py-1 text-[11px] text-primary">
+                        Nové
+                      </span>
+                    ) : null}
+                    <span className="rounded-md bg-surface-muted px-2 py-1 text-[11px]">
+                      {update.severity}
+                    </span>
+                  </div>
                 </div>
                 <p className="mt-2 text-xs text-foreground/58">
-                  {update.frameworkName} ·{" "}
+                  {update.source} · {update.frameworkName ?? "Obecné"} ·{" "}
                   {new Intl.DateTimeFormat("cs-CZ").format(update.publishedAt)}
                 </p>
                 {update.summary ? (
@@ -252,6 +267,32 @@ export default async function DashboardPage() {
                     {update.summary}
                   </p>
                 ) : null}
+                <div className="mt-4 flex flex-wrap gap-3">
+                  {update.sourceUrl ? (
+                    <a
+                      href={update.sourceUrl}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="inline-flex items-center gap-2 text-xs font-medium text-primary"
+                    >
+                      Otevřít zdroj
+                      <ArrowRight className="h-3.5 w-3.5" aria-hidden="true" />
+                    </a>
+                  ) : null}
+                  {!update.isRead && update.id !== "demo-regulation-update" ? (
+                    <form
+                      action={markRegulationUpdateReadAction.bind(null, update.id)}
+                    >
+                      <button
+                        type="submit"
+                        className="inline-flex items-center gap-2 text-xs font-medium text-foreground/64 hover:text-foreground"
+                      >
+                        <CheckCircle2 className="h-3.5 w-3.5" aria-hidden="true" />
+                        Označit přečtené
+                      </button>
+                    </form>
+                  ) : null}
+                </div>
               </article>
             ))}
           </div>

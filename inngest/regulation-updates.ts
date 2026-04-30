@@ -1,4 +1,5 @@
-import { syncNukibFeed } from "@/lib/integrations/nukib/sync";
+import { sendWeeklyRegulationDigest } from "@/lib/regulations/digest";
+import { syncRegulationUpdateSources } from "@/lib/regulations/sync";
 import { inngest } from "./client";
 
 export const regulationUpdates = inngest.createFunction(
@@ -8,10 +9,16 @@ export const regulationUpdates = inngest.createFunction(
     triggers: { cron: "0 6 * * 1" },
   },
   async ({ step }) => {
-    const nukib = await step.run("sync nukib feed", () => syncNukibFeed());
+    const sync = await step.run("sync regulation sources", () =>
+      syncRegulationUpdateSources(),
+    );
+    const digest = await step.run("send loops digest", () =>
+      sendWeeklyRegulationDigest(),
+    );
 
     return {
-      nukib,
+      digest,
+      sync,
     };
   },
 );

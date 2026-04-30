@@ -36,6 +36,13 @@
       "when": 1777577108060,
       "tag": "0004_crazy_toxin",
       "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "7",
+      "when": 1777578153928,
+      "tag": "0005_goofy_hulk",
+      "breakpoints": true
     }
   ]
 }

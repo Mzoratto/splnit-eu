@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { syncNukibFeed } from "@/lib/integrations/nukib/sync";
+import { syncRegulationUpdateSources } from "@/lib/regulations/sync";
 
 async function syncRegulationUpdates(request: Request) {
   const authHeader = request.headers.get("authorization");
@@ -10,7 +10,7 @@ async function syncRegulationUpdates(request: Request) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
-  const result = await syncNukibFeed();
+  const result = await syncRegulationUpdateSources();
 
   return NextResponse.json({
     ok: true,

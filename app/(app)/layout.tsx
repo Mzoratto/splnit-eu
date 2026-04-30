@@ -3,7 +3,7 @@ import { auth } from "@clerk/nextjs/server";
 import { AppShell } from "@/components/app/app-shell";
 import { hasDatabaseUrl } from "@/lib/db";
 import { getOrganisationByClerkOrgId } from "@/lib/db/queries/organisations";
-import { countActionRequiredRegulationUpdates } from "@/lib/db/queries/regulation-updates";
+import { countUnreadRelevantRegulationUpdates } from "@/lib/db/queries/regulation-updates";
 import { normalizePlanKey, type PlanKey } from "@/lib/stripe/plans";
 
 export const dynamic = "force-dynamic";
@@ -27,13 +27,13 @@ export default async function ProtectedLayout({
     }
 
     if (hasDatabaseUrl()) {
-      const [organisation, actionRequiredCount] = await Promise.all([
+      const [organisation, unreadRegulationUpdateCount] = await Promise.all([
         getOrganisationByClerkOrgId(session.orgId),
-        countActionRequiredRegulationUpdates(),
+        countUnreadRelevantRegulationUpdates(session.orgId),
       ]);
       organisationName = organisation?.name ?? "Organizace";
       plan = normalizePlanKey(organisation?.plan);
-      regulationUpdateCount = actionRequiredCount;
+      regulationUpdateCount = unreadRegulationUpdateCount;
     }
   }
 

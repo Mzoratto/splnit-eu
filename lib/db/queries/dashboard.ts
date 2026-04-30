@@ -1,12 +1,12 @@
-import { and, desc, eq, inArray } from "drizzle-orm";
+import { and, eq, inArray } from "drizzle-orm";
 import { getDb } from "@/lib/db";
 import {
   controls,
   frameworks,
   orgControlStatuses,
   orgFrameworks,
-  regulationUpdates,
 } from "@/lib/db/schema";
+import { listRelevantRegulationUpdates } from "@/lib/db/queries/regulation-updates";
 
 export type DashboardFrameworkScore = {
   slug: string;
@@ -24,9 +24,13 @@ export type DashboardControl = {
 };
 
 export type DashboardRegulationUpdate = {
+  id: string;
+  isRead: boolean;
   title: string;
   summary: string | null;
   severity: string;
+  source: string;
+  sourceUrl: string | null;
   publishedAt: Date;
   frameworkName: string | null;
 };
@@ -68,18 +72,7 @@ export async function getDashboardData(clerkOrgId: string) {
     .where(eq(orgControlStatuses.clerkOrgId, clerkOrgId))
     .limit(500);
 
-  const updates = await db
-    .select({
-      frameworkName: frameworks.nameCs,
-      publishedAt: regulationUpdates.publishedAt,
-      severity: regulationUpdates.severity,
-      summary: regulationUpdates.summaryCs,
-      title: regulationUpdates.title,
-    })
-    .from(regulationUpdates)
-    .leftJoin(frameworks, eq(regulationUpdates.frameworkId, frameworks.id))
-    .orderBy(desc(regulationUpdates.publishedAt))
-    .limit(5);
+  const updates = await listRelevantRegulationUpdates(clerkOrgId, 5);
 
   return {
     frameworkScores,
