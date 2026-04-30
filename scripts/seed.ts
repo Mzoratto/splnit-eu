@@ -9,6 +9,7 @@ import {
   tests,
 } from "../lib/db/schema";
 import { FRAMEWORK_LIBRARY } from "../lib/frameworks/registry";
+import { AWS_TEST_DEFINITIONS } from "../lib/integrations/aws/test-definitions";
 import { GITHUB_TEST_DEFINITIONS } from "../lib/integrations/github/test-definitions";
 import { MICROSOFT365_TEST_DEFINITIONS } from "../lib/integrations/microsoft365/test-definitions";
 
@@ -145,6 +146,10 @@ async function seedIntegrationTests(controlIds: Map<string, string>) {
     ...GITHUB_TEST_DEFINITIONS.map((definition) => ({
       ...definition,
       integrationType: "github",
+    })),
+    ...AWS_TEST_DEFINITIONS.map((definition) => ({
+      ...definition,
+      integrationType: "aws",
     })),
   ];
 

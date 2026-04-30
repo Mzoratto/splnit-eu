@@ -21,7 +21,7 @@ const integrations = [
     href: "/integrations/aws",
     icon: Cloud,
     name: "AWS",
-    status: "coming_soon",
+    status: "available",
   },
 ];
 
