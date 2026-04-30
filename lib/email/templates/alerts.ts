@@ -13,3 +13,19 @@ export function evidenceExpiryText(input: {
     `Expirace evidence: ${input.expiresAt}`,
   ].join("\n");
 }
+
+export function policyReviewSubject(policyTitle: string) {
+  return `Roční přezkum dokumentu: ${policyTitle}`;
+}
+
+export function policyReviewText(input: {
+  organisationName: string;
+  policyTitle: string;
+  expiresAt: string;
+}) {
+  return [
+    `Organizace: ${input.organisationName}`,
+    `Dokument: ${input.policyTitle}`,
+    `Datum přezkumu: ${input.expiresAt}`,
+  ].join("\n");
+}

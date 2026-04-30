@@ -1,4 +1,10 @@
-export type PolicyTemplateType = "ai_policy" | "training_log" | "record_of_use";
+export type PolicyTemplateType =
+  | "ai_policy"
+  | "security_policy"
+  | "gdpr_privacy_notice"
+  | "training_log"
+  | "record_of_use"
+  | "incident_response";
 
 export type PolicyTemplate = {
   type: PolicyTemplateType;
@@ -81,6 +87,95 @@ export const POLICY_TEMPLATES: PolicyTemplate[] = [
     ],
   },
   {
+    type: "security_policy",
+    titleCs: "Bezpečnostní politika",
+    description:
+      "Základní bezpečnostní politika pro řízení přístupů, šifrování, zranitelností, záloh a dodavatelů.",
+    sourceDocument: "tpl-004-security-policy-cs.pdf",
+    controlKeys: [
+      "ctrl_mfa_all_users",
+      "ctrl_privileged_access_reviewed",
+      "ctrl_incident_plan_documented",
+      "ctrl_data_encrypted_at_rest",
+      "ctrl_patch_management",
+      "ctrl_backup_tested",
+      "ctrl_logging_monitoring",
+      "ctrl_vendor_security_assessment",
+      "ctrl_asset_inventory",
+    ],
+    sections: [
+      {
+        title: "Identifikace dokumentu",
+        fields: ["Organizace", "IČO", "Verze", "Datum vydání", "Schválil/a"],
+      },
+      {
+        title: "Rozsah a cíle",
+        body: "Politika stanovuje minimální bezpečnostní pravidla pro zaměstnance, systémy, data, dodavatele a cloudové služby.",
+      },
+      {
+        title: "Řízení přístupů",
+        body: "Všechny účty používají MFA, privilegované role jsou omezené a přístupy se pravidelně přezkoumávají.",
+      },
+      {
+        title: "Ochrana dat",
+        body: "Citlivá data jsou klasifikována, šifrována a chráněna podle účelu zpracování a zákonných požadavků.",
+      },
+      {
+        title: "Zranitelnosti a změny",
+        body: "Kritické zranitelnosti se řeší prioritně, změny se schvalují a jsou dohledatelné.",
+      },
+      {
+        title: "Dodavatelé",
+        body: "Dodavatelé s přístupem k datům nebo systémům procházejí bezpečnostním hodnocením a smluvními požadavky.",
+      },
+      {
+        title: "Přezkum",
+        fields: ["Odpovědná osoba", "Datum přezkumu", "Datum příštího přezkumu"],
+      },
+    ],
+  },
+  {
+    type: "gdpr_privacy_notice",
+    titleCs: "GDPR informační memorandum",
+    description:
+      "Privacy notice pro popis účelů zpracování, právních základů, příjemců, lhůt uložení a práv subjektů údajů.",
+    sourceDocument: "tpl-005-gdpr-privacy-notice-cs.pdf",
+    controlKeys: [
+      "ctrl_privacy_notice_current",
+      "ctrl_data_processing_inventory",
+      "ctrl_dsr_process",
+      "ctrl_data_retention_schedule",
+      "ctrl_dpia_process",
+      "ctrl_supplier_contract_security",
+    ],
+    sections: [
+      {
+        title: "Správce osobních údajů",
+        fields: ["Název organizace", "IČO", "Adresa", "Kontaktní e-mail"],
+      },
+      {
+        title: "Účely a právní základy",
+        fields: ["Účel zpracování", "Kategorie údajů", "Právní základ", "Lhůta uložení"],
+      },
+      {
+        title: "Příjemci a zpracovatelé",
+        body: "Osobní údaje mohou být zpřístupněny dodavatelům, kteří plní roli zpracovatele na základě DPA.",
+      },
+      {
+        title: "Práva subjektů údajů",
+        body: "Subjekty údajů mohou požádat o přístup, opravu, výmaz, omezení, přenositelnost nebo podat námitku.",
+      },
+      {
+        title: "Bezpečnost",
+        body: "Organizace používá technická a organizační opatření včetně řízení přístupů, šifrování a incident response.",
+      },
+      {
+        title: "Dozorový úřad",
+        body: "Subjekty údajů se mohou obrátit na ÚOOÚ, pokud se domnívají, že zpracování porušuje GDPR.",
+      },
+    ],
+  },
+  {
     type: "training_log",
     titleCs: "Záznam o školení AI gramotnosti",
     description:
@@ -150,6 +245,46 @@ export const POLICY_TEMPLATES: PolicyTemplate[] = [
       {
         title: "Přezkum záznamu",
         fields: ["Přezkoumal/a", "Datum přezkumu", "Datum příštího přezkumu", "Podpis"],
+      },
+    ],
+  },
+  {
+    type: "incident_response",
+    titleCs: "Plán reakce na incidenty",
+    description:
+      "Incident response dokument pro NIS2 a GDPR, včetně eskalace, evidence dopadů a oznamovacích lhůt.",
+    sourceDocument: "tpl-006-incident-response-cs.pdf",
+    controlKeys: [
+      "ctrl_incident_plan_documented",
+      "ctrl_incident_72h_notification",
+      "ctrl_logging_monitoring",
+      "ctrl_security_event_alerting",
+      "ctrl_business_continuity_plan",
+    ],
+    sections: [
+      {
+        title: "Rozsah a role",
+        fields: ["Incident manager", "IT odpovědná osoba", "Právní kontakt", "Management"],
+      },
+      {
+        title: "Klasifikace incidentů",
+        fields: ["Nízký", "Střední", "Vysoký", "Kritický"],
+      },
+      {
+        title: "První reakce",
+        body: "Zajistit bezpečnost, omezit dopad, zachovat důkazy a aktivovat odpovědné osoby.",
+      },
+      {
+        title: "Oznamovací povinnosti",
+        body: "Incidenty s osobními údaji se posuzují podle GDPR Art. 33; významné kybernetické incidenty podle NIS2.",
+      },
+      {
+        title: "Evidence a komunikace",
+        fields: ["Čas detekce", "Dopad", "Dotčené systémy", "Přijatá opatření", "Externí komunikace"],
+      },
+      {
+        title: "Post-incident review",
+        fields: ["Kořenová příčina", "Nápravná opatření", "Vlastník", "Termín"],
       },
     ],
   },
