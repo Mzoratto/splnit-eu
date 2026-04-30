@@ -1,7 +1,9 @@
 import { NextResponse } from "next/server";
-import { runTestsForOrg } from "@/lib/integrations/runner";
+import { hasDatabaseUrl } from "@/lib/db";
+import { listActiveIntegrationTargets } from "@/lib/db/queries/integrations";
+import { inngest } from "@/inngest/client";
 
-export async function POST(request: Request) {
+async function queueIntegrationRuns(request: Request, body: Record<string, unknown>) {
   const authHeader = request.headers.get("authorization");
   if (
     process.env.CRON_SECRET &&
@@ -10,13 +12,62 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
-  const { clerkOrgId } = await request.json().catch(() => ({ clerkOrgId: null }));
+  if (body.clerkOrgId) {
+    await inngest.send({
+      name: "integrations/tests.run",
+      data: {
+        clerkOrgId: String(body.clerkOrgId),
+        provider: body.provider ? String(body.provider) : undefined,
+      },
+    });
 
-  if (!clerkOrgId) {
-    return NextResponse.json({ error: "clerkOrgId is required" }, { status: 400 });
+    return NextResponse.json({
+      ok: true,
+      queued: 1,
+    });
   }
 
-  await runTestsForOrg(String(clerkOrgId));
+  if (!hasDatabaseUrl()) {
+    return NextResponse.json({
+      ok: true,
+      queued: 0,
+      skipped: "DATABASE_URL is not configured.",
+    });
+  }
 
-  return NextResponse.json({ ok: true, clerkOrgId });
+  const targets = await listActiveIntegrationTargets();
+  const uniqueTargets = Array.from(
+    new Map(
+      targets.map((target) => [
+        `${target.clerkOrgId}:${target.provider}`,
+        target,
+      ]),
+    ).values(),
+  );
+
+  await Promise.all(
+    uniqueTargets.map((target) =>
+      inngest.send({
+        name: "integrations/tests.run",
+        data: {
+          clerkOrgId: target.clerkOrgId,
+          provider: target.provider,
+        },
+      }),
+    ),
+  );
+
+  return NextResponse.json({
+    ok: true,
+    queued: uniqueTargets.length,
+  });
+}
+
+export async function GET(request: Request) {
+  return queueIntegrationRuns(request, {});
+}
+
+export async function POST(request: Request) {
+  const body = await request.json().catch(() => ({}));
+  return queueIntegrationRuns(request, body);
 }

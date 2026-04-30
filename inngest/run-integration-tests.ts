@@ -9,13 +9,16 @@ export const runIntegrationTests = inngest.createFunction(
   },
   async ({ event, step }) => {
     const clerkOrgId = String(event.data.clerkOrgId ?? "");
+    const provider = event.data.provider ? String(event.data.provider) : undefined;
 
     if (!clerkOrgId) {
       throw new Error("clerkOrgId is required.");
     }
 
-    await step.run("run tests for org", () => runTestsForOrg(clerkOrgId));
+    const result = await step.run("run tests for org", () =>
+      runTestsForOrg(clerkOrgId, { provider }),
+    );
 
-    return { clerkOrgId };
+    return result;
   },
 );

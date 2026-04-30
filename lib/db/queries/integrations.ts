@@ -15,3 +15,15 @@ export async function listConnectedIntegrations(clerkOrgId: string) {
       ),
     );
 }
+
+export async function listActiveIntegrationTargets() {
+  const db = getDb();
+
+  return db
+    .select({
+      clerkOrgId: integrations.clerkOrgId,
+      provider: integrations.provider,
+    })
+    .from(integrations)
+    .where(eq(integrations.status, "connected"));
+}
