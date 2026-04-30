@@ -19,7 +19,7 @@ type SourceConfig = {
   key: RegulationSourceKey;
   kind: "html" | "xml";
   name: string;
-  url: string | null;
+  urls: string[];
 };
 
 type SourceResult = {
@@ -27,11 +27,56 @@ type SourceResult = {
   fetched: number;
   skipped?: string;
   sourceUrl: string | null;
+  sourceUrls?: string[];
 };
 
 const defaultPlans = ["free", "starter", "business", "consultant"];
+const defaultEurlexFeedUrls = [
+  "https://eur-lex.europa.eu/EN/display-feed.rss?rssId=162",
+  "https://eur-lex.europa.eu/EN/display-feed.rss?rssId=161",
+  "https://eur-lex.europa.eu/EN/display-feed.rss?rssId=222",
+];
+const eurlexKeywords = [
+  "2016/679",
+  "2022/2464",
+  "2022/2554",
+  "2022/2555",
+  "2024/1689",
+  "ai act",
+  "artificial intelligence",
+  "corporate sustainability",
+  "cyber security",
+  "cybersecurity",
+  "data protection",
+  "digital operational resilience",
+  "dora",
+  "esrs",
+  "gdpr",
+  "general-purpose ai",
+  "high-risk ai",
+  "network and information systems",
+  "nis2",
+  "personal data",
+  "sustainability reporting",
+];
+
+function getOptionalUrls(value: string | undefined) {
+  if (!value) {
+    return [];
+  }
+
+  return value
+    .split(",")
+    .map((url) => url.trim())
+    .filter(Boolean);
+}
 
 function getSourceConfigs(): SourceConfig[] {
+  const eurlexUrls = [
+    ...defaultEurlexFeedUrls,
+    ...getOptionalUrls(process.env.EURLEX_AMENDMENTS_FEED_URL),
+  ];
+
   return [
     {
       affectsPlans: ["starter", "business", "consultant"],
@@ -39,7 +84,7 @@ function getSourceConfigs(): SourceConfig[] {
       key: "nukib",
       kind: "xml",
       name: "NÚKIB",
-      url: process.env.NUKIB_FEED_URL ?? "https://portal.nukib.gov.cz/rss.xml",
+      urls: [process.env.NUKIB_FEED_URL ?? "https://portal.nukib.gov.cz/rss.xml"],
     },
     {
       fallbackFrameworkSlug: "ai-act",
@@ -54,40 +99,33 @@ function getSourceConfigs(): SourceConfig[] {
       key: "ctu",
       kind: "xml",
       name: "ČTÚ",
-      url: process.env.CTU_FEED_URL ?? "https://ctu.gov.cz/rss/aktualni-informace",
+      urls: [
+        process.env.CTU_FEED_URL ?? "https://ctu.gov.cz/rss/aktualni-informace",
+      ],
     },
     {
       fallbackFrameworkSlug: "ai-act",
       key: "eu-ai-office",
       kind: "html",
       name: "EU AI Office",
-      url:
+      urls: [
         process.env.EU_AI_OFFICE_UPDATES_URL ??
-        "https://digital-strategy.ec.europa.eu/en/related-content?topic=119",
+          "https://digital-strategy.ec.europa.eu/en/related-content?topic=119",
+      ],
     },
     {
       fallbackFrameworkSlug: null,
+      includeKeywords: eurlexKeywords,
       key: "eurlex",
       kind: "xml",
       name: "EUR-Lex",
-      url: process.env.EURLEX_AMENDMENTS_FEED_URL ?? null,
+      urls: eurlexUrls,
     },
   ];
 }
 
-async function fetchSource(config: SourceConfig) {
-  if (!config.url) {
-    return {
-      result: {
-        fetched: 0,
-        skipped: `${config.name} feed URL is not configured.`,
-        sourceUrl: null,
-      },
-      updates: [],
-    };
-  }
-
-  const response = await fetch(config.url, {
+async function fetchSourceUrl(config: SourceConfig, url: string) {
+  const response = await fetch(url, {
     next: { revalidate: 3600 },
   });
 
@@ -106,7 +144,8 @@ async function fetchSource(config: SourceConfig) {
         return config.includeKeywords?.some((keyword) => text.includes(keyword));
       })
     : items;
-  const updates = relevantItems.map((item) =>
+
+  return relevantItems.map((item) =>
     toRegulationUpdateInput(item, {
       affectsPlans: config.affectsPlans ?? defaultPlans,
       fallbackFrameworkSlug: config.fallbackFrameworkSlug,
@@ -114,11 +153,29 @@ async function fetchSource(config: SourceConfig) {
       sourceKey: config.key,
     }),
   );
+}
+
+async function fetchSource(config: SourceConfig) {
+  if (config.urls.length === 0) {
+    return {
+      result: {
+        fetched: 0,
+        skipped: `${config.name} feed URL is not configured.`,
+        sourceUrl: null,
+      },
+      updates: [],
+    };
+  }
+
+  const updates = (
+    await Promise.all(config.urls.map((url) => fetchSourceUrl(config, url)))
+  ).flat();
 
   return {
     result: {
       fetched: updates.length,
-      sourceUrl: config.url,
+      sourceUrl: config.urls[0] ?? null,
+      sourceUrls: config.urls,
     },
     updates,
   };
@@ -142,7 +199,8 @@ export async function collectRegulationUpdates(sourceKeys?: RegulationSourceKey[
       results[config.key] = {
         error: error instanceof Error ? error.message : "Unknown feed error.",
         fetched: 0,
-        sourceUrl: config.url,
+        sourceUrl: config.urls[0] ?? null,
+        sourceUrls: config.urls,
       };
     }
   }

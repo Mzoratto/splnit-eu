@@ -228,6 +228,7 @@ export function classifyFramework(
     text.includes("gdpr") ||
     text.includes("2016/679") ||
     text.includes("data protection") ||
+    text.includes("personal data") ||
     text.includes("privacy")
   ) {
     return "gdpr";
