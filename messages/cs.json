@@ -1,0 +1,20 @@
+{
+  "app": {
+    "name": "Splnit.eu",
+    "tagline": "Česká automatizace compliance pro EU regulace"
+  },
+  "navigation": {
+    "dashboard": "Dashboard",
+    "frameworks": "Frameworky",
+    "controls": "Kontroly",
+    "evidence": "Evidence",
+    "integrations": "Integrace",
+    "policies": "Politiky",
+    "vendors": "Dodavatelé",
+    "trustCenter": "Trust Center",
+    "incidents": "Incidenty",
+    "risks": "Rizika",
+    "team": "Tým",
+    "settings": "Nastavení"
+  }
+}
