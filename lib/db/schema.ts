@@ -19,6 +19,8 @@ export const organisations = pgTable("organisations", {
   ico: text("ico"),
   sector: text("sector"),
   employeeCount: text("employee_count"),
+  toolInventory: jsonb("tool_inventory").$type<string[]>().default([]),
+  onboardingCompletedAt: timestamp("onboarding_completed_at", { withTimezone: true }),
   plan: text("plan").notNull().default("free"),
   stripeCustomerId: text("stripe_customer_id").unique(),
   stripeSubscriptionId: text("stripe_subscription_id").unique(),

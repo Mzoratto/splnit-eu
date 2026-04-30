@@ -4,6 +4,7 @@ import { routing, type Locale } from "./i18n/routing";
 
 const isProtectedRoute = createRouteMatcher([
   "/dashboard(.*)",
+  "/onboarding(.*)",
   "/frameworks(.*)",
   "/controls(.*)",
   "/evidence(.*)",
