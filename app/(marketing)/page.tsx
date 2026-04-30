@@ -75,7 +75,7 @@ export default function HomePage() {
 
           <div className="relative z-10 mx-auto max-w-7xl px-5">
             <div className="mx-auto max-w-4xl text-center">
-              <div className="fade-up mb-8 inline-flex translate-y-3 items-center gap-2 rounded-full border border-blue-100 bg-blue-50/80 px-3.5 py-1.5 text-blue-700 opacity-0">
+              <div className="mb-8 inline-flex items-center gap-2 rounded-full border border-blue-100 bg-blue-50/80 px-3.5 py-1.5 text-blue-700">
                 <span className="pulse-dot h-1.5 w-1.5 rounded-full bg-blue-500" />
                 <span className="text-xs font-medium">
                   🇨🇿 Narozeno v Česku · Vytvořeno pro EU předpisy
@@ -83,28 +83,15 @@ export default function HomePage() {
               </div>
 
               <h1 className="mb-6 text-5xl font-semibold leading-[1.05] tracking-[-0.04em] md:text-[72px]">
-                <span className="flex flex-wrap justify-center gap-x-4 gap-y-1 text-zinc-900">
-                  <span className="inline-block overflow-hidden pb-1">
-                    <span className="rev-word inline-block translate-y-[110%]">
-                      Splňte
-                    </span>
-                  </span>
-                  <span className="inline-block overflow-hidden pb-1">
-                    <span className="rev-word inline-block translate-y-[110%]">
-                      EU předpisy.
-                    </span>
-                  </span>
+                <span className="block text-zinc-900">
+                  Splňte EU předpisy.
                 </span>
-                <span className="mt-1 flex flex-wrap justify-center gap-x-4 gap-y-1 text-zinc-400">
-                  <span className="inline-block overflow-hidden pb-1">
-                    <span className="rev-word inline-block translate-y-[110%]">
-                      Automaticky.
-                    </span>
-                  </span>
+                <span className="mt-1 block text-zinc-400">
+                  Automaticky.
                 </span>
               </h1>
 
-              <p className="fade-up mx-auto mb-10 max-w-2xl translate-y-4 text-lg leading-relaxed text-zinc-600 opacity-0 md:text-xl">
+              <p className="mx-auto mb-10 max-w-xl text-base leading-7 text-zinc-600 md:max-w-2xl md:text-xl md:leading-relaxed">
                 Centralizovaná platforma pro české firmy. Automatizujte soulad s{" "}
                 <strong className="font-medium text-zinc-900">GDPR</strong>,{" "}
                 <strong className="font-medium text-zinc-900">NIS2</strong> a{" "}
@@ -112,7 +99,7 @@ export default function HomePage() {
                 bez tabulek a bez konzultantů.
               </p>
 
-              <div className="fade-up mb-6 flex translate-y-4 flex-col items-center justify-center gap-3 opacity-0 sm:flex-row">
+              <div className="mb-6 flex flex-col items-center justify-center gap-3 sm:flex-row">
                 <div className="rounded-full bg-gradient-to-b from-blue-400 to-blue-700 p-px shadow-md shadow-blue-200/50 transition-all hover:scale-[1.02] hover:shadow-lg hover:shadow-blue-200/70">
                   <Link
                     href="/sign-up"
@@ -138,7 +125,7 @@ export default function HomePage() {
                   Zobrazit demo
                 </Link>
               </div>
-              <p className="fade-up text-xs text-zinc-400 opacity-0">
+              <p className="text-xs text-zinc-400">
                 Žádná kreditní karta · Okamžité spuštění · Zrušení kdykoliv
               </p>
             </div>

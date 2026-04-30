@@ -1,15 +1,32 @@
 "use client";
 
 import { useEffect } from "react";
-import gsap from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
 
 export function MarketingAnimations() {
   useEffect(() => {
+    let cancelled = false;
+    let killScrollTriggers = () => {};
+    const scrollTriggers: { kill: () => void }[] = [];
     const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
-    if (!reduced) {
+    async function runMotion() {
+      if (reduced) {
+        return;
+      }
+
+      const [{ default: gsap }, { ScrollTrigger }] = await Promise.all([
+        import("gsap"),
+        import("gsap/ScrollTrigger"),
+      ]);
+
+      if (cancelled) {
+        return;
+      }
+
       gsap.registerPlugin(ScrollTrigger);
+      killScrollTriggers = () => {
+        ScrollTrigger.getAll().forEach((trigger) => trigger.kill());
+      };
 
       const revWords = gsap.utils.toArray<HTMLElement>(".rev-word");
       if (revWords.length) {
@@ -51,47 +68,51 @@ export function MarketingAnimations() {
 
       const dashboard = document.querySelector("#dashboard-wrap");
       if (dashboard) {
-        ScrollTrigger.create({
-          trigger: dashboard,
-          start: "top 80%",
-          once: true,
-          onEnter: () => {
-            const ring = document.querySelector<SVGCircleElement>("#score-ring");
-            const score = document.querySelector<HTMLElement>("#score-val");
-            const bars = [
-              ["#bar-nis2", "91%"],
-              ["#bar-gdpr", "88%"],
-              ["#bar-aiact", "67%"],
-            ] as const;
+        scrollTriggers.push(
+          ScrollTrigger.create({
+            trigger: dashboard,
+            start: "top 80%",
+            once: true,
+            onEnter: () => {
+              const ring = document.querySelector<SVGCircleElement>("#score-ring");
+              const score = document.querySelector<HTMLElement>("#score-val");
+              const bars = [
+                ["#bar-nis2", "91%"],
+                ["#bar-gdpr", "88%"],
+                ["#bar-aiact", "67%"],
+              ] as const;
 
-            if (ring) {
-              ring.style.strokeDashoffset = "16.59";
-            }
+              if (ring) {
+                ring.style.strokeDashoffset = "16.59";
+              }
 
-            if (score) {
-              let value = 0;
-              const interval = window.setInterval(() => {
-                value += 2;
-                score.textContent = `${value}%`;
-                if (value >= 88) {
-                  score.textContent = "88%";
-                  window.clearInterval(interval);
-                }
-              }, 18);
-            }
+              if (score) {
+                let value = 0;
+                const interval = window.setInterval(() => {
+                  value += 2;
+                  score.textContent = `${value}%`;
+                  if (value >= 88) {
+                    score.textContent = "88%";
+                    window.clearInterval(interval);
+                  }
+                }, 18);
+              }
 
-            window.setTimeout(() => {
-              bars.forEach(([selector, width]) => {
-                const bar = document.querySelector<HTMLElement>(selector);
-                if (bar) {
-                  bar.style.width = width;
-                }
-              });
-            }, 200);
-          },
-        });
+              window.setTimeout(() => {
+                bars.forEach(([selector, width]) => {
+                  const bar = document.querySelector<HTMLElement>(selector);
+                  if (bar) {
+                    bar.style.width = width;
+                  }
+                });
+              }, 200);
+            },
+          }),
+        );
       }
     }
+
+    void runMotion();
 
     const sidebarItems = document.querySelectorAll<HTMLElement>(".sidebar-item");
     let currentSidebar = 0;
@@ -122,9 +143,11 @@ export function MarketingAnimations() {
     }, 3000);
 
     return () => {
+      cancelled = true;
       window.clearInterval(sidebarInterval);
       window.clearInterval(toggleInterval);
-      ScrollTrigger.getAll().forEach((trigger) => trigger.kill());
+      scrollTriggers.forEach((trigger) => trigger.kill());
+      killScrollTriggers();
     };
   }, []);
 

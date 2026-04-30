@@ -5,6 +5,7 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
+    "analyze": "ANALYZE=true next build",
     "start": "next start",
     "lint": "eslint",
     "typecheck": "tsc --noEmit",
@@ -27,7 +28,9 @@
     "@neondatabase/serverless": "^1.1.0",
     "@react-pdf/renderer": "^4.5.1",
     "@upstash/redis": "^1.37.0",
+    "@vercel/analytics": "^2.0.1",
     "@vercel/blob": "^2.3.3",
+    "@vercel/speed-insights": "^2.0.0",
     "clsx": "^2.1.1",
     "drizzle-orm": "^0.45.2",
     "fast-xml-parser": "^5.7.2",
@@ -53,6 +56,7 @@
     "postcss": "8.5.10"
   },
   "devDependencies": {
+    "@next/bundle-analyzer": "^15.5.15",
     "@playwright/test": "^1.59.1",
     "@tailwindcss/postcss": "^4",
     "@types/node": "^20",
