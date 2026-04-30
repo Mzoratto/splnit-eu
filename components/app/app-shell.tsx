@@ -19,12 +19,12 @@ export function AppShell({
   regulationUpdateCount = 0,
 }: AppShellProps) {
   return (
-    <div className="min-h-screen bg-background pb-20 text-foreground lg:pb-0">
+    <div className="min-h-screen bg-background pb-[calc(5.5rem+env(safe-area-inset-bottom))] text-foreground lg:pb-0">
       <Sidebar regulationUpdateCount={regulationUpdateCount} />
       <div className="lg:pl-64">
         <header className="sticky top-0 z-20 flex h-16 items-center justify-between border-b border-border bg-surface/92 px-5 backdrop-blur">
-          <div>
-            <p className="text-sm font-medium">{organisationName}</p>
+          <div className="min-w-0 pr-3">
+            <p className="truncate text-sm font-medium">{organisationName}</p>
             <p className="text-xs capitalize text-foreground/58">Plan: {plan}</p>
           </div>
           <div className="flex items-center gap-3">
@@ -52,7 +52,9 @@ export function AppShell({
             </div>
           </div>
         ) : null}
-        <main className="mx-auto w-full max-w-7xl px-5 py-8">{children}</main>
+        <main className="mx-auto w-full max-w-7xl px-4 py-6 sm:px-5 sm:py-8">
+          {children}
+        </main>
       </div>
       <MobileTabBar regulationUpdateCount={regulationUpdateCount} />
     </div>

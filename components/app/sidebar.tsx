@@ -107,7 +107,7 @@ export function MobileTabBar({
   const pathname = usePathname();
 
   return (
-    <nav className="fixed inset-x-0 bottom-0 z-30 grid grid-cols-5 border-t border-border bg-surface/95 px-2 pb-2 pt-1 backdrop-blur lg:hidden">
+    <nav className="fixed inset-x-0 bottom-0 z-30 grid grid-cols-5 border-t border-border bg-surface/95 px-2 pb-[calc(0.5rem+env(safe-area-inset-bottom))] pt-1 backdrop-blur lg:hidden">
       {mobileNavigation.map((item) => {
         const active = isActivePath(pathname, item.href);
 
@@ -115,7 +115,7 @@ export function MobileTabBar({
           <Link
             key={item.href}
             href={item.href}
-            className={`flex min-h-12 flex-col items-center justify-center gap-1 rounded-md text-[11px] ${
+            className={`flex min-h-12 min-w-0 flex-col items-center justify-center gap-1 rounded-md px-1 text-[11px] ${
               active
                 ? "bg-surface-muted font-medium text-primary"
                 : "text-foreground/62"
@@ -127,7 +127,7 @@ export function MobileTabBar({
                 <span className="absolute -right-2 -top-2 h-2 w-2 rounded-full bg-danger" />
               ) : null}
             </span>
-            {item.label}
+            <span className="max-w-full truncate">{item.label}</span>
           </Link>
         );
       })}

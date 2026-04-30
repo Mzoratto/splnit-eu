@@ -3,6 +3,7 @@ import { DM_Mono, DM_Sans } from "next/font/google";
 import { ClerkProvider } from "@clerk/nextjs";
 import { NextIntlClientProvider } from "next-intl";
 import { getLocale, getMessages } from "next-intl/server";
+import { RegisterServiceWorker } from "@/components/pwa/register-service-worker";
 import "./globals.css";
 
 const dmSans = DM_Sans({
@@ -19,9 +20,11 @@ const dmMono = DM_Mono({
 });
 
 export const metadata: Metadata = {
+  applicationName: "Splnit.eu",
   metadataBase: new URL(
     process.env.NEXT_PUBLIC_APP_URL ?? "https://splnit.eu",
   ),
+  manifest: "/manifest.webmanifest",
   title:
     "Splnit.eu — Automatizace souladu s NIS2, EU AI Act a GDPR pro české firmy",
   description:
@@ -48,6 +51,19 @@ export const metadata: Metadata = {
       "Splňte NIS2, EU AI Act a GDPR automaticky. 200+ testů každou hodinu.",
     images: ["/opengraph-image"],
   },
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: "default",
+    title: "Splnit.eu",
+  },
+  icons: {
+    icon: [
+      { url: "/icon.svg", type: "image/svg+xml" },
+      { url: "/icon-192x192.png", sizes: "192x192", type: "image/png" },
+      { url: "/icon-512x512.png", sizes: "512x512", type: "image/png" },
+    ],
+    apple: [{ url: "/apple-touch-icon.png", sizes: "180x180" }],
+  },
 };
 
 export default async function RootLayout({
@@ -65,6 +81,7 @@ export default async function RootLayout({
     >
       <body className="min-h-full bg-background text-foreground antialiased">
         <NextIntlClientProvider locale={locale} messages={messages}>
+          <RegisterServiceWorker />
           {children}
         </NextIntlClientProvider>
       </body>
