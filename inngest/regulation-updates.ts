@@ -5,13 +5,13 @@ export const regulationUpdates = inngest.createFunction(
   {
     id: "regulation-updates",
     name: "Regulation updates",
-    triggers: { cron: "0 7 * * 1" },
+    triggers: { cron: "0 6 * * 1" },
   },
   async ({ step }) => {
     const nukib = await step.run("sync nukib feed", () => syncNukibFeed());
 
     return {
-      sources: [nukib.sourceUrl],
+      nukib,
     };
   },
 );

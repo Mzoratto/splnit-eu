@@ -348,6 +348,7 @@ export const accessReviewItems = pgTable("access_review_items", {
 export const regulationUpdates = pgTable("regulation_updates", {
   id: uuid("id").primaryKey().defaultRandom(),
   frameworkId: uuid("framework_id").references(() => frameworks.id),
+  externalId: text("external_id").unique(),
   title: text("title").notNull(),
   summaryCs: text("summary_cs"),
   summaryEn: text("summary_en"),

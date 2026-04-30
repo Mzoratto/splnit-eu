@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { syncNukibFeed } from "@/lib/integrations/nukib/sync";
 
-export async function POST(request: Request) {
+async function syncRegulationUpdates(request: Request) {
   const authHeader = request.headers.get("authorization");
   if (
     process.env.CRON_SECRET &&
@@ -14,7 +14,14 @@ export async function POST(request: Request) {
 
   return NextResponse.json({
     ok: true,
-    sourceUrl: result.sourceUrl,
-    bytes: result.html.length,
+    ...result,
   });
+}
+
+export async function GET(request: Request) {
+  return syncRegulationUpdates(request);
+}
+
+export async function POST(request: Request) {
+  return syncRegulationUpdates(request);
 }

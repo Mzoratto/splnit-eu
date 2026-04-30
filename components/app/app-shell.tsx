@@ -8,6 +8,7 @@ type AppShellProps = {
   clerkEnabled: boolean;
   organisationName: string;
   plan: PlanKey;
+  regulationUpdateCount?: number;
 };
 
 export function AppShell({
@@ -15,10 +16,11 @@ export function AppShell({
   clerkEnabled,
   organisationName,
   plan,
+  regulationUpdateCount = 0,
 }: AppShellProps) {
   return (
     <div className="min-h-screen bg-background pb-20 text-foreground lg:pb-0">
-      <Sidebar />
+      <Sidebar regulationUpdateCount={regulationUpdateCount} />
       <div className="lg:pl-64">
         <header className="sticky top-0 z-20 flex h-16 items-center justify-between border-b border-border bg-surface/92 px-5 backdrop-blur">
           <div>
@@ -52,7 +54,7 @@ export function AppShell({
         ) : null}
         <main className="mx-auto w-full max-w-7xl px-5 py-8">{children}</main>
       </div>
-      <MobileTabBar />
+      <MobileTabBar regulationUpdateCount={regulationUpdateCount} />
     </div>
   );
 }

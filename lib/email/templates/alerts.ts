@@ -29,3 +29,25 @@ export function policyReviewText(input: {
     `Datum přezkumu: ${input.expiresAt}`,
   ].join("\n");
 }
+
+export function regulationUpdateSubject(title: string) {
+  return `Regulační aktualizace vyžaduje akci: ${title}`;
+}
+
+export function regulationUpdateText(input: {
+  organisationName: string;
+  title: string;
+  summary?: string | null;
+  sourceUrl?: string | null;
+  publishedAt: Date;
+}) {
+  return [
+    `Organizace: ${input.organisationName}`,
+    `Aktualizace: ${input.title}`,
+    `Publikováno: ${input.publishedAt.toISOString().slice(0, 10)}`,
+    input.summary ? `Shrnutí: ${input.summary}` : null,
+    input.sourceUrl ? `Zdroj: ${input.sourceUrl}` : null,
+  ]
+    .filter(Boolean)
+    .join("\n");
+}

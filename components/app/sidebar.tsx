@@ -43,7 +43,23 @@ function isActivePath(pathname: string, href: string) {
   return pathname === href || pathname.startsWith(`${href}/`);
 }
 
-export function Sidebar() {
+function Badge({ count }: { count: number }) {
+  if (count <= 0) {
+    return null;
+  }
+
+  return (
+    <span className="ml-auto rounded-full bg-danger px-2 py-0.5 text-[10px] font-semibold text-white">
+      {count > 99 ? "99+" : count}
+    </span>
+  );
+}
+
+export function Sidebar({
+  regulationUpdateCount = 0,
+}: {
+  regulationUpdateCount?: number;
+}) {
   const pathname = usePathname();
 
   return (
@@ -68,6 +84,9 @@ export function Sidebar() {
             >
               <item.icon className="h-4 w-4" aria-hidden="true" />
               {item.label}
+              {item.href === "/dashboard" ? (
+                <Badge count={regulationUpdateCount} />
+              ) : null}
             </Link>
           );
         })}
@@ -76,7 +95,11 @@ export function Sidebar() {
   );
 }
 
-export function MobileTabBar() {
+export function MobileTabBar({
+  regulationUpdateCount = 0,
+}: {
+  regulationUpdateCount?: number;
+}) {
   const pathname = usePathname();
 
   return (
@@ -94,7 +117,12 @@ export function MobileTabBar() {
                 : "text-foreground/62"
             }`}
           >
-            <item.icon className="h-4 w-4" aria-hidden="true" />
+            <span className="relative">
+              <item.icon className="h-4 w-4" aria-hidden="true" />
+              {item.href === "/dashboard" && regulationUpdateCount > 0 ? (
+                <span className="absolute -right-2 -top-2 h-2 w-2 rounded-full bg-danger" />
+              ) : null}
+            </span>
             {item.label}
           </Link>
         );
