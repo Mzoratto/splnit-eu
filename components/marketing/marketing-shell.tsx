@@ -1,16 +1,14 @@
 import { Footer } from "@/components/footer";
 import { Nav } from "@/components/nav";
-import { StickyCta } from "@/components/sticky-cta";
-import { MarketingAnimations } from "@/components/marketing/animations";
+import { DeferredMarketingEffects } from "@/components/marketing/deferred-effects";
 
 export function MarketingShell({ children }: { children: React.ReactNode }) {
   return (
     <>
       <Nav />
-      <MarketingAnimations />
       {children}
       <Footer />
-      <StickyCta />
+      <DeferredMarketingEffects />
     </>
   );
 }
