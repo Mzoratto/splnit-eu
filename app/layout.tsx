@@ -1,10 +1,8 @@
 import type { Metadata } from "next";
 import { DM_Mono, DM_Sans } from "next/font/google";
-import { ClerkProvider } from "@clerk/nextjs";
-import { Analytics } from "@vercel/analytics/next";
-import { SpeedInsights } from "@vercel/speed-insights/next";
 import { NextIntlClientProvider } from "next-intl";
 import { getLocale, getMessages } from "next-intl/server";
+import { CookieConsent } from "@/components/cookie-consent";
 import { RegisterServiceWorker } from "@/components/pwa/register-service-worker";
 import "./globals.css";
 
@@ -78,7 +76,7 @@ export default async function RootLayout({
   const locale = await getLocale();
   const messages = await getMessages();
 
-  const shell = (
+  return (
     <html
       lang={locale}
       className={`${dmSans.variable} ${dmMono.variable} h-full scroll-smooth`}
@@ -87,16 +85,9 @@ export default async function RootLayout({
         <NextIntlClientProvider locale={locale} messages={messages}>
           <RegisterServiceWorker />
           {children}
-          <Analytics />
-          <SpeedInsights />
+          <CookieConsent />
         </NextIntlClientProvider>
       </body>
     </html>
   );
-
-  if (!process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY) {
-    return shell;
-  }
-
-  return <ClerkProvider>{shell}</ClerkProvider>;
 }

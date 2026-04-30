@@ -1,4 +1,5 @@
 import { redirect } from "next/navigation";
+import { ClerkProvider } from "@clerk/nextjs";
 import { auth } from "@clerk/nextjs/server";
 import { AppShell } from "@/components/app/app-shell";
 import { hasDatabaseUrl } from "@/lib/db";
@@ -37,7 +38,7 @@ export default async function ProtectedLayout({
     }
   }
 
-  return (
+  const shell = (
     <AppShell
       clerkEnabled={clerkConfigured}
       organisationName={organisationName}
@@ -47,4 +48,10 @@ export default async function ProtectedLayout({
       {children}
     </AppShell>
   );
+
+  if (!clerkConfigured) {
+    return shell;
+  }
+
+  return <ClerkProvider>{shell}</ClerkProvider>;
 }

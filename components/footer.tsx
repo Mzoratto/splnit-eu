@@ -147,6 +147,9 @@ export function Footer() {
             <Link href="/cookies" className="transition-colors hover:text-zinc-700">
               Cookies
             </Link>
+            <Link href="/dpa" className="transition-colors hover:text-zinc-700">
+              DPA
+            </Link>
             <div className="h-3 w-px bg-zinc-200" />
             <div className="flex gap-1.5">
               <span className="font-semibold text-zinc-900">CS</span>
