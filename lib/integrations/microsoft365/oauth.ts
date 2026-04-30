@@ -47,3 +47,30 @@ export async function exchangeMicrosoftCode(code: string, redirectUri: string) {
     expires_in: number;
   }>;
 }
+
+export async function refreshMicrosoftToken(refreshToken: string) {
+  const response = await fetch(
+    `https://login.microsoftonline.com/${TENANT_ID}/oauth2/v2.0/token`,
+    {
+      body: new URLSearchParams({
+        client_id: process.env.MICROSOFT_CLIENT_ID ?? "",
+        client_secret: process.env.MICROSOFT_CLIENT_SECRET ?? "",
+        grant_type: "refresh_token",
+        refresh_token: refreshToken,
+        scope: `offline_access ${SCOPES}`,
+      }),
+      headers: { "content-type": "application/x-www-form-urlencoded" },
+      method: "POST",
+    },
+  );
+
+  if (!response.ok) {
+    throw new Error(`Microsoft OAuth refresh failed: ${response.status}`);
+  }
+
+  return response.json() as Promise<{
+    access_token: string;
+    refresh_token?: string;
+    expires_in: number;
+  }>;
+}

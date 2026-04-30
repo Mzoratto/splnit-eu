@@ -1,5 +1,7 @@
 import { NextResponse } from "next/server";
 import { exchangeMicrosoftCode } from "@/lib/integrations/microsoft365/oauth";
+import { encryptSecret } from "@/lib/crypto";
+import { upsertIntegrationConnection } from "@/lib/db/queries/integrations";
 
 export async function GET(request: Request) {
   const url = new URL(request.url);
@@ -12,10 +14,19 @@ export async function GET(request: Request) {
 
   const redirectUri = `${url.origin}/api/integrations/microsoft/callback`;
   const token = await exchangeMicrosoftCode(code, redirectUri);
+  const tokenExpiresAt = new Date(Date.now() + token.expires_in * 1000);
 
-  return NextResponse.json({
+  await upsertIntegrationConnection({
+    accessTokenEnc: encryptSecret(token.access_token, state),
     clerkOrgId: state,
-    expiresIn: token.expires_in,
-    note: "Persist encrypted access and refresh tokens in integrations table next.",
+    config: {
+      redirectUri,
+      tokenType: "oauth2",
+    },
+    provider: "microsoft365",
+    refreshTokenEnc: encryptSecret(token.refresh_token, state),
+    tokenExpiresAt,
   });
+
+  return NextResponse.redirect(new URL("/integrations/microsoft365", url.origin));
 }

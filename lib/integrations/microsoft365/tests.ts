@@ -158,6 +158,7 @@ export const microsoft365Adapter: IntegrationAdapter = {
         }
       }
 
+      case "check_sensitivity_labels":
       case "check_sharepoint_encryption": {
         const labels = await client
           .api("/security/informationProtection/sensitivityLabels")

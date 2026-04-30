@@ -1,8 +1,15 @@
+import { and, eq } from "drizzle-orm";
 import { loadEnvConfig } from "@next/env";
 import { CONTROL_LIBRARY } from "../lib/controls/library";
 import { getDb } from "../lib/db";
-import { controls, frameworkControls, frameworks } from "../lib/db/schema";
+import {
+  controls,
+  frameworkControls,
+  frameworks,
+  tests,
+} from "../lib/db/schema";
 import { FRAMEWORK_LIBRARY } from "../lib/frameworks/registry";
+import { MICROSOFT365_TEST_DEFINITIONS } from "../lib/integrations/microsoft365/test-definitions";
 
 loadEnvConfig(process.cwd());
 
@@ -126,10 +133,61 @@ async function seedFrameworkControls(
   return count;
 }
 
+async function seedIntegrationTests(controlIds: Map<string, string>) {
+  const db = getDb();
+  let count = 0;
+
+  for (const definition of MICROSOFT365_TEST_DEFINITIONS) {
+    const controlId = controlIds.get(definition.controlKey);
+
+    if (!controlId) {
+      throw new Error(`Missing control id for ${definition.controlKey}`);
+    }
+
+    const existingRows = await db
+      .select({ id: tests.id })
+      .from(tests)
+      .where(
+        and(
+          eq(tests.controlId, controlId),
+          eq(tests.integrationType, "microsoft365"),
+          eq(tests.checkLogic, definition.checkLogic),
+        ),
+      )
+      .limit(1);
+    const existing = existingRows[0] ?? null;
+
+    if (existing) {
+      await db
+        .update(tests)
+        .set({
+          isActive: true,
+          name: definition.name,
+          passCriteria: definition.passCriteria,
+        })
+        .where(eq(tests.id, existing.id));
+    } else {
+      await db.insert(tests).values({
+        checkLogic: definition.checkLogic,
+        controlId,
+        integrationType: "microsoft365",
+        isActive: true,
+        name: definition.name,
+        passCriteria: definition.passCriteria,
+      });
+    }
+
+    count += 1;
+  }
+
+  return count;
+}
+
 async function main() {
   const frameworkIds = await seedFrameworks();
   const controlIds = await seedControls();
   const mappingCount = await seedFrameworkControls(frameworkIds, controlIds);
+  const integrationTestCount = await seedIntegrationTests(controlIds);
 
   const db = getDb();
   const [frameworkRows, controlRows] = await Promise.all([
@@ -138,7 +196,7 @@ async function main() {
   ]);
 
   console.log(
-    `Seeded ${frameworkRows.length} frameworks, ${controlRows.length} controls, ${mappingCount} framework-control mappings.`,
+    `Seeded ${frameworkRows.length} frameworks, ${controlRows.length} controls, ${mappingCount} framework-control mappings, ${integrationTestCount} integration tests.`,
   );
 }
 
