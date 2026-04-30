@@ -86,3 +86,20 @@ export function trustCenterAccessText(input: {
     `Odkaz: ${input.accessUrl}`,
   ].join("\n");
 }
+
+export function vendorQuestionnaireSubject(organisationName: string) {
+  return `Bezpečnostní dotazník dodavatele: ${organisationName}`;
+}
+
+export function vendorQuestionnaireText(input: {
+  assessmentUrl: string;
+  organisationName: string;
+  vendorName: string;
+}) {
+  return [
+    `Organizace: ${input.organisationName}`,
+    `Dodavatel: ${input.vendorName}`,
+    "Prosíme o vyplnění bezpečnostního dotazníku pro supply-chain risk review.",
+    `Odkaz: ${input.assessmentUrl}`,
+  ].join("\n");
+}
