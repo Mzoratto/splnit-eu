@@ -6,6 +6,8 @@ import {
   ServerCog,
   ShieldAlert,
 } from "lucide-react";
+import { PageHeader } from "@/components/app/page-header";
+import { StatusPill, type StatusPillTone } from "@/components/app/status-pill";
 import { hasDatabaseUrl } from "@/lib/db";
 import { getIntegrationDetail } from "@/lib/db/queries/integrations";
 import { getAwsCloudFormationTemplate } from "@/lib/integrations/aws/cloudformation";
@@ -26,6 +28,25 @@ function formatDate(value: Date | string | null | undefined) {
     dateStyle: "medium",
     timeStyle: "short",
   }).format(new Date(value));
+}
+
+function statusMeta(status: string | null | undefined): {
+  label: string;
+  tone: StatusPillTone;
+} {
+  if (status === "connected" || status === "pass") {
+    return { label: "PASS", tone: "pass" };
+  }
+
+  if (status === "connecting" || status === "manual_review" || status === "warning") {
+    return { label: "WARN", tone: "warn" };
+  }
+
+  if (status === "error" || status === "fail") {
+    return { label: "FAIL", tone: "fail" };
+  }
+
+  return { label: "N/A", tone: "neutral" };
 }
 
 async function loadAwsData() {
@@ -71,6 +92,7 @@ export default async function AwsIntegrationPage() {
   const runs = detail?.runs ?? [];
   const tests = detail?.tests.length ? detail.tests : AWS_TEST_DEFINITIONS;
   const connected = integration?.status === "connected";
+  const connectionStatus = statusMeta(integration?.status);
   const config = (integration?.config ?? {}) as AwsIntegrationConfig;
   const selectedExternalId = config.externalId ?? externalId;
   const selectedRegion = getAwsRegion(config);
@@ -78,55 +100,53 @@ export default async function AwsIntegrationPage() {
 
   return (
     <section className="space-y-8">
-      <div className="flex flex-col justify-between gap-4 md:flex-row md:items-end">
-        <div className="max-w-3xl">
-          <p className="text-sm font-medium uppercase tracking-[0.14em] text-primary">
-            AWS SecurityAudit
-          </p>
-          <h1 className="mt-2 text-3xl font-semibold tracking-normal">
-            AWS integrace
-          </h1>
-          <p className="mt-3 text-base leading-7 text-foreground/68">
-            Cross-account read-only role kontroluje CloudTrail, S3 šifrování, IAM MFA, root MFA a VPC Flow Logs.
-          </p>
-        </div>
-      </div>
+      <PageHeader
+        eyebrow="AWS SecurityAudit"
+        title="AWS integrace"
+        subtitle="Cross-account read-only role kontroluje CloudTrail, S3 šifrování, IAM MFA, root MFA a VPC Flow Logs."
+      />
 
       <div className="grid gap-4 lg:grid-cols-3">
-        <article className="rounded-lg border border-border bg-surface p-5">
+        <article className="card">
           <div className="flex items-center gap-2">
             {connected ? (
-              <CheckCircle2 className="h-5 w-5 text-accent" aria-hidden="true" />
+              <CheckCircle2
+                className="h-5 w-5 text-status-pass"
+                aria-hidden="true"
+                strokeWidth={1.5}
+              />
             ) : (
-              <Cloud className="h-5 w-5 text-primary" aria-hidden="true" />
+              <Cloud className="h-5 w-5 text-primary" aria-hidden="true" strokeWidth={1.5} />
             )}
-            <h2 className="text-lg font-semibold">Stav</h2>
+            <h2 className="text-lg font-medium">Stav</h2>
           </div>
-          <p className="mt-4 font-mono text-2xl font-semibold">
-            {integration?.status ?? "not_connected"}
-          </p>
+          <div className="mt-4">
+            <StatusPill tone={connectionStatus.tone}>
+              {connectionStatus.label}
+            </StatusPill>
+          </div>
           <p className="mt-2 text-sm text-foreground/58">
             {config.accountId ?? "bez AWS účtu"} · {selectedRegion}
           </p>
         </article>
-        <article className="rounded-lg border border-border bg-surface p-5">
+        <article className="card">
           <div className="flex items-center gap-2">
-            <ServerCog className="h-5 w-5 text-primary" aria-hidden="true" />
-            <h2 className="text-lg font-semibold">Poslední sync</h2>
+            <ServerCog className="h-5 w-5 text-primary" aria-hidden="true" strokeWidth={1.5} />
+            <h2 className="text-lg font-medium">Poslední sync</h2>
           </div>
-          <p className="mt-4 font-mono text-2xl font-semibold">
+          <p className="mt-4 font-mono text-2xl font-medium">
             {formatDate(integration?.lastSyncedAt)}
           </p>
           <p className="mt-2 text-sm text-foreground/58">
             {integration?.lastErrorMsg ?? "Bez poslední chyby"}
           </p>
         </article>
-        <article className="rounded-lg border border-border bg-surface p-5">
+        <article className="card">
           <div className="flex items-center gap-2">
-            <ShieldAlert className="h-5 w-5 text-primary" aria-hidden="true" />
-            <h2 className="text-lg font-semibold">Automatické testy</h2>
+            <ShieldAlert className="h-5 w-5 text-primary" aria-hidden="true" strokeWidth={1.5} />
+            <h2 className="text-lg font-medium">Automatické testy</h2>
           </div>
-          <p className="mt-4 font-mono text-2xl font-semibold">{tests.length}</p>
+          <p className="mt-4 font-mono text-2xl font-medium">{tests.length}</p>
           <p className="mt-2 text-sm text-foreground/58">
             Mapované na audit logy, šifrování, MFA a monitoring sítě.
           </p>
@@ -134,73 +154,73 @@ export default async function AwsIntegrationPage() {
       </div>
 
       <div className="grid gap-4 lg:grid-cols-[1fr_1fr]">
-        <section className="rounded-lg border border-border bg-surface p-5">
+        <section className="card">
           <div className="flex items-center gap-2">
-            <KeyRound className="h-5 w-5 text-primary" aria-hidden="true" />
-            <h2 className="text-lg font-semibold">Připojit roli</h2>
+            <KeyRound className="h-5 w-5 text-primary" aria-hidden="true" strokeWidth={1.5} />
+            <h2 className="text-lg font-medium">Připojit roli</h2>
           </div>
           <form action={connectAwsIntegrationAction} className="mt-5 space-y-4">
-            <label className="grid gap-2 text-sm">
+            <label className="grid gap-2 text-xs font-medium text-foreground/68">
               Role ARN
               <input
                 name="roleArn"
                 defaultValue={config.roleArn ?? ""}
                 disabled={!canMutate}
                 placeholder="arn:aws:iam::123456789012:role/splnit-security-audit"
-                className="rounded-md border border-border bg-background px-3 py-2"
+                className="h-9 rounded-md border border-border-default bg-[var(--bg-input)] px-3 font-mono text-sm text-foreground"
               />
             </label>
             <div className="grid gap-4 md:grid-cols-2">
-              <label className="grid gap-2 text-sm">
+              <label className="grid gap-2 text-xs font-medium text-foreground/68">
                 External ID
                 <input
                   name="externalId"
                   defaultValue={selectedExternalId}
                   disabled={!canMutate}
-                  className="rounded-md border border-border bg-background px-3 py-2"
+                  className="h-9 rounded-md border border-border-default bg-[var(--bg-input)] px-3 font-mono text-sm text-foreground"
                 />
               </label>
-              <label className="grid gap-2 text-sm">
+              <label className="grid gap-2 text-xs font-medium text-foreground/68">
                 Region
                 <input
                   name="region"
                   defaultValue={selectedRegion}
                   disabled={!canMutate}
-                  className="rounded-md border border-border bg-background px-3 py-2"
+                  className="h-9 rounded-md border border-border-default bg-[var(--bg-input)] px-3 font-mono text-sm text-foreground"
                 />
               </label>
             </div>
             <button
               type="submit"
               disabled={!canMutate}
-              className="inline-flex items-center gap-2 rounded-md bg-primary px-4 py-3 text-sm font-medium text-primary-foreground disabled:cursor-not-allowed disabled:opacity-50"
+              className="btn btn-primary disabled:cursor-not-allowed disabled:opacity-50"
             >
               Validovat a uložit
-              <CheckCircle2 className="h-4 w-4" aria-hidden="true" />
+              <CheckCircle2 className="h-4 w-4" aria-hidden="true" strokeWidth={1.5} />
             </button>
           </form>
         </section>
 
-        <section className="rounded-lg border border-border bg-surface">
+        <section className="overflow-hidden rounded-lg border border-border bg-surface">
           <div className="border-b border-border p-5">
-            <h2 className="text-lg font-semibold">CloudFormation</h2>
+            <h2 className="text-lg font-medium">CloudFormation</h2>
           </div>
-          <pre className="max-h-[420px] overflow-auto p-5 text-xs leading-5 text-foreground/70">
+          <pre className="max-h-[420px] overflow-auto bg-background p-5 font-mono text-xs leading-5 text-foreground/70">
             <code>{template}</code>
           </pre>
         </section>
       </div>
 
       <div className="grid gap-4 lg:grid-cols-[1fr_1.2fr]">
-        <section className="rounded-lg border border-border bg-surface">
+        <section className="overflow-hidden rounded-lg border border-border bg-surface">
           <div className="border-b border-border p-5">
-            <h2 className="text-lg font-semibold">Test suite</h2>
+            <h2 className="text-lg font-medium">Test suite</h2>
           </div>
           <div className="divide-y divide-border">
             {tests.map((test) => (
-              <article key={test.checkLogic} className="p-5">
+              <article key={test.checkLogic} className="p-4 hover:bg-bg-hover">
                 <p className="font-medium">{test.name}</p>
-                <p className="mt-1 text-sm text-foreground/58">
+                <p className="mt-1 font-mono text-xs text-foreground/52">
                   {test.checkLogic}
                 </p>
                 {"passCriteria" in test ? (
@@ -213,14 +233,14 @@ export default async function AwsIntegrationPage() {
           </div>
         </section>
 
-        <section className="rounded-lg border border-border bg-surface">
+        <section className="overflow-hidden rounded-lg border border-border bg-surface">
           <div className="border-b border-border p-5">
-            <h2 className="text-lg font-semibold">Výsledky běhů</h2>
+            <h2 className="text-lg font-medium">Výsledky běhů</h2>
           </div>
           <div className="divide-y divide-border">
             {runs.length > 0 ? (
               runs.map((run) => (
-                <article key={`${run.testName}-${run.ranAt}`} className="p-5">
+                <article key={`${run.testName}-${run.ranAt}`} className="p-4 hover:bg-bg-hover">
                   <div className="flex flex-col justify-between gap-2 md:flex-row">
                     <div>
                       <p className="font-medium">{run.testName}</p>
@@ -228,9 +248,9 @@ export default async function AwsIntegrationPage() {
                         {formatDate(run.ranAt)}
                       </p>
                     </div>
-                    <span className="rounded-md bg-surface-muted px-2 py-1 text-xs text-foreground/64">
-                      {run.status}
-                    </span>
+                    <StatusPill tone={statusMeta(run.status).tone}>
+                      {statusMeta(run.status).label}
+                    </StatusPill>
                   </div>
                   {run.failureReason ? (
                     <p className="mt-2 text-sm leading-6 text-foreground/64">
