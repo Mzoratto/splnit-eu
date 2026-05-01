@@ -1,11 +1,25 @@
-const CACHE_NAME = "splnit-offline-v1";
+const CACHE_NAME = "splnit-offline-v2";
 const APP_SHELL = [
   "/",
-  "/dashboard",
-  "/frameworks",
-  "/controls",
   "/icon-192x192.png",
   "/icon-512x512.png",
+];
+const PRIVATE_ROUTE_PREFIXES = [
+  "/clients",
+  "/controls",
+  "/dashboard",
+  "/evidence",
+  "/frameworks",
+  "/incidents",
+  "/integrations",
+  "/onboarding",
+  "/policies",
+  "/questionnaires",
+  "/risks",
+  "/settings",
+  "/team",
+  "/trust-center",
+  "/vendors",
 ];
 
 self.addEventListener("install", (event) => {
@@ -45,7 +59,12 @@ self.addEventListener("fetch", (event) => {
   }
 
   if (request.mode === "navigate") {
-    event.respondWith(networkFirst(request, "/dashboard"));
+    if (isPrivateRoute(url.pathname)) {
+      event.respondWith(fetch(request));
+      return;
+    }
+
+    event.respondWith(networkFirst(request, "/"));
     return;
   }
 
@@ -58,12 +77,20 @@ self.addEventListener("fetch", (event) => {
   }
 });
 
+function isPrivateRoute(pathname) {
+  return PRIVATE_ROUTE_PREFIXES.some(
+    (prefix) => pathname === prefix || pathname.startsWith(`${prefix}/`),
+  );
+}
+
 async function networkFirst(request, fallbackUrl) {
   const cache = await caches.open(CACHE_NAME);
 
   try {
     const response = await fetch(request);
-    cache.put(request, response.clone());
+    if (response.ok) {
+      cache.put(request, response.clone());
+    }
     return response;
   } catch {
     return (
@@ -83,6 +110,8 @@ async function cacheFirst(request) {
   }
 
   const response = await fetch(request);
-  cache.put(request, response.clone());
+  if (response.ok) {
+    cache.put(request, response.clone());
+  }
   return response;
 }

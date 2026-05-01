@@ -84,3 +84,17 @@ test("schedules evidence expiry reminders in Vercel cron", async () => {
     schedule: "0 7 * * *",
   });
 });
+
+test("service worker does not cache private workspace pages", async () => {
+  const serviceWorkerPath = path.join(process.cwd(), "public", "sw.js");
+  const serviceWorker = await readFile(serviceWorkerPath, "utf8");
+  const appShellMatch = serviceWorker.match(/const APP_SHELL = \[([\s\S]*?)\];/);
+  const appShell = appShellMatch?.[1] ?? "";
+
+  expect(appShell).not.toContain('"/dashboard"');
+  expect(appShell).not.toContain('"/frameworks"');
+  expect(appShell).not.toContain('"/controls"');
+  expect(serviceWorker).not.toContain('networkFirst(request, "/dashboard")');
+  expect(serviceWorker).toContain('networkFirst(request, "/")');
+  expect(serviceWorker).toContain("isPrivateRoute(url.pathname)");
+});
