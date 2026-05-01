@@ -32,6 +32,16 @@ const contentSecurityPolicy = [
 
 const nextConfig: NextConfig = {
   allowedDevOrigins: ["127.0.0.1"],
+  webpack(config) {
+    config.ignoreWarnings = [
+      ...(Array.isArray(config.ignoreWarnings) ? config.ignoreWarnings : []),
+      { module: /@opentelemetry\/instrumentation/, message: /Critical dependency/ },
+      { module: /@prisma\/instrumentation/, message: /Critical dependency/ },
+      { module: /require-in-the-middle/, message: /Critical dependency/ },
+    ];
+
+    return config;
+  },
   async headers() {
     return [
       {
