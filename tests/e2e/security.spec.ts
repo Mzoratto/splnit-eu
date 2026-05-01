@@ -2,6 +2,11 @@ import { expect, test } from "@playwright/test";
 import { readFile } from "node:fs/promises";
 import path from "node:path";
 
+function expectNoStore(response: { headers(): Record<string, string> }) {
+  expect(response.headers()["cache-control"]).toContain("no-store");
+  expect(response.headers()["pragma"]).toBe("no-cache");
+}
+
 test("sets baseline security headers", async ({ request }) => {
   const response = await request.get("/");
 
@@ -39,12 +44,14 @@ test("requires authentication for private evidence downloads", async ({
   const response = await request.get("/api/evidence/ev_test/download");
 
   expect(response.status()).toBe(401);
+  expectNoStore(response);
 });
 
 test("requires authentication for workspace export", async ({ request }) => {
   const response = await request.get("/api/exports/workspace");
 
   expect(response.status()).toBe(401);
+  expectNoStore(response);
 });
 
 test("requires authentication for workspace archive export", async ({
@@ -53,6 +60,7 @@ test("requires authentication for workspace archive export", async ({
   const response = await request.get("/api/exports/workspace/archive");
 
   expect(response.status()).toBe(401);
+  expectNoStore(response);
 });
 
 test("requires authentication for evidence metadata export", async ({
@@ -61,6 +69,7 @@ test("requires authentication for evidence metadata export", async ({
   const response = await request.get("/api/exports/evidence-metadata");
 
   expect(response.status()).toBe(401);
+  expectNoStore(response);
 });
 
 test("requires authentication for audit log export filters", async ({
@@ -71,6 +80,7 @@ test("requires authentication for audit log export filters", async ({
   );
 
   expect(response.status()).toBe(401);
+  expectNoStore(response);
 });
 
 test("schedules reminder jobs in Vercel cron", async () => {

@@ -1,9 +1,9 @@
 import { auth } from "@clerk/nextjs/server";
-import { NextResponse } from "next/server";
 import { hasDatabaseUrl } from "@/lib/db";
 import { listEvidenceMetadataForExport } from "@/lib/db/queries/evidence";
 import { getOrganisationByClerkOrgId } from "@/lib/db/queries/organisations";
 import { renderEvidenceMetadataCsv } from "@/lib/exports/evidence-metadata";
+import { privateJson, withPrivateNoStore } from "@/lib/http/private-response";
 
 export const dynamic = "force-dynamic";
 
@@ -21,17 +21,17 @@ function getFilename() {
 
 export async function GET() {
   if (!hasClerkConfig()) {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    return privateJson({ error: "Unauthorized" }, { status: 401 });
   }
 
   const session = await auth();
 
   if (!session.userId || !session.orgId) {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    return privateJson({ error: "Unauthorized" }, { status: 401 });
   }
 
   if (!hasDatabaseUrl()) {
-    return NextResponse.json(
+    return privateJson(
       { error: "DATABASE_URL is required." },
       { status: 503 },
     );
@@ -40,15 +40,15 @@ export async function GET() {
   const organisation = await getOrganisationByClerkOrgId(session.orgId);
 
   if (!organisation) {
-    return NextResponse.json({ error: "Organisation not found." }, { status: 404 });
+    return privateJson({ error: "Organisation not found." }, { status: 404 });
   }
 
   const rows = await listEvidenceMetadataForExport(session.orgId);
 
   return new Response(`${renderEvidenceMetadataCsv(rows)}\n`, {
-    headers: {
+    headers: withPrivateNoStore({
       "Content-Disposition": `attachment; filename="${getFilename()}"`,
       "Content-Type": "text/csv; charset=utf-8",
-    },
+    }),
   });
 }

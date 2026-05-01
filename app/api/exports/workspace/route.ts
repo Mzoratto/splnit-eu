@@ -1,7 +1,7 @@
 import { auth } from "@clerk/nextjs/server";
-import { NextResponse } from "next/server";
 import { hasDatabaseUrl } from "@/lib/db";
 import { getWorkspaceExport } from "@/lib/db/queries/workspace-export";
+import { privateJson, withPrivateNoStore } from "@/lib/http/private-response";
 
 export const dynamic = "force-dynamic";
 
@@ -19,17 +19,17 @@ function getFilename() {
 
 export async function GET() {
   if (!hasClerkConfig()) {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    return privateJson({ error: "Unauthorized" }, { status: 401 });
   }
 
   const session = await auth();
 
   if (!session.userId || !session.orgId) {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    return privateJson({ error: "Unauthorized" }, { status: 401 });
   }
 
   if (!hasDatabaseUrl()) {
-    return NextResponse.json(
+    return privateJson(
       { error: "DATABASE_URL is required." },
       { status: 503 },
     );
@@ -38,13 +38,13 @@ export async function GET() {
   const workspaceExport = await getWorkspaceExport(session.orgId);
 
   if (!workspaceExport) {
-    return NextResponse.json({ error: "Organisation not found." }, { status: 404 });
+    return privateJson({ error: "Organisation not found." }, { status: 404 });
   }
 
   return new Response(`${JSON.stringify(workspaceExport, null, 2)}\n`, {
-    headers: {
+    headers: withPrivateNoStore({
       "Content-Disposition": `attachment; filename="${getFilename()}"`,
       "Content-Type": "application/json; charset=utf-8",
-    },
+    }),
   });
 }

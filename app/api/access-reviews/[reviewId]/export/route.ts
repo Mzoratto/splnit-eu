@@ -1,6 +1,6 @@
 import { auth } from "@clerk/nextjs/server";
-import { NextResponse } from "next/server";
 import { getAccessReviewDetail } from "@/lib/db/queries/access-reviews";
+import { privateJson, withPrivateNoStore } from "@/lib/http/private-response";
 
 function csvCell(value: Date | string | null | undefined) {
   const text = value instanceof Date ? value.toISOString() : value ?? "";
@@ -22,7 +22,7 @@ export async function GET(
   const session = await auth();
 
   if (!session.userId || !session.orgId) {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    return privateJson({ error: "Unauthorized" }, { status: 401 });
   }
 
   const { reviewId } = await params;
@@ -32,7 +32,7 @@ export async function GET(
   });
 
   if (!detail) {
-    return NextResponse.json({ error: "Access review not found" }, { status: 404 });
+    return privateJson({ error: "Access review not found" }, { status: 404 });
   }
 
   const header = [
@@ -62,11 +62,11 @@ export async function GET(
     .join("\n");
 
   return new Response(csv, {
-    headers: {
+    headers: withPrivateNoStore({
       "Content-Disposition": `attachment; filename="${safeFilename(
         detail.review.name,
       )}"`,
       "Content-Type": "text/csv; charset=utf-8",
-    },
+    }),
   });
 }

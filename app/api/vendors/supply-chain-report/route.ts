@@ -1,14 +1,14 @@
 import { auth } from "@clerk/nextjs/server";
-import { NextResponse } from "next/server";
 import { getOrganisationByClerkOrgId } from "@/lib/db/queries/organisations";
 import { listVendorsForOrg } from "@/lib/db/queries/vendors";
+import { privateJson, withPrivateNoStore } from "@/lib/http/private-response";
 import { renderVendorRiskReportPdf } from "@/lib/pdf/vendor-risk-report";
 
 export async function GET() {
   const session = await auth();
 
   if (!session.userId || !session.orgId) {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    return privateJson({ error: "Unauthorized" }, { status: 401 });
   }
 
   const [organisation, vendors] = await Promise.all([
@@ -22,9 +22,9 @@ export async function GET() {
   });
 
   return new Response(new Uint8Array(pdf), {
-    headers: {
+    headers: withPrivateNoStore({
       "Content-Disposition": 'attachment; filename="nis2-supply-chain-report.pdf"',
       "Content-Type": "application/pdf",
-    },
+    }),
   });
 }

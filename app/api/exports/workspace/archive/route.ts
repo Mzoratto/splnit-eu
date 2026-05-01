@@ -1,7 +1,6 @@
 import JSZip from "jszip";
 import { auth } from "@clerk/nextjs/server";
 import { get } from "@vercel/blob";
-import { NextResponse } from "next/server";
 import { hasDatabaseUrl } from "@/lib/db";
 import {
   listEvidenceArchiveFiles,
@@ -14,6 +13,7 @@ import {
 } from "@/lib/db/queries/policies";
 import { getWorkspaceExport } from "@/lib/db/queries/workspace-export";
 import { renderEvidenceMetadataCsv } from "@/lib/exports/evidence-metadata";
+import { privateJson, withPrivateNoStore } from "@/lib/http/private-response";
 
 export const dynamic = "force-dynamic";
 export const runtime = "nodejs";
@@ -146,17 +146,17 @@ async function addBlobToArchive(
 
 export async function GET() {
   if (!hasClerkConfig()) {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    return privateJson({ error: "Unauthorized" }, { status: 401 });
   }
 
   const session = await auth();
 
   if (!session.userId || !session.orgId) {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    return privateJson({ error: "Unauthorized" }, { status: 401 });
   }
 
   if (!hasDatabaseUrl()) {
-    return NextResponse.json(
+    return privateJson(
       { error: "DATABASE_URL is required." },
       { status: 503 },
     );
@@ -171,14 +171,14 @@ export async function GET() {
     ]);
 
   if (!workspaceExport) {
-    return NextResponse.json({ error: "Organisation not found." }, { status: 404 });
+    return privateJson({ error: "Organisation not found." }, { status: 404 });
   }
 
   if (
     (evidenceFiles.length > 0 || policyFiles.length > 0) &&
     !process.env.BLOB_READ_WRITE_TOKEN
   ) {
-    return NextResponse.json(
+    return privateJson(
       { error: "BLOB_READ_WRITE_TOKEN is required to build file archives." },
       { status: 503 },
     );
@@ -219,9 +219,9 @@ export async function GET() {
   });
 
   return new Response(archive, {
-    headers: {
+    headers: withPrivateNoStore({
       "Content-Disposition": `attachment; filename="${getFilename()}"`,
       "Content-Type": "application/zip",
-    },
+    }),
   });
 }

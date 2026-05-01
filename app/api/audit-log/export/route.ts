@@ -1,11 +1,11 @@
 import { auth } from "@clerk/nextjs/server";
-import { NextResponse } from "next/server";
 import { hasDatabaseUrl } from "@/lib/db";
 import {
   listAuditLogPage,
   MAX_AUDIT_LOG_EXPORT_LIMIT,
   type AuditLogCursor,
 } from "@/lib/db/queries/audit-logs";
+import { privateJson, withPrivateNoStore } from "@/lib/http/private-response";
 
 export const dynamic = "force-dynamic";
 
@@ -130,17 +130,17 @@ function getCsvFilename() {
 
 export async function GET(request: Request) {
   if (!hasClerkConfig()) {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    return privateJson({ error: "Unauthorized" }, { status: 401 });
   }
 
   const session = await auth();
 
   if (!session.userId || !session.orgId) {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    return privateJson({ error: "Unauthorized" }, { status: 401 });
   }
 
   if (!hasDatabaseUrl()) {
-    return NextResponse.json(
+    return privateJson(
       { error: "DATABASE_URL is required." },
       { status: 503 },
     );
@@ -153,14 +153,14 @@ export async function GET(request: Request) {
   const cursor = parseCursorParam(url.searchParams.get("cursor"));
 
   if (from.error || to.error || limit.error || cursor.error) {
-    return NextResponse.json(
+    return privateJson(
       { error: from.error ?? to.error ?? limit.error ?? cursor.error },
       { status: 400 },
     );
   }
 
   if (from.date && to.date && from.date > to.date) {
-    return NextResponse.json(
+    return privateJson(
       { error: "Invalid date range. The from date must be before the to date." },
       { status: 400 },
     );
@@ -200,7 +200,7 @@ export async function GET(request: Request) {
   const csv = [header.join(","), ...body].join("\n");
 
   return new Response(csv, {
-    headers: {
+    headers: withPrivateNoStore({
       "Content-Disposition": `attachment; filename="${getCsvFilename()}"`,
       "Content-Type": "text/csv; charset=utf-8",
       ...(page.nextCursor
@@ -211,6 +211,6 @@ export async function GET(request: Request) {
         : {
             "X-Audit-Log-Truncated": "false",
           }),
-    },
+    }),
   });
 }

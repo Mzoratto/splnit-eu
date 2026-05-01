@@ -1,7 +1,7 @@
 import { auth } from "@clerk/nextjs/server";
 import { get } from "@vercel/blob";
-import { NextResponse } from "next/server";
 import { getPolicyForOrg } from "@/lib/db/queries/policies";
+import { privateJson, withPrivateNoStore } from "@/lib/http/private-response";
 
 function hasClerkConfig() {
   return (
@@ -23,13 +23,13 @@ export async function GET(
   { params }: { params: Promise<{ policyId: string }> },
 ) {
   if (!hasClerkConfig()) {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    return privateJson({ error: "Unauthorized" }, { status: 401 });
   }
 
   const session = await auth();
 
   if (!session.userId || !session.orgId) {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    return privateJson({ error: "Unauthorized" }, { status: 401 });
   }
 
   const { policyId } = await params;
@@ -39,21 +39,21 @@ export async function GET(
   });
 
   if (!policy?.blobUrl) {
-    return NextResponse.json({ error: "Policy not found" }, { status: 404 });
+    return privateJson({ error: "Policy not found" }, { status: 404 });
   }
 
   const blob = await get(policy.blobUrl, { access: "private" });
 
   if (!blob || blob.statusCode !== 200) {
-    return NextResponse.json({ error: "Policy file not found" }, { status: 404 });
+    return privateJson({ error: "Policy file not found" }, { status: 404 });
   }
 
   return new Response(blob.stream, {
-    headers: {
+    headers: withPrivateNoStore({
       "Content-Disposition": `attachment; filename="${getSafeFilename(
         policy.titleCs,
       )}"`,
       "Content-Type": blob.blob.contentType,
-    },
+    }),
   });
 }

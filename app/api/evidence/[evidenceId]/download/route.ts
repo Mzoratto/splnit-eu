@@ -1,7 +1,7 @@
 import { auth } from "@clerk/nextjs/server";
 import { get } from "@vercel/blob";
-import { NextResponse } from "next/server";
 import { getEvidenceForOrg } from "@/lib/db/queries/evidence";
+import { privateJson, withPrivateNoStore } from "@/lib/http/private-response";
 
 function hasClerkConfig() {
   return (
@@ -47,13 +47,13 @@ export async function GET(
   { params }: { params: Promise<{ evidenceId: string }> },
 ) {
   if (!hasClerkConfig()) {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    return privateJson({ error: "Unauthorized" }, { status: 401 });
   }
 
   const session = await auth();
 
   if (!session.userId || !session.orgId) {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    return privateJson({ error: "Unauthorized" }, { status: 401 });
   }
 
   const { evidenceId } = await params;
@@ -63,17 +63,17 @@ export async function GET(
   });
 
   if (!evidence?.blobUrl) {
-    return NextResponse.json({ error: "Evidence not found" }, { status: 404 });
+    return privateJson({ error: "Evidence not found" }, { status: 404 });
   }
 
   const blob = await get(evidence.blobUrl, { access: "private" });
 
   if (!blob || blob.statusCode !== 200) {
-    return NextResponse.json({ error: "Evidence file not found" }, { status: 404 });
+    return privateJson({ error: "Evidence file not found" }, { status: 404 });
   }
 
   return new Response(blob.stream, {
-    headers: {
+    headers: withPrivateNoStore({
       "Content-Disposition": `attachment; filename="${getSafeFilename({
         contentType: blob.blob.contentType,
         description: evidence.description,
@@ -81,6 +81,6 @@ export async function GET(
         source: evidence.source,
       })}"`,
       "Content-Type": blob.blob.contentType,
-    },
+    }),
   });
 }

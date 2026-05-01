@@ -1,14 +1,14 @@
 import { auth } from "@clerk/nextjs/server";
-import { NextResponse } from "next/server";
 import { listRiskItemsForOrg } from "@/lib/db/queries/risks";
 import { getOrganisationByClerkOrgId } from "@/lib/db/queries/organisations";
+import { privateJson, withPrivateNoStore } from "@/lib/http/private-response";
 import { renderRiskRegisterPdf } from "@/lib/pdf/risk-register";
 
 export async function GET() {
   const session = await auth();
 
   if (!session.userId || !session.orgId) {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    return privateJson({ error: "Unauthorized" }, { status: 401 });
   }
 
   const [organisation, risks] = await Promise.all([
@@ -17,7 +17,7 @@ export async function GET() {
   ]);
 
   if (!organisation) {
-    return NextResponse.json({ error: "Organisation not found" }, { status: 404 });
+    return privateJson({ error: "Organisation not found" }, { status: 404 });
   }
 
   const pdf = await renderRiskRegisterPdf({
@@ -27,9 +27,9 @@ export async function GET() {
   });
 
   return new Response(new Uint8Array(pdf), {
-    headers: {
+    headers: withPrivateNoStore({
       "Content-Disposition": 'attachment; filename="risk-register.pdf"',
       "Content-Type": "application/pdf",
-    },
+    }),
   });
 }

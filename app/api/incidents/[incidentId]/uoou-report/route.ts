@@ -1,7 +1,7 @@
 import { auth } from "@clerk/nextjs/server";
-import { NextResponse } from "next/server";
 import { getIncidentForOrg } from "@/lib/db/queries/incidents";
 import { getOrganisationByClerkOrgId } from "@/lib/db/queries/organisations";
+import { privateJson, withPrivateNoStore } from "@/lib/http/private-response";
 import { renderIncidentNotificationPdf } from "@/lib/pdf/incident-notification";
 
 export async function GET(
@@ -11,7 +11,7 @@ export async function GET(
   const session = await auth();
 
   if (!session.userId || !session.orgId) {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    return privateJson({ error: "Unauthorized" }, { status: 401 });
   }
 
   const { incidentId } = await params;
@@ -21,7 +21,7 @@ export async function GET(
   ]);
 
   if (!incident || !organisation) {
-    return NextResponse.json({ error: "Incident not found" }, { status: 404 });
+    return privateJson({ error: "Incident not found" }, { status: 404 });
   }
 
   const pdf = await renderIncidentNotificationPdf({
@@ -32,9 +32,9 @@ export async function GET(
   });
 
   return new Response(new Uint8Array(pdf), {
-    headers: {
+    headers: withPrivateNoStore({
       "Content-Disposition": `attachment; filename="uoou-incident-${incident.id}.pdf"`,
       "Content-Type": "application/pdf",
-    },
+    }),
   });
 }

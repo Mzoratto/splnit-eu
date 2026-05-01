@@ -1,9 +1,9 @@
 import JSZip from "jszip";
 import { auth } from "@clerk/nextjs/server";
-import { NextResponse } from "next/server";
 import { hasDatabaseUrl } from "@/lib/db";
 import { getIso27001CertificationPackage } from "@/lib/db/queries/certification-package";
 import { ISO27001_CERTIFICATION_BODIES } from "@/lib/frameworks/iso27001-annex-a";
+import { privateJson, withPrivateNoStore } from "@/lib/http/private-response";
 
 export const dynamic = "force-dynamic";
 
@@ -17,7 +17,7 @@ export async function GET() {
     Boolean(process.env.CLERK_SECRET_KEY);
 
   if (!clerkConfigured) {
-    return NextResponse.json(
+    return privateJson(
       { error: "Clerk authentication is required." },
       { status: 401 },
     );
@@ -25,11 +25,11 @@ export async function GET() {
 
   const session = await auth();
   if (!session.userId || !session.orgId) {
-    return NextResponse.json({ error: "Unauthorized." }, { status: 401 });
+    return privateJson({ error: "Unauthorized." }, { status: 401 });
   }
 
   if (!hasDatabaseUrl()) {
-    return NextResponse.json(
+    return privateJson(
       { error: "DATABASE_URL is required." },
       { status: 503 },
     );
@@ -76,9 +76,9 @@ export async function GET() {
     .slice(0, 10)}.zip`;
 
   return new Response(body, {
-    headers: {
+    headers: withPrivateNoStore({
       "Content-Disposition": `attachment; filename="${filename}"`,
       "Content-Type": "application/zip",
-    },
+    }),
   });
 }
