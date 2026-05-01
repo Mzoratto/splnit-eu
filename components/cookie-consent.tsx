@@ -28,11 +28,17 @@ const appRoutePrefixes = [
   "/vendors",
 ];
 
-export function CookieConsent() {
+export function CookieConsent({
+  initialConsent,
+}: {
+  initialConsent: CookieConsentValue | null;
+}) {
   const pathname = usePathname();
-  const [consent, setConsent] = useState<CookieConsentValue | null>(null);
-  const [visible, setVisible] = useState(false);
   const isAppRoute = appRoutePrefixes.some((prefix) => pathname.startsWith(prefix));
+  const [consent, setConsent] = useState<CookieConsentValue | null>(
+    initialConsent,
+  );
+  const [visible, setVisible] = useState(!initialConsent && !isAppRoute);
 
   useEffect(() => {
     const currentConsent = getCookieConsent();

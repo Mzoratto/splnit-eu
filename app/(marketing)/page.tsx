@@ -66,13 +66,6 @@ export default function HomePage() {
                 "linear-gradient(to bottom, rgba(255,255,255,0.8) 0%, transparent 70%)",
             }}
           />
-          <div
-            className="pointer-events-none absolute left-1/2 top-0 z-0 h-[500px] w-[900px] -translate-x-1/2 opacity-[0.055] blur-[80px]"
-            style={{
-              background: "radial-gradient(ellipse at center, #3B82F6 0%, transparent 70%)",
-            }}
-          />
-
           <div className="relative z-10 mx-auto max-w-7xl px-5">
             <div className="mx-auto max-w-4xl text-center">
               <div className="mb-8 inline-flex items-center gap-2 rounded-full border border-blue-100 bg-blue-50/80 px-3.5 py-1.5 text-blue-700">
@@ -137,7 +130,7 @@ export default function HomePage() {
 
             <DashboardMockup />
 
-            <div className="fade-up mt-12 translate-y-4 text-center opacity-0">
+            <div className="fade-up mt-12 text-center">
               <p className="mb-6 text-xs font-medium uppercase tracking-widest text-zinc-400">
                 Chrání nejrychleji rostoucí české firmy
               </p>
@@ -159,7 +152,7 @@ export default function HomePage() {
 
         <section className="border-t border-zinc-200/50 py-20">
           <div className="mx-auto max-w-7xl px-5">
-            <div className="scroll-animate mb-14 translate-y-6 text-center opacity-0">
+            <div className="scroll-animate mb-14 text-center">
               <div className="section-tag mb-4">
                 <Icon icon="solar:bolt-circle-linear" aria-hidden="true" />
                 Jak to funguje
@@ -178,7 +171,7 @@ export default function HomePage() {
               {steps.map((step, index) => (
                 <div
                   key={step.title}
-                  className="scroll-animate relative z-10 flex translate-y-6 flex-col items-center gap-4 opacity-0"
+                  className="scroll-animate relative z-10 flex flex-col items-center gap-4"
                 >
                   <div className="flex h-10 w-10 items-center justify-center rounded-full bg-blue-600 text-sm font-semibold text-white shadow-md shadow-blue-200">
                     {index + 1}
@@ -204,7 +197,7 @@ export default function HomePage() {
 
         <section className="border-t border-zinc-200/50 bg-white py-20">
           <div className="mx-auto max-w-7xl px-5">
-            <div className="scroll-animate mb-14 translate-y-6 text-center opacity-0">
+            <div className="scroll-animate mb-14 text-center">
               <div className="section-tag mb-4">
                 <Icon icon="solar:star-linear" aria-hidden="true" />
                 Klíčové funkce
@@ -222,7 +215,7 @@ export default function HomePage() {
               {features.map((feature) => (
                 <article
                   key={feature.title}
-                  className="scroll-animate group rounded-[22px] p-px grad-border translate-y-6 opacity-0 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-lg"
+                  className="scroll-animate group rounded-[22px] p-px grad-border shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-lg"
                 >
                   <div className="flex h-full flex-col rounded-[21px] bg-white p-7">
                     <div className="mb-5 flex h-11 w-11 items-center justify-center rounded-xl bg-blue-50 text-blue-600 transition-colors group-hover:bg-blue-100">
@@ -243,7 +236,7 @@ export default function HomePage() {
 
         <section className="border-t border-zinc-200/50 bg-white py-20">
           <div className="mx-auto max-w-3xl px-5">
-            <div className="scroll-animate translate-y-6 opacity-0">
+            <div className="scroll-animate">
               <LeadCapture />
             </div>
           </div>
@@ -263,7 +256,7 @@ export default function HomePage() {
           />
           <div className="relative z-10 mx-auto max-w-7xl px-5">
             <div className="flex flex-col items-start gap-16 md:flex-row">
-              <div className="scroll-animate flex-1 -translate-x-6 opacity-0">
+              <div className="scroll-animate flex-1">
                 <Icon
                   icon="solar:quote-left-linear"
                   className="mb-7 block text-5xl text-zinc-700"
@@ -288,7 +281,7 @@ export default function HomePage() {
                 </span>
               </div>
 
-              <div className="testimonial-float scroll-animate w-full shrink-0 translate-x-6 opacity-0 md:w-[360px]">
+              <div className="testimonial-float scroll-animate w-full shrink-0 md:w-[360px]">
                 <div
                   className="rounded-[26px] p-px"
                   style={{ background: "linear-gradient(180deg,#3F3F46,#18181B)" }}
@@ -375,7 +368,7 @@ function FinalCta() {
             "radial-gradient(ellipse 60% 50% at 50% 50%, rgba(59,130,246,0.06), transparent)",
         }}
       />
-      <div className="scroll-animate relative z-10 mx-auto max-w-3xl translate-y-6 px-5 text-center opacity-0">
+      <div className="scroll-animate relative z-10 mx-auto max-w-3xl px-5 text-center">
         <h2 className="mb-5 text-4xl font-semibold leading-[1.05] tracking-[-0.04em] text-zinc-900 md:text-5xl">
           Zabezpečte svou infrastrukturu ještě dnes.
         </h2>

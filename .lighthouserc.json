@@ -7,13 +7,18 @@
       },
       "startServerCommand": "NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY= CLERK_SECRET_KEY= npm run start -- -p 3003",
       "startServerReadyPattern": "Ready",
-      "url": ["http://127.0.0.1:3003/"]
+      "url": [
+        "http://127.0.0.1:3003/",
+        "http://127.0.0.1:3003/platform",
+        "http://127.0.0.1:3003/predpisy",
+        "http://127.0.0.1:3003/cenik"
+      ]
     },
     "assert": {
       "assertions": {
         "categories:performance": ["warn", { "minScore": 0.7 }],
         "cumulative-layout-shift": ["error", { "maxNumericValue": 0.1 }],
-        "largest-contentful-paint": ["error", { "maxNumericValue": 4000 }],
+        "largest-contentful-paint": ["error", { "maxNumericValue": 3300 }],
         "total-blocking-time": ["warn", { "maxNumericValue": 300 }]
       }
     },

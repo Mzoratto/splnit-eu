@@ -1,9 +1,14 @@
 import type { Metadata } from "next";
 import { DM_Sans, JetBrains_Mono } from "next/font/google";
+import { cookies } from "next/headers";
 import { NextIntlClientProvider } from "next-intl";
 import { getLocale, getMessages } from "next-intl/server";
 import { CookieConsent } from "@/components/cookie-consent";
 import { RegisterServiceWorker } from "@/components/pwa/register-service-worker";
+import {
+  cookieConsentName,
+  type CookieConsentValue,
+} from "@/lib/privacy/cookie-consent";
 import "./globals.css";
 
 const dmSans = DM_Sans({
@@ -33,6 +38,12 @@ const themeScript = `
   }
 })();
 `;
+
+function normalizeCookieConsent(
+  value: string | undefined,
+): CookieConsentValue | null {
+  return value === "accepted" || value === "rejected" ? value : null;
+}
 
 export const metadata: Metadata = {
   applicationName: "Splnit.eu",
@@ -88,6 +99,10 @@ export default async function RootLayout({
 }>) {
   const locale = await getLocale();
   const messages = await getMessages();
+  const cookieStore = await cookies();
+  const initialCookieConsent = normalizeCookieConsent(
+    cookieStore.get(cookieConsentName)?.value,
+  );
 
   return (
     <html
@@ -103,7 +118,7 @@ export default async function RootLayout({
         <NextIntlClientProvider locale={locale} messages={messages}>
           <RegisterServiceWorker />
           {children}
-          <CookieConsent />
+          <CookieConsent initialConsent={initialCookieConsent} />
         </NextIntlClientProvider>
       </body>
     </html>

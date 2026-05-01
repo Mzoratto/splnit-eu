@@ -3,16 +3,9 @@ import { Icon } from "@/components/marketing/local-icon";
 export function DashboardMockup() {
   return (
     <div
-      className="relative mx-auto mt-16 max-w-5xl"
+      className="relative mx-auto mt-16 hidden max-w-5xl md:block"
       id="dashboard-wrap"
     >
-      <div
-        className="pointer-events-none absolute -inset-px rounded-[28px] opacity-60"
-        style={{
-          background: "linear-gradient(180deg,rgba(59,130,246,0.25),transparent)",
-          filter: "blur(8px)",
-        }}
-      />
       <div className="dash-glow relative rounded-[28px] p-px grad-border">
         <div className="overflow-hidden rounded-[27px] bg-white">
           <div className="flex h-11 items-center gap-3 border-b border-zinc-100 bg-zinc-50 px-4">
