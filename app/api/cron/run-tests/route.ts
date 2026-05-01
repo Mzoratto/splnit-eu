@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { hasDatabaseUrl } from "@/lib/db";
 import { listActiveIntegrationTargets } from "@/lib/db/queries/integrations";
 import { getCronAuthError } from "@/lib/http/cron";
+import { isSupportedIntegrationProvider } from "@/lib/integrations/registry";
 import { inngest } from "@/inngest/client";
 
 async function queueIntegrationRuns(request: Request, body: Record<string, unknown>) {
@@ -11,11 +12,23 @@ async function queueIntegrationRuns(request: Request, body: Record<string, unkno
   }
 
   if (body.clerkOrgId) {
+    const provider =
+      typeof body.provider === "string" && body.provider.trim()
+        ? body.provider.trim()
+        : undefined;
+
+    if (provider && !isSupportedIntegrationProvider(provider)) {
+      return NextResponse.json(
+        { error: "Unsupported integration provider." },
+        { status: 400 },
+      );
+    }
+
     await inngest.send({
       name: "integrations/tests.run",
       data: {
         clerkOrgId: String(body.clerkOrgId),
-        provider: body.provider ? String(body.provider) : undefined,
+        provider,
       },
     });
 

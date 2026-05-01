@@ -72,6 +72,15 @@ function applyLocale(request: NextRequest) {
   return response;
 }
 
+function authConfigurationError() {
+  return new NextResponse("Authentication is not configured.", {
+    headers: {
+      "content-type": "text/plain; charset=utf-8",
+    },
+    status: 503,
+  });
+}
+
 const clerk = clerkMiddleware(async (auth, request) => {
   const clerkConfigured =
     Boolean(process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY) &&
@@ -94,6 +103,10 @@ export default function middleware(request: NextRequest, event: NextFetchEvent) 
     Boolean(process.env.CLERK_SECRET_KEY);
 
   if (!clerkConfigured) {
+    if (process.env.NODE_ENV === "production" && isProtectedRoute(request)) {
+      return authConfigurationError();
+    }
+
     if (isApiRoute(request)) {
       return NextResponse.next();
     }

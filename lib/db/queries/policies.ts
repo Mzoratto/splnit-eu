@@ -8,6 +8,15 @@ import {
   profiles,
 } from "@/lib/db/schema";
 
+export type PolicyArchiveFile = {
+  blobUrl: string;
+  createdAt: Date | null;
+  policyId: string;
+  title: string;
+  type: string;
+  version: number;
+};
+
 export async function listPoliciesForOrg(clerkOrgId: string) {
   const db = getDb();
 
@@ -35,6 +44,39 @@ export async function getPolicyForOrg(input: {
     .limit(1);
 
   return rows[0] ?? null;
+}
+
+export async function listPolicyArchiveFiles(
+  clerkOrgId: string,
+): Promise<PolicyArchiveFile[]> {
+  const db = getDb();
+  const rows = await db
+    .select({
+      blobUrl: policies.blobUrl,
+      createdAt: policies.createdAt,
+      policyId: policies.id,
+      title: policies.titleCs,
+      type: policies.type,
+      version: policies.version,
+    })
+    .from(policies)
+    .where(eq(policies.clerkOrgId, clerkOrgId))
+    .orderBy(desc(policies.createdAt));
+
+  return rows.flatMap((row) =>
+    row.blobUrl
+      ? [
+          {
+            blobUrl: row.blobUrl,
+            createdAt: row.createdAt,
+            policyId: row.policyId,
+            title: row.title,
+            type: row.type,
+            version: row.version,
+          },
+        ]
+      : [],
+  );
 }
 
 export async function insertGeneratedPolicy(input: {

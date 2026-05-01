@@ -3,6 +3,13 @@ import { get } from "@vercel/blob";
 import { NextResponse } from "next/server";
 import { getPolicyForOrg } from "@/lib/db/queries/policies";
 
+function hasClerkConfig() {
+  return (
+    Boolean(process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY) &&
+    Boolean(process.env.CLERK_SECRET_KEY)
+  );
+}
+
 function getSafeFilename(title: string) {
   return `${title
     .toLowerCase()
@@ -15,6 +22,10 @@ export async function GET(
   _request: Request,
   { params }: { params: Promise<{ policyId: string }> },
 ) {
+  if (!hasClerkConfig()) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
+
   const session = await auth();
 
   if (!session.userId || !session.orgId) {

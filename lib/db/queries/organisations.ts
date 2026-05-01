@@ -52,3 +52,35 @@ export async function updateOrganisationBilling(input: {
     .set(billingFields)
     .where(eq(organisations.clerkOrgId, input.clerkOrgId));
 }
+
+export async function upsertOrganisationProfile(input: {
+  clerkOrgId: string;
+  employeeCount: string;
+  ico: string | null;
+  name: string;
+  sector: string;
+}) {
+  const db = getDb();
+  const updatedAt = new Date();
+
+  await db
+    .insert(organisations)
+    .values({
+      clerkOrgId: input.clerkOrgId,
+      employeeCount: input.employeeCount,
+      ico: input.ico,
+      name: input.name,
+      sector: input.sector,
+      updatedAt,
+    })
+    .onConflictDoUpdate({
+      target: organisations.clerkOrgId,
+      set: {
+        employeeCount: input.employeeCount,
+        ico: input.ico,
+        name: input.name,
+        sector: input.sector,
+        updatedAt,
+      },
+    });
+}

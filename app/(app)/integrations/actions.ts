@@ -6,8 +6,9 @@ import { redirect } from "next/navigation";
 import { z } from "zod";
 import { createAuditLog } from "@/lib/db/queries/audit-logs";
 import { disconnectIntegrationConnection } from "@/lib/db/queries/integrations";
+import { supportedIntegrationProviders } from "@/lib/integrations/registry";
 
-const providerSchema = z.enum(["microsoft365", "github", "aws"]);
+const providerSchema = z.enum(supportedIntegrationProviders);
 
 function requireActiveOrganisation(session: Awaited<ReturnType<typeof auth>>) {
   if (!session.userId || !session.orgId) {

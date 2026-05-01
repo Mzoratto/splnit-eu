@@ -6,10 +6,12 @@ export type LegalSection = {
 };
 
 export function LegalPage({
+  children,
   intro,
   sections,
   title,
 }: {
+  children?: React.ReactNode;
   intro: string;
   sections: LegalSection[];
   title: string;
@@ -40,6 +42,7 @@ export function LegalPage({
               </section>
             ))}
           </div>
+          {children ? <div className="mt-10">{children}</div> : null}
         </article>
       </main>
     </MarketingShell>

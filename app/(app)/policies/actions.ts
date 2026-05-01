@@ -4,6 +4,7 @@ import { auth } from "@clerk/nextjs/server";
 import { put } from "@vercel/blob";
 import { revalidatePath } from "next/cache";
 import { z } from "zod";
+import { deleteBlobUrlsAfterFailedSave } from "@/lib/blob/cleanup";
 import { createAuditLog } from "@/lib/db/queries/audit-logs";
 import { getOrganisationByClerkOrgId } from "@/lib/db/queries/organisations";
 import { insertGeneratedPolicy } from "@/lib/db/queries/policies";
@@ -89,7 +90,9 @@ export async function generatePolicyAction(type: string) {
     expiresAt: reviewDate,
     title: template.titleCs,
     type: template.type,
-  });
+  }).catch((error: unknown) =>
+    deleteBlobUrlsAfterFailedSave([blob.url], error),
+  );
 
   if (policyId) {
     await createAuditLog({

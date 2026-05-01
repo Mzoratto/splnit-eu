@@ -1,12 +1,18 @@
 import Link from "next/link";
-import { auth } from "@clerk/nextjs/server";
+import { auth, currentUser } from "@clerk/nextjs/server";
 import {
   AlertTriangle,
   ArrowRight,
-  CheckCircle2,
+  CalendarClock,
+  CircleDot,
   Clock3,
+  FileArchive,
+  Landmark,
   Newspaper,
+  ShieldCheck,
 } from "lucide-react";
+import { AnimatedScoreRing } from "@/components/app/animated-score-ring";
+import { StatusPill, type StatusPillTone } from "@/components/app/status-pill";
 import { markRegulationUpdateReadAction } from "@/app/(app)/dashboard/actions";
 import { CONTROL_LIBRARY } from "@/lib/controls/library";
 import { hasDatabaseUrl } from "@/lib/db";
@@ -14,22 +20,45 @@ import { getDashboardData } from "@/lib/db/queries/dashboard";
 import { FRAMEWORK_LIBRARY } from "@/lib/frameworks/registry";
 
 const fallbackFrameworkScores = [
-  { slug: "ai-act", score: 64, status: "setup" },
   { slug: "nis2", score: 72, status: "active" },
+  { slug: "ai-act", score: 64, status: "setup" },
   { slug: "gdpr", score: 81, status: "active" },
+  { slug: "iso27001", score: 58, status: "manual_review" },
 ];
 
 const fallbackUpdates = [
   {
     frameworkName: "NIS2",
-    id: "demo-regulation-update",
+    id: "demo-nukib-feed",
     isRead: true,
-    publishedAt: new Date("2026-04-15T08:00:00.000Z"),
+    publishedAt: new Date("2026-04-30T08:00:00.000Z"),
     severity: "info",
     source: "NÚKIB",
     sourceUrl: null,
-    summary: "Tento panel naplní synchronizace regulačních zdrojů.",
-    title: "Feed regulačních aktualizací je připravený",
+    summary: "Nová sada doporučení k řízení dodavatelských rizik pro povinné osoby.",
+    title: "NÚKIB publikoval aktualizaci metodiky",
+  },
+  {
+    frameworkName: "NIS2",
+    id: "demo-nukib-cve",
+    isRead: true,
+    publishedAt: new Date("2026-04-30T06:30:00.000Z"),
+    severity: "warning",
+    source: "NÚKIB",
+    sourceUrl: null,
+    summary: "Zranitelnost dopadá na běžně nasazované VPN brány.",
+    title: "CVE-2026-1842 vyžaduje ověření expozice",
+  },
+  {
+    frameworkName: "GDPR",
+    id: "demo-uooou-update",
+    isRead: true,
+    publishedAt: new Date("2026-04-26T10:00:00.000Z"),
+    severity: "info",
+    source: "ÚOOÚ",
+    sourceUrl: null,
+    summary: "Doporučení pro evidence zpracování a bezpečnostní opatření.",
+    title: "ÚOOÚ zveřejnil metodický výklad",
   },
 ];
 
@@ -45,6 +74,23 @@ async function loadDashboardData() {
 
   try {
     return await getDashboardData(session.orgId);
+  } catch {
+    return null;
+  }
+}
+
+async function loadUserName() {
+  const clerkConfigured =
+    Boolean(process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY) &&
+    Boolean(process.env.CLERK_SECRET_KEY);
+
+  if (!clerkConfigured) {
+    return null;
+  }
+
+  try {
+    const user = await currentUser();
+    return user?.firstName ?? null;
   } catch {
     return null;
   }
@@ -73,47 +119,169 @@ function calculateScore(input: {
   return Math.round((passing / input.statusRows.length) * 100);
 }
 
-function ScoreRing({ score }: { score: number }) {
-  const radius = 48;
-  const circumference = 2 * Math.PI * radius;
-  const offset = circumference - (score / 100) * circumference;
+function statusTone(status: string | null | undefined, score?: number | null): StatusPillTone {
+  if (status === "pass" || status === "completed" || status === "connected") {
+    return "pass";
+  }
+
+  if (status === "fail" || status === "error" || status === "critical") {
+    return "fail";
+  }
+
+  if (
+    status === "manual_review" ||
+    status === "warning" ||
+    status === "setup" ||
+    status === "in_progress" ||
+    status === "connecting"
+  ) {
+    return "warn";
+  }
+
+  if (typeof score === "number") {
+    if (score >= 80) {
+      return "pass";
+    }
+    if (score >= 60) {
+      return "warn";
+    }
+    return "fail";
+  }
+
+  return "neutral";
+}
+
+function frameworkStatusLabel(score: number | null | undefined) {
+  if (typeof score !== "number") {
+    return "PENDING";
+  }
+
+  if (score >= 80) {
+    return "PASS";
+  }
+
+  if (score >= 60) {
+    return "WARN";
+  }
+
+  return "FAIL";
+}
+
+function controlStatusLabel(status: string) {
+  const labels: Record<string, string> = {
+    fail: "FAIL",
+    manual_review: "WARN",
+    pass: "PASS",
+    unknown: "PENDING",
+    warning: "WARN",
+  };
+
+  return labels[status] ?? status.toUpperCase();
+}
+
+function severityTone(severity: string): StatusPillTone {
+  if (severity === "critical" || severity === "high" || severity === "fail") {
+    return "fail";
+  }
+
+  if (severity === "warning" || severity === "medium") {
+    return "warn";
+  }
+
+  if (severity === "info" || severity === "low") {
+    return "pass";
+  }
+
+  return "neutral";
+}
+
+function formatRelative(value: Date | string) {
+  const date = new Date(value);
+  const diffMs = Date.now() - date.getTime();
+  const minutes = Math.max(1, Math.round(diffMs / 60_000));
+
+  if (minutes < 60) {
+    return `před ${minutes} min`;
+  }
+
+  const hours = Math.round(minutes / 60);
+  if (hours < 24) {
+    return `před ${hours} h`;
+  }
+
+  const days = Math.round(hours / 24);
+  return `před ${days} dny`;
+}
+
+function formatDeadline(deadline: string | null) {
+  if (!deadline) {
+    return "Průběžně";
+  }
+
+  const deadlineDate = new Date(`${deadline}T00:00:00.000Z`);
+  const days = Math.ceil(
+    (deadlineDate.getTime() - Date.now()) / 86_400_000,
+  );
+
+  if (days < 0) {
+    return "Termín prošel";
+  }
+
+  if (days === 0) {
+    return "Dnes";
+  }
+
+  return `${days} dní`;
+}
+
+function Sparkline({ score }: { score: number }) {
+  const values = Array.from({ length: 14 }, (_, index) =>
+    Math.max(12, Math.min(96, score - 8 + (index % 5) * 3 + Math.floor(index / 3))),
+  );
+  const points = values
+    .map((value, index) => {
+      const x = (index / (values.length - 1)) * 60;
+      const y = 16 - (value / 100) * 16;
+      return `${x.toFixed(1)},${y.toFixed(1)}`;
+    })
+    .join(" ");
 
   return (
-    <div className="relative h-32 w-32">
-      <svg className="h-full w-full -rotate-90" viewBox="0 0 120 120">
-        <circle
-          cx="60"
-          cy="60"
-          fill="none"
-          r={radius}
-          stroke="currentColor"
-          strokeWidth="10"
-          className="text-surface-muted"
-        />
-        <circle
-          cx="60"
-          cy="60"
-          fill="none"
-          r={radius}
-          stroke="currentColor"
-          strokeDasharray={circumference}
-          strokeDashoffset={offset}
-          strokeLinecap="round"
-          strokeWidth="10"
-          className="text-primary ring-track"
-        />
-      </svg>
-      <div className="absolute inset-0 grid place-items-center">
-        <span className="font-mono text-3xl font-semibold text-primary">
-          {score}%
-        </span>
-      </div>
+    <svg aria-hidden="true" className="h-4 w-[60px]" viewBox="0 0 60 16">
+      <polyline
+        fill="none"
+        points={points}
+        stroke="currentColor"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        strokeWidth="1.5"
+      />
+    </svg>
+  );
+}
+
+function FrameworkIcon({ tone }: { tone: StatusPillTone }) {
+  const className =
+    tone === "pass"
+      ? "text-status-pass"
+      : tone === "warn"
+        ? "text-status-warn"
+        : tone === "fail"
+          ? "text-status-fail"
+          : "text-foreground/42";
+
+  return (
+    <div className="grid h-7 w-7 place-items-center rounded-md border border-border bg-background">
+      <Landmark className={`h-4 w-4 ${className}`} aria-hidden="true" strokeWidth={1.5} />
     </div>
   );
 }
 
 export default async function DashboardPage() {
-  const data = await loadDashboardData();
+  const [data, firstName] = await Promise.all([
+    loadDashboardData(),
+    loadUserName(),
+  ]);
   const frameworkScores =
     data?.frameworkScores.length
       ? data.frameworkScores
@@ -137,167 +305,281 @@ export default async function DashboardPage() {
           title: control.titleCs,
         }));
   const updates = data?.updates.length ? data.updates : fallbackUpdates;
+  const statusRows =
+    data?.statusRows.length
+      ? data.statusRows
+      : priorityControls.map((control) => ({ status: control.status }));
   const score = calculateScore({
     frameworkScores,
-    statusRows: data?.statusRows ?? [],
+    statusRows,
   });
+  const failingControls = statusRows.filter((row) => row.status === "fail").length;
+  const warningControls = statusRows.filter((row) =>
+    ["manual_review", "warning", "unknown"].includes(row.status),
+  ).length;
+  const openFindings = failingControls + warningControls;
+  const nukibUpdates = updates.filter((update) =>
+    update.source.toLowerCase().includes("núkib"),
+  );
+  const visibleNukibUpdates = nukibUpdates.length ? nukibUpdates : fallbackUpdates;
+  const deadlines = FRAMEWORK_LIBRARY.filter(
+    (framework) => framework.slug === "nis2" || framework.slug === "ai-act" || framework.slug === "gdpr",
+  );
 
   return (
-    <section className="space-y-8">
-      <div className="flex flex-col justify-between gap-4 md:flex-row md:items-end">
+    <section className="page-enter-active space-y-8">
+      <div className="flex flex-col justify-between gap-4 border-b border-border pb-6 md:flex-row md:items-end">
         <div>
-          <p className="text-sm font-medium uppercase tracking-[0.14em] text-primary">
-            Přehled
-          </p>
-          <h1 className="mt-2 text-3xl font-semibold tracking-normal">
-            Compliance dashboard
+          <p className="text-sm font-medium text-primary">Dashboard</p>
+          <h1 className="mt-2 text-[22px] font-medium tracking-normal">
+            Dobré ráno{firstName ? `, ${firstName}` : ""}
           </h1>
-          <p className="mt-2 text-foreground/64">
-            Skóre je počítané z denormalizovaných stavů kontrol.
+          <p className="mt-1 text-sm text-foreground/64">
+            {openFindings} otevřených nálezů · {failingControls} kontrol selhalo
           </p>
         </div>
-        <Link
-          href="/frameworks/ai-act/setup"
-          className="inline-flex items-center gap-2 rounded-md bg-primary px-4 py-3 text-sm font-medium text-primary-foreground"
-        >
+        <Link href="/frameworks/ai-act/setup" className="btn btn-primary">
           Spustit AI Act wizard
-          <ArrowRight className="h-4 w-4" aria-hidden="true" />
+          <ArrowRight className="h-4 w-4" aria-hidden="true" strokeWidth={1.5} />
         </Link>
       </div>
 
-      <div className="grid gap-4 lg:grid-cols-[0.8fr_1.6fr]">
-        <article className="flex items-center gap-6 rounded-lg border border-border bg-surface p-5">
-          <ScoreRing score={score} />
+      <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
+        <article className="metric-card flex items-center gap-5">
+          <AnimatedScoreRing score={score} />
           <div>
-            <p className="text-sm text-foreground/58">Celkové skóre</p>
-            <h2 className="mt-1 text-xl font-semibold">Aktivní frameworky</h2>
+            <p className="text-xs text-foreground/52">Compliance skóre</p>
             <p className="mt-2 text-sm leading-6 text-foreground/64">
-              Průměr aktivních frameworků nebo poměr splněných kontrol.
+              Průměr frameworků a stavů kontrol.
             </p>
           </div>
         </article>
 
-        <div className="grid gap-4 md:grid-cols-3">
-          {frameworkScores.map((item) => (
-            <article
-              key={item.slug}
-              className="rounded-lg border border-border bg-surface p-5"
-            >
-              <div className="flex items-start justify-between gap-4">
-                <div>
-                  <p className="text-sm text-foreground/58">{item.regulator}</p>
-                  <h2 className="mt-1 text-xl font-semibold">{item.name}</h2>
-                </div>
-                <span className="rounded-md bg-surface-muted px-2 py-1 text-xs">
-                  {item.status}
-                </span>
-              </div>
-              <p className="mt-6 font-mono text-4xl font-semibold text-primary">
-                {item.score ?? 0}%
+        <article className="metric-card">
+          <div className="flex items-center justify-between gap-3">
+            <p className="text-xs text-foreground/52">Aktivní frameworky</p>
+            <ShieldCheck className="h-4 w-4 text-status-pass" aria-hidden="true" strokeWidth={1.5} />
+          </div>
+          <p className="mt-5 font-mono text-[28px] font-medium">
+            {frameworkScores.length}
+          </p>
+          <StatusPill tone="pass" className="mt-4">PASS</StatusPill>
+        </article>
+
+        <article className="metric-card">
+          <div className="flex items-center justify-between gap-3">
+            <p className="text-xs text-foreground/52">Selhané kontroly</p>
+            <AlertTriangle className="h-4 w-4 text-status-fail" aria-hidden="true" strokeWidth={1.5} />
+          </div>
+          <p className="mt-5 font-mono text-[28px] font-medium">
+            {failingControls}
+          </p>
+          <StatusPill tone={failingControls > 0 ? "fail" : "pass"} className="mt-4">
+            {failingControls > 0 ? "FAIL" : "PASS"}
+          </StatusPill>
+        </article>
+
+        <article className="metric-card">
+          <div className="flex items-center justify-between gap-3">
+            <p className="text-xs text-foreground/52">Poslední změna</p>
+            <Clock3 className="h-4 w-4 text-primary" aria-hidden="true" strokeWidth={1.5} />
+          </div>
+          <p className="mt-5 font-mono text-[28px] font-medium">
+            {formatRelative(updates[0].publishedAt)}
+          </p>
+          <p className="mt-4 text-xs text-foreground/52">
+            {updates[0].source} · {updates[0].frameworkName ?? "Obecné"}
+          </p>
+        </article>
+      </div>
+
+      <div className="grid gap-4 xl:grid-cols-[1.5fr_1fr]">
+        <section className="card">
+          <div className="mb-4 flex items-center justify-between gap-4">
+            <div>
+              <h2 className="text-lg font-medium">Stav frameworků</h2>
+              <p className="mt-1 text-sm text-foreground/58">
+                Skóre podle aktivních regulací.
               </p>
-              <div className="mt-4 h-2 rounded-full bg-surface-muted">
-                <div
-                  className="h-2 rounded-full bg-primary"
-                  style={{ width: `${item.score ?? 0}%` }}
-                />
+            </div>
+            <Link
+              href="/frameworks"
+              className="text-sm font-medium text-primary hover:text-[var(--accent-hover)]"
+            >
+              Všechny
+            </Link>
+          </div>
+          <div className="stagger -mx-3 grid gap-1">
+            {frameworkScores.map((item) => {
+              const framework = FRAMEWORK_LIBRARY.find((fw) => fw.slug === item.slug);
+              const rowScore = item.score ?? 0;
+              const tone = statusTone(item.status, item.score);
+
+              return (
+                <Link
+                  key={item.slug}
+                  href={`/frameworks/${item.slug}`}
+                  className="interactive-card grid grid-cols-[auto_1fr_auto_auto_auto] items-center gap-3 rounded-md px-3 py-3 text-sm"
+                >
+                  <FrameworkIcon tone={tone} />
+                  <div className="min-w-0">
+                    <p className="truncate font-medium">{item.name}</p>
+                    <p className="mt-0.5 truncate text-xs text-foreground/52">
+                      {framework?.descriptionCs ?? item.regulator ?? "Framework"}
+                    </p>
+                  </div>
+                  <StatusPill tone={tone}>{frameworkStatusLabel(item.score)}</StatusPill>
+                  <span className="font-mono text-sm font-medium">
+                    {rowScore}%
+                  </span>
+                  <span
+                    className={
+                      tone === "pass"
+                        ? "text-status-pass"
+                        : tone === "warn"
+                          ? "text-status-warn"
+                          : "text-status-fail"
+                    }
+                  >
+                    <Sparkline score={rowScore} />
+                  </span>
+                </Link>
+              );
+            })}
+          </div>
+        </section>
+
+        <div className="grid gap-4">
+          <section className="nukib-card">
+            <div className="flex items-start justify-between gap-3">
+              <div>
+                <div className="flex flex-wrap items-center gap-2">
+                  <span className="rounded-sm border border-[var(--nukib-border)] bg-white/10 px-2 py-1 text-[11px] font-medium">
+                    🇨🇿 NÚKIB
+                  </span>
+                  <span className="rounded-sm bg-[var(--nukib-accent)]/18 px-2 py-1 text-[11px] font-medium text-[var(--nukib-text)]">
+                    Exclusive
+                  </span>
+                </div>
+                <h2 className="mt-3 text-lg font-medium">NÚKIB feed</h2>
+              </div>
+              <Newspaper className="h-5 w-5 text-[var(--nukib-accent)]" aria-hidden="true" strokeWidth={1.5} />
+            </div>
+            <div className="mt-4 grid gap-3">
+              {visibleNukibUpdates.slice(0, 3).map((update) => (
+                <article
+                  key={update.id}
+                  className="rounded-md border border-white/10 bg-white/[0.04] p-3"
+                >
+                  <div className="flex items-start justify-between gap-3">
+                    <div className="min-w-0">
+                      <p className="font-mono text-xs text-[var(--nukib-accent)]">
+                        {update.frameworkName ?? "Obecné"}
+                      </p>
+                      <h3 className="mt-1 text-sm font-medium text-[var(--nukib-text)]">
+                        {update.title}
+                      </h3>
+                    </div>
+                    <StatusPill tone={severityTone(update.severity)}>
+                      {update.severity.toUpperCase()}
+                    </StatusPill>
+                  </div>
+                  <p className="mt-2 text-xs leading-5 text-emerald-50/72">
+                    {update.summary}
+                  </p>
+                  <div className="mt-3 flex flex-wrap items-center gap-3 text-xs text-emerald-50/70">
+                    <span>{formatRelative(update.publishedAt)}</span>
+                    {update.sourceUrl ? (
+                      <a href={update.sourceUrl} target="_blank" rel="noreferrer" className="font-medium text-[var(--nukib-accent)]">
+                        Otevřít zdroj
+                      </a>
+                    ) : null}
+                    {!update.isRead && update.id !== "demo-nukib-feed" ? (
+                      <form action={markRegulationUpdateReadAction.bind(null, update.id)}>
+                        <button type="submit" className="font-medium text-[var(--nukib-accent)]">
+                          Označit přečtené
+                        </button>
+                      </form>
+                    ) : null}
+                  </div>
+                </article>
+              ))}
+            </div>
+          </section>
+
+          <section className="card">
+            <h2 className="text-lg font-medium">Aktivita</h2>
+            <div className="mt-4 grid gap-3">
+              {priorityControls.slice(0, 3).map((control) => (
+                <Link
+                  key={control.key}
+                  href={`/controls/${control.key}`}
+                  className="interactive-card flex items-start gap-3 rounded-md p-2"
+                >
+                  <CircleDot
+                    className={
+                      statusTone(control.status) === "fail"
+                        ? "mt-0.5 h-4 w-4 text-status-fail"
+                        : "mt-0.5 h-4 w-4 text-status-warn"
+                    }
+                    aria-hidden="true"
+                    strokeWidth={1.5}
+                  />
+                  <div className="min-w-0">
+                    <p className="truncate text-sm font-medium">{control.title}</p>
+                    <p className="mt-1 font-mono text-xs text-foreground/52">
+                      {control.key} · {controlStatusLabel(control.status)}
+                    </p>
+                  </div>
+                </Link>
+              ))}
+            </div>
+          </section>
+        </div>
+      </div>
+
+      <section className="card">
+        <div className="mb-4 flex items-center justify-between gap-4">
+          <div>
+            <h2 className="text-lg font-medium">Nadcházející termíny</h2>
+            <p className="mt-1 text-sm text-foreground/58">
+              Povinnosti s dopadem na aktivní program.
+            </p>
+          </div>
+          <CalendarClock className="h-5 w-5 text-primary" aria-hidden="true" strokeWidth={1.5} />
+        </div>
+        <div className="-mx-1 flex gap-3 overflow-x-auto px-1 pb-2">
+          {deadlines.map((framework) => (
+            <article
+              key={framework.slug}
+              className="min-w-[260px] rounded-lg border border-border bg-background p-4"
+            >
+              <div className="flex items-start justify-between gap-3">
+                <div>
+                  <p className="text-sm font-medium">{framework.nameCs}</p>
+                  <p className="mt-1 text-xs text-foreground/52">
+                    {framework.regulator}
+                  </p>
+                </div>
+                <FileArchive className="h-4 w-4 text-primary" aria-hidden="true" strokeWidth={1.5} />
+              </div>
+              <p className="mt-4 text-sm text-foreground/72">
+                {framework.descriptionCs}
+              </p>
+              <div className="mt-4 flex items-center justify-between gap-3">
+                <span className="font-mono text-xs text-foreground/52">
+                  {framework.mandatoryDeadline ?? "průběžně"}
+                </span>
+                <StatusPill
+                  tone={framework.mandatoryDeadline && formatDeadline(framework.mandatoryDeadline) === "Termín prošel" ? "fail" : "warn"}
+                >
+                  {formatDeadline(framework.mandatoryDeadline)}
+                </StatusPill>
               </div>
             </article>
           ))}
         </div>
-      </div>
-
-      <div className="grid gap-4 lg:grid-cols-[1.6fr_1fr]">
-        <section className="rounded-lg border border-border bg-surface">
-          <div className="border-b border-border p-5">
-            <h2 className="text-lg font-semibold">Prioritní kontroly</h2>
-          </div>
-          <div className="divide-y divide-border">
-            {priorityControls.map((control) => (
-              <Link
-                key={control.key}
-                href={`/controls/${control.key}`}
-                className="grid gap-3 p-5 hover:bg-surface-muted md:grid-cols-[1fr_auto]"
-              >
-                <div>
-                  <p className="font-medium">{control.title}</p>
-                  <p className="mt-1 text-sm text-foreground/58">
-                    {control.category}
-                  </p>
-                </div>
-                <span className="inline-flex items-center gap-2 text-sm text-foreground/64">
-                  {control.status === "fail" ? (
-                    <AlertTriangle className="h-4 w-4 text-danger" aria-hidden="true" />
-                  ) : (
-                    <Clock3 className="h-4 w-4 text-warning" aria-hidden="true" />
-                  )}
-                  {control.status}
-                </span>
-              </Link>
-            ))}
-          </div>
-        </section>
-
-        <section className="rounded-lg border border-border bg-surface">
-          <div className="flex items-center gap-2 border-b border-border p-5">
-            <Newspaper className="h-5 w-5 text-primary" aria-hidden="true" />
-            <h2 className="text-lg font-semibold">Regulační aktualizace</h2>
-          </div>
-          <div className="divide-y divide-border">
-            {updates.map((update) => (
-              <article key={update.id} className="p-5">
-                <div className="flex items-start justify-between gap-3">
-                  <h3 className="text-sm font-medium">{update.title}</h3>
-                  <div className="flex shrink-0 items-center gap-2">
-                    {!update.isRead ? (
-                      <span className="rounded-md bg-primary/12 px-2 py-1 text-[11px] text-primary">
-                        Nové
-                      </span>
-                    ) : null}
-                    <span className="rounded-md bg-surface-muted px-2 py-1 text-[11px]">
-                      {update.severity}
-                    </span>
-                  </div>
-                </div>
-                <p className="mt-2 text-xs text-foreground/58">
-                  {update.source} · {update.frameworkName ?? "Obecné"} ·{" "}
-                  {new Intl.DateTimeFormat("cs-CZ").format(update.publishedAt)}
-                </p>
-                {update.summary ? (
-                  <p className="mt-2 text-sm leading-6 text-foreground/64">
-                    {update.summary}
-                  </p>
-                ) : null}
-                <div className="mt-4 flex flex-wrap gap-3">
-                  {update.sourceUrl ? (
-                    <a
-                      href={update.sourceUrl}
-                      target="_blank"
-                      rel="noreferrer"
-                      className="inline-flex items-center gap-2 text-xs font-medium text-primary"
-                    >
-                      Otevřít zdroj
-                      <ArrowRight className="h-3.5 w-3.5" aria-hidden="true" />
-                    </a>
-                  ) : null}
-                  {!update.isRead && update.id !== "demo-regulation-update" ? (
-                    <form
-                      action={markRegulationUpdateReadAction.bind(null, update.id)}
-                    >
-                      <button
-                        type="submit"
-                        className="inline-flex items-center gap-2 text-xs font-medium text-foreground/64 hover:text-foreground"
-                      >
-                        <CheckCircle2 className="h-3.5 w-3.5" aria-hidden="true" />
-                        Označit přečtené
-                      </button>
-                    </form>
-                  ) : null}
-                </div>
-              </article>
-            ))}
-          </div>
-        </section>
-      </div>
+      </section>
     </section>
   );
 }

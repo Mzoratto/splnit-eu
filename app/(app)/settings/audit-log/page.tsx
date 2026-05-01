@@ -2,11 +2,16 @@ import Link from "next/link";
 import { auth } from "@clerk/nextjs/server";
 import { Download, Filter, ScrollText } from "lucide-react";
 import { hasDatabaseUrl } from "@/lib/db";
-import { listAuditLogs } from "@/lib/db/queries/audit-logs";
+import {
+  listAuditLogs,
+  MAX_AUDIT_LOG_EXPORT_LIMIT,
+} from "@/lib/db/queries/audit-logs";
 
 type SearchParams = {
   action?: string;
   entityType?: string;
+  from?: string;
+  to?: string;
 };
 
 const actionOptions = [
@@ -59,8 +64,30 @@ function buildExportHref(filters: SearchParams) {
     params.set("entityType", filters.entityType);
   }
 
+  if (filters.from) {
+    params.set("from", filters.from);
+  }
+
+  if (filters.to) {
+    params.set("to", filters.to);
+  }
+
+  params.set("limit", String(MAX_AUDIT_LOG_EXPORT_LIMIT));
+
   const query = params.toString();
   return query ? `/api/audit-log/export?${query}` : "/api/audit-log/export";
+}
+
+function parseDateFilter(value: string | undefined, boundary: "start" | "end") {
+  if (!value) {
+    return undefined;
+  }
+
+  const normalized =
+    boundary === "start" ? `${value}T00:00:00.000Z` : `${value}T23:59:59.999Z`;
+  const date = new Date(normalized);
+
+  return Number.isNaN(date.getTime()) ? undefined : date;
 }
 
 async function loadAuditLogs(filters: SearchParams) {
@@ -83,7 +110,9 @@ async function loadAuditLogs(filters: SearchParams) {
       action: filters.action,
       clerkOrgId: session.orgId,
       entityType: filters.entityType,
+      from: parseDateFilter(filters.from, "start"),
       limit: 100,
+      to: parseDateFilter(filters.to, "end"),
     });
   } catch {
     return [];
@@ -127,7 +156,7 @@ export default async function AuditLogSettingsPage({
           <Filter className="h-5 w-5 text-primary" aria-hidden="true" />
           <h2 className="text-lg font-semibold">Filtry</h2>
         </div>
-        <div className="grid gap-4 md:grid-cols-[1fr_1fr_auto]">
+        <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-[1fr_1fr_160px_160px_auto]">
           <label className="grid gap-2 text-sm">
             Akce
             <select
@@ -157,6 +186,24 @@ export default async function AuditLogSettingsPage({
                 </option>
               ))}
             </select>
+          </label>
+          <label className="grid gap-2 text-sm">
+            Od
+            <input
+              type="date"
+              name="from"
+              defaultValue={filters.from ?? ""}
+              className="rounded-md border border-border bg-background px-3 py-2"
+            />
+          </label>
+          <label className="grid gap-2 text-sm">
+            Do
+            <input
+              type="date"
+              name="to"
+              defaultValue={filters.to ?? ""}
+              className="rounded-md border border-border bg-background px-3 py-2"
+            />
           </label>
           <div className="flex items-end">
             <button

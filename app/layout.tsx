@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { DM_Mono, DM_Sans } from "next/font/google";
+import { DM_Sans, JetBrains_Mono } from "next/font/google";
 import { NextIntlClientProvider } from "next-intl";
 import { getLocale, getMessages } from "next-intl/server";
 import { CookieConsent } from "@/components/cookie-consent";
@@ -13,13 +13,26 @@ const dmSans = DM_Sans({
   preload: true,
 });
 
-const dmMono = DM_Mono({
-  variable: "--font-dm-mono",
+const jetBrainsMono = JetBrains_Mono({
+  variable: "--font-jetbrains-mono",
   subsets: ["latin"],
   weight: ["400", "500"],
   display: "optional",
   preload: true,
 });
+
+const themeScript = `
+(() => {
+  try {
+    const stored = window.localStorage.getItem("splnit-theme");
+    const theme = stored === "dark" ? "dark" : "light";
+    document.documentElement.dataset.theme = theme;
+    document.documentElement.style.colorScheme = theme;
+  } catch {
+    document.documentElement.dataset.theme = "light";
+  }
+})();
+`;
 
 export const metadata: Metadata = {
   applicationName: "Splnit.eu",
@@ -79,8 +92,13 @@ export default async function RootLayout({
   return (
     <html
       lang={locale}
-      className={`${dmSans.variable} ${dmMono.variable} h-full scroll-smooth`}
+      data-theme="light"
+      suppressHydrationWarning
+      className={`${dmSans.variable} ${jetBrainsMono.variable} h-full scroll-smooth`}
     >
+      <head>
+        <script dangerouslySetInnerHTML={{ __html: themeScript }} />
+      </head>
       <body className="min-h-full bg-background text-foreground antialiased">
         <NextIntlClientProvider locale={locale} messages={messages}>
           <RegisterServiceWorker />

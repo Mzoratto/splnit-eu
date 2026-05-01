@@ -9,6 +9,7 @@ export async function GET() {
       databaseConfigured: hasDatabaseUrl(),
     },
     ok: true,
+    readiness: "/api/readiness",
     service: "splnit.eu",
     timestamp: new Date().toISOString(),
   });

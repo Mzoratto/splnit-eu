@@ -10,6 +10,8 @@ import {
   PlugZap,
   XCircle,
 } from "lucide-react";
+import { PageHeader } from "@/components/app/page-header";
+import { StatusPill, type StatusPillTone } from "@/components/app/status-pill";
 import { hasDatabaseUrl } from "@/lib/db";
 import { getIntegrationsHubData } from "@/lib/db/queries/integrations";
 import { disconnectIntegrationAction } from "./actions";
@@ -87,20 +89,20 @@ function formatDate(value: Date | string | null | undefined) {
   }).format(new Date(value));
 }
 
-function statusClass(status: string) {
+function statusMeta(status: string): { label: string; tone: StatusPillTone } {
   if (status === "connected") {
-    return "bg-emerald-50 text-emerald-800";
+    return { label: "PASS", tone: "pass" };
   }
 
   if (status === "connecting") {
-    return "bg-amber-50 text-amber-900";
+    return { label: "WARN", tone: "warn" };
   }
 
   if (status === "coming_soon") {
-    return "bg-surface-muted text-foreground/58";
+    return { label: "PENDING", tone: "neutral" };
   }
 
-  return "bg-blue-50 text-blue-800";
+  return { label: "N/A", tone: "neutral" };
 }
 
 function getRunBreakdown(provider: string, data: HubData | null) {
@@ -150,50 +152,49 @@ export default async function IntegrationsPage() {
   return (
     <section className="space-y-6">
       <IntegrationStatusRefresh enabled={hasConnecting} />
-      <div className="max-w-3xl">
-        <p className="text-sm font-medium uppercase tracking-[0.14em] text-primary">
-          Integrace
-        </p>
-        <h1 className="mt-2 text-3xl font-semibold tracking-normal">
-          Automatické testy
-        </h1>
-        <p className="mt-3 text-base leading-7 text-foreground/68">
-          Připojené služby dodávají důkazy a aktualizují stavy kontrol.
-        </p>
-      </div>
+      <PageHeader
+        eyebrow="Integrace"
+        title="Automatické testy"
+        subtitle="Připojené služby dodávají důkazy a aktualizují stavy kontrol."
+      />
 
       <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
         {providers.map((provider) => {
           const Icon = provider.icon;
           const integration = integrationMap.get(provider.key);
-          const status =
+          const rawStatus =
             integration?.status ?? (provider.planned ? "coming_soon" : "available");
-          const connected = status === "connected";
+          const connected = rawStatus === "connected";
+          const providerStatus = statusMeta(rawStatus);
           const breakdown = getRunBreakdown(provider.key, data);
           const testCount = getTestCount(provider.key, provider.testCount, data);
 
           return (
             <article
               key={provider.key}
-              className="rounded-lg border border-border bg-surface p-5"
+              className="card interactive-card"
             >
               <div className="flex items-start justify-between gap-4">
                 <div>
-                  <span
-                    className={`inline-flex rounded-md px-2 py-1 text-xs font-medium ${statusClass(
-                      status,
-                    )}`}
-                  >
-                    {status}
-                  </span>
-                  <h2 className="mt-3 text-xl font-semibold">{provider.name}</h2>
+                  <StatusPill tone={providerStatus.tone}>
+                    {providerStatus.label}
+                  </StatusPill>
+                  <h2 className="mt-3 text-lg font-medium">{provider.name}</h2>
                 </div>
                 {connected ? (
-                  <CheckCircle2 className="h-5 w-5 text-accent" aria-hidden="true" />
+                  <CheckCircle2
+                    className="h-5 w-5 text-status-pass"
+                    aria-hidden="true"
+                    strokeWidth={1.5}
+                  />
                 ) : provider.planned ? (
-                  <CircleDashed className="h-5 w-5 text-foreground/42" aria-hidden="true" />
+                  <CircleDashed
+                    className="h-5 w-5 text-foreground/42"
+                    aria-hidden="true"
+                    strokeWidth={1.5}
+                  />
                 ) : (
-                  <Icon className="h-5 w-5 text-primary" aria-hidden="true" />
+                  <Icon className="h-5 w-5 text-primary" aria-hidden="true" strokeWidth={1.5} />
                 )}
               </div>
               <p className="mt-3 min-h-24 text-sm leading-6 text-foreground/64">
@@ -203,7 +204,7 @@ export default async function IntegrationsPage() {
               <dl className="mt-4 grid grid-cols-2 gap-3 text-sm">
                 <div>
                   <dt className="text-foreground/52">Testy</dt>
-                  <dd className="mt-1 font-mono text-lg font-semibold">
+                  <dd className="mt-1 font-mono text-lg font-medium">
                     {testCount}
                   </dd>
                 </div>
@@ -220,19 +221,19 @@ export default async function IntegrationsPage() {
                   Výsledky za 24h
                 </p>
                 <div className="mt-2 grid grid-cols-5 gap-2 text-center font-mono text-xs">
-                  <span className="rounded bg-background px-1 py-1 text-emerald-700">
+                  <span className="rounded-sm bg-background px-1 py-1 text-status-pass">
                     {breakdown.pass}
                   </span>
-                  <span className="rounded bg-background px-1 py-1 text-danger">
+                  <span className="rounded-sm bg-background px-1 py-1 text-danger">
                     {breakdown.fail}
                   </span>
-                  <span className="rounded bg-background px-1 py-1 text-warning">
+                  <span className="rounded-sm bg-background px-1 py-1 text-warning">
                     {breakdown.warning}
                   </span>
-                  <span className="rounded bg-background px-1 py-1 text-blue-700">
+                  <span className="rounded-sm bg-background px-1 py-1 text-primary">
                     {breakdown.manual_review}
                   </span>
-                  <span className="rounded bg-background px-1 py-1 text-foreground/58">
+                  <span className="rounded-sm bg-background px-1 py-1 text-foreground/58">
                     {breakdown.error}
                   </span>
                 </div>
@@ -243,27 +244,27 @@ export default async function IntegrationsPage() {
                   <button
                     type="button"
                     disabled
-                    className="inline-flex items-center gap-2 rounded-md border border-border px-4 py-3 text-sm font-medium opacity-50"
+                    className="btn btn-secondary opacity-50"
                   >
                     Připravuje se
                   </button>
                 ) : (
                   <Link
                     href={provider.href}
-                    className="inline-flex items-center gap-2 rounded-md border border-border px-4 py-3 text-sm font-medium hover:bg-surface-muted"
+                    className="btn btn-secondary"
                   >
                     {connected ? "Spravovat" : "Připojit"}
-                    <ArrowRight className="h-4 w-4" aria-hidden="true" />
+                    <ArrowRight className="h-4 w-4" aria-hidden="true" strokeWidth={1.5} />
                   </Link>
                 )}
                 {connected ? (
                   <form action={disconnectIntegrationAction.bind(null, provider.key)}>
                     <button
                       type="submit"
-                      className="inline-flex items-center gap-2 rounded-md border border-border px-4 py-3 text-sm font-medium text-danger hover:bg-surface-muted"
+                      className="btn btn-danger"
                     >
                       Odpojit
-                      <XCircle className="h-4 w-4" aria-hidden="true" />
+                      <XCircle className="h-4 w-4" aria-hidden="true" strokeWidth={1.5} />
                     </button>
                   </form>
                 ) : null}

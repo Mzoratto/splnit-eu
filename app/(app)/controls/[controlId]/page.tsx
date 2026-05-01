@@ -1,6 +1,6 @@
 import { auth } from "@clerk/nextjs/server";
 import { notFound } from "next/navigation";
-import { FileUp, History, ShieldCheck, Upload } from "lucide-react";
+import { Download, FileUp, History, ShieldCheck, Upload } from "lucide-react";
 import {
   updateControlStatusAction,
   uploadEvidenceAction,
@@ -294,6 +294,15 @@ export default async function ControlDetailPage({
                       Expirace {formatDate(item.expiresAt)}
                     </span>
                   </div>
+                  {item.blobUrl ? (
+                    <a
+                      href={`/api/evidence/${item.id}/download`}
+                      className="mt-4 inline-flex items-center gap-2 rounded-md border border-border px-3 py-2 text-sm hover:bg-surface-muted"
+                    >
+                      Stáhnout soubor
+                      <Download className="h-4 w-4" aria-hidden="true" />
+                    </a>
+                  ) : null}
                 </article>
               ))
             ) : (

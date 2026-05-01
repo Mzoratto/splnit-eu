@@ -1,6 +1,8 @@
 import Link from "next/link";
 import { auth } from "@clerk/nextjs/server";
-import { ArrowRight, FileText, Filter } from "lucide-react";
+import { ArrowRight, Download, FileText, Filter } from "lucide-react";
+import { PageHeader } from "@/components/app/page-header";
+import { StatusPill, type StatusPillTone } from "@/components/app/status-pill";
 import { hasDatabaseUrl } from "@/lib/db";
 import { listEvidenceVault } from "@/lib/db/queries/evidence";
 import { FRAMEWORK_LIBRARY } from "@/lib/frameworks/registry";
@@ -31,6 +33,34 @@ function getDaysUntil(value: Date | string | null) {
   target.setHours(0, 0, 0, 0);
 
   return Math.ceil((target.getTime() - today.getTime()) / 86_400_000);
+}
+
+function statusTone(status: string | null | undefined): StatusPillTone {
+  if (status === "pass") {
+    return "pass";
+  }
+
+  if (status === "fail") {
+    return "fail";
+  }
+
+  if (status === "manual_review" || status === "warning") {
+    return "warn";
+  }
+
+  return "neutral";
+}
+
+function statusLabel(status: string | null | undefined) {
+  const labels: Record<string, string> = {
+    fail: "FAIL",
+    manual_review: "WARN",
+    pass: "PASS",
+    unknown: "PENDING",
+    warning: "WARN",
+  };
+
+  return labels[status ?? "unknown"] ?? "PENDING";
 }
 
 async function loadEvidenceRows() {
@@ -83,30 +113,24 @@ export default async function EvidencePage({
 
   return (
     <section className="space-y-6">
-      <div className="max-w-3xl">
-        <p className="text-sm font-medium uppercase tracking-[0.14em] text-primary">
-          Evidence
-        </p>
-        <h1 className="mt-2 text-3xl font-semibold tracking-normal">
-          Evidence vault
-        </h1>
-        <p className="mt-3 text-base leading-7 text-foreground/68">
-          Úložiště manuálních uploadů a automatických snapshotů napojených na kontroly.
-        </p>
-      </div>
+      <PageHeader
+        eyebrow="Evidence"
+        title="Evidence vault"
+        subtitle="Úložiště manuálních uploadů a automatických snapshotů napojených na kontroly."
+      />
 
-      <form className="rounded-lg border border-border bg-surface p-5">
+      <form className="card">
         <div className="mb-4 flex items-center gap-2">
-          <Filter className="h-5 w-5 text-primary" aria-hidden="true" />
-          <h2 className="text-lg font-semibold">Filtry</h2>
+          <Filter className="h-5 w-5 text-primary" aria-hidden="true" strokeWidth={1.5} />
+          <h2 className="text-lg font-medium">Filtry</h2>
         </div>
         <div className="grid gap-4 md:grid-cols-4">
-          <label className="grid gap-2 text-sm">
+          <label className="grid gap-2 text-xs font-medium text-foreground/68">
             Framework
             <select
               name="framework"
               defaultValue={filters.framework ?? ""}
-              className="rounded-md border border-border bg-background px-3 py-2"
+              className="h-9 rounded-md border border-border-default bg-[var(--bg-input)] px-3 text-sm text-foreground"
             >
               <option value="">Všechny</option>
               {FRAMEWORK_LIBRARY.map((framework) => (
@@ -116,12 +140,12 @@ export default async function EvidencePage({
               ))}
             </select>
           </label>
-          <label className="grid gap-2 text-sm">
+          <label className="grid gap-2 text-xs font-medium text-foreground/68">
             Status
             <select
               name="status"
               defaultValue={filters.status ?? ""}
-              className="rounded-md border border-border bg-background px-3 py-2"
+              className="h-9 rounded-md border border-border-default bg-[var(--bg-input)] px-3 text-sm text-foreground"
             >
               <option value="">Všechny</option>
               <option value="pass">Splněno</option>
@@ -130,12 +154,12 @@ export default async function EvidencePage({
               <option value="unknown">Neznámé</option>
             </select>
           </label>
-          <label className="grid gap-2 text-sm">
+          <label className="grid gap-2 text-xs font-medium text-foreground/68">
             Expirace
             <select
               name="expiry"
               defaultValue={filters.expiry ?? ""}
-              className="rounded-md border border-border bg-background px-3 py-2"
+              className="h-9 rounded-md border border-border-default bg-[var(--bg-input)] px-3 text-sm text-foreground"
             >
               <option value="">Vše</option>
               <option value="30">Do 30 dnů</option>
@@ -146,19 +170,19 @@ export default async function EvidencePage({
           <div className="flex items-end">
             <button
               type="submit"
-              className="inline-flex w-full items-center justify-center gap-2 rounded-md bg-primary px-4 py-3 text-sm font-medium text-primary-foreground"
+              className="btn btn-primary w-full"
             >
               Použít filtry
-              <Filter className="h-4 w-4" aria-hidden="true" />
+              <Filter className="h-4 w-4" aria-hidden="true" strokeWidth={1.5} />
             </button>
           </div>
         </div>
       </form>
 
-      <section className="rounded-lg border border-border bg-surface">
+      <section className="overflow-hidden rounded-lg border border-border bg-surface">
         <div className="flex items-center justify-between gap-4 border-b border-border p-5">
-          <h2 className="text-lg font-semibold">Záznamy evidence</h2>
-          <span className="rounded-md bg-surface-muted px-2 py-1 text-xs text-foreground/64">
+          <h2 className="text-lg font-medium">Záznamy evidence</h2>
+          <span className="rounded-sm bg-surface-muted px-2 py-1 font-mono text-xs text-foreground/64">
             {filteredRows.length} / {rows.length}
           </span>
         </div>
@@ -174,13 +198,13 @@ export default async function EvidencePage({
                 >
                   <div>
                     <div className="flex flex-wrap items-center gap-2">
-                      <FileText className="h-4 w-4 text-primary" aria-hidden="true" />
-                      <h3 className="font-medium">
+                      <FileText className="h-4 w-4 text-status-pass" aria-hidden="true" strokeWidth={1.5} />
+                      <h3 className="font-mono text-sm font-medium">
                         {item.description ?? item.controlTitle}
                       </h3>
-                      <span className="rounded-md bg-surface-muted px-2 py-1 text-xs text-foreground/64">
-                        {item.status ?? "unknown"}
-                      </span>
+                      <StatusPill tone={statusTone(item.status)}>
+                        {statusLabel(item.status)}
+                      </StatusPill>
                     </div>
                     <p className="mt-2 text-sm text-foreground/58">
                       {item.controlTitle} · {item.type} · {formatDate(item.collectedAt)}
@@ -189,7 +213,7 @@ export default async function EvidencePage({
                       {item.frameworks.map((framework) => (
                         <span
                           key={`${item.evidenceId}-${framework.frameworkSlug}`}
-                          className="rounded-md bg-blue-50 px-2 py-1 text-xs text-blue-700"
+                          className="rounded-sm bg-[var(--accent-subtle)] px-2 py-1 text-xs text-primary"
                         >
                           {framework.frameworkName}
                         </span>
@@ -201,12 +225,21 @@ export default async function EvidencePage({
                       Expirace {formatDate(item.expiresAt)}
                       {daysUntilExpiry !== null ? ` (${daysUntilExpiry} dnů)` : ""}
                     </span>
+                    {item.blobUrl ? (
+                      <Link
+                        href={`/api/evidence/${item.evidenceId}/download`}
+                        className="btn btn-secondary h-8 px-3"
+                      >
+                        Soubor
+                        <Download className="h-4 w-4" aria-hidden="true" strokeWidth={1.5} />
+                      </Link>
+                    ) : null}
                     <Link
                       href={`/controls/${item.controlKey}`}
-                      className="inline-flex items-center gap-2 rounded-md border border-border px-3 py-2 text-sm hover:bg-surface-muted"
+                      className="btn btn-secondary h-8 px-3"
                     >
                       Kontrola
-                      <ArrowRight className="h-4 w-4" aria-hidden="true" />
+                      <ArrowRight className="h-4 w-4" aria-hidden="true" strokeWidth={1.5} />
                     </Link>
                   </div>
                 </article>

@@ -4,6 +4,7 @@ import { auth } from "@clerk/nextjs/server";
 import { put } from "@vercel/blob";
 import { revalidatePath } from "next/cache";
 import { z } from "zod";
+import { deleteBlobUrlsAfterFailedSave } from "@/lib/blob/cleanup";
 import type { FrameworkSlug } from "@/lib/controls/library";
 import {
   assessFramework,
@@ -97,7 +98,7 @@ export async function generateGapReportAction(frameworkSlug: string) {
     `gap-reports/${clerkOrgId}/${parsedSlug}-${generatedAt.getTime()}.pdf`,
     pdf,
     {
-      access: "public",
+      access: "private",
       contentType: "application/pdf",
     },
   );
@@ -115,7 +116,9 @@ export async function generateGapReportAction(frameworkSlug: string) {
       totalControls: detail.controls.length,
     },
     title: `${detail.framework.nameCs} gap report`,
-  });
+  }).catch((error: unknown) =>
+    deleteBlobUrlsAfterFailedSave([blob.url], error),
+  );
 
   revalidatePath(`/frameworks/${parsedSlug}`);
 }

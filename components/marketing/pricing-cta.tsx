@@ -2,6 +2,11 @@
 
 import Link from "next/link";
 import { useEffect, useState } from "react";
+import {
+  cookieConsentChangedEvent,
+  hasOptionalAnalyticsConsent,
+  type CookieConsentValue,
+} from "@/lib/privacy/cookie-consent";
 
 const PRICING_CTA_FLAG = "pricing_cta_copy";
 const POSTHOG_DEFAULTS = "2026-01-30";
@@ -26,6 +31,10 @@ async function getPostHog() {
     return null;
   }
 
+  if (!hasOptionalAnalyticsConsent()) {
+    return null;
+  }
+
   if (window.__splnitPostHogStarted) {
     const { default: posthog } = await import("posthog-js");
     posthogClient = posthog;
@@ -45,10 +54,20 @@ async function getPostHog() {
     capture_pageview: false,
     defaults: POSTHOG_DEFAULTS,
   });
+  posthog.opt_in_capturing();
   posthogClient = posthog;
   window.__splnitPostHogStarted = true;
 
   return posthog;
+}
+
+function stopPostHog() {
+  posthogClient?.opt_out_capturing();
+  posthogClient = null;
+
+  if (typeof window !== "undefined") {
+    window.__splnitPostHogStarted = false;
+  }
 }
 
 function getFlaggedCopy(posthog: PostHogClient, fallback: string) {
@@ -82,7 +101,9 @@ export function PricingCta({
     let cancelled = false;
     let unsubscribe: (() => void) | undefined;
 
-    void getPostHog().then((posthog) => {
+    const applyPostHogCopy = async () => {
+      const posthog = await getPostHog();
+
       if (!posthog || cancelled) {
         return;
       }
@@ -97,10 +118,29 @@ export function PricingCta({
       if (typeof stopListening === "function") {
         unsubscribe = stopListening;
       }
-    });
+    };
+
+    void applyPostHogCopy();
+
+    const onConsentChange = (event: Event) => {
+      const consent = (event as CustomEvent<CookieConsentValue>).detail;
+
+      if (consent === "accepted") {
+        void applyPostHogCopy();
+        return;
+      }
+
+      unsubscribe?.();
+      unsubscribe = undefined;
+      stopPostHog();
+      setCopy(label);
+    };
+
+    window.addEventListener(cookieConsentChangedEvent, onConsentChange);
 
     return () => {
       cancelled = true;
+      window.removeEventListener(cookieConsentChangedEvent, onConsentChange);
       unsubscribe?.();
     };
   }, [label, planName]);

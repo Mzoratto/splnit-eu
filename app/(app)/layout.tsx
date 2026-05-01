@@ -1,5 +1,5 @@
 import { redirect } from "next/navigation";
-import { ClerkProvider } from "@clerk/nextjs";
+import { ClerkThemeProvider } from "@/components/app/clerk-theme-provider";
 import { auth } from "@clerk/nextjs/server";
 import { AppShell } from "@/components/app/app-shell";
 import { hasDatabaseUrl } from "@/lib/db";
@@ -53,5 +53,5 @@ export default async function ProtectedLayout({
     return shell;
   }
 
-  return <ClerkProvider>{shell}</ClerkProvider>;
+  return <ClerkThemeProvider>{shell}</ClerkThemeProvider>;
 }

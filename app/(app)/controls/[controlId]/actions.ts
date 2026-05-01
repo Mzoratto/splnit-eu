@@ -4,6 +4,7 @@ import { auth } from "@clerk/nextjs/server";
 import { put } from "@vercel/blob";
 import { revalidatePath } from "next/cache";
 import { z } from "zod";
+import { deleteBlobUrlsAfterFailedSave } from "@/lib/blob/cleanup";
 import { createAuditLog } from "@/lib/db/queries/audit-logs";
 import { updateControlStatus } from "@/lib/db/queries/controls";
 import { createManualEvidence } from "@/lib/db/queries/evidence";
@@ -125,7 +126,9 @@ export async function uploadEvidenceAction(
     expiresAt: expiresAt || null,
     fileType: file.type || "application/octet-stream",
     source: source || "manual_upload",
-  });
+  }).catch((error: unknown) =>
+    deleteBlobUrlsAfterFailedSave([blob.url], error),
+  );
   await createAuditLog({
     action: "evidence.uploaded",
     clerkOrgId: session.clerkOrgId,

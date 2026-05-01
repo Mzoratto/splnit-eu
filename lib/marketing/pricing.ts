@@ -142,7 +142,7 @@ export const faqs = [
   {
     question: "Jsou moje data uložena v EU?",
     answer:
-      "Ano. Všechna data jsou uložena v AWS eu-west-1 (Irsko). Nikdy neopustí EU.",
+      "Produkční konfigurace je navržená pro EU regiony. Přesné lokace zpracování a případné mechanismy předání mimo EU/EHP potvrzujeme v DPA a subdodavatelském přehledu.",
   },
   {
     question: "Potřebuji technické znalosti k nastavení?",

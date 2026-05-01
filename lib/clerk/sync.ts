@@ -1,5 +1,13 @@
+import { deleteBlobUrls } from "@/lib/blob/cleanup";
 import { getDb } from "@/lib/db";
-import { organisations, profiles } from "@/lib/db/schema";
+import {
+  evidence,
+  organisations,
+  orgControlStatuses,
+  policies,
+  profiles,
+  trustCenterRequests,
+} from "@/lib/db/schema";
 import { eq } from "drizzle-orm";
 
 export async function upsertOrganisationFromClerk(input: {
@@ -29,6 +37,30 @@ export async function upsertOrganisationFromClerk(input: {
 
 export async function deleteOrganisationFromClerk(clerkOrgId: string) {
   const db = getDb();
+  const [evidenceBlobRows, policyBlobRows] = await Promise.all([
+    db
+      .select({ blobUrl: evidence.blobUrl })
+      .from(evidence)
+      .where(eq(evidence.clerkOrgId, clerkOrgId)),
+    db
+      .select({ blobUrl: policies.blobUrl })
+      .from(policies)
+      .where(eq(policies.clerkOrgId, clerkOrgId)),
+  ]);
+
+  await deleteBlobUrls([
+    ...evidenceBlobRows.map((row) => row.blobUrl),
+    ...policyBlobRows.map((row) => row.blobUrl),
+  ]);
+
+  await Promise.all([
+    db
+      .delete(orgControlStatuses)
+      .where(eq(orgControlStatuses.clerkOrgId, clerkOrgId)),
+    db
+      .delete(trustCenterRequests)
+      .where(eq(trustCenterRequests.clerkOrgId, clerkOrgId)),
+  ]);
 
   await db
     .delete(organisations)

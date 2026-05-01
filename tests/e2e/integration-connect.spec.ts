@@ -18,3 +18,19 @@ test("renders the Microsoft 365 integration test suite", async ({ page }) => {
   ).toBeVisible();
   await expect(page.getByText("Výsledky se zobrazí po prvním běhu runneru.")).toBeVisible();
 });
+
+test("renders planned integration details without enabling OAuth", async ({
+  page,
+}) => {
+  await page.goto("/integrations/google-workspace");
+
+  await expect(
+    page.getByRole("heading", { name: "Google Workspace" }),
+  ).toBeVisible();
+  await expect(page.getByText("coming_soon")).toBeVisible();
+  await expect(page.getByText("No OAuth flow or token storage is active")).toBeVisible();
+  await expect(page.getByRole("link", { name: /Back to integrations/ })).toHaveAttribute(
+    "href",
+    "/integrations",
+  );
+});
