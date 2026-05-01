@@ -1,4 +1,6 @@
 import { expect, test } from "@playwright/test";
+import { readFile } from "node:fs/promises";
+import path from "node:path";
 
 test("sets baseline security headers", async ({ request }) => {
   const response = await request.get("/");
@@ -69,4 +71,16 @@ test("requires authentication for audit log export filters", async ({
   );
 
   expect(response.status()).toBe(401);
+});
+
+test("schedules evidence expiry reminders in Vercel cron", async () => {
+  const configPath = path.join(process.cwd(), "vercel.json");
+  const config = JSON.parse(await readFile(configPath, "utf8")) as {
+    crons?: { path: string; schedule: string }[];
+  };
+
+  expect(config.crons).toContainEqual({
+    path: "/api/cron/evidence-expiry",
+    schedule: "0 7 * * *",
+  });
 });
