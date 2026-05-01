@@ -1,5 +1,7 @@
 import { auth } from "@clerk/nextjs/server";
 import { Download, Flame, Plus, ShieldAlert } from "lucide-react";
+import { PageHeader } from "@/components/app/page-header";
+import { StatusPill, type StatusPillTone } from "@/components/app/status-pill";
 import { hasDatabaseUrl } from "@/lib/db";
 import { listRiskItemsForOrg } from "@/lib/db/queries/risks";
 import { COMMON_CZECH_SME_RISKS } from "@/lib/risks/common";
@@ -72,36 +74,36 @@ function getScore(risk: RiskItem) {
   return risk.riskScore ?? risk.likelihood * risk.impact;
 }
 
-function scoreClass(score: number) {
+function scoreTone(score: number): StatusPillTone {
   if (score >= 20) {
-    return "bg-red-50 text-red-800";
+    return "fail";
   }
 
   if (score >= 12) {
-    return "bg-amber-50 text-amber-900";
+    return "warn";
   }
 
   if (score >= 6) {
-    return "bg-blue-50 text-blue-800";
+    return "neutral";
   }
 
-  return "bg-emerald-50 text-emerald-800";
+  return "pass";
 }
 
-function statusClass(status: string) {
+function statusTone(status: string): StatusPillTone {
   if (status === "closed") {
-    return "bg-emerald-50 text-emerald-800";
+    return "pass";
   }
 
-  if (status === "accepted") {
-    return "bg-blue-50 text-blue-800";
+  if (status === "accepted" || status === "mitigating") {
+    return "warn";
   }
 
-  if (status === "mitigating") {
-    return "bg-amber-50 text-amber-900";
-  }
+  return "neutral";
+}
 
-  return "bg-surface-muted text-foreground/64";
+function fieldClass(extra = "") {
+  return `h-9 rounded-md border border-border-default bg-[var(--bg-input)] px-3 text-sm text-foreground ${extra}`;
 }
 
 function heatColor(score: number) {
@@ -219,77 +221,68 @@ export default async function RisksPage() {
 
   return (
     <section className="space-y-8">
-      <div className="flex flex-col justify-between gap-4 md:flex-row md:items-end">
-        <div>
-          <p className="text-sm font-medium uppercase tracking-[0.14em] text-primary">
-            Risk register
-          </p>
-          <h1 className="mt-2 text-3xl font-semibold tracking-normal">
-            Rizika
-          </h1>
-          <p className="mt-2 max-w-2xl text-sm leading-6 text-foreground/64">
-            ISO 27001 risk register se skóre likelihood × impact, vlastníkem, termínem a stavem mitigace.
-          </p>
-        </div>
-        <a
-          href="/api/risks/register-report"
-          className="inline-flex items-center gap-2 rounded-md border border-border px-4 py-3 text-sm font-medium hover:bg-surface-muted"
-        >
-          Export ISO PDF
-          <Download className="h-4 w-4" aria-hidden="true" />
-        </a>
-      </div>
+      <PageHeader
+        eyebrow="Risk register"
+        title="Rizika"
+        subtitle="ISO 27001 risk register se skóre likelihood × impact, vlastníkem, termínem a stavem mitigace."
+        actions={
+          <a href="/api/risks/register-report" className="btn btn-secondary">
+            Export ISO PDF
+            <Download className="h-4 w-4" aria-hidden="true" strokeWidth={1.5} />
+          </a>
+        }
+      />
 
       <div className="grid gap-4 lg:grid-cols-3">
-        <article className="rounded-lg border border-border bg-surface p-5">
+        <article className="metric-card">
           <div className="flex items-center gap-2">
-            <ShieldAlert className="h-5 w-5 text-primary" aria-hidden="true" />
-            <h2 className="text-lg font-semibold">Rizika</h2>
+            <ShieldAlert className="h-5 w-5 text-primary" aria-hidden="true" strokeWidth={1.5} />
+            <h2 className="text-lg font-medium">Rizika</h2>
           </div>
-          <p className="mt-4 font-mono text-2xl font-semibold">{risks.length}</p>
+          <p className="mt-4 font-mono text-2xl font-medium">{risks.length}</p>
           <p className="mt-2 text-sm text-foreground/58">
             Celkem položek v registru.
           </p>
         </article>
-        <article className="rounded-lg border border-border bg-surface p-5">
+        <article className="metric-card">
           <div className="flex items-center gap-2">
-            <Flame className="h-5 w-5 text-primary" aria-hidden="true" />
-            <h2 className="text-lg font-semibold">Vysoká rizika</h2>
+            <Flame className="h-5 w-5 text-primary" aria-hidden="true" strokeWidth={1.5} />
+            <h2 className="text-lg font-medium">Vysoká rizika</h2>
           </div>
-          <p className="mt-4 font-mono text-2xl font-semibold">
+          <p className="mt-4 font-mono text-2xl font-medium">
             {highRisks.length}
           </p>
           <p className="mt-2 text-sm text-foreground/58">Skóre 12 a více.</p>
         </article>
-        <article className="rounded-lg border border-border bg-surface p-5">
+        <article className="metric-card">
           <div className="flex items-center gap-2">
-            <Plus className="h-5 w-5 text-primary" aria-hidden="true" />
-            <h2 className="text-lg font-semibold">Průměrné skóre</h2>
+            <Plus className="h-5 w-5 text-primary" aria-hidden="true" strokeWidth={1.5} />
+            <h2 className="text-lg font-medium">Průměrné skóre</h2>
           </div>
-          <p className="mt-4 font-mono text-2xl font-semibold">{averageScore}</p>
+          <p className="mt-4 font-mono text-2xl font-medium">{averageScore}</p>
           <p className="mt-2 text-sm text-foreground/58">Likelihood × impact.</p>
         </article>
       </div>
 
       <div className="grid gap-4 xl:grid-cols-[0.8fr_1.4fr]">
         <section className="space-y-4">
-          <article className="rounded-lg border border-border bg-surface p-5">
+          <article className="card">
             <div className="flex items-center gap-2">
-              <Plus className="h-5 w-5 text-primary" aria-hidden="true" />
-              <h2 className="text-lg font-semibold">Nové riziko</h2>
+              <Plus className="h-5 w-5 text-primary" aria-hidden="true" strokeWidth={1.5} />
+              <h2 className="text-lg font-medium">Nové riziko</h2>
             </div>
             <form action={createRiskAction} className="mt-5 space-y-4">
-              <label className="grid gap-2 text-sm">
+              <label className="grid gap-2 text-xs font-medium text-foreground/68">
                 Název
                 <input
                   name="title"
                   required
                   disabled={!canMutate}
-                  className="rounded-md border border-border bg-background px-3 py-2"
+                  className={fieldClass()}
                 />
               </label>
               <div className="grid gap-3 md:grid-cols-2">
-                <label className="grid gap-2 text-sm">
+                <label className="grid gap-2 text-xs font-medium text-foreground/68">
                   Likelihood
                   <input
                     name="likelihood"
@@ -298,10 +291,10 @@ export default async function RisksPage() {
                     max="5"
                     defaultValue="3"
                     disabled={!canMutate}
-                    className="rounded-md border border-border bg-background px-3 py-2"
+                    className={fieldClass("font-mono")}
                   />
                 </label>
-                <label className="grid gap-2 text-sm">
+                <label className="grid gap-2 text-xs font-medium text-foreground/68">
                   Impact
                   <input
                     name="impact"
@@ -310,58 +303,58 @@ export default async function RisksPage() {
                     max="5"
                     defaultValue="3"
                     disabled={!canMutate}
-                    className="rounded-md border border-border bg-background px-3 py-2"
+                    className={fieldClass("font-mono")}
                   />
                 </label>
               </div>
               <div className="grid gap-3 md:grid-cols-2">
-                <label className="grid gap-2 text-sm">
+                <label className="grid gap-2 text-xs font-medium text-foreground/68">
                   Kategorie
                   <input
                     name="category"
                     disabled={!canMutate}
-                    className="rounded-md border border-border bg-background px-3 py-2"
+                    className={fieldClass()}
                   />
                 </label>
-                <label className="grid gap-2 text-sm">
+                <label className="grid gap-2 text-xs font-medium text-foreground/68">
                   Owner
                   <input
                     name="owner"
                     disabled={!canMutate}
-                    className="rounded-md border border-border bg-background px-3 py-2"
+                    className={fieldClass()}
                   />
                 </label>
               </div>
-              <label className="grid gap-2 text-sm">
+              <label className="grid gap-2 text-xs font-medium text-foreground/68">
                 Due date
                 <input
                   name="dueDate"
                   type="date"
                   disabled={!canMutate}
-                  className="rounded-md border border-border bg-background px-3 py-2"
+                  className={fieldClass("font-mono")}
                 />
               </label>
-              <label className="grid gap-2 text-sm">
+              <label className="grid gap-2 text-xs font-medium text-foreground/68">
                 Mitigation notes
                 <textarea
                   name="description"
                   rows={3}
                   disabled={!canMutate}
-                  className="rounded-md border border-border bg-background px-3 py-2"
+                  className="rounded-md border border-border-default bg-[var(--bg-input)] px-3 py-2 text-sm text-foreground"
                 />
               </label>
               <button
                 type="submit"
                 disabled={!canMutate}
-                className="inline-flex items-center gap-2 rounded-md bg-primary px-4 py-3 text-sm font-medium text-primary-foreground disabled:cursor-not-allowed disabled:opacity-50"
+                className="btn btn-primary disabled:cursor-not-allowed disabled:opacity-50"
               >
                 Přidat riziko
-                <Plus className="h-4 w-4" aria-hidden="true" />
+                <Plus className="h-4 w-4" aria-hidden="true" strokeWidth={1.5} />
               </button>
             </form>
           </article>
-          <article className="rounded-lg border border-border bg-surface p-5">
-            <h2 className="text-lg font-semibold">Common SME risks</h2>
+          <article className="card">
+            <h2 className="text-lg font-medium">Běžná SME rizika</h2>
             <p className="mt-2 text-sm leading-6 text-foreground/64">
               Předvyplní 10 běžných rizik pro české MSP, pokud je registr prázdný.
             </p>
@@ -369,23 +362,23 @@ export default async function RisksPage() {
               <button
                 type="submit"
                 disabled={!canMutate || risks.length > 0}
-                className="rounded-md border border-border px-4 py-3 text-sm font-medium hover:bg-surface-muted disabled:cursor-not-allowed disabled:opacity-50"
+                className="btn btn-secondary disabled:cursor-not-allowed disabled:opacity-50"
               >
                 Předvyplnit registr
               </button>
             </form>
           </article>
-          <article className="rounded-lg border border-border bg-surface p-5">
-            <h2 className="text-lg font-semibold">Risk matrix</h2>
+          <article className="card">
+            <h2 className="text-lg font-medium">Risk matrix</h2>
             <div className="mt-4">
               <RiskMatrix risks={risks} />
             </div>
           </article>
         </section>
 
-        <section className="rounded-lg border border-border bg-surface">
+        <section className="overflow-hidden rounded-lg border border-border bg-surface">
           <div className="border-b border-border p-5">
-            <h2 className="text-lg font-semibold">Register</h2>
+            <h2 className="text-lg font-medium">Registr</h2>
           </div>
           <div className="divide-y divide-border">
             {risks.length ? (
@@ -395,25 +388,15 @@ export default async function RisksPage() {
                 return (
                   <article
                     key={risk.id}
-                    className="grid gap-4 p-5 xl:grid-cols-[1fr_auto]"
+                    className="grid gap-4 p-4 hover:bg-bg-hover xl:grid-cols-[1fr_auto]"
                   >
                     <div>
                       <div className="flex flex-wrap items-center gap-2">
                         <p className="font-medium">{risk.title}</p>
-                        <span
-                          className={`rounded-md px-2 py-1 text-xs font-medium ${scoreClass(
-                            score,
-                          )}`}
-                        >
-                          score {score}
-                        </span>
-                        <span
-                          className={`rounded-md px-2 py-1 text-xs font-medium ${statusClass(
-                            risk.status,
-                          )}`}
-                        >
-                          {risk.status}
-                        </span>
+                        <StatusPill tone={scoreTone(score)}>SCORE {score}</StatusPill>
+                        <StatusPill tone={statusTone(risk.status)}>
+                          {risk.status.toUpperCase()}
+                        </StatusPill>
                       </div>
                       <p className="mt-1 text-sm text-foreground/58">
                         {risk.category ?? "n/a"} · L{risk.likelihood} × I{risk.impact}
@@ -435,7 +418,7 @@ export default async function RisksPage() {
                         name="status"
                         defaultValue={risk.status}
                         disabled={!canMutate}
-                        className="rounded-md border border-border bg-background px-3 py-2 text-sm"
+                        className={fieldClass()}
                       >
                         <option value="open">open</option>
                         <option value="mitigating">mitigating</option>
@@ -445,7 +428,7 @@ export default async function RisksPage() {
                       <button
                         type="submit"
                         disabled={!canMutate}
-                        className="rounded-md border border-border px-4 py-2 text-sm font-medium hover:bg-surface-muted disabled:cursor-not-allowed disabled:opacity-50"
+                        className="btn btn-secondary disabled:cursor-not-allowed disabled:opacity-50"
                       >
                         Uložit
                       </button>

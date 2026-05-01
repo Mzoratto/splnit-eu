@@ -8,6 +8,8 @@ import {
   FileText,
   ShieldAlert,
 } from "lucide-react";
+import { PageHeader } from "@/components/app/page-header";
+import { StatusPill, type StatusPillTone } from "@/components/app/status-pill";
 import { hasDatabaseUrl } from "@/lib/db";
 import {
   getIncidentForOrg,
@@ -97,20 +99,32 @@ function formatDateTime(value: Date | string | null | undefined) {
   }).format(new Date(value));
 }
 
-function severityClass(severity: string) {
+function severityTone(severity: string | null | undefined): StatusPillTone {
   if (severity === "critical") {
-    return "bg-red-50 text-red-800";
+    return "fail";
   }
 
-  if (severity === "high") {
-    return "bg-amber-50 text-amber-900";
+  if (severity === "high" || severity === "medium") {
+    return "warn";
   }
 
-  if (severity === "medium") {
-    return "bg-blue-50 text-blue-800";
+  return "neutral";
+}
+
+function statusTone(status: string | null | undefined): StatusPillTone {
+  if (status === "resolved") {
+    return "pass";
   }
 
-  return "bg-surface-muted text-foreground/64";
+  if (status === "contained") {
+    return "warn";
+  }
+
+  if (status === "investigating") {
+    return "fail";
+  }
+
+  return "neutral";
 }
 
 function getCountdown(incident: Incident | null) {
@@ -148,18 +162,22 @@ function getCountdown(incident: Incident | null) {
 
 function countdownClass(tone: string) {
   if (tone === "danger") {
-    return "border-red-200 bg-red-50 text-red-900";
+    return "border-[var(--status-fail-border)] bg-[var(--status-fail-subtle)] text-[var(--status-fail)]";
   }
 
   if (tone === "warn") {
-    return "border-amber-200 bg-amber-50 text-amber-950";
+    return "border-[var(--status-warn-border)] bg-[var(--status-warn-subtle)] text-[var(--status-warn)]";
   }
 
   if (tone === "ok") {
-    return "border-emerald-200 bg-emerald-50 text-emerald-900";
+    return "border-[var(--status-pass-border)] bg-[var(--status-pass-subtle)] text-[var(--status-pass)]";
   }
 
   return "border-border bg-surface text-foreground/64";
+}
+
+function fieldClass(extra = "") {
+  return `h-9 rounded-md border border-border-default bg-[var(--bg-input)] px-3 text-sm text-foreground ${extra}`;
 }
 
 export default async function IncidentsPage({
@@ -175,45 +193,39 @@ export default async function IncidentsPage({
 
   return (
     <section className="space-y-8">
-      <div className="flex flex-col justify-between gap-4 md:flex-row md:items-end">
-        <div>
-          <p className="text-sm font-medium uppercase tracking-[0.14em] text-primary">
-            Incident management
-          </p>
-          <h1 className="mt-2 text-3xl font-semibold tracking-normal">
-            Incidenty
-          </h1>
-          <p className="mt-2 max-w-2xl text-sm leading-6 text-foreground/64">
-            NIS2 a GDPR incident log s 72h countdownem, regulatorními checklisty a exporty oznámení.
-          </p>
-        </div>
-        {activeIncident ? (
-          <div className="flex flex-wrap gap-2">
-            <a
-              href={`/api/incidents/${activeIncident.id}/nukib-report`}
-              className="inline-flex items-center gap-2 rounded-md border border-border px-4 py-3 text-sm font-medium hover:bg-surface-muted"
-            >
-              NÚKIB PDF
-              <Download className="h-4 w-4" aria-hidden="true" />
-            </a>
-            <a
-              href={`/api/incidents/${activeIncident.id}/uoou-report`}
-              className="inline-flex items-center gap-2 rounded-md border border-border px-4 py-3 text-sm font-medium hover:bg-surface-muted"
-            >
-              ÚOOÚ PDF
-              <Download className="h-4 w-4" aria-hidden="true" />
-            </a>
-          </div>
-        ) : null}
-      </div>
+      <PageHeader
+        eyebrow="Incident management"
+        title="Incidenty"
+        subtitle="NIS2 a GDPR incident log s 72h countdownem, regulatorními checklisty a exporty oznámení."
+        actions={
+          activeIncident ? (
+            <>
+              <a
+                href={`/api/incidents/${activeIncident.id}/nukib-report`}
+                className="btn btn-nukib"
+              >
+                🇨🇿 NÚKIB PDF
+                <Download className="h-4 w-4" aria-hidden="true" strokeWidth={1.5} />
+              </a>
+              <a
+                href={`/api/incidents/${activeIncident.id}/uoou-report`}
+                className="btn btn-secondary"
+              >
+                ÚOOÚ PDF
+                <Download className="h-4 w-4" aria-hidden="true" strokeWidth={1.5} />
+              </a>
+            </>
+          ) : null
+        }
+      />
 
       <div className="grid gap-4 lg:grid-cols-3">
-        <article className="rounded-lg border border-border bg-surface p-5">
+        <article className="metric-card">
           <div className="flex items-center gap-2">
-            <AlertTriangle className="h-5 w-5 text-primary" aria-hidden="true" />
-            <h2 className="text-lg font-semibold">Otevřené</h2>
+            <AlertTriangle className="h-5 w-5 text-primary" aria-hidden="true" strokeWidth={1.5} />
+            <h2 className="text-lg font-medium">Otevřené</h2>
           </div>
-          <p className="mt-4 font-mono text-2xl font-semibold">
+          <p className="mt-4 font-mono text-2xl font-medium">
             {openIncidents.length}
           </p>
           <p className="mt-2 text-sm text-foreground/58">
@@ -224,20 +236,22 @@ export default async function IncidentsPage({
           className={`rounded-lg border p-5 ${countdownClass(countdown.tone)}`}
         >
           <div className="flex items-center gap-2">
-            <Clock3 className="h-5 w-5" aria-hidden="true" />
-            <h2 className="text-lg font-semibold">GDPR 72h</h2>
+            <Clock3 className="h-5 w-5" aria-hidden="true" strokeWidth={1.5} />
+            <h2 className="text-lg font-medium">GDPR 72h</h2>
           </div>
           <p className="mt-4 text-sm font-medium">{countdown.label}</p>
           <p className="mt-2 text-sm opacity-75">GDPR Article 33 breach notice.</p>
         </article>
-        <article className="rounded-lg border border-border bg-surface p-5">
+        <article className="metric-card">
           <div className="flex items-center gap-2">
-            <ShieldAlert className="h-5 w-5 text-primary" aria-hidden="true" />
-            <h2 className="text-lg font-semibold">Severity</h2>
+            <ShieldAlert className="h-5 w-5 text-primary" aria-hidden="true" strokeWidth={1.5} />
+            <h2 className="text-lg font-medium">Severity</h2>
           </div>
-          <p className="mt-4 font-mono text-2xl font-semibold">
-            {activeIncident?.severity ?? "none"}
-          </p>
+          <div className="mt-4">
+            <StatusPill tone={severityTone(activeIncident?.severity)}>
+              {(activeIncident?.severity ?? "none").toUpperCase()}
+            </StatusPill>
+          </div>
           <p className="mt-2 text-sm text-foreground/58">
             Status {activeIncident?.status ?? "n/a"}.
           </p>
@@ -246,30 +260,30 @@ export default async function IncidentsPage({
 
       <div className="grid gap-4 xl:grid-cols-[0.8fr_1.4fr]">
         <section className="space-y-4">
-          <article className="rounded-lg border border-border bg-surface p-5">
+          <article className="card">
             <div className="flex items-center gap-2">
-              <FileText className="h-5 w-5 text-primary" aria-hidden="true" />
-              <h2 className="text-lg font-semibold">Incident wizard</h2>
+              <FileText className="h-5 w-5 text-primary" aria-hidden="true" strokeWidth={1.5} />
+              <h2 className="text-lg font-medium">Incident wizard</h2>
             </div>
             <form action={createIncidentAction} className="mt-5 space-y-5">
               <fieldset className="space-y-3">
                 <legend className="text-sm font-medium">1. Klasifikace</legend>
-                <label className="grid gap-2 text-sm">
+                <label className="grid gap-2 text-xs font-medium text-foreground/68">
                   Název
                   <input
                     name="title"
                     required
                     disabled={!canMutate}
-                    className="rounded-md border border-border bg-background px-3 py-2"
+                    className={fieldClass()}
                   />
                 </label>
-                <label className="grid gap-2 text-sm">
+                <label className="grid gap-2 text-xs font-medium text-foreground/68">
                   Severity
                   <select
                     name="severity"
                     defaultValue="medium"
                     disabled={!canMutate}
-                    className="rounded-md border border-border bg-background px-3 py-2"
+                    className={fieldClass()}
                   >
                     <option value="low">low</option>
                     <option value="medium">medium</option>
@@ -277,7 +291,7 @@ export default async function IncidentsPage({
                     <option value="critical">critical</option>
                   </select>
                 </label>
-                <label className="grid gap-2 text-sm">
+                <label className="grid gap-2 text-xs font-medium text-foreground/68">
                   Detekováno
                   <input
                     name="detectedAt"
@@ -285,7 +299,7 @@ export default async function IncidentsPage({
                     defaultValue={defaultDetectedAt}
                     required
                     disabled={!canMutate}
-                    className="rounded-md border border-border bg-background px-3 py-2"
+                    className={fieldClass("font-mono")}
                   />
                 </label>
               </fieldset>
@@ -316,23 +330,23 @@ export default async function IncidentsPage({
                   name="description"
                   rows={4}
                   disabled={!canMutate}
-                  className="w-full rounded-md border border-border bg-background px-3 py-2 text-sm"
+                  className="w-full rounded-md border border-border-default bg-[var(--bg-input)] px-3 py-2 text-sm text-foreground"
                 />
               </fieldset>
               <button
                 type="submit"
                 disabled={!canMutate}
-                className="inline-flex items-center gap-2 rounded-md bg-primary px-4 py-3 text-sm font-medium text-primary-foreground disabled:cursor-not-allowed disabled:opacity-50"
+                className="btn btn-primary disabled:cursor-not-allowed disabled:opacity-50"
               >
                 Založit incident
-                <AlertTriangle className="h-4 w-4" aria-hidden="true" />
+                <AlertTriangle className="h-4 w-4" aria-hidden="true" strokeWidth={1.5} />
               </button>
             </form>
           </article>
 
-          <article className="rounded-lg border border-border bg-surface">
+          <article className="overflow-hidden rounded-lg border border-border bg-surface">
             <div className="border-b border-border p-5">
-              <h2 className="text-lg font-semibold">Incident log</h2>
+              <h2 className="text-lg font-medium">Incident log</h2>
             </div>
             <div className="divide-y divide-border">
               {incidents.length ? (
@@ -340,17 +354,13 @@ export default async function IncidentsPage({
                   <Link
                     key={incident.id}
                     href={`/incidents?incidentId=${incident.id}`}
-                    className="block p-5 hover:bg-surface-muted"
+                    className="block p-4 hover:bg-bg-hover"
                   >
                     <div className="flex flex-wrap items-center gap-2">
                       <p className="font-medium">{incident.title}</p>
-                      <span
-                        className={`rounded-md px-2 py-1 text-xs font-medium ${severityClass(
-                          incident.severity,
-                        )}`}
-                      >
-                        {incident.severity}
-                      </span>
+                      <StatusPill tone={severityTone(incident.severity)}>
+                        {incident.severity.toUpperCase()}
+                      </StatusPill>
                     </div>
                     <p className="mt-1 text-sm text-foreground/58">
                       {incident.status} · {formatDateTime(incident.detectedAt)}
@@ -366,10 +376,10 @@ export default async function IncidentsPage({
           </article>
         </section>
 
-        <section className="rounded-lg border border-border bg-surface">
+        <section className="overflow-hidden rounded-lg border border-border bg-surface">
           <div className="flex flex-col justify-between gap-3 border-b border-border p-5 md:flex-row md:items-center">
             <div>
-              <h2 className="text-lg font-semibold">
+              <h2 className="text-lg font-medium">
                 {activeIncident?.title ?? "Detail incidentu"}
               </h2>
               <p className="mt-1 text-sm text-foreground/58">
@@ -377,6 +387,16 @@ export default async function IncidentsPage({
                   ? `${activeIncident.status} · ${activeIncident.severity}`
                   : "Vyberte nebo založte incident."}
               </p>
+              {activeIncident ? (
+                <div className="mt-2 flex flex-wrap gap-2">
+                  <StatusPill tone={statusTone(activeIncident.status)}>
+                    {activeIncident.status.toUpperCase()}
+                  </StatusPill>
+                  <StatusPill tone={severityTone(activeIncident.severity)}>
+                    {activeIncident.severity.toUpperCase()}
+                  </StatusPill>
+                </div>
+              ) : null}
             </div>
             {activeIncident ? (
               <form
@@ -387,7 +407,7 @@ export default async function IncidentsPage({
                   name="status"
                   defaultValue={activeIncident.status}
                   disabled={!canMutate}
-                  className="rounded-md border border-border bg-background px-3 py-2 text-sm"
+                  className={fieldClass()}
                 >
                   <option value="open">open</option>
                   <option value="investigating">investigating</option>
@@ -397,7 +417,7 @@ export default async function IncidentsPage({
                 <button
                   type="submit"
                   disabled={!canMutate}
-                  className="rounded-md border border-border px-4 py-2 text-sm font-medium hover:bg-surface-muted disabled:cursor-not-allowed disabled:opacity-50"
+                  className="btn btn-secondary disabled:cursor-not-allowed disabled:opacity-50"
                 >
                   Uložit
                 </button>
@@ -426,7 +446,7 @@ export default async function IncidentsPage({
                   ["Vyřešeno", formatDateTime(activeIncident.resolvedAt)],
                 ].map(([label, value]) => (
                   <div key={label} className="rounded-md border border-border p-4">
-                    <p className="text-xs font-medium uppercase tracking-[0.12em] text-foreground/50">
+                    <p className="text-xs font-medium text-foreground/50">
                       {label}
                     </p>
                     <p className="mt-2 text-sm font-medium">{value}</p>
@@ -435,7 +455,7 @@ export default async function IncidentsPage({
               </div>
 
               <article className="rounded-md border border-border p-4">
-                <h3 className="font-semibold">Mandatory notification checklist</h3>
+                <h3 className="font-medium">Regulatorní checklist</h3>
                 <div className="mt-4 grid gap-3 md:grid-cols-2">
                   <div className="rounded-md bg-surface-muted p-3 text-sm">
                     <p className="font-medium">NIS2 / NÚKIB</p>
@@ -469,10 +489,10 @@ export default async function IncidentsPage({
                         !activeIncident.affectsCriticalSystems ||
                         Boolean(activeIncident.reportedToNukib)
                       }
-                      className="inline-flex items-center gap-2 rounded-md border border-border px-4 py-3 text-sm font-medium hover:bg-surface-muted disabled:cursor-not-allowed disabled:opacity-50"
+                      className="btn btn-nukib disabled:cursor-not-allowed disabled:opacity-50"
                     >
                       Označit NÚKIB
-                      <CheckCircle2 className="h-4 w-4" aria-hidden="true" />
+                      <CheckCircle2 className="h-4 w-4" aria-hidden="true" strokeWidth={1.5} />
                     </button>
                   </form>
                   <form
@@ -489,17 +509,17 @@ export default async function IncidentsPage({
                         !activeIncident.affectsPersonalData ||
                         Boolean(activeIncident.reportedToUoou)
                       }
-                      className="inline-flex items-center gap-2 rounded-md border border-border px-4 py-3 text-sm font-medium hover:bg-surface-muted disabled:cursor-not-allowed disabled:opacity-50"
+                      className="btn btn-secondary disabled:cursor-not-allowed disabled:opacity-50"
                     >
                       Označit ÚOOÚ
-                      <CheckCircle2 className="h-4 w-4" aria-hidden="true" />
+                      <CheckCircle2 className="h-4 w-4" aria-hidden="true" strokeWidth={1.5} />
                     </button>
                   </form>
                 </div>
               </article>
 
               <article className="rounded-md border border-border p-4">
-                <h3 className="font-semibold">Popis</h3>
+                <h3 className="font-medium">Popis</h3>
                 <p className="mt-3 text-sm leading-6 text-foreground/64">
                   {activeIncident.description ?? "Bez popisu."}
                 </p>
