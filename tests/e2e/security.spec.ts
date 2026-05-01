@@ -73,7 +73,7 @@ test("requires authentication for audit log export filters", async ({
   expect(response.status()).toBe(401);
 });
 
-test("schedules evidence expiry reminders in Vercel cron", async () => {
+test("schedules reminder jobs in Vercel cron", async () => {
   const configPath = path.join(process.cwd(), "vercel.json");
   const config = JSON.parse(await readFile(configPath, "utf8")) as {
     crons?: { path: string; schedule: string }[];
@@ -82,6 +82,14 @@ test("schedules evidence expiry reminders in Vercel cron", async () => {
   expect(config.crons).toContainEqual({
     path: "/api/cron/evidence-expiry",
     schedule: "0 7 * * *",
+  });
+  expect(config.crons).toContainEqual({
+    path: "/api/cron/policy-review-reminders",
+    schedule: "0 7 * * *",
+  });
+  expect(config.crons).toContainEqual({
+    path: "/api/cron/access-review-reminders",
+    schedule: "0 7 1 */3 *",
   });
 });
 
