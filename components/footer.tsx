@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { FormEvent, useState } from "react";
-import { Icon } from "@iconify/react";
+import { Icon } from "@/components/marketing/local-icon";
 
 export function Footer() {
   const [email, setEmail] = useState("");

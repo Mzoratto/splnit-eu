@@ -2,7 +2,7 @@
 
 import { FormEvent, useState } from "react";
 import Link from "next/link";
-import { Icon } from "@iconify/react";
+import { Icon } from "@/components/marketing/local-icon";
 
 const industries = ["Technologie", "Výroba", "Finance", "Jiné"];
 const sizes = ["1–49", "50–249", "250+"];

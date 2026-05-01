@@ -28,8 +28,8 @@ export const plans: Plan[] = [
   {
     name: "Starter",
     description: "Pro firmy, které berou soulad vážně.",
-    monthly: 59,
-    annual: 49,
+    monthly: 1475,
+    annual: 1225,
     featured: true,
     cta: "Zahájit 14denní zkušební verzi",
     href: "/sign-up",
@@ -47,8 +47,8 @@ export const plans: Plan[] = [
   {
     name: "Business",
     description: "Kompletní platforma pro celý tým.",
-    monthly: 149,
-    annual: 124,
+    monthly: 3725,
+    annual: 3100,
     cta: "Kontaktovat obchod",
     href: "mailto:hello@splnit.eu",
     features: [

@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { Icon } from "@iconify/react";
+import { Icon } from "@/components/marketing/local-icon";
 import { DashboardMockup } from "@/components/marketing/dashboard-mockup";
 import { LeadCapture } from "@/components/marketing/lead-capture";
 import { MarketingShell } from "@/components/marketing/marketing-shell";
@@ -174,16 +174,16 @@ export default function HomePage() {
             </div>
 
             <div className="relative grid gap-6 md:grid-cols-3">
-              <div className="pointer-events-none absolute left-[calc(33.33%-24px)] right-[calc(33.33%-24px)] top-10 hidden h-px bg-gradient-to-r from-blue-100 via-blue-300 to-blue-100 md:block" />
+              <div className="pointer-events-none absolute left-[16.666%] right-[16.666%] top-5 hidden h-px bg-gradient-to-r from-blue-100 via-blue-300 to-blue-100 md:block" />
               {steps.map((step, index) => (
                 <div
                   key={step.title}
-                  className="scroll-animate flex translate-y-6 flex-col gap-4 opacity-0"
+                  className="scroll-animate relative z-10 flex translate-y-6 flex-col items-center gap-4 opacity-0"
                 >
-                  <div className="z-10 flex h-10 w-10 items-center justify-center rounded-full bg-blue-600 text-sm font-semibold text-white shadow-md shadow-blue-200">
+                  <div className="flex h-10 w-10 items-center justify-center rounded-full bg-blue-600 text-sm font-semibold text-white shadow-md shadow-blue-200">
                     {index + 1}
                   </div>
-                  <div className={`rounded-2xl p-px ${index === 1 ? "grad-border-blue" : "grad-border"}`}>
+                  <div className={`w-full rounded-2xl p-px ${index === 1 ? "grad-border-blue" : "grad-border"}`}>
                     <div className="h-full rounded-[15px] bg-white p-6">
                       <div className="mb-5 flex h-10 w-10 items-center justify-center rounded-xl bg-blue-50 text-blue-600">
                         <Icon icon={step.icon} className="text-xl" aria-hidden="true" />

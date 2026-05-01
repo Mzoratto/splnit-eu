@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
-import { Icon } from "@iconify/react";
+import { Icon } from "@/components/marketing/local-icon";
 
 const links = [
   { href: "/platform", label: "Platforma" },

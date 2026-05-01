@@ -1,7 +1,7 @@
 "use client";
 
 import { FormEvent, useState } from "react";
-import { Icon } from "@iconify/react";
+import { Icon } from "@/components/marketing/local-icon";
 
 const options = [
   ["GDPR", "solar:shield-user-linear"],

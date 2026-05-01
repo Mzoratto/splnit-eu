@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { Icon } from "@iconify/react";
+import { Icon } from "@/components/marketing/local-icon";
 import { MarketingShell } from "@/components/marketing/marketing-shell";
 import {
   ComparisonTable,
@@ -11,7 +11,7 @@ import {
 
 export const metadata: Metadata = {
   title:
-    "Ceník | Splnit.eu — od €0/měsíc, transparentní ceny, žádné závazky",
+    "Ceník | Splnit.eu — od 0 Kč/měsíc, transparentní ceny, žádné závazky",
   description:
     "Transparentní ceny Splnit.eu pro české firmy: zdarma, Starter a Business s roční nebo měsíční fakturací.",
   openGraph: {
@@ -58,7 +58,7 @@ export default function PricingPage() {
               </div>
             </div>
             <div className="mt-6 shrink-0 md:mt-0 md:text-right">
-              <p className="mono text-3xl font-semibold">€299/měsíc</p>
+              <p className="mono text-3xl font-semibold">7 475 Kč/měsíc</p>
               <Link
                 href="mailto:hello@splnit.eu?subject=Partner%20Splnit.eu"
                 className="mt-3 inline-flex text-sm font-medium text-blue-300 hover:text-blue-200"

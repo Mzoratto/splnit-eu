@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { Icon } from "@iconify/react";
+import { Icon } from "@/components/marketing/local-icon";
 import { MarketingShell } from "@/components/marketing/marketing-shell";
 import { SoftwareApplicationJsonLd } from "@/components/marketing/software-json-ld";
 import {

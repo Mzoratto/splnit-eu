@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { Icon } from "@iconify/react";
+import { Icon } from "@/components/marketing/local-icon";
 import { LeadCapture } from "@/components/marketing/lead-capture";
 import { MarketingShell } from "@/components/marketing/marketing-shell";
 import { RegulationSelector } from "@/components/marketing/regulation-selector";

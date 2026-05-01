@@ -2,12 +2,19 @@
 
 import Link from "next/link";
 import { useMemo, useState } from "react";
-import { Icon } from "@iconify/react";
+import { Icon } from "@/components/marketing/local-icon";
 import { comparisonGroups, faqs, plans } from "@/lib/marketing/pricing";
 import { PricingCta } from "@/components/marketing/pricing-cta";
 
 export function PricingCards() {
   const [annual, setAnnual] = useState(false);
+  const formatCurrency = useMemo(
+    () =>
+      new Intl.NumberFormat("cs-CZ", {
+        maximumFractionDigits: 0,
+      }),
+    [],
+  );
 
   return (
     <>
@@ -54,7 +61,7 @@ export function PricingCards() {
                 </p>
                 <div className="flex items-baseline gap-1">
                   <span className="text-4xl font-semibold tracking-tight text-zinc-900 transition-opacity">
-                    €{price}
+                    {formatCurrency.format(price)} Kč
                   </span>
                   <span className="text-sm text-zinc-400">
                     {annual && price > 0 ? "/měsíc ročně" : "/měsíc"}

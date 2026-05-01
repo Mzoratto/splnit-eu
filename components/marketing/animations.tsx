@@ -10,6 +10,8 @@ export function MarketingAnimations() {
     const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
     async function runMotion() {
+      document.documentElement.classList.add("motion-ready");
+
       if (reduced) {
         return;
       }
@@ -41,6 +43,7 @@ export function MarketingAnimations() {
 
       const fadeUpElements = gsap.utils.toArray<HTMLElement>(".fade-up");
       if (fadeUpElements.length) {
+        gsap.set(fadeUpElements, { y: 16, opacity: 0 });
         gsap.to(fadeUpElements, {
           y: 0,
           opacity: 1,
@@ -52,6 +55,14 @@ export function MarketingAnimations() {
       }
 
       gsap.utils.toArray<HTMLElement>(".scroll-animate").forEach((element) => {
+        const x = element.classList.contains("-translate-x-6")
+          ? -24
+          : element.classList.contains("translate-x-6")
+            ? 24
+            : 0;
+        const y = element.classList.contains("translate-y-6") ? 24 : 0;
+
+        gsap.set(element, { x, y, opacity: 0 });
         gsap.to(element, {
           scrollTrigger: {
             trigger: element,
@@ -114,7 +125,7 @@ export function MarketingAnimations() {
 
     const motionTimeout = window.setTimeout(() => {
       void runMotion();
-    }, 2500);
+    }, 120);
 
     const sidebarItems = document.querySelectorAll<HTMLElement>(".sidebar-item");
     let currentSidebar = 0;
@@ -151,6 +162,7 @@ export function MarketingAnimations() {
       window.clearInterval(toggleInterval);
       scrollTriggers.forEach((trigger) => trigger.kill());
       killScrollTriggers();
+      document.documentElement.classList.remove("motion-ready");
     };
   }, []);
 

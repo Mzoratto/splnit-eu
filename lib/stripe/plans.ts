@@ -5,8 +5,8 @@ export const PLANS = {
     features: ["framework_wizard", "manual_controls", "basic_policies"],
   },
   starter: {
-    priceMonthly: 5900,
-    priceAnnual: 4900,
+    priceMonthly: 147500,
+    priceAnnual: 122500,
     limits: { frameworks: 2, integrations: 3, users: 5, vendors: 10, policies: 20 },
     features: [
       "starter_integrations",
@@ -17,8 +17,8 @@ export const PLANS = {
     ],
   },
   business: {
-    priceMonthly: 14900,
-    priceAnnual: 12400,
+    priceMonthly: 372500,
+    priceAnnual: 310000,
     limits: { frameworks: 5, integrations: 10, users: 25, vendors: 50, policies: 999 },
     features: [
       "trust_center",
@@ -30,8 +30,8 @@ export const PLANS = {
     ],
   },
   consultant: {
-    priceMonthly: 29900,
-    priceAnnual: 24900,
+    priceMonthly: 747500,
+    priceAnnual: 622500,
     limits: {
       frameworks: 999,
       integrations: 999,

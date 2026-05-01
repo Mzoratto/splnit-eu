@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
-import { Icon } from "@iconify/react";
+import { Icon } from "@/components/marketing/local-icon";
 
 export function StickyCta() {
   const [visible, setVisible] = useState(false);

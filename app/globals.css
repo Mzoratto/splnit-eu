@@ -415,6 +415,17 @@ body {
   }
 }
 
+.scroll-animate,
+.fade-up {
+  opacity: 1;
+  transform: none;
+}
+
+.motion-ready .scroll-animate,
+.motion-ready .fade-up {
+  will-change: transform, opacity;
+}
+
 @keyframes fade-up {
   from {
     opacity: 0;

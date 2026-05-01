@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { Icon } from "@iconify/react";
+import { Icon } from "@/components/marketing/local-icon";
 import { MarketingShell } from "@/components/marketing/marketing-shell";
 import { QualificationForm } from "@/components/marketing/qualification-form";
 
@@ -159,7 +159,7 @@ export default function CustomersPage() {
                   <h3 className="font-semibold text-zinc-900">Před Splnit.eu</h3>
                   <ul className="mt-4 space-y-2 text-sm text-zinc-600">
                     <li>3 konzultanti</li>
-                    <li>€12 000 poplatky</li>
+                    <li>300 000 Kč poplatky</li>
                     <li>4 měsíce</li>
                     <li>240 hodin ručního sběru důkazů</li>
                   </ul>
@@ -168,7 +168,7 @@ export default function CustomersPage() {
                   <h3 className="font-semibold text-emerald-900">Po Splnit.eu</h3>
                   <ul className="mt-4 space-y-2 text-sm text-emerald-800">
                     <li>Automatizace 90 % kontrol</li>
-                    <li>€708/rok</li>
+                    <li>17 700 Kč/rok</li>
                     <li>3 týdny</li>
                     <li>0 hodin ručního sběru</li>
                   </ul>
@@ -179,7 +179,7 @@ export default function CustomersPage() {
               <div className="grid gap-6">
                 <Metric value="90%" label="automatizovaných kontrol" />
                 <Metric value="3 týdny" label="do certifikace" />
-                <Metric value="€11K" label="ušetřeno proti konzultantům" />
+                <Metric value="282 tis. Kč" label="ušetřeno proti konzultantům" />
               </div>
               <blockquote className="mt-8 border-t border-zinc-800 pt-6 text-sm leading-6 text-zinc-300">
                 „Splnit.eu nám dalo přesně ten důkazní materiál, který auditor

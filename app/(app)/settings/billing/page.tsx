@@ -32,7 +32,7 @@ const planCopy: Record<BillablePlanKey, { name: string; description: string }> =
 };
 
 const currency = new Intl.NumberFormat("cs-CZ", {
-  currency: "EUR",
+  currency: "CZK",
   maximumFractionDigits: 0,
   style: "currency",
 });
@@ -164,11 +164,11 @@ export default async function BillingSettingsPage() {
                 <p className="font-mono text-3xl font-semibold text-primary">
                   {formatPrice(planData.priceMonthly)}
                   <span className="font-sans text-sm font-normal text-foreground/58">
-                    /mo
+                    /měsíc
                   </span>
                 </p>
                 <p className="text-sm text-foreground/58">
-                  {formatPrice(planData.priceAnnual)}/mo billed yearly
+                  {formatPrice(planData.priceAnnual)}/měsíc při roční fakturaci
                 </p>
               </div>
 
