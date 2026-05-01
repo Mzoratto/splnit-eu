@@ -117,7 +117,7 @@ export function DashboardMockup() {
                           strokeWidth="5"
                           strokeLinecap="round"
                           strokeDasharray="138.23"
-                          strokeDashoffset="138.23"
+                          strokeDashoffset="16.59"
                           className="ring-track"
                         />
                       </svg>
@@ -126,7 +126,7 @@ export function DashboardMockup() {
                           className="score-number text-base font-semibold text-zinc-900"
                           id="score-val"
                         >
-                          0%
+                          88%
                         </span>
                       </div>
                     </div>
@@ -159,6 +159,7 @@ export function DashboardMockup() {
                     score="100%"
                     badge="Splněno"
                     barId="bar-gdpr"
+                    barWidth="88%"
                     tone="emerald"
                   />
                   <FrameworkRow
@@ -167,6 +168,7 @@ export function DashboardMockup() {
                     score="84%"
                     badge="Zmapováno"
                     barId="bar-nis2"
+                    barWidth="91%"
                     tone="amber"
                   />
                   <FrameworkRow
@@ -175,6 +177,7 @@ export function DashboardMockup() {
                     score="Čeká"
                     badge="Čeká"
                     barId="bar-aiact"
+                    barWidth="67%"
                     tone="zinc"
                   />
                 </div>
@@ -287,6 +290,7 @@ function FrameworkRow({
   score,
   badge,
   barId,
+  barWidth,
   tone,
 }: {
   icon: string;
@@ -294,6 +298,7 @@ function FrameworkRow({
   score: string;
   badge: string;
   barId: string;
+  barWidth: string;
   tone: "emerald" | "amber" | "zinc";
 }) {
   const color =
@@ -318,7 +323,7 @@ function FrameworkRow({
           </span>
         </div>
         <div className="h-1 overflow-hidden rounded-full bg-zinc-100">
-          <div className={`progress-fill ${bar}`} style={{ width: "0%" }} id={barId} />
+          <div className={`progress-fill ${bar}`} style={{ width: barWidth }} id={barId} />
         </div>
       </div>
       <span className={`shrink-0 rounded-full border px-2 py-0.5 text-[10px] font-medium ${color}`}>

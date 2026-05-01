@@ -87,7 +87,7 @@ export default function PlatformPage() {
               {steps.map((step, index) => (
                 <article
                   key={step.title}
-                  className="scroll-animate translate-y-6 opacity-0"
+                  className="scroll-animate"
                 >
                   <div className="mb-5 flex items-center">
                     <div className="z-10 flex h-11 w-11 items-center justify-center rounded-full bg-blue-600 text-sm font-semibold text-white shadow-md shadow-blue-200">
@@ -116,7 +116,7 @@ export default function PlatformPage() {
 
         <section id="integrace" className="overflow-hidden border-t border-zinc-200/50 py-20">
           <div className="mx-auto flex max-w-7xl flex-col items-center gap-16 px-5 lg:flex-row">
-            <div className="scroll-animate w-full -translate-x-6 opacity-0 lg:w-1/2">
+            <div className="scroll-animate w-full lg:w-1/2">
               <div className="rounded-[26px] p-px grad-border">
                 <div className="overflow-hidden rounded-[25px] bg-zinc-50 p-8">
                   <p className="mono mb-6 text-[11px] font-medium uppercase tracking-widest text-zinc-400">
@@ -167,7 +167,7 @@ export default function PlatformPage() {
               </div>
             </div>
 
-            <div className="scroll-animate w-full translate-x-6 opacity-0 lg:w-1/2">
+            <div className="scroll-animate w-full lg:w-1/2">
               <span className="section-tag mb-5">Integrace</span>
               <h2 className="mb-5 text-3xl font-semibold leading-[1.1] tracking-[-0.04em] text-zinc-900 lg:text-[44px]">
                 Připojte nástroje, které již používáte.

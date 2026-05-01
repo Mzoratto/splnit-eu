@@ -46,7 +46,7 @@ export default function RegulationsPage() {
                 <article
                   key={framework.slug}
                   id={framework.slug}
-                  className="scroll-animate translate-y-6 rounded-[22px] p-px opacity-0 grad-border"
+                  className="scroll-animate rounded-[22px] p-px grad-border"
                 >
                   <div className="flex h-full flex-col rounded-[21px] bg-white p-7">
                     <div className="mb-5 flex items-start justify-between gap-4">
