@@ -27,6 +27,10 @@ test("reports production readiness without exposing secret values", async ({
         level: "recommended",
         name: "observability",
       }),
+      expect.objectContaining({
+        level: "recommended",
+        name: "sentrySourceMaps",
+      }),
     ]),
   );
 

@@ -56,9 +56,9 @@ Before deletion, collect the exports that apply to the customer workspace:
 | Evidence metadata | `/api/exports/evidence-metadata` | CSV | Authenticated and scoped to active Clerk organisation. Spreadsheet-native inventory without direct Blob URLs. |
 | Questionnaire answers | `/api/questionnaires/export/pdf` and `/api/questionnaires/export/xlsx` | PDF/XLSX | Export is payload-based from the current questionnaire result, not a workspace-wide stored archive. |
 
-Current export gaps:
+Current export follow-ups:
 
-- Workspace archive generation is in-process; load-test it against the largest expected customer workspaces before enterprise rollout.
+- Workspace archive generation is implemented; load-test it against the largest expected customer workspaces before enterprise rollout.
 - Vendor-dashboard records, provider logs, backups, and billing records still require the residual vendor tasks below.
 
 ## Deletion Sequence

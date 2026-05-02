@@ -124,6 +124,11 @@ const recommendedChecks: EnvCheck[] = [
     name: "observability",
     variables: ["NEXT_PUBLIC_SENTRY_DSN", "SENTRY_DSN"],
   },
+  {
+    level: "recommended",
+    name: "sentrySourceMaps",
+    variables: ["SENTRY_AUTH_TOKEN", "SENTRY_ORG", "SENTRY_PROJECT"],
+  },
 ];
 
 function hasValue(name: string) {
