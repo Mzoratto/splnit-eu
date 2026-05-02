@@ -29,6 +29,12 @@ export async function GET() {
       service: "splnit.eu",
       timestamp: new Date().toISOString(),
     },
-    { status: report.ready ? 200 : 503 },
+    {
+      headers: {
+        "Cache-Control": "no-store, max-age=0",
+        Pragma: "no-cache",
+      },
+      status: report.ready ? 200 : 503,
+    },
   );
 }
