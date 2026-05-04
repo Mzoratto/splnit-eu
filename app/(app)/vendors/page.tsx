@@ -1,7 +1,11 @@
 import Link from "next/link";
 import { auth } from "@clerk/nextjs/server";
+import { getLocale } from "next-intl/server";
 import { ArrowRight, FileText, Plus, ShieldAlert } from "lucide-react";
+import { getMessagesForLocale } from "@/i18n/messages";
+import { normalizeLocale, type Locale } from "@/i18n/routing";
 import { hasDatabaseUrl } from "@/lib/db";
+import { getOrganisationByClerkOrgId } from "@/lib/db/queries/organisations";
 import { listVendorsForOrg } from "@/lib/db/queries/vendors";
 import { createVendorAction } from "./actions";
 
@@ -19,18 +23,33 @@ async function loadVendors() {
   const session = await auth();
 
   if (!session.orgId) {
-    return null;
+    return {
+      organisationLocale: null,
+      vendors: null,
+    };
   }
 
-  return listVendorsForOrg(session.orgId).catch(() => null);
+  const [organisation, vendors] = await Promise.all([
+    getOrganisationByClerkOrgId(session.orgId).catch(() => null),
+    listVendorsForOrg(session.orgId).catch(() => null),
+  ]);
+
+  return {
+    organisationLocale: organisation?.locale ?? null,
+    vendors,
+  };
 }
 
-function formatDate(value: Date | string | null | undefined) {
+function formatDate(
+  value: Date | string | null | undefined,
+  locale: Locale,
+  emptyLabel: string,
+) {
   if (!value) {
-    return "nenaplánováno";
+    return emptyLabel;
   }
 
-  return new Intl.DateTimeFormat("cs-CZ").format(new Date(value));
+  return new Intl.DateTimeFormat(locale).format(new Date(value));
 }
 
 function tierClass(tier: string | null) {
@@ -54,7 +73,11 @@ function tierClass(tier: string | null) {
 }
 
 export default async function VendorsPage() {
-  const vendors = await loadVendors();
+  const requestLocale = normalizeLocale(await getLocale()) ?? "cs-CZ";
+  const data = await loadVendors();
+  const locale = normalizeLocale(data?.organisationLocale) ?? requestLocale;
+  const copy = getMessagesForLocale(locale).vendorsPage;
+  const vendors = data?.vendors ?? null;
   const rows =
     vendors ?? [
       {
@@ -77,20 +100,20 @@ export default async function VendorsPage() {
       <div className="flex flex-col justify-between gap-4 md:flex-row md:items-end">
         <div>
           <p className="text-sm font-medium uppercase tracking-[0.14em] text-primary">
-            Dodavatelé
+            {copy.eyebrow}
           </p>
           <h1 className="mt-2 text-3xl font-semibold tracking-normal">
-            Vendor risk
+            {copy.title}
           </h1>
           <p className="mt-2 max-w-2xl text-sm leading-6 text-foreground/64">
-            Katalog dodavatelů, risk tier assessment a NIS2 supply-chain report.
+            {copy.subtitle}
           </p>
         </div>
         <a
           href="/api/vendors/supply-chain-report"
           className="inline-flex items-center gap-2 rounded-md border border-border px-4 py-3 text-sm font-medium hover:bg-surface-muted"
         >
-          Export NIS2 report
+          {copy.exportReport}
           <FileText className="h-4 w-4" aria-hidden="true" />
         </a>
       </div>
@@ -99,11 +122,11 @@ export default async function VendorsPage() {
         <section className="rounded-lg border border-border bg-surface p-5">
           <div className="flex items-center gap-2">
             <Plus className="h-5 w-5 text-primary" aria-hidden="true" />
-            <h2 className="text-lg font-semibold">Nový dodavatel</h2>
+            <h2 className="text-lg font-semibold">{copy.form.title}</h2>
           </div>
           <form action={createVendorAction} className="mt-5 space-y-4">
             <label className="grid gap-2 text-sm">
-              Název
+              {copy.form.name}
               <input
                 name="name"
                 required
@@ -112,7 +135,7 @@ export default async function VendorsPage() {
               />
             </label>
             <label className="grid gap-2 text-sm">
-              Web
+              {copy.form.website}
               <input
                 name="website"
                 type="url"
@@ -121,7 +144,7 @@ export default async function VendorsPage() {
               />
             </label>
             <label className="grid gap-2 text-sm">
-              Kategorie
+              {copy.form.category}
               <select
                 name="category"
                 disabled={!canMutate}
@@ -139,7 +162,7 @@ export default async function VendorsPage() {
               disabled={!canMutate}
               className="inline-flex items-center gap-2 rounded-md bg-primary px-4 py-3 text-sm font-medium text-primary-foreground disabled:cursor-not-allowed disabled:opacity-50"
             >
-              Vytvořit
+              {copy.form.create}
               <Plus className="h-4 w-4" aria-hidden="true" />
             </button>
           </form>
@@ -148,7 +171,7 @@ export default async function VendorsPage() {
         <section className="rounded-lg border border-border bg-surface">
           <div className="flex items-center gap-2 border-b border-border p-5">
             <ShieldAlert className="h-5 w-5 text-primary" aria-hidden="true" />
-            <h2 className="text-lg font-semibold">Katalog</h2>
+            <h2 className="text-lg font-semibold">{copy.catalog.title}</h2>
           </div>
           <div className="divide-y divide-border">
             {rows.map((vendor) => (
@@ -165,18 +188,23 @@ export default async function VendorsPage() {
                         vendor.riskTier,
                       )}`}
                     >
-                      {vendor.riskTier ?? "pending"}
+                      {vendor.riskTier
+                        ? copy.riskTiers[vendor.riskTier as keyof typeof copy.riskTiers] ?? vendor.riskTier
+                        : copy.statuses.pending}
                     </span>
                   </div>
                   <p className="mt-1 text-sm text-foreground/58">
-                    {vendor.category ?? "n/a"} · {vendor.status}
+                    {vendor.category ?? copy.emptyValue} ·{" "}
+                    {copy.statuses[vendor.status as keyof typeof copy.statuses] ??
+                      vendor.status}
                   </p>
                   <p className="mt-1 text-sm text-foreground/58">
-                    Další review {formatDate(vendor.nextReviewAt)}
+                    {copy.catalog.nextReview}{" "}
+                    {formatDate(vendor.nextReviewAt, locale, copy.noDate)}
                   </p>
                 </div>
                 <span className="inline-flex items-center gap-2 text-sm font-medium">
-                  Detail
+                  {copy.catalog.detail}
                   <ArrowRight className="h-4 w-4" aria-hidden="true" />
                 </span>
               </Link>

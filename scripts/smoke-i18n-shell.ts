@@ -6,6 +6,7 @@ const requiredNamespaces = [
   "navigation",
   "shell",
   "accessReviews",
+  "controlsPage",
   "dashboard",
   "clientsPage",
   "evidence",
@@ -17,6 +18,7 @@ const requiredNamespaces = [
   "risks",
   "teamPage",
   "trustCenterSettings",
+  "vendorsPage",
 ] as const;
 const locales: Locale[] = ["cs-CZ", "en-EU", "it-IT"];
 
@@ -35,6 +37,7 @@ for (const locale of locales) {
     messages.accessReviews.form.start,
     `${locale} should label access reviews`,
   );
+  assert.ok(messages.controlsPage.index.openControl, `${locale} should label controls`);
   assert.ok(messages.dashboard.metrics.scoreTitle, `${locale} should label dashboard score`);
   assert.ok(messages.clientsPage.form.save, `${locale} should label clients page`);
   assert.ok(messages.evidence.filters.apply, `${locale} should label evidence filters`);
@@ -58,12 +61,15 @@ for (const locale of locales) {
     messages.trustCenterSettings.saveSettings,
     `${locale} should label Trust Center settings save`,
   );
+  assert.ok(messages.vendorsPage.form.create, `${locale} should label vendors`);
 }
 
 const en = getMessagesForLocale("en-EU");
 assert.equal(en.shell.upgradePlan, "Upgrade plan");
 assert.equal(en.accessReviews.title, "Access reviews");
 assert.equal(en.accessReviews.form.start, "Load users");
+assert.equal(en.controlsPage.index.title, "Control library");
+assert.equal(en.controlsPage.detail.saveStatus, "Save status");
 assert.equal(en.dashboard.metrics.scoreTitle, "Compliance score");
 assert.equal(en.clientsPage.title, "Client dashboard");
 assert.equal(en.clientsPage.form.save, "Save link");
@@ -83,12 +89,16 @@ assert.equal(en.teamPage.title, "Access and training");
 assert.equal(en.teamPage.open, "Open");
 assert.equal(en.trustCenterSettings.title, "Public compliance centre");
 assert.equal(en.trustCenterSettings.saveSettings, "Save settings");
+assert.equal(en.vendorsPage.title, "Vendor risk");
+assert.equal(en.vendorsPage.form.create, "Create");
 assert.notEqual(en.shell.freePlanBanner, getMessagesForLocale("cs-CZ").shell.freePlanBanner);
 
 const it = getMessagesForLocale("it-IT");
 assert.equal(it.shell.upgradePlan, "Aggiorna piano");
 assert.equal(it.accessReviews.title, "Revisioni accessi");
 assert.equal(it.accessReviews.form.start, "Carica utenti");
+assert.equal(it.controlsPage.index.title, "Libreria controlli");
+assert.equal(it.controlsPage.detail.saveStatus, "Salva stato");
 assert.equal(it.dashboard.metrics.scoreTitle, "Punteggio compliance");
 assert.equal(it.clientsPage.title, "Dashboard clienti");
 assert.equal(it.clientsPage.form.save, "Salva collegamento");
@@ -108,6 +118,8 @@ assert.equal(it.teamPage.title, "Accessi e formazione");
 assert.equal(it.teamPage.open, "Apri");
 assert.equal(it.trustCenterSettings.title, "Centro compliance pubblico");
 assert.equal(it.trustCenterSettings.saveSettings, "Salva impostazioni");
+assert.equal(it.vendorsPage.title, "Rischio fornitori");
+assert.equal(it.vendorsPage.form.create, "Crea");
 assert.notEqual(it.shell.freePlanBanner, getMessagesForLocale("cs-CZ").shell.freePlanBanner);
 
 console.log("i18n shell smoke test passed.");

@@ -503,6 +503,133 @@
       }
     }
   },
+  "vendorsPage": {
+    "noDate": "nenaplánováno",
+    "emptyValue": "n/a",
+    "eyebrow": "Dodavatelé",
+    "title": "Vendor risk",
+    "subtitle": "Katalog dodavatelů, risk tier assessment a NIS2 supply-chain report.",
+    "exportReport": "Export NIS2 report",
+    "form": {
+      "title": "Nový dodavatel",
+      "name": "Název",
+      "website": "Web",
+      "category": "Kategorie",
+      "create": "Vytvořit"
+    },
+    "catalog": {
+      "title": "Katalog",
+      "nextReview": "Další review",
+      "detail": "Detail"
+    },
+    "detail": {
+      "eyebrow": "Vendor risk",
+      "noWebsite": "bez webu",
+      "riskTier": "Risk tier"
+    },
+    "assessment": {
+      "title": "12-question assessment",
+      "save": "Uložit assessment",
+      "answers": {
+        "yes": "Ano",
+        "partial": "Částečně",
+        "no": "Ne"
+      },
+      "questions": {
+        "security_owner": "Má dodavatel určeného vlastníka bezpečnosti?",
+        "iso_certification": "Má dodavatel ISO 27001, SOC 2 nebo ekvivalentní audit?",
+        "data_processing": "Zpracovává dodavatel osobní nebo citlivá data?",
+        "subprocessors": "Dokládá dodavatel seznam subdodavatelů?",
+        "incident_notice": "Má smluvní povinnost hlásit incidenty do 24 hodin?",
+        "access_control": "Používá MFA a pravidelné revize přístupů?",
+        "encryption": "Šifruje data při přenosu i v klidu?",
+        "backup_recovery": "Testuje zálohy a disaster recovery?",
+        "vulnerability_management": "Má proces řízení zranitelností?",
+        "business_continuity": "Má plán kontinuity provozu?",
+        "data_location": "Udržuje data v EU/EHP nebo v právně ošetřeném režimu?",
+        "termination": "Umí po ukončení smlouvy data bezpečně vrátit nebo smazat?"
+      }
+    },
+    "questionnaire": {
+      "title": "Vendor questionnaire",
+      "email": "Email dodavatele",
+      "send": "Odeslat dotazník"
+    },
+    "history": {
+      "title": "Historie assessmentů",
+      "empty": "Assessment zatím není vyplněný."
+    },
+    "riskTiers": {
+      "low": "low",
+      "medium": "medium",
+      "high": "high",
+      "critical": "critical"
+    },
+    "statuses": {
+      "pending": "pending",
+      "assessed": "assessed",
+      "questionnaire_sent": "questionnaire sent",
+      "completed": "completed",
+      "sent": "sent",
+      "submitted": "submitted"
+    }
+  },
+  "controlsPage": {
+    "noDate": "bez data",
+    "emptyValue": "n/a",
+    "index": {
+      "eyebrow": "Kontroly",
+      "title": "Knihovna kontrol",
+      "subtitle": "Sdílené kontroly propojují frameworky, manuální evidenci a automatické testy.",
+      "openControl": "Otevřít kontrolu"
+    },
+    "detail": {
+      "statusTitle": "Stav kontroly",
+      "statusLabel": "Status",
+      "notes": "Poznámky",
+      "saveStatus": "Uložit status",
+      "uploadTitle": "Nahrát evidenci",
+      "file": "Soubor",
+      "source": "Zdroj",
+      "expires": "Expirace",
+      "description": "Popis",
+      "uploadFile": "Nahrát soubor",
+      "frameworksTitle": "Frameworky a testy",
+      "mappings": "Mapování",
+      "linkedTests": "Linked tests",
+      "noLinkedTests": "Automatické testy se připojí po integracích.",
+      "evidenceTitle": "Evidence",
+      "uploaded": "nahráno",
+      "downloadFile": "Stáhnout soubor",
+      "noEvidence": "Zatím není nahraná žádná evidence.",
+      "historyTitle": "Historie změn",
+      "noHistory": "Historie vznikne po první změně statusu nebo uploadu.",
+      "activityStatusChanged": "Status změněn na {status}",
+      "activityEvidenceUploaded": "Evidence nahrána: {evidence}"
+    },
+    "statuses": {
+      "unknown": "Neznámé",
+      "pass": "Splněno",
+      "fail": "Nesplněno",
+      "manual_review": "Částečně",
+      "not_applicable": "N/A"
+    },
+    "categories": {
+      "access_control": "Řízení přístupů",
+      "training": "Školení",
+      "incident": "Incidenty",
+      "data_protection": "Ochrana dat",
+      "asset_management": "Správa aktiv",
+      "supplier": "Dodavatelé",
+      "physical": "Fyzická bezpečnost",
+      "business_continuity": "Kontinuita provozu",
+      "ai_governance": "AI governance",
+      "governance": "Governance",
+      "esg_environment": "ESG environment",
+      "esg_social": "ESG social",
+      "esg_governance": "ESG governance"
+    }
+  },
   "accessReviews": {
     "noDate": "nenastaveno",
     "eyebrow": "Access reviews",

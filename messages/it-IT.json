@@ -503,6 +503,133 @@
       }
     }
   },
+  "vendorsPage": {
+    "noDate": "non pianificata",
+    "emptyValue": "n/d",
+    "eyebrow": "Fornitori",
+    "title": "Rischio fornitori",
+    "subtitle": "Catalogo fornitori, valutazione del livello di rischio e report supply chain NIS2.",
+    "exportReport": "Esporta report NIS2",
+    "form": {
+      "title": "Nuovo fornitore",
+      "name": "Nome",
+      "website": "Sito web",
+      "category": "Categoria",
+      "create": "Crea"
+    },
+    "catalog": {
+      "title": "Catalogo",
+      "nextReview": "Prossima revisione",
+      "detail": "Dettaglio"
+    },
+    "detail": {
+      "eyebrow": "Rischio fornitore",
+      "noWebsite": "nessun sito web",
+      "riskTier": "Livello di rischio"
+    },
+    "assessment": {
+      "title": "Assessment in 12 domande",
+      "save": "Salva assessment",
+      "answers": {
+        "yes": "Sì",
+        "partial": "Parziale",
+        "no": "No"
+      },
+      "questions": {
+        "security_owner": "Il fornitore ha un responsabile sicurezza nominato?",
+        "iso_certification": "Il fornitore ha ISO 27001, SOC 2 o un audit equivalente?",
+        "data_processing": "Il fornitore tratta dati personali o sensibili?",
+        "subprocessors": "Il fornitore fornisce l'elenco dei sub-responsabili?",
+        "incident_notice": "Il contratto richiede la notifica degli incidenti entro 24 ore?",
+        "access_control": "Il fornitore usa MFA e revisioni accessi regolari?",
+        "encryption": "Il fornitore cifra i dati in transito e a riposo?",
+        "backup_recovery": "Il fornitore testa backup e disaster recovery?",
+        "vulnerability_management": "Il fornitore ha un processo di gestione vulnerabilità?",
+        "business_continuity": "Il fornitore ha un piano di continuità operativa?",
+        "data_location": "Il fornitore mantiene i dati in UE/SEE o con un meccanismo di trasferimento valido?",
+        "termination": "Il fornitore può restituire o cancellare i dati in modo sicuro alla fine del contratto?"
+      }
+    },
+    "questionnaire": {
+      "title": "Questionario fornitore",
+      "email": "Email fornitore",
+      "send": "Invia questionario"
+    },
+    "history": {
+      "title": "Storico assessment",
+      "empty": "Nessun assessment è stato completato."
+    },
+    "riskTiers": {
+      "low": "basso",
+      "medium": "medio",
+      "high": "alto",
+      "critical": "critico"
+    },
+    "statuses": {
+      "pending": "in attesa",
+      "assessed": "valutato",
+      "questionnaire_sent": "questionario inviato",
+      "completed": "completato",
+      "sent": "inviato",
+      "submitted": "inviato"
+    }
+  },
+  "controlsPage": {
+    "noDate": "senza data",
+    "emptyValue": "n/d",
+    "index": {
+      "eyebrow": "Controlli",
+      "title": "Libreria controlli",
+      "subtitle": "Controlli condivisi collegano normative, evidenze manuali e test automatici.",
+      "openControl": "Apri controllo"
+    },
+    "detail": {
+      "statusTitle": "Stato controllo",
+      "statusLabel": "Stato",
+      "notes": "Note",
+      "saveStatus": "Salva stato",
+      "uploadTitle": "Carica evidenza",
+      "file": "File",
+      "source": "Fonte",
+      "expires": "Scadenza",
+      "description": "Descrizione",
+      "uploadFile": "Carica file",
+      "frameworksTitle": "Framework e test",
+      "mappings": "Mappature",
+      "linkedTests": "Test collegati",
+      "noLinkedTests": "I test automatici saranno collegati dopo l'attivazione delle integrazioni.",
+      "evidenceTitle": "Evidenze",
+      "uploaded": "caricato",
+      "downloadFile": "Scarica file",
+      "noEvidence": "Nessuna evidenza è stata caricata.",
+      "historyTitle": "Storico modifiche",
+      "noHistory": "Lo storico apparirà dopo la prima modifica di stato o il primo upload.",
+      "activityStatusChanged": "Stato modificato in {status}",
+      "activityEvidenceUploaded": "Evidenza caricata: {evidence}"
+    },
+    "statuses": {
+      "unknown": "Sconosciuto",
+      "pass": "Superato",
+      "fail": "Fallito",
+      "manual_review": "Parziale",
+      "not_applicable": "N/A"
+    },
+    "categories": {
+      "access_control": "Controllo accessi",
+      "training": "Formazione",
+      "incident": "Risposta agli incidenti",
+      "data_protection": "Protezione dati",
+      "asset_management": "Gestione asset",
+      "supplier": "Sicurezza fornitori",
+      "physical": "Sicurezza fisica",
+      "business_continuity": "Continuità operativa",
+      "ai_governance": "Governance AI",
+      "governance": "Governance",
+      "esg_environment": "ESG ambiente",
+      "esg_social": "ESG sociale",
+      "esg_governance": "ESG governance"
+    }
+  },
   "accessReviews": {
     "noDate": "non impostato",
     "eyebrow": "Access review",

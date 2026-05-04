@@ -1,15 +1,40 @@
 import Link from "next/link";
+import { getLocale } from "next-intl/server";
 import { ArrowRight, ShieldCheck } from "lucide-react";
 import { PageHeader } from "@/components/app/page-header";
+import { getMessagesForLocale } from "@/i18n/messages";
+import { normalizeLocale, type Locale } from "@/i18n/routing";
 import { CONTROL_LIBRARY } from "@/lib/controls/library";
+import type { ControlSeed } from "@/lib/controls/library";
 
-export default function ControlsPage() {
+type ControlsCopy = ReturnType<typeof getMessagesForLocale>["controlsPage"];
+
+function getControlTitle(control: ControlSeed, locale: Locale) {
+  return locale === "cs-CZ" ? control.titleCs : control.titleEn;
+}
+
+function getControlDescription(control: ControlSeed, locale: Locale) {
+  if (locale === "cs-CZ") {
+    return control.descriptionCs ?? control.titleEn;
+  }
+
+  return control.titleEn;
+}
+
+function getCategoryLabel(category: string, copy: ControlsCopy) {
+  return copy.categories[category as keyof typeof copy.categories] ?? category;
+}
+
+export default async function ControlsPage() {
+  const locale = normalizeLocale(await getLocale()) ?? "cs-CZ";
+  const copy = getMessagesForLocale(locale).controlsPage;
+
   return (
     <section className="space-y-6">
       <PageHeader
-        eyebrow="Kontroly"
-        title="Knihovna kontrol"
-        subtitle="Sdílené kontroly propojují frameworky, manuální evidenci a automatické testy."
+        eyebrow={copy.index.eyebrow}
+        title={copy.index.title}
+        subtitle={copy.index.subtitle}
       />
 
       <div className="grid gap-4 md:grid-cols-2">
@@ -23,9 +48,11 @@ export default function ControlsPage() {
                 <p className="font-mono text-xs text-foreground/52">
                   {control.key}
                 </p>
-                <h2 className="mt-1 text-lg font-medium">{control.titleCs}</h2>
+                <h2 className="mt-1 text-lg font-medium">
+                  {getControlTitle(control, locale)}
+                </h2>
                 <p className="mt-1 text-xs text-foreground/52">
-                  {control.category}
+                  {getCategoryLabel(control.category, copy)}
                 </p>
               </div>
               <ShieldCheck
@@ -35,13 +62,13 @@ export default function ControlsPage() {
               />
             </div>
             <p className="mt-3 text-sm leading-6 text-foreground/64">
-              {control.descriptionCs ?? control.titleEn}
+              {getControlDescription(control, locale)}
             </p>
             <Link
               href={`/controls/${control.key}`}
               className="btn btn-secondary mt-5"
             >
-              Otevřít kontrolu
+              {copy.index.openControl}
               <ArrowRight className="h-4 w-4" aria-hidden="true" strokeWidth={1.5} />
             </Link>
           </article>

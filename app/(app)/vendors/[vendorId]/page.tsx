@@ -1,10 +1,13 @@
 import { notFound } from "next/navigation";
 import { auth } from "@clerk/nextjs/server";
+import { getLocale } from "next-intl/server";
 import { Mail, ShieldCheck } from "lucide-react";
+import { getMessagesForLocale } from "@/i18n/messages";
+import { normalizeLocale, type Locale } from "@/i18n/routing";
 import { hasDatabaseUrl } from "@/lib/db";
+import { getOrganisationByClerkOrgId } from "@/lib/db/queries/organisations";
 import { getVendorDetail } from "@/lib/db/queries/vendors";
 import {
-  VENDOR_ANSWER_OPTIONS,
   VENDOR_ASSESSMENT_QUESTIONS,
 } from "@/lib/vendors/questions";
 import {
@@ -22,19 +25,22 @@ async function loadVendor(vendorId: string) {
   if (!clerkConfigured || !hasDatabaseUrl()) {
     return vendorId === "demo-cloud"
       ? {
-          assessments: [],
-          vendor: {
-            category: "cloud",
-            clerkOrgId: "demo",
-            createdAt: new Date(),
-            id: "demo-cloud",
-            lastAssessedAt: null,
-            name: "Demo Cloud Provider",
-            nextReviewAt: null,
-            riskTier: "medium",
-            status: "pending",
-            website: "https://example.com",
+          detail: {
+            assessments: [],
+            vendor: {
+              category: "cloud",
+              clerkOrgId: "demo",
+              createdAt: new Date(),
+              id: "demo-cloud",
+              lastAssessedAt: null,
+              name: "Demo Cloud Provider",
+              nextReviewAt: null,
+              riskTier: "medium",
+              status: "pending",
+              website: "https://example.com",
+            },
           },
+          organisationLocale: null,
         }
       : null;
   }
@@ -45,10 +51,20 @@ async function loadVendor(vendorId: string) {
     return null;
   }
 
-  return getVendorDetail({
-    clerkOrgId: session.orgId,
-    vendorId,
-  }).catch(() => null);
+  const [organisation, detail] = await Promise.all([
+    getOrganisationByClerkOrgId(session.orgId).catch(() => null),
+    getVendorDetail({
+      clerkOrgId: session.orgId,
+      vendorId,
+    }).catch(() => null),
+  ]);
+
+  return detail
+    ? {
+        detail,
+        organisationLocale: organisation?.locale ?? null,
+      }
+    : null;
 }
 
 function getAnswer(
@@ -59,18 +75,34 @@ function getAnswer(
   return typeof value === "string" ? value : "partial";
 }
 
+function formatDate(
+  value: Date | string | null | undefined,
+  locale: Locale,
+  emptyLabel: string,
+) {
+  if (!value) {
+    return emptyLabel;
+  }
+
+  return new Intl.DateTimeFormat(locale).format(new Date(value));
+}
+
 export default async function VendorDetailPage({
   params,
 }: {
   params: Promise<{ vendorId: string }>;
 }) {
   const { vendorId } = await params;
-  const detail = await loadVendor(vendorId);
+  const requestLocale = normalizeLocale(await getLocale()) ?? "cs-CZ";
+  const data = await loadVendor(vendorId);
 
-  if (!detail) {
+  if (!data) {
     notFound();
   }
 
+  const locale = normalizeLocale(data.organisationLocale) ?? requestLocale;
+  const copy = getMessagesForLocale(locale).vendorsPage;
+  const { detail } = data;
   const latestAssessment = detail.assessments[0] ?? null;
   const canMutate = detail.vendor.clerkOrgId !== "demo";
 
@@ -79,19 +111,23 @@ export default async function VendorDetailPage({
       <div className="flex flex-col justify-between gap-4 md:flex-row md:items-end">
         <div>
           <p className="text-sm font-medium uppercase tracking-[0.14em] text-primary">
-            Vendor risk
+            {copy.detail.eyebrow}
           </p>
           <h1 className="mt-2 text-3xl font-semibold tracking-normal">
             {detail.vendor.name}
           </h1>
           <p className="mt-2 text-sm text-foreground/64">
-            {detail.vendor.category ?? "n/a"} · {detail.vendor.website ?? "bez webu"}
+            {detail.vendor.category ?? copy.emptyValue} ·{" "}
+            {detail.vendor.website ?? copy.detail.noWebsite}
           </p>
         </div>
         <div className="rounded-lg border border-border bg-surface p-4">
-          <p className="text-sm text-foreground/58">Risk tier</p>
+          <p className="text-sm text-foreground/58">{copy.detail.riskTier}</p>
           <p className="mt-1 font-mono text-2xl font-semibold text-primary">
-            {detail.vendor.riskTier ?? "pending"}
+            {detail.vendor.riskTier
+              ? copy.riskTiers[detail.vendor.riskTier as keyof typeof copy.riskTiers] ??
+                detail.vendor.riskTier
+              : copy.statuses.pending}
           </p>
         </div>
       </div>
@@ -100,7 +136,7 @@ export default async function VendorDetailPage({
         <section className="rounded-lg border border-border bg-surface p-5">
           <div className="flex items-center gap-2">
             <ShieldCheck className="h-5 w-5 text-primary" aria-hidden="true" />
-            <h2 className="text-lg font-semibold">12-question assessment</h2>
+            <h2 className="text-lg font-semibold">{copy.assessment.title}</h2>
           </div>
           <form
             action={saveVendorAssessmentAction.bind(null, detail.vendor.id)}
@@ -112,7 +148,10 @@ export default async function VendorDetailPage({
                 className="grid gap-2 rounded-md border border-border p-3 text-sm md:grid-cols-[1fr_180px]"
               >
                 <span>
-                  {index + 1}. {question.label}
+                  {index + 1}.{" "}
+                  {copy.assessment.questions[
+                    question.id as keyof typeof copy.assessment.questions
+                  ] ?? question.id}
                 </span>
                 <select
                   name={question.id}
@@ -120,9 +159,9 @@ export default async function VendorDetailPage({
                   disabled={!canMutate}
                   className="rounded-md border border-border bg-background px-3 py-2"
                 >
-                  {VENDOR_ANSWER_OPTIONS.map((option) => (
-                    <option key={option.value} value={option.value}>
-                      {option.label}
+                  {Object.entries(copy.assessment.answers).map(([value, label]) => (
+                    <option key={value} value={value}>
+                      {label}
                     </option>
                   ))}
                 </select>
@@ -133,7 +172,7 @@ export default async function VendorDetailPage({
               disabled={!canMutate}
               className="inline-flex items-center gap-2 rounded-md bg-primary px-4 py-3 text-sm font-medium text-primary-foreground disabled:cursor-not-allowed disabled:opacity-50"
             >
-              Uložit assessment
+              {copy.assessment.save}
               <ShieldCheck className="h-4 w-4" aria-hidden="true" />
             </button>
           </form>
@@ -143,14 +182,14 @@ export default async function VendorDetailPage({
           <article className="rounded-lg border border-border bg-surface p-5">
             <div className="flex items-center gap-2">
               <Mail className="h-5 w-5 text-primary" aria-hidden="true" />
-              <h2 className="text-lg font-semibold">Vendor questionnaire</h2>
+              <h2 className="text-lg font-semibold">{copy.questionnaire.title}</h2>
             </div>
             <form
               action={sendVendorQuestionnaireAction.bind(null, detail.vendor.id)}
               className="mt-5 space-y-4"
             >
               <label className="grid gap-2 text-sm">
-                Email dodavatele
+                {copy.questionnaire.email}
                 <input
                   name="email"
                   required
@@ -164,7 +203,7 @@ export default async function VendorDetailPage({
                 disabled={!canMutate}
                 className="inline-flex items-center gap-2 rounded-md border border-border px-4 py-3 text-sm font-medium hover:bg-surface-muted disabled:cursor-not-allowed disabled:opacity-50"
               >
-                Odeslat dotazník
+                {copy.questionnaire.send}
                 <Mail className="h-4 w-4" aria-hidden="true" />
               </button>
             </form>
@@ -172,7 +211,7 @@ export default async function VendorDetailPage({
 
           <article className="rounded-lg border border-border bg-surface">
             <div className="border-b border-border p-5">
-              <h2 className="text-lg font-semibold">Historie assessmentů</h2>
+              <h2 className="text-lg font-semibold">{copy.history.title}</h2>
             </div>
             <div className="divide-y divide-border">
               {detail.assessments.length ? (
@@ -182,14 +221,13 @@ export default async function VendorDetailPage({
                       {assessment.score ?? "-"}% · {assessment.status}
                     </p>
                     <p className="mt-1 text-sm text-foreground/58">
-                      {assessment.assessedAt?.toISOString().slice(0, 10) ??
-                        "bez data"}
+                      {formatDate(assessment.assessedAt, locale, copy.noDate)}
                     </p>
                   </div>
                 ))
               ) : (
                 <p className="p-5 text-sm text-foreground/58">
-                  Assessment zatím není vyplněný.
+                  {copy.history.empty}
                 </p>
               )}
             </div>
