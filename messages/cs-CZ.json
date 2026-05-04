@@ -694,13 +694,13 @@
       "empty": "Žádné auditní záznamy neodpovídají aktuálním filtrům."
     },
     "actions": {
-      "control.status_changed": "Status kontroly změněn",
-      "evidence.uploaded": "Evidence nahrána",
-      "policy.generated": "Dokument vygenerován",
-      "integration.connected": "Integrace připojena",
-      "integration.disconnected": "Integrace odpojena",
-      "user.invited": "Uživatel pozván",
-      "consultant_client.linked": "Klient konzultanta propojen"
+      "control_status_changed": "Status kontroly změněn",
+      "evidence_uploaded": "Evidence nahrána",
+      "policy_generated": "Dokument vygenerován",
+      "integration_connected": "Integrace připojena",
+      "integration_disconnected": "Integrace odpojena",
+      "user_invited": "Uživatel pozván",
+      "consultant_client_linked": "Klient konzultanta propojen"
     },
     "entityTypes": {
       "control": "kontrola",

@@ -923,13 +923,13 @@
       "empty": "No audit records match the current filters."
     },
     "actions": {
-      "control.status_changed": "Control status changed",
-      "evidence.uploaded": "Evidence uploaded",
-      "policy.generated": "Policy generated",
-      "integration.connected": "Integration connected",
-      "integration.disconnected": "Integration disconnected",
-      "user.invited": "User invited",
-      "consultant_client.linked": "Consultant client linked"
+      "control_status_changed": "Control status changed",
+      "evidence_uploaded": "Evidence uploaded",
+      "policy_generated": "Policy generated",
+      "integration_connected": "Integration connected",
+      "integration_disconnected": "Integration disconnected",
+      "user_invited": "User invited",
+      "consultant_client_linked": "Consultant client linked"
     },
     "entityTypes": {
       "control": "control",

@@ -150,7 +150,8 @@ async function loadAuditLogs(filters: SearchParams) {
 }
 
 function actionLabel(action: string, copy: AuditLogCopy) {
-  return copy.actions[action as keyof typeof copy.actions] ?? action;
+  const key = action.replaceAll(".", "_") as keyof typeof copy.actions;
+  return copy.actions[key] ?? action;
 }
 
 function entityTypeLabel(entityType: string, copy: AuditLogCopy) {

@@ -923,13 +923,13 @@
       "empty": "Nessun record audit corrisponde ai filtri attuali."
     },
     "actions": {
-      "control.status_changed": "Stato controllo modificato",
-      "evidence.uploaded": "Evidenza caricata",
-      "policy.generated": "Documento generato",
-      "integration.connected": "Integrazione collegata",
-      "integration.disconnected": "Integrazione scollegata",
-      "user.invited": "Utente invitato",
-      "consultant_client.linked": "Cliente consulenza collegato"
+      "control_status_changed": "Stato controllo modificato",
+      "evidence_uploaded": "Evidenza caricata",
+      "policy_generated": "Documento generato",
+      "integration_connected": "Integrazione collegata",
+      "integration_disconnected": "Integrazione scollegata",
+      "user_invited": "Utente invitato",
+      "consultant_client_linked": "Cliente consulenza collegato"
     },
     "entityTypes": {
       "control": "controllo",
