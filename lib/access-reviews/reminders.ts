@@ -36,9 +36,13 @@ export async function sendAccessReviewReminders() {
     for (const recipient of alert.recipients) {
       await resend.emails.send({
         from,
-        subject: accessReviewReminderSubject(alert.organisationName),
+        subject: accessReviewReminderSubject({
+          locale: alert.locale,
+          organisationName: alert.organisationName,
+        }),
         text: accessReviewReminderText({
           accessReviewsUrl: `${getAppUrl()}/team/access-reviews`,
+          locale: alert.locale,
           organisationName: alert.organisationName,
         }),
         to: recipient,

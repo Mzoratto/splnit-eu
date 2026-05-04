@@ -53,8 +53,12 @@ export async function sendRegulationUpdateAlerts(
 
       await resend.emails.send({
         from,
-        subject: regulationUpdateSubject(update.title),
+        subject: regulationUpdateSubject({
+          locale: recipient.locale,
+          title: update.title,
+        }),
         text: regulationUpdateText({
+          locale: recipient.locale,
           organisationName: recipient.organisationName,
           publishedAt: update.publishedAt,
           source: update.source,

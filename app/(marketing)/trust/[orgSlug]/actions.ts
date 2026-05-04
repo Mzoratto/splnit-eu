@@ -34,6 +34,7 @@ export async function requestTrustCenterAccessAction(
   });
 
   await sendTrustCenterRequestEmail({
+    locale: result.locale,
     organisationName: result.organisationName,
     recipients: result.recipients,
     requesterCompany: result.request.company,

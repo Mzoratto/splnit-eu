@@ -7,6 +7,7 @@ import {
 } from "@/lib/email/templates/alerts";
 
 export async function sendTrustCenterRequestEmail(input: {
+  locale?: string | null;
   organisationName: string;
   recipients: { email: string | null }[];
   requesterCompany?: string | null;
@@ -31,7 +32,10 @@ export async function sendTrustCenterRequestEmail(input: {
 
     await resend.emails.send({
       from,
-      subject: trustCenterRequestSubject(input.organisationName),
+      subject: trustCenterRequestSubject({
+        locale: input.locale,
+        organisationName: input.organisationName,
+      }),
       text: trustCenterRequestText(input),
       to: recipient.email,
     });
@@ -46,6 +50,7 @@ export async function sendTrustCenterRequestEmail(input: {
 
 export async function sendTrustCenterAccessEmail(input: {
   accessUrl: string;
+  locale?: string | null;
   organisationName: string;
   requesterEmail: string;
 }) {
@@ -58,7 +63,10 @@ export async function sendTrustCenterAccessEmail(input: {
 
   await getResend().emails.send({
     from: getResendFrom(),
-    subject: trustCenterAccessSubject(input.organisationName),
+    subject: trustCenterAccessSubject({
+      locale: input.locale,
+      organisationName: input.organisationName,
+    }),
     text: trustCenterAccessText(input),
     to: input.requesterEmail,
   });

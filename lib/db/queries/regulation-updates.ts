@@ -214,6 +214,7 @@ export async function listRegulationAlertRecipients(input: {
     return db
       .select({
         email: profiles.email,
+        locale: organisations.locale,
         organisationName: organisations.name,
       })
       .from(profiles)
@@ -235,6 +236,7 @@ export async function listRegulationAlertRecipients(input: {
   return db
     .select({
       email: profiles.email,
+      locale: organisations.locale,
       organisationName: organisations.name,
     })
     .from(profiles)

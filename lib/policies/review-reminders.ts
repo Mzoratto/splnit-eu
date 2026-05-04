@@ -40,9 +40,13 @@ export async function sendPolicyReviewReminders(now = new Date()) {
     for (const recipient of alert.recipients) {
       await resend.emails.send({
         from,
-        subject: policyReviewSubject(alert.policyTitle),
+        subject: policyReviewSubject({
+          locale: alert.locale,
+          policyTitle: alert.policyTitle,
+        }),
         text: policyReviewText({
           expiresAt: alert.expiresAt,
+          locale: alert.locale,
           organisationName: alert.organisationName,
           policyTitle: alert.policyTitle,
         }),

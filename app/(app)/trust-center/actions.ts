@@ -104,6 +104,7 @@ export async function approveTrustCenterRequestAction(requestId: string) {
 
   await sendTrustCenterAccessEmail({
     accessUrl: result.accessUrl,
+    locale: organisation?.locale,
     organisationName: organisation?.name ?? "Splnit.eu Trust Center",
     requesterEmail: result.request.email,
   });

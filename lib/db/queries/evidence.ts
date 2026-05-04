@@ -1,4 +1,5 @@
 import { and, desc, eq, inArray } from "drizzle-orm";
+import { normalizeLocale } from "@/i18n/routing";
 import { getDb } from "@/lib/db";
 import {
   controls,
@@ -330,10 +331,12 @@ export async function listExpiringEvidenceAlerts(targetDates: string[]) {
   const rows = await db
     .select({
       clerkOrgId: evidence.clerkOrgId,
-      controlTitle: controls.titleCs,
+      controlTitleCs: controls.titleCs,
+      controlTitleEn: controls.titleEn,
       email: profiles.email,
       evidenceId: evidence.id,
       expiresAt: evidence.expiresAt,
+      locale: organisations.locale,
       organisationName: organisations.name,
       role: profiles.role,
     })
@@ -348,10 +351,12 @@ export async function listExpiringEvidenceAlerts(targetDates: string[]) {
   const grouped = new Map<
     string,
     {
-      controlTitle: string;
+      controlTitleCs: string;
+      controlTitleEn: string;
       emails: { email: string; role: string }[];
       evidenceId: string;
       expiresAt: string;
+      locale: string;
       organisationName: string;
     }
   >();
@@ -364,10 +369,12 @@ export async function listExpiringEvidenceAlerts(targetDates: string[]) {
     const existing =
       grouped.get(row.evidenceId) ??
       {
-        controlTitle: row.controlTitle,
+        controlTitleCs: row.controlTitleCs,
+        controlTitleEn: row.controlTitleEn,
         emails: [],
         evidenceId: row.evidenceId,
         expiresAt: row.expiresAt,
+        locale: row.locale,
         organisationName: row.organisationName,
       };
 
@@ -390,10 +397,14 @@ export async function listExpiringEvidenceAlerts(targetDates: string[]) {
     );
     const recipients = ownerEmails.length > 0 ? ownerEmails : item.emails;
 
+    const locale = normalizeLocale(item.locale) ?? "cs-CZ";
+
     return {
-      controlTitle: item.controlTitle,
+      controlTitle:
+        locale === "cs-CZ" ? item.controlTitleCs : item.controlTitleEn,
       evidenceId: item.evidenceId,
       expiresAt: item.expiresAt,
+      locale,
       organisationName: item.organisationName,
       recipients: Array.from(new Set(recipients.map((recipient) => recipient.email))),
     };

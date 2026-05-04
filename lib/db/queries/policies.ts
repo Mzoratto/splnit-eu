@@ -139,6 +139,7 @@ export async function listPolicyReviewAlerts(targetDates: string[]) {
       clerkOrgId: policies.clerkOrgId,
       email: profiles.email,
       expiresAt: policies.expiresAt,
+      locale: organisations.locale,
       organisationName: organisations.name,
       policyId: policies.id,
       policyTitle: policies.titleCs,
@@ -156,6 +157,7 @@ export async function listPolicyReviewAlerts(targetDates: string[]) {
     {
       emails: { email: string; role: string }[];
       expiresAt: string;
+      locale: string;
       organisationName: string;
       policyId: string;
       policyTitle: string;
@@ -172,6 +174,7 @@ export async function listPolicyReviewAlerts(targetDates: string[]) {
       {
         emails: [],
         expiresAt: row.expiresAt,
+        locale: row.locale,
         organisationName: row.organisationName,
         policyId: row.policyId,
         policyTitle: row.policyTitle,
@@ -198,6 +201,7 @@ export async function listPolicyReviewAlerts(targetDates: string[]) {
 
     return {
       expiresAt: item.expiresAt,
+      locale: item.locale,
       organisationName: item.organisationName,
       policyId: item.policyId,
       policyTitle: item.policyTitle,

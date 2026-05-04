@@ -43,10 +43,14 @@ export async function sendEvidenceExpiryAlerts(now = new Date()) {
     for (const recipient of alert.recipients) {
       await resend.emails.send({
         from,
-        subject: evidenceExpirySubject(alert.controlTitle),
+        subject: evidenceExpirySubject({
+          controlTitle: alert.controlTitle,
+          locale: alert.locale,
+        }),
         text: evidenceExpiryText({
           controlTitle: alert.controlTitle,
           expiresAt: alert.expiresAt,
+          locale: alert.locale,
           organisationName: alert.organisationName,
         }),
         to: recipient,

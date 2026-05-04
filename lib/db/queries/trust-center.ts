@@ -101,6 +101,7 @@ export async function createTrustCenterRequest(input: {
     .select({
       clerkOrgId: trustCenters.clerkOrgId,
       isPublic: trustCenters.isPublic,
+      locale: organisations.locale,
       organisationName: organisations.name,
     })
     .from(trustCenters)
@@ -127,6 +128,7 @@ export async function createTrustCenterRequest(input: {
 
   return {
     organisationName: center.organisationName,
+    locale: center.locale,
     recipients,
     request,
   };

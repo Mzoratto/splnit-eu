@@ -154,6 +154,7 @@ export async function listAccessReviewReminderAlerts() {
     .select({
       clerkOrgId: organisations.clerkOrgId,
       email: profiles.email,
+      locale: organisations.locale,
       organisationName: organisations.name,
       role: profiles.role,
     })
@@ -169,6 +170,7 @@ export async function listAccessReviewReminderAlerts() {
     string,
     {
       emails: { email: string; role: string }[];
+      locale: string;
       organisationName: string;
     }
   >();
@@ -178,6 +180,7 @@ export async function listAccessReviewReminderAlerts() {
       grouped.get(row.clerkOrgId) ??
       {
         emails: [],
+        locale: row.locale,
         organisationName: row.organisationName,
       };
 
@@ -202,6 +205,7 @@ export async function listAccessReviewReminderAlerts() {
 
     return {
       clerkOrgId,
+      locale: item.locale,
       organisationName: item.organisationName,
       recipients: Array.from(new Set(recipients.map((recipient) => recipient.email))),
     };
