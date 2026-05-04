@@ -612,6 +612,12 @@
       "submitted": "submitted"
     }
   },
+  "vendorAssessmentPage": {
+    "eyebrow": "Vendor assessment",
+    "requestDescription": "{organisation} žádá o vyplnění supply-chain bezpečnostního dotazníku.",
+    "submitted": "Dotazník byl odeslán.",
+    "submit": "Odeslat assessment"
+  },
   "controlsPage": {
     "noDate": "bez data",
     "emptyValue": "n/a",

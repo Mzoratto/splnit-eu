@@ -841,6 +841,12 @@
       "submitted": "submitted"
     }
   },
+  "vendorAssessmentPage": {
+    "eyebrow": "Vendor assessment",
+    "requestDescription": "{organisation} requests completion of a supply-chain security questionnaire.",
+    "submitted": "The questionnaire has been submitted.",
+    "submit": "Submit assessment"
+  },
   "controlsPage": {
     "noDate": "no date",
     "emptyValue": "n/a",

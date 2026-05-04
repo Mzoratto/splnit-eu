@@ -1,14 +1,24 @@
 import { notFound } from "next/navigation";
+import { getLocale } from "next-intl/server";
 import { Building2, CheckCircle2 } from "lucide-react";
+import { getMessagesForLocale } from "@/i18n/messages";
+import { normalizeLocale } from "@/i18n/routing";
 import { hasDatabaseUrl } from "@/lib/db";
 import { getVendorAssessmentByToken } from "@/lib/db/queries/vendors";
 import {
-  VENDOR_ANSWER_OPTIONS,
+  VENDOR_ANSWER_VALUES,
   VENDOR_ASSESSMENT_QUESTIONS,
 } from "@/lib/vendors/questions";
 import { submitVendorAssessmentAction } from "./actions";
 
 export const dynamic = "force-dynamic";
+
+function formatMessage(template: string, values: Record<string, string>) {
+  return Object.entries(values).reduce(
+    (message, [key, value]) => message.replaceAll(`{${key}}`, value),
+    template,
+  );
+}
 
 export default async function VendorAssessmentPage({
   params,
@@ -26,6 +36,12 @@ export default async function VendorAssessmentPage({
     notFound();
   }
 
+  const requestLocale = normalizeLocale(await getLocale()) ?? "cs-CZ";
+  const locale = normalizeLocale(data.organisation.locale) ?? requestLocale;
+  const copy = getMessagesForLocale(locale);
+  const pageCopy = copy.vendorAssessmentPage;
+  const assessmentCopy = copy.vendorsPage.assessment;
+
   return (
     <main className="min-h-screen bg-background px-5 py-10 text-foreground">
       <section className="mx-auto max-w-4xl space-y-6">
@@ -33,19 +49,20 @@ export default async function VendorAssessmentPage({
           <div className="flex items-center gap-2">
             <Building2 className="h-5 w-5 text-primary" aria-hidden="true" />
             <p className="text-sm font-medium uppercase tracking-[0.14em] text-primary">
-              Vendor assessment
+              {pageCopy.eyebrow}
             </p>
           </div>
           <h1 className="mt-3 text-3xl font-semibold tracking-normal">
             {data.vendor.name}
           </h1>
           <p className="mt-2 text-sm text-foreground/64">
-            {data.organisation.name} žádá o vyplnění supply-chain bezpečnostního
-            dotazníku.
+            {formatMessage(pageCopy.requestDescription, {
+              organisation: data.organisation.name,
+            })}
           </p>
           {query.submitted === "1" ? (
             <p className="mt-4 inline-flex rounded-md bg-emerald-50 px-3 py-2 text-sm text-emerald-800">
-              Dotazník byl odeslán.
+              {pageCopy.submitted}
             </p>
           ) : null}
         </div>
@@ -58,28 +75,31 @@ export default async function VendorAssessmentPage({
             <label
               key={question.id}
               className="grid gap-2 rounded-md border border-border p-3 text-sm md:grid-cols-[1fr_180px]"
-            >
-              <span>
-                {index + 1}. {question.label}
-              </span>
-              <select
-                name={question.id}
-                defaultValue="partial"
-                className="rounded-md border border-border bg-background px-3 py-2"
               >
-                {VENDOR_ANSWER_OPTIONS.map((option) => (
-                  <option key={option.value} value={option.value}>
-                    {option.label}
-                  </option>
-                ))}
-              </select>
-            </label>
-          ))}
+                <span>
+                  {index + 1}.{" "}
+                  {assessmentCopy.questions[
+                    question.id as keyof typeof assessmentCopy.questions
+                  ] ?? question.id}
+                </span>
+                <select
+                  name={question.id}
+                  defaultValue="partial"
+                  className="rounded-md border border-border bg-background px-3 py-2"
+                >
+                  {VENDOR_ANSWER_VALUES.map((value) => (
+                    <option key={value} value={value}>
+                      {assessmentCopy.answers[value]}
+                    </option>
+                  ))}
+                </select>
+              </label>
+            ))}
           <button
             type="submit"
             className="inline-flex items-center gap-2 rounded-md bg-primary px-4 py-3 text-sm font-medium text-primary-foreground"
           >
-            Odeslat assessment
+            {pageCopy.submit}
             <CheckCircle2 className="h-4 w-4" aria-hidden="true" />
           </button>
         </form>

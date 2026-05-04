@@ -841,6 +841,12 @@
       "submitted": "inviato"
     }
   },
+  "vendorAssessmentPage": {
+    "eyebrow": "Assessment fornitore",
+    "requestDescription": "{organisation} richiede la compilazione di un questionario di sicurezza supply chain.",
+    "submitted": "Il questionario è stato inviato.",
+    "submit": "Invia assessment"
+  },
   "controlsPage": {
     "noDate": "senza data",
     "emptyValue": "n/d",
