@@ -2,6 +2,7 @@ import { redirect } from "next/navigation";
 import { ClerkThemeProvider } from "@/components/app/clerk-theme-provider";
 import { auth } from "@clerk/nextjs/server";
 import { NextIntlClientProvider } from "next-intl";
+import { getLocale } from "next-intl/server";
 import { AppShell } from "@/components/app/app-shell";
 import { getMessagesForLocale } from "@/i18n/messages";
 import { normalizeLocale, type Locale } from "@/i18n/routing";
@@ -20,10 +21,10 @@ export default async function ProtectedLayout({
   const clerkConfigured =
     Boolean(process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY) &&
     Boolean(process.env.CLERK_SECRET_KEY);
-  let organisationName = "Demo organizace";
+  let organisationName: string | null = null;
   let plan: PlanKey = "free";
   let regulationUpdateCount = 0;
-  let tenantLocale: Locale = "cs-CZ";
+  let tenantLocale: Locale = normalizeLocale(await getLocale()) ?? "cs-CZ";
 
   if (clerkConfigured) {
     const session = await auth();
@@ -36,21 +37,28 @@ export default async function ProtectedLayout({
         getOrganisationByClerkOrgId(session.orgId),
         countUnreadRelevantRegulationUpdates(session.orgId),
       ]);
-      organisationName = organisation?.name ?? "Organizace";
+      organisationName = organisation?.name ?? null;
       plan = normalizePlanKey(organisation?.plan);
       regulationUpdateCount = unreadRegulationUpdateCount;
-      tenantLocale = normalizeLocale(organisation?.locale) ?? "cs-CZ";
+      tenantLocale = normalizeLocale(organisation?.locale) ?? tenantLocale;
     }
   }
+
+  const messages = getMessagesForLocale(tenantLocale);
+  const displayOrganisationName =
+    organisationName ??
+    (clerkConfigured
+      ? messages.shell.organisationFallback
+      : messages.shell.demoOrganisation);
 
   const shell = (
     <NextIntlClientProvider
       locale={tenantLocale}
-      messages={getMessagesForLocale(tenantLocale)}
+      messages={messages}
     >
       <AppShell
         clerkEnabled={clerkConfigured}
-        organisationName={organisationName}
+        organisationName={displayOrganisationName}
         plan={plan}
         regulationUpdateCount={regulationUpdateCount}
       >

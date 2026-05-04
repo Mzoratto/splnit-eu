@@ -2,13 +2,21 @@
 
 import { useEffect, useMemo, useState } from "react";
 
-export function AnimatedScoreRing({ score }: { score: number }) {
+export function AnimatedScoreRing({
+  label = "Score",
+  locale = "en-EU",
+  score,
+}: {
+  label?: string;
+  locale?: string;
+  score: number;
+}) {
   const [displayScore, setDisplayScore] = useState(0);
   const radius = 52;
   const circumference = 2 * Math.PI * radius;
   const safeScore = Math.max(0, Math.min(100, score));
   const offset = circumference - (safeScore / 100) * circumference;
-  const formatter = useMemo(() => new Intl.NumberFormat("cs-CZ"), []);
+  const formatter = useMemo(() => new Intl.NumberFormat(locale), [locale]);
 
   useEffect(() => {
     let frame = 0;
@@ -63,7 +71,7 @@ export function AnimatedScoreRing({ score }: { score: number }) {
           <p className="font-mono text-[32px] font-semibold leading-none text-foreground">
             {formatter.format(displayScore)}%
           </p>
-          <p className="mt-1 text-[11px] text-foreground/52">Skóre</p>
+          <p className="mt-1 text-[11px] text-foreground/52">{label}</p>
         </div>
       </div>
     </div>

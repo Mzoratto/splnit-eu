@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { auth, currentUser } from "@clerk/nextjs/server";
+import { getLocale } from "next-intl/server";
 import {
   AlertTriangle,
   ArrowRight,
@@ -14,10 +15,14 @@ import {
 import { AnimatedScoreRing } from "@/components/app/animated-score-ring";
 import { StatusPill, type StatusPillTone } from "@/components/app/status-pill";
 import { markRegulationUpdateReadAction } from "@/app/(app)/dashboard/actions";
+import { getMessagesForLocale } from "@/i18n/messages";
+import { normalizeLocale, type Locale } from "@/i18n/routing";
 import { CONTROL_LIBRARY } from "@/lib/controls/library";
 import { hasDatabaseUrl } from "@/lib/db";
 import { getDashboardData } from "@/lib/db/queries/dashboard";
 import { FRAMEWORK_LIBRARY } from "@/lib/frameworks/registry";
+
+type DashboardCopy = ReturnType<typeof getMessagesForLocale>["dashboard"];
 
 const fallbackFrameworkScores = [
   { slug: "nis2", score: 72, status: "active" },
@@ -26,41 +31,62 @@ const fallbackFrameworkScores = [
   { slug: "iso27001", score: 58, status: "manual_review" },
 ];
 
-const fallbackUpdates = [
-  {
-    frameworkName: "NIS2",
-    id: "demo-nukib-feed",
-    isRead: true,
-    publishedAt: new Date("2026-04-30T08:00:00.000Z"),
-    severity: "info",
-    source: "NÚKIB",
-    sourceUrl: null,
-    summary: "Nová sada doporučení k řízení dodavatelských rizik pro povinné osoby.",
-    title: "NÚKIB publikoval aktualizaci metodiky",
-  },
-  {
-    frameworkName: "NIS2",
-    id: "demo-nukib-cve",
-    isRead: true,
-    publishedAt: new Date("2026-04-30T06:30:00.000Z"),
-    severity: "warning",
-    source: "NÚKIB",
-    sourceUrl: null,
-    summary: "Zranitelnost dopadá na běžně nasazované VPN brány.",
-    title: "CVE-2026-1842 vyžaduje ověření expozice",
-  },
-  {
-    frameworkName: "GDPR",
-    id: "demo-uooou-update",
-    isRead: true,
-    publishedAt: new Date("2026-04-26T10:00:00.000Z"),
-    severity: "info",
-    source: "ÚOOÚ",
-    sourceUrl: null,
-    summary: "Doporučení pro evidence zpracování a bezpečnostní opatření.",
-    title: "ÚOOÚ zveřejnil metodický výklad",
-  },
-];
+function getFallbackUpdates(copy: DashboardCopy) {
+  return [
+    {
+      frameworkName: "NIS2",
+      id: "demo-nukib-feed",
+      isRead: true,
+      publishedAt: new Date("2026-04-30T08:00:00.000Z"),
+      severity: "info",
+      source: "NÚKIB",
+      sourceUrl: null,
+      summary: copy.demoUpdates.nukibMethodology.summary,
+      title: copy.demoUpdates.nukibMethodology.title,
+    },
+    {
+      frameworkName: "NIS2",
+      id: "demo-nukib-cve",
+      isRead: true,
+      publishedAt: new Date("2026-04-30T06:30:00.000Z"),
+      severity: "warning",
+      source: "NÚKIB",
+      sourceUrl: null,
+      summary: copy.demoUpdates.nukibCve.summary,
+      title: copy.demoUpdates.nukibCve.title,
+    },
+    {
+      frameworkName: "GDPR",
+      id: "demo-uooou-update",
+      isRead: true,
+      publishedAt: new Date("2026-04-26T10:00:00.000Z"),
+      severity: "info",
+      source: "ÚOOÚ",
+      sourceUrl: null,
+      summary: copy.demoUpdates.uoouGuidance.summary,
+      title: copy.demoUpdates.uoouGuidance.title,
+    },
+  ];
+}
+
+function getFrameworkName(
+  framework: (typeof FRAMEWORK_LIBRARY)[number],
+  locale: Locale,
+) {
+  return locale === "cs-CZ" ? framework.nameCs : framework.nameEn;
+}
+
+function getFrameworkDescription(
+  framework: (typeof FRAMEWORK_LIBRARY)[number],
+  locale: Locale,
+  copy: DashboardCopy,
+) {
+  if (locale === "cs-CZ") {
+    return framework.descriptionCs;
+  }
+
+  return copy.frameworkDescriptions[framework.slug] ?? framework.descriptionCs;
+}
 
 async function loadDashboardData() {
   const clerkConfigured =
@@ -195,27 +221,31 @@ function severityTone(severity: string): StatusPillTone {
   return "neutral";
 }
 
-function formatRelative(value: Date | string) {
+function formatRelative(
+  value: Date | string,
+  locale: Locale,
+) {
   const date = new Date(value);
   const diffMs = Date.now() - date.getTime();
   const minutes = Math.max(1, Math.round(diffMs / 60_000));
+  const formatter = new Intl.RelativeTimeFormat(locale, { numeric: "auto" });
 
   if (minutes < 60) {
-    return `před ${minutes} min`;
+    return formatter.format(-minutes, "minute");
   }
 
   const hours = Math.round(minutes / 60);
   if (hours < 24) {
-    return `před ${hours} h`;
+    return formatter.format(-hours, "hour");
   }
 
   const days = Math.round(hours / 24);
-  return `před ${days} dny`;
+  return formatter.format(-days, "day");
 }
 
-function formatDeadline(deadline: string | null) {
+function formatDeadline(deadline: string | null, copy: DashboardCopy) {
   if (!deadline) {
-    return "Průběžně";
+    return copy.deadline.continuous;
   }
 
   const deadlineDate = new Date(`${deadline}T00:00:00.000Z`);
@@ -224,14 +254,14 @@ function formatDeadline(deadline: string | null) {
   );
 
   if (days < 0) {
-    return "Termín prošel";
+    return copy.deadline.past;
   }
 
   if (days === 0) {
-    return "Dnes";
+    return copy.deadline.today;
   }
 
-  return `${days} dní`;
+  return copy.deadline.days.replace("{days}", String(days));
 }
 
 function Sparkline({ score }: { score: number }) {
@@ -278,17 +308,22 @@ function FrameworkIcon({ tone }: { tone: StatusPillTone }) {
 }
 
 export default async function DashboardPage() {
+  const requestLocale = normalizeLocale(await getLocale()) ?? "cs-CZ";
   const [data, firstName] = await Promise.all([
     loadDashboardData(),
     loadUserName(),
   ]);
+  const locale = normalizeLocale(data?.organisationLocale) ?? requestLocale;
+  const messages = getMessagesForLocale(locale);
+  const copy = messages.dashboard;
+  const fallbackUpdates = getFallbackUpdates(copy);
   const frameworkScores =
     data?.frameworkScores.length
       ? data.frameworkScores
       : fallbackFrameworkScores.map((item) => {
           const framework = FRAMEWORK_LIBRARY.find((fw) => fw.slug === item.slug);
           return {
-            name: framework?.nameCs ?? item.slug,
+            name: framework ? getFrameworkName(framework, locale) : item.slug,
             regulator: framework?.regulator ?? null,
             score: item.score,
             slug: item.slug,
@@ -302,8 +337,17 @@ export default async function DashboardPage() {
           category: control.category,
           key: control.key,
           status: index < 2 ? "fail" : "manual_review",
-          title: control.titleCs,
+          title: locale === "cs-CZ" ? control.titleCs : control.titleEn,
+          titleCs: control.titleCs,
+          titleEn: control.titleEn,
         }));
+  const priorityControlRows = priorityControls.map((control) => ({
+    ...control,
+    title:
+      locale === "cs-CZ"
+        ? control.titleCs ?? control.title
+        : control.titleEn ?? control.title,
+  }));
   const updates = data?.updates.length ? data.updates : fallbackUpdates;
   const statusRows =
     data?.statusRows.length
@@ -332,32 +376,35 @@ export default async function DashboardPage() {
         <div>
           <p className="text-sm font-medium text-primary">Dashboard</p>
           <h1 className="mt-2 text-[22px] font-medium tracking-normal">
-            Dobré ráno{firstName ? `, ${firstName}` : ""}
+            {copy.greeting}{firstName ? `, ${firstName}` : ""}
           </h1>
           <p className="mt-1 text-sm text-foreground/64">
-            {openFindings} otevřených nálezů · {failingControls} kontrol selhalo
+            {openFindings} {copy.summary.openFindings} · {failingControls}{" "}
+            {copy.summary.failedControls}
           </p>
         </div>
         <Link href="/frameworks/ai-act/setup" className="btn btn-primary">
-          Spustit AI Act wizard
+          {copy.aiActWizardCta}
           <ArrowRight className="h-4 w-4" aria-hidden="true" strokeWidth={1.5} />
         </Link>
       </div>
 
       <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
         <article className="metric-card flex items-center gap-5">
-          <AnimatedScoreRing score={score} />
+          <AnimatedScoreRing label={copy.scoreLabel} locale={locale} score={score} />
           <div>
-            <p className="text-xs text-foreground/52">Compliance skóre</p>
+            <p className="text-xs text-foreground/52">{copy.metrics.scoreTitle}</p>
             <p className="mt-2 text-sm leading-6 text-foreground/64">
-              Průměr frameworků a stavů kontrol.
+              {copy.metrics.scoreBody}
             </p>
           </div>
         </article>
 
         <article className="metric-card">
           <div className="flex items-center justify-between gap-3">
-            <p className="text-xs text-foreground/52">Aktivní frameworky</p>
+            <p className="text-xs text-foreground/52">
+              {copy.metrics.activeFrameworks}
+            </p>
             <ShieldCheck className="h-4 w-4 text-status-pass" aria-hidden="true" strokeWidth={1.5} />
           </div>
           <p className="mt-5 font-mono text-[28px] font-medium">
@@ -368,7 +415,9 @@ export default async function DashboardPage() {
 
         <article className="metric-card">
           <div className="flex items-center justify-between gap-3">
-            <p className="text-xs text-foreground/52">Selhané kontroly</p>
+            <p className="text-xs text-foreground/52">
+              {copy.metrics.failedControls}
+            </p>
             <AlertTriangle className="h-4 w-4 text-status-fail" aria-hidden="true" strokeWidth={1.5} />
           </div>
           <p className="mt-5 font-mono text-[28px] font-medium">
@@ -381,14 +430,14 @@ export default async function DashboardPage() {
 
         <article className="metric-card">
           <div className="flex items-center justify-between gap-3">
-            <p className="text-xs text-foreground/52">Poslední změna</p>
+            <p className="text-xs text-foreground/52">{copy.metrics.lastChange}</p>
             <Clock3 className="h-4 w-4 text-primary" aria-hidden="true" strokeWidth={1.5} />
           </div>
           <p className="mt-5 font-mono text-[28px] font-medium">
-            {formatRelative(updates[0].publishedAt)}
+            {formatRelative(updates[0].publishedAt, locale)}
           </p>
           <p className="mt-4 text-xs text-foreground/52">
-            {updates[0].source} · {updates[0].frameworkName ?? "Obecné"}
+            {updates[0].source} · {updates[0].frameworkName ?? copy.general}
           </p>
         </article>
       </div>
@@ -397,16 +446,16 @@ export default async function DashboardPage() {
         <section className="card">
           <div className="mb-4 flex items-center justify-between gap-4">
             <div>
-              <h2 className="text-lg font-medium">Stav frameworků</h2>
+              <h2 className="text-lg font-medium">{copy.frameworks.title}</h2>
               <p className="mt-1 text-sm text-foreground/58">
-                Skóre podle aktivních regulací.
+                {copy.frameworks.subtitle}
               </p>
             </div>
             <Link
               href="/frameworks"
               className="text-sm font-medium text-primary hover:text-[var(--accent-hover)]"
             >
-              Všechny
+              {copy.frameworks.viewAll}
             </Link>
           </div>
           <div className="stagger -mx-3 grid gap-1">
@@ -423,9 +472,13 @@ export default async function DashboardPage() {
                 >
                   <FrameworkIcon tone={tone} />
                   <div className="min-w-0">
-                    <p className="truncate font-medium">{item.name}</p>
+                    <p className="truncate font-medium">
+                      {framework ? getFrameworkName(framework, locale) : item.name}
+                    </p>
                     <p className="mt-0.5 truncate text-xs text-foreground/52">
-                      {framework?.descriptionCs ?? item.regulator ?? "Framework"}
+                      {framework
+                        ? getFrameworkDescription(framework, locale, copy)
+                        : item.regulator ?? "Framework"}
                     </p>
                   </div>
                   <StatusPill tone={tone}>{frameworkStatusLabel(item.score)}</StatusPill>
@@ -458,10 +511,10 @@ export default async function DashboardPage() {
                     🇨🇿 NÚKIB
                   </span>
                   <span className="rounded-sm bg-[var(--nukib-accent)]/18 px-2 py-1 text-[11px] font-medium text-[var(--nukib-text)]">
-                    Exclusive
+                    {copy.nukib.exclusive}
                   </span>
                 </div>
-                <h2 className="mt-3 text-lg font-medium">NÚKIB feed</h2>
+                <h2 className="mt-3 text-lg font-medium">{copy.nukib.title}</h2>
               </div>
               <Newspaper className="h-5 w-5 text-[var(--nukib-accent)]" aria-hidden="true" strokeWidth={1.5} />
             </div>
@@ -474,7 +527,7 @@ export default async function DashboardPage() {
                   <div className="flex items-start justify-between gap-3">
                     <div className="min-w-0">
                       <p className="font-mono text-xs text-[var(--nukib-accent)]">
-                        {update.frameworkName ?? "Obecné"}
+                        {update.frameworkName ?? copy.general}
                       </p>
                       <h3 className="mt-1 text-sm font-medium text-[var(--nukib-text)]">
                         {update.title}
@@ -488,16 +541,16 @@ export default async function DashboardPage() {
                     {update.summary}
                   </p>
                   <div className="mt-3 flex flex-wrap items-center gap-3 text-xs text-emerald-50/70">
-                    <span>{formatRelative(update.publishedAt)}</span>
+                    <span>{formatRelative(update.publishedAt, locale)}</span>
                     {update.sourceUrl ? (
                       <a href={update.sourceUrl} target="_blank" rel="noreferrer" className="font-medium text-[var(--nukib-accent)]">
-                        Otevřít zdroj
+                        {copy.nukib.openSource}
                       </a>
                     ) : null}
                     {!update.isRead && update.id !== "demo-nukib-feed" ? (
                       <form action={markRegulationUpdateReadAction.bind(null, update.id)}>
                         <button type="submit" className="font-medium text-[var(--nukib-accent)]">
-                          Označit přečtené
+                          {copy.nukib.markRead}
                         </button>
                       </form>
                     ) : null}
@@ -508,9 +561,9 @@ export default async function DashboardPage() {
           </section>
 
           <section className="card">
-            <h2 className="text-lg font-medium">Aktivita</h2>
+            <h2 className="text-lg font-medium">{copy.activity.title}</h2>
             <div className="mt-4 grid gap-3">
-              {priorityControls.slice(0, 3).map((control) => (
+              {priorityControlRows.slice(0, 3).map((control) => (
                 <Link
                   key={control.key}
                   href={`/controls/${control.key}`}
@@ -541,9 +594,9 @@ export default async function DashboardPage() {
       <section className="card">
         <div className="mb-4 flex items-center justify-between gap-4">
           <div>
-            <h2 className="text-lg font-medium">Nadcházející termíny</h2>
+            <h2 className="text-lg font-medium">{copy.deadlines.title}</h2>
             <p className="mt-1 text-sm text-foreground/58">
-              Povinnosti s dopadem na aktivní program.
+              {copy.deadlines.subtitle}
             </p>
           </div>
           <CalendarClock className="h-5 w-5 text-primary" aria-hidden="true" strokeWidth={1.5} />
@@ -556,7 +609,9 @@ export default async function DashboardPage() {
             >
               <div className="flex items-start justify-between gap-3">
                 <div>
-                  <p className="text-sm font-medium">{framework.nameCs}</p>
+                  <p className="text-sm font-medium">
+                    {getFrameworkName(framework, locale)}
+                  </p>
                   <p className="mt-1 text-xs text-foreground/52">
                     {framework.regulator}
                   </p>
@@ -564,16 +619,22 @@ export default async function DashboardPage() {
                 <FileArchive className="h-4 w-4 text-primary" aria-hidden="true" strokeWidth={1.5} />
               </div>
               <p className="mt-4 text-sm text-foreground/72">
-                {framework.descriptionCs}
+                {getFrameworkDescription(framework, locale, copy)}
               </p>
               <div className="mt-4 flex items-center justify-between gap-3">
                 <span className="font-mono text-xs text-foreground/52">
-                  {framework.mandatoryDeadline ?? "průběžně"}
+                  {framework.mandatoryDeadline ?? copy.deadline.continuous}
                 </span>
                 <StatusPill
-                  tone={framework.mandatoryDeadline && formatDeadline(framework.mandatoryDeadline) === "Termín prošel" ? "fail" : "warn"}
+                  tone={
+                    framework.mandatoryDeadline &&
+                    formatDeadline(framework.mandatoryDeadline, copy) ===
+                      copy.deadline.past
+                      ? "fail"
+                      : "warn"
+                  }
                 >
-                  {formatDeadline(framework.mandatoryDeadline)}
+                  {formatDeadline(framework.mandatoryDeadline, copy)}
                 </StatusPill>
               </div>
             </article>

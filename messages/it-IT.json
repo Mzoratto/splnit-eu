@@ -28,8 +28,72 @@
     "search": "Cerca (⌘K)...",
     "trustCenter": "Trust center",
     "notifications": "Notifiche",
+    "demoOrganisation": "Organizzazione demo",
+    "organisationFallback": "Organizzazione",
     "freePlanBanner": "Il piano gratuito è attivo. Le funzioni Business si sbloccano dopo l'upgrade.",
     "upgradePlan": "Aggiorna piano"
+  },
+  "dashboard": {
+    "greeting": "Buongiorno",
+    "summary": {
+      "openFindings": "rilievi aperti",
+      "failedControls": "controlli falliti"
+    },
+    "aiActWizardCta": "Avvia wizard AI Act",
+    "scoreLabel": "Punteggio",
+    "general": "Generale",
+    "metrics": {
+      "scoreTitle": "Punteggio compliance",
+      "scoreBody": "Media dei punteggi framework e degli stati dei controlli.",
+      "activeFrameworks": "Framework attivi",
+      "failedControls": "Controlli falliti",
+      "lastChange": "Ultima modifica"
+    },
+    "frameworks": {
+      "title": "Stato framework",
+      "subtitle": "Punteggi sulle normative attive.",
+      "viewAll": "Vedi tutti"
+    },
+    "frameworkDescriptions": {
+      "nis2": "Cybersecurity, gestione del rischio, incident reporting e responsabilità del management.",
+      "ai-act": "Obblighi per deployer AI, alfabetizzazione AI, AI ad alto rischio e trasparenza.",
+      "gdpr": "Protezione dei dati personali, registri dei trattamenti, sicurezza e notifica violazioni.",
+      "iso27001": "Sistema di gestione della sicurezza delle informazioni e catalogo dei controlli.",
+      "csrd": "Reporting ESG, doppia materialità, evidenze dati e questionari fornitori."
+    },
+    "nukib": {
+      "exclusive": "Esclusivo",
+      "title": "Feed NÚKIB",
+      "openSource": "Apri fonte",
+      "markRead": "Segna come letto"
+    },
+    "activity": {
+      "title": "Attività"
+    },
+    "deadlines": {
+      "title": "Scadenze in arrivo",
+      "subtitle": "Obblighi con impatto sul programma attivo."
+    },
+    "deadline": {
+      "continuous": "Continuativo",
+      "past": "Scadenza passata",
+      "today": "Oggi",
+      "days": "{days} giorni"
+    },
+    "demoUpdates": {
+      "nukibMethodology": {
+        "title": "NÚKIB ha pubblicato un aggiornamento metodologico",
+        "summary": "Nuove raccomandazioni per gestire il rischio fornitori per soggetti regolati."
+      },
+      "nukibCve": {
+        "title": "CVE-2026-1842 richiede una verifica dell'esposizione",
+        "summary": "La vulnerabilità impatta gateway VPN comunemente utilizzati."
+      },
+      "uoouGuidance": {
+        "title": "ÚOOÚ ha pubblicato una guida metodologica",
+        "summary": "Indicazioni su registri dei trattamenti e misure di sicurezza."
+      }
+    }
   },
   "marketing": {
     "nav": {

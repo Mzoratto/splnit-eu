@@ -28,8 +28,72 @@
     "search": "Hledat (⌘K)...",
     "trustCenter": "Trust centrum",
     "notifications": "Oznámení",
+    "demoOrganisation": "Demo organizace",
+    "organisationFallback": "Organizace",
     "freePlanBanner": "Bezplatný plán je aktivní. Business funkce se odemknou po upgradu.",
     "upgradePlan": "Upgradovat plán"
+  },
+  "dashboard": {
+    "greeting": "Dobré ráno",
+    "summary": {
+      "openFindings": "otevřených nálezů",
+      "failedControls": "kontrol selhalo"
+    },
+    "aiActWizardCta": "Spustit AI Act wizard",
+    "scoreLabel": "Skóre",
+    "general": "Obecné",
+    "metrics": {
+      "scoreTitle": "Compliance skóre",
+      "scoreBody": "Průměr frameworků a stavů kontrol.",
+      "activeFrameworks": "Aktivní frameworky",
+      "failedControls": "Selhané kontroly",
+      "lastChange": "Poslední změna"
+    },
+    "frameworks": {
+      "title": "Stav frameworků",
+      "subtitle": "Skóre podle aktivních regulací.",
+      "viewAll": "Všechny"
+    },
+    "frameworkDescriptions": {
+      "nis2": "Kybernetická bezpečnost, řízení rizik, incident reporting a odpovědnost managementu.",
+      "ai-act": "Povinnosti nasazovatelů AI systémů, AI gramotnost, vysoce riziková AI a transparentnost.",
+      "gdpr": "Ochrana osobních údajů, záznamy o činnostech zpracování, bezpečnost a oznamování porušení.",
+      "iso27001": "Systém řízení bezpečnosti informací a katalog bezpečnostních opatření.",
+      "csrd": "ESG reporting, dvojí materialita, datová evidence a dodavatelské dotazníky."
+    },
+    "nukib": {
+      "exclusive": "Exclusive",
+      "title": "NÚKIB feed",
+      "openSource": "Otevřít zdroj",
+      "markRead": "Označit přečtené"
+    },
+    "activity": {
+      "title": "Aktivita"
+    },
+    "deadlines": {
+      "title": "Nadcházející termíny",
+      "subtitle": "Povinnosti s dopadem na aktivní program."
+    },
+    "deadline": {
+      "continuous": "Průběžně",
+      "past": "Termín prošel",
+      "today": "Dnes",
+      "days": "{days} dní"
+    },
+    "demoUpdates": {
+      "nukibMethodology": {
+        "title": "NÚKIB publikoval aktualizaci metodiky",
+        "summary": "Nová sada doporučení k řízení dodavatelských rizik pro povinné osoby."
+      },
+      "nukibCve": {
+        "title": "CVE-2026-1842 vyžaduje ověření expozice",
+        "summary": "Zranitelnost dopadá na běžně nasazované VPN brány."
+      },
+      "uoouGuidance": {
+        "title": "ÚOOÚ zveřejnil metodický výklad",
+        "summary": "Doporučení pro evidence zpracování a bezpečnostní opatření."
+      }
+    }
   },
   "marketing": {
     "nav": {
