@@ -11,11 +11,14 @@ import {
   getFrameworkDetail,
   saveGapReportRecord,
 } from "@/lib/db/queries/framework-assessment";
+import { getOrganisationByClerkOrgId } from "@/lib/db/queries/organisations";
 import {
   FRAMEWORK_QUESTIONS,
   type FrameworkAnswer,
 } from "@/lib/frameworks/questions";
 import { FRAMEWORK_LIBRARY } from "@/lib/frameworks/registry";
+import { getMessagesForLocale } from "@/i18n/messages";
+import { normalizeLocale } from "@/i18n/routing";
 import { renderGapReportPdf } from "@/lib/pdf/gap-report";
 
 const answerSchema = z.enum(["yes", "partial", "no", "na"]);
@@ -77,6 +80,7 @@ export async function generateGapReportAction(frameworkSlug: string) {
     clerkOrgId,
     frameworkSlug: parsedSlug,
   });
+  const organisation = await getOrganisationByClerkOrgId(clerkOrgId);
 
   if (!detail) {
     throw new Error(`Unknown framework: ${frameworkSlug}`);
@@ -88,10 +92,35 @@ export async function generateGapReportAction(frameworkSlug: string) {
 
   const score = detail.orgFramework?.score ?? 0;
   const generatedAt = new Date();
+  const locale = normalizeLocale(organisation?.locale) ?? "cs-CZ";
+  const copy = getMessagesForLocale(locale).frameworks;
+  const seedFramework = FRAMEWORK_LIBRARY.find(
+    (framework) => framework.slug === parsedSlug,
+  );
   const pdf = await renderGapReportPdf({
-    controls: detail.controls,
-    framework: detail.framework,
+    controls: detail.controls.map((control) => ({
+      ...control,
+      description: locale === "cs-CZ" ? control.description : null,
+      title:
+        locale === "cs-CZ"
+          ? control.titleCs ?? control.title
+          : control.titleEn ?? control.title,
+    })),
+    framework: {
+      description:
+        locale === "cs-CZ"
+          ? detail.framework.descriptionCs
+          : copy.descriptions[parsedSlug] ?? detail.framework.descriptionCs,
+      mandatoryDeadline: detail.framework.mandatoryDeadline,
+      name:
+        locale === "cs-CZ"
+          ? detail.framework.nameCs
+          : detail.framework.nameEn,
+      regulator: detail.framework.regulator,
+      version: detail.framework.version,
+    },
     generatedAt,
+    locale,
     score,
   });
   const blob = await put(
@@ -109,13 +138,14 @@ export async function generateGapReportAction(frameworkSlug: string) {
     frameworkSlug: parsedSlug,
     metadata: {
       generatedAt: generatedAt.toISOString(),
+      locale,
       openControls: detail.controls.filter((control) =>
         ["fail", "manual_review", "unknown", null].includes(control.status),
       ).length,
       score,
       totalControls: detail.controls.length,
     },
-    title: `${detail.framework.nameCs} gap report`,
+    title: `${seedFramework?.nameEn ?? detail.framework.nameEn} gap report`,
   }).catch((error: unknown) =>
     deleteBlobUrlsAfterFailedSave([blob.url], error),
   );

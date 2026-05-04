@@ -21,15 +21,58 @@ type GapReportControl = {
 type GapReportInput = {
   controls: GapReportControl[];
   framework: {
-    descriptionCs: string | null;
+    description: string | null;
     mandatoryDeadline: string | null;
-    nameCs: string;
+    name: string;
     regulator: string | null;
     version: string | null;
   };
   generatedAt: Date;
+  locale: "cs-CZ" | "en-EU" | "it-IT";
   score: number;
 };
+
+const GAP_REPORT_COPY = {
+  "cs-CZ": {
+    continuous: "prubezne",
+    generated: "Vygenerovano",
+    noReference: "bez reference",
+    noVersion: "bez verze",
+    openControls: "otevrenych kontrol z",
+    priorityGaps: "Prioritni mezery",
+    regulator: "Regulator",
+    score: "Skore",
+    subject: "gap report",
+    term: "Termin",
+    unknownCategory: "obecne",
+  },
+  "en-EU": {
+    continuous: "continuous",
+    generated: "Generated",
+    noReference: "no reference",
+    noVersion: "no version",
+    openControls: "open controls of",
+    priorityGaps: "Priority gaps",
+    regulator: "Regulator",
+    score: "Score",
+    subject: "gap report",
+    term: "Deadline",
+    unknownCategory: "general",
+  },
+  "it-IT": {
+    continuous: "continuativo",
+    generated: "Generato",
+    noReference: "nessun riferimento",
+    noVersion: "nessuna versione",
+    openControls: "controlli aperti su",
+    priorityGaps: "Gap prioritari",
+    regulator: "Regolatore",
+    score: "Punteggio",
+    subject: "gap report",
+    term: "Scadenza",
+    unknownCategory: "generale",
+  },
+} as const satisfies Record<GapReportInput["locale"], Record<string, string>>;
 
 const styles = StyleSheet.create({
   page: {
@@ -151,8 +194,10 @@ function GapReportDocument({
   controls,
   framework,
   generatedAt,
+  locale,
   score,
 }: GapReportInput) {
+  const copy = GAP_REPORT_COPY[locale];
   const failingControls = controls.filter((control) =>
     ["fail", "manual_review", "unknown", null].includes(control.status),
   );
@@ -160,38 +205,38 @@ function GapReportDocument({
   return (
     <Document
       author="Splnit.eu"
-      subject={`${framework.nameCs} gap report`}
-      title={`${framework.nameCs} gap report`}
+      subject={`${framework.name} ${copy.subject}`}
+      title={`${framework.name} ${copy.subject}`}
     >
       <Page size="A4" style={styles.page}>
-        <Text style={styles.eyebrow}>Splnit.eu gap report</Text>
-        <Text style={styles.title}>{framework.nameCs}</Text>
-        <Text style={styles.muted}>{framework.descriptionCs}</Text>
+        <Text style={styles.eyebrow}>Splnit.eu {copy.subject}</Text>
+        <Text style={styles.title}>{framework.name}</Text>
+        <Text style={styles.muted}>{framework.description}</Text>
 
         <View style={styles.summaryGrid}>
           <View style={styles.summaryBox}>
-            <Text style={styles.summaryLabel}>Skore</Text>
+            <Text style={styles.summaryLabel}>{copy.score}</Text>
             <Text style={styles.summaryValue}>{score}%</Text>
           </View>
           <View style={styles.summaryBox}>
-            <Text style={styles.summaryLabel}>Regulator</Text>
+            <Text style={styles.summaryLabel}>{copy.regulator}</Text>
             <Text style={styles.summaryValue}>{framework.regulator ?? "N/A"}</Text>
           </View>
           <View style={styles.summaryBox}>
-            <Text style={styles.summaryLabel}>Termin</Text>
+            <Text style={styles.summaryLabel}>{copy.term}</Text>
             <Text style={styles.summaryValue}>
-              {framework.mandatoryDeadline ?? "prubezne"}
+              {framework.mandatoryDeadline ?? copy.continuous}
             </Text>
           </View>
         </View>
 
         <Text style={styles.meta}>
-          Vygenerovano {new Intl.DateTimeFormat("cs-CZ").format(generatedAt)} ·{" "}
-          {framework.version ?? "bez verze"} · {failingControls.length} otevrenych
-          kontrol z {controls.length}
+          {copy.generated} {new Intl.DateTimeFormat(locale).format(generatedAt)} ·{" "}
+          {framework.version ?? copy.noVersion} · {failingControls.length}{" "}
+          {copy.openControls} {controls.length}
         </Text>
 
-        <Text style={styles.sectionTitle}>Prioritni mezery</Text>
+        <Text style={styles.sectionTitle}>{copy.priorityGaps}</Text>
         {(failingControls.length ? failingControls : controls).slice(0, 20).map((control) => (
           <View key={control.key} style={styles.control} wrap={false}>
             <View style={styles.controlHeader}>
@@ -202,8 +247,8 @@ function GapReportDocument({
             </View>
             <Text style={styles.muted}>{control.description}</Text>
             <Text style={styles.meta}>
-              {control.articleRef ?? "bez reference"} · {control.requirementLevel} ·{" "}
-              {control.category ?? "obecne"}
+              {control.articleRef ?? copy.noReference} · {control.requirementLevel} ·{" "}
+              {control.category ?? copy.unknownCategory}
             </Text>
           </View>
         ))}
