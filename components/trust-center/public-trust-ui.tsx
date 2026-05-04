@@ -32,12 +32,19 @@ import type {
   TrustFrameworkCategory,
   TrustSignal,
 } from "@/lib/trust-center/public-model";
+import {
+  trustLocaleCodes,
+  type PublicTrustCopy,
+} from "@/lib/trust-center/public-copy";
+import type { Locale } from "@/i18n/routing";
 
 export function TrustTopbar({
   backHref,
+  copy,
   trustCenter,
 }: {
   backHref?: string;
+  copy: PublicTrustCopy;
   trustCenter: PublicTrustCenterModel;
 }) {
   return (
@@ -46,7 +53,7 @@ export function TrustTopbar({
         <Link
           href="/"
           className="flex min-w-0 items-center gap-3 rounded-[var(--r-md)] focus:outline-none focus:ring-2 focus:ring-[var(--accent)] focus:ring-offset-2"
-          aria-label="Go to Splnit.eu homepage"
+          aria-label={copy.topbar.homeAria}
         >
           <span
             aria-hidden="true"
@@ -71,12 +78,12 @@ export function TrustTopbar({
               className="hidden items-center gap-2 rounded-[var(--r-md)] border border-border px-3 py-2 text-xs font-medium text-foreground/68 sm:inline-flex"
             >
               <ArrowLeft className="h-3.5 w-3.5" aria-hidden="true" />
-              Back
+              {copy.topbar.back}
             </Link>
           ) : null}
           <div className="inline-flex items-center gap-2 text-xs font-medium text-foreground/62">
             <ShieldCheck className="h-4 w-4 text-[var(--accent)]" aria-hidden="true" />
-            Verified by Splnit.eu
+            {copy.topbar.verifiedBy}
           </div>
         </div>
       </div>
@@ -113,18 +120,24 @@ export function TrustSignalsStrip({ signals }: { signals: TrustSignal[] }) {
 }
 
 export function FrameworkCard({
+  copy,
   framework,
   href,
+  locale,
   showDrilldown,
   showPercentages,
 }: {
+  copy: PublicTrustCopy;
   framework: TrustFramework;
   href: string;
+  locale: Locale;
   showDrilldown: boolean;
   showPercentages: boolean;
 }) {
   const passPct = segmentWidth(framework.verified, framework.totalControls);
   const warnPct = segmentWidth(framework.inProgress, framework.totalControls);
+  const frameworkName =
+    locale === "cs-CZ" ? framework.framework.nameCs : framework.framework.nameEn;
 
   return (
     <article className="rounded-[var(--r-lg)] border border-border bg-surface p-5">
@@ -132,9 +145,9 @@ export function FrameworkCard({
         <div className="flex items-start gap-3">
           <FrameworkIcon slug={framework.framework.slug} />
           <div>
-            <h3 className="text-lg font-semibold">{framework.framework.nameCs}</h3>
+            <h3 className="text-lg font-semibold">{frameworkName}</h3>
             <p className="mt-1 text-sm text-foreground/58">
-              Český regulátor: {framework.regulator} · {framework.law}
+              {copy.frameworkCard.regulatorPrefix}: {framework.regulator} · {framework.law}
             </p>
           </div>
         </div>
@@ -155,13 +168,16 @@ export function FrameworkCard({
           </div>
           <p className="mt-3 flex flex-wrap items-center gap-x-4 gap-y-1 font-mono text-xs text-foreground/58">
             <span>
-              <Dot className="bg-[var(--status-pass)]" /> {framework.verified} verified
+              <Dot className="bg-[var(--status-pass)]" /> {framework.verified}{" "}
+              {copy.frameworkCard.verified}
             </span>
             <span>
-              <Dot className="bg-[var(--status-warn)]" /> {framework.inProgress} in progress
+              <Dot className="bg-[var(--status-warn)]" /> {framework.inProgress}{" "}
+              {copy.frameworkCard.inProgress}
             </span>
             <span>
-              <Dot className="bg-foreground/28" /> {framework.notApplicable} not applicable
+              <Dot className="bg-foreground/28" /> {framework.notApplicable}{" "}
+              {copy.frameworkCard.notApplicable}
             </span>
           </p>
         </div>
@@ -174,14 +190,15 @@ export function FrameworkCard({
 
       <div className="mt-5 flex flex-col gap-3 border-t border-border pt-4 sm:flex-row sm:items-center sm:justify-between">
         <p className="font-mono text-xs text-foreground/50">
-          Last assessed: {formatDateTime(framework.lastAssessedAt)} · Auto
+          {copy.frameworkCard.lastAssessed}{" "}
+          {formatDateTime(framework.lastAssessedAt, locale)} · {copy.frameworkCard.auto}
         </p>
         {showDrilldown ? (
           <Link
             href={href}
             className="inline-flex items-center gap-2 text-sm font-medium text-[var(--accent)]"
           >
-            Zobrazit detail frameworku
+            {copy.frameworkCard.viewDetails}
             <ArrowRight className="h-4 w-4" aria-hidden="true" />
           </Link>
         ) : null}
@@ -191,9 +208,11 @@ export function FrameworkCard({
 }
 
 export function DocumentsSection({
+  copy,
   documents,
-  title = "Dokumenty",
+  title,
 }: {
+  copy: PublicTrustCopy;
   documents: PublicTrustDocument[];
   title?: string;
 }) {
@@ -202,13 +221,14 @@ export function DocumentsSection({
       <div className="flex flex-col justify-between gap-3 sm:flex-row sm:items-end">
         <div>
           <p className="font-mono text-xs uppercase tracking-[0.16em] text-foreground/48">
-            DOCUMENTS
+            {copy.documents.eyebrow}
           </p>
-          <h2 className="mt-2 text-2xl font-medium tracking-normal">{title}</h2>
+          <h2 className="mt-2 text-2xl font-medium tracking-normal">
+            {title ?? copy.documents.title}
+          </h2>
         </div>
         <p className="max-w-xl text-sm leading-6 text-foreground/58">
-          Uzamčené položky jsou dostupné na žádost. Veřejné dokumenty lze zobrazit
-          přímo bez dodatečného přístupu.
+          {copy.documents.description}
         </p>
       </div>
       <div className="mt-6 grid gap-3 [grid-template-columns:repeat(auto-fill,minmax(320px,1fr))]">
@@ -244,7 +264,11 @@ export function DocumentsSection({
                   : secondaryButtonClass
               }
             >
-              {document.isLocked ? "Request" : document.href.startsWith("mailto:") ? "Request" : "View"}
+              {document.isLocked
+                ? copy.documents.request
+                : document.href.startsWith("mailto:")
+                  ? copy.documents.request
+                  : copy.documents.view}
               {document.isLocked ? (
                 <LockKeyhole className="h-3.5 w-3.5" aria-hidden="true" />
               ) : document.href.startsWith("mailto:") ? (
@@ -260,23 +284,29 @@ export function DocumentsSection({
   );
 }
 
-export function ContactSection({ orgName }: { orgName: string }) {
+export function ContactSection({
+  copy,
+  orgName,
+}: {
+  copy: PublicTrustCopy;
+  orgName: string;
+}) {
   return (
     <section className="mx-auto max-w-7xl px-4 py-10 sm:px-6">
       <div className="grid gap-4 lg:grid-cols-2">
         <ContactCard
-          description={`Procurement nebo bezpečnostní tým může požádat o detailnější odpovědi k ${orgName}.`}
+          description={copy.contacts.vendorDescription(orgName)}
           href="mailto:hello@splnit.eu?subject=Vendor%20risk%20assessment"
           icon="vendor"
-          meta="Odpověď obvykle do 2 pracovních dnů"
-          title="Vendor risk assessment"
+          meta={copy.contacts.vendorMeta}
+          title={copy.contacts.vendorTitle}
         />
         <ContactCard
-          description="Bezpečnostní nálezy a zranitelnosti posílejte přes odpovědný disclosure kanál."
+          description={copy.contacts.disclosureDescription}
           href="mailto:security@splnit.eu?subject=Responsible%20disclosure"
           icon="security"
-          meta="PGP klíč na vyžádání · první odpověď do 24 hodin"
-          title="Responsible disclosure"
+          meta={copy.contacts.disclosureMeta}
+          title={copy.contacts.disclosureTitle}
         />
       </div>
     </section>
@@ -285,31 +315,42 @@ export function ContactSection({ orgName }: { orgName: string }) {
 
 export function TrustFooter({
   backHref,
+  copy,
+  locale,
   trustCenter,
 }: {
   backHref?: string;
+  copy: PublicTrustCopy;
+  locale: Locale;
   trustCenter: PublicTrustCenterModel;
 }) {
   return (
     <footer className="border-t border-border bg-surface">
       <div className="mx-auto flex max-w-7xl flex-col gap-4 px-4 py-6 sm:px-6 lg:flex-row lg:items-center lg:justify-between">
         <p className="font-mono text-xs text-foreground/50">
-          Last verified {formatDateTime(trustCenter.lastTestedAt)} · next test{" "}
-          {formatTimeUntil(trustCenter.nextTestAt)}
+          {copy.footer.lastVerified}{" "}
+          {formatDateTime(trustCenter.lastTestedAt, locale)} · {copy.footer.nextTest}{" "}
+          {formatTimeUntil(trustCenter.nextTestAt, copy)}
         </p>
         <div className="flex flex-wrap items-center gap-4 text-sm text-foreground/58">
-          {backHref ? <Link href={backHref}>← Back to Trust Center</Link> : null}
-          <Link href="/">Splnit.eu home</Link>
-          <Link href="https://status.splnit.eu">status page</Link>
-          <Link href="/soukromi">Privacy</Link>
-          <Link href="/podminky">Terms</Link>
+          {backHref ? <Link href={backHref}>{copy.footer.back}</Link> : null}
+          <Link href="/">{copy.footer.home}</Link>
+          <Link href="https://status.splnit.eu">{copy.footer.status}</Link>
+          <Link href="/soukromi">{copy.footer.privacy}</Link>
+          <Link href="/podminky">{copy.footer.terms}</Link>
         </div>
       </div>
     </footer>
   );
 }
 
-export function CategoryRow({ category }: { category: TrustFrameworkCategory }) {
+export function CategoryRow({
+  category,
+  copy,
+}: {
+  category: TrustFrameworkCategory;
+  copy: PublicTrustCopy;
+}) {
   const Icon = categoryIconMap[category.icon] ?? ShieldQuestion;
   const tone: StatusPillTone =
     category.status === "pass" ? "pass" : category.status === "warn" ? "warn" : "neutral";
@@ -344,7 +385,7 @@ export function CategoryRow({ category }: { category: TrustFrameworkCategory }) 
         </div>
       </div>
       <p className="font-mono text-xs text-foreground/58 sm:text-right">
-        {formatCategoryCounts(category)}
+        {formatCategoryCounts(category, copy)}
       </p>
       <StatusPill tone={tone}>
         {category.status === "pass"
@@ -357,21 +398,27 @@ export function CategoryRow({ category }: { category: TrustFrameworkCategory }) 
   );
 }
 
-export function HeroActions({ orgName }: { orgName: string }) {
+export function HeroActions({
+  copy,
+  orgName,
+}: {
+  copy: PublicTrustCopy;
+  orgName: string;
+}) {
   return (
     <div className="mt-6 flex flex-col gap-3 sm:flex-row">
       <Link
         href={`mailto:hello@splnit.eu?subject=Document%20access%20request%20for%20${encodeURIComponent(orgName)}`}
         className={primaryButtonClass}
       >
-        Request access to documents
+        {copy.heroActions.requestAccess}
         <Download className="h-4 w-4" aria-hidden="true" />
       </Link>
       <Link
         href="mailto:security@splnit.eu?subject=Security%20question"
         className={secondaryButtonClass}
       >
-        Contact security team
+        {copy.heroActions.contactSecurity}
         <Mail className="h-4 w-4" aria-hidden="true" />
       </Link>
     </div>
@@ -379,20 +426,25 @@ export function HeroActions({ orgName }: { orgName: string }) {
 }
 
 export function LiveIndicator({
+  copy,
   lastTestedAt,
+  locale,
   nextTestAt,
 }: {
+  copy: PublicTrustCopy;
   lastTestedAt: Date | null;
+  locale: Locale;
   nextTestAt: Date | null;
 }) {
   return (
     <div className="mt-6 inline-flex flex-wrap items-center gap-3 rounded-[var(--r-lg)] border border-[var(--status-pass-border)] bg-[var(--status-pass-subtle)] px-4 py-3">
       <span className="flex items-center gap-2 text-sm font-medium text-[var(--status-pass)]">
         <span className="h-2 w-2 animate-pulse rounded-full bg-[var(--status-pass)]" />
-        Live
+        {copy.liveIndicator.live}
       </span>
       <span className="font-mono text-xs text-foreground/58">
-        last {formatDateTime(lastTestedAt)} · next {formatDateTime(nextTestAt)}
+        {copy.liveIndicator.last} {formatDateTime(lastTestedAt, locale)} ·{" "}
+        {copy.liveIndicator.next} {formatDateTime(nextTestAt, locale)}
       </span>
     </div>
   );
@@ -415,20 +467,26 @@ export function FrameworkIcon({ slug }: { slug: string }) {
   );
 }
 
-export function formatDateTime(value: Date | string | null | undefined) {
+export function formatDateTime(
+  value: Date | string | null | undefined,
+  locale: Locale = "cs-CZ",
+) {
   if (!value) {
     return "n/a";
   }
 
-  return new Intl.DateTimeFormat("cs-CZ", {
+  return new Intl.DateTimeFormat(trustLocaleCodes[locale] ?? "cs-CZ", {
     dateStyle: "medium",
     timeStyle: "short",
   }).format(new Date(value));
 }
 
-function formatTimeUntil(value: Date | string | null | undefined) {
+function formatTimeUntil(
+  value: Date | string | null | undefined,
+  copy: PublicTrustCopy,
+) {
   if (!value) {
-    return "n/a";
+    return copy.time.na;
   }
 
   const diffMinutes = Math.max(
@@ -437,13 +495,13 @@ function formatTimeUntil(value: Date | string | null | undefined) {
   );
 
   if (diffMinutes < 60) {
-    return `in ${diffMinutes} min`;
+    return copy.time.inMinutes(diffMinutes);
   }
 
   const hours = Math.floor(diffMinutes / 60);
   const minutes = diffMinutes % 60;
 
-  return minutes > 0 ? `in ${hours}h ${minutes}m` : `in ${hours}h`;
+  return copy.time.inHours(hours, minutes);
 }
 
 export const primaryButtonClass =
@@ -511,12 +569,15 @@ function segmentWidth(value: number, total: number) {
   return Math.round((value / total) * 1000) / 10;
 }
 
-function formatCategoryCounts(category: TrustFrameworkCategory) {
+function formatCategoryCounts(
+  category: TrustFrameworkCategory,
+  copy: PublicTrustCopy,
+) {
   if (category.notApplicable === category.total) {
-    return `${category.total} not applicable`;
+    return copy.categoryCounts.notApplicable(category.total);
   }
 
-  return `${category.verified} / ${category.total} verified`;
+  return copy.categoryCounts.verified(category.verified, category.total);
 }
 
 const signalIconMap: Record<TrustSignal["icon"], LucideIcon> = {

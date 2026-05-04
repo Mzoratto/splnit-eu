@@ -14,6 +14,7 @@ import {
   type PublicControlCategory,
 } from "@/lib/frameworks/categories";
 import { FRAMEWORK_LIBRARY, type FrameworkSeed } from "@/lib/frameworks/registry";
+import type { Locale } from "@/i18n/routing";
 
 export type PublicTrustDocument = {
   description: string;
@@ -159,65 +160,225 @@ const PUBLIC_DOCUMENTS: PublicTrustDocument[] = [
   },
 ];
 
-const REGULATION_META: Record<
-  string,
-  { effectiveDate: string; law: string; maxPenalty: string; regulator: string }
+const DOCUMENT_DESCRIPTIONS: Record<
+  Locale,
+  Record<PublicTrustDocument["id"], string>
 > = {
-  "ai-act": {
-    effectiveDate: "Srpen 2026",
-    law: "Nařízení (EU) 2024/1689",
-    maxPenalty: "Až €35M nebo 7% obratu",
-    regulator: "ČTÚ",
+  "cs-CZ": {
+    dpa: "Vzor smlouvy o zpracování osobních údajů.",
+    "iso-soa": "Statement of Applicability pro ISO 27001.",
+    pentest: "Souhrn posledního penetračního testu.",
+    "privacy-policy": "Veřejné informace o zpracování osobních údajů.",
+    sla: "Dostupnost služby, reakční časy a provozní odpovědnosti.",
+    soc2: "Nezávislé ověření kontrol a provozních procesů.",
+    subprocessors: "Aktuální seznam hlavních subdodavatelů.",
+    whitepaper: "Přehled bezpečnostní architektury a provozních opatření.",
   },
-  csrd: {
-    effectiveDate: "Leden 2024",
-    law: "Směrnice (EU) 2022/2464",
-    maxPenalty: "Dle národní transpozice",
-    regulator: "MŽP",
+  "en-EU": {
+    dpa: "Template data processing agreement.",
+    "iso-soa": "Statement of Applicability for ISO 27001.",
+    pentest: "Summary of the latest penetration test.",
+    "privacy-policy": "Public information about personal data processing.",
+    sla: "Service availability, response times, and operating responsibilities.",
+    soc2: "Independent verification of controls and operating processes.",
+    subprocessors: "Current list of main sub-processors.",
+    whitepaper: "Overview of security architecture and operating measures.",
   },
-  gdpr: {
-    effectiveDate: "Květen 2018",
-    law: "GDPR + zákon č. 110/2019 Sb.",
-    maxPenalty: "Až €20M nebo 4% obratu",
-    regulator: "ÚOOÚ",
+  "it-IT": {
+    dpa: "Modello di accordo per il trattamento dei dati.",
+    "iso-soa": "Statement of Applicability per ISO 27001.",
+    pentest: "Riepilogo dell'ultimo penetration test.",
+    "privacy-policy": "Informazioni pubbliche sul trattamento dei dati personali.",
+    sla: "Disponibilità del servizio, tempi di risposta e responsabilità operative.",
+    soc2: "Verifica indipendente di controlli e processi operativi.",
+    subprocessors: "Elenco aggiornato dei principali sub-responsabili.",
+    whitepaper: "Panoramica di architettura di sicurezza e misure operative.",
   },
-  iso27001: {
-    effectiveDate: "Říjen 2022",
-    law: "ISO/IEC 27001:2022",
-    maxPenalty: "Není zákonná pokuta",
-    regulator: "ISO",
+};
+
+const CATEGORY_META_IT: Record<
+  PublicControlCategory,
+  { desc: string; name: string }
+> = {
+  architecture: {
+    desc: "Segmentazione, inventario sistemi, configurazione sicura e ownership tecnica",
+    name: "Architettura sicura",
   },
-  nis2: {
-    effectiveDate: "Říjen 2024",
-    law: "Zákon č. 264/2025 Sb.",
-    maxPenalty: "Až €10M nebo 2% obratu",
-    regulator: "NÚKIB",
+  awareness: {
+    desc: "Formazione del personale, responsabilità, regole di sicurezza e verifiche di comprensione",
+    name: "Consapevolezza sicurezza",
+  },
+  backup: {
+    desc: "Backup, ripristino, continuità operativa e test di recupero",
+    name: "Backup e ripristino",
+  },
+  cryptography: {
+    desc: "Cifratura dati, gestione chiavi, classificazione dati e condivisione sicura",
+    name: "Crittografia e protezione dati",
+  },
+  iam: {
+    desc: "MFA, accesso condizionale, ruoli privilegiati e accesso ospiti",
+    name: "Identity and access management",
+  },
+  incident: {
+    desc: "Incident response, escalation, scadenze legali e lezioni apprese",
+    name: "Incident response",
+  },
+  logging: {
+    desc: "Logging, monitoring, alert anomalie e tracciabilità eventi",
+    name: "Logging e monitoring",
+  },
+  ot: {
+    desc: "Separazione delle tecnologie operative, accesso remoto e controllo cambiamenti",
+    name: "Sistemi OT",
+  },
+  supply_chain: {
+    desc: "Rischio fornitori, requisiti contrattuali, questionari e revisione continua",
+    name: "Sicurezza supply chain",
+  },
+  vulnerability: {
+    desc: "Patch management, vulnerability scanning, remediation e prioritizzazione",
+    name: "Gestione vulnerabilità",
+  },
+};
+
+const REGULATION_META: Record<
+  Locale,
+  Record<
+    string,
+    { effectiveDate: string; law: string; maxPenalty: string; regulator: string }
+  >
+> = {
+  "cs-CZ": {
+    "ai-act": {
+      effectiveDate: "Srpen 2026",
+      law: "Nařízení (EU) 2024/1689",
+      maxPenalty: "Až €35M nebo 7% obratu",
+      regulator: "ČTÚ",
+    },
+    csrd: {
+      effectiveDate: "Leden 2024",
+      law: "Směrnice (EU) 2022/2464",
+      maxPenalty: "Dle národní transpozice",
+      regulator: "MŽP",
+    },
+    gdpr: {
+      effectiveDate: "Květen 2018",
+      law: "GDPR + zákon č. 110/2019 Sb.",
+      maxPenalty: "Až €20M nebo 4% obratu",
+      regulator: "ÚOOÚ",
+    },
+    iso27001: {
+      effectiveDate: "Říjen 2022",
+      law: "ISO/IEC 27001:2022",
+      maxPenalty: "Není zákonná pokuta",
+      regulator: "ISO",
+    },
+    nis2: {
+      effectiveDate: "Říjen 2024",
+      law: "Zákon č. 264/2025 Sb.",
+      maxPenalty: "Až €10M nebo 2% obratu",
+      regulator: "NÚKIB",
+    },
+  },
+  "en-EU": {
+    "ai-act": {
+      effectiveDate: "August 2026",
+      law: "Regulation (EU) 2024/1689",
+      maxPenalty: "Up to €35M or 7% of turnover",
+      regulator: "ČTÚ",
+    },
+    csrd: {
+      effectiveDate: "January 2024",
+      law: "Directive (EU) 2022/2464",
+      maxPenalty: "According to national transposition",
+      regulator: "MŽP",
+    },
+    gdpr: {
+      effectiveDate: "May 2018",
+      law: "GDPR + Act No. 110/2019 Coll.",
+      maxPenalty: "Up to €20M or 4% of turnover",
+      regulator: "ÚOOÚ",
+    },
+    iso27001: {
+      effectiveDate: "October 2022",
+      law: "ISO/IEC 27001:2022",
+      maxPenalty: "No statutory fine",
+      regulator: "ISO",
+    },
+    nis2: {
+      effectiveDate: "October 2024",
+      law: "Act No. 264/2025 Coll.",
+      maxPenalty: "Up to €10M or 2% of turnover",
+      regulator: "NÚKIB",
+    },
+  },
+  "it-IT": {
+    "ai-act": {
+      effectiveDate: "Agosto 2026",
+      law: "Regolamento (UE) 2024/1689",
+      maxPenalty: "Fino a €35M o 7% del fatturato",
+      regulator: "ČTÚ",
+    },
+    csrd: {
+      effectiveDate: "Gennaio 2024",
+      law: "Direttiva (UE) 2022/2464",
+      maxPenalty: "Secondo la trasposizione nazionale",
+      regulator: "MŽP",
+    },
+    gdpr: {
+      effectiveDate: "Maggio 2018",
+      law: "GDPR + legge n. 110/2019 Coll.",
+      maxPenalty: "Fino a €20M o 4% del fatturato",
+      regulator: "ÚOOÚ",
+    },
+    iso27001: {
+      effectiveDate: "Ottobre 2022",
+      law: "ISO/IEC 27001:2022",
+      maxPenalty: "Nessuna sanzione legale",
+      regulator: "ISO",
+    },
+    nis2: {
+      effectiveDate: "Ottobre 2024",
+      law: "Legge n. 264/2025 Coll.",
+      maxPenalty: "Fino a €10M o 2% del fatturato",
+      regulator: "NÚKIB",
+    },
   },
 };
 
 export async function getPublicTrustCenterModel(input: {
   accessToken?: string | null;
+  locale?: Locale;
   orgSlug: string;
 }): Promise<PublicTrustCenterModel | null> {
+  const locale = input.locale ?? "cs-CZ";
+
   if (hasDatabaseUrl()) {
-    const model = await loadDatabaseTrustCenter(input).catch(() => null);
+    const model = await loadDatabaseTrustCenter({ ...input, locale }).catch(() => null);
 
     if (model) {
       return model;
     }
   }
 
-  return input.orgSlug === "demo" ? getDemoTrustCenterModel(input.orgSlug) : null;
+  return input.orgSlug === "demo"
+    ? getDemoTrustCenterModel(input.orgSlug, locale)
+    : null;
 }
 
 export async function getPublicFrameworkDetailModel(input: {
   frameworkSlug: string;
+  locale?: Locale;
   orgSlug: string;
 }): Promise<{
   framework: TrustFramework;
   trustCenter: PublicTrustCenterModel;
 } | null> {
-  const trustCenter = await getPublicTrustCenterModel({ orgSlug: input.orgSlug });
+  const trustCenter = await getPublicTrustCenterModel({
+    locale: input.locale,
+    orgSlug: input.orgSlug,
+  });
 
   if (!trustCenter?.showFrameworkDrilldown) {
     return null;
@@ -236,8 +397,27 @@ export function getDocumentsForFramework(frameworkSlug: string) {
   );
 }
 
+export function getLocalizedDocuments(locale: Locale) {
+  const descriptions = DOCUMENT_DESCRIPTIONS[locale] ?? DOCUMENT_DESCRIPTIONS["cs-CZ"];
+
+  return PUBLIC_DOCUMENTS.map((document) => ({
+    ...document,
+    description: descriptions[document.id] ?? document.description,
+  }));
+}
+
+export function getLocalizedDocumentsForFramework(
+  frameworkSlug: string,
+  locale: Locale,
+) {
+  return getLocalizedDocuments(locale).filter((document) =>
+    document.frameworkSlugs.includes(frameworkSlug),
+  );
+}
+
 async function loadDatabaseTrustCenter(input: {
   accessToken?: string | null;
+  locale: Locale;
   orgSlug: string;
 }): Promise<PublicTrustCenterModel | null> {
   const data = await getPublicTrustCenter(input);
@@ -288,12 +468,13 @@ async function loadDatabaseTrustCenter(input: {
       row.score,
       controlRows.filter((control) => control.frameworkId === row.framework.id),
       data.lastTestedAt,
+      input.locale,
     ),
   );
 
   return {
     accentColor: data.accentColor,
-    documents: PUBLIC_DOCUMENTS,
+    documents: getLocalizedDocuments(input.locale),
     frameworks,
     lastTestedAt: data.lastTestedAt,
     logoUrl: data.logoUrl,
@@ -302,22 +483,25 @@ async function loadDatabaseTrustCenter(input: {
     orgSlug: data.subdomain ?? input.orgSlug,
     showFrameworkDrilldown: data.trustCenter.showFrameworkDrilldown,
     showFrameworkPercentages: data.trustCenter.showFrameworkPercentages,
-    trustSignals: buildTrustSignals(frameworks, data.lastTestedAt, uptimePct),
+    trustSignals: buildTrustSignals(frameworks, data.lastTestedAt, uptimePct, input.locale),
     uptimePct,
   };
 }
 
-function getDemoTrustCenterModel(orgSlug: string): PublicTrustCenterModel {
+function getDemoTrustCenterModel(
+  orgSlug: string,
+  locale: Locale,
+): PublicTrustCenterModel {
   const lastTestedAt = new Date(Date.now() - 11 * 60 * 1000);
   const frameworks = [
-    buildDemoFramework("nis2", 78, 31, 8, 4, lastTestedAt),
-    buildDemoFramework("gdpr", 86, 18, 3, 2, lastTestedAt),
-    buildDemoFramework("iso27001", 62, 26, 12, 6, lastTestedAt),
+    buildDemoFramework("nis2", 78, 31, 8, 4, lastTestedAt, locale),
+    buildDemoFramework("gdpr", 86, 18, 3, 2, lastTestedAt, locale),
+    buildDemoFramework("iso27001", 62, 26, 12, 6, lastTestedAt, locale),
   ];
 
   return {
     accentColor: "#1d4ed8",
-    documents: PUBLIC_DOCUMENTS,
+    documents: getLocalizedDocuments(locale),
     frameworks,
     lastTestedAt,
     logoUrl: null,
@@ -326,7 +510,7 @@ function getDemoTrustCenterModel(orgSlug: string): PublicTrustCenterModel {
     orgSlug,
     showFrameworkDrilldown: true,
     showFrameworkPercentages: true,
-    trustSignals: buildTrustSignals(frameworks, lastTestedAt, 99.9),
+    trustSignals: buildTrustSignals(frameworks, lastTestedAt, 99.9, locale),
     uptimePct: 99.9,
   };
 }
@@ -338,6 +522,7 @@ function buildDemoFramework(
   inProgress: number,
   notApplicable: number,
   lastAssessedAt: Date,
+  locale: Locale,
 ): TrustFramework {
   const framework = FRAMEWORK_LIBRARY.find((item) => item.slug === slug);
 
@@ -360,6 +545,7 @@ function buildDemoFramework(
       inProgress: Math.max(0, total - categoryVerified - categoryNotApplicable),
       notApplicable: categoryNotApplicable,
       total,
+      locale,
       verified: categoryVerified,
     });
   });
@@ -372,6 +558,7 @@ function buildDemoFramework(
     notApplicable,
     score,
     totalControls: verified + inProgress + notApplicable,
+    locale,
     verified,
   });
 }
@@ -381,9 +568,10 @@ function buildTrustFramework(
   score: number | null,
   rows: ControlStatusRow[],
   fallbackAssessedAt: Date | null,
+  locale: Locale,
 ): TrustFramework {
   const counts = countControlRows(rows);
-  const categories = buildCategorySummaries(rows);
+  const categories = buildCategorySummaries(rows, locale);
 
   return withFrameworkMeta({
     categories,
@@ -393,6 +581,7 @@ function buildTrustFramework(
     notApplicable: counts.notApplicable,
     score: score ?? scoreFromCounts(counts),
     totalControls: counts.total,
+    locale,
     verified: counts.verified,
   });
 }
@@ -405,22 +594,28 @@ function withFrameworkMeta(input: {
   notApplicable: number;
   score: number | null;
   totalControls: number;
+  locale: Locale;
   verified: number;
 }): TrustFramework {
-  const meta = REGULATION_META[input.framework.slug] ?? {
+  const meta = REGULATION_META[input.locale]?.[input.framework.slug] ?? {
     effectiveDate: formatMandatoryDeadline(input.framework.mandatoryDeadline),
-    law: input.framework.version ?? "Příslušný předpis",
-    maxPenalty: "Dle příslušného předpisu",
-    regulator: input.framework.regulator ?? "Regulátor",
+    law: input.framework.version ?? fallbackRegulationText(input.locale).law,
+    maxPenalty: fallbackRegulationText(input.locale).maxPenalty,
+    regulator: input.framework.regulator ?? fallbackRegulationText(input.locale).regulator,
   };
   const statusTone = input.score == null ? "neutral" : input.score >= 80 ? "pass" : "warn";
 
   return {
-    ...input,
+    categories: input.categories,
     effectiveDate: meta.effectiveDate,
+    framework: input.framework,
+    inProgress: input.inProgress,
+    lastAssessedAt: input.lastAssessedAt,
     law: meta.law,
     maxPenalty: meta.maxPenalty,
+    notApplicable: input.notApplicable,
     regulator: meta.regulator,
+    score: input.score,
     statusLabel:
       statusTone === "pass"
         ? "VERIFIED"
@@ -428,6 +623,8 @@ function withFrameworkMeta(input: {
           ? "IN PROGRESS"
           : "MONITORED",
     statusTone,
+    totalControls: input.totalControls,
+    verified: input.verified,
   };
 }
 
@@ -443,6 +640,30 @@ function formatMandatoryDeadline(value: Date | string | null | undefined) {
   }
 
   return value;
+}
+
+function fallbackRegulationText(locale: Locale) {
+  if (locale === "en-EU") {
+    return {
+      law: "Applicable regulation",
+      maxPenalty: "According to the applicable regulation",
+      regulator: "Regulator",
+    };
+  }
+
+  if (locale === "it-IT") {
+    return {
+      law: "Normativa applicabile",
+      maxPenalty: "Secondo la normativa applicabile",
+      regulator: "Regolatore",
+    };
+  }
+
+  return {
+    law: "Příslušný předpis",
+    maxPenalty: "Dle příslušného předpisu",
+    regulator: "Regulátor",
+  };
 }
 
 function countControlRows(rows: ControlStatusRow[]) {
@@ -464,7 +685,7 @@ function countControlRows(rows: ControlStatusRow[]) {
   );
 }
 
-function buildCategorySummaries(rows: ControlStatusRow[]) {
+function buildCategorySummaries(rows: ControlStatusRow[], locale: Locale) {
   const categories = new Map<
     PublicControlCategory,
     { inProgress: number; notApplicable: number; total: number; verified: number }
@@ -488,7 +709,7 @@ function buildCategorySummaries(rows: ControlStatusRow[]) {
   }
 
   return Array.from(categories.entries()).map(([category, counts]) =>
-    buildCategorySummary({ category, ...counts }),
+    buildCategorySummary({ category, locale, ...counts }),
   );
 }
 
@@ -497,9 +718,10 @@ function buildCategorySummary(input: {
   inProgress: number;
   notApplicable: number;
   total: number;
+  locale: Locale;
   verified: number;
 }): TrustFrameworkCategory {
-  const meta = CATEGORY_META[input.category];
+  const meta = getCategoryMeta(input.category, input.locale);
   const status =
     input.notApplicable === input.total
       ? "na"
@@ -508,11 +730,40 @@ function buildCategorySummary(input: {
         : "warn";
 
   return {
-    ...input,
-    description: meta.desc.cs,
+    category: input.category,
+    description: meta.desc,
+    icon: meta.icon,
+    inProgress: input.inProgress,
+    name: meta.name,
+    notApplicable: input.notApplicable,
+    status,
+    total: input.total,
+    verified: input.verified,
+  };
+}
+
+function getCategoryMeta(category: PublicControlCategory, locale: Locale) {
+  const meta = CATEGORY_META[category];
+
+  if (locale === "it-IT") {
+    return {
+      ...CATEGORY_META_IT[category],
+      icon: meta.icon,
+    };
+  }
+
+  if (locale === "en-EU") {
+    return {
+      desc: meta.desc.en,
+      icon: meta.icon,
+      name: meta.name.en,
+    };
+  }
+
+  return {
+    desc: meta.desc.cs,
     icon: meta.icon,
     name: meta.name.cs,
-    status,
   };
 }
 
@@ -579,33 +830,72 @@ function buildTrustSignals(
   frameworks: TrustFramework[],
   lastTestedAt: Date | null,
   uptimePct: number | null,
+  locale: Locale,
 ): TrustSignal[] {
   const gdpr = frameworks.find((item) => item.framework.slug === "gdpr");
   const iso = frameworks.find((item) => item.framework.slug === "iso27001");
   const nis2 = frameworks.find((item) => item.framework.slug === "nis2");
   const gdprYear = gdpr?.lastAssessedAt?.getFullYear() ?? 2026;
 
+  const copy = trustSignalCopy(locale);
+
   return [
     { icon: "server", label: "Hosting", value: "EU · Frankfurt" },
     {
       icon: "shield",
       label: "GDPR",
-      value: gdpr ? `Compliant od ${gdprYear}` : "Připraveno",
+      value: gdpr ? copy.gdprCompliant(gdprYear) : copy.ready,
     },
     {
       icon: "badge",
       label: "ISO 27001",
-      value: iso?.score && iso.score >= 80 ? "Sledováno" : "Příprava · Q3 2026",
+      value: iso?.score && iso.score >= 80 ? copy.monitored : copy.preparation,
     },
     {
       icon: "radar",
       label: "NÚKIB feed",
-      value: nis2 || lastTestedAt ? "Monitorováno 24/7" : "Čeká na první běh",
+      value: nis2 || lastTestedAt ? copy.monitored247 : copy.waiting,
     },
     {
       icon: "activity",
       label: "Uptime",
-      value: uptimePct == null ? "n/a · 90 dní" : `${uptimePct}% · 90 dní`,
+      value: uptimePct == null ? `n/a · ${copy.ninetyDays}` : `${uptimePct}% · ${copy.ninetyDays}`,
     },
   ];
+}
+
+function trustSignalCopy(locale: Locale) {
+  if (locale === "en-EU") {
+    return {
+      gdprCompliant: (year: number) => `Compliant since ${year}`,
+      monitored: "Monitored",
+      monitored247: "Monitored 24/7",
+      ninetyDays: "90 days",
+      preparation: "Preparation · Q3 2026",
+      ready: "Ready",
+      waiting: "Waiting for first run",
+    };
+  }
+
+  if (locale === "it-IT") {
+    return {
+      gdprCompliant: (year: number) => `Compliant dal ${year}`,
+      monitored: "Monitorato",
+      monitored247: "Monitorato 24/7",
+      ninetyDays: "90 giorni",
+      preparation: "Preparazione · Q3 2026",
+      ready: "Pronto",
+      waiting: "In attesa del primo run",
+    };
+  }
+
+  return {
+    gdprCompliant: (year: number) => `Compliant od ${year}`,
+    monitored: "Sledováno",
+    monitored247: "Monitorováno 24/7",
+    ninetyDays: "90 dní",
+    preparation: "Příprava · Q3 2026",
+    ready: "Připraveno",
+    waiting: "Čeká na první běh",
+  };
 }

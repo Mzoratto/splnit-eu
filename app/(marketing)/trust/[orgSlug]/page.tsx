@@ -1,5 +1,6 @@
 import type { CSSProperties } from "react";
 import type { Metadata } from "next";
+import { getLocale } from "next-intl/server";
 import { notFound } from "next/navigation";
 import { CheckCircle2 } from "lucide-react";
 import {
@@ -13,6 +14,10 @@ import {
   TrustTopbar,
 } from "@/components/trust-center/public-trust-ui";
 import { getPublicTrustCenterModel } from "@/lib/trust-center/public-model";
+import {
+  getPublicTrustCopy,
+  normalizeTrustLocale,
+} from "@/lib/trust-center/public-copy";
 
 export const dynamic = "force-dynamic";
 
@@ -26,8 +31,10 @@ export async function generateMetadata({
 }: {
   params: Promise<{ orgSlug: string }>;
 }): Promise<Metadata> {
-  const { orgSlug } = await params;
-  const trustCenter = await getPublicTrustCenterModel({ orgSlug });
+  const [{ orgSlug }, requestLocale] = await Promise.all([params, getLocale()]);
+  const locale = normalizeTrustLocale(requestLocale);
+  const copy = getPublicTrustCopy(locale);
+  const trustCenter = await getPublicTrustCenterModel({ locale, orgSlug });
 
   if (!trustCenter) {
     return {
@@ -36,7 +43,7 @@ export async function generateMetadata({
   }
 
   return {
-    description: `${trustCenter.organisationName} průběžně ověřuje bezpečnostní kontroly, dokumenty a stav souladu s EU předpisy.`,
+    description: copy.main.metadataDescription(trustCenter.organisationName),
     title: `${trustCenter.organisationName} · Trust Center`,
   };
 }
@@ -45,9 +52,16 @@ export default async function TrustCenterPage({
   params,
   searchParams,
 }: PageProps) {
-  const [{ orgSlug }, query] = await Promise.all([params, searchParams]);
+  const [{ orgSlug }, query, requestLocale] = await Promise.all([
+    params,
+    searchParams,
+    getLocale(),
+  ]);
+  const locale = normalizeTrustLocale(requestLocale);
+  const copy = getPublicTrustCopy(locale);
   const trustCenter = await getPublicTrustCenterModel({
     accessToken: query.access ?? null,
+    locale,
     orgSlug,
   });
 
@@ -66,28 +80,31 @@ export default async function TrustCenterPage({
       className="min-h-screen bg-background text-foreground"
       style={{ "--accent": trustCenter.accentColor } as CSSProperties}
     >
-      <TrustTopbar trustCenter={trustCenter} />
+      <TrustTopbar copy={copy} trustCenter={trustCenter} />
 
       <section className="mx-auto max-w-7xl px-4 pb-10 pt-12 sm:px-6 lg:pt-16">
         <div className="max-w-4xl">
           <p className="inline-flex items-center gap-2 font-mono text-xs uppercase tracking-[0.16em] text-[var(--accent)]">
             <CheckCircle2 className="h-4 w-4" aria-hidden="true" />
-            TRUST CENTER · VERIFIED CONTINUOUSLY
+            {copy.main.heroEyebrow}
           </p>
           <h1 className="mt-5 max-w-4xl text-[32px] font-medium leading-tight tracking-normal text-foreground sm:text-[40px]">
-            {`${trustCenter.organisationName} průběžně testuje ${controlCount} bezpečnostních kontrol napříč ${frameworkCount} EU předpisy.`}
+            {copy.main.heroTitle(
+              trustCenter.organisationName,
+              controlCount,
+              frameworkCount,
+            )}
           </h1>
           <p className="mt-5 max-w-3xl text-base leading-7 text-foreground/62">
-            Tento Trust Center ukazuje veřejný souhrn automatických kontrol,
-            regulatorních frameworků a dokumentů. Detaily důkazů a konkrétní
-            control IDs zůstávají chráněné a jsou dostupné pouze po schválení
-            přístupu.
+            {copy.main.description}
           </p>
           <LiveIndicator
+            copy={copy}
             lastTestedAt={trustCenter.lastTestedAt}
+            locale={locale}
             nextTestAt={trustCenter.nextTestAt}
           />
-          <HeroActions orgName={trustCenter.organisationName} />
+          <HeroActions copy={copy} orgName={trustCenter.organisationName} />
         </div>
       </section>
 
@@ -97,23 +114,24 @@ export default async function TrustCenterPage({
         <div className="flex flex-col justify-between gap-3 sm:flex-row sm:items-end">
           <div>
             <p className="font-mono text-xs uppercase tracking-[0.16em] text-foreground/48">
-              FRAMEWORKS
+              {copy.main.frameworksEyebrow}
             </p>
             <h2 className="mt-2 text-2xl font-medium tracking-normal">
-              Stav EU předpisů
+              {copy.main.frameworksTitle}
             </h2>
           </div>
           <p className="max-w-xl text-sm leading-6 text-foreground/58">
-            Skóre je agregované z kontrol v rozsahu. Veřejná stránka zobrazuje
-            souhrny kategorií, ne jednotlivé testy nebo názvy důkazů.
+            {copy.main.frameworksBody}
           </p>
         </div>
         <div className="mt-6 grid gap-4">
           {trustCenter.frameworks.map((framework) => (
             <FrameworkCard
+              copy={copy}
               key={framework.framework.slug}
               framework={framework}
               href={`/trust/${trustCenter.orgSlug}/frameworks/${framework.framework.slug}`}
+              locale={locale}
               showDrilldown={trustCenter.showFrameworkDrilldown}
               showPercentages={trustCenter.showFrameworkPercentages}
             />
@@ -121,9 +139,9 @@ export default async function TrustCenterPage({
         </div>
       </section>
 
-      <DocumentsSection documents={trustCenter.documents} />
-      <ContactSection orgName={trustCenter.organisationName} />
-      <TrustFooter trustCenter={trustCenter} />
+      <DocumentsSection copy={copy} documents={trustCenter.documents} />
+      <ContactSection copy={copy} orgName={trustCenter.organisationName} />
+      <TrustFooter copy={copy} locale={locale} trustCenter={trustCenter} />
     </main>
   );
 }
