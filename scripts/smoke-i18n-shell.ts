@@ -6,13 +6,16 @@ const requiredNamespaces = [
   "navigation",
   "shell",
   "accessReviews",
+  "appError",
   "auditLogPage",
+  "billingSettings",
   "clientDetailPage",
   "controlsPage",
   "dashboard",
   "clientsPage",
   "evidence",
   "frameworks",
+  "frameworkWizard",
   "incidents",
   "integrations",
   "onboarding",
@@ -35,17 +38,20 @@ for (const locale of locales) {
   }
 
   assert.ok(messages.navigation.dashboard, `${locale} should label dashboard`);
+  assert.ok(messages.appError.retry, `${locale} should label app error retry`);
   assert.ok(
     messages.accessReviews.form.start,
     `${locale} should label access reviews`,
   );
   assert.ok(messages.auditLogPage.filters.apply, `${locale} should label audit log`);
+  assert.ok(messages.billingSettings.monthSuffix, `${locale} should label billing`);
   assert.ok(messages.clientDetailPage.back, `${locale} should label client detail`);
   assert.ok(messages.controlsPage.index.openControl, `${locale} should label controls`);
   assert.ok(messages.dashboard.metrics.scoreTitle, `${locale} should label dashboard score`);
   assert.ok(messages.clientsPage.form.save, `${locale} should label clients page`);
   assert.ok(messages.evidence.filters.apply, `${locale} should label evidence filters`);
   assert.ok(messages.frameworks.index.title, `${locale} should label frameworks`);
+  assert.ok(messages.frameworkWizard.next, `${locale} should label framework wizard`);
   assert.ok(messages.incidents.wizard.create, `${locale} should label incidents`);
   assert.ok(messages.integrations.index.title, `${locale} should label integrations`);
   assert.ok(
@@ -70,9 +76,11 @@ for (const locale of locales) {
 
 const en = getMessagesForLocale("en-EU");
 assert.equal(en.shell.upgradePlan, "Upgrade plan");
+assert.equal(en.appError.retry, "Try again");
 assert.equal(en.accessReviews.title, "Access reviews");
 assert.equal(en.accessReviews.form.start, "Load users");
 assert.equal(en.auditLogPage.records.title, "Records");
+assert.equal(en.billingSettings.monthSuffix, "/month");
 assert.equal(en.clientDetailPage.back, "Back to clients");
 assert.equal(en.controlsPage.index.title, "Control library");
 assert.equal(en.controlsPage.detail.saveStatus, "Save status");
@@ -81,6 +89,7 @@ assert.equal(en.clientsPage.title, "Client dashboard");
 assert.equal(en.clientsPage.form.save, "Save link");
 assert.equal(en.evidence.filters.apply, "Apply filters");
 assert.equal(en.frameworks.index.title, "Regulations and standards");
+assert.equal(en.frameworkWizard.submit, "Assess");
 assert.equal(en.incidents.title, "Incidents");
 assert.equal(en.incidents.wizard.create, "Create incident");
 assert.equal(en.integrations.index.title, "Automated tests");
@@ -101,9 +110,11 @@ assert.notEqual(en.shell.freePlanBanner, getMessagesForLocale("cs-CZ").shell.fre
 
 const it = getMessagesForLocale("it-IT");
 assert.equal(it.shell.upgradePlan, "Aggiorna piano");
+assert.equal(it.appError.retry, "Riprova");
 assert.equal(it.accessReviews.title, "Revisioni accessi");
 assert.equal(it.accessReviews.form.start, "Carica utenti");
 assert.equal(it.auditLogPage.records.title, "Record");
+assert.equal(it.billingSettings.monthSuffix, "/mese");
 assert.equal(it.clientDetailPage.back, "Torna ai clienti");
 assert.equal(it.controlsPage.index.title, "Libreria controlli");
 assert.equal(it.controlsPage.detail.saveStatus, "Salva stato");
@@ -112,6 +123,7 @@ assert.equal(it.clientsPage.title, "Dashboard clienti");
 assert.equal(it.clientsPage.form.save, "Salva collegamento");
 assert.equal(it.evidence.filters.apply, "Applica filtri");
 assert.equal(it.frameworks.index.title, "Normative e standard");
+assert.equal(it.frameworkWizard.submit, "Valuta");
 assert.equal(it.incidents.title, "Incidenti");
 assert.equal(it.incidents.wizard.create, "Crea incidente");
 assert.equal(it.integrations.index.title, "Test automatici");

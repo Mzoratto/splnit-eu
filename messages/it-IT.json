@@ -31,7 +31,45 @@
     "demoOrganisation": "Organizzazione demo",
     "organisationFallback": "Organizzazione",
     "freePlanBanner": "Il piano gratuito è attivo. Le funzioni Business si sbloccano dopo l'upgrade.",
-    "upgradePlan": "Aggiorna piano"
+    "upgradePlan": "Aggiorna piano",
+    "switchToLight": "Passa alla modalità chiara",
+    "switchToDark": "Passa alla modalità scura",
+    "demoUser": "Utente demo"
+  },
+  "appError": {
+    "eyebrow": "Errore applicazione",
+    "title": "Qualcosa non è stato caricato",
+    "body": "L'evento è stato registrato. Aggiorna la pagina o torna alla dashboard.",
+    "retry": "Riprova"
+  },
+  "billingSettings": {
+    "monthSuffix": "/mese",
+    "annualMonthly": "{price}/mese con fatturazione annuale"
+  },
+  "frameworkWizard": {
+    "error": "Non è stato possibile salvare l'assessment.",
+    "resultTitle": "Gap assessment completato",
+    "resultBody": "Il risultato è stato salvato negli stati dei controlli e la dashboard è stata ricalcolata.",
+    "totalControls": "Controlli",
+    "openGaps": "Gap aperti",
+    "status": "Stato",
+    "scoreStatus": "Baseline",
+    "controls": "Apri controlli",
+    "editAnswers": "Modifica risposte",
+    "intro": "Le risposte impostano gli stati iniziali dei controlli e preparano un gap report.",
+    "step": "Step {step}",
+    "questionRange": "Domande {from}-{to}",
+    "answered": "Risposte {answered} di {total}",
+    "back": "Indietro",
+    "submit": "Valuta",
+    "next": "Continua",
+    "answers": {
+      "yes": "Sì",
+      "partial": "Parziale",
+      "no": "No",
+      "na": "N/A"
+    },
+    "questions": {}
   },
   "dashboard": {
     "greeting": "Buongiorno",

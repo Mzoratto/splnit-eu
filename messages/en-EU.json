@@ -31,7 +31,45 @@
     "demoOrganisation": "Demo organisation",
     "organisationFallback": "Organisation",
     "freePlanBanner": "The free plan is active. Business features unlock after upgrade.",
-    "upgradePlan": "Upgrade plan"
+    "upgradePlan": "Upgrade plan",
+    "switchToLight": "Switch to light mode",
+    "switchToDark": "Switch to dark mode",
+    "demoUser": "Demo user"
+  },
+  "appError": {
+    "eyebrow": "Application error",
+    "title": "Something failed to load",
+    "body": "The event was recorded. Refresh the page or return to the dashboard.",
+    "retry": "Try again"
+  },
+  "billingSettings": {
+    "monthSuffix": "/month",
+    "annualMonthly": "{price}/month when billed annually"
+  },
+  "frameworkWizard": {
+    "error": "The assessment could not be saved.",
+    "resultTitle": "Gap assessment complete",
+    "resultBody": "The result was saved to control statuses and the dashboard was recalculated.",
+    "totalControls": "Controls",
+    "openGaps": "Open gaps",
+    "status": "Status",
+    "scoreStatus": "Baseline",
+    "controls": "Open controls",
+    "editAnswers": "Edit answers",
+    "intro": "Answers set the initial control statuses and prepare a gap report.",
+    "step": "Step {step}",
+    "questionRange": "Questions {from}-{to}",
+    "answered": "Answered {answered} of {total}",
+    "back": "Back",
+    "submit": "Assess",
+    "next": "Continue",
+    "answers": {
+      "yes": "Yes",
+      "partial": "Partial",
+      "no": "No",
+      "na": "N/A"
+    },
+    "questions": {}
   },
   "dashboard": {
     "greeting": "Good morning",

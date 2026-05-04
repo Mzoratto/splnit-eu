@@ -1,13 +1,16 @@
 "use client";
 
 import { UserButton } from "@clerk/nextjs";
+import { useTranslations } from "next-intl";
 
 export function UserMenu({ enabled }: { enabled: boolean }) {
+  const t = useTranslations("shell");
+
   if (!enabled) {
     return (
       <span
         className="grid h-8 w-8 place-items-center rounded-full border border-border bg-surface text-xs font-medium text-foreground/70"
-        aria-label="Demo uživatel"
+        aria-label={t("demoUser")}
       >
         D
       </span>

@@ -1,5 +1,8 @@
 import { auth } from "@clerk/nextjs/server";
+import { getLocale } from "next-intl/server";
 import { CreditCard, ExternalLink, ShieldCheck } from "lucide-react";
+import { getMessagesForLocale } from "@/i18n/messages";
+import { normalizeLocale, type Locale } from "@/i18n/routing";
 import { getOrganisationByClerkOrgId } from "@/lib/db/queries/organisations";
 import { hasStripeBillingConfig } from "@/lib/stripe/client";
 import {
@@ -31,17 +34,16 @@ const planCopy: Record<BillablePlanKey, { name: string; description: string }> =
   },
 };
 
-const currency = new Intl.NumberFormat("cs-CZ", {
-  currency: "CZK",
-  maximumFractionDigits: 0,
-  style: "currency",
-});
-
-function formatPrice(cents: number) {
-  return currency.format(cents / 100);
+function formatPrice(cents: number, locale: Locale) {
+  return new Intl.NumberFormat(locale, {
+    currency: "CZK",
+    maximumFractionDigits: 0,
+    style: "currency",
+  }).format(cents / 100);
 }
 
 export default async function BillingSettingsPage() {
+  const requestLocale = normalizeLocale(await getLocale()) ?? "cs-CZ";
   const clerkConfigured =
     Boolean(process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY) &&
     Boolean(process.env.CLERK_SECRET_KEY);
@@ -50,6 +52,8 @@ export default async function BillingSettingsPage() {
     ? await getOrganisationByClerkOrgId(session.orgId)
     : null;
   const currentPlan = normalizePlanKey(organisation?.plan);
+  const locale = normalizeLocale(organisation?.locale) ?? requestLocale;
+  const copy = getMessagesForLocale(locale).billingSettings;
   const stripeConfigured = hasStripeBillingConfig();
   const canManageBilling = Boolean(stripeConfigured && session?.userId && session?.orgId);
   const canOpenPortal = Boolean(canManageBilling && organisation?.stripeCustomerId);
@@ -162,13 +166,16 @@ export default async function BillingSettingsPage() {
 
               <div className="mt-6 grid gap-2">
                 <p className="font-mono text-3xl font-semibold text-primary">
-                  {formatPrice(planData.priceMonthly)}
+                  {formatPrice(planData.priceMonthly, locale)}
                   <span className="font-sans text-sm font-normal text-foreground/58">
-                    /měsíc
+                    {copy.monthSuffix}
                   </span>
                 </p>
                 <p className="text-sm text-foreground/58">
-                  {formatPrice(planData.priceAnnual)}/měsíc při roční fakturaci
+                  {copy.annualMonthly.replace(
+                    "{price}",
+                    formatPrice(planData.priceAnnual, locale),
+                  )}
                 </p>
               </div>
 

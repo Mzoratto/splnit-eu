@@ -1,6 +1,7 @@
 "use client";
 
 import { Moon, Sun } from "lucide-react";
+import { useTranslations } from "next-intl";
 import { useEffect, useState } from "react";
 
 function setRootTheme(theme: "light" | "dark") {
@@ -10,6 +11,7 @@ function setRootTheme(theme: "light" | "dark") {
 }
 
 export function ThemeToggle() {
+  const t = useTranslations("shell");
   const [theme, setTheme] = useState<"light" | "dark">("light");
 
   useEffect(() => {
@@ -22,7 +24,7 @@ export function ThemeToggle() {
     <button
       type="button"
       className="btn btn-ghost h-9 w-9 px-0"
-      aria-label={theme === "dark" ? "Přepnout na světlý režim" : "Přepnout na tmavý režim"}
+      aria-label={theme === "dark" ? t("switchToLight") : t("switchToDark")}
       onClick={() => {
         setRootTheme(nextTheme);
         setTheme(nextTheme);

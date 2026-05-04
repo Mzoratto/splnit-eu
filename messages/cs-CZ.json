@@ -31,7 +31,45 @@
     "demoOrganisation": "Demo organizace",
     "organisationFallback": "Organizace",
     "freePlanBanner": "Bezplatný plán je aktivní. Business funkce se odemknou po upgradu.",
-    "upgradePlan": "Upgradovat plán"
+    "upgradePlan": "Upgradovat plán",
+    "switchToLight": "Přepnout na světlý režim",
+    "switchToDark": "Přepnout na tmavý režim",
+    "demoUser": "Demo uživatel"
+  },
+  "appError": {
+    "eyebrow": "Chyba aplikace",
+    "title": "Něco se nepodařilo načíst",
+    "body": "Událost byla zaznamenána. Zkuste stránku obnovit, nebo se vraťte do dashboardu.",
+    "retry": "Zkusit znovu"
+  },
+  "billingSettings": {
+    "monthSuffix": "/měsíc",
+    "annualMonthly": "{price}/měsíc při roční fakturaci"
+  },
+  "frameworkWizard": {
+    "error": "Vyhodnocení se nepodařilo uložit.",
+    "resultTitle": "Gap assessment hotový",
+    "resultBody": "Výsledek je uložený do stavů kontrol a dashboard se přepočítal.",
+    "totalControls": "Kontroly",
+    "openGaps": "Otevřené mezery",
+    "status": "Stav",
+    "scoreStatus": "Baseline",
+    "controls": "Otevřít kontroly",
+    "editAnswers": "Upravit odpovědi",
+    "intro": "Odpovědi nastaví počáteční stavy kontrol a připraví gap report.",
+    "step": "Krok {step}",
+    "questionRange": "Otázky {from}-{to}",
+    "answered": "Zodpovězeno {answered} z {total}",
+    "back": "Zpět",
+    "submit": "Vyhodnotit",
+    "next": "Pokračovat",
+    "answers": {
+      "yes": "Ano",
+      "partial": "Částečně",
+      "no": "Ne",
+      "na": "N/A"
+    },
+    "questions": {}
   },
   "dashboard": {
     "greeting": "Dobré ráno",

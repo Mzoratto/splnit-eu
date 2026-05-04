@@ -1,9 +1,11 @@
 "use client";
 
 import Link from "next/link";
+import { useLocale, useMessages } from "next-intl";
 import { useMemo, useState, useTransition } from "react";
 import { ArrowLeft, ArrowRight, Check, Gauge } from "lucide-react";
 import { assessFrameworkAction } from "@/app/(app)/frameworks/[frameworkSlug]/actions";
+import { normalizeLocale } from "@/i18n/routing";
 import type { FrameworkAnswer, FrameworkQuestion } from "@/lib/frameworks/questions";
 import type { FrameworkSeed } from "@/lib/frameworks/registry";
 
@@ -13,15 +15,30 @@ type AssessmentResult = {
   totalControls: number;
 };
 
-const answerOptions: {
-  label: string;
-  value: FrameworkAnswer;
-}[] = [
-  { label: "Ano", value: "yes" },
-  { label: "Částečně", value: "partial" },
-  { label: "Ne", value: "no" },
-  { label: "N/A", value: "na" },
-];
+type FrameworkWizardCopy = {
+  answers: Record<FrameworkAnswer, string>;
+  answered: string;
+  back: string;
+  controls: string;
+  editAnswers: string;
+  error: string;
+  intro: string;
+  next: string;
+  openGaps: string;
+  questions: Record<string, { help?: string; text: string }>;
+  questionRange: string;
+  resultBody: string;
+  resultTitle: string;
+  scoreStatus: string;
+  status: string;
+  step: string;
+  submit: string;
+  totalControls: string;
+};
+
+type FrameworkWizardMessages = {
+  frameworkWizard: FrameworkWizardCopy;
+};
 
 function chunkQuestions(questions: FrameworkQuestion[]) {
   const chunks: FrameworkQuestion[][] = [];
@@ -31,6 +48,22 @@ function chunkQuestions(questions: FrameworkQuestion[]) {
   }
 
   return chunks;
+}
+
+function humanizeQuestionId(id: string) {
+  return id
+    .split("_")
+    .map((word) =>
+      word.length <= 3 ? word.toUpperCase() : word[0].toUpperCase() + word.slice(1),
+    )
+    .join(" ");
+}
+
+function interpolate(template: string, values: Record<string, string | number>) {
+  return Object.entries(values).reduce(
+    (text, [key, value]) => text.replaceAll(`{${key}}`, String(value)),
+    template,
+  );
 }
 
 function ScoreRing({ score }: { score: number }) {
@@ -78,6 +111,8 @@ export function FrameworkAssessmentWizard({
   framework: FrameworkSeed;
   questions: FrameworkQuestion[];
 }) {
+  const locale = normalizeLocale(useLocale()) ?? "cs-CZ";
+  const copy = (useMessages() as FrameworkWizardMessages).frameworkWizard;
   const [answers, setAnswers] = useState<Record<string, FrameworkAnswer>>({});
   const [step, setStep] = useState(0);
   const [result, setResult] = useState<AssessmentResult | null>(null);
@@ -88,6 +123,15 @@ export function FrameworkAssessmentWizard({
   const answeredCount = Object.keys(answers).length;
   const allAnswered = answeredCount === questions.length;
   const isLastStep = step === questionGroups.length - 1;
+  const answerOptions: {
+    label: string;
+    value: FrameworkAnswer;
+  }[] = [
+    { label: copy.answers.yes, value: "yes" },
+    { label: copy.answers.partial, value: "partial" },
+    { label: copy.answers.no, value: "no" },
+    { label: copy.answers.na, value: "na" },
+  ];
 
   function selectAnswer(questionId: string, answer: FrameworkAnswer) {
     setAnswers((current) => ({
@@ -103,9 +147,25 @@ export function FrameworkAssessmentWizard({
         const nextResult = await assessFrameworkAction(framework.slug, answers);
         setResult(nextResult);
       } catch {
-        setError("Vyhodnocení se nepodařilo uložit.");
+        setError(copy.error);
       }
     });
+  }
+
+  function questionText(question: FrameworkQuestion) {
+    if (locale === "cs-CZ") {
+      return question.text;
+    }
+
+    return copy.questions[question.id]?.text ?? `${humanizeQuestionId(question.id)}?`;
+  }
+
+  function questionHelp(question: FrameworkQuestion) {
+    if (locale === "cs-CZ") {
+      return question.help;
+    }
+
+    return copy.questions[question.id]?.help ?? "";
   }
 
   if (result) {
@@ -113,13 +173,13 @@ export function FrameworkAssessmentWizard({
       <section className="space-y-6">
         <div className="max-w-3xl">
           <p className="text-sm font-medium uppercase tracking-[0.14em] text-primary">
-            {framework.nameCs}
+            {locale === "cs-CZ" ? framework.nameCs : framework.nameEn}
           </p>
           <h1 className="mt-2 text-3xl font-semibold tracking-normal">
-            Gap assessment hotový
+            {copy.resultTitle}
           </h1>
           <p className="mt-3 text-sm leading-6 text-foreground/64">
-            Výsledek je uložený do stavů kontrol a dashboard se přepočítal.
+            {copy.resultBody}
           </p>
         </div>
 
@@ -130,20 +190,20 @@ export function FrameworkAssessmentWizard({
           <article className="rounded-lg border border-border bg-surface p-6">
             <div className="grid gap-4 sm:grid-cols-3">
               <div>
-                <p className="text-sm text-foreground/58">Kontroly</p>
+                <p className="text-sm text-foreground/58">{copy.totalControls}</p>
                 <p className="mt-1 font-mono text-3xl font-semibold">
                   {result.totalControls}
                 </p>
               </div>
               <div>
-                <p className="text-sm text-foreground/58">Otevřené mezery</p>
+                <p className="text-sm text-foreground/58">{copy.openGaps}</p>
                 <p className="mt-1 font-mono text-3xl font-semibold text-warning">
                   {result.failingControls}
                 </p>
               </div>
               <div>
-                <p className="text-sm text-foreground/58">Stav</p>
-                <p className="mt-1 text-lg font-semibold">Baseline</p>
+                <p className="text-sm text-foreground/58">{copy.status}</p>
+                <p className="mt-1 text-lg font-semibold">{copy.scoreStatus}</p>
               </div>
             </div>
             <div className="mt-6 flex flex-wrap gap-3">
@@ -151,7 +211,7 @@ export function FrameworkAssessmentWizard({
                 href={`/frameworks/${framework.slug}`}
                 className="inline-flex items-center gap-2 rounded-md bg-primary px-4 py-3 text-sm font-medium text-primary-foreground"
               >
-                Otevřít kontroly
+                {copy.controls}
                 <ArrowRight className="h-4 w-4" aria-hidden="true" />
               </Link>
               <button
@@ -162,7 +222,7 @@ export function FrameworkAssessmentWizard({
                 }}
                 className="rounded-md border border-border px-4 py-3 text-sm"
               >
-                Upravit odpovědi
+                {copy.editAnswers}
               </button>
             </div>
           </article>
@@ -178,10 +238,10 @@ export function FrameworkAssessmentWizard({
           Framework wizard
         </p>
         <h1 className="mt-2 text-3xl font-semibold tracking-normal">
-          {framework.nameCs} assessment
+          {locale === "cs-CZ" ? framework.nameCs : framework.nameEn} assessment
         </h1>
         <p className="mt-3 text-sm leading-6 text-foreground/64">
-          Odpovědi nastaví počáteční stavy kontrol a připraví gap report.
+          {copy.intro}
         </p>
       </div>
 
@@ -203,7 +263,7 @@ export function FrameworkAssessmentWizard({
                     : "border-border bg-surface text-foreground/62"
               }`}
             >
-              Krok {index + 1}
+              {interpolate(copy.step, { step: index + 1 })}
             </button>
           );
         })}
@@ -215,11 +275,17 @@ export function FrameworkAssessmentWizard({
             <div className="flex items-center gap-2">
               <Gauge className="h-5 w-5 text-primary" aria-hidden="true" />
               <h2 className="text-lg font-semibold">
-                Otázky {step * 4 + 1}-{Math.min((step + 1) * 4, questions.length)}
+                {interpolate(copy.questionRange, {
+                  from: step * 4 + 1,
+                  to: Math.min((step + 1) * 4, questions.length),
+                })}
               </h2>
             </div>
             <p className="mt-1 text-sm text-foreground/58">
-              Zodpovězeno {answeredCount} z {questions.length}
+              {interpolate(copy.answered, {
+                answered: answeredCount,
+                total: questions.length,
+              })}
             </p>
           </div>
           <div className="h-2 w-full rounded-full bg-surface-muted md:w-56">
@@ -242,10 +308,12 @@ export function FrameworkAssessmentWizard({
               key={question.id}
               className="rounded-lg border border-border bg-background p-4"
             >
-              <legend className="px-1 font-medium">{question.text}</legend>
-              <p className="mt-1 text-sm leading-6 text-foreground/58">
-                {question.help}
-              </p>
+              <legend className="px-1 font-medium">{questionText(question)}</legend>
+              {questionHelp(question) ? (
+                <p className="mt-1 text-sm leading-6 text-foreground/58">
+                  {questionHelp(question)}
+                </p>
+              ) : null}
               <div className="mt-4 grid gap-2 sm:grid-cols-4">
                 {answerOptions.map((option) => {
                   const selected = answers[question.id] === option.value;
@@ -281,7 +349,7 @@ export function FrameworkAssessmentWizard({
             className="inline-flex items-center gap-2 rounded-md border border-border px-4 py-3 text-sm disabled:cursor-not-allowed disabled:opacity-50"
           >
             <ArrowLeft className="h-4 w-4" aria-hidden="true" />
-            Zpět
+            {copy.back}
           </button>
           {isLastStep ? (
             <button
@@ -290,7 +358,7 @@ export function FrameworkAssessmentWizard({
               onClick={submit}
               className="inline-flex items-center gap-2 rounded-md bg-primary px-4 py-3 text-sm font-medium text-primary-foreground disabled:cursor-not-allowed disabled:opacity-50"
             >
-              Vyhodnotit
+              {copy.submit}
               <Check className="h-4 w-4" aria-hidden="true" />
             </button>
           ) : (
@@ -301,7 +369,7 @@ export function FrameworkAssessmentWizard({
               }
               className="inline-flex items-center gap-2 rounded-md bg-primary px-4 py-3 text-sm font-medium text-primary-foreground"
             >
-              Pokračovat
+              {copy.next}
               <ArrowRight className="h-4 w-4" aria-hidden="true" />
             </button>
           )}
