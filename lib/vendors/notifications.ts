@@ -6,6 +6,7 @@ import {
 
 export async function sendVendorQuestionnaireEmail(input: {
   assessmentUrl: string;
+  locale?: string | null;
   organisationName: string;
   to: string;
   vendorName: string;
@@ -19,7 +20,10 @@ export async function sendVendorQuestionnaireEmail(input: {
 
   await getResend().emails.send({
     from: getResendFrom(),
-    subject: vendorQuestionnaireSubject(input.organisationName),
+    subject: vendorQuestionnaireSubject({
+      locale: input.locale,
+      organisationName: input.organisationName,
+    }),
     text: vendorQuestionnaireText(input),
     to: input.to,
   });

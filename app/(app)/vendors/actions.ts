@@ -120,6 +120,7 @@ export async function sendVendorQuestionnaireAction(
 
   await sendVendorQuestionnaireEmail({
     assessmentUrl: `${getAppUrl()}/vendor-assessment/${token}`,
+    locale: organisation?.locale,
     organisationName: organisation?.name ?? "Splnit.eu",
     to: parsed.email,
     vendorName: detail.vendor.name,

@@ -1,3 +1,49 @@
+import { normalizeLocale, type Locale } from "@/i18n/routing";
+
+type VendorQuestionnaireCopy = {
+  body: string;
+  labels: {
+    link: string;
+    organisation: string;
+    vendor: string;
+  };
+  subjectPrefix: string;
+};
+
+const vendorQuestionnaireCopy = {
+  "cs-CZ": {
+    body: "Prosíme o vyplnění bezpečnostního dotazníku pro supply-chain risk review.",
+    labels: {
+      link: "Odkaz",
+      organisation: "Organizace",
+      vendor: "Dodavatel",
+    },
+    subjectPrefix: "Bezpečnostní dotazník dodavatele",
+  },
+  "en-EU": {
+    body: "Please complete the security questionnaire for the supply-chain risk review.",
+    labels: {
+      link: "Link",
+      organisation: "Organisation",
+      vendor: "Vendor",
+    },
+    subjectPrefix: "Vendor security questionnaire",
+  },
+  "it-IT": {
+    body: "Ti chiediamo di compilare il questionario di sicurezza per la revisione del rischio supply chain.",
+    labels: {
+      link: "Link",
+      organisation: "Organizzazione",
+      vendor: "Fornitore",
+    },
+    subjectPrefix: "Questionario sicurezza fornitore",
+  },
+} satisfies Record<Locale, VendorQuestionnaireCopy>;
+
+function getVendorQuestionnaireCopy(locale?: string | null) {
+  return vendorQuestionnaireCopy[normalizeLocale(locale) ?? "cs-CZ"];
+}
+
 export function evidenceExpirySubject(controlTitle: string) {
   return `Evidence se blíží expiraci: ${controlTitle}`;
 }
@@ -89,20 +135,28 @@ export function trustCenterAccessText(input: {
   ].join("\n");
 }
 
-export function vendorQuestionnaireSubject(organisationName: string) {
-  return `Bezpečnostní dotazník dodavatele: ${organisationName}`;
+export function vendorQuestionnaireSubject(input: {
+  locale?: string | null;
+  organisationName: string;
+}) {
+  const copy = getVendorQuestionnaireCopy(input.locale);
+
+  return `${copy.subjectPrefix}: ${input.organisationName}`;
 }
 
 export function vendorQuestionnaireText(input: {
   assessmentUrl: string;
+  locale?: string | null;
   organisationName: string;
   vendorName: string;
 }) {
+  const copy = getVendorQuestionnaireCopy(input.locale);
+
   return [
-    `Organizace: ${input.organisationName}`,
-    `Dodavatel: ${input.vendorName}`,
-    "Prosíme o vyplnění bezpečnostního dotazníku pro supply-chain risk review.",
-    `Odkaz: ${input.assessmentUrl}`,
+    `${copy.labels.organisation}: ${input.organisationName}`,
+    `${copy.labels.vendor}: ${input.vendorName}`,
+    copy.body,
+    `${copy.labels.link}: ${input.assessmentUrl}`,
   ].join("\n");
 }
 
