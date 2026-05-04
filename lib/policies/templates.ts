@@ -53,7 +53,7 @@ export const POLICY_TEMPLATES: PolicyTemplate[] = [
         title: "Identifikace dokumentu",
         fields: [
           "Organizace",
-          "IČO",
+          "{{tenant.legalIdentifier}}",
           "Verze dokumentu",
           "Datum vydání",
           "Schválil/a",
@@ -124,7 +124,13 @@ export const POLICY_TEMPLATES: PolicyTemplate[] = [
     sections: [
       {
         title: "Identifikace dokumentu",
-        fields: ["Organizace", "IČO", "Verze", "Datum vydání", "Schválil/a"],
+        fields: [
+          "Organizace",
+          "{{tenant.legalIdentifier}}",
+          "Verze",
+          "Datum vydání",
+          "Schválil/a",
+        ],
       },
       {
         title: "Rozsah a cíle",
@@ -172,7 +178,12 @@ export const POLICY_TEMPLATES: PolicyTemplate[] = [
     sections: [
       {
         title: "Správce osobních údajů",
-        fields: ["Název organizace", "IČO", "Adresa", "Kontaktní e-mail"],
+        fields: [
+          "Název organizace",
+          "{{tenant.legalIdentifier}}",
+          "{{jurisdiction.address}}",
+          "{{jurisdiction.contactEmail}}",
+        ],
       },
       {
         title: "Účely a právní základy",
@@ -192,7 +203,7 @@ export const POLICY_TEMPLATES: PolicyTemplate[] = [
       },
       {
         title: "Dozorový úřad",
-        body: "Subjekty údajů se mohou obrátit na ÚOOÚ, pokud se domnívají, že zpracování porušuje GDPR.",
+        body: "Subjekty údajů se mohou obrátit na {{jurisdiction.dataProtectionAuthority}}, pokud se domnívají, že zpracování porušuje GDPR.",
       },
     ],
   },
@@ -209,7 +220,12 @@ export const POLICY_TEMPLATES: PolicyTemplate[] = [
     sections: [
       {
         title: "Identifikace",
-        fields: ["Organizace", "IČO", "Rok", "Odpovědná osoba"],
+        fields: [
+          "Organizace",
+          "{{tenant.legalIdentifier}}",
+          "Rok",
+          "Odpovědná osoba",
+        ],
       },
       {
         title: "Evidence školení",
@@ -267,7 +283,12 @@ export const POLICY_TEMPLATES: PolicyTemplate[] = [
       },
       {
         title: "Záznamy o incidentech",
-        fields: ["Datum", "Popis incidentu", "Přijatá opatření", "Hlášen ČTÚ"],
+        fields: [
+          "Datum",
+          "Popis incidentu",
+          "Přijatá opatření",
+          "Hlášen {{jurisdiction.telecomAuthority}}",
+        ],
       },
       {
         title: "Přezkum záznamu",
@@ -306,7 +327,7 @@ export const POLICY_TEMPLATES: PolicyTemplate[] = [
       },
       {
         title: "Oznamovací povinnosti",
-        body: "Incidenty s osobními údaji se posuzují podle GDPR Art. 33; významné kybernetické incidenty podle NIS2.",
+        body: "Incidenty s osobními údaji se posuzují podle {{jurisdiction.gdprCitation}} čl. 33; významné kybernetické incidenty podle {{jurisdiction.nis2Citation}}.",
       },
       {
         title: "Evidence a komunikace",

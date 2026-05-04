@@ -29,6 +29,24 @@ const itTenant = {
   primaryJurisdiction: "IT",
 } satisfies TenantContext;
 
+function collectTemplateText(template: ReturnType<typeof resolvePolicyTemplate>) {
+  const values = [template.titleCs, template.description];
+
+  for (const section of template.sections) {
+    values.push(section.title);
+
+    if (section.body) {
+      values.push(section.body);
+    }
+
+    if (section.fields) {
+      values.push(...section.fields);
+    }
+  }
+
+  return values.join("\n");
+}
+
 function assertResolvedSet(
   label: string,
   tenant: TenantContext,
@@ -57,6 +75,11 @@ function assertResolvedSet(
       template.locale,
       expected.locale,
       `${label}: ${template.templateFamily} should resolve to ${expected.locale}`,
+    );
+    assert.doesNotMatch(
+      collectTemplateText(template),
+      /\{\{/,
+      `${label}: ${template.templateFamily} should not leak unresolved placeholders`,
     );
   }
 }
@@ -89,6 +112,27 @@ for (const family of POLICY_TEMPLATE_TYPES) {
     `Italian tenant must not receive Czech locale for ${family}`,
   );
 }
+
+const czAiPolicy = resolvePolicyTemplate("ai_policy", czTenant);
+assert.match(
+  collectTemplateText(czAiPolicy),
+  /IČO/,
+  "Czech templates should materialize tenant legal identifier labels",
+);
+
+const czGdprNotice = resolvePolicyTemplate("gdpr_privacy_notice", czTenant);
+assert.match(
+  collectTemplateText(czGdprNotice),
+  /ÚOOÚ/,
+  "Czech GDPR templates should materialize the Czech data protection authority",
+);
+
+const czRecordOfUse = resolvePolicyTemplate("record_of_use", czTenant);
+assert.match(
+  collectTemplateText(czRecordOfUse),
+  /ČTÚ/,
+  "Czech AI Act templates should materialize the Czech telecom authority",
+);
 
 assert.throws(
   () =>

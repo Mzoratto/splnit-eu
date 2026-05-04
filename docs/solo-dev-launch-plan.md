@@ -256,9 +256,22 @@ templateFamily: text('template_family').notNull();
 Tasks:
 
 - [ ] Audit `templates.ts` for Czech-law references, including IČO, ÚOOÚ, ČTÚ, Czech legal entity labels, and Czech-only GDPR phrasing.
-- [ ] Replace hardcoded labels with tenant and jurisdiction placeholders.
+- [x] Replace hardcoded labels with tenant and jurisdiction placeholders.
 - [x] Add a jurisdiction context provider for authority names, citation formats, and local labels.
 - [x] Use a resolver that tries exact tenant jurisdiction and locale, then EU/EN, then throws a clear `TemplateNotFoundError`.
+
+### Phase 2 Verification - 2026-05-05
+
+Completed and verified locally:
+
+- Policy template resolver materializes tenant and jurisdiction placeholders for legal identifier labels, authority names, and regulation citations.
+- Czech templates no longer hardcode the repeated `IČO`, `ÚOOÚ`, and `ČTÚ` values directly in reusable sections; they resolve through jurisdiction context.
+- Template smoke tests assert Czech exact-match resolution, English-EU exact-match resolution, Italian fallback to EU/EN, and no unresolved `{{...}}` placeholders in resolved templates.
+
+Remaining before calling Phase 2 fully done:
+
+- Continue translating the remaining authenticated app paths and email/error copy.
+- Keep Italian legal templates out of the product until Phase 3 advisor review.
 
 ### 2.2 i18n Shell
 

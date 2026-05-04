@@ -1,4 +1,5 @@
 import type { Organisation } from "@/lib/db/schema";
+import { getJurisdictionContext } from "@/lib/jurisdictions/context";
 import {
   POLICY_TEMPLATES,
   POLICY_TEMPLATE_TYPES,
@@ -27,6 +28,54 @@ function getTenantContext(tenant: TemplateTenant | null | undefined) {
   };
 }
 
+function materializeText(value: string, context: ReturnType<typeof getJurisdictionContext>) {
+  const replacements: Record<string, string> = {
+    "{{jurisdiction.address}}": context.labels.address,
+    "{{jurisdiction.aiActCitation}}": context.citations.aiAct,
+    "{{jurisdiction.contactEmail}}": context.labels.contactEmail,
+    "{{jurisdiction.cybersecurityAuthority}}": context.authorities.cybersecurity,
+    "{{jurisdiction.dataProtectionAuthority}}": context.authorities.dataProtection,
+    "{{jurisdiction.gdprCitation}}": context.citations.gdpr,
+    "{{jurisdiction.legalIdentifier}}": context.labels.legalIdentifier,
+    "{{jurisdiction.nis2Citation}}": context.citations.nis2,
+    "{{jurisdiction.organisation}}": context.labels.organisation,
+    "{{jurisdiction.telecomAuthority}}": context.authorities.telecom,
+    "{{tenant.legalIdentifier}}": context.labels.legalIdentifier,
+    "{{tenant.organisation}}": context.labels.organisation,
+  };
+
+  return Object.entries(replacements).reduce(
+    (text, [placeholder, replacement]) => text.replaceAll(placeholder, replacement),
+    value,
+  );
+}
+
+function materializeTemplate(
+  template: PolicyTemplate,
+  tenantContext: ReturnType<typeof getTenantContext>,
+): PolicyTemplate {
+  const jurisdictionContext = getJurisdictionContext(
+    tenantContext.primaryJurisdiction,
+    tenantContext.locale,
+  );
+
+  return {
+    ...template,
+    description: materializeText(template.description, jurisdictionContext),
+    sections: template.sections.map((section) => ({
+      ...section,
+      body: section.body
+        ? materializeText(section.body, jurisdictionContext)
+        : undefined,
+      fields: section.fields?.map((field) =>
+        materializeText(field, jurisdictionContext),
+      ),
+      title: materializeText(section.title, jurisdictionContext),
+    })),
+    titleCs: materializeText(template.titleCs, jurisdictionContext),
+  };
+}
+
 export function resolvePolicyTemplate(
   family: PolicyTemplateType,
   tenant?: TemplateTenant | null,
@@ -40,7 +89,7 @@ export function resolvePolicyTemplate(
   );
 
   if (exact) {
-    return exact;
+    return materializeTemplate(exact, context);
   }
 
   const euFallback = POLICY_TEMPLATES.find(
@@ -51,7 +100,7 @@ export function resolvePolicyTemplate(
   );
 
   if (euFallback) {
-    return euFallback;
+    return materializeTemplate(euFallback, context);
   }
 
   throw new TemplateNotFoundError(family, context);
