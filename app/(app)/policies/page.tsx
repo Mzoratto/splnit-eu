@@ -5,15 +5,22 @@ import { generatePolicyAction } from "@/app/(app)/policies/actions";
 import { hasDatabaseUrl } from "@/lib/db";
 import { getOrganisationByClerkOrgId } from "@/lib/db/queries/organisations";
 import { listPoliciesForOrg } from "@/lib/db/queries/policies";
+import { getJurisdictionContext } from "@/lib/jurisdictions/context";
 import { listResolvedPolicyTemplates } from "@/lib/policies/resolve-template";
+import {
+  getPolicyStatusLabel,
+  getPolicyUiCopy,
+} from "@/lib/policies/ui-copy";
 
 async function loadPolicies() {
+  const defaultContext = getJurisdictionContext("CZ", "cs-CZ");
   const clerkConfigured =
     Boolean(process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY) &&
     Boolean(process.env.CLERK_SECRET_KEY);
 
   if (!clerkConfigured || !hasDatabaseUrl()) {
     return {
+      context: defaultContext,
       policies: [],
       templates: listResolvedPolicyTemplates(null),
     };
@@ -23,6 +30,7 @@ async function loadPolicies() {
 
   if (!session.orgId) {
     return {
+      context: defaultContext,
       policies: [],
       templates: listResolvedPolicyTemplates(null),
     };
@@ -35,27 +43,39 @@ async function loadPolicies() {
     ]);
 
     return {
+      context: organisation
+        ? getJurisdictionContext(
+            organisation.primaryJurisdiction,
+            organisation.locale,
+          )
+        : defaultContext,
       policies,
       templates: listResolvedPolicyTemplates(organisation),
     };
   } catch {
     return {
+      context: defaultContext,
       policies: [],
       templates: listResolvedPolicyTemplates(null),
     };
   }
 }
 
-function formatDate(value: Date | string | null | undefined) {
+function formatDate(
+  value: Date | string | null | undefined,
+  locale: string,
+  emptyLabel: string,
+) {
   if (!value) {
-    return "bez data";
+    return emptyLabel;
   }
 
-  return new Intl.DateTimeFormat("cs-CZ").format(new Date(value));
+  return new Intl.DateTimeFormat(locale).format(new Date(value));
 }
 
 export default async function PoliciesPage() {
-  const { policies, templates } = await loadPolicies();
+  const { context, policies, templates } = await loadPolicies();
+  const copy = getPolicyUiCopy(context.locale);
   const latestByType = new Map<string, (typeof policies)[number]>();
 
   for (const policy of policies) {
@@ -68,13 +88,13 @@ export default async function PoliciesPage() {
     <section className="space-y-6">
       <div className="max-w-3xl">
         <p className="text-sm font-medium uppercase tracking-[0.14em] text-primary">
-          Policy library
+          {copy.list.eyebrow}
         </p>
         <h1 className="mt-2 text-3xl font-semibold tracking-normal">
-          Compliance dokumenty
+          {copy.list.title}
         </h1>
         <p className="mt-3 text-base leading-7 text-foreground/68">
-          Šablony se vyplní údaji organizace, uloží jako PDF a připomenou roční přezkum.
+          {copy.list.intro}
         </p>
       </div>
 
@@ -103,12 +123,18 @@ export default async function PoliciesPage() {
               </p>
               {latestPolicy ? (
                 <p className="mt-4 text-sm text-foreground/58">
-                  Poslední verze: {latestPolicy.status} · přezkum{" "}
-                  {formatDate(latestPolicy.expiresAt)}
+                  {copy.list.latestVersion}:{" "}
+                  {getPolicyStatusLabel(latestPolicy.status, context.locale)} ·{" "}
+                  {copy.list.review}{" "}
+                  {formatDate(
+                    latestPolicy.expiresAt,
+                    context.dateLocale,
+                    copy.list.emptyDate,
+                  )}
                 </p>
               ) : (
                 <p className="mt-4 text-sm text-foreground/58">
-                  Dokument zatím není vygenerovaný.
+                  {copy.list.emptyState}
                 </p>
               )}
               <div className="mt-5 flex flex-wrap gap-3">
@@ -116,7 +142,7 @@ export default async function PoliciesPage() {
                   href={`/policies/${template.type}`}
                   className="inline-flex items-center gap-2 rounded-md border border-border px-4 py-3 text-sm font-medium hover:bg-surface-muted"
                 >
-                  Detail
+                  {copy.actions.detail}
                   <ArrowRight className="h-4 w-4" aria-hidden="true" />
                 </Link>
                 {latestPolicy?.blobUrl ? (
@@ -134,7 +160,7 @@ export default async function PoliciesPage() {
                     disabled={!process.env.BLOB_READ_WRITE_TOKEN}
                     className="inline-flex items-center gap-2 rounded-md bg-primary px-4 py-3 text-sm font-medium text-primary-foreground disabled:cursor-not-allowed disabled:opacity-50"
                   >
-                    Vygenerovat
+                    {copy.actions.generate}
                     <FileText className="h-4 w-4" aria-hidden="true" />
                   </button>
                 </form>

@@ -6,23 +6,30 @@ import { generatePolicyAction } from "@/app/(app)/policies/actions";
 import { hasDatabaseUrl } from "@/lib/db";
 import { getOrganisationByClerkOrgId } from "@/lib/db/queries/organisations";
 import { listPoliciesForOrg } from "@/lib/db/queries/policies";
+import { getJurisdictionContext } from "@/lib/jurisdictions/context";
 import { resolvePolicyTemplate } from "@/lib/policies/resolve-template";
 import {
   POLICY_TEMPLATE_TYPES,
   type PolicyTemplateType,
 } from "@/lib/policies/templates";
+import {
+  getPolicyStatusLabel,
+  getPolicyUiCopy,
+} from "@/lib/policies/ui-copy";
 
 function isPolicyTemplateType(type: string): type is PolicyTemplateType {
   return POLICY_TEMPLATE_TYPES.includes(type as PolicyTemplateType);
 }
 
 async function loadPolicyDetail(type: PolicyTemplateType) {
+  const defaultContext = getJurisdictionContext("CZ", "cs-CZ");
   const clerkConfigured =
     Boolean(process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY) &&
     Boolean(process.env.CLERK_SECRET_KEY);
 
   if (!clerkConfigured || !hasDatabaseUrl()) {
     return {
+      context: defaultContext,
       policies: [],
       template: resolvePolicyTemplate(type, null),
     };
@@ -32,6 +39,7 @@ async function loadPolicyDetail(type: PolicyTemplateType) {
 
   if (!session.orgId) {
     return {
+      context: defaultContext,
       policies: [],
       template: resolvePolicyTemplate(type, null),
     };
@@ -44,23 +52,34 @@ async function loadPolicyDetail(type: PolicyTemplateType) {
     ]);
 
     return {
+      context: organisation
+        ? getJurisdictionContext(
+            organisation.primaryJurisdiction,
+            organisation.locale,
+          )
+        : defaultContext,
       policies: policies.filter((policy) => policy.type === type),
       template: resolvePolicyTemplate(type, organisation),
     };
   } catch {
     return {
+      context: defaultContext,
       policies: [],
       template: resolvePolicyTemplate(type, null),
     };
   }
 }
 
-function formatDate(value: Date | string | null | undefined) {
+function formatDate(
+  value: Date | string | null | undefined,
+  locale: string,
+  emptyLabel: string,
+) {
   if (!value) {
-    return "bez data";
+    return emptyLabel;
   }
 
-  return new Intl.DateTimeFormat("cs-CZ").format(new Date(value));
+  return new Intl.DateTimeFormat(locale).format(new Date(value));
 }
 
 export default async function PolicyDetailPage({
@@ -74,7 +93,8 @@ export default async function PolicyDetailPage({
     notFound();
   }
 
-  const { policies, template } = await loadPolicyDetail(type);
+  const { context, policies, template } = await loadPolicyDetail(type);
+  const copy = getPolicyUiCopy(context.locale);
 
   return (
     <section className="space-y-8">
@@ -96,7 +116,7 @@ export default async function PolicyDetailPage({
             className="inline-flex items-center gap-2 rounded-md border border-border px-4 py-3 text-sm font-medium hover:bg-surface-muted"
           >
             <ArrowLeft className="h-4 w-4" aria-hidden="true" />
-            Knihovna
+            {copy.actions.library}
           </Link>
           <form action={generatePolicyAction.bind(null, template.type)}>
             <button
@@ -104,7 +124,7 @@ export default async function PolicyDetailPage({
               disabled={!process.env.BLOB_READ_WRITE_TOKEN}
               className="inline-flex items-center gap-2 rounded-md bg-primary px-4 py-3 text-sm font-medium text-primary-foreground disabled:cursor-not-allowed disabled:opacity-50"
             >
-              Vygenerovat PDF
+              {copy.actions.generatePdf}
               <FileText className="h-4 w-4" aria-hidden="true" />
             </button>
           </form>
@@ -114,7 +134,9 @@ export default async function PolicyDetailPage({
       <div className="grid gap-4 lg:grid-cols-[1.4fr_1fr]">
         <section className="rounded-lg border border-border bg-surface">
           <div className="border-b border-border p-5">
-            <h2 className="text-lg font-semibold">Sekce dokumentu</h2>
+            <h2 className="text-lg font-semibold">
+              {copy.detail.documentSections}
+            </h2>
           </div>
           <div className="divide-y divide-border">
             {template.sections.map((section) => (
@@ -144,7 +166,9 @@ export default async function PolicyDetailPage({
 
         <section className="rounded-lg border border-border bg-surface">
           <div className="border-b border-border p-5">
-            <h2 className="text-lg font-semibold">Vygenerované verze</h2>
+            <h2 className="text-lg font-semibold">
+              {copy.detail.generatedVersions}
+            </h2>
           </div>
           <div className="divide-y divide-border">
             {policies.length > 0 ? (
@@ -152,14 +176,20 @@ export default async function PolicyDetailPage({
                 <article key={policy.id} className="p-5">
                   <p className="font-medium">{policy.titleCs}</p>
                   <p className="mt-1 text-sm text-foreground/58">
-                    {policy.status} · přezkum {formatDate(policy.expiresAt)}
+                    {getPolicyStatusLabel(policy.status, context.locale)} ·{" "}
+                    {copy.list.review}{" "}
+                    {formatDate(
+                      policy.expiresAt,
+                      context.dateLocale,
+                      copy.list.emptyDate,
+                    )}
                   </p>
                   {policy.blobUrl ? (
                     <Link
                       href={`/api/policies/${policy.id}/download`}
                       className="mt-4 inline-flex items-center gap-2 rounded-md border border-border px-3 py-2 text-sm hover:bg-surface-muted"
                     >
-                      Stáhnout PDF
+                      {copy.actions.downloadPdf}
                       <Download className="h-4 w-4" aria-hidden="true" />
                     </Link>
                   ) : null}
@@ -167,7 +197,7 @@ export default async function PolicyDetailPage({
               ))
             ) : (
               <p className="p-5 text-sm text-foreground/58">
-                Zatím není vygenerovaná žádná verze.
+                {copy.detail.emptyVersions}
               </p>
             )}
           </div>
