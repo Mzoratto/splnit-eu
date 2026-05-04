@@ -3,12 +3,16 @@
 import { auth } from "@clerk/nextjs/server";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
+import { getLocale } from "next-intl/server";
 import { z } from "zod";
+import { normalizeLocale } from "@/i18n/routing";
+import { getOrganisationByClerkOrgId } from "@/lib/db/queries/organisations";
 import {
   createRiskItem,
   seedCommonRiskItems,
   updateRiskItemStatus,
 } from "@/lib/db/queries/risks";
+import { getCommonSmeRisks } from "@/lib/risks/common";
 
 const riskSchema = z.object({
   category: z.string().trim().max(80).optional(),
@@ -82,7 +86,18 @@ export async function updateRiskStatusAction(
 
 export async function seedCommonRisksAction() {
   const session = await requireActiveSession();
+  const [organisation, requestLocale] = await Promise.all([
+    getOrganisationByClerkOrgId(session.clerkOrgId).catch(() => null),
+    getLocale(),
+  ]);
+  const locale =
+    normalizeLocale(organisation?.locale) ??
+    normalizeLocale(requestLocale) ??
+    "cs-CZ";
 
-  await seedCommonRiskItems(session.clerkOrgId);
+  await seedCommonRiskItems({
+    clerkOrgId: session.clerkOrgId,
+    risks: getCommonSmeRisks(locale),
+  });
   revalidatePath("/risks");
 }

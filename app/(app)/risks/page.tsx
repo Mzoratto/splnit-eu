@@ -8,7 +8,7 @@ import { normalizeLocale, type Locale } from "@/i18n/routing";
 import { hasDatabaseUrl } from "@/lib/db";
 import { getOrganisationByClerkOrgId } from "@/lib/db/queries/organisations";
 import { listRiskItemsForOrg } from "@/lib/db/queries/risks";
-import { COMMON_CZECH_SME_RISKS } from "@/lib/risks/common";
+import { getCommonSmeRisks } from "@/lib/risks/common";
 import {
   createRiskAction,
   seedCommonRisksAction,
@@ -26,13 +26,13 @@ async function loadRisks(requestLocale: Locale) {
     Boolean(process.env.CLERK_SECRET_KEY);
 
   if (!clerkConfigured || !hasDatabaseUrl()) {
-    return getDemoData(getMessagesForLocale(requestLocale).risks);
+    return getDemoData(requestLocale);
   }
 
   const session = await auth();
 
   if (!session.orgId) {
-    return getDemoData(getMessagesForLocale(requestLocale).risks);
+    return getDemoData(requestLocale);
   }
 
   const [risks, organisation] = await Promise.all([
@@ -47,27 +47,29 @@ async function loadRisks(requestLocale: Locale) {
   };
 }
 
-function getDemoData(copy: RisksCopy): {
+function getDemoData(locale: Locale): {
   canMutate: boolean;
   organisationLocale: string | null;
   risks: RiskItem[];
 } {
+  const risks = getCommonSmeRisks(locale);
+
   return {
     canMutate: false,
     organisationLocale: null,
-    risks: COMMON_CZECH_SME_RISKS.map((risk, index) => ({
-      category: copy.demoRisks[index]?.category ?? risk.category,
+    risks: risks.map((risk, index) => ({
+      category: risk.category,
       clerkOrgId: "demo",
       createdAt: new Date(),
-      description: copy.demoRisks[index]?.description ?? risk.description,
+      description: risk.description,
       dueDate: index < 4 ? "2026-06-30" : null,
       id: `demo-risk-${index}`,
       impact: risk.impact,
       likelihood: risk.likelihood,
-      owner: copy.demoRisks[index]?.owner ?? risk.owner,
+      owner: risk.owner,
       riskScore: risk.likelihood * risk.impact,
       status: index < 3 ? "mitigating" : "open",
-      title: copy.demoRisks[index]?.title ?? risk.title,
+      title: risk.title,
       updatedAt: new Date(),
     })),
   };

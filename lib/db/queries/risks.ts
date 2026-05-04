@@ -1,7 +1,7 @@
 import { and, desc, eq } from "drizzle-orm";
 import { getDb } from "@/lib/db";
 import { riskItems } from "@/lib/db/schema";
-import { COMMON_CZECH_SME_RISKS } from "@/lib/risks/common";
+import type { CommonRisk } from "@/lib/risks/common";
 
 export async function listRiskItemsForOrg(clerkOrgId: string) {
   const db = getDb();
@@ -62,12 +62,15 @@ export async function updateRiskItemStatus(input: {
     );
 }
 
-export async function seedCommonRiskItems(clerkOrgId: string) {
+export async function seedCommonRiskItems(input: {
+  clerkOrgId: string;
+  risks: CommonRisk[];
+}) {
   const db = getDb();
   const existingRows = await db
     .select({ id: riskItems.id })
     .from(riskItems)
-    .where(eq(riskItems.clerkOrgId, clerkOrgId))
+    .where(eq(riskItems.clerkOrgId, input.clerkOrgId))
     .limit(1);
 
   if (existingRows.length > 0) {
@@ -75,9 +78,9 @@ export async function seedCommonRiskItems(clerkOrgId: string) {
   }
 
   await db.insert(riskItems).values(
-    COMMON_CZECH_SME_RISKS.map((risk) => ({
+    input.risks.map((risk) => ({
       category: risk.category,
-      clerkOrgId,
+      clerkOrgId: input.clerkOrgId,
       description: risk.description,
       impact: risk.impact,
       likelihood: risk.likelihood,
@@ -88,5 +91,5 @@ export async function seedCommonRiskItems(clerkOrgId: string) {
     })),
   );
 
-  return COMMON_CZECH_SME_RISKS.length;
+  return input.risks.length;
 }
