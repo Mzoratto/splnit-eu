@@ -327,6 +327,119 @@
       "markUoou": "Marca ÚOOÚ"
     }
   },
+  "risks": {
+    "noDate": "non pianificato",
+    "eyebrow": "Risk register",
+    "title": "Rischi",
+    "subtitle": "Registro rischi ISO 27001 con punteggio likelihood × impact, responsabile, scadenza e stato della mitigazione.",
+    "exportPdf": "Esporta ISO PDF",
+    "metrics": {
+      "totalTitle": "Rischi totali",
+      "totalBody": "Elementi totali nel registro.",
+      "highTitle": "Rischi alti",
+      "highBody": "Punteggio 12 o superiore.",
+      "averageTitle": "Punteggio medio",
+      "averageBody": "Likelihood × impact."
+    },
+    "form": {
+      "title": "Nuovo rischio",
+      "name": "Nome",
+      "likelihood": "Likelihood",
+      "impact": "Impact",
+      "category": "Categoria",
+      "owner": "Responsabile",
+      "dueDate": "Scadenza",
+      "notes": "Note di mitigazione",
+      "add": "Aggiungi rischio"
+    },
+    "seed": {
+      "title": "Rischi PMI comuni",
+      "body": "Precompila 10 rischi comuni per PMI quando il registro è vuoto.",
+      "button": "Precompila registro"
+    },
+    "matrix": {
+      "title": "Matrice rischi",
+      "ariaLabel": "Matrice rischi likelihood per impact",
+      "likelihood": "likelihood",
+      "impact": "impact"
+    },
+    "register": {
+      "title": "Registro",
+      "score": "PUNTEGGIO",
+      "owner": "Responsabile",
+      "due": "scadenza",
+      "empty": "Il registro è vuoto. Aggiungi un rischio o precompila i rischi comuni.",
+      "save": "Salva"
+    },
+    "statuses": {
+      "open": "aperto",
+      "mitigating": "in mitigazione",
+      "accepted": "accettato",
+      "closed": "chiuso"
+    },
+    "demoRisks": [
+      {
+        "title": "MFA non applicata sugli account chiave",
+        "description": "La MFA non è obbligatoria per tutti gli account cloud e amministratore.",
+        "category": "identity",
+        "owner": "Responsabile IT"
+      },
+      {
+        "title": "Ripristino backup non verificato",
+        "description": "I backup non sono testati regolarmente e il ripristino potrebbe non rispettare l'RTO.",
+        "category": "backup",
+        "owner": "Operations"
+      },
+      {
+        "title": "Sicurezza fornitori non gestita",
+        "description": "Un fornitore SaaS critico non ha assessment sicurezza né DPA archiviato.",
+        "category": "vendor",
+        "owner": "Procurement"
+      },
+      {
+        "title": "Incident response non pronta",
+        "description": "I ruoli di incident response non sono esercitati e la notifica potrebbe superare 72h.",
+        "category": "incident",
+        "owner": "Responsabile sicurezza"
+      },
+      {
+        "title": "Retention dati personali non gestita",
+        "description": "I dati personali sono conservati in strumenti senza regole chiare di retention e accesso.",
+        "category": "data",
+        "owner": "DPO"
+      },
+      {
+        "title": "Gestione endpoint debole",
+        "description": "I laptop non hanno gestione uniforme di cifratura, EDR e patching.",
+        "category": "endpoint",
+        "owner": "Responsabile IT"
+      },
+      {
+        "title": "Access review irregolari",
+        "description": "I diritti di accesso di ex dipendenti e fornitori non sono revisionati con costanza.",
+        "category": "access",
+        "owner": "HR + IT"
+      },
+      {
+        "title": "Uso strumenti AI non controllato",
+        "description": "I dipendenti usano strumenti AI senza regole per i dati sensibili.",
+        "category": "ai",
+        "owner": "Responsabile AI"
+      },
+      {
+        "title": "Audit trail insufficiente",
+        "description": "Gli audit log non sono centralizzati o non hanno retention sufficiente.",
+        "category": "logging",
+        "owner": "Responsabile IT"
+      },
+      {
+        "title": "Evidenza formazione sicurezza mancante",
+        "description": "La formazione sicurezza non è dimostrabile per tutti i dipendenti.",
+        "category": "training",
+        "owner": "HR"
+      }
+    ]
+  },
   "trustCenterSettings": {
     "never": "mai",
     "title": "Centro compliance pubblico",

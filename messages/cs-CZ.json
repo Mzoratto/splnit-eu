@@ -327,6 +327,119 @@
       "markUoou": "Označit ÚOOÚ"
     }
   },
+  "risks": {
+    "noDate": "nenaplánováno",
+    "eyebrow": "Risk register",
+    "title": "Rizika",
+    "subtitle": "ISO 27001 risk register se skóre likelihood × impact, vlastníkem, termínem a stavem mitigace.",
+    "exportPdf": "Export ISO PDF",
+    "metrics": {
+      "totalTitle": "Rizika",
+      "totalBody": "Celkem položek v registru.",
+      "highTitle": "Vysoká rizika",
+      "highBody": "Skóre 12 a více.",
+      "averageTitle": "Průměrné skóre",
+      "averageBody": "Likelihood × impact."
+    },
+    "form": {
+      "title": "Nové riziko",
+      "name": "Název",
+      "likelihood": "Likelihood",
+      "impact": "Impact",
+      "category": "Kategorie",
+      "owner": "Owner",
+      "dueDate": "Due date",
+      "notes": "Mitigation notes",
+      "add": "Přidat riziko"
+    },
+    "seed": {
+      "title": "Běžná SME rizika",
+      "body": "Předvyplní 10 běžných rizik pro české MSP, pokud je registr prázdný.",
+      "button": "Předvyplnit registr"
+    },
+    "matrix": {
+      "title": "Risk matrix",
+      "ariaLabel": "Risk matrix likelihood by impact",
+      "likelihood": "likelihood",
+      "impact": "impact"
+    },
+    "register": {
+      "title": "Registr",
+      "score": "SCORE",
+      "owner": "Owner",
+      "due": "due",
+      "empty": "Registr je prázdný. Přidejte riziko nebo použijte předvyplnění.",
+      "save": "Uložit"
+    },
+    "statuses": {
+      "open": "otevřené",
+      "mitigating": "mitigace",
+      "accepted": "akceptované",
+      "closed": "uzavřené"
+    },
+    "demoRisks": [
+      {
+        "title": "Chybějící MFA u klíčových účtů",
+        "description": "MFA není vynucené pro všechny cloudové a administrátorské účty.",
+        "category": "identity",
+        "owner": "IT owner"
+      },
+      {
+        "title": "Neověřená obnova ze záloh",
+        "description": "Zálohy nejsou pravidelně testované a obnova nemusí splnit RTO.",
+        "category": "backup",
+        "owner": "Operations"
+      },
+      {
+        "title": "Nedostatečně řízený dodavatel",
+        "description": "Kritický SaaS dodavatel nemá bezpečnostní assessment ani DPA.",
+        "category": "vendor",
+        "owner": "Procurement"
+      },
+      {
+        "title": "Nepřipravené incident response řízení",
+        "description": "Incident response role nejsou nacvičené a hlášení může překročit 72h.",
+        "category": "incident",
+        "owner": "Security owner"
+      },
+      {
+        "title": "Neřízená retence osobních údajů",
+        "description": "Osobní údaje jsou uložené v nástrojích bez jasné retence a přístupů.",
+        "category": "data",
+        "owner": "DPO"
+      },
+      {
+        "title": "Slabá správa koncových zařízení",
+        "description": "Notebooky nemají jednotnou správu šifrování, EDR a patchingu.",
+        "category": "endpoint",
+        "owner": "IT owner"
+      },
+      {
+        "title": "Nepravidelné access reviews",
+        "description": "Přístupová práva bývalých zaměstnanců a dodavatelů nejsou revidovaná.",
+        "category": "access",
+        "owner": "HR + IT"
+      },
+      {
+        "title": "Nekontrolované použití AI nástrojů",
+        "description": "Zaměstnanci používají AI nástroje bez pravidel pro citlivá data.",
+        "category": "ai",
+        "owner": "AI owner"
+      },
+      {
+        "title": "Nedostatečná auditní stopa",
+        "description": "Auditní logy nejsou centralizované nebo nemají dostatečnou retenci.",
+        "category": "logging",
+        "owner": "IT owner"
+      },
+      {
+        "title": "Chybějící evidence školení",
+        "description": "Bezpečnostní školení není doložitelné pro všechny zaměstnance.",
+        "category": "training",
+        "owner": "HR"
+      }
+    ]
+  },
   "trustCenterSettings": {
     "never": "nikdy",
     "title": "Veřejné compliance centrum",

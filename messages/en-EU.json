@@ -327,6 +327,119 @@
       "markUoou": "Mark ÚOOÚ"
     }
   },
+  "risks": {
+    "noDate": "not scheduled",
+    "eyebrow": "Risk register",
+    "title": "Risks",
+    "subtitle": "ISO 27001 risk register with likelihood × impact scoring, owner, due date, and mitigation status.",
+    "exportPdf": "Export ISO PDF",
+    "metrics": {
+      "totalTitle": "Total risks",
+      "totalBody": "Total items in the register.",
+      "highTitle": "High risks",
+      "highBody": "Score 12 or higher.",
+      "averageTitle": "Average score",
+      "averageBody": "Likelihood × impact."
+    },
+    "form": {
+      "title": "New risk",
+      "name": "Name",
+      "likelihood": "Likelihood",
+      "impact": "Impact",
+      "category": "Category",
+      "owner": "Owner",
+      "dueDate": "Due date",
+      "notes": "Mitigation notes",
+      "add": "Add risk"
+    },
+    "seed": {
+      "title": "Common SMB risks",
+      "body": "Seeds 10 common SMB risks when the register is empty.",
+      "button": "Seed register"
+    },
+    "matrix": {
+      "title": "Risk matrix",
+      "ariaLabel": "Risk matrix likelihood by impact",
+      "likelihood": "likelihood",
+      "impact": "impact"
+    },
+    "register": {
+      "title": "Register",
+      "score": "SCORE",
+      "owner": "Owner",
+      "due": "due",
+      "empty": "The register is empty. Add a risk or seed common risks.",
+      "save": "Save"
+    },
+    "statuses": {
+      "open": "open",
+      "mitigating": "mitigating",
+      "accepted": "accepted",
+      "closed": "closed"
+    },
+    "demoRisks": [
+      {
+        "title": "MFA is not enforced on key accounts",
+        "description": "MFA is not enforced for every cloud and administrator account.",
+        "category": "identity",
+        "owner": "IT owner"
+      },
+      {
+        "title": "Backup recovery is not verified",
+        "description": "Backups are not tested regularly and recovery may not meet RTO.",
+        "category": "backup",
+        "owner": "Operations"
+      },
+      {
+        "title": "Supplier security is not managed",
+        "description": "A critical SaaS supplier has no security assessment or DPA on file.",
+        "category": "vendor",
+        "owner": "Procurement"
+      },
+      {
+        "title": "Incident response is not ready",
+        "description": "Incident response roles are not rehearsed and reporting could exceed 72h.",
+        "category": "incident",
+        "owner": "Security owner"
+      },
+      {
+        "title": "Personal data retention is unmanaged",
+        "description": "Personal data is stored in tools without clear retention and access rules.",
+        "category": "data",
+        "owner": "DPO"
+      },
+      {
+        "title": "Endpoint management is weak",
+        "description": "Laptops do not have consistent encryption, EDR, and patch management.",
+        "category": "endpoint",
+        "owner": "IT owner"
+      },
+      {
+        "title": "Access reviews are irregular",
+        "description": "Access rights for former employees and suppliers are not reviewed consistently.",
+        "category": "access",
+        "owner": "HR + IT"
+      },
+      {
+        "title": "AI tool usage is uncontrolled",
+        "description": "Employees use AI tools without rules for sensitive data.",
+        "category": "ai",
+        "owner": "AI owner"
+      },
+      {
+        "title": "Audit trail coverage is insufficient",
+        "description": "Audit logs are not centralised or do not have enough retention.",
+        "category": "logging",
+        "owner": "IT owner"
+      },
+      {
+        "title": "Security training evidence is missing",
+        "description": "Security training cannot be evidenced for every employee.",
+        "category": "training",
+        "owner": "HR"
+      }
+    ]
+  },
   "trustCenterSettings": {
     "never": "never",
     "title": "Public compliance centre",
