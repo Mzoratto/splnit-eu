@@ -76,7 +76,6 @@ export function QuestionnaireWorkbench({
         <form
           action={formAction}
           className="mt-5 space-y-4"
-          encType="multipart/form-data"
         >
           <input name="locale" type="hidden" value={locale} />
           <label className="grid gap-2 text-sm">
