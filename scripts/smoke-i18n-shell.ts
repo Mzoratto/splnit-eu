@@ -8,6 +8,7 @@ const requiredNamespaces = [
   "dashboard",
   "evidence",
   "frameworks",
+  "incidents",
   "integrations",
   "onboarding",
   "organisationSettings",
@@ -29,6 +30,7 @@ for (const locale of locales) {
   assert.ok(messages.dashboard.metrics.scoreTitle, `${locale} should label dashboard score`);
   assert.ok(messages.evidence.filters.apply, `${locale} should label evidence filters`);
   assert.ok(messages.frameworks.index.title, `${locale} should label frameworks`);
+  assert.ok(messages.incidents.wizard.create, `${locale} should label incidents`);
   assert.ok(messages.integrations.index.title, `${locale} should label integrations`);
   assert.ok(
     messages.integrations.providerPages.common.runResults,
@@ -52,6 +54,8 @@ assert.equal(en.shell.upgradePlan, "Upgrade plan");
 assert.equal(en.dashboard.metrics.scoreTitle, "Compliance score");
 assert.equal(en.evidence.filters.apply, "Apply filters");
 assert.equal(en.frameworks.index.title, "Regulations and standards");
+assert.equal(en.incidents.title, "Incidents");
+assert.equal(en.incidents.wizard.create, "Create incident");
 assert.equal(en.integrations.index.title, "Automated tests");
 assert.equal(en.integrations.providerPages.aws.title, "AWS integration");
 assert.equal(en.integrations.providerPages.github.repositories, "Repositories");
@@ -67,6 +71,8 @@ assert.equal(it.shell.upgradePlan, "Aggiorna piano");
 assert.equal(it.dashboard.metrics.scoreTitle, "Punteggio compliance");
 assert.equal(it.evidence.filters.apply, "Applica filtri");
 assert.equal(it.frameworks.index.title, "Normative e standard");
+assert.equal(it.incidents.title, "Incidenti");
+assert.equal(it.incidents.wizard.create, "Crea incidente");
 assert.equal(it.integrations.index.title, "Test automatici");
 assert.equal(it.integrations.providerPages.aws.title, "Integrazione AWS");
 assert.equal(it.integrations.providerPages.github.repositories, "Repository");

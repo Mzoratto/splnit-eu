@@ -251,6 +251,82 @@
       }
     }
   },
+  "incidents": {
+    "noDate": "non impostato",
+    "eyebrow": "Incident management",
+    "title": "Incidenti",
+    "subtitle": "Registro incidenti NIS2 e GDPR con countdown 72h, checklist regolatorie ed export delle notifiche.",
+    "demo": {
+      "title": "Accesso amministratore sospetto",
+      "description": "Incidente demo che copre accesso non autorizzato a un pannello admin SaaS e possibile esposizione di dati personali."
+    },
+    "actions": {
+      "nukibPdf": "NÚKIB PDF",
+      "uoouPdf": "ÚOOÚ PDF"
+    },
+    "metrics": {
+      "openTitle": "Aperti",
+      "totalIncidents": "{count} incidenti totali nel log.",
+      "gdprNotice": "Notifica violazione GDPR Articolo 33.",
+      "severityTitle": "Gravità",
+      "statusLine": "Stato {status}."
+    },
+    "countdown": {
+      "notStarted": "GDPR Art. 33 non attivato",
+      "reported": "Segnalato a ÚOOÚ {date}",
+      "overdue": "Scaduto · deadline {date}",
+      "remaining": "{hours}h rimanenti · deadline {date}"
+    },
+    "severities": {
+      "low": "bassa",
+      "medium": "media",
+      "high": "alta",
+      "critical": "critica",
+      "none": "nessuna"
+    },
+    "statuses": {
+      "open": "aperto",
+      "investigating": "in indagine",
+      "contained": "contenuto",
+      "resolved": "risolto"
+    },
+    "wizard": {
+      "title": "Wizard incidente",
+      "classification": "1. Classificazione",
+      "name": "Nome",
+      "severity": "Gravità",
+      "detectedAt": "Rilevato",
+      "impact": "2. Impatto",
+      "affectsPersonalData": "L'incidente riguarda dati personali",
+      "affectsCriticalSystems": "L'incidente riguarda sistemi critici o servizi",
+      "description": "3. Descrizione",
+      "create": "Crea incidente"
+    },
+    "log": {
+      "title": "Log incidenti",
+      "empty": "Il log incidenti è vuoto."
+    },
+    "detail": {
+      "titleFallback": "Dettaglio incidente",
+      "selectOrCreate": "Seleziona un incidente dal log o creane uno nuovo.",
+      "save": "Salva",
+      "detected": "Rilevato",
+      "created": "Creato",
+      "resolved": "Risolto",
+      "notSent": "non inviato",
+      "description": "Descrizione",
+      "noDescription": "Nessuna descrizione."
+    },
+    "checklist": {
+      "title": "Checklist regolatoria",
+      "nis2Required": "Richiede assessment dell'impatto e decisione sulla notifica.",
+      "nis2NotMarked": "Non marcato come sistema critico.",
+      "gdprActive": "Countdown 72h attivo.",
+      "gdprNotMarked": "Non marcato come dati personali.",
+      "markNukib": "Marca NÚKIB",
+      "markUoou": "Marca ÚOOÚ"
+    }
+  },
   "trustCenterSettings": {
     "never": "mai",
     "title": "Centro compliance pubblico",

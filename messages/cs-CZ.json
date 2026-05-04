@@ -251,6 +251,82 @@
       }
     }
   },
+  "incidents": {
+    "noDate": "nenastaveno",
+    "eyebrow": "Incident management",
+    "title": "Incidenty",
+    "subtitle": "NIS2 a GDPR incident log s 72h countdownem, regulatorními checklisty a exporty oznámení.",
+    "demo": {
+      "title": "Podezřelý přístup administrátora",
+      "description": "Demo incident pokrývající neoprávněný přístup do SaaS administrace a možné vystavení osobních údajů."
+    },
+    "actions": {
+      "nukibPdf": "NÚKIB PDF",
+      "uoouPdf": "ÚOOÚ PDF"
+    },
+    "metrics": {
+      "openTitle": "Otevřené",
+      "totalIncidents": "Celkem {count} incidentů v logu.",
+      "gdprNotice": "GDPR Article 33 breach notice.",
+      "severityTitle": "Severity",
+      "statusLine": "Status {status}."
+    },
+    "countdown": {
+      "notStarted": "GDPR Art. 33 není spuštěn",
+      "reported": "ÚOOÚ reportováno {date}",
+      "overdue": "Po termínu · deadline {date}",
+      "remaining": "{hours}h zbývá · deadline {date}"
+    },
+    "severities": {
+      "low": "low",
+      "medium": "medium",
+      "high": "high",
+      "critical": "critical",
+      "none": "none"
+    },
+    "statuses": {
+      "open": "open",
+      "investigating": "investigating",
+      "contained": "contained",
+      "resolved": "resolved"
+    },
+    "wizard": {
+      "title": "Incident wizard",
+      "classification": "1. Klasifikace",
+      "name": "Název",
+      "severity": "Severity",
+      "detectedAt": "Detekováno",
+      "impact": "2. Dopad",
+      "affectsPersonalData": "Incident se týká osobních údajů",
+      "affectsCriticalSystems": "Incident se týká kritických systémů nebo služby",
+      "description": "3. Popis",
+      "create": "Založit incident"
+    },
+    "log": {
+      "title": "Incident log",
+      "empty": "Incident log je zatím prázdný."
+    },
+    "detail": {
+      "titleFallback": "Detail incidentu",
+      "selectOrCreate": "Vyberte nebo založte incident.",
+      "save": "Uložit",
+      "detected": "Detekováno",
+      "created": "Založeno",
+      "resolved": "Vyřešeno",
+      "notSent": "neodesláno",
+      "description": "Popis",
+      "noDescription": "Bez popisu."
+    },
+    "checklist": {
+      "title": "Regulatorní checklist",
+      "nis2Required": "Vyžaduje posouzení a oznámení podle dopadu.",
+      "nis2NotMarked": "Neoznačeno jako kritický systém.",
+      "gdprActive": "72h countdown je aktivní.",
+      "gdprNotMarked": "Neoznačeno jako osobní údaje.",
+      "markNukib": "Označit NÚKIB",
+      "markUoou": "Označit ÚOOÚ"
+    }
+  },
   "trustCenterSettings": {
     "never": "nikdy",
     "title": "Veřejné compliance centrum",
