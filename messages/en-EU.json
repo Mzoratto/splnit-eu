@@ -200,7 +200,7 @@
     "footnote": "All plans include EU data storage · No hidden fees · Cancel anytime",
     "partnerTitle": "Are you a consultant or MSP?",
     "partnerBody": "Unlimited clients, white-label option, partner badge.",
-    "partnerPrice": "CZK 7,475/month",
+    "partnerPrice": "€299/month",
     "partnerCta": "Learn more →",
     "comparisonTag": "Feature comparison",
     "comparisonTitle": "Choose by automation depth.",
@@ -216,7 +216,7 @@
       "billingToggle": "Toggle billing",
       "saving": "Save 2 months",
       "featured": "Most popular",
-      "currency": "CZK",
+      "currency": "€",
       "monthlySuffix": "/month",
       "annualSuffix": "/month annually",
       "free": {

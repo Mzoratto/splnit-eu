@@ -1,10 +1,11 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { getTranslations } from "next-intl/server";
+import { getLocale, getTranslations } from "next-intl/server";
 import { Icon } from "@/components/marketing/local-icon";
 import { DashboardMockup } from "@/components/marketing/dashboard-mockup";
 import { LeadCapture } from "@/components/marketing/lead-capture";
 import { MarketingShell } from "@/components/marketing/marketing-shell";
+import { normalizeLocale } from "@/i18n/routing";
 
 export const metadata: Metadata = {
   title:
@@ -54,6 +55,7 @@ const trustBadges = [
 ] as const;
 
 export default async function HomePage() {
+  const locale = normalizeLocale(await getLocale()) ?? "cs-CZ";
   const t = await getTranslations("home");
 
   return (
@@ -128,7 +130,7 @@ export default async function HomePage() {
               </p>
             </div>
 
-            <DashboardMockup />
+            <DashboardMockup locale={locale} />
 
             <div className="fade-up mt-12 text-center">
               <p className="mb-6 text-xs font-medium uppercase tracking-widest text-zinc-400">

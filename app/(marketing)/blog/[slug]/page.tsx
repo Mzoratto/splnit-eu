@@ -1,13 +1,23 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { getLocale } from "next-intl/server";
 import { notFound } from "next/navigation";
 import { Icon } from "@/components/marketing/local-icon";
 import { MarketingShell } from "@/components/marketing/marketing-shell";
 import { SoftwareApplicationJsonLd } from "@/components/marketing/software-json-ld";
-import { getBlogPost, getBlogPosts } from "@/lib/marketing/blog";
+import { normalizeLocale } from "@/i18n/routing";
+import {
+  getBlogPageCopy,
+  getBlogPost,
+  getBlogPosts,
+} from "@/lib/marketing/blog";
 
 export function generateStaticParams() {
   return getBlogPosts().map((post) => ({ slug: post.slug }));
+}
+
+function sectionId(heading: string) {
+  return heading.toLowerCase().replaceAll(" ", "-");
 }
 
 export async function generateMetadata({
@@ -16,7 +26,9 @@ export async function generateMetadata({
   params: Promise<{ slug: string }>;
 }): Promise<Metadata> {
   const { slug } = await params;
-  const post = getBlogPost(slug);
+  const locale = normalizeLocale(await getLocale()) ?? "cs-CZ";
+  const pageCopy = getBlogPageCopy(locale);
+  const post = getBlogPost(slug, locale);
 
   if (!post) {
     return {};
@@ -26,7 +38,7 @@ export async function generateMetadata({
     title: `${post.title} | Splnit.eu Blog`,
     description: post.description,
     openGraph: {
-      locale: "cs_CZ",
+      locale: pageCopy.locale,
       type: "article",
       publishedTime: post.publishedAt,
       title: post.title,
@@ -41,7 +53,9 @@ export default async function BlogPostPage({
   params: Promise<{ slug: string }>;
 }) {
   const { slug } = await params;
-  const post = getBlogPost(slug);
+  const locale = normalizeLocale(await getLocale()) ?? "cs-CZ";
+  const pageCopy = getBlogPageCopy(locale);
+  const post = getBlogPost(slug, locale);
 
   if (!post) {
     notFound();
@@ -62,7 +76,7 @@ export default async function BlogPostPage({
                 href="/blog"
                 className="mb-8 inline-flex text-sm font-medium text-blue-600 hover:text-blue-700"
               >
-                ← Všechny články
+                {pageCopy.allArticles}
               </Link>
               <div className="flex flex-wrap items-center gap-2">
                 <span className="rounded-full border border-blue-100 bg-blue-50 px-3 py-1 text-xs font-medium text-blue-700">
@@ -75,7 +89,7 @@ export default async function BlogPostPage({
                   dateTime={post.publishedAt}
                   className="rounded-full border border-zinc-200 bg-white px-3 py-1 text-xs font-medium text-zinc-600"
                 >
-                  {new Intl.DateTimeFormat("cs-CZ", {
+                  {new Intl.DateTimeFormat(locale, {
                     day: "numeric",
                     month: "long",
                     year: "numeric",
@@ -94,13 +108,13 @@ export default async function BlogPostPage({
               <aside className="hidden lg:block">
                 <div className="sticky top-24 rounded-2xl border border-zinc-200 bg-zinc-50 p-5">
                   <p className="mono text-xs font-medium uppercase text-zinc-400">
-                    V článku
+                    {pageCopy.articleNavTitle}
                   </p>
                   <nav className="mt-4 grid gap-3">
                     {post.sections.map((section) => (
                       <a
                         key={section.heading}
-                        href={`#${section.heading.toLowerCase().replaceAll(" ", "-")}`}
+                        href={`#${sectionId(section.heading)}`}
                         className="text-sm font-medium text-zinc-600 hover:text-blue-700"
                       >
                         {section.heading}
@@ -114,7 +128,7 @@ export default async function BlogPostPage({
                 {post.sections.map((section) => (
                   <section
                     key={section.heading}
-                    id={section.heading.toLowerCase().replaceAll(" ", "-")}
+                    id={sectionId(section.heading)}
                     className="scroll-mt-24"
                   >
                     <h2 className="text-3xl font-semibold tracking-[-0.03em] text-zinc-900">
@@ -152,17 +166,16 @@ export default async function BlogPostPage({
 
                 <div className="rounded-[2rem] border border-blue-100 bg-blue-50/40 p-8">
                   <h2 className="text-2xl font-semibold tracking-[-0.03em] text-zinc-900">
-                    Převést článek na kontrolní seznam
+                    {pageCopy.articleCtaTitle}
                   </h2>
                   <p className="mt-3 max-w-2xl text-sm leading-6 text-zinc-500">
-                    Splnit.eu mapuje povinnosti na kontroly, důkazy a termíny,
-                    aby šly průběžně ověřovat.
+                    {pageCopy.articleCtaBody}
                   </p>
                   <Link
                     href="/platform"
                     className="mt-6 inline-flex rounded-full bg-blue-600 px-6 py-2.5 text-sm font-medium text-white transition-colors hover:bg-blue-500"
                   >
-                    Zobrazit platformu
+                    {pageCopy.articleCtaButton}
                   </Link>
                 </div>
               </div>

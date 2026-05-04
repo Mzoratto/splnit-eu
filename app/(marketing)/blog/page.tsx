@@ -1,39 +1,46 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { getLocale } from "next-intl/server";
 import { Icon } from "@/components/marketing/local-icon";
 import { MarketingShell } from "@/components/marketing/marketing-shell";
 import { SoftwareApplicationJsonLd } from "@/components/marketing/software-json-ld";
-import { getBlogPosts } from "@/lib/marketing/blog";
+import { normalizeLocale } from "@/i18n/routing";
+import { getBlogPageCopy, getBlogPosts } from "@/lib/marketing/blog";
 
-export const metadata: Metadata = {
-  title: "Blog | Splnit.eu — NIS2, EU AI Act a GDPR pro české firmy",
-  description:
-    "Praktické návody k NIS2, EU AI Act, GDPR a ISO 27001 pro české MSP.",
-  openGraph: {
-    locale: "cs_CZ",
-  },
-};
+export async function generateMetadata(): Promise<Metadata> {
+  const locale = normalizeLocale(await getLocale()) ?? "cs-CZ";
+  const copy = getBlogPageCopy(locale);
 
-export default function BlogPage() {
-  const posts = getBlogPosts();
+  return {
+    title: copy.metadataTitle,
+    description: copy.jsonLdDescription,
+    openGraph: {
+      locale: copy.locale,
+    },
+  };
+}
+
+export default async function BlogPage() {
+  const locale = normalizeLocale(await getLocale()) ?? "cs-CZ";
+  const copy = getBlogPageCopy(locale);
+  const posts = getBlogPosts(locale);
 
   return (
     <MarketingShell>
       <SoftwareApplicationJsonLd
         pageName="Splnit.eu Blog"
         path="/blog"
-        description="Praktické návody Splnit.eu k NIS2, EU AI Act, GDPR a ISO 27001 pro české firmy."
+        description={copy.jsonLdDescription}
       />
       <main>
         <section data-hero className="px-5 pb-16 pt-32">
           <div className="mx-auto max-w-5xl">
-            <span className="section-tag mb-5">Compliance průvodce</span>
+            <span className="section-tag mb-5">{copy.tag}</span>
             <h1 className="text-5xl font-semibold leading-[1.05] tracking-[-0.04em] text-zinc-900 md:text-[68px]">
-              Návody pro EU compliance bez právního šumu.
+              {copy.title}
             </h1>
             <p className="mt-6 max-w-3xl text-lg leading-8 text-zinc-500">
-              Praktické články pro české firmy, které potřebují proměnit NIS2,
-              EU AI Act a GDPR na kontroly, důkazy a odpovědnosti.
+              {copy.description}
             </p>
           </div>
         </section>
@@ -64,7 +71,7 @@ export default function BlogPage() {
                     href={`/blog/${post.slug}`}
                     className="mt-7 inline-flex items-center gap-2 text-sm font-medium text-blue-600 hover:text-blue-700"
                   >
-                    Číst článek
+                    {copy.readArticle}
                     <Icon
                       icon="solar:arrow-right-linear"
                       className="text-base"

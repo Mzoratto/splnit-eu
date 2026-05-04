@@ -5,6 +5,7 @@ import { useMemo, useState } from "react";
 import { Icon } from "@/components/marketing/local-icon";
 import { comparisonGroups, faqs, plans } from "@/lib/marketing/pricing";
 import { PricingCta } from "@/components/marketing/pricing-cta";
+import type { Locale } from "@/i18n/routing";
 
 const planKeys = ["free", "starter", "business"] as const;
 const comparisonGroupKeys = [
@@ -24,17 +25,44 @@ const faqKeys = [
   "discount",
   "cancelData",
 ] as const;
+const planPrices: Record<
+  Locale,
+  {
+    currency: string;
+    monthly: [number, number, number];
+    annual: [number, number, number];
+  }
+> = {
+  "cs-CZ": {
+    annual: [0, 1225, 3100],
+    currency: "CZK",
+    monthly: [0, 1475, 3725],
+  },
+  "en-EU": {
+    annual: [0, 49, 124],
+    currency: "EUR",
+    monthly: [0, 59, 149],
+  },
+  "it-IT": {
+    annual: [0, 49, 124],
+    currency: "EUR",
+    monthly: [0, 59, 149],
+  },
+};
 
 export function PricingCards() {
-  const locale = useLocale();
+  const locale = useLocale() as Locale;
   const t = useTranslations("pricing.cards");
   const [annual, setAnnual] = useState(false);
+  const priceSet = planPrices[locale] ?? planPrices["cs-CZ"];
   const formatCurrency = useMemo(
     () =>
       new Intl.NumberFormat(locale, {
+        currency: priceSet.currency,
         maximumFractionDigits: 0,
+        style: "currency",
       }),
-    [locale],
+    [locale, priceSet.currency],
   );
 
   return (
@@ -64,7 +92,7 @@ export function PricingCards() {
         {plans.map((plan, index) => {
           const planKey = planKeys[index];
           const planName = t(`${planKey}.name`);
-          const price = annual ? plan.annual : plan.monthly;
+          const price = annual ? priceSet.annual[index] : priceSet.monthly[index];
           const features = t.raw(`${planKey}.features`) as string[];
           const card = (
             <div className="flex h-full flex-col rounded-[21px] bg-white p-7">
@@ -85,7 +113,7 @@ export function PricingCards() {
                 </p>
                 <div className="flex items-baseline gap-1">
                   <span className="text-4xl font-semibold tracking-tight text-zinc-900 transition-opacity">
-                    {formatCurrency.format(price)} {t("currency")}
+                    {formatCurrency.format(price)}
                   </span>
                   <span className="text-sm text-zinc-400">
                     {annual && price > 0 ? t("annualSuffix") : t("monthlySuffix")}
@@ -157,6 +185,7 @@ export function PricingCards() {
 
 export function ComparisonTable() {
   const t = useTranslations("pricing.comparison");
+  const cardT = useTranslations("pricing.cards");
   const [openGroups, setOpenGroups] = useState<string[]>(
     comparisonGroups.slice(0, 3).map((group) => group.name),
   );
@@ -191,10 +220,10 @@ export function ComparisonTable() {
   return (
     <div className="overflow-hidden rounded-[24px] border border-zinc-200 bg-white shadow-sm">
       <div className="grid grid-cols-[1.4fr_repeat(3,0.8fr)] border-b border-zinc-100 bg-zinc-50 px-4 py-3 text-xs font-semibold text-zinc-600 md:px-6">
-        <span>Funkce</span>
-        <span>Zdarma</span>
-        <span>Starter</span>
-        <span>Business</span>
+        <span>{t("feature")}</span>
+        <span>{cardT("free.name")}</span>
+        <span>{cardT("starter.name")}</span>
+        <span>{cardT("business.name")}</span>
       </div>
       {comparisonGroups.map((group) => {
         const groupKey = comparisonGroupKeys[comparisonGroups.indexOf(group)];

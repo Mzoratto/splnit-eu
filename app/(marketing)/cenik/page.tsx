@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { getTranslations } from "next-intl/server";
+import { getLocale, getTranslations } from "next-intl/server";
 import { Icon } from "@/components/marketing/local-icon";
 import { MarketingShell } from "@/components/marketing/marketing-shell";
 import {
@@ -8,16 +8,44 @@ import {
   FaqAccordion,
   PricingCards,
 } from "@/components/marketing/pricing-widgets";
+import { normalizeLocale, type Locale } from "@/i18n/routing";
 
-export const metadata: Metadata = {
-  title:
-    "Ceník | Splnit.eu — od 0 Kč/měsíc, transparentní ceny, žádné závazky",
-  description:
-    "Transparentní ceny Splnit.eu pro české firmy: zdarma, Starter a Business s roční nebo měsíční fakturací.",
-  openGraph: {
+const metadataByLocale: Record<Locale, Required<Pick<Metadata, "title" | "description">> & { locale: string }> = {
+  "cs-CZ": {
+    description:
+      "Transparentní ceny Splnit.eu pro české firmy: zdarma, Starter a Business s roční nebo měsíční fakturací.",
     locale: "cs_CZ",
+    title:
+      "Ceník | Splnit.eu — od 0 Kč/měsíc, transparentní ceny, žádné závazky",
+  },
+  "en-EU": {
+    description:
+      "Transparent Splnit.eu pricing for EU SMBs: Free, Starter, and Business with monthly or annual billing in euros.",
+    locale: "en_EU",
+    title:
+      "Pricing | Splnit.eu — from €0/month, transparent pricing, no lock-in",
+  },
+  "it-IT": {
+    description:
+      "Prezzi trasparenti Splnit.eu per PMI europee: Gratis, Starter e Business con fatturazione mensile o annuale in euro.",
+    locale: "it_IT",
+    title:
+      "Prezzi | Splnit.eu — da €0/mese, prezzi trasparenti, nessun vincolo",
   },
 };
+
+export async function generateMetadata(): Promise<Metadata> {
+  const locale = normalizeLocale(await getLocale()) ?? "cs-CZ";
+  const metadata = metadataByLocale[locale];
+
+  return {
+    title: metadata.title,
+    description: metadata.description,
+    openGraph: {
+      locale: metadata.locale,
+    },
+  };
+}
 
 export default async function PricingPage() {
   const t = await getTranslations("pricing");

@@ -1,81 +1,52 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { getLocale } from "next-intl/server";
 import { Icon } from "@/components/marketing/local-icon";
 import { MarketingShell } from "@/components/marketing/marketing-shell";
 import { SoftwareApplicationJsonLd } from "@/components/marketing/software-json-ld";
+import { normalizeLocale } from "@/i18n/routing";
+import { getPlatformCopy } from "@/lib/marketing/platform-copy";
 
-export const metadata: Metadata = {
-  title:
-    "Platforma | Splnit.eu — automatické kontroly pro Microsoft 365, AWS a GitHub",
-  description:
-    "Technická platforma Splnit.eu pro automatické kontroly, evidence vault a dokumenty pro NIS2, GDPR a ISO 27001.",
-  openGraph: {
-    locale: "cs_CZ",
-  },
-};
+export async function generateMetadata(): Promise<Metadata> {
+  const locale = normalizeLocale(await getLocale()) ?? "cs-CZ";
+  const copy = getPlatformCopy(locale);
 
-const steps = [
-  {
-    icon: "solar:plug-linear",
-    title: "Připojte nástroje",
-    body: "Microsoft 365, GitHub, AWS nebo Google Workspace. Nastavení za 5 minut.",
-  },
-  {
-    icon: "solar:cpu-linear",
-    title: "Testy běží automaticky",
-    body: "Kontroly pro připojené systémy běží průběžně a výsledky se ukládají jako důkazy.",
-  },
-  {
-    icon: "solar:document-check-linear",
-    title: "Dostanete výsledky",
-    body: "Dashboard, upozornění na selhání a dokumentace pro auditora — vše na jednom místě.",
-  },
-];
+  return {
+    title: copy.metadata.title,
+    description: copy.metadata.description,
+    openGraph: {
+      locale: copy.metadata.locale,
+    },
+  };
+}
 
-const evidence = [
-  {
-    icon: "solar:cloud-download-linear",
-    title: "Automatický sběr",
-    body: "API snapshoty z každé integrace uloženy jako důkaz.",
-  },
-  {
-    icon: "solar:folder-with-files-linear",
-    title: "Manuální nahrávání",
-    body: "Nahrajte PDF, screenshoty nebo podepsané záznamy.",
-  },
-  {
-    icon: "solar:calendar-check-linear",
-    title: "Hlídání vypršení",
-    body: "Upozornění 30 a 7 dní před vypršením platnosti důkazu.",
-  },
-];
+export default async function PlatformPage() {
+  const locale = normalizeLocale(await getLocale()) ?? "cs-CZ";
+  const copy = getPlatformCopy(locale);
 
-export default function PlatformPage() {
   return (
     <MarketingShell>
       <SoftwareApplicationJsonLd
-        pageName="Splnit.eu Platforma"
+        pageName={copy.pageName}
         path="/platform"
-        description="Platforma Splnit.eu automatizuje compliance testy, evidence vault a Trust Center pro NIS2, EU AI Act, GDPR a ISO 27001."
+        description={copy.jsonLdDescription}
       />
       <main>
         <section data-hero className="bg-white px-5 pb-20 pt-32">
           <div className="mx-auto max-w-7xl">
             <div className="max-w-3xl">
-              <span className="section-tag mb-5">Developer First</span>
+              <span className="section-tag mb-5">{copy.hero.tag}</span>
               <h1 className="text-5xl font-semibold leading-[1.05] tracking-[-0.04em] text-zinc-900 md:text-[68px]">
-                Automatické kontroly pro systémy, které už používáte.
+                {copy.hero.title}
               </h1>
               <p className="mt-6 max-w-2xl text-lg leading-8 text-zinc-500">
-                Připojte Microsoft 365, GitHub nebo AWS jednou. Splnit.eu
-                testuje vaše bezpečnostní kontroly nepřetržitě a generuje
-                auditní záznamy automaticky.
+                {copy.hero.body}
               </p>
               <Link
                 href="mailto:hello@splnit.eu?subject=Demo%20Splnit.eu"
                 className="mt-8 inline-flex rounded-full bg-zinc-900 px-7 py-3 text-sm font-medium text-white transition-colors hover:bg-zinc-800"
               >
-                Rezervovat demo
+                {copy.hero.cta}
               </Link>
             </div>
           </div>
@@ -84,7 +55,7 @@ export default function PlatformPage() {
         <section className="border-t border-zinc-200/50 py-20">
           <div className="mx-auto max-w-7xl px-5">
             <div className="grid gap-6 md:grid-cols-3">
-              {steps.map((step, index) => (
+              {copy.steps.map((step, index) => (
                 <article
                   key={step.title}
                   className="scroll-animate"
@@ -93,7 +64,7 @@ export default function PlatformPage() {
                     <div className="z-10 flex h-11 w-11 items-center justify-center rounded-full bg-blue-600 text-sm font-semibold text-white shadow-md shadow-blue-200">
                       {index + 1}
                     </div>
-                    {index < steps.length - 1 ? (
+                    {index < copy.steps.length - 1 ? (
                       <div className="mx-3 hidden h-px flex-1 bg-gradient-to-r from-blue-100 via-blue-300 to-blue-100 md:block" />
                     ) : null}
                   </div>
@@ -120,7 +91,7 @@ export default function PlatformPage() {
               <div className="rounded-[26px] p-px grad-border">
                 <div className="overflow-hidden rounded-[25px] bg-zinc-50 p-8">
                   <p className="mono mb-6 text-[11px] font-medium uppercase tracking-widest text-zinc-400">
-                    Dostupné integrace
+                    {copy.integrations.available}
                   </p>
                   <div className="grid grid-cols-3 gap-3">
                     {[
@@ -149,12 +120,14 @@ export default function PlatformPage() {
                       <div className="flex-1">
                         <div className="flex items-center gap-2">
                           <span className="text-xs font-semibold text-emerald-100">
-                            Lokální regulatorní zdroje
+                            {copy.integrations.localSourcesTitle}
                           </span>
-                          <span className="nukib-chip">🇨🇿 Pouze pro ČR</span>
+                          <span className="nukib-chip">
+                            {copy.integrations.localSourcesBadge}
+                          </span>
                         </div>
                         <span className="text-[10px] text-emerald-500">
-                          NÚKIB pro český obsah, další jurisdikce po ověření
+                          {copy.integrations.localSourcesBody}
                         </span>
                       </div>
                       <div className="pulse-dot h-2 w-2 shrink-0 rounded-full bg-emerald-400" />
@@ -165,21 +138,15 @@ export default function PlatformPage() {
             </div>
 
             <div className="scroll-animate w-full lg:w-1/2">
-              <span className="section-tag mb-5">Integrace</span>
+              <span className="section-tag mb-5">{copy.integrations.tag}</span>
               <h2 className="mb-5 text-3xl font-semibold leading-[1.1] tracking-[-0.04em] text-zinc-900 lg:text-[44px]">
-                Připojte nástroje, které již používáte.
+                {copy.integrations.title}
               </h2>
               <p className="mb-7 max-w-lg text-base leading-relaxed text-zinc-500">
-                Nevěříme na ruční sběr důkazů. Splnit.eu se nativně připojuje k
-                vašim identity providerům, cloudovým hostingům a HR systémům.
+                {copy.integrations.body}
               </p>
               <ul className="space-y-3.5">
-                {[
-                  "Integrace pro Microsoft 365, GitHub a AWS",
-                  "Upozornění na selhání kontrol v aplikaci",
-                  "Lokální regulatorní zdroje tam, kde jsou ověřené",
-                  "API-first architektura pro vlastní interní nástroje",
-                ].map((item) => (
+                {copy.integrations.bullets.map((item) => (
                   <li key={item} className="flex items-start gap-3">
                     <Icon
                       icon="solar:check-circle-linear"
@@ -197,16 +164,13 @@ export default function PlatformPage() {
         <section className="bg-zinc-950 py-24">
           <div className="mx-auto max-w-5xl px-5 text-center">
             <span className="section-tag mb-5 border-blue-500/30 bg-blue-500/10 text-blue-300">
-              Křížové mapování
+              {copy.crossMapping.tag}
             </span>
             <h2 className="text-4xl font-semibold tracking-[-0.04em] text-white md:text-5xl">
-              Jeden test. Tři předpisy.
+              {copy.crossMapping.title}
             </h2>
             <p className="mx-auto mt-5 max-w-3xl text-base leading-7 text-zinc-400">
-              MFA kontrola pro všechny uživatele splňuje NIS2 čl. 21(2)(j), ISO
-              27001 A.9.4.2 a GDPR čl. 32(1)(b) najednou. Přidání každého
-              dalšího předpisu znamená doplnit mapování, ne začínat z prázdné
-              tabulky.
+              {copy.crossMapping.body}
             </p>
             <div className="mono mx-auto mt-10 max-w-3xl rounded-2xl border border-zinc-800 bg-zinc-900 p-5 text-left text-sm text-zinc-300">
               <p className="text-blue-300">ctrl_mfa_all_users</p>
@@ -215,7 +179,7 @@ export default function PlatformPage() {
               <p className="text-emerald-400">✓ GDPR čl. 32(1)(b)</p>
             </div>
             <div className="mt-8 grid gap-4 md:grid-cols-3">
-              {["Jedna evidence", "Více předpisů", "Průběžné kontroly"].map((stat) => (
+              {copy.crossMapping.stats.map((stat) => (
                 <div
                   key={stat}
                   className="rounded-2xl border border-zinc-800 bg-zinc-900/70 p-5 text-xl font-semibold text-white"
@@ -230,13 +194,13 @@ export default function PlatformPage() {
         <section id="monitoring" className="border-t border-zinc-200/50 py-20">
           <div className="mx-auto max-w-7xl px-5">
             <div className="mb-12 max-w-3xl">
-              <span className="section-tag mb-5">Evidence vault</span>
+              <span className="section-tag mb-5">{copy.evidence.tag}</span>
               <h2 className="text-4xl font-semibold tracking-[-0.04em] text-zinc-900">
-                Auditní záznamy. Automaticky.
+                {copy.evidence.title}
               </h2>
             </div>
             <div className="grid gap-5 md:grid-cols-3">
-              {evidence.map((item) => (
+              {copy.evidence.cards.map((item) => (
                 <article key={item.title} className="rounded-[22px] p-px grad-border">
                   <div className="h-full rounded-[21px] bg-white p-7">
                     <div className="mb-5 flex h-11 w-11 items-center justify-center rounded-xl bg-blue-50 text-blue-600">
@@ -257,18 +221,16 @@ export default function PlatformPage() {
           <div className="mx-auto max-w-4xl px-5">
             <div className="rounded-[2rem] border border-blue-100 bg-blue-50/40 p-8 md:p-12">
               <h3 className="text-3xl font-semibold tracking-[-0.03em] text-zinc-900">
-                Trust Center — zveřejněte svůj soulad.
+                {copy.trustCenter.title}
               </h3>
               <p className="mt-3 max-w-2xl text-sm leading-6 text-zinc-500">
-                Zákazníci a partneři vidí váš compliance status v reálném čase.
-                Méně dotazníků. Rychlejší obchody.
+                {copy.trustCenter.body}
               </p>
               <div className="mono mt-6 w-fit rounded-full border border-blue-100 bg-white px-4 py-2 text-xs text-blue-700">
                 trust.splnit.eu/demo
               </div>
               <div className="mt-6 flex flex-wrap gap-2">
-                {["NIS2 demo", "GDPR demo", "ISO 27001 demo", "EU AI Act demo"].map(
-                  (badge) => (
+                {copy.trustCenter.badges.map((badge) => (
                     <span
                       key={badge}
                       className={`rounded-full border px-3 py-1.5 text-xs font-medium ${
@@ -279,14 +241,13 @@ export default function PlatformPage() {
                     >
                       {badge}
                     </span>
-                  ),
-                )}
+                ))}
               </div>
               <Link
                 href="/trust/demo"
                 className="mt-8 inline-flex text-sm font-medium text-blue-600 hover:text-blue-700"
               >
-                Spustit Trust Center →
+                {copy.trustCenter.cta}
               </Link>
             </div>
           </div>
@@ -294,18 +255,12 @@ export default function PlatformPage() {
 
         <section className="border-y border-zinc-200/50 bg-white py-10">
           <div className="mx-auto flex max-w-7xl flex-wrap items-center justify-center gap-8 px-5 text-sm font-medium text-zinc-600 md:gap-16">
-            {[
-              "EU data residency cíl",
-              "Šifrování AES-256",
-              "DPA k právní kontrole",
-              "Subdodavatelé evidovaní",
-            ].map((badge) => (
+            {copy.trustBadges.map((badge) => (
               <span key={badge}>{badge}</span>
             ))}
           </div>
           <p className="mt-6 text-center text-sm text-zinc-500">
-            Bezpečnostní a právní dokumentace se doplňuje podle reálného stavu
-            před produkčním spuštěním.
+            {copy.finalNote}
           </p>
         </section>
       </main>

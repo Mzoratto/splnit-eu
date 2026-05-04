@@ -1,6 +1,113 @@
 import { Icon } from "@/components/marketing/local-icon";
+import type { Locale } from "@/i18n/routing";
 
-export function DashboardMockup() {
+type DashboardMockupCopy = {
+  auditReadiness: string;
+  auditReadinessBody: string;
+  checkRun: string;
+  dataResidencyTitle: string;
+  dataResidencyBody: string;
+  demoBadge: string;
+  demoWorkspace: string;
+  evidence: string;
+  frameworks: string;
+  integrations: string;
+  latestTesting: string;
+  microsoftControls: string;
+  overview: string;
+  pending: string;
+  regulationsStatus: string;
+  supplierRisk: string;
+  supplierRiskBody: string;
+  team: string;
+  trustCenter: string;
+  urlPath: string;
+  sampleOverview: string;
+  sampleBadge: string;
+  mappedBadge: string;
+};
+
+const copy: Record<Locale, DashboardMockupCopy> = {
+  "cs-CZ": {
+    auditReadiness: "Auditní připravenost",
+    auditReadinessBody: "Ukázkový stav kontrol a důkazů",
+    checkRun: "Ukázkový běh kontrol",
+    dataResidencyBody: "Konkrétní region bude potvrzen před spuštěním",
+    dataResidencyTitle: "EU data residency cíl",
+    demoBadge: "Demo",
+    demoWorkspace: "Demo workspace · ukázková data",
+    evidence: "Důkazy",
+    frameworks: "Předpisy",
+    integrations: "Integrace",
+    latestTesting: "Poslední testování",
+    mappedBadge: "Zmapováno",
+    microsoftControls: "Microsoft 365 · vybrané kontroly",
+    overview: "Přehled",
+    pending: "Čeká",
+    regulationsStatus: "Stav předpisů",
+    sampleBadge: "Ukázka",
+    sampleOverview: "Ukázkový přehled",
+    supplierRisk: "Hodnocení rizik dodavatelů",
+    supplierRiskBody: "Ukázkový sken dodavatelů",
+    team: "Tým",
+    trustCenter: "Trust Center",
+    urlPath: "app.splnit.eu/prehled",
+  },
+  "en-EU": {
+    auditReadiness: "Audit readiness",
+    auditReadinessBody: "Sample control and evidence status",
+    checkRun: "Sample control run",
+    dataResidencyBody: "Exact region will be confirmed before launch",
+    dataResidencyTitle: "EU data residency target",
+    demoBadge: "Demo",
+    demoWorkspace: "Demo workspace · sample data",
+    evidence: "Evidence",
+    frameworks: "Regulations",
+    integrations: "Integrations",
+    latestTesting: "Latest testing",
+    mappedBadge: "Mapped",
+    microsoftControls: "Microsoft 365 · selected checks",
+    overview: "Overview",
+    pending: "Pending",
+    regulationsStatus: "Regulation status",
+    sampleBadge: "Sample",
+    sampleOverview: "Sample overview",
+    supplierRisk: "Supplier risk assessment",
+    supplierRiskBody: "Sample supplier scan",
+    team: "Team",
+    trustCenter: "Trust Center",
+    urlPath: "app.splnit.eu/overview",
+  },
+  "it-IT": {
+    auditReadiness: "Prontezza audit",
+    auditReadinessBody: "Stato demo di controlli ed evidenze",
+    checkRun: "Esecuzione controlli demo",
+    dataResidencyBody: "La regione precisa sarà confermata prima del lancio",
+    dataResidencyTitle: "Dati nell'UE come obiettivo",
+    demoBadge: "Demo",
+    demoWorkspace: "Workspace demo · dati di esempio",
+    evidence: "Evidenze",
+    frameworks: "Normative",
+    integrations: "Integrazioni",
+    latestTesting: "Ultimi test",
+    mappedBadge: "Mappato",
+    microsoftControls: "Microsoft 365 · controlli selezionati",
+    overview: "Panoramica",
+    pending: "In attesa",
+    regulationsStatus: "Stato normative",
+    sampleBadge: "Esempio",
+    sampleOverview: "Panoramica demo",
+    supplierRisk: "Valutazione rischio fornitori",
+    supplierRiskBody: "Scan demo fornitori",
+    team: "Team",
+    trustCenter: "Trust Center",
+    urlPath: "app.splnit.eu/panoramica",
+  },
+};
+
+export function DashboardMockup({ locale = "cs-CZ" }: { locale?: Locale }) {
+  const t = copy[locale] ?? copy["cs-CZ"];
+
   return (
     <div
       className="relative mx-auto mt-16 hidden max-w-5xl md:block"
@@ -21,12 +128,14 @@ export function DashboardMockup() {
                   className="text-xs text-zinc-300"
                   aria-hidden="true"
                 />
-                app.splnit.eu/prehled
+                {t.urlPath}
               </div>
             </div>
             <div className="flex items-center gap-2">
               <div className="pulse-dot h-1.5 w-1.5 rounded-full bg-emerald-400" />
-              <span className="mono text-[10px] text-zinc-400">Ukázkový přehled</span>
+              <span className="mono text-[10px] text-zinc-400">
+                {t.sampleOverview}
+              </span>
             </div>
           </div>
 
@@ -47,11 +156,11 @@ export function DashboardMockup() {
                 </div>
               </div>
               {[
-                ["Přehled", "solar:widget-5-linear"],
-                ["Předpisy", "solar:folder-with-files-linear"],
-                ["Důkazy", "solar:document-add-linear"],
-                ["Integrace", "solar:link-square-linear"],
-                ["Trust Center", "solar:global-linear"],
+                [t.overview, "solar:widget-5-linear"],
+                [t.frameworks, "solar:folder-with-files-linear"],
+                [t.evidence, "solar:document-add-linear"],
+                [t.integrations, "solar:link-square-linear"],
+                [t.trustCenter, "solar:global-linear"],
               ].map(([label, icon], index) => (
                 <div
                   key={label}
@@ -67,7 +176,7 @@ export function DashboardMockup() {
               ))}
               <div className="mt-auto flex cursor-pointer items-center gap-2.5 rounded-lg px-2.5 py-2 text-xs font-medium text-zinc-500 transition-colors hover:bg-zinc-50">
                 <Icon icon="solar:users-group-rounded-linear" aria-hidden="true" />
-                Tým
+                {t.team}
               </div>
             </aside>
 
@@ -76,15 +185,15 @@ export function DashboardMockup() {
                 <div className="flex items-center justify-between">
                   <div>
                     <h3 className="text-sm font-semibold text-zinc-900">
-                      Stav předpisů
+                      {t.regulationsStatus}
                     </h3>
                     <p className="mt-0.5 text-[11px] text-zinc-400">
-                      Demo workspace · ukázková data
+                      {t.demoWorkspace}
                     </p>
                   </div>
                   <div className="flex items-center gap-1 rounded-full border border-emerald-100 bg-emerald-50 px-2 py-0.5 text-[10px] font-medium text-emerald-600">
                     <div className="h-1 w-1 rounded-full bg-emerald-500" />
-                    Demo
+                    {t.demoBadge}
                   </div>
                 </div>
 
@@ -125,10 +234,10 @@ export function DashboardMockup() {
                     </div>
                     <div className="flex-1">
                       <p className="mb-0.5 text-xs font-medium text-zinc-900">
-                        Auditní připravenost
+                        {t.auditReadiness}
                       </p>
                       <p className="text-[10px] text-zinc-400">
-                        Ukázkový stav kontrol a důkazů
+                        {t.auditReadinessBody}
                       </p>
                       <div className="mt-2 flex gap-1">
                         <span className="rounded-full border border-emerald-100 bg-emerald-50 px-1.5 py-0.5 text-[10px] font-medium text-emerald-700">
@@ -149,8 +258,8 @@ export function DashboardMockup() {
                   <FrameworkRow
                     icon="solar:shield-up-linear"
                     name="GDPR"
-                    score="Demo"
-                    badge="Ukázka"
+                    score={t.demoBadge}
+                    badge={t.sampleBadge}
                     barId="bar-gdpr"
                     barWidth="88%"
                     tone="emerald"
@@ -158,8 +267,8 @@ export function DashboardMockup() {
                   <FrameworkRow
                     icon="solar:server-square-linear"
                     name="NIS2"
-                    score="Demo"
-                    badge="Zmapováno"
+                    score={t.demoBadge}
+                    badge={t.mappedBadge}
                     barId="bar-nis2"
                     barWidth="91%"
                     tone="amber"
@@ -167,8 +276,8 @@ export function DashboardMockup() {
                   <FrameworkRow
                     icon="solar:document-text-linear"
                     name="ISO 27001"
-                    score="Čeká"
-                    badge="Čeká"
+                    score={t.pending}
+                    badge={t.pending}
                     barId="bar-aiact"
                     barWidth="67%"
                     tone="zinc"
@@ -181,10 +290,10 @@ export function DashboardMockup() {
                   <div className="mb-3 flex items-start justify-between">
                     <div>
                       <h4 className="text-xs font-semibold text-zinc-900">
-                        Poslední testování
+                        {t.latestTesting}
                       </h4>
                       <p className="mono mt-0.5 text-[10px] text-zinc-400">
-                        Ukázkový běh kontrol
+                        {t.checkRun}
                       </p>
                     </div>
                     <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-blue-50">
@@ -211,17 +320,17 @@ export function DashboardMockup() {
                   ))}
                   <div className="mt-2 flex items-center gap-1 text-[10px] text-zinc-400">
                     <Icon icon="solar:link-circle-linear" aria-hidden="true" />
-                    Microsoft 365 · vybrané kontroly
+                    {t.microsoftControls}
                   </div>
                 </div>
 
                 <div className="flex items-center justify-between gap-3 rounded-xl border border-zinc-100 bg-white p-4 shadow-sm">
                   <div>
                     <h4 className="text-xs font-semibold text-zinc-900">
-                      EU data residency cíl
+                      {t.dataResidencyTitle}
                     </h4>
                     <p className="mt-0.5 text-[10px] text-zinc-400">
-                      Konkrétní region bude potvrzen před spuštěním
+                      {t.dataResidencyBody}
                     </p>
                   </div>
                   <div
@@ -247,12 +356,12 @@ export function DashboardMockup() {
                     <div className="min-w-0 flex-1">
                       <div className="mb-0.5 flex items-center gap-1.5">
                         <h4 className="text-xs font-semibold text-emerald-100">
-                          Hodnocení rizik dodavatelů
+                          {t.supplierRisk}
                         </h4>
-                        <span className="nukib-chip">Demo</span>
+                        <span className="nukib-chip">{t.demoBadge}</span>
                       </div>
                       <p className="text-[10px] text-emerald-400/80">
-                        Ukázkový sken dodavatelů
+                        {t.supplierRiskBody}
                       </p>
                       <div className="mt-3 h-2 overflow-hidden rounded-full bg-emerald-900">
                         <div className="relative h-full w-[92%] overflow-hidden rounded-full bg-emerald-400">
