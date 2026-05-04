@@ -7,6 +7,7 @@ import { getOrganisationByClerkOrgId } from "@/lib/db/queries/organisations";
 import { listPoliciesForOrg } from "@/lib/db/queries/policies";
 import { getJurisdictionContext } from "@/lib/jurisdictions/context";
 import { listResolvedPolicyTemplates } from "@/lib/policies/resolve-template";
+import { resolvePolicySourceDocuments } from "@/lib/policies/source-documents";
 import {
   getPolicyStatusLabel,
   getPolicyUiCopy,
@@ -19,20 +20,26 @@ async function loadPolicies() {
     Boolean(process.env.CLERK_SECRET_KEY);
 
   if (!clerkConfigured || !hasDatabaseUrl()) {
+    const templates = listResolvedPolicyTemplates(null);
+
     return {
       context: defaultContext,
       policies: [],
-      templates: listResolvedPolicyTemplates(null),
+      sourceDocuments: await resolvePolicySourceDocuments(templates),
+      templates,
     };
   }
 
   const session = await auth();
 
   if (!session.orgId) {
+    const templates = listResolvedPolicyTemplates(null);
+
     return {
       context: defaultContext,
       policies: [],
-      templates: listResolvedPolicyTemplates(null),
+      sourceDocuments: await resolvePolicySourceDocuments(templates),
+      templates,
     };
   }
 
@@ -41,6 +48,7 @@ async function loadPolicies() {
       getOrganisationByClerkOrgId(session.orgId),
       listPoliciesForOrg(session.orgId),
     ]);
+    const templates = listResolvedPolicyTemplates(organisation);
 
     return {
       context: organisation
@@ -50,13 +58,17 @@ async function loadPolicies() {
           )
         : defaultContext,
       policies,
-      templates: listResolvedPolicyTemplates(organisation),
+      sourceDocuments: await resolvePolicySourceDocuments(templates),
+      templates,
     };
   } catch {
+    const templates = listResolvedPolicyTemplates(null);
+
     return {
       context: defaultContext,
       policies: [],
-      templates: listResolvedPolicyTemplates(null),
+      sourceDocuments: await resolvePolicySourceDocuments(templates),
+      templates,
     };
   }
 }
@@ -74,7 +86,8 @@ function formatDate(
 }
 
 export default async function PoliciesPage() {
-  const { context, policies, templates } = await loadPolicies();
+  const { context, policies, sourceDocuments, templates } =
+    await loadPolicies();
   const copy = getPolicyUiCopy(context.locale);
   const latestByType = new Map<string, (typeof policies)[number]>();
 
@@ -101,6 +114,7 @@ export default async function PoliciesPage() {
       <div className="grid gap-4 md:grid-cols-2">
         {templates.map((template) => {
           const latestPolicy = latestByType.get(template.type);
+          const sourceDocument = sourceDocuments.get(template.sourceDocument);
 
           return (
             <article
@@ -110,7 +124,7 @@ export default async function PoliciesPage() {
               <div className="flex items-start justify-between gap-4">
                 <div>
                   <p className="text-sm text-foreground/58">
-                    {template.sourceDocument}
+                    {sourceDocument?.title ?? template.titleCs}
                   </p>
                   <h2 className="mt-1 text-xl font-semibold">
                     {template.titleCs}

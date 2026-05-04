@@ -8,6 +8,7 @@ import { getOrganisationByClerkOrgId } from "@/lib/db/queries/organisations";
 import { listPoliciesForOrg } from "@/lib/db/queries/policies";
 import { getJurisdictionContext } from "@/lib/jurisdictions/context";
 import { resolvePolicyTemplate } from "@/lib/policies/resolve-template";
+import { resolvePolicySourceDocument } from "@/lib/policies/source-documents";
 import {
   POLICY_TEMPLATE_TYPES,
   type PolicyTemplateType,
@@ -28,20 +29,26 @@ async function loadPolicyDetail(type: PolicyTemplateType) {
     Boolean(process.env.CLERK_SECRET_KEY);
 
   if (!clerkConfigured || !hasDatabaseUrl()) {
+    const template = resolvePolicyTemplate(type, null);
+
     return {
       context: defaultContext,
       policies: [],
-      template: resolvePolicyTemplate(type, null),
+      sourceDocument: await resolvePolicySourceDocument(template),
+      template,
     };
   }
 
   const session = await auth();
 
   if (!session.orgId) {
+    const template = resolvePolicyTemplate(type, null);
+
     return {
       context: defaultContext,
       policies: [],
-      template: resolvePolicyTemplate(type, null),
+      sourceDocument: await resolvePolicySourceDocument(template),
+      template,
     };
   }
 
@@ -50,6 +57,7 @@ async function loadPolicyDetail(type: PolicyTemplateType) {
       getOrganisationByClerkOrgId(session.orgId),
       listPoliciesForOrg(session.orgId),
     ]);
+    const template = resolvePolicyTemplate(type, organisation);
 
     return {
       context: organisation
@@ -59,13 +67,17 @@ async function loadPolicyDetail(type: PolicyTemplateType) {
           )
         : defaultContext,
       policies: policies.filter((policy) => policy.type === type),
-      template: resolvePolicyTemplate(type, organisation),
+      sourceDocument: await resolvePolicySourceDocument(template),
+      template,
     };
   } catch {
+    const template = resolvePolicyTemplate(type, null);
+
     return {
       context: defaultContext,
       policies: [],
-      template: resolvePolicyTemplate(type, null),
+      sourceDocument: await resolvePolicySourceDocument(template),
+      template,
     };
   }
 }
@@ -93,7 +105,8 @@ export default async function PolicyDetailPage({
     notFound();
   }
 
-  const { context, policies, template } = await loadPolicyDetail(type);
+  const { context, policies, sourceDocument, template } =
+    await loadPolicyDetail(type);
   const copy = getPolicyUiCopy(context.locale);
 
   return (
@@ -101,13 +114,16 @@ export default async function PolicyDetailPage({
       <div className="flex flex-col justify-between gap-4 md:flex-row md:items-end">
         <div className="max-w-3xl">
           <p className="text-sm font-medium uppercase tracking-[0.14em] text-primary">
-            {template.sourceDocument}
+            {sourceDocument.title}
           </p>
           <h1 className="mt-2 text-3xl font-semibold tracking-normal">
             {template.titleCs}
           </h1>
           <p className="mt-3 text-base leading-7 text-foreground/68">
             {template.description}
+          </p>
+          <p className="mt-2 text-sm leading-6 text-foreground/58">
+            {copy.detail.source}: {sourceDocument.citation}
           </p>
         </div>
         <div className="flex flex-wrap gap-3">

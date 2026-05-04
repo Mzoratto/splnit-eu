@@ -120,6 +120,18 @@ const SOURCE_DOCUMENT_LIBRARY = [
   },
 ] as const;
 
+function getTemplateSourceDocumentTitle(template: (typeof POLICY_TEMPLATES)[number]) {
+  if (template.locale === "cs-CZ") {
+    return "Knihovna šablon Splnit";
+  }
+
+  if (template.locale === "it-IT") {
+    return "Libreria modelli Splnit";
+  }
+
+  return "Splnit template library";
+}
+
 async function seedFrameworks() {
   const db = getDb();
   const ids = new Map<string, string>();
@@ -315,7 +327,7 @@ async function seedSourceDocuments() {
         jurisdiction: template.jurisdiction,
         lastReviewed,
         locale: template.locale,
-        title: template.titleCs,
+        title: getTemplateSourceDocumentTitle(template),
       })
       .onConflictDoUpdate({
         target: sourceDocuments.filename,
@@ -324,7 +336,7 @@ async function seedSourceDocuments() {
           jurisdiction: template.jurisdiction,
           lastReviewed,
           locale: template.locale,
-          title: template.titleCs,
+          title: getTemplateSourceDocumentTitle(template),
         },
       });
 

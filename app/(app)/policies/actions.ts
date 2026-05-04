@@ -10,6 +10,7 @@ import { getOrganisationByClerkOrgId } from "@/lib/db/queries/organisations";
 import { insertGeneratedPolicy } from "@/lib/db/queries/policies";
 import { renderPolicyPdf } from "@/lib/pdf/policy-document";
 import { resolvePolicyTemplate } from "@/lib/policies/resolve-template";
+import { resolvePolicySourceDocument } from "@/lib/policies/source-documents";
 import { POLICY_TEMPLATE_TYPES } from "@/lib/policies/templates";
 
 const policyTypeSchema = z.enum(POLICY_TEMPLATE_TYPES);
@@ -52,6 +53,7 @@ export async function generatePolicyAction(type: string) {
   }
 
   const template = resolvePolicyTemplate(parsedType, organisation);
+  const sourceDocument = await resolvePolicySourceDocument(template);
   const generatedAt = new Date();
   const reviewDate = formatDate(addYears(generatedAt, 1));
   const pdf = await renderPolicyPdf({
@@ -61,6 +63,7 @@ export async function generatePolicyAction(type: string) {
       name: organisation.name,
     },
     reviewDate,
+    sourceDocument,
     template,
   });
   const blob = await put(
@@ -79,7 +82,7 @@ export async function generatePolicyAction(type: string) {
       generatedAt: generatedAt.toISOString(),
       reviewDate,
       sections: template.sections,
-      sourceDocument: template.sourceDocument,
+      sourceDocument,
     },
     controlKeys: template.controlKeys,
     expiresAt: reviewDate,

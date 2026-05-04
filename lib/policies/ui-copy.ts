@@ -12,6 +12,7 @@ type PolicyUiCopy = {
     documentSections: string;
     emptyVersions: string;
     generatedVersions: string;
+    source: string;
   };
   list: {
     emptyDate: string;
@@ -41,6 +42,7 @@ const POLICY_UI_COPY = {
       documentSections: "Sekce dokumentu",
       emptyVersions: "Zatím není vygenerovaná žádná verze.",
       generatedVersions: "Vygenerované verze",
+      source: "Zdroj",
     },
     list: {
       emptyDate: "bez data",
@@ -69,6 +71,7 @@ const POLICY_UI_COPY = {
       documentSections: "Document sections",
       emptyVersions: "No generated version yet.",
       generatedVersions: "Generated versions",
+      source: "Source",
     },
     list: {
       emptyDate: "no date",
@@ -97,6 +100,7 @@ const POLICY_UI_COPY = {
       documentSections: "Sezioni del documento",
       emptyVersions: "Nessuna versione generata finora.",
       generatedVersions: "Versioni generate",
+      source: "Fonte",
     },
     list: {
       emptyDate: "nessuna data",

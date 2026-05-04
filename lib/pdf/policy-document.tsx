@@ -8,6 +8,7 @@ import {
   renderToBuffer,
 } from "@react-pdf/renderer";
 import { getJurisdictionContext } from "@/lib/jurisdictions/context";
+import type { PolicySourceDocument } from "@/lib/policies/source-documents";
 import type { PolicyTemplate } from "@/lib/policies/templates";
 
 type PolicyDocumentInput = {
@@ -17,6 +18,7 @@ type PolicyDocumentInput = {
     name: string;
   };
   reviewDate: string;
+  sourceDocument: PolicySourceDocument;
   template: PolicyTemplate;
 };
 
@@ -92,6 +94,7 @@ function PolicyDocument({
   generatedAt,
   organisation,
   reviewDate,
+  sourceDocument,
   template,
 }: PolicyDocumentInput) {
   const jurisdiction = getJurisdictionContext(
@@ -129,7 +132,7 @@ function PolicyDocument({
         <Text style={[styles.muted, { marginBottom: 14 }]}>
           {labels.generated}{" "}
           {new Intl.DateTimeFormat(jurisdiction.dateLocale).format(generatedAt)} ·{" "}
-          {labels.source} {template.sourceDocument}
+          {labels.source} {sourceDocument.citation}
         </Text>
 
         {template.sections.map((section) => (
