@@ -18,6 +18,72 @@ import { POLICY_TEMPLATES } from "../lib/policies/templates";
 
 loadEnvConfig(process.cwd());
 
+const SOURCE_DOCUMENT_LIBRARY = [
+  {
+    citation: "D.Lgs. 4 settembre 2024, n. 138 (GU Serie Generale n. 230 del 01-10-2024)",
+    effectiveDate: "2024-10-16",
+    filename: "it/dlgs-138-2024.html",
+    jurisdiction: "IT",
+    locale: "it-IT",
+    title: "D.Lgs. 138/2024 - Recepimento direttiva NIS2",
+    url: "https://www.gazzettaufficiale.it/eli/id/2024/10/01/24G00155/SG",
+  },
+  {
+    citation: "ACN, Determinazione NIS piattaforma 2024/38565",
+    effectiveDate: null,
+    filename: "it/acn-nis-piattaforma-2024-38565.pdf",
+    jurisdiction: "IT",
+    locale: "it-IT",
+    title: "ACN - Determinazione NIS piattaforma",
+    url: "https://www.acn.gov.it/portale/documents/d/guest/detacn_nis_piattaforma_2024_38565",
+  },
+  {
+    citation: "Regolamento (UE) 2016/679, CELEX 32016R0679",
+    effectiveDate: "2018-05-25",
+    filename: "eu/gdpr-2016-679-it.html",
+    jurisdiction: "EU",
+    locale: "it-IT",
+    title: "GDPR - testo italiano EUR-Lex",
+    url: "https://eur-lex.europa.eu/legal-content/IT/TXT/?uri=CELEX:32016R0679",
+  },
+  {
+    citation: "D.Lgs. 30 giugno 2003, n. 196 - Codice in materia di protezione dei dati personali",
+    effectiveDate: "2004-01-01",
+    filename: "it/codice-privacy-dlgs-196-2003.pdf",
+    jurisdiction: "IT",
+    locale: "it-IT",
+    title: "Codice Privacy - testo coordinato Garante",
+    url: "https://www.garanteprivacy.it/documents/10160/0/Codice%2Bin%2Bmateria%2Bdi%2Bprotezione%2Bdei%2Bdati%2Bpersonali%2B%28Testo%2Bcoordinato%29.pdf/b1787d6b-6bce-07da-a38f-3742e3888c1d?version=5.0",
+  },
+  {
+    citation: "Garante Privacy - Data Breach, violazioni di dati personali",
+    effectiveDate: null,
+    filename: "it/garante-data-breach.html",
+    jurisdiction: "IT",
+    locale: "it-IT",
+    title: "Garante - Data breach e violazioni di dati personali",
+    url: "https://www.garanteprivacy.it/data-breach",
+  },
+  {
+    citation: "Garante Privacy - Valutazione d'impatto della protezione dei dati (DPIA)",
+    effectiveDate: null,
+    filename: "it/garante-dpia.html",
+    jurisdiction: "IT",
+    locale: "it-IT",
+    title: "Garante - DPIA",
+    url: "https://www.garanteprivacy.it/valutazione-d-impatto-della-protezione-dei-dati-dpia-",
+  },
+  {
+    citation: "Garante Privacy - FAQ sul registro delle attività di trattamento",
+    effectiveDate: null,
+    filename: "it/garante-ropa-faq.html",
+    jurisdiction: "IT",
+    locale: "it-IT",
+    title: "Garante - FAQ registro delle attività di trattamento",
+    url: "https://www.garanteprivacy.it/home/faq/registro-delle-attivita-di-trattamento",
+  },
+] as const;
+
 async function seedFrameworks() {
   const db = getDb();
   const ids = new Map<string, string>();
@@ -201,7 +267,7 @@ async function seedFrameworkControls(
 
 async function seedSourceDocuments() {
   const db = getDb();
-  const lastReviewed = new Date("2026-05-03T00:00:00.000Z");
+  const lastReviewed = new Date("2026-05-04T00:00:00.000Z");
   let count = 0;
 
   for (const template of POLICY_TEMPLATES) {
@@ -223,6 +289,39 @@ async function seedSourceDocuments() {
           lastReviewed,
           locale: "cs-CZ",
           title: template.titleCs,
+        },
+      });
+
+    count += 1;
+  }
+
+  for (const sourceDocument of SOURCE_DOCUMENT_LIBRARY) {
+    await db
+      .insert(sourceDocuments)
+      .values({
+        citation: sourceDocument.citation,
+        effectiveDate: sourceDocument.effectiveDate
+          ? new Date(`${sourceDocument.effectiveDate}T00:00:00.000Z`)
+          : null,
+        filename: sourceDocument.filename,
+        jurisdiction: sourceDocument.jurisdiction,
+        lastReviewed,
+        locale: sourceDocument.locale,
+        title: sourceDocument.title,
+        url: sourceDocument.url,
+      })
+      .onConflictDoUpdate({
+        target: sourceDocuments.filename,
+        set: {
+          citation: sourceDocument.citation,
+          effectiveDate: sourceDocument.effectiveDate
+            ? new Date(`${sourceDocument.effectiveDate}T00:00:00.000Z`)
+            : null,
+          jurisdiction: sourceDocument.jurisdiction,
+          lastReviewed,
+          locale: sourceDocument.locale,
+          title: sourceDocument.title,
+          url: sourceDocument.url,
         },
       });
 
