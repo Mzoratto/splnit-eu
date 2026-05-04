@@ -95,7 +95,7 @@ type ControlStatusRow = {
 
 const PUBLIC_DOCUMENTS: PublicTrustDocument[] = [
   {
-    description: "Nezávislé ověření kontrol a provozních procesů.",
+    description: "Sdílí se pouze tehdy, pokud je pro organizaci k dispozici.",
     frameworkSlugs: ["iso27001", "nis2"],
     href: "mailto:hello@splnit.eu?subject=Request%20SOC%202%20report",
     id: "soc2",
@@ -103,7 +103,7 @@ const PUBLIC_DOCUMENTS: PublicTrustDocument[] = [
     title: "SOC 2 report",
   },
   {
-    description: "Statement of Applicability pro ISO 27001.",
+    description: "Sdílí se pouze tehdy, pokud je pro organizaci k dispozici.",
     frameworkSlugs: ["iso27001"],
     href: "mailto:hello@splnit.eu?subject=Request%20ISO%2027001%20SoA",
     id: "iso-soa",
@@ -111,7 +111,7 @@ const PUBLIC_DOCUMENTS: PublicTrustDocument[] = [
     title: "ISO 27001 SoA",
   },
   {
-    description: "Souhrn posledního penetračního testu.",
+    description: "Sdílí se pouze tehdy, pokud je pro organizaci k dispozici.",
     frameworkSlugs: ["nis2", "iso27001"],
     href: "mailto:hello@splnit.eu?subject=Request%20penetration%20test%20summary",
     id: "pentest",
@@ -166,31 +166,31 @@ const DOCUMENT_DESCRIPTIONS: Record<
 > = {
   "cs-CZ": {
     dpa: "Vzor smlouvy o zpracování osobních údajů.",
-    "iso-soa": "Statement of Applicability pro ISO 27001.",
-    pentest: "Souhrn posledního penetračního testu.",
+    "iso-soa": "Sdílí se pouze tehdy, pokud je pro organizaci k dispozici.",
+    pentest: "Sdílí se pouze tehdy, pokud je pro organizaci k dispozici.",
     "privacy-policy": "Veřejné informace o zpracování osobních údajů.",
     sla: "Dostupnost služby, reakční časy a provozní odpovědnosti.",
-    soc2: "Nezávislé ověření kontrol a provozních procesů.",
+    soc2: "Sdílí se pouze tehdy, pokud je pro organizaci k dispozici.",
     subprocessors: "Aktuální seznam hlavních subdodavatelů.",
     whitepaper: "Přehled bezpečnostní architektury a provozních opatření.",
   },
   "en-EU": {
     dpa: "Template data processing agreement.",
-    "iso-soa": "Statement of Applicability for ISO 27001.",
-    pentest: "Summary of the latest penetration test.",
+    "iso-soa": "Shared only if it is available for this organisation.",
+    pentest: "Shared only if it is available for this organisation.",
     "privacy-policy": "Public information about personal data processing.",
     sla: "Service availability, response times, and operating responsibilities.",
-    soc2: "Independent verification of controls and operating processes.",
+    soc2: "Shared only if it is available for this organisation.",
     subprocessors: "Current list of main sub-processors.",
     whitepaper: "Overview of security architecture and operating measures.",
   },
   "it-IT": {
     dpa: "Modello di accordo per il trattamento dei dati.",
-    "iso-soa": "Statement of Applicability per ISO 27001.",
-    pentest: "Riepilogo dell'ultimo penetration test.",
+    "iso-soa": "Condiviso solo se disponibile per questa organizzazione.",
+    pentest: "Condiviso solo se disponibile per questa organizzazione.",
     "privacy-policy": "Informazioni pubbliche sul trattamento dei dati personali.",
     sla: "Disponibilità del servizio, tempi di risposta e responsabilità operative.",
-    soc2: "Verifica indipendente di controlli e processi operativi.",
+    soc2: "Condiviso solo se disponibile per questa organizzazione.",
     subprocessors: "Elenco aggiornato dei principali sub-responsabili.",
     whitepaper: "Panoramica di architettura di sicurezza e misure operative.",
   },
@@ -510,8 +510,8 @@ function getDemoTrustCenterModel(
     orgSlug,
     showFrameworkDrilldown: true,
     showFrameworkPercentages: true,
-    trustSignals: buildTrustSignals(frameworks, lastTestedAt, 99.9, locale),
-    uptimePct: 99.9,
+    trustSignals: buildTrustSignals(frameworks, lastTestedAt, null, locale),
+    uptimePct: null,
   };
 }
 

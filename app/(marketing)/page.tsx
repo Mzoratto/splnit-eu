@@ -303,7 +303,7 @@ export default async function HomePage() {
                 </Link>
               </div>
 
-              <div className="testimonial-float scroll-animate w-full shrink-0 md:w-[360px]">
+              <div className="reference-float scroll-animate w-full shrink-0 md:w-[360px]">
                 <div
                   className="rounded-[26px] p-px"
                   style={{ background: "linear-gradient(180deg,#3F3F46,#18181B)" }}

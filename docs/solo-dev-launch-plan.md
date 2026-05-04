@@ -4,7 +4,7 @@ Owner: [Your Name], OSVČ, IČO [your number], Olomouc
 Product: splnit.eu - EU compliance automation for NIS2, GDPR, and ISO 27001  
 Status: Pre-launch, no verified customers, solo developer  
 Strategic decision: Path A - pivot to English and Italian markets; Czech becomes secondary  
-Last updated: 2026-05-03
+Last updated: 2026-05-04
 
 ## Phase 0 - Honesty Pass
 
@@ -101,6 +101,23 @@ Before anything goes live:
 - [ ] `/about` or `/o-nas` exists with real founder information.
 - [ ] `/early-access` exists or `/zakaznici` has been replaced with the design-partner page.
 - [ ] Build passes, deploy succeeds, and the site loads correctly.
+
+### Phase 0 Verification - 2026-05-04
+
+Code honesty cleanup is complete:
+
+- `/zakaznici` redirects to `/early-access`.
+- Public pages no longer include fake customer names, logo walls, testimonials, or unsupported savings claims.
+- The homepage presents early access and `0 / 10` design partners instead of fabricated proof.
+- Targeted scans of `app`, `components`, `lib`, `messages`, and `public` found no unsupported references to `Splnit Technology s.r.o.`, fake customer names, or the old inflated launch claims.
+- Trust Center demo uptime no longer displays a fabricated percentage.
+
+Still launch-blocking and requiring owner input:
+
+- Final OSVČ identity details: legal name, IČO, ARES URL, and registered address.
+- Legal review of privacy policy, terms, DPA, and cookie policy.
+- Real founder photo and final founder bio for `/about`.
+- Production deploy verification after the final identity/legal pass.
 
 ## Non-Negotiable Guardrails
 
