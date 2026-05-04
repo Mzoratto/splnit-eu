@@ -535,8 +535,8 @@
       "description": "Demo incident covering unauthorized access to a SaaS admin panel and potential personal data exposure."
     },
     "actions": {
-      "nukibPdf": "NÚKIB PDF",
-      "uoouPdf": "ÚOOÚ PDF"
+      "cybersecurityPdf": "Cybersecurity authority PDF",
+      "dataProtectionPdf": "Data protection authority PDF"
     },
     "metrics": {
       "openTitle": "Open",
@@ -547,7 +547,7 @@
     },
     "countdown": {
       "notStarted": "GDPR Art. 33 is not triggered",
-      "reported": "Reported to ÚOOÚ {date}",
+      "reported": "Reported to {authority} {date}",
       "overdue": "Overdue · deadline {date}",
       "remaining": "{hours}h remaining · deadline {date}"
     },
@@ -597,8 +597,8 @@
       "nis2NotMarked": "Not marked as a critical system.",
       "gdprActive": "72h countdown is active.",
       "gdprNotMarked": "Not marked as personal data.",
-      "markNukib": "Mark NÚKIB",
-      "markUoou": "Mark ÚOOÚ"
+      "markCybersecurity": "Mark cybersecurity report",
+      "markDataProtection": "Mark data protection report"
     }
   },
   "risks": {

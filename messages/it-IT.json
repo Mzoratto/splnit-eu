@@ -535,8 +535,8 @@
       "description": "Incidente demo che copre accesso non autorizzato a un pannello admin SaaS e possibile esposizione di dati personali."
     },
     "actions": {
-      "nukibPdf": "NÚKIB PDF",
-      "uoouPdf": "ÚOOÚ PDF"
+      "cybersecurityPdf": "{authority} PDF",
+      "dataProtectionPdf": "{authority} PDF"
     },
     "metrics": {
       "openTitle": "Aperti",
@@ -547,7 +547,7 @@
     },
     "countdown": {
       "notStarted": "GDPR Art. 33 non attivato",
-      "reported": "Segnalato a ÚOOÚ {date}",
+      "reported": "Segnalato a {authority} {date}",
       "overdue": "Scaduto · deadline {date}",
       "remaining": "{hours}h rimanenti · deadline {date}"
     },
@@ -597,8 +597,8 @@
       "nis2NotMarked": "Non marcato come sistema critico.",
       "gdprActive": "Countdown 72h attivo.",
       "gdprNotMarked": "Non marcato come dati personali.",
-      "markNukib": "Marca NÚKIB",
-      "markUoou": "Marca ÚOOÚ"
+      "markCybersecurity": "Marca notifica {authority}",
+      "markDataProtection": "Marca notifica {authority}"
     }
   },
   "risks": {

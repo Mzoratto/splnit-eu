@@ -306,8 +306,8 @@
       "description": "Demo incident pokrývající neoprávněný přístup do SaaS administrace a možné vystavení osobních údajů."
     },
     "actions": {
-      "nukibPdf": "NÚKIB PDF",
-      "uoouPdf": "ÚOOÚ PDF"
+      "cybersecurityPdf": "{authority} PDF",
+      "dataProtectionPdf": "{authority} PDF"
     },
     "metrics": {
       "openTitle": "Otevřené",
@@ -318,7 +318,7 @@
     },
     "countdown": {
       "notStarted": "GDPR Art. 33 není spuštěn",
-      "reported": "ÚOOÚ reportováno {date}",
+      "reported": "{authority} reportováno {date}",
       "overdue": "Po termínu · deadline {date}",
       "remaining": "{hours}h zbývá · deadline {date}"
     },
@@ -368,8 +368,8 @@
       "nis2NotMarked": "Neoznačeno jako kritický systém.",
       "gdprActive": "72h countdown je aktivní.",
       "gdprNotMarked": "Neoznačeno jako osobní údaje.",
-      "markNukib": "Označit NÚKIB",
-      "markUoou": "Označit ÚOOÚ"
+      "markCybersecurity": "Označit {authority}",
+      "markDataProtection": "Označit {authority}"
     }
   },
   "risks": {

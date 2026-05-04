@@ -19,6 +19,7 @@ import {
   listIncidentsForOrg,
 } from "@/lib/db/queries/incidents";
 import { getOrganisationByClerkOrgId } from "@/lib/db/queries/organisations";
+import { getJurisdictionContext } from "@/lib/jurisdictions/context";
 import {
   createIncidentAction,
   markIncidentReportedAction,
@@ -64,6 +65,7 @@ async function loadIncidents(
     activeIncident,
     canMutate: true,
     incidents,
+    organisationJurisdiction: organisation?.primaryJurisdiction ?? null,
     organisationLocale: organisation?.locale ?? null,
   };
 }
@@ -72,6 +74,7 @@ function getDemoData(copy: IncidentsCopy): {
   activeIncident: Incident;
   canMutate: boolean;
   incidents: Incident[];
+  organisationJurisdiction: string | null;
   organisationLocale: string | null;
 } {
   const detectedAt = new Date(Date.now() - 61 * 60 * 60 * 1000);
@@ -97,6 +100,7 @@ function getDemoData(copy: IncidentsCopy): {
     activeIncident: incident,
     canMutate: false,
     incidents: [incident],
+    organisationJurisdiction: null,
     organisationLocale: null,
   };
 }
@@ -155,6 +159,7 @@ function getCountdown(
   incident: Incident | null,
   locale: Locale,
   copy: IncidentsCopy,
+  dataProtectionAuthority: string,
 ) {
   if (!incident?.affectsPersonalData) {
     return {
@@ -166,6 +171,7 @@ function getCountdown(
   if (incident.reportedToUoou) {
     return {
       label: formatMessage(copy.countdown.reported, {
+        authority: dataProtectionAuthority,
         date: formatDateTime(incident.uoouReportedAt, locale, copy.noDate),
       }),
       tone: "ok",
@@ -242,11 +248,20 @@ export default async function IncidentsPage({
     activeIncident,
     canMutate,
     incidents,
+    organisationJurisdiction,
     organisationLocale,
   } = await loadIncidents(incidentId, requestLocale);
   const locale = normalizeLocale(organisationLocale) ?? requestLocale;
+  const jurisdiction = getJurisdictionContext(organisationJurisdiction, locale);
   const copy = getMessagesForLocale(locale).incidents;
-  const countdown = getCountdown(activeIncident, locale, copy);
+  const cybersecurityAuthority = jurisdiction.authorities.cybersecurity;
+  const dataProtectionAuthority = jurisdiction.authorities.dataProtection;
+  const countdown = getCountdown(
+    activeIncident,
+    locale,
+    copy,
+    dataProtectionAuthority,
+  );
   const openIncidents = incidents.filter((incident) => incident.status !== "resolved");
   const defaultDetectedAt = new Date().toISOString().slice(0, 16);
 
@@ -263,14 +278,18 @@ export default async function IncidentsPage({
                 href={`/api/incidents/${activeIncident.id}/nukib-report`}
                 className="btn btn-nukib"
               >
-                {copy.actions.nukibPdf}
+                {formatMessage(copy.actions.cybersecurityPdf, {
+                  authority: cybersecurityAuthority,
+                })}
                 <Download className="h-4 w-4" aria-hidden="true" strokeWidth={1.5} />
               </a>
               <a
                 href={`/api/incidents/${activeIncident.id}/uoou-report`}
                 className="btn btn-secondary"
               >
-                {copy.actions.uoouPdf}
+                {formatMessage(copy.actions.dataProtectionPdf, {
+                  authority: dataProtectionAuthority,
+                })}
                 <Download className="h-4 w-4" aria-hidden="true" strokeWidth={1.5} />
               </a>
             </>
@@ -502,13 +521,13 @@ export default async function IncidentsPage({
                     formatDateTime(activeIncident.createdAt, locale, copy.noDate),
                   ],
                   [
-                    "NÚKIB",
+                    cybersecurityAuthority,
                     activeIncident.reportedToNukib
                       ? formatDateTime(activeIncident.nukibReportedAt, locale, copy.noDate)
                       : copy.detail.notSent,
                   ],
                   [
-                    "ÚOOÚ",
+                    dataProtectionAuthority,
                     activeIncident.reportedToUoou
                       ? formatDateTime(activeIncident.uoouReportedAt, locale, copy.noDate)
                       : copy.detail.notSent,
@@ -531,7 +550,9 @@ export default async function IncidentsPage({
                 <h3 className="font-medium">{copy.checklist.title}</h3>
                 <div className="mt-4 grid gap-3 md:grid-cols-2">
                   <div className="rounded-md bg-surface-muted p-3 text-sm">
-                    <p className="font-medium">NIS2 / NÚKIB</p>
+                    <p className="font-medium">
+                      NIS2 / {cybersecurityAuthority}
+                    </p>
                     <p className="mt-1 text-foreground/62">
                       {activeIncident.affectsCriticalSystems
                         ? copy.checklist.nis2Required
@@ -539,7 +560,9 @@ export default async function IncidentsPage({
                     </p>
                   </div>
                   <div className="rounded-md bg-surface-muted p-3 text-sm">
-                    <p className="font-medium">GDPR / ÚOOÚ</p>
+                    <p className="font-medium">
+                      GDPR / {dataProtectionAuthority}
+                    </p>
                     <p className="mt-1 text-foreground/62">
                       {activeIncident.affectsPersonalData
                         ? copy.checklist.gdprActive
@@ -564,7 +587,9 @@ export default async function IncidentsPage({
                       }
                       className="btn btn-nukib disabled:cursor-not-allowed disabled:opacity-50"
                     >
-                      {copy.checklist.markNukib}
+                      {formatMessage(copy.checklist.markCybersecurity, {
+                        authority: cybersecurityAuthority,
+                      })}
                       <CheckCircle2 className="h-4 w-4" aria-hidden="true" strokeWidth={1.5} />
                     </button>
                   </form>
@@ -584,7 +609,9 @@ export default async function IncidentsPage({
                       }
                       className="btn btn-secondary disabled:cursor-not-allowed disabled:opacity-50"
                     >
-                      {copy.checklist.markUoou}
+                      {formatMessage(copy.checklist.markDataProtection, {
+                        authority: dataProtectionAuthority,
+                      })}
                       <CheckCircle2 className="h-4 w-4" aria-hidden="true" strokeWidth={1.5} />
                     </button>
                   </form>
