@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { auth } from "@clerk/nextjs/server";
+import { getLocale } from "next-intl/server";
 import {
   CheckCircle2,
   ExternalLink,
@@ -7,7 +8,10 @@ import {
   Globe2,
   XCircle,
 } from "lucide-react";
+import { getMessagesForLocale } from "@/i18n/messages";
+import { normalizeLocale, type Locale } from "@/i18n/routing";
 import { hasDatabaseUrl } from "@/lib/db";
+import { getOrganisationByClerkOrgId } from "@/lib/db/queries/organisations";
 import { getTrustCenterSettings } from "@/lib/db/queries/trust-center";
 import { FRAMEWORK_LIBRARY } from "@/lib/frameworks/registry";
 import {
@@ -24,31 +28,50 @@ async function loadSettings() {
     Boolean(process.env.CLERK_SECRET_KEY);
 
   if (!clerkConfigured || !hasDatabaseUrl()) {
-    return null;
+    return { data: null, organisationLocale: null };
   }
 
   const session = await auth();
 
   if (!session.orgId) {
-    return null;
+    return { data: null, organisationLocale: null };
   }
 
-  return getTrustCenterSettings(session.orgId).catch(() => null);
+  try {
+    const [data, organisation] = await Promise.all([
+      getTrustCenterSettings(session.orgId),
+      getOrganisationByClerkOrgId(session.orgId),
+    ]);
+
+    return {
+      data,
+      organisationLocale: organisation?.locale ?? null,
+    };
+  } catch {
+    return { data: null, organisationLocale: null };
+  }
 }
 
-function formatDate(value: Date | string | null | undefined) {
+function formatDate(
+  value: Date | string | null | undefined,
+  locale: Locale,
+  emptyLabel: string,
+) {
   if (!value) {
-    return "nikdy";
+    return emptyLabel;
   }
 
-  return new Intl.DateTimeFormat("cs-CZ", {
+  return new Intl.DateTimeFormat(locale, {
     dateStyle: "medium",
     timeStyle: "short",
   }).format(new Date(value));
 }
 
 export default async function TrustCenterSettingsPage() {
-  const data = await loadSettings();
+  const requestLocale = normalizeLocale(await getLocale()) ?? "cs-CZ";
+  const { data, organisationLocale } = await loadSettings();
+  const locale = normalizeLocale(organisationLocale) ?? requestLocale;
+  const copy = getMessagesForLocale(locale).trustCenterSettings;
   const trustCenter = data?.trustCenter ?? null;
   const visibleFrameworks = trustCenter?.visibleFrameworks ?? [];
   const enrolledFrameworks =
@@ -57,6 +80,7 @@ export default async function TrustCenterSettingsPage() {
       : FRAMEWORK_LIBRARY.slice(0, 4).map((framework, index) => ({
           id: framework.slug,
           nameCs: framework.nameCs,
+          nameEn: framework.nameEn,
           regulator: framework.regulator,
           score: [72, 64, 81, 55][index] ?? null,
           slug: framework.slug,
@@ -74,17 +98,17 @@ export default async function TrustCenterSettingsPage() {
             Trust Center
           </p>
           <h1 className="mt-2 text-3xl font-semibold tracking-normal">
-            Veřejné compliance centrum
+            {copy.title}
           </h1>
           <p className="mt-2 max-w-2xl text-sm leading-6 text-foreground/64">
-            Nastavení veřejné stránky, viditelných frameworků a přístupu k dokumentům.
+            {copy.subtitle}
           </p>
         </div>
         <Link
           href={publicUrl}
           className="inline-flex items-center gap-2 rounded-md border border-border px-4 py-3 text-sm font-medium hover:bg-surface-muted"
         >
-          Otevřít veřejnou stránku
+          {copy.openPublicPage}
           <ExternalLink className="h-4 w-4" aria-hidden="true" />
         </Link>
       </div>
@@ -93,12 +117,12 @@ export default async function TrustCenterSettingsPage() {
         <section className="rounded-lg border border-border bg-surface p-5">
           <div className="flex items-center gap-2">
             <Globe2 className="h-5 w-5 text-primary" aria-hidden="true" />
-            <h2 className="text-lg font-semibold">Konfigurace</h2>
+            <h2 className="text-lg font-semibold">{copy.configuration}</h2>
           </div>
           <form action={updateTrustCenterSettingsAction} className="mt-5 space-y-5">
             <div className="grid gap-4 md:grid-cols-2">
               <label className="grid gap-2 text-sm">
-                Public slug
+                {copy.publicSlug}
                 <input
                   name="subdomain"
                   defaultValue={subdomain}
@@ -107,7 +131,7 @@ export default async function TrustCenterSettingsPage() {
                 />
               </label>
               <label className="grid gap-2 text-sm">
-                Accent colour
+                {copy.accentColour}
                 <input
                   name="accentColor"
                   defaultValue={trustCenter?.accentColor ?? "#1b7f5a"}
@@ -125,7 +149,7 @@ export default async function TrustCenterSettingsPage() {
                   defaultChecked={trustCenter?.isPublic ?? false}
                   disabled={!canMutate}
                 />
-                Publikovat Trust Center
+                {copy.publish}
               </label>
               <label className="flex items-center gap-3 rounded-md border border-border px-3 py-3 text-sm">
                 <input
@@ -134,7 +158,7 @@ export default async function TrustCenterSettingsPage() {
                   defaultChecked={trustCenter?.ndaRequired ?? false}
                   disabled={!canMutate}
                 />
-                Vyžadovat schválený přístup k dokumentům
+                {copy.requireApprovedDocumentAccess}
               </label>
               <label className="flex items-center gap-3 rounded-md border border-border px-3 py-3 text-sm">
                 <input
@@ -143,7 +167,7 @@ export default async function TrustCenterSettingsPage() {
                   defaultChecked={trustCenter?.showFrameworkDrilldown ?? true}
                   disabled={!canMutate}
                 />
-                Povolit detail frameworků
+                {copy.enableFrameworkDetail}
               </label>
               <label className="flex items-center gap-3 rounded-md border border-border px-3 py-3 text-sm">
                 <input
@@ -152,11 +176,11 @@ export default async function TrustCenterSettingsPage() {
                   defaultChecked={trustCenter?.showFrameworkPercentages ?? true}
                   disabled={!canMutate}
                 />
-                Zobrazovat procentuální skóre
+                {copy.showPercentageScores}
               </label>
             </div>
             <div>
-              <p className="text-sm font-medium">Viditelné frameworky</p>
+              <p className="text-sm font-medium">{copy.visibleFrameworks}</p>
               <div className="mt-3 grid gap-2 sm:grid-cols-2">
                 {enrolledFrameworks.map((framework) => (
                   <label
@@ -174,9 +198,11 @@ export default async function TrustCenterSettingsPage() {
                       disabled={!canMutate}
                     />
                     <span>
-                      <span className="block font-medium">{framework.nameCs}</span>
+                      <span className="block font-medium">
+                        {locale === "cs-CZ" ? framework.nameCs : framework.nameEn}
+                      </span>
                       <span className="text-xs text-foreground/56">
-                        {framework.regulator ?? "regulator n/a"} · skóre{" "}
+                        {framework.regulator ?? copy.regulatorEmpty} · {copy.scoreLabel}{" "}
                         {framework.score ?? 0}%
                       </span>
                     </span>
@@ -189,7 +215,7 @@ export default async function TrustCenterSettingsPage() {
               disabled={!canMutate}
               className="inline-flex items-center gap-2 rounded-md bg-primary px-4 py-3 text-sm font-medium text-primary-foreground disabled:cursor-not-allowed disabled:opacity-50"
             >
-              Uložit nastavení
+              {copy.saveSettings}
               <CheckCircle2 className="h-4 w-4" aria-hidden="true" />
             </button>
           </form>
@@ -198,7 +224,7 @@ export default async function TrustCenterSettingsPage() {
         <section className="rounded-lg border border-border bg-surface">
           <div className="flex items-center gap-2 border-b border-border p-5">
             <FileSignature className="h-5 w-5 text-primary" aria-hidden="true" />
-            <h2 className="text-lg font-semibold">NDA žádosti</h2>
+            <h2 className="text-lg font-semibold">{copy.requestsTitle}</h2>
           </div>
           <div className="divide-y divide-border">
             {data?.requests.length ? (
@@ -211,15 +237,17 @@ export default async function TrustCenterSettingsPage() {
                     <div className="flex flex-wrap items-center gap-2">
                       <p className="font-medium">{request.email}</p>
                       <span className="rounded-md bg-surface-muted px-2 py-1 text-xs">
-                        {request.status}
+                        {copy.requestStatuses[
+                          request.status as keyof typeof copy.requestStatuses
+                        ] ?? request.status}
                       </span>
                     </div>
                     <p className="mt-1 text-sm text-foreground/58">
-                      {request.company ?? "firma neuvedena"} · vytvořeno{" "}
-                      {formatDate(request.createdAt)}
+                      {request.company ?? copy.companyEmpty} · {copy.created}{" "}
+                      {formatDate(request.createdAt, locale, copy.never)}
                     </p>
                     <p className="mt-1 text-sm text-foreground/58">
-                      Přístup expiruje {formatDate(request.expiresAt)}
+                      {copy.accessExpires} {formatDate(request.expiresAt, locale, copy.never)}
                     </p>
                   </div>
                   <div className="flex flex-wrap gap-2">
@@ -231,7 +259,7 @@ export default async function TrustCenterSettingsPage() {
                         disabled={request.status === "approved"}
                         className="inline-flex items-center gap-2 rounded-md border border-border px-3 py-2 text-sm font-medium hover:bg-surface-muted disabled:cursor-not-allowed disabled:opacity-50"
                       >
-                        Schválit
+                        {copy.approve}
                         <CheckCircle2 className="h-4 w-4" aria-hidden="true" />
                       </button>
                     </form>
@@ -243,7 +271,7 @@ export default async function TrustCenterSettingsPage() {
                         disabled={request.status === "declined"}
                         className="inline-flex items-center gap-2 rounded-md border border-border px-3 py-2 text-sm font-medium text-danger hover:bg-surface-muted disabled:cursor-not-allowed disabled:opacity-50"
                       >
-                        Zamítnout
+                        {copy.decline}
                         <XCircle className="h-4 w-4" aria-hidden="true" />
                       </button>
                     </form>
@@ -252,7 +280,7 @@ export default async function TrustCenterSettingsPage() {
               ))
             ) : (
               <p className="p-5 text-sm text-foreground/58">
-                Žádné NDA žádosti zatím nejsou otevřené.
+                {copy.requestsEmpty}
               </p>
             )}
           </div>

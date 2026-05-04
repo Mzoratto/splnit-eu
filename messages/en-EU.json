@@ -251,6 +251,35 @@
       }
     }
   },
+  "trustCenterSettings": {
+    "never": "never",
+    "title": "Public compliance centre",
+    "subtitle": "Configure the public page, visible frameworks, and document access.",
+    "openPublicPage": "Open public page",
+    "configuration": "Configuration",
+    "publicSlug": "Public slug",
+    "accentColour": "Accent colour",
+    "publish": "Publish Trust Center",
+    "requireApprovedDocumentAccess": "Require approved document access",
+    "enableFrameworkDetail": "Enable framework detail",
+    "showPercentageScores": "Show percentage scores",
+    "visibleFrameworks": "Visible frameworks",
+    "regulatorEmpty": "regulator n/a",
+    "scoreLabel": "score",
+    "saveSettings": "Save settings",
+    "requestsTitle": "Document access requests",
+    "companyEmpty": "company not provided",
+    "created": "created",
+    "accessExpires": "Access expires",
+    "approve": "Approve",
+    "decline": "Decline",
+    "requestsEmpty": "No document access requests are open yet.",
+    "requestStatuses": {
+      "approved": "approved",
+      "declined": "declined",
+      "pending": "pending"
+    }
+  },
   "marketing": {
     "nav": {
       "platform": "Platform",

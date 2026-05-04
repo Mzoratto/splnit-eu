@@ -251,6 +251,35 @@
       }
     }
   },
+  "trustCenterSettings": {
+    "never": "nikdy",
+    "title": "Veřejné compliance centrum",
+    "subtitle": "Nastavení veřejné stránky, viditelných frameworků a přístupu k dokumentům.",
+    "openPublicPage": "Otevřít veřejnou stránku",
+    "configuration": "Konfigurace",
+    "publicSlug": "Veřejný slug",
+    "accentColour": "Akcentní barva",
+    "publish": "Publikovat Trust Center",
+    "requireApprovedDocumentAccess": "Vyžadovat schválený přístup k dokumentům",
+    "enableFrameworkDetail": "Povolit detail frameworků",
+    "showPercentageScores": "Zobrazovat procentuální skóre",
+    "visibleFrameworks": "Viditelné frameworky",
+    "regulatorEmpty": "regulator n/a",
+    "scoreLabel": "skóre",
+    "saveSettings": "Uložit nastavení",
+    "requestsTitle": "NDA žádosti",
+    "companyEmpty": "firma neuvedena",
+    "created": "vytvořeno",
+    "accessExpires": "Přístup expiruje",
+    "approve": "Schválit",
+    "decline": "Zamítnout",
+    "requestsEmpty": "Žádné NDA žádosti zatím nejsou otevřené.",
+    "requestStatuses": {
+      "approved": "schváleno",
+      "declined": "zamítnuto",
+      "pending": "čeká"
+    }
+  },
   "marketing": {
     "nav": {
       "platform": "Platforma",

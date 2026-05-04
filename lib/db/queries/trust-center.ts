@@ -40,6 +40,7 @@ export async function getTrustCenterSettings(clerkOrgId: string) {
       .select({
         id: frameworks.id,
         nameCs: frameworks.nameCs,
+        nameEn: frameworks.nameEn,
         regulator: frameworks.regulator,
         score: orgFrameworks.score,
         slug: frameworks.slug,

@@ -11,6 +11,7 @@ const requiredNamespaces = [
   "integrations",
   "onboarding",
   "organisationSettings",
+  "trustCenterSettings",
 ] as const;
 const locales: Locale[] = ["cs-CZ", "en-EU", "it-IT"];
 
@@ -40,6 +41,10 @@ for (const locale of locales) {
     messages.organisationSettings.profile.save,
     `${locale} should label organisation settings save`,
   );
+  assert.ok(
+    messages.trustCenterSettings.saveSettings,
+    `${locale} should label Trust Center settings save`,
+  );
 }
 
 const en = getMessagesForLocale("en-EU");
@@ -53,6 +58,8 @@ assert.equal(en.integrations.providerPages.github.repositories, "Repositories");
 assert.equal(en.integrations.providerPages.microsoft365.connect, "Connect Microsoft 365");
 assert.equal(en.navigation.evidence, "Evidence");
 assert.equal(en.organisationSettings.profile.save, "Save changes");
+assert.equal(en.trustCenterSettings.title, "Public compliance centre");
+assert.equal(en.trustCenterSettings.saveSettings, "Save settings");
 assert.notEqual(en.shell.freePlanBanner, getMessagesForLocale("cs-CZ").shell.freePlanBanner);
 
 const it = getMessagesForLocale("it-IT");
@@ -66,6 +73,8 @@ assert.equal(it.integrations.providerPages.github.repositories, "Repository");
 assert.equal(it.integrations.providerPages.microsoft365.connect, "Collega Microsoft 365");
 assert.equal(it.navigation.evidence, "Evidenze");
 assert.equal(it.organisationSettings.profile.save, "Salva modifiche");
+assert.equal(it.trustCenterSettings.title, "Centro compliance pubblico");
+assert.equal(it.trustCenterSettings.saveSettings, "Salva impostazioni");
 assert.notEqual(it.shell.freePlanBanner, getMessagesForLocale("cs-CZ").shell.freePlanBanner);
 
 console.log("i18n shell smoke test passed.");

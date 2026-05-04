@@ -251,6 +251,35 @@
       }
     }
   },
+  "trustCenterSettings": {
+    "never": "mai",
+    "title": "Centro compliance pubblico",
+    "subtitle": "Configura la pagina pubblica, i framework visibili e l'accesso ai documenti.",
+    "openPublicPage": "Apri pagina pubblica",
+    "configuration": "Configurazione",
+    "publicSlug": "Slug pubblico",
+    "accentColour": "Colore accento",
+    "publish": "Pubblica Trust Center",
+    "requireApprovedDocumentAccess": "Richiedi accesso approvato ai documenti",
+    "enableFrameworkDetail": "Abilita dettaglio framework",
+    "showPercentageScores": "Mostra punteggi percentuali",
+    "visibleFrameworks": "Framework visibili",
+    "regulatorEmpty": "regolatore n/a",
+    "scoreLabel": "punteggio",
+    "saveSettings": "Salva impostazioni",
+    "requestsTitle": "Richieste accesso documenti",
+    "companyEmpty": "azienda non indicata",
+    "created": "creata",
+    "accessExpires": "Accesso scade",
+    "approve": "Approva",
+    "decline": "Rifiuta",
+    "requestsEmpty": "Non ci sono ancora richieste aperte di accesso ai documenti.",
+    "requestStatuses": {
+      "approved": "approvata",
+      "declined": "rifiutata",
+      "pending": "in attesa"
+    }
+  },
   "marketing": {
     "nav": {
       "platform": "Piattaforma",
