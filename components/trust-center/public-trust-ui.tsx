@@ -43,7 +43,11 @@ export function TrustTopbar({
   return (
     <header className="sticky top-0 z-[var(--z-sticky)] h-14 border-b border-border bg-surface/95 backdrop-blur">
       <div className="mx-auto flex h-full max-w-7xl items-center justify-between gap-4 px-4 sm:px-6">
-        <div className="flex min-w-0 items-center gap-3">
+        <Link
+          href="/"
+          className="flex min-w-0 items-center gap-3 rounded-[var(--r-md)] focus:outline-none focus:ring-2 focus:ring-[var(--accent)] focus:ring-offset-2"
+          aria-label="Go to Splnit.eu homepage"
+        >
           <span
             aria-hidden="true"
             className="grid h-8 w-8 shrink-0 place-items-center rounded-[var(--r-md)] text-white"
@@ -59,7 +63,7 @@ export function TrustTopbar({
               trust.splnit.eu/{trustCenter.orgSlug}
             </p>
           </div>
-        </div>
+        </Link>
         <div className="flex shrink-0 items-center gap-3">
           {backHref ? (
             <Link
@@ -295,6 +299,7 @@ export function TrustFooter({
         </p>
         <div className="flex flex-wrap items-center gap-4 text-sm text-foreground/58">
           {backHref ? <Link href={backHref}>← Back to Trust Center</Link> : null}
+          <Link href="/">Splnit.eu home</Link>
           <Link href="https://status.splnit.eu">status page</Link>
           <Link href="/soukromi">Privacy</Link>
           <Link href="/podminky">Terms</Link>
