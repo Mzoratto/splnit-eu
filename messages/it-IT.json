@@ -334,8 +334,9 @@
       "csrd": "Reporting ESG, doppia materialità, evidenze dati e questionari fornitori."
     },
     "nukib": {
-      "exclusive": "Esclusivo",
-      "title": "Feed NÚKIB",
+      "badge": "Italia",
+      "exclusive": "Monitorato",
+      "title": "Feed normativo",
       "openSource": "Apri fonte",
       "markRead": "Segna come letto"
     },
@@ -353,17 +354,18 @@
       "days": "{days} giorni"
     },
     "demoUpdates": {
+      "demoSource": "Monitor demo",
       "nukibMethodology": {
-        "title": "NÚKIB ha pubblicato un aggiornamento metodologico",
-        "summary": "Nuove raccomandazioni per gestire il rischio fornitori per soggetti regolati."
+        "title": "Esempio di aggiornamento guida",
+        "summary": "Esempio di raccomandazione per gestire il rischio fornitori in un programma regolato."
       },
       "nukibCve": {
-        "title": "CVE-2026-1842 richiede una verifica dell'esposizione",
-        "summary": "La vulnerabilità impatta gateway VPN comunemente utilizzati."
+        "title": "Esempio di verifica esposizione CVE",
+        "summary": "Esempio di vulnerabilità che richiederebbe una verifica dell'esposizione."
       },
       "uoouGuidance": {
-        "title": "ÚOOÚ ha pubblicato una guida metodologica",
-        "summary": "Indicazioni su registri dei trattamenti e misure di sicurezza."
+        "title": "Esempio di guida GDPR",
+        "summary": "Esempio di indicazione per registri dei trattamenti e misure di sicurezza."
       }
     }
   },

@@ -43,7 +43,10 @@ export async function getDashboardData(clerkOrgId: string) {
   const [organisationRows, frameworkScores, priorityControls, statusRows, updates] =
     await Promise.all([
       db
-        .select({ locale: organisations.locale })
+        .select({
+          locale: organisations.locale,
+          primaryJurisdiction: organisations.primaryJurisdiction,
+        })
         .from(organisations)
         .where(eq(organisations.clerkOrgId, clerkOrgId))
         .limit(1),
@@ -90,6 +93,7 @@ export async function getDashboardData(clerkOrgId: string) {
 
   return {
     frameworkScores,
+    organisationJurisdiction: organisationRows[0]?.primaryJurisdiction ?? null,
     organisationLocale: organisationRows[0]?.locale ?? null,
     priorityControls,
     statusRows,

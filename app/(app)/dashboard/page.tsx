@@ -21,6 +21,7 @@ import { CONTROL_LIBRARY } from "@/lib/controls/library";
 import { hasDatabaseUrl } from "@/lib/db";
 import { getDashboardData } from "@/lib/db/queries/dashboard";
 import { FRAMEWORK_LIBRARY } from "@/lib/frameworks/registry";
+import { getJurisdictionContext } from "@/lib/jurisdictions/context";
 
 type DashboardCopy = ReturnType<typeof getMessagesForLocale>["dashboard"];
 
@@ -39,7 +40,7 @@ function getFallbackUpdates(copy: DashboardCopy) {
       isRead: true,
       publishedAt: new Date("2026-04-30T08:00:00.000Z"),
       severity: "info",
-      source: "NÚKIB",
+      source: copy.demoUpdates.demoSource,
       sourceUrl: null,
       summary: copy.demoUpdates.nukibMethodology.summary,
       title: copy.demoUpdates.nukibMethodology.title,
@@ -50,7 +51,7 @@ function getFallbackUpdates(copy: DashboardCopy) {
       isRead: true,
       publishedAt: new Date("2026-04-30T06:30:00.000Z"),
       severity: "warning",
-      source: "NÚKIB",
+      source: copy.demoUpdates.demoSource,
       sourceUrl: null,
       summary: copy.demoUpdates.nukibCve.summary,
       title: copy.demoUpdates.nukibCve.title,
@@ -61,7 +62,7 @@ function getFallbackUpdates(copy: DashboardCopy) {
       isRead: true,
       publishedAt: new Date("2026-04-26T10:00:00.000Z"),
       severity: "info",
-      source: "ÚOOÚ",
+      source: copy.demoUpdates.demoSource,
       sourceUrl: null,
       summary: copy.demoUpdates.uoouGuidance.summary,
       title: copy.demoUpdates.uoouGuidance.title,
@@ -314,6 +315,10 @@ export default async function DashboardPage() {
     loadUserName(),
   ]);
   const locale = normalizeLocale(data?.organisationLocale) ?? requestLocale;
+  const jurisdiction = getJurisdictionContext(
+    data?.organisationJurisdiction,
+    locale,
+  );
   const messages = getMessagesForLocale(locale);
   const copy = messages.dashboard;
   const fallbackUpdates = getFallbackUpdates(copy);
@@ -362,10 +367,17 @@ export default async function DashboardPage() {
     ["manual_review", "warning", "unknown"].includes(row.status),
   ).length;
   const openFindings = failingControls + warningControls;
-  const nukibUpdates = updates.filter((update) =>
-    update.source.toLowerCase().includes("núkib"),
+  const regulatoryFeedSources = new Set([
+    jurisdiction.authorities.cybersecurity,
+    jurisdiction.authorities.dataProtection,
+    copy.demoUpdates.demoSource,
+  ]);
+  const regulatoryUpdates = updates.filter((update) =>
+    regulatoryFeedSources.has(update.source),
   );
-  const visibleNukibUpdates = nukibUpdates.length ? nukibUpdates : fallbackUpdates;
+  const visibleRegulatoryUpdates = regulatoryUpdates.length
+    ? regulatoryUpdates
+    : fallbackUpdates;
   const deadlines = FRAMEWORK_LIBRARY.filter(
     (framework) => framework.slug === "nis2" || framework.slug === "ai-act" || framework.slug === "gdpr",
   );
@@ -508,7 +520,7 @@ export default async function DashboardPage() {
               <div>
                 <div className="flex flex-wrap items-center gap-2">
                   <span className="rounded-sm border border-[var(--nukib-border)] bg-white/10 px-2 py-1 text-[11px] font-medium">
-                    🇨🇿 NÚKIB
+                    {copy.nukib.badge}
                   </span>
                   <span className="rounded-sm bg-[var(--nukib-accent)]/18 px-2 py-1 text-[11px] font-medium text-[var(--nukib-text)]">
                     {copy.nukib.exclusive}
@@ -519,7 +531,7 @@ export default async function DashboardPage() {
               <Newspaper className="h-5 w-5 text-[var(--nukib-accent)]" aria-hidden="true" strokeWidth={1.5} />
             </div>
             <div className="mt-4 grid gap-3">
-              {visibleNukibUpdates.slice(0, 3).map((update) => (
+              {visibleRegulatoryUpdates.slice(0, 3).map((update) => (
                 <article
                   key={update.id}
                   className="rounded-md border border-white/10 bg-white/[0.04] p-3"
@@ -547,7 +559,7 @@ export default async function DashboardPage() {
                         {copy.nukib.openSource}
                       </a>
                     ) : null}
-                    {!update.isRead && update.id !== "demo-nukib-feed" ? (
+                    {!update.isRead && !update.id.startsWith("demo-") ? (
                       <form action={markRegulationUpdateReadAction.bind(null, update.id)}>
                         <button type="submit" className="font-medium text-[var(--nukib-accent)]">
                           {copy.nukib.markRead}

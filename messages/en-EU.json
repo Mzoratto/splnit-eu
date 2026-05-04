@@ -334,8 +334,9 @@
       "csrd": "ESG reporting, double materiality, data evidence, and supplier questionnaires."
     },
     "nukib": {
-      "exclusive": "Exclusive",
-      "title": "NÚKIB feed",
+      "badge": "EU monitor",
+      "exclusive": "Monitored",
+      "title": "Regulatory feed",
       "openSource": "Open source",
       "markRead": "Mark as read"
     },
@@ -353,17 +354,18 @@
       "days": "{days} days"
     },
     "demoUpdates": {
+      "demoSource": "Demo monitor",
       "nukibMethodology": {
-        "title": "NÚKIB published methodology update",
-        "summary": "New recommendations for managing supplier risk for regulated entities."
+        "title": "Example guidance update",
+        "summary": "Sample recommendation for managing supplier risk in a regulated programme."
       },
       "nukibCve": {
-        "title": "CVE-2026-1842 requires exposure review",
-        "summary": "The vulnerability affects commonly deployed VPN gateways."
+        "title": "Example CVE exposure review",
+        "summary": "Sample vulnerability item that would require an exposure check."
       },
       "uoouGuidance": {
-        "title": "ÚOOÚ published methodological guidance",
-        "summary": "Guidance for processing records and security measures."
+        "title": "Example GDPR guidance",
+        "summary": "Sample guidance item for processing records and security measures."
       }
     }
   },

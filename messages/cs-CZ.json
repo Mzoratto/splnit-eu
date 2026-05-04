@@ -105,6 +105,7 @@
       "csrd": "ESG reporting, dvojí materialita, datová evidence a dodavatelské dotazníky."
     },
     "nukib": {
+      "badge": "🇨🇿 NÚKIB",
       "exclusive": "Exclusive",
       "title": "NÚKIB feed",
       "openSource": "Otevřít zdroj",
@@ -124,17 +125,18 @@
       "days": "{days} dní"
     },
     "demoUpdates": {
+      "demoSource": "Demo monitor",
       "nukibMethodology": {
-        "title": "NÚKIB publikoval aktualizaci metodiky",
-        "summary": "Nová sada doporučení k řízení dodavatelských rizik pro povinné osoby."
+        "title": "Ukázková metodická aktualizace",
+        "summary": "Modelový příklad doporučení k řízení dodavatelských rizik pro regulované subjekty."
       },
       "nukibCve": {
-        "title": "CVE-2026-1842 vyžaduje ověření expozice",
-        "summary": "Zranitelnost dopadá na běžně nasazované VPN brány."
+        "title": "Ukázková kontrola expozice CVE",
+        "summary": "Modelový příklad zranitelnosti, která by vyžadovala ověření expozice."
       },
       "uoouGuidance": {
-        "title": "ÚOOÚ zveřejnil metodický výklad",
-        "summary": "Doporučení pro evidence zpracování a bezpečnostní opatření."
+        "title": "Ukázkové GDPR doporučení",
+        "summary": "Modelový příklad doporučení pro evidence zpracování a bezpečnostní opatření."
       }
     }
   },
