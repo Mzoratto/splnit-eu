@@ -13,9 +13,9 @@ const options = [
 ] as const;
 
 export function LeadCapture({
-  title = "Které EU předpisy se vás týkají?",
-  subtitle = "Získejte personalizovaný přehled povinností za 2 minuty.",
-  cta = "Získat přehled",
+  title,
+  subtitle,
+  cta,
   resources,
 }: {
   title?: string;
