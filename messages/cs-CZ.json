@@ -1036,19 +1036,43 @@
         "name": "Zdarma",
         "description": "Vyzkoušejte platformu bez závazků.",
         "cta": "Začít zdarma",
-        "features": ["1 předpis", "Manuální kontroly", "3 vzory dokumentů", "1 uživatel", "Komunitní podpora"]
+        "features": [
+          "1 předpis",
+          "Manuální kontroly",
+          "3 vzory dokumentů",
+          "1 uživatel",
+          "Komunitní podpora"
+        ]
       },
       "starter": {
         "name": "Starter",
         "description": "Pro firmy, které berou soulad vážně.",
         "cta": "Stát se design partnerem",
-        "features": ["2 předpisy (NIS2 + 1 další)", "3 integrace", "Automatické kontroly pro Microsoft 365, AWS a GitHub", "Evidence vault", "Šablony dokumentů", "Upozornění na termíny", "5 uživatelů", "Email podpora"]
+        "features": [
+          "2 předpisy (NIS2 + 1 další)",
+          "3 integrace",
+          "Automatické kontroly pro Microsoft 365, AWS a GitHub",
+          "Evidence vault",
+          "Šablony dokumentů",
+          "Upozornění na termíny",
+          "5 uživatelů",
+          "Email podpora"
+        ]
       },
       "business": {
         "name": "Business",
         "description": "Kompletní platforma pro celý tým.",
         "cta": "Kontaktovat obchod",
-        "features": ["5 předpisů", "10 integrací", "Trust Center", "Vendor risk modul", "Access reviews", "Incident log", "25 uživatelů", "Prioritní podpora"]
+        "features": [
+          "5 předpisů",
+          "10 integrací",
+          "Trust Center",
+          "Vendor risk modul",
+          "Access reviews",
+          "Incident log",
+          "25 uživatelů",
+          "Prioritní podpora"
+        ]
       }
     },
     "comparison": {
@@ -1096,23 +1120,69 @@
     "downloadTitle": "Stáhněte si zdarma",
     "downloadSubtitle": "Kompletní přehled povinností, šablony dokumentů a checklist pro každý předpis.",
     "downloadCta": "Stáhnout vše zdarma",
-    "resources": ["NIS2 checklist", "EU AI Act přehled", "Politika AI (šablona)", "Školení AI gramotnosti", "Záznam o používání AI", "Annex III reference"],
+    "resources": [
+      "NIS2 checklist",
+      "EU AI Act přehled",
+      "Politika AI (šablona)",
+      "Školení AI gramotnosti",
+      "Záznam o používání AI",
+      "Annex III reference"
+    ],
     "cards": {
       "available": "Dostupné",
       "soon": "Brzy",
-      "nis2": {"regulator": "NÚKIB", "deadline": "Říjen 2024", "description": "Kybernetická bezpečnost pro střední a velké firmy."},
-      "eu-ai-act": {"regulator": "ČTÚ", "deadline": "Srpen 2026", "description": "Povinnosti pro nasazovatele AI systémů."},
-      "gdpr": {"regulator": "ÚOOÚ", "deadline": "Aktivní", "description": "Ochrana osobních údajů — platí pro každou firmu."},
-      "iso-27001": {"regulator": "ISO/ČAS", "deadline": "Průběžně", "description": "Mezinárodní standard pro informační bezpečnost."},
-      "csrd": {"regulator": "MŽP", "deadline": "2026+", "description": "ESG reporting pro dodavatele velkých korporací."},
-      "dora": {"regulator": "ČNB", "deadline": "Leden 2025", "description": "Digitální odolnost pro finanční instituce."}
+      "nis2": {
+        "regulator": "NÚKIB",
+        "deadline": "Říjen 2024",
+        "description": "Kybernetická bezpečnost pro střední a velké firmy."
+      },
+      "eu-ai-act": {
+        "regulator": "ČTÚ",
+        "deadline": "Srpen 2026",
+        "description": "Povinnosti pro nasazovatele AI systémů."
+      },
+      "gdpr": {
+        "regulator": "ÚOOÚ",
+        "deadline": "Aktivní",
+        "description": "Ochrana osobních údajů — platí pro každou firmu."
+      },
+      "iso-27001": {
+        "regulator": "ISO/ČAS",
+        "deadline": "Průběžně",
+        "description": "Mezinárodní standard pro informační bezpečnost."
+      },
+      "csrd": {
+        "regulator": "MŽP",
+        "deadline": "2026+",
+        "description": "ESG reporting pro dodavatele velkých korporací."
+      },
+      "dora": {
+        "regulator": "ČNB",
+        "deadline": "Leden 2025",
+        "description": "Digitální odolnost pro finanční instituce."
+      }
     },
     "timeline": [
-      {"date": "Únor 2025", "title": "Zákaz škodlivých AI praktik"},
-      {"date": "Říjen 2024", "title": "NIS2 transponována do české legislativy"},
-      {"date": "Srpen 2025", "title": "Povinnost AI gramotnosti zaměstnanců"},
-      {"date": "Srpen 2026", "title": "High-risk AI systémy musí být v souladu"},
-      {"date": "Srpen 2027", "title": "Zbývající AI systémy v produktech"}
+      {
+        "date": "Únor 2025",
+        "title": "Zákaz škodlivých AI praktik"
+      },
+      {
+        "date": "Říjen 2024",
+        "title": "NIS2 transponována do české legislativy"
+      },
+      {
+        "date": "Srpen 2025",
+        "title": "Povinnost AI gramotnosti zaměstnanců"
+      },
+      {
+        "date": "Srpen 2026",
+        "title": "High-risk AI systémy musí být v souladu"
+      },
+      {
+        "date": "Srpen 2027",
+        "title": "Zbývající AI systémy v produktech"
+      }
     ],
     "detail": {
       "metadataTitleSuffix": "Splnit.eu — povinnosti, termíny a automatizace souladu",
@@ -1257,6 +1327,58 @@
       "toolInventory": "Inventář nástrojů",
       "updated": "Aktualizováno",
       "notSet": "nenastaveno"
+    }
+  },
+  "questionnairePage": {
+    "eyebrow": "Questionnaire AI",
+    "title": "Bezpečnostní dotazníky",
+    "subtitle": "Automaticky navrhujte odpovědi na zákaznické dotazníky podle splněných kontrol, evidence a aktivních politik ve Splnit.eu.",
+    "disabledNotice": "Questionnaire AI vyžaduje Clerk, DATABASE_URL a ANTHROPIC_API_KEY.",
+    "fallbacks": {
+      "demoOrganisation": "Demo organizace",
+      "organisation": "Organizace"
+    },
+    "metrics": {
+      "controls": "Splněné kontroly",
+      "controlsBody": "Používají se jako hlavní kontext odpovědí.",
+      "evidence": "Evidence",
+      "evidenceBody": "Automatická evidence podporuje vyšší jistotu odpovědí.",
+      "policies": "Politiky",
+      "policiesBody": "Aktivní dokumenty podporují střední jistotu odpovědí."
+    },
+    "workbench": {
+      "inputTitle": "Vstup dotazníku",
+      "pasteLabel": "Vložit dotazník",
+      "uploadLabel": "Nahrát textový soubor",
+      "generate": "Vygenerovat odpovědi",
+      "rateLimitTitle": "Limit použití",
+      "rateLimitBody": "Starter: 5/měsíc. Business a Consultant: bez limitu.",
+      "remaining": "Zbývá",
+      "reset": "reset",
+      "notAvailable": "n/a",
+      "resultsTitle": "Vygenerované odpovědi",
+      "resultMeta": "{count} otázek · {model}",
+      "noResultSubtitle": "Odpovědi se zobrazí po vygenerování.",
+      "emptyBody": "Claude odpovědi budou založené na splněných kontrolách, evidenci a aktivních politikách v pracovním prostoru {organisation}.",
+      "evidence": "Evidence",
+      "policies": "Politiky",
+      "none": "žádné",
+      "sampleQuestions": [
+        "Vyžadujete MFA pro všechny uživatele?",
+        "Máte politiku reakce na incidenty a proces hlášení porušení?",
+        "Jak řídíte bezpečnostní riziko dodavatelů?",
+        "Probíhají přezkumy přístupů alespoň kvartálně?",
+        "Uchováváte auditní logy bezpečnostních událostí?"
+      ]
+    },
+    "actionErrors": {
+      "authRequired": "Přihlášení a aktivní organizace jsou povinné.",
+      "invalidInput": "Vložte text dotazníku nebo nahrajte textový soubor.",
+      "missingConfig": "ANTHROPIC_API_KEY není nastavený.",
+      "noQuestions": "Nepodařilo se najít otázky v dotazníku.",
+      "rateLimit": "Měsíční limit {limit} dotazníků je vyčerpaný.",
+      "generationFailed": "Generování odpovědí se nepodařilo.",
+      "organisationFallback": "Organizace"
     }
   }
 }

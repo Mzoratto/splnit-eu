@@ -2,6 +2,8 @@
 
 import { auth } from "@clerk/nextjs/server";
 import { z } from "zod";
+import { getMessagesForLocale } from "@/i18n/messages";
+import { normalizeLocale, type Locale } from "@/i18n/routing";
 import { getQuestionnaireComplianceContext } from "@/lib/db/queries/questionnaires";
 import { getOrganisationByClerkOrgId } from "@/lib/db/queries/organisations";
 import { answerQuestionnaireWithClaude, hasClaudeConfig } from "@/lib/questionnaires/claude";
@@ -29,16 +31,23 @@ const initialQuestionnaireState: QuestionnaireActionState = {
   result: null,
 };
 
+function getActionLocale(formData: FormData): Locale {
+  const locale = formData.get("locale");
+  return normalizeLocale(typeof locale === "string" ? locale : null) ?? "cs-CZ";
+}
+
 export async function answerQuestionnaireAction(
   _previousState: QuestionnaireActionState,
   formData: FormData,
 ): Promise<QuestionnaireActionState> {
+  const locale = getActionLocale(formData);
+  const copy = getMessagesForLocale(locale).questionnairePage.actionErrors;
   const session = await auth();
 
   if (!session.userId || !session.orgId) {
     return {
       ...initialQuestionnaireState,
-      error: "Přihlášení a aktivní organizace jsou povinné.",
+      error: copy.authRequired,
     };
   }
 
@@ -48,14 +57,14 @@ export async function answerQuestionnaireAction(
   if (!parsed.success) {
     return {
       ...initialQuestionnaireState,
-      error: "Vložte text dotazníku nebo nahrajte textový soubor.",
+      error: copy.invalidInput,
     };
   }
 
   if (!hasClaudeConfig()) {
     return {
       ...initialQuestionnaireState,
-      error: "ANTHROPIC_API_KEY není nastavený.",
+      error: copy.missingConfig,
     };
   }
 
@@ -64,7 +73,7 @@ export async function answerQuestionnaireAction(
   if (questions.length === 0) {
     return {
       ...initialQuestionnaireState,
-      error: "Nepodařilo se najít otázky v dotazníku.",
+      error: copy.noQuestions,
     };
   }
 
@@ -77,7 +86,7 @@ export async function answerQuestionnaireAction(
   if (!rateLimit.allowed) {
     return {
       ...initialQuestionnaireState,
-      error: `Měsíční limit ${rateLimit.limit} dotazníků je vyčerpaný.`,
+      error: copy.rateLimit.replace("{limit}", String(rateLimit.limit)),
       rateLimit,
     };
   }
@@ -97,18 +106,17 @@ export async function answerQuestionnaireAction(
         generatedAt: new Date().toISOString(),
         model: generated.model,
         organisationName:
-          context.organisation?.name ?? organisation?.name ?? "Organizace",
+          context.organisation?.name ?? organisation?.name ?? copy.organisationFallback,
         questionCount: questions.length,
         summary: generated.summary,
       },
     };
   } catch (error) {
+    console.error("Questionnaire answer generation failed", error);
+
     return {
       ...initialQuestionnaireState,
-      error:
-        error instanceof Error
-          ? error.message
-          : "Generování odpovědí se nepodařilo.",
+      error: copy.generationFailed,
       rateLimit,
     };
   }

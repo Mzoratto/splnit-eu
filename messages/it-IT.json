@@ -69,7 +69,236 @@
       "no": "No",
       "na": "N/A"
     },
-    "questions": {}
+    "questions": {
+      "mfa": {
+        "text": "La MFA è obbligatoria per tutti gli account utente?",
+        "help": "Includi identità principale, amministratori e accesso remoto."
+      },
+      "privileged_access": {
+        "text": "Gli account privilegiati vengono revisionati regolarmente?",
+        "help": "Almeno ogni trimestre o quando cambia il ruolo."
+      },
+      "guest_access": {
+        "text": "Gli account esterni e guest sono controllati e rimossi?",
+        "help": "Gli ospiti inattivi dovrebbero essere rilevati e revocati."
+      },
+      "training": {
+        "text": "I dipendenti completano formazione di sicurezza periodica?",
+        "help": "Formazione in onboarding e refresh annuale con evidenze."
+      },
+      "incident_plan": {
+        "text": "Avete un piano di risposta agli incidenti approvato?",
+        "help": "Includi ruoli, escalation, comunicazioni e revisione."
+      },
+      "incident_reporting": {
+        "text": "Riuscite a tracciare e rispettare le notifiche entro 72 ore?",
+        "help": "GDPR e NIS2 prevedono scadenze rigide per la notifica degli incidenti."
+      },
+      "encryption": {
+        "text": "I dati sensibili sono cifrati a riposo?",
+        "help": "Database, storage, laptop e backup."
+      },
+      "patching": {
+        "text": "Avete un processo gestito di patch management?",
+        "help": "Tracciate vulnerabilità critiche, scadenze ed eccezioni."
+      },
+      "backups": {
+        "text": "Testate il ripristino dai backup?",
+        "help": "Creare backup non basta; il ripristino deve essere verificato regolarmente."
+      },
+      "logging": {
+        "text": "Raccogliete log e alert di sicurezza?",
+        "help": "Coprite cloud, identità, endpoint e applicazioni critiche."
+      },
+      "suppliers": {
+        "text": "Valutate la sicurezza dei fornitori e i requisiti contrattuali?",
+        "help": "NIS2 e ISO 27001 richiedono controlli sulla supply chain."
+      },
+      "asset_inventory": {
+        "text": "Mantenete un inventario aggiornato di asset e sistemi?",
+        "help": "Includi SaaS, cloud, endpoint, applicazioni e owner responsabili."
+      },
+      "business_continuity": {
+        "text": "Avete un piano di continuità operativa documentato?",
+        "help": "Includi responsabili, obiettivi di ripristino e dipendenze."
+      },
+      "secure_baseline": {
+        "text": "Usate baseline sicure per la configurazione dei sistemi?",
+        "help": "Per esempio impostazioni hardened per M365, AWS o endpoint."
+      },
+      "network_segmentation": {
+        "text": "I sistemi critici sono segmentati dalla rete?",
+        "help": "La segmentazione limita l’impatto di una compromissione."
+      },
+      "change_management": {
+        "text": "Le modifiche ai sistemi critici sono approvate e tracciabili?",
+        "help": "Includi modifiche di configurazione, infrastruttura e applicazioni."
+      },
+      "penetration_test": {
+        "text": "Eseguite almeno annualmente penetration test o audit di sicurezza?",
+        "help": "Concentratevi su sistemi esposti a Internet e processi critici."
+      },
+      "endpoint_protection": {
+        "text": "Gli endpoint sono protetti con EDR/AV e gestiti centralmente?",
+        "help": "Coprite laptop aziendali, server e dispositivi mobili."
+      },
+      "ai_inventory": {
+        "text": "Mantenete un inventario dei sistemi AI utilizzati?",
+        "help": "Registrate finalità, fornitore, owner, dati e categoria di rischio."
+      },
+      "ai_literacy": {
+        "text": "I dipendenti che usano AI completano formazione di AI literacy?",
+        "help": "L’articolo 4 si applica ampiamente a deployer e provider."
+      },
+      "prohibited_practices": {
+        "text": "Avete verificato che l’AI non usi pratiche vietate?",
+        "help": "Per esempio social scoring o riconoscimento delle emozioni sul lavoro."
+      },
+      "high_risk_classification": {
+        "text": "Classificate se l’AI rientra nelle categorie ad alto rischio?",
+        "help": "HR, istruzione, credito, biometria e infrastrutture critiche."
+      },
+      "provider_verification": {
+        "text": "Verificate la compliance dei provider di AI ad alto rischio?",
+        "help": "Marcatura CE, dichiarazione UE di conformità e istruzioni d’uso."
+      },
+      "human_oversight": {
+        "text": "È definita la supervisione umana sulle decisioni AI?",
+        "help": "Una persona responsabile deve poter valutare, interrompere o invertire le decisioni."
+      },
+      "ai_logs": {
+        "text": "Conservate i log di uso dell’AI ad alto rischio per almeno 6 mesi?",
+        "help": "Includi log automatici e registrazioni manuali di utilizzo."
+      },
+      "individual_notice": {
+        "text": "Informate le persone interessate su decisioni assistite da AI?",
+        "help": "Soprattutto per HR, decisioni sui clienti e servizi pubblici."
+      },
+      "content_labeling": {
+        "text": "Etichettate i contenuti generati da AI quando richiesto?",
+        "help": "Chatbot, contenuti sintetici e output deepfake."
+      },
+      "data_governance": {
+        "text": "Avete regole per dati di input, dati personali e informazioni sensibili nell’AI?",
+        "help": "Collega governance AI, GDPR e classificazione dei dati."
+      },
+      "incident_monitoring": {
+        "text": "Riuscite a rilevare e gestire incidenti o output AI dannosi?",
+        "help": "Includi escalation, azioni correttive e audit trail."
+      },
+      "supplier_contracts": {
+        "text": "I fornitori AI hanno requisiti contrattuali di sicurezza e compliance?",
+        "help": "Documenta ruoli, dati, responsabilità e condizioni di chiusura."
+      },
+      "ropa": {
+        "text": "Mantenete il registro delle attività di trattamento dei dati personali?",
+        "help": "ROPA ai sensi dell’articolo 30 GDPR."
+      },
+      "privacy_notice": {
+        "text": "La privacy notice è aggiornata e comprensibile?",
+        "help": "Descrive finalità, basi giuridiche, destinatari e diritti degli interessati."
+      },
+      "dsr": {
+        "text": "Avete un processo per le richieste degli interessati?",
+        "help": "Accesso, cancellazione, rettifica, portabilità e opposizione."
+      },
+      "retention": {
+        "text": "Avete un piano di conservazione e regole di cancellazione dati?",
+        "help": "I dati personali non devono essere conservati più del necessario."
+      },
+      "dpia": {
+        "text": "Eseguite DPIA per trattamenti rischiosi?",
+        "help": "Per esempio monitoraggio, profilazione o dati sensibili su larga scala."
+      },
+      "processors": {
+        "text": "I responsabili del trattamento hanno DPA e requisiti di sicurezza?",
+        "help": "I fornitori che trattano dati personali richiedono controlli contrattuali."
+      },
+      "classification": {
+        "text": "Classificate dati personali e sensibili nei sistemi?",
+        "help": "Aiuta a gestire accessi, cifratura e regole di retention."
+      },
+      "physical_access": {
+        "text": "Uffici e aree sensibili sono protetti fisicamente?",
+        "help": "Accessi, visitatori e registri dei supporti fisici."
+      },
+      "media_disposal": {
+        "text": "Smaltite supporti e dispositivi in modo sicuro?",
+        "help": "Cancellazione dischi, distruzione e registri di smaltimento."
+      },
+      "crypto_policy": {
+        "text": "Avete una policy di crittografia e gestione delle chiavi?",
+        "help": "Cifratura, rotazione delle chiavi e responsabilità."
+      },
+      "code_review": {
+        "text": "Richiedete code review e protezione dei branch principali?",
+        "help": "Si applica ai team di sviluppo e ai repository critici."
+      },
+      "secrets": {
+        "text": "Gestite i segreti e rilevate fughe nel codice?",
+        "help": "Secret scanning, rotazione token e minimo privilegio."
+      },
+      "dependency_alerts": {
+        "text": "Monitorate le vulnerabilità delle dipendenze?",
+        "help": "Dependency alert, SBOM o vulnerability scan regolari."
+      },
+      "cloud_audit": {
+        "text": "Avete log di audit cloud e controlli di sicurezza baseline?",
+        "help": "CloudTrail, root MFA, cifratura S3 o equivalenti."
+      },
+      "change_management_iso": {
+        "text": "Il change management è auditabile?",
+        "help": "Approvazione, test, rollback e owner della modifica."
+      },
+      "isms_governance": {
+        "text": "Avete definito ambito ISMS, SoA e piano di trattamento del rischio?",
+        "help": "Un audit di certificazione si aspetta ambito, Statement of Applicability e collegamento tra rischi e controlli."
+      },
+      "isms_review": {
+        "text": "Si svolgono audit interni e riesame della direzione?",
+        "help": "ISO 27001 richiede un ciclo dimostrabile di audit interni, correzioni e management review."
+      },
+      "document_control": {
+        "text": "Controllate la documentazione e approvate le eccezioni?",
+        "help": "Policy, procedure, eccezioni e record devono avere owner, versione e revisione."
+      },
+      "remote_and_mobile": {
+        "text": "Dispositivi mobili e lavoro da remoto sono gestiti in sicurezza?",
+        "help": "Includi MDM, cifratura, wipe remoto, VPN e regole per il lavoro da casa."
+      },
+      "materiality": {
+        "text": "Avete completato doppia materialità e priorità ESG approvate?",
+        "help": "CSRD richiede di valutare gli impatti dell’azienda e l’effetto finanziario dei temi ESG sull’azienda."
+      },
+      "emissions": {
+        "text": "Misurate emissioni Scope 1, Scope 2 e Scope 3 rilevanti?",
+        "help": "Ogni numero richiede fonte dati, metodo e owner chiari."
+      },
+      "resource_use": {
+        "text": "Tracciate energia, acqua, rifiuti e incidenti ambientali?",
+        "help": "I dati ambientali core devono essere auditabili e aggiornati regolarmente."
+      },
+      "environmental_risk": {
+        "text": "Valutate rischi climatici e impatti sulla biodiversità?",
+        "help": "Se un tema non è rilevante, conservate la motivazione nella valutazione di materialità."
+      },
+      "workforce": {
+        "text": "Avete dati su forza lavoro, salute e sicurezza, formazione e diversità?",
+        "help": "Le metriche sociali devono rispettare limiti locali di lavoro e privacy."
+      },
+      "supply_chain": {
+        "text": "Valutate il rischio ESG nella supply chain?",
+        "help": "Questionari fornitori e due diligence aiutano a rispondere ai clienti enterprise."
+      },
+      "governance": {
+        "text": "Avete policy di condotta aziendale e formazione anticorruzione?",
+        "help": "La governance copre etica, conflitti di interesse, corruzione e approvazioni."
+      },
+      "report_approval": {
+        "text": "Il report ESG è approvato con una traccia dati auditabile?",
+        "help": "Prima dell’export deve essere chiaro chi ha fornito, verificato e approvato i dati."
+      }
+    }
   },
   "dashboard": {
     "greeting": "Buongiorno",
@@ -1036,19 +1265,43 @@
         "name": "Gratis",
         "description": "Provate la piattaforma senza impegno.",
         "cta": "Inizia gratis",
-        "features": ["1 normativa", "Controlli manuali", "3 modelli documento", "1 utente", "Supporto community"]
+        "features": [
+          "1 normativa",
+          "Controlli manuali",
+          "3 modelli documento",
+          "1 utente",
+          "Supporto community"
+        ]
       },
       "starter": {
         "name": "Starter",
         "description": "Per aziende che prendono la compliance sul serio.",
         "cta": "Diventa design partner",
-        "features": ["2 normative (NIS2 + 1 altra)", "3 integrazioni", "Controlli automatici per Microsoft 365, AWS e GitHub", "Evidence vault", "Modelli documento", "Avvisi scadenze", "5 utenti", "Supporto email"]
+        "features": [
+          "2 normative (NIS2 + 1 altra)",
+          "3 integrazioni",
+          "Controlli automatici per Microsoft 365, AWS e GitHub",
+          "Evidence vault",
+          "Modelli documento",
+          "Avvisi scadenze",
+          "5 utenti",
+          "Supporto email"
+        ]
       },
       "business": {
         "name": "Business",
         "description": "Piattaforma completa per tutto il team.",
         "cta": "Contatta vendite",
-        "features": ["5 normative", "10 integrazioni", "Trust Center", "Modulo vendor risk", "Access reviews", "Incident log", "25 utenti", "Supporto prioritario"]
+        "features": [
+          "5 normative",
+          "10 integrazioni",
+          "Trust Center",
+          "Modulo vendor risk",
+          "Access reviews",
+          "Incident log",
+          "25 utenti",
+          "Supporto prioritario"
+        ]
       }
     },
     "comparison": {
@@ -1096,23 +1349,69 @@
     "downloadTitle": "Scarica gratis",
     "downloadSubtitle": "Panoramica obblighi, modelli documento e checklist per ogni normativa.",
     "downloadCta": "Scarica tutto gratis",
-    "resources": ["Checklist NIS2", "Panoramica EU AI Act", "Modello policy AI", "Formazione AI literacy", "Registro uso AI", "Riferimento Annex III"],
+    "resources": [
+      "Checklist NIS2",
+      "Panoramica EU AI Act",
+      "Modello policy AI",
+      "Formazione AI literacy",
+      "Registro uso AI",
+      "Riferimento Annex III"
+    ],
     "cards": {
       "available": "Disponibile",
       "soon": "Presto",
-      "nis2": {"regulator": "ACN", "deadline": "Ottobre 2024", "description": "Obblighi di cybersecurity per organizzazioni medie e grandi."},
-      "eu-ai-act": {"regulator": "Autorità UE/nazionali", "deadline": "Agosto 2026", "description": "Obblighi per organizzazioni che usano sistemi AI."},
-      "gdpr": {"regulator": "Garante Privacy", "deadline": "Attivo", "description": "Obblighi di protezione dati personali per ogni azienda."},
-      "iso-27001": {"regulator": "ISO", "deadline": "Continuo", "description": "Standard internazionale per la gestione della sicurezza delle informazioni."},
-      "csrd": {"regulator": "Autorità ESG nazionale", "deadline": "2026+", "description": "Pressione ESG reporting per fornitori di grandi aziende."},
-      "dora": {"regulator": "Autorità finanziaria", "deadline": "Gennaio 2025", "description": "Resilienza operativa digitale per istituzioni finanziarie."}
+      "nis2": {
+        "regulator": "ACN",
+        "deadline": "Ottobre 2024",
+        "description": "Obblighi di cybersecurity per organizzazioni medie e grandi."
+      },
+      "eu-ai-act": {
+        "regulator": "Autorità UE/nazionali",
+        "deadline": "Agosto 2026",
+        "description": "Obblighi per organizzazioni che usano sistemi AI."
+      },
+      "gdpr": {
+        "regulator": "Garante Privacy",
+        "deadline": "Attivo",
+        "description": "Obblighi di protezione dati personali per ogni azienda."
+      },
+      "iso-27001": {
+        "regulator": "ISO",
+        "deadline": "Continuo",
+        "description": "Standard internazionale per la gestione della sicurezza delle informazioni."
+      },
+      "csrd": {
+        "regulator": "Autorità ESG nazionale",
+        "deadline": "2026+",
+        "description": "Pressione ESG reporting per fornitori di grandi aziende."
+      },
+      "dora": {
+        "regulator": "Autorità finanziaria",
+        "deadline": "Gennaio 2025",
+        "description": "Resilienza operativa digitale per istituzioni finanziarie."
+      }
     },
     "timeline": [
-      {"date": "Febbraio 2025", "title": "Divieto delle pratiche AI dannose"},
-      {"date": "Ottobre 2024", "title": "Scadenza recepimento NIS2"},
-      {"date": "Agosto 2025", "title": "Obbligo di AI literacy per il personale"},
-      {"date": "Agosto 2026", "title": "I sistemi AI ad alto rischio devono essere conformi"},
-      {"date": "Agosto 2027", "title": "Altri sistemi AI integrati nei prodotti"}
+      {
+        "date": "Febbraio 2025",
+        "title": "Divieto delle pratiche AI dannose"
+      },
+      {
+        "date": "Ottobre 2024",
+        "title": "Scadenza recepimento NIS2"
+      },
+      {
+        "date": "Agosto 2025",
+        "title": "Obbligo di AI literacy per il personale"
+      },
+      {
+        "date": "Agosto 2026",
+        "title": "I sistemi AI ad alto rischio devono essere conformi"
+      },
+      {
+        "date": "Agosto 2027",
+        "title": "Altri sistemi AI integrati nei prodotti"
+      }
     ],
     "detail": {
       "metadataTitleSuffix": "Splnit.eu — obblighi, scadenze e automazione compliance",
@@ -1257,6 +1556,58 @@
       "toolInventory": "Inventario strumenti",
       "updated": "Aggiornato",
       "notSet": "non impostato"
+    }
+  },
+  "questionnairePage": {
+    "eyebrow": "Questionnaire AI",
+    "title": "Questionari di sicurezza",
+    "subtitle": "Genera bozze di risposta ai questionari clienti usando controlli superati, evidenze e policy già presenti in Splnit.eu.",
+    "disabledNotice": "Questionnaire AI richiede Clerk, DATABASE_URL e ANTHROPIC_API_KEY.",
+    "fallbacks": {
+      "demoOrganisation": "Organizzazione demo",
+      "organisation": "Organizzazione"
+    },
+    "metrics": {
+      "controls": "Controlli superati",
+      "controlsBody": "Usati come contesto principale per le risposte.",
+      "evidence": "Evidenze",
+      "evidenceBody": "Le evidenze automatiche supportano risposte ad alta confidenza.",
+      "policies": "Policy",
+      "policiesBody": "I documenti attivi supportano risposte a confidenza media."
+    },
+    "workbench": {
+      "inputTitle": "Input questionario",
+      "pasteLabel": "Incolla questionario",
+      "uploadLabel": "Carica file di testo",
+      "generate": "Genera risposte",
+      "rateLimitTitle": "Limite utilizzo",
+      "rateLimitBody": "Starter: 5/mese. Business e Consultant: illimitati.",
+      "remaining": "Residui",
+      "reset": "reset",
+      "notAvailable": "n/d",
+      "resultsTitle": "Risposte generate",
+      "resultMeta": "{count} domande · {model}",
+      "noResultSubtitle": "Le risposte appariranno qui dopo la generazione.",
+      "emptyBody": "Le risposte di Claude saranno basate sui controlli superati, sulle evidenze e sulle policy attive nello spazio di lavoro {organisation}.",
+      "evidence": "Evidenze",
+      "policies": "Policy",
+      "none": "nessuna",
+      "sampleQuestions": [
+        "Richiedete MFA per tutti gli utenti?",
+        "Avete una policy di risposta agli incidenti e un processo di notifica violazioni?",
+        "Come gestite il rischio di sicurezza dei fornitori?",
+        "Le revisioni degli accessi vengono eseguite almeno ogni trimestre?",
+        "Conservate i log di audit per gli eventi di sicurezza?"
+      ]
+    },
+    "actionErrors": {
+      "authRequired": "Sono richiesti accesso e organizzazione attiva.",
+      "invalidInput": "Incolla il testo del questionario o carica un file di testo.",
+      "missingConfig": "ANTHROPIC_API_KEY non è configurata.",
+      "noQuestions": "Non sono state trovate domande nel questionario.",
+      "rateLimit": "Il limite mensile di {limit} questionari è stato raggiunto.",
+      "generationFailed": "Generazione delle risposte non riuscita.",
+      "organisationFallback": "Organizzazione"
     }
   }
 }

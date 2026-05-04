@@ -1,11 +1,13 @@
 "use client";
 
 import { useActionState, useMemo } from "react";
+import { useLocale, useMessages } from "next-intl";
 import { Download, FileSpreadsheet, Loader2, Sparkles } from "lucide-react";
 import {
   answerQuestionnaireAction,
   type QuestionnaireActionState,
 } from "@/app/(app)/questionnaires/actions";
+import { normalizeLocale } from "@/i18n/routing";
 
 const initialState: QuestionnaireActionState = {
   error: null,
@@ -13,19 +15,48 @@ const initialState: QuestionnaireActionState = {
   result: null,
 };
 
-const sampleQuestionnaire = [
-  "Do you enforce MFA for all users?",
-  "Do you have an incident response policy and breach notification process?",
-  "How do you manage vendor security risk?",
-  "Are access reviews performed at least quarterly?",
-  "Do you retain audit logs for security events?",
-].join("\n");
+type QuestionnaireWorkbenchCopy = {
+  inputTitle: string;
+  pasteLabel: string;
+  uploadLabel: string;
+  sampleQuestions: string[];
+  generate: string;
+  rateLimitTitle: string;
+  rateLimitBody: string;
+  remaining: string;
+  reset: string;
+  notAvailable: string;
+  resultsTitle: string;
+  resultMeta: string;
+  noResultSubtitle: string;
+  emptyBody: string;
+  evidence: string;
+  policies: string;
+  none: string;
+};
+
+type QuestionnaireMessages = {
+  questionnairePage: {
+    workbench: QuestionnaireWorkbenchCopy;
+  };
+};
+
+function interpolate(template: string, values: Record<string, string | number>) {
+  return Object.entries(values).reduce(
+    (text, [key, value]) => text.replaceAll(`{${key}}`, String(value)),
+    template,
+  );
+}
 
 export function QuestionnaireWorkbench({
   canGenerate,
+  organisationName,
 }: {
   canGenerate: boolean;
+  organisationName: string;
 }) {
+  const locale = normalizeLocale(useLocale()) ?? "cs-CZ";
+  const copy = (useMessages() as QuestionnaireMessages).questionnairePage.workbench;
   const [state, formAction, pending] = useActionState(
     answerQuestionnaireAction,
     initialState,
@@ -40,25 +71,26 @@ export function QuestionnaireWorkbench({
       <section className="rounded-lg border border-border bg-surface p-5">
         <div className="flex items-center gap-2">
           <Sparkles className="h-5 w-5 text-primary" aria-hidden="true" />
-          <h2 className="text-lg font-semibold">Questionnaire input</h2>
+          <h2 className="text-lg font-semibold">{copy.inputTitle}</h2>
         </div>
         <form
           action={formAction}
           className="mt-5 space-y-4"
           encType="multipart/form-data"
         >
+          <input name="locale" type="hidden" value={locale} />
           <label className="grid gap-2 text-sm">
-            Paste questionnaire
+            {copy.pasteLabel}
             <textarea
               name="questionnaire"
               rows={12}
-              placeholder={sampleQuestionnaire}
+              placeholder={copy.sampleQuestions.join("\n")}
               disabled={!canGenerate || pending}
               className="resize-y rounded-md border border-border bg-background px-3 py-2 text-sm leading-6"
             />
           </label>
           <label className="grid gap-2 text-sm">
-            Upload text file
+            {copy.uploadLabel}
             <input
               name="file"
               type="file"
@@ -77,7 +109,7 @@ export function QuestionnaireWorkbench({
             ) : (
               <Sparkles className="h-4 w-4" aria-hidden="true" />
             )}
-            Generate answers
+            {copy.generate}
           </button>
         </form>
 
@@ -88,16 +120,17 @@ export function QuestionnaireWorkbench({
         ) : null}
 
         <div className="mt-5 rounded-md bg-surface-muted p-4 text-sm text-foreground/64">
-          <p className="font-medium text-foreground">Rate limit</p>
+          <p className="font-medium text-foreground">{copy.rateLimitTitle}</p>
           <p className="mt-1">
-            Starter: 5/month. Business and Consultant: unlimited.
+            {copy.rateLimitBody}
           </p>
           {state.rateLimit ? (
             <p className="mt-1">
-              Remaining: {state.rateLimit.remaining ?? "n/a"} · reset{" "}
+              {copy.remaining}: {state.rateLimit.remaining ?? copy.notAvailable} ·{" "}
+              {copy.reset}{" "}
               {state.rateLimit.resetAt
                 ? state.rateLimit.resetAt.slice(0, 10)
-                : "n/a"}
+                : copy.notAvailable}
             </p>
           ) : null}
         </div>
@@ -106,11 +139,14 @@ export function QuestionnaireWorkbench({
       <section className="rounded-lg border border-border bg-surface">
         <div className="flex flex-col justify-between gap-3 border-b border-border p-5 md:flex-row md:items-center">
           <div>
-            <h2 className="text-lg font-semibold">Generated answers</h2>
+            <h2 className="text-lg font-semibold">{copy.resultsTitle}</h2>
             <p className="mt-1 text-sm text-foreground/58">
               {state.result
-                ? `${state.result.questionCount} questions · ${state.result.model}`
-                : "Answers appear here after generation."}
+                ? interpolate(copy.resultMeta, {
+                    count: state.result.questionCount,
+                    model: state.result.model,
+                  })
+                : copy.noResultSubtitle}
             </p>
           </div>
           {state.result ? (
@@ -163,8 +199,13 @@ export function QuestionnaireWorkbench({
                     {answer.answer}
                   </p>
                   <div className="mt-3 grid gap-2 text-xs text-foreground/58 md:grid-cols-2">
-                    <p>Evidence: {answer.evidenceRefs.join(", ") || "none"}</p>
-                    <p>Policies: {answer.policyRefs.join(", ") || "none"}</p>
+                    <p>
+                      {copy.evidence}:{" "}
+                      {answer.evidenceRefs.join(", ") || copy.none}
+                    </p>
+                    <p>
+                      {copy.policies}: {answer.policyRefs.join(", ") || copy.none}
+                    </p>
                   </div>
                   {answer.notes ? (
                     <p className="mt-2 text-xs leading-5 text-foreground/58">
@@ -180,8 +221,7 @@ export function QuestionnaireWorkbench({
             <div>
               <Sparkles className="mx-auto h-8 w-8 text-primary" aria-hidden="true" />
               <p className="mt-3 max-w-sm">
-                Claude answers will be grounded in passing controls, evidence,
-                and active policies from the organisation workspace.
+                {interpolate(copy.emptyBody, { organisation: organisationName })}
               </p>
             </div>
           </div>

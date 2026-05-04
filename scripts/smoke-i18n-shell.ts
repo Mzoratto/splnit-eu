@@ -1,6 +1,7 @@
 import assert from "node:assert/strict";
 import { getMessagesForLocale } from "../i18n/messages";
 import type { Locale } from "../i18n/routing";
+import { FRAMEWORK_QUESTIONS } from "../lib/frameworks/questions";
 
 const requiredNamespaces = [
   "navigation",
@@ -20,6 +21,7 @@ const requiredNamespaces = [
   "integrations",
   "onboarding",
   "organisationSettings",
+  "questionnairePage",
   "risks",
   "teamPage",
   "trustCenterSettings",
@@ -65,6 +67,10 @@ for (const locale of locales) {
     messages.organisationSettings.profile.save,
     `${locale} should label organisation settings save`,
   );
+  assert.ok(
+    messages.questionnairePage.workbench.generate,
+    `${locale} should label questionnaires`,
+  );
   assert.ok(messages.risks.form.add, `${locale} should label risks`);
   assert.ok(messages.teamPage.open, `${locale} should label team page`);
   assert.ok(
@@ -75,6 +81,9 @@ for (const locale of locales) {
 }
 
 const en = getMessagesForLocale("en-EU");
+const frameworkQuestionIds = Array.from(
+  new Set(Object.values(FRAMEWORK_QUESTIONS).flat().map((question) => question.id)),
+);
 assert.equal(en.shell.upgradePlan, "Upgrade plan");
 assert.equal(en.appError.retry, "Try again");
 assert.equal(en.accessReviews.title, "Access reviews");
@@ -90,6 +99,12 @@ assert.equal(en.clientsPage.form.save, "Save link");
 assert.equal(en.evidence.filters.apply, "Apply filters");
 assert.equal(en.frameworks.index.title, "Regulations and standards");
 assert.equal(en.frameworkWizard.submit, "Assess");
+for (const questionId of frameworkQuestionIds) {
+  assert.ok(
+    (en.frameworkWizard.questions as Record<string, { text: string }>)[questionId]?.text,
+    `en-EU should translate framework wizard question ${questionId}`,
+  );
+}
 assert.equal(en.incidents.title, "Incidents");
 assert.equal(en.incidents.wizard.create, "Create incident");
 assert.equal(en.integrations.index.title, "Automated tests");
@@ -98,6 +113,13 @@ assert.equal(en.integrations.providerPages.github.repositories, "Repositories");
 assert.equal(en.integrations.providerPages.microsoft365.connect, "Connect Microsoft 365");
 assert.equal(en.navigation.evidence, "Evidence");
 assert.equal(en.organisationSettings.profile.save, "Save changes");
+assert.equal(en.questionnairePage.title, "Security questionnaires");
+assert.equal(en.questionnairePage.workbench.generate, "Generate answers");
+assert.equal(en.questionnairePage.workbench.sampleQuestions[0], "Do you enforce MFA for all users?");
+assert.equal(
+  (en.frameworkWizard.questions as Record<string, { text: string }>).mfa.text,
+  "Is MFA required for all user accounts?",
+);
 assert.equal(en.risks.title, "Risks");
 assert.equal(en.risks.form.add, "Add risk");
 assert.equal(en.teamPage.title, "Access and training");
@@ -124,6 +146,12 @@ assert.equal(it.clientsPage.form.save, "Salva collegamento");
 assert.equal(it.evidence.filters.apply, "Applica filtri");
 assert.equal(it.frameworks.index.title, "Normative e standard");
 assert.equal(it.frameworkWizard.submit, "Valuta");
+for (const questionId of frameworkQuestionIds) {
+  assert.ok(
+    (it.frameworkWizard.questions as Record<string, { text: string }>)[questionId]?.text,
+    `it-IT should translate framework wizard question ${questionId}`,
+  );
+}
 assert.equal(it.incidents.title, "Incidenti");
 assert.equal(it.incidents.wizard.create, "Crea incidente");
 assert.equal(it.integrations.index.title, "Test automatici");
@@ -132,6 +160,13 @@ assert.equal(it.integrations.providerPages.github.repositories, "Repository");
 assert.equal(it.integrations.providerPages.microsoft365.connect, "Collega Microsoft 365");
 assert.equal(it.navigation.evidence, "Evidenze");
 assert.equal(it.organisationSettings.profile.save, "Salva modifiche");
+assert.equal(it.questionnairePage.title, "Questionari di sicurezza");
+assert.equal(it.questionnairePage.workbench.generate, "Genera risposte");
+assert.equal(it.questionnairePage.workbench.sampleQuestions[0], "Richiedete MFA per tutti gli utenti?");
+assert.equal(
+  (it.frameworkWizard.questions as Record<string, { text: string }>).mfa.text,
+  "La MFA è obbligatoria per tutti gli account utente?",
+);
 assert.equal(it.risks.title, "Rischi");
 assert.equal(it.risks.form.add, "Aggiungi rischio");
 assert.equal(it.teamPage.title, "Accessi e formazione");
