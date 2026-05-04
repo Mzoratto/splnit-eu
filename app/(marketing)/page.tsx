@@ -5,17 +5,44 @@ import { Icon } from "@/components/marketing/local-icon";
 import { DashboardMockup } from "@/components/marketing/dashboard-mockup";
 import { LeadCapture } from "@/components/marketing/lead-capture";
 import { MarketingShell } from "@/components/marketing/marketing-shell";
-import { normalizeLocale } from "@/i18n/routing";
+import { normalizeLocale, type Locale } from "@/i18n/routing";
 
-export const metadata: Metadata = {
-  title:
-    "Splnit.eu — Compliance automation pro evropské SMB týmy",
-  description:
-    "Splnit.eu propojí Microsoft 365, AWS nebo GitHub a pomůže připravit auditní důkazy pro NIS2, GDPR a ISO 27001.",
-  openGraph: {
+const metadataByLocale: Record<
+  Locale,
+  Required<Pick<Metadata, "title" | "description">> & { locale: string }
+> = {
+  "cs-CZ": {
+    title: "Splnit.eu - Compliance automation pro evropské SMB týmy",
+    description:
+      "Splnit.eu propojí Microsoft 365, AWS nebo GitHub a pomůže připravit auditní důkazy pro NIS2, GDPR a ISO 27001.",
     locale: "cs_CZ",
   },
+  "en-EU": {
+    title: "Splnit.eu - Compliance automation for European SMB teams",
+    description:
+      "Connect Microsoft 365, AWS, or GitHub and prepare audit evidence for NIS2, GDPR, and ISO 27001.",
+    locale: "en_EU",
+  },
+  "it-IT": {
+    title: "Splnit.eu - Automazione compliance per PMI europee",
+    description:
+      "Collegate Microsoft 365, AWS o GitHub e preparate evidenze audit per NIS2, GDPR e ISO 27001.",
+    locale: "it_IT",
+  },
 };
+
+export async function generateMetadata(): Promise<Metadata> {
+  const locale = normalizeLocale(await getLocale()) ?? "cs-CZ";
+  const metadata = metadataByLocale[locale];
+
+  return {
+    title: metadata.title,
+    description: metadata.description,
+    openGraph: {
+      locale: metadata.locale,
+    },
+  };
+}
 
 const features = [
   {

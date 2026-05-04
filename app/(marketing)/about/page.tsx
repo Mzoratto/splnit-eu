@@ -1,17 +1,46 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { getTranslations } from "next-intl/server";
+import { getLocale, getTranslations } from "next-intl/server";
 import { Icon } from "@/components/marketing/local-icon";
 import { MarketingShell } from "@/components/marketing/marketing-shell";
+import { normalizeLocale, type Locale } from "@/i18n/routing";
 
-export const metadata: Metadata = {
-  title: "About | Splnit.eu",
-  description:
-    "Kdo stojí za Splnit.eu a co je v early access produktu dnes skutečně hotové.",
-  openGraph: {
+const metadataByLocale: Record<
+  Locale,
+  Required<Pick<Metadata, "title" | "description">> & { locale: string }
+> = {
+  "cs-CZ": {
+    title: "About | Splnit.eu",
+    description:
+      "Kdo stojí za Splnit.eu a co je v early access produktu dnes skutečně hotové.",
     locale: "cs_CZ",
   },
+  "en-EU": {
+    title: "About | Splnit.eu",
+    description:
+      "Who is behind Splnit.eu and what is actually ready in the early access product today.",
+    locale: "en_EU",
+  },
+  "it-IT": {
+    title: "Chi siamo | Splnit.eu",
+    description:
+      "Chi c'è dietro Splnit.eu e cosa è realmente pronto oggi nel prodotto in early access.",
+    locale: "it_IT",
+  },
 };
+
+export async function generateMetadata(): Promise<Metadata> {
+  const locale = normalizeLocale(await getLocale()) ?? "cs-CZ";
+  const metadata = metadataByLocale[locale];
+
+  return {
+    title: metadata.title,
+    description: metadata.description,
+    openGraph: {
+      locale: metadata.locale,
+    },
+  };
+}
 
 const realTodayKeys = ["solo", "focus", "legalReview", "noFakeProof"];
 const notYetKeys = ["legalAdvice", "enterprise", "certification", "entity"];
