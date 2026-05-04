@@ -16,6 +16,7 @@
     "smoke:italian-tenant": "tsx scripts/smoke-tenant-locales.ts",
     "smoke:tenant-locales": "tsx scripts/smoke-tenant-locales.ts",
     "smoke:jurisdictions": "tsx scripts/smoke-jurisdiction-context.ts",
+    "smoke:source-documents": "tsx scripts/smoke-source-documents.ts",
     "smoke:templates": "tsx scripts/smoke-template-resolution.ts",
     "db:generate": "drizzle-kit generate",
     "db:migrate": "drizzle-kit migrate",

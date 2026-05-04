@@ -65,13 +65,74 @@ const SOURCE_DOCUMENT_LIBRARY = [
     url: "https://www.gazzettaufficiale.it/eli/id/2024/10/01/24G00155/SG",
   },
   {
-    citation: "ACN, Determinazione NIS piattaforma 2024/38565",
+    citation:
+      "ACN, Determinazione n. 38565 del 26 novembre 2024 - piattaforma NIS; sostituita dalla Determinazione n. 136117/2025",
     effectiveDate: null,
     filename: "it/acn-nis-piattaforma-2024-38565.pdf",
     jurisdiction: "IT",
     locale: "it-IT",
-    title: "ACN - Determinazione NIS piattaforma",
+    title: "ACN - Determinazione NIS piattaforma 2024 (sostituita)",
     url: "https://www.acn.gov.it/portale/documents/d/guest/detacn_nis_piattaforma_2024_38565",
+  },
+  {
+    citation:
+      "ACN, Determinazione n. 136117 del 10 aprile 2025 - piattaforma digitale NIS",
+    effectiveDate: "2025-04-15",
+    filename: "it/acn-nis-piattaforma-2025-136117.pdf",
+    jurisdiction: "IT",
+    locale: "it-IT",
+    title: "ACN - Determinazione NIS piattaforma 2025",
+    url: "https://www.acn.gov.it/portale/documents/d/guest/detacn_nis_piattaforma_2025_136117_signed",
+  },
+  {
+    citation:
+      "ACN, Determinazione n. 164179 del 10 aprile 2025 - specifiche di base NIS",
+    effectiveDate: "2025-04-30",
+    filename: "it/acn-nis-specifiche-2025-164179.pdf",
+    jurisdiction: "IT",
+    locale: "it-IT",
+    title: "ACN - Determinazione NIS specifiche di base",
+    url: "https://www.acn.gov.it/portale/documents/d/guest/detacn_nis_specifiche_2025_164179_signed",
+  },
+  {
+    citation:
+      "ACN, Determinazione n. 164179/2025, allegato 1 - misure di sicurezza di base per soggetti importanti",
+    effectiveDate: "2025-04-30",
+    filename: "it/acn-nis-specifiche-2025-164179-allegato1.pdf",
+    jurisdiction: "IT",
+    locale: "it-IT",
+    title: "ACN - Allegato 1 misure per soggetti importanti",
+    url: "https://www.acn.gov.it/portale/documents/d/guest/detacn_nis_specifiche_2025_164179_allegato1",
+  },
+  {
+    citation:
+      "ACN, Determinazione n. 164179/2025, allegato 2 - misure di sicurezza di base per soggetti essenziali",
+    effectiveDate: "2025-04-30",
+    filename: "it/acn-nis-specifiche-2025-164179-allegato2.pdf",
+    jurisdiction: "IT",
+    locale: "it-IT",
+    title: "ACN - Allegato 2 misure per soggetti essenziali",
+    url: "https://www.acn.gov.it/portale/documents/d/guest/detacn_nis_specifiche_2025_164179_allegato2",
+  },
+  {
+    citation:
+      "ACN, Determinazione n. 164179/2025, allegato 3 - incidenti significativi di base per soggetti importanti",
+    effectiveDate: "2025-04-30",
+    filename: "it/acn-nis-specifiche-2025-164179-allegato3.pdf",
+    jurisdiction: "IT",
+    locale: "it-IT",
+    title: "ACN - Allegato 3 incidenti per soggetti importanti",
+    url: "https://www.acn.gov.it/portale/documents/d/guest/detacn_nis_specifiche_2025_164179_allegato3",
+  },
+  {
+    citation:
+      "ACN, Determinazione n. 164179/2025, allegato 4 - incidenti significativi di base per soggetti essenziali",
+    effectiveDate: "2025-04-30",
+    filename: "it/acn-nis-specifiche-2025-164179-allegato4.pdf",
+    jurisdiction: "IT",
+    locale: "it-IT",
+    title: "ACN - Allegato 4 incidenti per soggetti essenziali",
+    url: "https://www.acn.gov.it/portale/documents/d/guest/detacn_nis_specifiche_2025_164179_allegato4",
   },
   {
     citation: "Regolamento (UE) 2016/679, CELEX 32016R0679",
@@ -315,7 +376,7 @@ async function seedFrameworkControls(
 
 async function seedSourceDocuments() {
   const db = getDb();
-  const lastReviewed = new Date("2026-05-04T00:00:00.000Z");
+  const lastReviewed = new Date("2026-05-05T00:00:00.000Z");
   let count = 0;
 
   for (const template of POLICY_TEMPLATES) {

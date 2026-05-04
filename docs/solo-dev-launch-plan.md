@@ -306,6 +306,21 @@ Ingest each source into `source_documents` with citation, URL, effective date, a
 - [ ] Current consolidated D.Lgs. 196/2003, Codice Privacy.
 - [ ] Garante guidance relevant to SMBs.
 
+### Phase 3 Source Ingestion - 2026-05-05
+
+Started and verified locally:
+
+- Added ACN Determinazione n. 136117/2025 on NIS platform access and entity updates; PDF text states it applies from 2025-04-15.
+- Added ACN Determinazione n. 164179/2025 on NIS baseline specifications; PDF text states it applies from 2025-04-30.
+- Added ACN 164179/2025 annexes 1-4 for important/essential security measures and incident categories.
+- Kept ACN Determinazione n. 38565/2024 in the source library as superseded history and marked it as replaced by 136117/2025.
+- Added `smoke:source-documents` to verify required Italian NIS/GDPR/Garante source rows, URLs, effective dates where known, and review timestamps.
+
+Still open before calling 3.1 complete:
+
+- Verify whether later ACN determinations on the NIS portal/CSIRT referent, including 333017/2025 and later 2025 updates mentioned in secondary sources, have official ACN document URLs. Do not seed them until the official source is found.
+- Add official ACN guidance/reading-guide documents if ACN publishes a stable source URL.
+
 ### 3.2 Italian Control Mapping
 
 For each NIS2 Article 21 measure:
