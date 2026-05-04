@@ -440,6 +440,49 @@
       }
     ]
   },
+  "clientsPage": {
+    "never": "never",
+    "eyebrow": "Consultant",
+    "title": "Client dashboard",
+    "subtitle": "Manage client organisations, monitor scores, and prepare white-label Trust Center outputs.",
+    "planLabel": "Plan",
+    "lock": {
+      "demoTitle": "Demo mode",
+      "demoBody": "Clerk or the database is not available, so the form is locked and the page uses demo client data.",
+      "planTitle": "Consultant plan required",
+      "planBody": "Production client organisation linking is available only on the consultant plan."
+    },
+    "form": {
+      "title": "Connect client",
+      "clientOrgId": "Client Clerk org ID",
+      "contactEmail": "Contact email",
+      "access": "Access",
+      "save": "Save link"
+    },
+    "accessLevels": {
+      "view": "Read only",
+      "manage": "Manage controls",
+      "admin": "Admin"
+    },
+    "list": {
+      "title": "Clients",
+      "sectorEmpty": "sector not provided",
+      "frameworkCount": "{count} frameworks",
+      "lastChanged": "last changed",
+      "averageScore": "avg score",
+      "empty": "You do not have any connected clients yet."
+    },
+    "demoClients": [
+      {
+        "name": "Demo client A",
+        "sector": "Manufacturing"
+      },
+      {
+        "name": "Demo client B",
+        "sector": "Finance"
+      }
+    ]
+  },
   "trustCenterSettings": {
     "never": "never",
     "title": "Public compliance centre",

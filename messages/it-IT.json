@@ -440,6 +440,49 @@
       }
     ]
   },
+  "clientsPage": {
+    "never": "mai",
+    "eyebrow": "Consultant",
+    "title": "Dashboard clienti",
+    "subtitle": "Gestisci organizzazioni cliente, monitora i punteggi e prepara output Trust Center white-label.",
+    "planLabel": "Piano",
+    "lock": {
+      "demoTitle": "Modalità demo",
+      "demoBody": "Clerk o il database non sono disponibili, quindi il form è bloccato e la pagina usa dati cliente demo.",
+      "planTitle": "Serve il piano Consultant",
+      "planBody": "Il collegamento in produzione delle organizzazioni cliente è disponibile solo con il piano consultant."
+    },
+    "form": {
+      "title": "Collega cliente",
+      "clientOrgId": "Clerk org ID cliente",
+      "contactEmail": "Email contatto",
+      "access": "Accesso",
+      "save": "Salva collegamento"
+    },
+    "accessLevels": {
+      "view": "Sola lettura",
+      "manage": "Gestione controlli",
+      "admin": "Admin"
+    },
+    "list": {
+      "title": "Clienti",
+      "sectorEmpty": "settore non indicato",
+      "frameworkCount": "{count} framework",
+      "lastChanged": "ultima modifica",
+      "averageScore": "punteggio medio",
+      "empty": "Non hai ancora clienti collegati."
+    },
+    "demoClients": [
+      {
+        "name": "Cliente demo A",
+        "sector": "Manifatturiero"
+      },
+      {
+        "name": "Cliente demo B",
+        "sector": "Finanza"
+      }
+    ]
+  },
   "trustCenterSettings": {
     "never": "mai",
     "title": "Centro compliance pubblico",

@@ -440,6 +440,49 @@
       }
     ]
   },
+  "clientsPage": {
+    "never": "nikdy",
+    "eyebrow": "Consultant",
+    "title": "Klientský dashboard",
+    "subtitle": "Spravujte klientské organizace, sledujte skóre a připravte white-label Trust Center výstupy.",
+    "planLabel": "Plán",
+    "lock": {
+      "demoTitle": "Demo režim",
+      "demoBody": "Clerk nebo databáze nejsou dostupné, proto je formulář zamčený a stránka používá ukázková klientská data.",
+      "planTitle": "Vyžaduje Consultant plán",
+      "planBody": "Produkční propojení klientských organizací je dostupné pouze pro consultant plán."
+    },
+    "form": {
+      "title": "Připojit klienta",
+      "clientOrgId": "Clerk org ID klienta",
+      "contactEmail": "Kontaktní email",
+      "access": "Přístup",
+      "save": "Uložit propojení"
+    },
+    "accessLevels": {
+      "view": "Read only",
+      "manage": "Manage controls",
+      "admin": "Admin"
+    },
+    "list": {
+      "title": "Klienti",
+      "sectorEmpty": "sektor neuveden",
+      "frameworkCount": "{count} frameworků",
+      "lastChanged": "poslední změna",
+      "averageScore": "avg score",
+      "empty": "Zatím nemáte připojeného žádného klienta."
+    },
+    "demoClients": [
+      {
+        "name": "Ukázkový klient A",
+        "sector": "Výroba"
+      },
+      {
+        "name": "Ukázkový klient B",
+        "sector": "Finance"
+      }
+    ]
+  },
   "trustCenterSettings": {
     "never": "nikdy",
     "title": "Veřejné compliance centrum",

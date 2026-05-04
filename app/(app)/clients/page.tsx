@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { auth } from "@clerk/nextjs/server";
+import { getLocale } from "next-intl/server";
 import {
   ArrowRight,
   BriefcaseBusiness,
@@ -7,6 +8,8 @@ import {
   Plus,
   Sparkles,
 } from "lucide-react";
+import { getMessagesForLocale } from "@/i18n/messages";
+import { normalizeLocale, type Locale } from "@/i18n/routing";
 import { hasDatabaseUrl } from "@/lib/db";
 import { getConsultantClients } from "@/lib/db/queries/consultant-clients";
 import { getOrganisationByClerkOrgId } from "@/lib/db/queries/organisations";
@@ -15,51 +18,44 @@ import { linkClientAction } from "./actions";
 
 export const dynamic = "force-dynamic";
 
-const fallbackClients = [
-  {
-    accessLevel: "manage",
-    clientOrgId: "demo-client-a",
-    createdAt: new Date("2026-04-01T10:00:00.000Z"),
-    frameworkCount: 4,
-    id: "demo-client-a",
-    inviteEmail: "security@example.test",
-    name: "Ukázkový klient A",
-    plan: "business",
-    score: 84,
-    sector: "Výroba",
-    status: "active",
-    updatedAt: new Date("2026-04-28T10:00:00.000Z"),
-    whiteLabelAccentColor: "#1b7f5a",
-    whiteLabelLogoUrl: null,
-  },
-  {
-    accessLevel: "view",
-    clientOrgId: "demo-client-b",
-    createdAt: new Date("2026-03-15T10:00:00.000Z"),
-    frameworkCount: 3,
-    id: "demo-client-b",
-    inviteEmail: "compliance@example.test",
-    name: "Ukázkový klient B",
-    plan: "starter",
-    score: 71,
-    sector: "Finance",
-    status: "active",
-    updatedAt: new Date("2026-04-25T10:00:00.000Z"),
-    whiteLabelAccentColor: "#2563eb",
-    whiteLabelLogoUrl: null,
-  },
-];
+type ClientsCopy = ReturnType<typeof getMessagesForLocale>["clientsPage"];
 
-async function loadClients() {
+function getFallbackClients(copy: ClientsCopy) {
+  return copy.demoClients.map((client, index) => ({
+    accessLevel: index === 0 ? "manage" : "view",
+    clientOrgId: `demo-client-${index + 1}`,
+    createdAt: new Date(
+      index === 0 ? "2026-04-01T10:00:00.000Z" : "2026-03-15T10:00:00.000Z",
+    ),
+    frameworkCount: index === 0 ? 4 : 3,
+    id: `demo-client-${index + 1}`,
+    inviteEmail: index === 0 ? "security@example.test" : "compliance@example.test",
+    name: client.name,
+    plan: index === 0 ? "business" : "starter",
+    score: index === 0 ? 84 : 71,
+    sector: client.sector,
+    status: "active",
+    updatedAt: new Date(
+      index === 0 ? "2026-04-28T10:00:00.000Z" : "2026-04-25T10:00:00.000Z",
+    ),
+    whiteLabelAccentColor: index === 0 ? "#1b7f5a" : "#2563eb",
+    whiteLabelLogoUrl: null,
+  }));
+}
+
+async function loadClients(requestLocale: Locale) {
   const clerkConfigured =
     Boolean(process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY) &&
     Boolean(process.env.CLERK_SECRET_KEY);
 
   if (!clerkConfigured || !hasDatabaseUrl()) {
+    const copy = getMessagesForLocale(requestLocale).clientsPage;
+
     return {
       canManage: false,
-      clients: fallbackClients,
+      clients: getFallbackClients(copy),
       demoMode: true,
+      organisationLocale: null,
       plan: "consultant",
     };
   }
@@ -70,6 +66,7 @@ async function loadClients() {
       canManage: false,
       clients: [],
       demoMode: false,
+      organisationLocale: null,
       plan: "free",
     };
   }
@@ -82,6 +79,7 @@ async function loadClients() {
       canManage: false,
       clients: [],
       demoMode: false,
+      organisationLocale: organisation?.locale ?? null,
       plan,
     };
   }
@@ -90,6 +88,7 @@ async function loadClients() {
     canManage: true,
     clients: await getConsultantClients(session.orgId),
     demoMode: false,
+    organisationLocale: organisation?.locale ?? null,
     plan,
   };
 }
@@ -120,39 +119,49 @@ function ClientSparkline({ score }: { score: number }) {
   );
 }
 
-function formatDate(value: Date | string | null | undefined) {
+function formatFrameworkCount(copy: ClientsCopy, count: number) {
+  return copy.list.frameworkCount.replace("{count}", String(count));
+}
+
+function formatDate(
+  value: Date | string | null | undefined,
+  locale: Locale,
+  emptyLabel: string,
+) {
   if (!value) {
-    return "nikdy";
+    return emptyLabel;
   }
 
-  return new Intl.DateTimeFormat("cs-CZ", {
+  return new Intl.DateTimeFormat(locale, {
     dateStyle: "medium",
   }).format(new Date(value));
 }
 
 export default async function ClientsPage() {
-  const data = await loadClients();
+  const requestLocale = normalizeLocale(await getLocale()) ?? "cs-CZ";
+  const data = await loadClients(requestLocale);
+  const locale = normalizeLocale(data.organisationLocale) ?? requestLocale;
+  const copy = getMessagesForLocale(locale).clientsPage;
 
   return (
     <section className="space-y-8">
       <div className="flex flex-col justify-between gap-4 md:flex-row md:items-end">
         <div>
           <p className="text-sm font-medium uppercase tracking-[0.14em] text-primary">
-            Consultant
+            {copy.eyebrow}
           </p>
           <h1 className="mt-2 text-3xl font-semibold tracking-normal">
-            Klientský dashboard
+            {copy.title}
           </h1>
           <p className="mt-2 max-w-2xl text-sm leading-6 text-foreground/64">
-            Spravujte klientské organizace, sledujte skóre a připravte
-            white-label Trust Center výstupy.
+            {copy.subtitle}
           </p>
         </div>
         <Link
           href="/settings/billing"
           className="inline-flex items-center gap-2 rounded-md border border-border px-4 py-3 text-sm font-medium hover:bg-surface-muted"
         >
-          Plán: {data.plan}
+          {copy.planLabel}: {data.plan}
           <ArrowRight className="h-4 w-4" aria-hidden="true" />
         </Link>
       </div>
@@ -163,12 +172,12 @@ export default async function ClientsPage() {
             <LockKeyhole className="mt-1 h-5 w-5 text-primary" aria-hidden="true" />
             <div>
               <h2 className="text-lg font-semibold">
-                {data.demoMode ? "Demo režim" : "Vyžaduje Consultant plán"}
+                {data.demoMode ? copy.lock.demoTitle : copy.lock.planTitle}
               </h2>
               <p className="mt-2 text-sm leading-6 text-foreground/64">
                 {data.demoMode
-                  ? "Clerk nebo databáze nejsou dostupné, proto je formulář zamčený a stránka používá ukázková klientská data."
-                  : "Produkční propojení klientských organizací je dostupné pouze pro consultant plán."}
+                  ? copy.lock.demoBody
+                  : copy.lock.planBody}
               </p>
             </div>
           </div>
@@ -179,11 +188,11 @@ export default async function ClientsPage() {
         <section className="rounded-lg border border-border bg-surface p-5">
           <div className="flex items-center gap-2">
             <Plus className="h-5 w-5 text-primary" aria-hidden="true" />
-            <h2 className="text-lg font-semibold">Připojit klienta</h2>
+            <h2 className="text-lg font-semibold">{copy.form.title}</h2>
           </div>
           <form action={linkClientAction} className="mt-5 space-y-4">
             <label className="grid gap-2 text-sm">
-              Clerk org ID klienta
+              {copy.form.clientOrgId}
               <input
                 name="clientOrgId"
                 placeholder="org_..."
@@ -193,7 +202,7 @@ export default async function ClientsPage() {
               />
             </label>
             <label className="grid gap-2 text-sm">
-              Kontaktní email
+              {copy.form.contactEmail}
               <input
                 name="inviteEmail"
                 type="email"
@@ -202,16 +211,16 @@ export default async function ClientsPage() {
               />
             </label>
             <label className="grid gap-2 text-sm">
-              Přístup
+              {copy.form.access}
               <select
                 name="accessLevel"
                 defaultValue="manage"
                 disabled={!data.canManage}
                 className="rounded-md border border-border bg-background px-3 py-2"
               >
-                <option value="view">Read only</option>
-                <option value="manage">Manage controls</option>
-                <option value="admin">Admin</option>
+                <option value="view">{copy.accessLevels.view}</option>
+                <option value="manage">{copy.accessLevels.manage}</option>
+                <option value="admin">{copy.accessLevels.admin}</option>
               </select>
             </label>
             <button
@@ -219,7 +228,7 @@ export default async function ClientsPage() {
               disabled={!data.canManage}
               className="inline-flex items-center gap-2 rounded-md bg-primary px-4 py-3 text-sm font-medium text-primary-foreground disabled:cursor-not-allowed disabled:opacity-50"
             >
-              Uložit propojení
+              {copy.form.save}
               <BriefcaseBusiness className="h-4 w-4" aria-hidden="true" />
             </button>
           </form>
@@ -228,7 +237,7 @@ export default async function ClientsPage() {
         <section className="rounded-lg border border-border bg-surface">
           <div className="flex items-center gap-2 border-b border-border p-5">
             <Sparkles className="h-5 w-5 text-primary" aria-hidden="true" />
-            <h2 className="text-lg font-semibold">Klienti</h2>
+            <h2 className="text-lg font-semibold">{copy.list.title}</h2>
           </div>
           <div className="divide-y divide-border">
             {data.clients.length ? (
@@ -249,9 +258,10 @@ export default async function ClientsPage() {
                       </span>
                     </div>
                     <p className="mt-2 text-sm text-foreground/58">
-                      {client.sector ?? "sektor neuveden"} ·{" "}
-                      {client.frameworkCount} frameworky · poslední změna{" "}
-                      {formatDate(client.updatedAt)}
+                      {client.sector ?? copy.list.sectorEmpty} ·{" "}
+                      {formatFrameworkCount(copy, client.frameworkCount)} ·{" "}
+                      {copy.list.lastChanged}{" "}
+                      {formatDate(client.updatedAt, locale, copy.never)}
                     </p>
                   </div>
                   <div className="flex items-center gap-4">
@@ -260,14 +270,14 @@ export default async function ClientsPage() {
                       <p className="font-mono text-3xl font-semibold text-primary">
                         {client.score}%
                       </p>
-                      <p className="text-xs text-foreground/56">avg score</p>
+                      <p className="text-xs text-foreground/56">{copy.list.averageScore}</p>
                     </div>
                   </div>
                 </Link>
               ))
             ) : (
               <p className="p-5 text-sm text-foreground/58">
-                Zatím nemáte připojeného žádného klienta.
+                {copy.list.empty}
               </p>
             )}
           </div>
