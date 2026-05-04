@@ -33,6 +33,7 @@ export type PlatformCopy = {
     tag: string;
     title: string;
     body: string;
+    references: string[];
     stats: string[];
   };
   evidence: {
@@ -112,6 +113,7 @@ const copy: Record<Locale, PlatformCopy> = {
     crossMapping: {
       body:
         "MFA kontrola pro všechny uživatele splňuje NIS2 čl. 21(2)(j), ISO 27001 A.9.4.2 a GDPR čl. 32(1)(b) najednou. Přidání každého dalšího předpisu znamená doplnit mapování, ne začínat z prázdné tabulky.",
+      references: ["NIS2 čl. 21(2)(j)", "ISO 27001 A.9.4.2", "GDPR čl. 32(1)(b)"],
       stats: ["Jedna evidence", "Více předpisů", "Průběžné kontroly"],
       tag: "Křížové mapování",
       title: "Jeden test. Tři předpisy.",
@@ -210,6 +212,7 @@ const copy: Record<Locale, PlatformCopy> = {
     crossMapping: {
       body:
         "One MFA control for all users can support NIS2 Article 21(2)(j), ISO 27001 A.9.4.2, and GDPR Article 32(1)(b). Adding another regulation means adding a mapping, not starting from an empty spreadsheet.",
+      references: ["NIS2 Article 21(2)(j)", "ISO 27001 A.9.4.2", "GDPR Article 32(1)(b)"],
       stats: ["One evidence item", "Multiple regulations", "Continuous checks"],
       tag: "Cross-mapping",
       title: "One check. Three regulations.",
@@ -308,6 +311,7 @@ const copy: Record<Locale, PlatformCopy> = {
     crossMapping: {
       body:
         "Un controllo MFA per tutti gli utenti può supportare NIS2 articolo 21(2)(j), ISO 27001 A.9.4.2 e GDPR articolo 32(1)(b). Aggiungere un'altra normativa significa aggiungere una mappatura, non ripartire da un foglio vuoto.",
+      references: ["NIS2 articolo 21(2)(j)", "ISO 27001 A.9.4.2", "GDPR articolo 32(1)(b)"],
       stats: ["Una evidenza", "Più normative", "Controlli continui"],
       tag: "Mappatura incrociata",
       title: "Un controllo. Tre normative.",

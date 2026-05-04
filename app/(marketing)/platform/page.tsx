@@ -175,9 +175,14 @@ export default async function PlatformPage() {
             </p>
             <div className="mono mx-auto mt-10 max-w-3xl rounded-2xl border border-zinc-800 bg-zinc-900 p-5 text-left text-sm text-zinc-300">
               <p className="text-blue-300">ctrl_mfa_all_users</p>
-              <p className="mt-3 text-emerald-400">✓ NIS2 čl. 21(2)(j)</p>
-              <p className="text-emerald-400">✓ ISO 27001 A.9.4.2</p>
-              <p className="text-emerald-400">✓ GDPR čl. 32(1)(b)</p>
+              {copy.crossMapping.references.map((reference, index) => (
+                <p
+                  key={reference}
+                  className={index === 0 ? "mt-3 text-emerald-400" : "text-emerald-400"}
+                >
+                  ✓ {reference}
+                </p>
+              ))}
             </div>
             <div className="mt-8 grid gap-4 md:grid-cols-3">
               {copy.crossMapping.stats.map((stat) => (
