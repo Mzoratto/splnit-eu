@@ -1,4 +1,4 @@
-export type FrameworkStatus = "Dostupné" | "Brzy";
+export type FrameworkStatus = "available" | "soon";
 
 export type FrameworkCard = {
   slug: string;
@@ -40,7 +40,7 @@ export const frameworkCards: FrameworkCard[] = [
     icon: "solar:server-square-linear",
     regulator: "NÚKIB",
     deadline: "Říjen 2024",
-    status: "Dostupné",
+    status: "available",
     description: "Kybernetická bezpečnost pro střední a velké firmy.",
   },
   {
@@ -49,7 +49,7 @@ export const frameworkCards: FrameworkCard[] = [
     icon: "solar:cpu-bolt-linear",
     regulator: "ČTÚ",
     deadline: "Srpen 2026",
-    status: "Dostupné",
+    status: "available",
     description: "Povinnosti pro nasazovatele AI systémů.",
   },
   {
@@ -58,7 +58,7 @@ export const frameworkCards: FrameworkCard[] = [
     icon: "solar:shield-user-linear",
     regulator: "ÚOOÚ",
     deadline: "Aktivní",
-    status: "Dostupné",
+    status: "available",
     description: "Ochrana osobních údajů — platí pro každou firmu.",
   },
   {
@@ -67,7 +67,7 @@ export const frameworkCards: FrameworkCard[] = [
     icon: "solar:document-text-linear",
     regulator: "ISO/ČAS",
     deadline: "Průběžně",
-    status: "Dostupné",
+    status: "available",
     description: "Mezinárodní standard pro informační bezpečnost.",
   },
   {
@@ -76,7 +76,7 @@ export const frameworkCards: FrameworkCard[] = [
     icon: "solar:leaf-linear",
     regulator: "MŽP",
     deadline: "2026+",
-    status: "Dostupné",
+    status: "available",
     description: "ESG reporting pro dodavatele velkých korporací.",
   },
   {
@@ -85,7 +85,7 @@ export const frameworkCards: FrameworkCard[] = [
     icon: "solar:banknote-2-linear",
     regulator: "ČNB",
     deadline: "Leden 2025",
-    status: "Brzy",
+    status: "soon",
     description: "Digitální odolnost pro finanční instituce.",
   },
 ];

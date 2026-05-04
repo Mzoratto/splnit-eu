@@ -99,12 +99,12 @@ export default async function RegulationsPage() {
                       </div>
                       <span
                         className={`rounded-full border px-2.5 py-1 text-[11px] font-medium ${
-                          framework.status === "Dostupné"
+                          framework.status === "available"
                             ? "border-emerald-100 bg-emerald-50 text-emerald-700"
                             : "border-amber-100 bg-amber-50 text-amber-700"
                         }`}
                       >
-                        {framework.status === "Dostupné"
+                        {framework.status === "available"
                           ? t("cards.available")
                           : t("cards.soon")}
                       </span>
