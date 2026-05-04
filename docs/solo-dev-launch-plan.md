@@ -268,10 +268,11 @@ Completed and verified locally:
 - Czech templates no longer hardcode the repeated `IČO`, `ÚOOÚ`, and `ČTÚ` values directly in reusable sections; they resolve through jurisdiction context.
 - Template smoke tests assert Czech exact-match resolution, English-EU exact-match resolution, Italian fallback to EU/EN, and no unresolved `{{...}}` placeholders in resolved templates.
 - Copy hygiene smoke tests guard EN/IT messages and authenticated app code against Czech regulator/UI copy regressions.
+- Italian tenant smoke test creates a fake `IT` tenant inside a rolled-back DB transaction and verifies EU/EN template fallback plus Italian source document availability.
 
 Remaining before calling Phase 2 fully done:
 
-- Continue translating the remaining authenticated app paths and email/error copy.
+- Continue translating any newly added authenticated app paths and email/error copy.
 - Keep Italian legal templates out of the product until Phase 3 advisor review.
 
 ### 2.2 i18n Shell
