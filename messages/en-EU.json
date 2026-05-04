@@ -407,5 +407,43 @@
       "en-EU": "English EU",
       "it-IT": "Italiano"
     }
+  },
+  "organisationSettings": {
+    "eyebrow": "Settings",
+    "title": "Organisation",
+    "description": "Basic organisation identity, classification, and Clerk workspace linkage.",
+    "status": {
+      "editable": "Editable",
+      "demoReadonly": "Demo read-only"
+    },
+    "profile": {
+      "title": "Organisation profile",
+      "companyName": "Company name",
+      "employeeCount": "Employee count",
+      "sector": "Sector",
+      "country": "Country",
+      "primaryJurisdiction": "Primary jurisdiction",
+      "locale": "Locale",
+      "save": "Save changes"
+    },
+    "nis2": {
+      "title": "NIS2 classification",
+      "description": "Indicative internal label based on sector and size. Final legal assessment stays outside automated classification.",
+      "categories": {
+        "essential_or_important_entity_review": "Essential or important entity review needed",
+        "important_entity_review": "Important entity review needed",
+        "monitoring": "Monitor changes"
+      }
+    },
+    "workspace": {
+      "title": "Workspace links",
+      "clerkOrg": "Clerk org",
+      "plan": "Plan",
+      "jurisdiction": "Jurisdiction",
+      "onboarding": "Onboarding",
+      "toolInventory": "Tool inventory",
+      "updated": "Updated",
+      "notSet": "not set"
+    }
   }
 }

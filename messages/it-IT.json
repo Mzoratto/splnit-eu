@@ -407,5 +407,43 @@
       "en-EU": "English EU",
       "it-IT": "Italiano"
     }
+  },
+  "organisationSettings": {
+    "eyebrow": "Impostazioni",
+    "title": "Organizzazione",
+    "description": "Identità di base dell'organizzazione, classificazione e collegamento al workspace Clerk.",
+    "status": {
+      "editable": "Modificabile",
+      "demoReadonly": "Demo in sola lettura"
+    },
+    "profile": {
+      "title": "Profilo organizzazione",
+      "companyName": "Nome azienda",
+      "employeeCount": "Numero dipendenti",
+      "sector": "Settore",
+      "country": "Paese",
+      "primaryJurisdiction": "Giurisdizione primaria",
+      "locale": "Locale",
+      "save": "Salva modifiche"
+    },
+    "nis2": {
+      "title": "Classificazione NIS2",
+      "description": "Etichetta interna indicativa basata su settore e dimensione. La valutazione legale finale resta fuori dalla classificazione automatica.",
+      "categories": {
+        "essential_or_important_entity_review": "Serve valutare se è soggetto essenziale o importante",
+        "important_entity_review": "Serve valutare se è soggetto importante",
+        "monitoring": "Monitorare le modifiche"
+      }
+    },
+    "workspace": {
+      "title": "Collegamenti workspace",
+      "clerkOrg": "Clerk org",
+      "plan": "Piano",
+      "jurisdiction": "Giurisdizione",
+      "onboarding": "Onboarding",
+      "toolInventory": "Inventario strumenti",
+      "updated": "Aggiornato",
+      "notSet": "non impostato"
+    }
   }
 }

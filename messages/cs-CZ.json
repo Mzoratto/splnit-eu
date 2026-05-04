@@ -407,5 +407,43 @@
       "en-EU": "English EU",
       "it-IT": "Italiano"
     }
+  },
+  "organisationSettings": {
+    "eyebrow": "Nastavení",
+    "title": "Organizace",
+    "description": "Základní identita organizace, kategorizace a vazba na Clerk workspace.",
+    "status": {
+      "editable": "Upravitelné",
+      "demoReadonly": "Demo jen pro čtení"
+    },
+    "profile": {
+      "title": "Profil organizace",
+      "companyName": "Název firmy",
+      "employeeCount": "Počet zaměstnanců",
+      "sector": "Sektor",
+      "country": "Země",
+      "primaryJurisdiction": "Primární jurisdikce",
+      "locale": "Locale",
+      "save": "Uložit změny"
+    },
+    "nis2": {
+      "title": "NIS2 kategorizace",
+      "description": "Orientační interní štítek podle sektoru a velikosti. Finální právní posouzení zůstává mimo automatickou klasifikaci.",
+      "categories": {
+        "essential_or_important_entity_review": "Vyžaduje posouzení základního nebo důležitého subjektu",
+        "important_entity_review": "Vyžaduje posouzení důležitého subjektu",
+        "monitoring": "Monitorovat změny"
+      }
+    },
+    "workspace": {
+      "title": "Vazby workspace",
+      "clerkOrg": "Clerk org",
+      "plan": "Plan",
+      "jurisdiction": "Jurisdikce",
+      "onboarding": "Onboarding",
+      "toolInventory": "Inventář nástrojů",
+      "updated": "Aktualizováno",
+      "notSet": "nenastaveno"
+    }
   }
 }
