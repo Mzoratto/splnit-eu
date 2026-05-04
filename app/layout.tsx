@@ -47,19 +47,17 @@ function normalizeCookieConsent(
 
 export const metadata: Metadata = {
   applicationName: "Splnit.eu",
-  metadataBase: new URL(
-    process.env.NEXT_PUBLIC_APP_URL ?? "https://splnit.eu",
-  ),
+  metadataBase: new URL(process.env.NEXT_PUBLIC_APP_URL || "https://splnit.eu"),
   manifest: "/manifest.webmanifest",
   title:
-    "Splnit.eu — Automatizace souladu s NIS2, EU AI Act a GDPR pro české firmy",
+    "Splnit.eu — Compliance automation pro evropské SMB týmy",
   description:
-    "Splnit.eu propojí vaše systémy, prověří bezpečnostní kontroly každou hodinu a udržuje vás v souladu s NIS2, EU AI Act, GDPR a ISO 27001.",
+    "Splnit.eu propojí Microsoft 365, AWS nebo GitHub a pomůže připravit auditní důkazy pro NIS2, GDPR a ISO 27001.",
   openGraph: {
     locale: "cs_CZ",
-    title: "Splnit.eu — Compliance automatizace pro české firmy",
+    title: "Splnit.eu — Compliance automation pro evropské SMB týmy",
     description:
-      "Splňte NIS2, EU AI Act a GDPR automaticky. 200+ testů každou hodinu.",
+      "Připravte NIS2, GDPR a ISO 27001 důkazy s automatickými kontrolami.",
     images: [
       {
         url: "/opengraph-image",
@@ -72,9 +70,9 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Splnit.eu — Compliance automatizace pro české firmy",
+    title: "Splnit.eu — Compliance automation pro evropské SMB týmy",
     description:
-      "Splňte NIS2, EU AI Act a GDPR automaticky. 200+ testů každou hodinu.",
+      "Připravte NIS2, GDPR a ISO 27001 důkazy s automatickými kontrolami.",
     images: ["/opengraph-image"],
   },
   appleWebApp: {

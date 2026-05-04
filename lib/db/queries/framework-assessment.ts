@@ -74,12 +74,12 @@ export async function getFrameworkDetail(input: {
       articleRef: frameworkControls.articleRef,
       category: controls.category,
       controlId: controls.id,
-      description: controls.descriptionCs,
+      description: sql<string | null>`coalesce(${frameworkControls.localizedDescription}, ${controls.descriptionCs})`,
       isAutomated: controls.isAutomated,
       key: controls.key,
       requirementLevel: frameworkControls.requirementLevel,
       status: orgControlStatuses.status,
-      title: controls.titleCs,
+      title: sql<string>`coalesce(${frameworkControls.localizedTitle}, ${controls.titleCs})`,
       updatedAt: orgControlStatuses.updatedAt,
     })
     .from(frameworkControls)

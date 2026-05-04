@@ -3,8 +3,9 @@ import { auth } from "@clerk/nextjs/server";
 import { ArrowRight, Download, FileText } from "lucide-react";
 import { generatePolicyAction } from "@/app/(app)/policies/actions";
 import { hasDatabaseUrl } from "@/lib/db";
+import { getOrganisationByClerkOrgId } from "@/lib/db/queries/organisations";
 import { listPoliciesForOrg } from "@/lib/db/queries/policies";
-import { POLICY_TEMPLATES } from "@/lib/policies/templates";
+import { listResolvedPolicyTemplates } from "@/lib/policies/resolve-template";
 
 async function loadPolicies() {
   const clerkConfigured =
@@ -12,19 +13,36 @@ async function loadPolicies() {
     Boolean(process.env.CLERK_SECRET_KEY);
 
   if (!clerkConfigured || !hasDatabaseUrl()) {
-    return [];
+    return {
+      policies: [],
+      templates: listResolvedPolicyTemplates(null),
+    };
   }
 
   const session = await auth();
 
   if (!session.orgId) {
-    return [];
+    return {
+      policies: [],
+      templates: listResolvedPolicyTemplates(null),
+    };
   }
 
   try {
-    return listPoliciesForOrg(session.orgId);
+    const [organisation, policies] = await Promise.all([
+      getOrganisationByClerkOrgId(session.orgId),
+      listPoliciesForOrg(session.orgId),
+    ]);
+
+    return {
+      policies,
+      templates: listResolvedPolicyTemplates(organisation),
+    };
   } catch {
-    return [];
+    return {
+      policies: [],
+      templates: listResolvedPolicyTemplates(null),
+    };
   }
 }
 
@@ -37,7 +55,7 @@ function formatDate(value: Date | string | null | undefined) {
 }
 
 export default async function PoliciesPage() {
-  const policies = await loadPolicies();
+  const { policies, templates } = await loadPolicies();
   const latestByType = new Map<string, (typeof policies)[number]>();
 
   for (const policy of policies) {
@@ -61,7 +79,7 @@ export default async function PoliciesPage() {
       </div>
 
       <div className="grid gap-4 md:grid-cols-2">
-        {POLICY_TEMPLATES.map((template) => {
+        {templates.map((template) => {
           const latestPolicy = latestByType.get(template.type);
 
           return (

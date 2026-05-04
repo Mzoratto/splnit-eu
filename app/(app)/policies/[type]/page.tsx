@@ -4,29 +4,54 @@ import { notFound } from "next/navigation";
 import { ArrowLeft, Download, FileText } from "lucide-react";
 import { generatePolicyAction } from "@/app/(app)/policies/actions";
 import { hasDatabaseUrl } from "@/lib/db";
+import { getOrganisationByClerkOrgId } from "@/lib/db/queries/organisations";
 import { listPoliciesForOrg } from "@/lib/db/queries/policies";
-import { POLICY_TEMPLATES } from "@/lib/policies/templates";
+import { resolvePolicyTemplate } from "@/lib/policies/resolve-template";
+import {
+  POLICY_TEMPLATE_TYPES,
+  type PolicyTemplateType,
+} from "@/lib/policies/templates";
 
-async function loadPolicies(type: string) {
+function isPolicyTemplateType(type: string): type is PolicyTemplateType {
+  return POLICY_TEMPLATE_TYPES.includes(type as PolicyTemplateType);
+}
+
+async function loadPolicyDetail(type: PolicyTemplateType) {
   const clerkConfigured =
     Boolean(process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY) &&
     Boolean(process.env.CLERK_SECRET_KEY);
 
   if (!clerkConfigured || !hasDatabaseUrl()) {
-    return [];
+    return {
+      policies: [],
+      template: resolvePolicyTemplate(type, null),
+    };
   }
 
   const session = await auth();
 
   if (!session.orgId) {
-    return [];
+    return {
+      policies: [],
+      template: resolvePolicyTemplate(type, null),
+    };
   }
 
   try {
-    const policies = await listPoliciesForOrg(session.orgId);
-    return policies.filter((policy) => policy.type === type);
+    const [organisation, policies] = await Promise.all([
+      getOrganisationByClerkOrgId(session.orgId),
+      listPoliciesForOrg(session.orgId),
+    ]);
+
+    return {
+      policies: policies.filter((policy) => policy.type === type),
+      template: resolvePolicyTemplate(type, organisation),
+    };
   } catch {
-    return [];
+    return {
+      policies: [],
+      template: resolvePolicyTemplate(type, null),
+    };
   }
 }
 
@@ -44,13 +69,12 @@ export default async function PolicyDetailPage({
   params: Promise<{ type: string }>;
 }) {
   const { type } = await params;
-  const template = POLICY_TEMPLATES.find((item) => item.type === type);
 
-  if (!template) {
+  if (!isPolicyTemplateType(type)) {
     notFound();
   }
 
-  const policies = await loadPolicies(type);
+  const { policies, template } = await loadPolicyDetail(type);
 
   return (
     <section className="space-y-8">

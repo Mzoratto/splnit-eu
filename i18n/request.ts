@@ -1,6 +1,15 @@
 import { hasLocale } from "next-intl";
 import { getRequestConfig } from "next-intl/server";
-import { routing } from "./routing";
+import csCZ from "../messages/cs-CZ.json";
+import enEU from "../messages/en-EU.json";
+import itIT from "../messages/it-IT.json";
+import { routing, type Locale } from "./routing";
+
+const messages: Record<Locale, typeof csCZ> = {
+  "cs-CZ": csCZ,
+  "en-EU": enEU,
+  "it-IT": itIT,
+};
 
 export default getRequestConfig(async ({ requestLocale }) => {
   const requestedLocale = await requestLocale;
@@ -10,6 +19,6 @@ export default getRequestConfig(async ({ requestLocale }) => {
 
   return {
     locale,
-    messages: (await import(`../messages/${locale}.json`)).default,
+    messages: messages[locale],
   };
 });

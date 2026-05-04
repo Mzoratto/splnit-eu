@@ -42,16 +42,16 @@ function demoClient(clientOrgId: string) {
       client: {
         clerkOrgId: clientOrgId,
         name:
-          clientOrgId === "demo-finedge"
-            ? "FinEdge CZ"
-            : "Acme Manufacturing CZ",
-        plan: clientOrgId === "demo-finedge" ? "starter" : "business",
-        sector: clientOrgId === "demo-finedge" ? "Finance" : "Výroba",
+          clientOrgId === "demo-client-b"
+            ? "Ukázkový klient B"
+            : "Ukázkový klient A",
+        plan: clientOrgId === "demo-client-b" ? "starter" : "business",
+        sector: clientOrgId === "demo-client-b" ? "Finance" : "Výroba",
       },
       inviteEmail:
-        clientOrgId === "demo-finedge"
-          ? "compliance@finedge.cz"
-          : "security@acme.cz",
+        clientOrgId === "demo-client-b"
+          ? "compliance@example.test"
+          : "security@example.test",
       status: "active",
       whiteLabelAccentColor: "#1b7f5a",
       whiteLabelLogoUrl: null,

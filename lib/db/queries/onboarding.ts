@@ -27,10 +27,13 @@ export async function getOnboardingState(clerkOrgId: string) {
 
 export async function saveOnboardingCompany(input: {
   clerkOrgId: string;
-  name: string;
-  ico: string | null;
-  sector: string;
+  country: string;
   employeeCount: string;
+  ico: string | null;
+  locale: string;
+  name: string;
+  primaryJurisdiction: string;
+  sector: string;
 }) {
   const db = getDb();
 
@@ -38,18 +41,24 @@ export async function saveOnboardingCompany(input: {
     .insert(organisations)
     .values({
       clerkOrgId: input.clerkOrgId,
+      country: input.country,
       employeeCount: input.employeeCount,
       ico: input.ico,
+      locale: input.locale,
       name: input.name,
+      primaryJurisdiction: input.primaryJurisdiction,
       sector: input.sector,
       updatedAt: new Date(),
     })
     .onConflictDoUpdate({
       target: organisations.clerkOrgId,
       set: {
+        country: input.country,
         employeeCount: input.employeeCount,
         ico: input.ico,
+        locale: input.locale,
         name: input.name,
+        primaryJurisdiction: input.primaryJurisdiction,
         sector: input.sector,
         updatedAt: new Date(),
       },

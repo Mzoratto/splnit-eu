@@ -6,9 +6,9 @@ import { SoftwareApplicationJsonLd } from "@/components/marketing/software-json-
 
 export const metadata: Metadata = {
   title:
-    "Platforma | Splnit.eu — 200+ automatických testů, integrace Microsoft 365 a NÚKIB",
+    "Platforma | Splnit.eu — automatické kontroly pro Microsoft 365, AWS a GitHub",
   description:
-    "Technická platforma Splnit.eu pro automatické testování kontrol, integrace Microsoft 365, GitHub, AWS a NÚKIB feed.",
+    "Technická platforma Splnit.eu pro automatické kontroly, evidence vault a dokumenty pro NIS2, GDPR a ISO 27001.",
   openGraph: {
     locale: "cs_CZ",
   },
@@ -23,7 +23,7 @@ const steps = [
   {
     icon: "solar:cpu-linear",
     title: "Testy běží automaticky",
-    body: "200+ kontrol každou hodinu. Vy spíte. Systém hlídá.",
+    body: "Kontroly pro připojené systémy běží průběžně a výsledky se ukládají jako důkazy.",
   },
   {
     icon: "solar:document-check-linear",
@@ -64,7 +64,7 @@ export default function PlatformPage() {
             <div className="max-w-3xl">
               <span className="section-tag mb-5">Developer First</span>
               <h1 className="text-5xl font-semibold leading-[1.05] tracking-[-0.04em] text-zinc-900 md:text-[68px]">
-                200+ automatických testů. Každou hodinu.
+                Automatické kontroly pro systémy, které už používáte.
               </h1>
               <p className="mt-6 max-w-2xl text-lg leading-8 text-zinc-500">
                 Připojte Microsoft 365, GitHub nebo AWS jednou. Splnit.eu
@@ -127,9 +127,6 @@ export default function PlatformPage() {
                       ["logos:microsoft", "Microsoft 365"],
                       ["logos:github-icon", "GitHub"],
                       ["logos:aws", "AWS"],
-                      ["logos:google-cloud", "Google WS"],
-                      ["logos:azure-icon", "Azure"],
-                      ["logos:slack-icon", "Slack"],
                     ].map(([icon, label]) => (
                       <div
                         key={label}
@@ -152,12 +149,12 @@ export default function PlatformPage() {
                       <div className="flex-1">
                         <div className="flex items-center gap-2">
                           <span className="text-xs font-semibold text-emerald-100">
-                            NÚKIB Vulnerability Feed
+                            Lokální regulatorní zdroje
                           </span>
                           <span className="nukib-chip">🇨🇿 Pouze pro ČR</span>
                         </div>
                         <span className="text-[10px] text-emerald-500">
-                          Národní kybernetická bezpečnostní agentura
+                          NÚKIB pro český obsah, další jurisdikce po ověření
                         </span>
                       </div>
                       <div className="pulse-dot h-2 w-2 shrink-0 rounded-full bg-emerald-400" />
@@ -178,9 +175,9 @@ export default function PlatformPage() {
               </p>
               <ul className="space-y-3.5">
                 {[
-                  "Nativní integrace pro Microsoft 365, GitHub a AWS",
-                  "Slack a Microsoft Teams upozornění v reálném čase",
-                  "NÚKIB feed zranitelností — výlučně pro český trh 🇨🇿",
+                  "Integrace pro Microsoft 365, GitHub a AWS",
+                  "Upozornění na selhání kontrol v aplikaci",
+                  "Lokální regulatorní zdroje tam, kde jsou ověřené",
                   "API-first architektura pro vlastní interní nástroje",
                 ].map((item) => (
                   <li key={item} className="flex items-start gap-3">
@@ -208,7 +205,8 @@ export default function PlatformPage() {
             <p className="mx-auto mt-5 max-w-3xl text-base leading-7 text-zinc-400">
               MFA kontrola pro všechny uživatele splňuje NIS2 čl. 21(2)(j), ISO
               27001 A.9.4.2 a GDPR čl. 32(1)(b) najednou. Přidání každého
-              dalšího předpisu stojí 20 % původního úsilí.
+              dalšího předpisu znamená doplnit mapování, ne začínat z prázdné
+              tabulky.
             </p>
             <div className="mono mx-auto mt-10 max-w-3xl rounded-2xl border border-zinc-800 bg-zinc-900 p-5 text-left text-sm text-zinc-300">
               <p className="text-blue-300">ctrl_mfa_all_users</p>
@@ -217,7 +215,7 @@ export default function PlatformPage() {
               <p className="text-emerald-400">✓ GDPR čl. 32(1)(b)</p>
             </div>
             <div className="mt-8 grid gap-4 md:grid-cols-3">
-              {["80% úspora", "1 test → 3 předpisy", "200+ kontrol"].map((stat) => (
+              {["Jedna evidence", "Více předpisů", "Průběžné kontroly"].map((stat) => (
                 <div
                   key={stat}
                   className="rounded-2xl border border-zinc-800 bg-zinc-900/70 p-5 text-xl font-semibold text-white"
@@ -266,15 +264,15 @@ export default function PlatformPage() {
                 Méně dotazníků. Rychlejší obchody.
               </p>
               <div className="mono mt-6 w-fit rounded-full border border-blue-100 bg-white px-4 py-2 text-xs text-blue-700">
-                trust.splnit.eu/acme-sro
+                trust.splnit.eu/demo
               </div>
               <div className="mt-6 flex flex-wrap gap-2">
-                {["NIS2 91%", "GDPR 88%", "ISO 27001 84%", "EU AI Act 67%"].map(
+                {["NIS2 demo", "GDPR demo", "ISO 27001 demo", "EU AI Act demo"].map(
                   (badge) => (
                     <span
                       key={badge}
                       className={`rounded-full border px-3 py-1.5 text-xs font-medium ${
-                        badge.includes("67")
+                        badge.includes("EU AI Act")
                           ? "border-amber-100 bg-amber-50 text-amber-700"
                           : "border-emerald-100 bg-emerald-50 text-emerald-700"
                       }`}
@@ -297,16 +295,17 @@ export default function PlatformPage() {
         <section className="border-y border-zinc-200/50 bg-white py-10">
           <div className="mx-auto flex max-w-7xl flex-wrap items-center justify-center gap-8 px-5 text-sm font-medium text-zinc-600 md:gap-16">
             {[
-              "Data v EU (eu-west-1)",
+              "EU data residency cíl",
               "Šifrování AES-256",
-              "SOC 2 Type II",
-              "GDPR Compliant",
+              "DPA k právní kontrole",
+              "Subdodavatelé evidovaní",
             ].map((badge) => (
               <span key={badge}>{badge}</span>
             ))}
           </div>
           <p className="mt-6 text-center text-sm text-zinc-500">
-            Naše platforma sama splňuje předpisy, které vám pomáhá dodržovat.
+            Bezpečnostní a právní dokumentace se doplňuje podle reálného stavu
+            před produkčním spuštěním.
           </p>
         </section>
       </main>

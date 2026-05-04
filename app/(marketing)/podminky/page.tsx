@@ -13,6 +13,13 @@ export default function TermsPage() {
       intro="Tyto podmínky upravují přístup ke službě Splnit.eu a používání aplikace pro compliance automatizaci. Před produkčním spuštěním musí být zkontrolovány advokátem a doplněny o finální identifikační údaje provozovatele."
       sections={[
         {
+          title: "Smluvní strany",
+          body: [
+            "Službu Splnit.eu provozuje OSVČ v České republice. Finální jméno, IČO, ARES odkaz a adresa provozovatele musí být doplněné před produkčním spuštěním a před použitím těchto podmínek vůči zákazníkům.",
+            "Zákazníkem je osoba nebo organizace, která si vytvoří účet, objedná placený plán nebo službu používá pro vlastní compliance účel.",
+          ],
+        },
+        {
           title: "Služba",
           body: [
             "Splnit.eu poskytuje software pro správu compliance, automatizované testy, evidenci, dokumenty, reporty, Trust Center a podpůrné workflow.",

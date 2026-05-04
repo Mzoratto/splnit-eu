@@ -2,6 +2,7 @@
 
 import { Analytics } from "@vercel/analytics/next";
 import { SpeedInsights } from "@vercel/speed-insights/next";
+import { useTranslations } from "next-intl";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import {
@@ -33,6 +34,7 @@ export function CookieConsent({
 }: {
   initialConsent: CookieConsentValue | null;
 }) {
+  const t = useTranslations("marketing.cookies");
   const pathname = usePathname();
   const isAppRoute = appRoutePrefixes.some((prefix) => pathname.startsWith(prefix));
   const [consent, setConsent] = useState<CookieConsentValue | null>(
@@ -74,9 +76,9 @@ export function CookieConsent({
         <div className="fixed inset-x-4 bottom-4 z-50 mx-auto max-w-3xl rounded-lg border border-border bg-surface p-4 shadow-[var(--shadow-md)]">
           <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
             <div>
-              <p className="text-sm font-medium">Cookies</p>
+              <p className="text-sm font-medium">{t("title")}</p>
               <p className="mt-1 text-sm leading-6 text-foreground/64">
-                Používáme nezbytné cookies a volitelné měření návštěvnosti pro zlepšování Splnit.eu.
+                {t("body")}
               </p>
             </div>
             <div className="flex shrink-0 gap-2">
@@ -85,14 +87,14 @@ export function CookieConsent({
                 onClick={() => chooseConsent("rejected")}
                 className="btn btn-secondary"
               >
-                Odmítnout
+                {t("reject")}
               </button>
               <button
                 type="button"
                 onClick={() => chooseConsent("accepted")}
                 className="btn btn-primary"
               >
-                Přijmout
+                {t("accept")}
               </button>
             </div>
           </div>

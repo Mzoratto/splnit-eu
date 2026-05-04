@@ -1,10 +1,12 @@
 "use client";
 
 import Link from "next/link";
+import { useTranslations } from "next-intl";
 import { useEffect, useState } from "react";
 import { Icon } from "@/components/marketing/local-icon";
 
 export function StickyCta() {
+  const t = useTranslations("marketing");
   const [visible, setVisible] = useState(false);
 
   useEffect(() => {
@@ -30,7 +32,7 @@ export function StickyCta() {
     >
       <div className="rounded-full bg-gradient-to-b from-blue-400 to-blue-700 p-px shadow-xl shadow-blue-200/50">
         <Link
-          href="/sign-up"
+          href="/early-access"
           className="flex items-center gap-2 rounded-full bg-blue-600 px-5 py-2.5 text-sm font-medium text-white transition-colors hover:bg-blue-500"
         >
           <Icon
@@ -38,7 +40,7 @@ export function StickyCta() {
             className="text-sm"
             aria-hidden="true"
           />
-          Začít zdarma
+          {t("stickyCta")}
         </Link>
       </div>
     </div>

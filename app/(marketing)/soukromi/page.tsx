@@ -11,12 +11,12 @@ export default function PrivacyPage() {
   return (
     <LegalPage
       title="Zásady ochrany soukromí"
-      intro="Tyto zásady popisují, jak Splnit Technology s.r.o. zpracovává osobní údaje návštěvníků webu, uživatelů aplikace, obchodních kontaktů a osob, jejichž údaje zákazník do služby vloží."
+      intro="Tyto zásady popisují, jak provozovatel Splnit.eu jako OSVČ zpracovává osobní údaje návštěvníků webu, uživatelů aplikace, obchodních kontaktů a osob, jejichž údaje zákazník do služby vloží. Finální identifikační údaje provozovatele musí být doplněné před produkčním spuštěním."
       sections={[
         {
           title: "Správce údajů",
           body: [
-            "Správcem pro web, obchodní komunikaci, účet zákazníka, fakturaci a provozní bezpečnost je Splnit Technology s.r.o., Česká republika. Pro dotazy k ochraně osobních údajů nás kontaktujte na hello@splnit.eu.",
+            "Správcem pro web, obchodní komunikaci, účet zákazníka, fakturaci a provozní bezpečnost je provozovatel Splnit.eu jako OSVČ, Česká republika. Jméno, IČO, ARES odkaz a adresa budou doplněné před produkčním spuštěním. Pro dotazy k ochraně osobních údajů nás kontaktujte na hello@splnit.eu.",
             "U osobních údajů, které zákazník vkládá do aplikace jako evidence, dokumenty, dodavatelské dotazníky nebo auditní záznamy, vystupuje zákazník zpravidla jako správce a Splnit.eu jako zpracovatel podle DPA.",
             "Pověřenec pro ochranu osobních údajů není ke dni zveřejnění jmenován. Pokud se tato skutečnost změní, kontaktní údaj zde doplníme.",
           ],

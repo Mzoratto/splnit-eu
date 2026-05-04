@@ -67,9 +67,13 @@ export async function getControlDetailByKey(input: {
   const frameworkRows = await db
     .select({
       articleRef: frameworkControls.articleRef,
+      evidenceRequirements: frameworkControls.evidenceRequirements,
       frameworkId: frameworks.id,
       frameworkName: frameworks.nameCs,
       frameworkSlug: frameworks.slug,
+      localizedDescription: frameworkControls.localizedDescription,
+      localizedTitle: frameworkControls.localizedTitle,
+      regulatorGuidance: frameworkControls.regulatorGuidance,
       requirementLevel: frameworkControls.requirementLevel,
     })
     .from(frameworkControls)

@@ -1,6 +1,6 @@
 import { clerkMiddleware, createRouteMatcher } from "@clerk/nextjs/server";
 import { NextFetchEvent, NextRequest, NextResponse } from "next/server";
-import { routing, type Locale } from "./i18n/routing";
+import { localeCookieName, normalizeLocale, routing } from "./i18n/routing";
 
 const isProtectedRoute = createRouteMatcher([
   "/dashboard(.*)",
@@ -20,14 +20,12 @@ const isProtectedRoute = createRouteMatcher([
 
 const isApiRoute = createRouteMatcher(["/api(.*)", "/trpc(.*)"]);
 
-function isLocale(value: string | undefined): value is Locale {
-  return routing.locales.includes(value as Locale);
-}
-
 function getPreferredLocale(request: NextRequest) {
-  const cookieLocale = request.cookies.get("NEXT_LOCALE")?.value;
+  const cookieLocale = normalizeLocale(
+    request.cookies.get(localeCookieName)?.value,
+  );
 
-  if (isLocale(cookieLocale)) {
+  if (cookieLocale) {
     return cookieLocale;
   }
 
@@ -39,9 +37,7 @@ function getPreferredLocale(request: NextRequest) {
 
   for (const language of languages ?? []) {
     const baseLanguage = language.split("-")[0];
-    const locale = routing.locales.find(
-      (candidate) => candidate === language || candidate === baseLanguage,
-    );
+    const locale = normalizeLocale(language) ?? normalizeLocale(baseLanguage);
 
     if (locale) {
       return locale;
@@ -62,8 +58,8 @@ function applyLocale(request: NextRequest) {
     },
   });
 
-  if (request.cookies.get("NEXT_LOCALE")?.value !== locale) {
-    response.cookies.set("NEXT_LOCALE", locale, {
+  if (request.cookies.get(localeCookieName)?.value !== locale) {
+    response.cookies.set(localeCookieName, locale, {
       path: "/",
       sameSite: "lax",
     });

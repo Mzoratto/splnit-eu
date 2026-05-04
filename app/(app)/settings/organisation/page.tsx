@@ -23,14 +23,43 @@ const employeeCountOptions = [
   { label: "250+", value: "250+" },
 ];
 
+const countryOptions = [
+  { label: "Czech Republic", value: "CZ" },
+  { label: "Italy", value: "IT" },
+  { label: "Germany", value: "DE" },
+  { label: "France", value: "FR" },
+  { label: "Spain", value: "ES" },
+  { label: "Netherlands", value: "NL" },
+  { label: "Poland", value: "PL" },
+  { label: "Slovakia", value: "SK" },
+  { label: "Austria", value: "AT" },
+  { label: "Belgium", value: "BE" },
+  { label: "Ireland", value: "IE" },
+];
+
+const jurisdictionOptions = [
+  { label: "Czech Republic", value: "CZ" },
+  { label: "Italy", value: "IT" },
+  { label: "EU / English", value: "EU" },
+];
+
+const localeOptions = [
+  { label: "Čeština (cs-CZ)", value: "cs-CZ" },
+  { label: "English EU (en-EU)", value: "en-EU" },
+  { label: "Italiano (it-IT)", value: "it-IT" },
+];
+
 type OrganisationSettingsData = {
   canMutate: boolean;
   clerkOrgId: string;
+  country: string;
   employeeCount: string;
   ico: string;
+  locale: string;
   name: string;
   onboardingCompletedAt: Date | string | null;
   plan: string;
+  primaryJurisdiction: string;
   sector: string;
   toolInventory: string[];
   updatedAt: Date | string | null;
@@ -39,11 +68,14 @@ type OrganisationSettingsData = {
 const fallbackOrganisation: OrganisationSettingsData = {
   canMutate: false,
   clerkOrgId: "demo",
+  country: "CZ",
   employeeCount: "10-49",
   ico: "12345678",
+  locale: "cs-CZ",
   name: "Demo organizace",
   onboardingCompletedAt: null,
   plan: "free",
+  primaryJurisdiction: "CZ",
   sector: "technology",
   toolInventory: ["chatgpt", "microsoft-copilot"],
   updatedAt: null,
@@ -71,11 +103,14 @@ async function loadOrganisationSettings(): Promise<OrganisationSettingsData> {
   return {
     canMutate: true,
     clerkOrgId: session.orgId,
+    country: organisation?.country ?? "CZ",
     employeeCount: organisation?.employeeCount ?? "10-49",
     ico: organisation?.ico ?? "",
+    locale: organisation?.locale ?? "cs-CZ",
     name: organisation?.name ?? "Organizace",
     onboardingCompletedAt: organisation?.onboardingCompletedAt ?? null,
     plan: normalizePlanKey(organisation?.plan),
+    primaryJurisdiction: organisation?.primaryJurisdiction ?? "CZ",
     sector: organisation?.sector ?? "technology",
     toolInventory: organisation?.toolInventory ?? [],
     updatedAt: organisation?.updatedAt ?? null,
@@ -204,6 +239,54 @@ export default async function OrganisationSettingsPage() {
                 ))}
               </select>
             </label>
+
+            <div className="grid gap-4 md:grid-cols-3">
+              <label className="grid gap-2 text-sm">
+                Země
+                <select
+                  name="country"
+                  defaultValue={data.country}
+                  disabled={!data.canMutate}
+                  className="rounded-md border border-border bg-background px-3 py-2"
+                >
+                  {countryOptions.map((option) => (
+                    <option key={option.value} value={option.value}>
+                      {option.label}
+                    </option>
+                  ))}
+                </select>
+              </label>
+              <label className="grid gap-2 text-sm">
+                Primární jurisdikce
+                <select
+                  name="primaryJurisdiction"
+                  defaultValue={data.primaryJurisdiction}
+                  disabled={!data.canMutate}
+                  className="rounded-md border border-border bg-background px-3 py-2"
+                >
+                  {jurisdictionOptions.map((option) => (
+                    <option key={option.value} value={option.value}>
+                      {option.label}
+                    </option>
+                  ))}
+                </select>
+              </label>
+              <label className="grid gap-2 text-sm">
+                Locale
+                <select
+                  name="locale"
+                  defaultValue={data.locale}
+                  disabled={!data.canMutate}
+                  className="rounded-md border border-border bg-background px-3 py-2"
+                >
+                  {localeOptions.map((option) => (
+                    <option key={option.value} value={option.value}>
+                      {option.label}
+                    </option>
+                  ))}
+                </select>
+              </label>
+            </div>
           </div>
 
           <button
@@ -244,6 +327,12 @@ export default async function OrganisationSettingsPage() {
               <div className="grid gap-1 sm:grid-cols-[150px_1fr]">
                 <dt className="text-foreground/58">Plan</dt>
                 <dd className="font-medium capitalize">{data.plan}</dd>
+              </div>
+              <div className="grid gap-1 sm:grid-cols-[150px_1fr]">
+                <dt className="text-foreground/58">Jurisdiction</dt>
+                <dd className="font-mono text-xs">
+                  {data.country} / {data.primaryJurisdiction} / {data.locale}
+                </dd>
               </div>
               <div className="grid gap-1 sm:grid-cols-[150px_1fr]">
                 <dt className="text-foreground/58">Onboarding</dt>

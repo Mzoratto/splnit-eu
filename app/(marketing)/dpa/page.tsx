@@ -15,7 +15,7 @@ export default function DpaPage() {
         {
           title: "Role",
           body: [
-            "U zákaznických dat vystupuje Splnit Technology s.r.o. zpravidla jako zpracovatel a zákazník jako správce. U obchodní komunikace a provozních metrik vystupujeme jako správce.",
+            "U zákaznických dat vystupuje provozovatel Splnit.eu jako OSVČ zpravidla jako zpracovatel a zákazník jako správce. U obchodní komunikace a provozních metrik vystupujeme jako správce. Finální jméno, IČO, ARES odkaz a adresa provozovatele musí být doplněné před produkčním spuštěním.",
             "Zákazník určuje účel a prostředky zpracování zákaznických dat v aplikaci. Splnit.eu zpracovává tato data za účelem poskytování služby, bezpečnosti, podpory, údržby, zákonných povinností a dalších dokumentovaných pokynů zákazníka.",
           ],
         },

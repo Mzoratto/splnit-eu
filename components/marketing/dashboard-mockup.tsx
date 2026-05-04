@@ -26,7 +26,7 @@ export function DashboardMockup() {
             </div>
             <div className="flex items-center gap-2">
               <div className="pulse-dot h-1.5 w-1.5 rounded-full bg-emerald-400" />
-              <span className="mono text-[10px] text-zinc-400">Živý přehled</span>
+              <span className="mono text-[10px] text-zinc-400">Ukázkový přehled</span>
             </div>
           </div>
 
@@ -79,12 +79,12 @@ export function DashboardMockup() {
                       Stav předpisů
                     </h3>
                     <p className="mt-0.5 text-[11px] text-zinc-400">
-                      4 předpisy · Poslední test: 47 min. zpět
+                      Demo workspace · ukázková data
                     </p>
                   </div>
                   <div className="flex items-center gap-1 rounded-full border border-emerald-100 bg-emerald-50 px-2 py-0.5 text-[10px] font-medium text-emerald-600">
                     <div className="h-1 w-1 rounded-full bg-emerald-500" />
-                    Live
+                    Demo
                   </div>
                 </div>
 
@@ -119,26 +119,26 @@ export function DashboardMockup() {
                           className="score-number text-base font-semibold text-zinc-900"
                           id="score-val"
                         >
-                          88%
+                          Demo
                         </span>
                       </div>
                     </div>
                     <div className="flex-1">
                       <p className="mb-0.5 text-xs font-medium text-zinc-900">
-                        Celkový soulad
+                        Auditní připravenost
                       </p>
                       <p className="text-[10px] text-zinc-400">
-                        88 ze 100 kontrol splněno
+                        Ukázkový stav kontrol a důkazů
                       </p>
                       <div className="mt-2 flex gap-1">
                         <span className="rounded-full border border-emerald-100 bg-emerald-50 px-1.5 py-0.5 text-[10px] font-medium text-emerald-700">
-                          14 PASS
+                          PASS
                         </span>
                         <span className="rounded-full border border-amber-100 bg-amber-50 px-1.5 py-0.5 text-[10px] font-medium text-amber-700">
-                          3 WARN
+                          WARN
                         </span>
                         <span className="rounded-full border border-red-100 bg-red-50 px-1.5 py-0.5 text-[10px] font-medium text-red-600">
-                          1 FAIL
+                          FAIL
                         </span>
                       </div>
                     </div>
@@ -149,8 +149,8 @@ export function DashboardMockup() {
                   <FrameworkRow
                     icon="solar:shield-up-linear"
                     name="GDPR"
-                    score="100%"
-                    badge="Splněno"
+                    score="Demo"
+                    badge="Ukázka"
                     barId="bar-gdpr"
                     barWidth="88%"
                     tone="emerald"
@@ -158,7 +158,7 @@ export function DashboardMockup() {
                   <FrameworkRow
                     icon="solar:server-square-linear"
                     name="NIS2"
-                    score="84%"
+                    score="Demo"
                     badge="Zmapováno"
                     barId="bar-nis2"
                     barWidth="91%"
@@ -184,7 +184,7 @@ export function DashboardMockup() {
                         Poslední testování
                       </h4>
                       <p className="mono mt-0.5 text-[10px] text-zinc-400">
-                        2026-04-30 · 08:14:02 UTC
+                        Ukázkový běh kontrol
                       </p>
                     </div>
                     <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-blue-50">
@@ -211,17 +211,17 @@ export function DashboardMockup() {
                   ))}
                   <div className="mt-2 flex items-center gap-1 text-[10px] text-zinc-400">
                     <Icon icon="solar:link-circle-linear" aria-hidden="true" />
-                    Microsoft 365 · 247 kontrol celkem
+                    Microsoft 365 · vybrané kontroly
                   </div>
                 </div>
 
                 <div className="flex items-center justify-between gap-3 rounded-xl border border-zinc-100 bg-white p-4 shadow-sm">
                   <div>
                     <h4 className="text-xs font-semibold text-zinc-900">
-                      Data v EU (eu-west-1)
+                      EU data residency cíl
                     </h4>
                     <p className="mt-0.5 text-[10px] text-zinc-400">
-                      Irsko · AWS · Šifrováno AES-256
+                      Konkrétní region bude potvrzen před spuštěním
                     </p>
                   </div>
                   <div
@@ -249,10 +249,10 @@ export function DashboardMockup() {
                         <h4 className="text-xs font-semibold text-emerald-100">
                           Hodnocení rizik dodavatelů
                         </h4>
-                        <span className="nukib-chip">High Trust</span>
+                        <span className="nukib-chip">Demo</span>
                       </div>
                       <p className="text-[10px] text-emerald-400/80">
-                        Poslední sken: 2 min. zpět
+                        Ukázkový sken dodavatelů
                       </p>
                       <div className="mt-3 h-2 overflow-hidden rounded-full bg-emerald-900">
                         <div className="relative h-full w-[92%] overflow-hidden rounded-full bg-emerald-400">
@@ -263,7 +263,7 @@ export function DashboardMockup() {
                         </div>
                       </div>
                       <p className="mono mt-2 text-[10px] text-emerald-300">
-                        vendor_risk_score · 92%
+                        vendor_risk_score · demo
                       </p>
                     </div>
                   </div>

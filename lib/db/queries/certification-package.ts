@@ -1,4 +1,4 @@
-import { and, desc, eq, inArray } from "drizzle-orm";
+import { and, desc, eq, inArray, sql } from "drizzle-orm";
 import { getDb } from "@/lib/db";
 import {
   controls,
@@ -35,12 +35,12 @@ export async function getIso27001CertificationPackage(clerkOrgId: string) {
         category: controls.category,
         controlId: controls.id,
         controlKey: controls.key,
-        description: controls.descriptionCs,
+        description: sql<string | null>`coalesce(${frameworkControls.localizedDescription}, ${controls.descriptionCs})`,
         evidenceAt: orgControlStatuses.lastEvidenceAt,
         isAutomated: controls.isAutomated,
         requirementLevel: frameworkControls.requirementLevel,
         status: orgControlStatuses.status,
-        title: controls.titleCs,
+        title: sql<string>`coalesce(${frameworkControls.localizedTitle}, ${controls.titleCs})`,
         updatedAt: orgControlStatuses.updatedAt,
       })
       .from(frameworkControls)

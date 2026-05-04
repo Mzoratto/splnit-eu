@@ -27,6 +27,10 @@ export type ControlSeed = {
   frameworkMappings: {
     frameworkSlug: FrameworkSlug;
     articleRef: string;
+    regulatorGuidance?: string;
+    evidenceRequirements?: string;
+    localizedTitle?: string;
+    localizedDescription?: string;
     level: "mandatory" | "recommended" | "optional";
   }[];
 };
@@ -131,14 +135,26 @@ const BASE_CONTROL_LIBRARY: ControlSeed[] = [
     titleCs: "Incidenty hlášeny do 72 hodin příslušnému orgánu",
     titleEn: "Security incidents reported to authority within 72 hours",
     descriptionCs:
-      "Proces incidentů sleduje zákonné lhůty pro oznámení NÚKIB, ČTÚ nebo ÚOOÚ.",
+      "Proces incidentů sleduje zákonné lhůty pro oznámení příslušnému dozorovému nebo regulatornímu orgánu.",
     category: "incident",
     testType: "manual",
     requiresEvidence: true,
     isAutomated: false,
     frameworkMappings: [
-      { frameworkSlug: "nis2", articleRef: "Article 23", level: "mandatory" },
-      { frameworkSlug: "gdpr", articleRef: "Article 33", level: "mandatory" },
+      {
+        frameworkSlug: "nis2",
+        articleRef: "Article 23",
+        regulatorGuidance:
+          "V českém NIS2 kontextu se významné kybernetické incidenty posuzují vůči NÚKIB podle příslušné transpozice a metodiky.",
+        level: "mandatory",
+      },
+      {
+        frameworkSlug: "gdpr",
+        articleRef: "Article 33",
+        regulatorGuidance:
+          "V českém GDPR kontextu se porušení zabezpečení osobních údajů posuzuje vůči ÚOOÚ podle GDPR čl. 33.",
+        level: "mandatory",
+      },
     ],
   },
   {

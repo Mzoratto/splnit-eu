@@ -1,10 +1,13 @@
 "use client";
 
 import Link from "next/link";
+import { useTranslations } from "next-intl";
 import { FormEvent, useState } from "react";
+import { LocaleSwitcher } from "@/components/locale-switcher";
 import { Icon } from "@/components/marketing/local-icon";
 
 export function Footer() {
+  const t = useTranslations("marketing.footer");
   const [email, setEmail] = useState("");
   const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">(
     "idle",
@@ -49,16 +52,16 @@ export function Footer() {
               </span>
             </div>
             <p className="mb-5 max-w-xs text-xs leading-relaxed text-zinc-500">
-              Platforma pro automatizaci souladu s EU předpisy.
+              {t("tagline")}
             </p>
             <div>
               <p className="mb-2 text-xs font-semibold text-zinc-900">
-                Měsíční přehled EU předpisů
+                {t("newsletterTitle")}
               </p>
               {status === "success" ? (
                 <p className="inline-flex items-center gap-1.5 rounded-full bg-emerald-50 px-3 py-1.5 text-xs font-medium text-emerald-700">
                   <Icon icon="solar:check-circle-linear" aria-hidden="true" />
-                  Odebírání aktivní
+                  {t("newsletterSuccess")}
                 </p>
               ) : (
                 <div className="space-y-2">
@@ -81,12 +84,14 @@ export function Footer() {
                       disabled={status === "loading"}
                       className="shrink-0 rounded-full bg-zinc-900 px-4 py-1.5 text-xs font-medium text-white transition-colors hover:bg-zinc-800 disabled:cursor-not-allowed disabled:opacity-60"
                     >
-                      {status === "loading" ? "Ukládám" : "Odebírat"}
+                      {status === "loading"
+                        ? t("newsletterLoading")
+                        : t("newsletterSubmit")}
                     </button>
                   </form>
                   {status === "error" ? (
                     <p className="text-xs text-red-600">
-                      Odběr se nepodařilo uložit.
+                      {t("newsletterError")}
                     </p>
                   ) : null}
                 </div>
@@ -95,16 +100,18 @@ export function Footer() {
           </div>
 
           <FooterColumn
-            title="Produkt"
+            title={t("product")}
             links={[
-              ["Monitoring", "/platform#monitoring"],
-              ["Integrace", "/platform#integrace"],
-              ["Trust Center", "/platform#trust-center"],
-              ["Ceník", "/cenik"],
+              [t("monitoring"), "/platform#monitoring"],
+              [t("integrations"), "/platform#integrace"],
+              [t("trustCenter"), "/platform#trust-center"],
+              ["Early access", "/early-access"],
+              [t("about"), "/about"],
+              [t("pricing"), "/cenik"],
             ]}
           />
           <FooterColumn
-            title="Předpisy"
+            title={t("regulations")}
             links={[
               ["NIS2", "/predpisy/nis2"],
               ["EU AI Act", "/predpisy/eu-ai-act"],
@@ -115,13 +122,14 @@ export function Footer() {
 
           <div className="col-span-2 md:pl-4">
             <h4 className="mb-4 text-xs font-semibold uppercase tracking-wider text-zinc-900">
-              Kontakt
+              {t("contact")}
             </h4>
             <address className="space-y-1.5 text-xs text-zinc-500 not-italic">
               <p className="font-medium text-zinc-700">
-                Splnit Technology s.r.o.
+                {t("operator")}
               </p>
-              <p>Ostrava, Česká republika</p>
+              <p>{t("location")}</p>
+              <p>{t("pendingEntity")}</p>
               <Link
                 href="mailto:hello@splnit.eu"
                 className="mt-2 inline-block font-medium text-blue-600 transition-colors hover:text-blue-700"
@@ -134,15 +142,14 @@ export function Footer() {
 
         <div className="flex flex-col items-center justify-between gap-4 border-t border-zinc-100 pt-8 md:flex-row">
           <p className="text-xs text-zinc-400">
-            © 2026 Splnit Technology · Vytvořeno v Česku 🇨🇿 · Splnit
-            Technology s.r.o. · Ostrava
+            {t("copyright")}
           </p>
           <div className="flex items-center gap-5 text-xs text-zinc-400">
             <Link href="/soukromi" className="transition-colors hover:text-zinc-700">
-              Privacy
+              {t("privacy")}
             </Link>
             <Link href="/podminky" className="transition-colors hover:text-zinc-700">
-              Podmínky
+              {t("terms")}
             </Link>
             <Link href="/cookies" className="transition-colors hover:text-zinc-700">
               Cookies
@@ -151,13 +158,7 @@ export function Footer() {
               DPA
             </Link>
             <div className="h-3 w-px bg-zinc-200" />
-            <div className="flex gap-1.5">
-              <span className="font-semibold text-zinc-900">CS</span>
-              <span className="text-zinc-300">|</span>
-              <span>EN</span>
-              <span className="text-zinc-300">|</span>
-              <span>DE</span>
-            </div>
+            <LocaleSwitcher compact />
           </div>
         </div>
       </div>

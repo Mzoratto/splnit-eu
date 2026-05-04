@@ -1,0 +1,411 @@
+{
+  "app": {
+    "name": "Splnit.eu",
+    "tagline": "Compliance automatizace pro evropské SMB týmy"
+  },
+  "navigation": {
+    "sections": {
+      "overview": "Přehled",
+      "operations": "Provoz",
+      "team": "Tým"
+    },
+    "dashboard": "Dashboard",
+    "frameworks": "Frameworky",
+    "controls": "Kontroly",
+    "evidence": "Evidence",
+    "integrations": "Integrace",
+    "policies": "Politiky",
+    "vendors": "Dodavatelé",
+    "questionnaires": "Dotazníky",
+    "incidents": "Incidenty",
+    "risks": "Rizika",
+    "clients": "Klienti",
+    "team": "Tým",
+    "settings": "Nastavení"
+  },
+  "shell": {
+    "plan": "Plan",
+    "search": "Hledat (⌘K)...",
+    "trustCenter": "Trust centrum",
+    "notifications": "Oznámení",
+    "freePlanBanner": "Bezplatný plán je aktivní. Business funkce se odemknou po upgradu.",
+    "upgradePlan": "Upgradovat plán"
+  },
+  "marketing": {
+    "nav": {
+      "platform": "Platforma",
+      "regulations": "EU Předpisy",
+      "blog": "Blog",
+      "earlyAccess": "Early access",
+      "about": "O nás",
+      "pricing": "Ceník",
+      "signIn": "Přihlásit se",
+      "cta": "Design partner",
+      "menu": "Menu"
+    },
+    "footer": {
+      "tagline": "Early access platforma pro compliance automation v EU.",
+      "newsletterTitle": "Měsíční přehled EU předpisů",
+      "newsletterSuccess": "Odebírání aktivní",
+      "newsletterLoading": "Ukládám",
+      "newsletterSubmit": "Odebírat",
+      "newsletterError": "Odběr se nepodařilo uložit.",
+      "product": "Produkt",
+      "monitoring": "Monitoring",
+      "integrations": "Integrace",
+      "trustCenter": "Trust Center",
+      "about": "O nás",
+      "pricing": "Ceník",
+      "regulations": "Předpisy",
+      "contact": "Kontakt",
+      "operator": "Splnit.eu — provozováno jako OSVČ",
+      "location": "Olomouc, Česká republika",
+      "pendingEntity": "Finální IČO a ARES odkaz budou doplněné před spuštěním.",
+      "copyright": "© 2026 Splnit.eu · Vytvořeno v Olomouci · OSVČ údaje budou doplněné před produkčním spuštěním",
+      "privacy": "Privacy",
+      "terms": "Podmínky"
+    },
+    "stickyCta": "Design partner",
+    "cookies": {
+      "title": "Cookies",
+      "body": "Používáme nezbytné cookies a volitelné měření návštěvnosti pro zlepšování Splnit.eu.",
+      "reject": "Odmítnout",
+      "accept": "Přijmout"
+    },
+    "earlyAccess": {
+      "tag": "Early access",
+      "title": "Hledáme prvních 10 design partnerů.",
+      "body": "Splnit.eu je v early access. Stavím ho jako solo developer v Olomouci a hledám firmy, které chtějí ovlivnit produkt před veřejným spuštěním.",
+      "primaryCta": "Přihlásit se jako design partner",
+      "secondaryCta": "Kdo za tím stojí",
+      "filledLabel": "Aktuálně obsazeno",
+      "emptyProof": "Žádné veřejné reference zatím neuvádíme. Až budou existovat, půjdou na web pouze se souhlasem zákazníka.",
+      "benefitsTitle": "Co dostanete",
+      "asksTitle": "Co za to potřebuji",
+      "onboardingTag": "Onboarding",
+      "onboardingTitle": "Tři týdny práce se skutečným projektem.",
+      "onboardingBody": "Cílem není demo účet. Cílem je použít Splnit.eu na reálný NIS2 nebo GDPR problém a zjistit, co v produktu chybí.",
+      "benefits": {
+        "businessFree": "12 měsíců zdarma na Business plánu",
+        "guidedOnboarding": "3 týdny řízeného onboardingu přímo se zakladatelem",
+        "sectorFeatures": "Funkce prioritizované podle vašeho odvětví",
+        "directContact": "Přímý kontakt bez ticketovací fronty"
+      },
+      "asks": {
+        "realUse": "Reálné použití na vašem NIS2 nebo GDPR projektu",
+        "weeklyFeedback": "30 minut zpětné vazby týdně během onboardingu",
+        "referencePermission": "Možnost použít vaše jméno jako referenci pouze tehdy, když budete spokojení"
+      },
+      "weeks": {
+        "week1Title": "1. týden",
+        "week1Heading": "Scoping a gap analýza",
+        "week1Body": "Potvrdíme jurisdikci, projdeme NIS2 aplikovatelnost a připravíme první seznam priorit.",
+        "week2Title": "2. týden",
+        "week2Heading": "Integrace a evidence",
+        "week2Body": "Připojíme Microsoft 365, AWS nebo GitHub a nastavíme první automatické kontroly.",
+        "week3Title": "3. týden",
+        "week3Heading": "Dokumenty a auditní balíček",
+        "week3Body": "Vygenerujeme první sadu dokumentů a připravíme formát důkazů pro auditora."
+      }
+    },
+    "about": {
+      "tag": "About",
+      "photoPlaceholder": "Founder photo before launch",
+      "title": "Kdo stojí za Splnit.eu.",
+      "body": "Splnit.eu staví solo developer v Olomouci. Produkt vzniká pro evropské SMB týmy, které potřebují připravit důkazy, kontroly a dokumenty pro NIS2, GDPR a ISO 27001 bez nekonečných tabulek.",
+      "primaryCta": "Stát se design partnerem",
+      "realTodayTitle": "Co je pravda dnes",
+      "notYetTitle": "Co zatím netvrdíme",
+      "whyTag": "Why",
+      "whyTitle": "Developer-built, local-law aware compliance.",
+      "whyP1": "Velké globální compliance platformy často pokrývají obecné rámce dobře, ale SMB týmy v EU potřebují také lokální transpozice, jasné citace a praktický onboarding.",
+      "whyP2": "Splnit.eu začíná menší: automatické kontroly pro systémy, které firmy už používají, dokumenty připravené k právní kontrole a přímá práce se zakladatelem u prvních design partnerů.",
+      "realToday": {
+        "solo": "Splnit.eu je early access produkt stavěný solo developerem v Olomouci.",
+        "focus": "Produkt se zaměřuje na EU compliance automation pro NIS2, GDPR a ISO 27001.",
+        "legalReview": "DPA a finální právní dokumenty jsou připravené k právní kontrole před produkčním spuštěním.",
+        "noFakeProof": "Veřejné reference a metriky nejsou uvedené, dokud nebudou ověřené."
+      },
+      "notYet": {
+        "legalAdvice": "Nejde o právní poradenství, auditorské stanovisko ani certifikaci.",
+        "enterprise": "Splnit.eu zatím není enterprise vendor s 24/7 SLA a penalizacemi.",
+        "certification": "ISO 27001 nebo SOC 2 certifikace Splnit.eu samotného není veřejně deklarovaná.",
+        "entity": "Finální OSVČ identifikační údaje musí být doplněné před produkčním spuštěním."
+      }
+    }
+  },
+  "home": {
+    "badge": "Narozeno v Česku · Vytvořeno pro EU předpisy",
+    "titleLine1": "Připravte se na audit.",
+    "titleLine2": "S automatizovanou compliance platformou.",
+    "mobileLead": "Připravte důkazy pro GDPR, NIS2 a ISO 27001 bez tabulek.",
+    "lead": "Centralizovaná platforma pro evropské SMB týmy. Připravte důkazy pro GDPR, NIS2 a ISO 27001 s automatickými kontrolami pro Microsoft 365, AWS a GitHub.",
+    "primaryCta": "Stát se design partnerem",
+    "secondaryCta": "Zobrazit demo",
+    "trustLine": "Early access · Přímý kontakt se zakladatelem · EU data residency cíl",
+    "partnerTag": "Hledáme prvních 10 design partnerů",
+    "partnerFilled": "0 / 10 obsazeno",
+    "partnerFree": "12 měsíců Business zdarma",
+    "partnerOnboarding": "3 týdny founder-led onboarding",
+    "stepsTag": "Jak to funguje",
+    "stepsTitle": "Nastavte jednou. Funguje navždy.",
+    "stepsBody": "Tři kroky od prvního propojení systému k použitelnému evidence packu.",
+    "featuresTag": "Klíčové funkce",
+    "featuresTitle": "Compliance vytvořené pro moderní týmy.",
+    "featuresBody": "Propojte lokální i globální infrastrukturu. Mapujeme kontroly automaticky na české i mezinárodní standardy.",
+    "offerTitle": "Founding customer offer pro prvních 10 firem.",
+    "offerBody": "Splnit.eu je v early access. První design partneři získají Business plán na 12 měsíců zdarma a tři týdny řízeného onboardingu přímo se zakladatelem.",
+    "offerCta": "Zobrazit early access",
+    "referencePlaceholder": "Reálné reference přidáme až po ověřeném používání a se souhlasem zákazníka.",
+    "referenceCount": "0 / 10 design partnerů",
+    "referenceNote": "První reference teprve vzniknou",
+    "finalTitle": "Připravte první auditní důkazy.",
+    "finalBody": "Staňte se design partnerem a pomozte postavit produkt podle reálného NIS2 nebo GDPR projektu.",
+    "docsCta": "Zobrazit dokumentaci",
+    "steps": {
+      "connectTitle": "Připojte nástroje",
+      "connectBody": "Propojte Microsoft 365, GitHub nebo AWS. Nastavení trvá 5 minut.",
+      "testsTitle": "Testy běží automaticky",
+      "testsBody": "Automatické kontroly sledují připojené systémy a ukládají výsledky jako auditní důkazy.",
+      "resultsTitle": "Dostanete výsledky",
+      "resultsBody": "Dashboard, upozornění na selhání a auditní dokumentace připravená pro auditora."
+    },
+    "features": {
+      "residencyTitle": "EU data residency cíl",
+      "residencyBody": "Architektura je navržená pro evropské hostingové regiony. Konkrétní produkční region bude potvrzen před spuštěním.",
+      "monitoringTitle": "Kontinuální monitoring",
+      "monitoringBody": "Zachyťte výpadky konfigurace ve vašem Microsoft 365 nebo AWS okamžitě.",
+      "documentsTitle": "Automatické dokumenty",
+      "documentsBody": "Generujte pracovní dokumenty a evidence packy, které můžete předat právníkovi, auditorovi nebo konzultantovi k finální kontrole."
+    },
+    "trustBadges": {
+      "early": "Early access",
+      "dpa": "DPA k právní kontrole",
+      "residency": "EU data residency cíl",
+      "onboarding": "Founder-led onboarding"
+    }
+  },
+  "leadCapture": {
+    "tag": "Personalizovaný přehled",
+    "title": "Které EU předpisy se vás týkají?",
+    "subtitle": "Získejte personalizovaný přehled povinností za 2 minuty.",
+    "cta": "Získat přehled",
+    "success": "Odesláno. Přehled vám přijde do 2 minut.",
+    "placeholder": "pracovni@firma.cz",
+    "footnote": "Žádná kreditní karta · Výsledky okamžitě · Odhlášení kdykoliv"
+  },
+  "pricing": {
+    "title": "Transparentní ceny. Žádná překvapení.",
+    "subtitle": "Méně než jedna hodina konzultanta měsíčně.",
+    "footnote": "Všechny plány zahrnují EU datové úložiště · Bez skrytých poplatků · Zrušení kdykoliv",
+    "partnerTitle": "Jste poradce nebo MSP?",
+    "partnerBody": "Neomezený počet klientů, white-label možnost, partnerský odznak.",
+    "partnerPrice": "7 475 Kč/měsíc",
+    "partnerCta": "Zjistit více →",
+    "comparisonTag": "Srovnání funkcí",
+    "comparisonTitle": "Vyberte podle hloubky automatizace.",
+    "faqTag": "FAQ",
+    "faqTitle": "Časté otázky",
+    "finalTitle": "Začněte plnit předpisy ještě dnes.",
+    "finalBody": "Early access je otevřený pro první design partnery, kteří chtějí použít Splnit.eu na reálném NIS2 nebo GDPR projektu.",
+    "primaryCta": "Stát se design partnerem",
+    "secondaryCta": "Prohlédnout dokumentaci",
+    "cards": {
+      "monthly": "Měsíčně",
+      "annual": "Ročně",
+      "billingToggle": "Přepnout fakturaci",
+      "saving": "Ušetřete 2 měsíce",
+      "featured": "Nejoblíbenější",
+      "currency": "Kč",
+      "monthlySuffix": "/měsíc",
+      "annualSuffix": "/měsíc ročně",
+      "free": {
+        "name": "Zdarma",
+        "description": "Vyzkoušejte platformu bez závazků.",
+        "cta": "Začít zdarma",
+        "features": ["1 předpis", "Manuální kontroly", "3 vzory dokumentů", "1 uživatel", "Komunitní podpora"]
+      },
+      "starter": {
+        "name": "Starter",
+        "description": "Pro firmy, které berou soulad vážně.",
+        "cta": "Stát se design partnerem",
+        "features": ["2 předpisy (NIS2 + 1 další)", "3 integrace", "Automatické kontroly pro Microsoft 365, AWS a GitHub", "Evidence vault", "Šablony dokumentů", "Upozornění na termíny", "5 uživatelů", "Email podpora"]
+      },
+      "business": {
+        "name": "Business",
+        "description": "Kompletní platforma pro celý tým.",
+        "cta": "Kontaktovat obchod",
+        "features": ["5 předpisů", "10 integrací", "Trust Center", "Vendor risk modul", "Access reviews", "Incident log", "25 uživatelů", "Prioritní podpora"]
+      }
+    },
+    "comparison": {
+      "feature": "Funkce",
+      "free": "Zdarma",
+      "optional": "volitelné",
+      "lite": "lite",
+      "soon": "brzy",
+      "selected": "vybrané integrace",
+      "unlimited": "neomezeně",
+      "groups": {
+        "regulations": "Předpisy",
+        "integrations": "Integrace",
+        "automation": "Automatizace",
+        "documents": "Dokumenty",
+        "trustCenter": "Trust Center",
+        "team": "Tým",
+        "support": "Podpora"
+      }
+    },
+    "faqs": {
+      "cancelQuestion": "Mohu zrušit předplatné kdykoliv?",
+      "cancelAnswer": "Ano. Žádné roční závazky u měsíčního tarifu. U ročního tarifu vrátíme poměrnou část.",
+      "dataQuestion": "Jsou moje data uložena v EU?",
+      "dataAnswer": "Produkční konfigurace je navržená pro EU regiony. Přesné lokace zpracování a případné mechanismy předání mimo EU/EHP potvrzujeme v DPA a subdodavatelském přehledu.",
+      "setupQuestion": "Potřebuji technické znalosti k nastavení?",
+      "setupAnswer": "Ne. Průvodce nastavením zabere 15 minut bez IT oddělení.",
+      "legalQuestion": "Je Splnit.eu právní poradenství?",
+      "legalAnswer": "Ne. Platforma vám pomáhá připravit se na právní přezkum — nenahrazuje kvalifikovaného právníka.",
+      "discountQuestion": "Nabízíte slevu pro neziskové organizace nebo startupy?",
+      "discountAnswer": "Ano. Kontaktujte nás na hello@splnit.eu pro speciální podmínky.",
+      "cancelDataQuestion": "Co se stane s mými daty po zrušení?",
+      "cancelDataAnswer": "Máte 30 dní na export veškerých dat. Poté jsou trvale smazána."
+    }
+  },
+  "regulations": {
+    "pageName": "Splnit.eu EU Předpisy",
+    "jsonLdDescription": "Přehled EU předpisů pro české firmy a automatizace souladu v platformě Splnit.eu.",
+    "title": "Které EU předpisy se vás týkají?",
+    "subtitle": "Průvodce všemi EU předpisy, které platí pro česká MSP — s konkrétními termíny, pokutami a kroky k souladu.",
+    "learnMore": "Zjistit více →",
+    "timelineTag": "Regulatorní timeline",
+    "timelineTitle": "Termíny, které nesmíte minout.",
+    "currentMilestone": "Aktuální milník",
+    "downloadTitle": "Stáhněte si zdarma",
+    "downloadSubtitle": "Kompletní přehled povinností, šablony dokumentů a checklist pro každý předpis.",
+    "downloadCta": "Stáhnout vše zdarma",
+    "resources": ["NIS2 checklist", "EU AI Act přehled", "Politika AI (šablona)", "Školení AI gramotnosti", "Záznam o používání AI", "Annex III reference"],
+    "cards": {
+      "available": "Dostupné",
+      "soon": "Brzy",
+      "nis2": {"regulator": "NÚKIB", "deadline": "Říjen 2024", "description": "Kybernetická bezpečnost pro střední a velké firmy."},
+      "eu-ai-act": {"regulator": "ČTÚ", "deadline": "Srpen 2026", "description": "Povinnosti pro nasazovatele AI systémů."},
+      "gdpr": {"regulator": "ÚOOÚ", "deadline": "Aktivní", "description": "Ochrana osobních údajů — platí pro každou firmu."},
+      "iso-27001": {"regulator": "ISO/ČAS", "deadline": "Průběžně", "description": "Mezinárodní standard pro informační bezpečnost."},
+      "csrd": {"regulator": "MŽP", "deadline": "2026+", "description": "ESG reporting pro dodavatele velkých korporací."},
+      "dora": {"regulator": "ČNB", "deadline": "Leden 2025", "description": "Digitální odolnost pro finanční instituce."}
+    },
+    "timeline": [
+      {"date": "Únor 2025", "title": "Zákaz škodlivých AI praktik"},
+      {"date": "Říjen 2024", "title": "NIS2 transponována do české legislativy"},
+      {"date": "Srpen 2025", "title": "Povinnost AI gramotnosti zaměstnanců"},
+      {"date": "Srpen 2026", "title": "High-risk AI systémy musí být v souladu"},
+      {"date": "Srpen 2027", "title": "Zbývající AI systémy v produktech"}
+    ],
+    "detail": {
+      "metadataTitleSuffix": "Splnit.eu — povinnosti, termíny a automatizace souladu",
+      "metadataDescription": "{name}: český přehled povinností, sankcí a kroků k souladu pro MSP.",
+      "jsonLdDescription": "{name}: český přehled povinností a automatizace souladu v platformě Splnit.eu.",
+      "backLink": "← Všechny předpisy",
+      "appliesTag": "Kdo to musí splnit",
+      "appliesTitle": "Praktický dopad pro české firmy.",
+      "obligationsTag": "Klíčové povinnosti",
+      "obligationsTitle": "Co musí být doložitelné.",
+      "deadlineLabel": "Termín",
+      "finesTag": "Pokuty a sankce",
+      "finesTitle": "Riziko se měří penězi i ztracenými zakázkami.",
+      "violationHeader": "Typ porušení",
+      "maximumHeader": "Maximální sankce",
+      "enforcerHeader": "Český dohled",
+      "helpsTag": "Jak Splnit.eu pomáhá",
+      "helpsTitle": "Převod povinností na kontroly, důkazy a termíny.",
+      "platformCta": "Zobrazit v akci",
+      "resourcesTitle": "Stáhnout zdroje"
+    }
+  },
+  "onboarding": {
+    "eyebrow": "Onboarding",
+    "title": "Nastavení organizace",
+    "description": "Pět kroků nastaví základní profil, frameworky, nástroje a první doporučenou integraci.",
+    "saveStepError": "Uložení kroku se nepodařilo.",
+    "finishError": "Dokončení onboardingu se nepodařilo.",
+    "steps": {
+      "company": "Firma",
+      "frameworks": "Frameworky",
+      "tools": "Nástroje",
+      "integration": "Integrace",
+      "score": "Skóre"
+    },
+    "company": {
+      "title": "Údaje o firmě",
+      "name": "Název firmy",
+      "legalId": "IČO",
+      "sector": "Sektor",
+      "employeeCount": "Počet zaměstnanců",
+      "country": "Země",
+      "primaryJurisdiction": "Primární jurisdikce",
+      "locale": "Locale",
+      "continue": "Pokračovat"
+    },
+    "buttons": {
+      "back": "Zpět",
+      "saveFrameworks": "Uložit frameworky",
+      "saveTools": "Uložit nástroje",
+      "showScore": "Zobrazit skóre",
+      "finish": "Dokončit onboarding"
+    },
+    "frameworks": {
+      "title": "Vyberte frameworky",
+      "descriptions": {
+        "nis2": "Kybernetická bezpečnost, řízení rizik, incident reporting a odpovědnost managementu.",
+        "ai-act": "Povinnosti nasazovatelů AI systémů, AI gramotnost, vysoce riziková AI a transparentnost.",
+        "gdpr": "Ochrana osobních údajů, záznamy o činnostech zpracování, bezpečnost a oznamování porušení.",
+        "iso27001": "Systém řízení bezpečnosti informací a katalog bezpečnostních opatření.",
+        "csrd": "ESG reporting, dvojí materialita, datová evidence a dodavatelské dotazníky."
+      }
+    },
+    "tools": {
+      "title": "AI nástroje a SaaS inventář"
+    },
+    "integration": {
+      "title": "Doporučená integrace",
+      "body": "První automatické kontroly pokryjí MFA, Conditional Access, hosty a privilegované role.",
+      "open": "Otevřít nastavení integrace"
+    },
+    "score": {
+      "label": "Úvodní skóre",
+      "title": "První baseline je připravená",
+      "body": "Skóre vychází z vybraných frameworků a inventáře nástrojů. Automatické testy ho zpřesní po připojení integrací."
+    },
+    "sectors": {
+      "technology": "Technologie",
+      "finance": "Finance",
+      "healthcare": "Zdravotnictví",
+      "manufacturing": "Výroba",
+      "public-sector": "Veřejný sektor",
+      "professional-services": "Profesionální služby"
+    },
+    "countries": {
+      "CZ": "Česká republika",
+      "IT": "Itálie",
+      "DE": "Německo",
+      "FR": "Francie",
+      "ES": "Španělsko",
+      "NL": "Nizozemsko",
+      "PL": "Polsko",
+      "SK": "Slovensko",
+      "AT": "Rakousko",
+      "BE": "Belgie",
+      "IE": "Irsko"
+    },
+    "jurisdictions": {
+      "CZ": "Česká republika",
+      "IT": "Itálie",
+      "EU": "EU / English"
+    },
+    "locales": {
+      "cs-CZ": "Čeština",
+      "en-EU": "English EU",
+      "it-IT": "Italiano"
+    }
+  }
+}

@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { useTranslations } from "next-intl";
 import { useEffect, useMemo, useReducer, useState, useTransition } from "react";
 import {
   ArrowRight,
@@ -21,9 +22,12 @@ import type { FrameworkSeed } from "@/lib/frameworks/registry";
 import type { ToolInventoryItem } from "@/lib/onboarding/tools";
 
 type CompanyState = {
+  country: string;
   employeeCount: string;
   ico: string;
+  locale: string;
   name: string;
+  primaryJurisdiction: string;
   sector: string;
 };
 
@@ -41,15 +45,31 @@ type WizardAction =
   | { type: "step"; step: number };
 
 const sectors = [
-  ["technology", "Technologie"],
-  ["finance", "Finance"],
-  ["healthcare", "Zdravotnictví"],
-  ["manufacturing", "Výroba"],
-  ["public-sector", "Veřejný sektor"],
-  ["professional-services", "Profesionální služby"],
-];
+  "technology",
+  "finance",
+  "healthcare",
+  "manufacturing",
+  "public-sector",
+  "professional-services",
+] as const;
 
 const employeeCounts = ["1-9", "10-49", "50-249", "250+"];
+const countries = [
+  "CZ",
+  "IT",
+  "DE",
+  "FR",
+  "ES",
+  "NL",
+  "PL",
+  "SK",
+  "AT",
+  "BE",
+  "IE",
+] as const;
+const jurisdictions = ["CZ", "IT", "EU"] as const;
+const locales = ["cs-CZ", "en-EU", "it-IT"] as const;
+const stepKeys = ["company", "frameworks", "tools", "integration", "score"];
 
 function reducer(state: WizardState, action: WizardAction): WizardState {
   switch (action.type) {
@@ -149,6 +169,7 @@ export function OnboardingWizard({
   initialTools: string[];
   tools: ToolInventoryItem[];
 }) {
+  const t = useTranslations("onboarding");
   const [pending, startTransition] = useTransition();
   const [error, setError] = useState<string | null>(null);
   const [state, dispatch] = useReducer(reducer, {
@@ -166,7 +187,7 @@ export function OnboardingWizard({
         await action();
         dispatch({ type: "step", step: nextStep });
       } catch {
-        setError("Uložení kroku se nepodařilo.");
+        setError(t("saveStepError"));
       }
     });
   }
@@ -178,7 +199,7 @@ export function OnboardingWizard({
         await completeOnboardingStep({ initialScore: score });
         window.location.href = "/dashboard";
       } catch {
-        setError("Dokončení onboardingu se nepodařilo.");
+        setError(t("finishError"));
       }
     });
   }
@@ -187,25 +208,25 @@ export function OnboardingWizard({
     <section className="space-y-6">
       <div className="max-w-3xl">
         <p className="text-sm font-medium uppercase tracking-[0.14em] text-primary">
-          Onboarding
+          {t("eyebrow")}
         </p>
         <h1 className="mt-2 text-3xl font-semibold tracking-normal">
-          Nastavení organizace
+          {t("title")}
         </h1>
         <p className="mt-2 text-sm leading-6 text-foreground/64">
-          Pět kroků nastaví základní profil, frameworky, nástroje a první doporučenou integraci.
+          {t("description")}
         </p>
       </div>
 
       <div className="grid gap-2 md:grid-cols-5">
-        {["Firma", "Frameworky", "Nástroje", "Integrace", "Skóre"].map(
-          (label, index) => {
+        {stepKeys.map(
+          (key, index) => {
             const active = state.step === index + 1;
             const complete = state.step > index + 1;
 
             return (
               <button
-                key={label}
+                key={key}
                 type="button"
                 onClick={() => dispatch({ type: "step", step: index + 1 })}
                 className={`flex min-h-12 items-center justify-center rounded-md border px-3 text-sm ${
@@ -216,7 +237,7 @@ export function OnboardingWizard({
                       : "border-border bg-surface text-foreground/62"
                 }`}
               >
-                {label}
+                {t(`steps.${key}`)}
               </button>
             );
           },
@@ -233,11 +254,11 @@ export function OnboardingWizard({
         <div className="rounded-lg border border-border bg-surface p-5">
           <div className="mb-6 flex items-center gap-3">
             <Building2 className="h-5 w-5 text-primary" aria-hidden="true" />
-            <h2 className="text-lg font-semibold">Údaje o firmě</h2>
+            <h2 className="text-lg font-semibold">{t("company.title")}</h2>
           </div>
           <div className="grid gap-4 md:grid-cols-2">
             <label className="grid gap-2 text-sm">
-              Název firmy
+              {t("company.name")}
               <input
                 value={state.company.name}
                 onChange={(event) =>
@@ -248,7 +269,7 @@ export function OnboardingWizard({
               />
             </label>
             <label className="grid gap-2 text-sm">
-              IČO
+              {t("company.legalId")}
               <input
                 value={state.company.ico}
                 onChange={(event) =>
@@ -258,7 +279,7 @@ export function OnboardingWizard({
               />
             </label>
             <label className="grid gap-2 text-sm">
-              Sektor
+              {t("company.sector")}
               <select
                 value={state.company.sector}
                 onChange={(event) =>
@@ -266,15 +287,15 @@ export function OnboardingWizard({
                 }
                 className="rounded-md border border-border bg-background px-3 py-2"
               >
-                {sectors.map(([value, label]) => (
+                {sectors.map((value) => (
                   <option key={value} value={value}>
-                    {label}
+                    {t(`sectors.${value}`)}
                   </option>
                 ))}
               </select>
             </label>
             <label className="grid gap-2 text-sm">
-              Počet zaměstnanců
+              {t("company.employeeCount")}
               <select
                 value={state.company.employeeCount}
                 onChange={(event) =>
@@ -293,6 +314,58 @@ export function OnboardingWizard({
                 ))}
               </select>
             </label>
+            <label className="grid gap-2 text-sm">
+              {t("company.country")}
+              <select
+                value={state.company.country}
+                onChange={(event) =>
+                  dispatch({ type: "company", field: "country", value: event.target.value })
+                }
+                className="rounded-md border border-border bg-background px-3 py-2"
+              >
+                {countries.map((value) => (
+                  <option key={value} value={value}>
+                    {t(`countries.${value}`)}
+                  </option>
+                ))}
+              </select>
+            </label>
+            <label className="grid gap-2 text-sm">
+              {t("company.primaryJurisdiction")}
+              <select
+                value={state.company.primaryJurisdiction}
+                onChange={(event) =>
+                  dispatch({
+                    type: "company",
+                    field: "primaryJurisdiction",
+                    value: event.target.value,
+                  })
+                }
+                className="rounded-md border border-border bg-background px-3 py-2"
+              >
+                {jurisdictions.map((value) => (
+                  <option key={value} value={value}>
+                    {t(`jurisdictions.${value}`)}
+                  </option>
+                ))}
+              </select>
+            </label>
+            <label className="grid gap-2 text-sm">
+              {t("company.locale")}
+              <select
+                value={state.company.locale}
+                onChange={(event) =>
+                  dispatch({ type: "company", field: "locale", value: event.target.value })
+                }
+                className="rounded-md border border-border bg-background px-3 py-2"
+              >
+                {locales.map((value) => (
+                  <option key={value} value={value}>
+                    {t(`locales.${value}`)}
+                  </option>
+                ))}
+              </select>
+            </label>
           </div>
           <div className="mt-6 flex justify-end">
             <button
@@ -302,9 +375,12 @@ export function OnboardingWizard({
                 runStep(
                   () =>
                     saveCompanyStep({
+                      country: state.company.country,
                       employeeCount: state.company.employeeCount,
                       ico: state.company.ico,
+                      locale: state.company.locale,
                       name: state.company.name,
+                      primaryJurisdiction: state.company.primaryJurisdiction,
                       sector: state.company.sector,
                     }),
                   2,
@@ -312,7 +388,7 @@ export function OnboardingWizard({
               }
               className="inline-flex items-center gap-2 rounded-md bg-primary px-4 py-3 text-sm font-medium text-primary-foreground disabled:cursor-not-allowed disabled:opacity-50"
             >
-              Pokračovat
+              {t("company.continue")}
               <ArrowRight className="h-4 w-4" aria-hidden="true" />
             </button>
           </div>
@@ -323,7 +399,7 @@ export function OnboardingWizard({
         <div className="rounded-lg border border-border bg-surface p-5">
           <div className="mb-6 flex items-center gap-3">
             <ShieldCheck className="h-5 w-5 text-primary" aria-hidden="true" />
-            <h2 className="text-lg font-semibold">Vyberte frameworky</h2>
+            <h2 className="text-lg font-semibold">{t("frameworks.title")}</h2>
           </div>
           <div className="grid gap-3 md:grid-cols-2">
             {frameworks.map((framework) => {
@@ -350,7 +426,7 @@ export function OnboardingWizard({
                     {selected ? <Check className="h-5 w-5 text-primary" /> : null}
                   </div>
                   <p className="mt-3 text-sm leading-6 text-foreground/64">
-                    {framework.descriptionCs}
+                    {t(`frameworks.descriptions.${framework.slug}`)}
                   </p>
                 </button>
               );
@@ -362,7 +438,7 @@ export function OnboardingWizard({
               onClick={() => dispatch({ type: "step", step: 1 })}
               className="rounded-md border border-border px-4 py-3 text-sm"
             >
-              Zpět
+              {t("buttons.back")}
             </button>
             <button
               type="button"
@@ -378,7 +454,7 @@ export function OnboardingWizard({
               }
               className="inline-flex items-center gap-2 rounded-md bg-primary px-4 py-3 text-sm font-medium text-primary-foreground disabled:cursor-not-allowed disabled:opacity-50"
             >
-              Uložit frameworky
+              {t("buttons.saveFrameworks")}
               <ArrowRight className="h-4 w-4" aria-hidden="true" />
             </button>
           </div>
@@ -389,7 +465,7 @@ export function OnboardingWizard({
         <div className="rounded-lg border border-border bg-surface p-5">
           <div className="mb-6 flex items-center gap-3">
             <Sparkles className="h-5 w-5 text-primary" aria-hidden="true" />
-            <h2 className="text-lg font-semibold">AI nástroje a SaaS inventář</h2>
+            <h2 className="text-lg font-semibold">{t("tools.title")}</h2>
           </div>
           <div className="grid gap-2 md:grid-cols-4">
             {tools.map((tool) => {
@@ -420,7 +496,7 @@ export function OnboardingWizard({
               onClick={() => dispatch({ type: "step", step: 2 })}
               className="rounded-md border border-border px-4 py-3 text-sm"
             >
-              Zpět
+              {t("buttons.back")}
             </button>
             <button
               type="button"
@@ -433,7 +509,7 @@ export function OnboardingWizard({
               }
               className="inline-flex items-center gap-2 rounded-md bg-primary px-4 py-3 text-sm font-medium text-primary-foreground disabled:cursor-not-allowed disabled:opacity-50"
             >
-              Uložit nástroje
+              {t("buttons.saveTools")}
               <ArrowRight className="h-4 w-4" aria-hidden="true" />
             </button>
           </div>
@@ -444,18 +520,18 @@ export function OnboardingWizard({
         <div className="rounded-lg border border-border bg-surface p-5">
           <div className="mb-6 flex items-center gap-3">
             <Plug className="h-5 w-5 text-primary" aria-hidden="true" />
-            <h2 className="text-lg font-semibold">Doporučená integrace</h2>
+            <h2 className="text-lg font-semibold">{t("integration.title")}</h2>
           </div>
           <div className="rounded-lg border border-border bg-background p-5">
             <p className="text-lg font-semibold">Microsoft 365</p>
             <p className="mt-2 text-sm leading-6 text-foreground/64">
-              První automatické kontroly pokryjí MFA, Conditional Access, hosty a privilegované role.
+              {t("integration.body")}
             </p>
             <Link
               href="/integrations/microsoft365"
               className="mt-5 inline-flex items-center gap-2 rounded-md border border-border px-4 py-3 text-sm font-medium hover:bg-surface-muted"
             >
-              Otevřít nastavení integrace
+              {t("integration.open")}
               <ArrowRight className="h-4 w-4" aria-hidden="true" />
             </Link>
           </div>
@@ -465,14 +541,14 @@ export function OnboardingWizard({
               onClick={() => dispatch({ type: "step", step: 3 })}
               className="rounded-md border border-border px-4 py-3 text-sm"
             >
-              Zpět
+              {t("buttons.back")}
             </button>
             <button
               type="button"
               onClick={() => dispatch({ type: "step", step: 5 })}
               className="inline-flex items-center gap-2 rounded-md bg-primary px-4 py-3 text-sm font-medium text-primary-foreground"
             >
-              Zobrazit skóre
+              {t("buttons.showScore")}
               <Gauge className="h-4 w-4" aria-hidden="true" />
             </button>
           </div>
@@ -484,10 +560,10 @@ export function OnboardingWizard({
           <div className="grid gap-6 md:grid-cols-[auto_1fr] md:items-center">
             <ScoreReveal score={score} />
             <div>
-              <p className="text-sm text-foreground/58">Úvodní skóre</p>
-              <h2 className="mt-1 text-2xl font-semibold">První baseline je připravená</h2>
+              <p className="text-sm text-foreground/58">{t("score.label")}</p>
+              <h2 className="mt-1 text-2xl font-semibold">{t("score.title")}</h2>
               <p className="mt-3 text-sm leading-6 text-foreground/64">
-                Skóre vychází z vybraných frameworků a inventáře nástrojů. Automatické testy ho zpřesní po připojení integrací.
+                {t("score.body")}
               </p>
             </div>
           </div>
@@ -497,7 +573,7 @@ export function OnboardingWizard({
               onClick={() => dispatch({ type: "step", step: 4 })}
               className="rounded-md border border-border px-4 py-3 text-sm"
             >
-              Zpět
+              {t("buttons.back")}
             </button>
             <button
               type="button"
@@ -505,7 +581,7 @@ export function OnboardingWizard({
               onClick={finishOnboarding}
               className="inline-flex items-center gap-2 rounded-md bg-primary px-4 py-3 text-sm font-medium text-primary-foreground disabled:cursor-not-allowed disabled:opacity-50"
             >
-              Dokončit onboarding
+              {t("buttons.finish")}
               <Check className="h-4 w-4" aria-hidden="true" />
             </button>
           </div>

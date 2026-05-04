@@ -6,6 +6,7 @@ import {
   controls,
   frameworkControls,
   frameworks,
+  sourceDocuments,
   tests,
 } from "../lib/db/schema";
 import { FRAMEWORK_LIBRARY } from "../lib/frameworks/registry";
@@ -13,6 +14,7 @@ import { ISO27001_ANNEX_A_MAPPINGS } from "../lib/frameworks/iso27001-annex-a";
 import { AWS_TEST_DEFINITIONS } from "../lib/integrations/aws/test-definitions";
 import { GITHUB_TEST_DEFINITIONS } from "../lib/integrations/github/test-definitions";
 import { MICROSOFT365_TEST_DEFINITIONS } from "../lib/integrations/microsoft365/test-definitions";
+import { POLICY_TEMPLATES } from "../lib/policies/templates";
 
 loadEnvConfig(process.cwd());
 
@@ -121,6 +123,11 @@ async function seedFrameworkControls(
           frameworkId,
           controlId,
           articleRef: mapping.articleRef,
+          evidenceRequirements: mapping.evidenceRequirements,
+          localizedDescription:
+            mapping.localizedDescription ?? control.descriptionCs,
+          localizedTitle: mapping.localizedTitle ?? control.titleCs,
+          regulatorGuidance: mapping.regulatorGuidance,
           requirementLevel: mapping.level,
           sortOrder: index,
         })
@@ -132,6 +139,11 @@ async function seedFrameworkControls(
           ],
           set: {
             articleRef: mapping.articleRef,
+            evidenceRequirements: mapping.evidenceRequirements,
+            localizedDescription:
+              mapping.localizedDescription ?? control.descriptionCs,
+            localizedTitle: mapping.localizedTitle ?? control.titleCs,
+            regulatorGuidance: mapping.regulatorGuidance,
             requirementLevel: mapping.level,
             sortOrder: index,
           },
@@ -164,6 +176,7 @@ async function seedFrameworkControls(
         articleRef: mapping.articleRef,
         controlId,
         frameworkId: isoFrameworkId,
+        localizedTitle: mapping.title,
         requirementLevel: "mandatory",
         sortOrder: index,
       })
@@ -174,8 +187,42 @@ async function seedFrameworkControls(
           frameworkControls.articleRef,
         ],
         set: {
+          localizedTitle: mapping.title,
           requirementLevel: "mandatory",
           sortOrder: index,
+        },
+      });
+
+    count += 1;
+  }
+
+  return count;
+}
+
+async function seedSourceDocuments() {
+  const db = getDb();
+  const lastReviewed = new Date("2026-05-03T00:00:00.000Z");
+  let count = 0;
+
+  for (const template of POLICY_TEMPLATES) {
+    await db
+      .insert(sourceDocuments)
+      .values({
+        citation: template.description,
+        filename: template.sourceDocument,
+        jurisdiction: "CZ",
+        lastReviewed,
+        locale: "cs-CZ",
+        title: template.titleCs,
+      })
+      .onConflictDoUpdate({
+        target: sourceDocuments.filename,
+        set: {
+          citation: template.description,
+          jurisdiction: "CZ",
+          lastReviewed,
+          locale: "cs-CZ",
+          title: template.titleCs,
         },
       });
 
@@ -253,6 +300,7 @@ async function main() {
   const frameworkIds = await seedFrameworks();
   const controlIds = await seedControls();
   const mappingCount = await seedFrameworkControls(frameworkIds, controlIds);
+  const sourceDocumentCount = await seedSourceDocuments();
   const integrationTestCount = await seedIntegrationTests(controlIds);
 
   const db = getDb();
@@ -262,7 +310,7 @@ async function main() {
   ]);
 
   console.log(
-    `Seeded ${frameworkRows.length} frameworks, ${controlRows.length} controls, ${mappingCount} framework-control mappings, ${integrationTestCount} integration tests.`,
+    `Seeded ${frameworkRows.length} frameworks, ${controlRows.length} controls, ${mappingCount} framework-control mappings, ${sourceDocumentCount} source documents, ${integrationTestCount} integration tests.`,
   );
 }
 

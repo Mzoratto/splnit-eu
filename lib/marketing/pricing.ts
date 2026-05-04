@@ -16,7 +16,7 @@ export const plans: Plan[] = [
     monthly: 0,
     annual: 0,
     cta: "Začít zdarma",
-    href: "/sign-up",
+    href: "/early-access",
     features: [
       "1 předpis",
       "Manuální kontroly",
@@ -31,12 +31,12 @@ export const plans: Plan[] = [
     monthly: 1475,
     annual: 1225,
     featured: true,
-    cta: "Zahájit 14denní zkušební verzi",
-    href: "/sign-up",
+    cta: "Stát se design partnerem",
+    href: "/early-access",
     features: [
       "2 předpisy (NIS2 + 1 další)",
       "3 integrace",
-      "200+ automatických testů",
+      "Automatické kontroly pro Microsoft 365, AWS a GitHub",
       "Evidence vault",
       "Šablony dokumentů",
       "Upozornění na termíny",
@@ -90,7 +90,7 @@ export const comparisonGroups = [
   {
     name: "Automatizace",
     rows: [
-      ["Počet testů/hod", "0", "200+", "200+"],
+      ["Automatické kontroly", "-", "vybrané integrace", "vybrané integrace"],
       ["Automatický sběr důkazů", "-", "✓", "✓"],
       ["Upozornění na selhání", "-", "✓", "✓"],
       ["Scheduler", "-", "✓", "✓"],

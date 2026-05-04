@@ -2,7 +2,9 @@
 
 import { auth } from "@clerk/nextjs/server";
 import { revalidatePath } from "next/cache";
+import { cookies } from "next/headers";
 import { z } from "zod";
+import { localeCookieName } from "@/i18n/routing";
 import {
   completeOnboarding,
   saveOnboardingCompany,
@@ -22,11 +24,17 @@ const sectors = [
 ] as const;
 
 const employeeCounts = ["1-9", "10-49", "50-249", "250+"] as const;
+const countries = ["CZ", "IT", "DE", "FR", "ES", "NL", "PL", "SK", "AT", "BE", "IE"] as const;
+const jurisdictions = ["CZ", "IT", "EU"] as const;
+const locales = ["cs-CZ", "en-EU", "it-IT"] as const;
 
 const companySchema = z.object({
+  country: z.enum(countries),
   employeeCount: z.enum(employeeCounts),
   ico: z.string().trim().max(32).optional(),
+  locale: z.enum(locales),
   name: z.string().trim().min(2).max(120),
+  primaryJurisdiction: z.enum(jurisdictions),
   sector: z.enum(sectors),
 });
 
@@ -63,17 +71,30 @@ async function getActiveOrgId() {
   return session.orgId;
 }
 
+async function persistLocaleCookie(locale: string) {
+  const cookieStore = await cookies();
+
+  cookieStore.set(localeCookieName, locale, {
+    path: "/",
+    sameSite: "lax",
+  });
+}
+
 export async function saveCompanyStep(input: unknown) {
   const parsed = companySchema.parse(input);
   const clerkOrgId = await getActiveOrgId();
 
   await saveOnboardingCompany({
     clerkOrgId,
+    country: parsed.country,
     employeeCount: parsed.employeeCount,
     ico: parsed.ico || null,
+    locale: parsed.locale,
     name: parsed.name,
+    primaryJurisdiction: parsed.primaryJurisdiction,
     sector: parsed.sector,
   });
+  await persistLocaleCookie(parsed.locale);
 
   revalidatePath("/onboarding");
 }

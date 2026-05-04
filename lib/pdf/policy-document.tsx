@@ -87,12 +87,38 @@ const styles = StyleSheet.create({
   },
 });
 
+function getLabels(template: PolicyTemplate) {
+  if (template.locale === "cs-CZ") {
+    return {
+      generated: "Vygenerovano",
+      identifier: "ICO",
+      library: "Splnit.eu policy library",
+      organisation: "Organizace",
+      review: "Pristi prezkum",
+      source: "zdroj",
+      dateLocale: "cs-CZ",
+    };
+  }
+
+  return {
+    generated: "Generated",
+    identifier: "Legal identifier",
+    library: "Splnit.eu policy library",
+    organisation: "Organisation",
+    review: "Next review",
+    source: "source",
+    dateLocale: "en-GB",
+  };
+}
+
 function PolicyDocument({
   generatedAt,
   organisation,
   reviewDate,
   template,
 }: PolicyDocumentInput) {
+  const labels = getLabels(template);
+
   return (
     <Document
       author="Splnit.eu"
@@ -100,28 +126,29 @@ function PolicyDocument({
       title={template.titleCs}
     >
       <Page size="A4" style={styles.page}>
-        <Text style={styles.eyebrow}>Splnit.eu policy library</Text>
+        <Text style={styles.eyebrow}>{labels.library}</Text>
         <Text style={styles.title}>{template.titleCs}</Text>
         <Text style={styles.muted}>{template.description}</Text>
 
         <View style={styles.metaGrid}>
           <View style={styles.metaBox}>
-            <Text style={styles.metaLabel}>Organizace</Text>
+            <Text style={styles.metaLabel}>{labels.organisation}</Text>
             <Text style={styles.metaValue}>{organisation.name}</Text>
           </View>
           <View style={styles.metaBox}>
-            <Text style={styles.metaLabel}>ICO</Text>
+            <Text style={styles.metaLabel}>{labels.identifier}</Text>
             <Text style={styles.metaValue}>{organisation.ico ?? "N/A"}</Text>
           </View>
           <View style={styles.metaBox}>
-            <Text style={styles.metaLabel}>Pristi prezkum</Text>
+            <Text style={styles.metaLabel}>{labels.review}</Text>
             <Text style={styles.metaValue}>{reviewDate}</Text>
           </View>
         </View>
 
         <Text style={[styles.muted, { marginBottom: 14 }]}>
-          Vygenerovano {new Intl.DateTimeFormat("cs-CZ").format(generatedAt)} ·
-          zdroj {template.sourceDocument}
+          {labels.generated}{" "}
+          {new Intl.DateTimeFormat(labels.dateLocale).format(generatedAt)} ·{" "}
+          {labels.source} {template.sourceDocument}
         </Text>
 
         {template.sections.map((section) => (

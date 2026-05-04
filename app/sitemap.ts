@@ -1,13 +1,14 @@
 import type { MetadataRoute } from "next";
 import { frameworkCards } from "@/lib/marketing/frameworks";
 
-const appUrl = process.env.NEXT_PUBLIC_APP_URL ?? "https://splnit.eu";
+const appUrl = process.env.NEXT_PUBLIC_APP_URL || "https://splnit.eu";
 
 const staticRoutes = [
   "",
   "/platform",
   "/predpisy",
-  "/zakaznici",
+  "/early-access",
+  "/about",
   "/cenik",
   "/pricing",
 ];

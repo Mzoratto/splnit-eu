@@ -9,11 +9,10 @@ import { createAuditLog } from "@/lib/db/queries/audit-logs";
 import { getOrganisationByClerkOrgId } from "@/lib/db/queries/organisations";
 import { insertGeneratedPolicy } from "@/lib/db/queries/policies";
 import { renderPolicyPdf } from "@/lib/pdf/policy-document";
-import { POLICY_TEMPLATES } from "@/lib/policies/templates";
+import { resolvePolicyTemplate } from "@/lib/policies/resolve-template";
+import { POLICY_TEMPLATE_TYPES } from "@/lib/policies/templates";
 
-const policyTypeSchema = z.enum(
-  POLICY_TEMPLATES.map((template) => template.type) as [string, ...string[]],
-);
+const policyTypeSchema = z.enum(POLICY_TEMPLATE_TYPES);
 
 function addYears(date: Date, years: number) {
   const nextDate = new Date(date);
@@ -40,11 +39,6 @@ async function getActiveSession() {
 
 export async function generatePolicyAction(type: string) {
   const parsedType = policyTypeSchema.parse(type);
-  const template = POLICY_TEMPLATES.find((item) => item.type === parsedType);
-
-  if (!template) {
-    throw new Error(`Unknown policy template: ${type}`);
-  }
 
   if (!process.env.BLOB_READ_WRITE_TOKEN) {
     throw new Error("BLOB_READ_WRITE_TOKEN is required to generate policies.");
@@ -57,6 +51,7 @@ export async function generatePolicyAction(type: string) {
     throw new Error("Organisation profile is required to generate policies.");
   }
 
+  const template = resolvePolicyTemplate(parsedType, organisation);
   const generatedAt = new Date();
   const reviewDate = formatDate(addYears(generatedAt, 1));
   const pdf = await renderPolicyPdf({

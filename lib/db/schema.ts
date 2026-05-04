@@ -17,6 +17,9 @@ export const organisations = pgTable("organisations", {
   clerkOrgId: text("clerk_org_id").notNull().unique(),
   name: text("name").notNull(),
   ico: text("ico"),
+  country: text("country").notNull().default("CZ"),
+  primaryJurisdiction: text("primary_jurisdiction").notNull().default("CZ"),
+  locale: text("locale").notNull().default("cs-CZ"),
   sector: text("sector"),
   employeeCount: text("employee_count"),
   toolInventory: jsonb("tool_inventory").$type<string[]>().default([]),
@@ -51,6 +54,18 @@ export const frameworks = pgTable("frameworks", {
   mandatoryDeadline: date("mandatory_deadline"),
   version: text("version"),
   isActive: boolean("is_active").notNull().default(true),
+});
+
+export const sourceDocuments = pgTable("source_documents", {
+  id: uuid("id").primaryKey().defaultRandom(),
+  jurisdiction: text("jurisdiction").notNull(),
+  locale: text("locale").notNull(),
+  title: text("title").notNull(),
+  citation: text("citation").notNull(),
+  url: text("url"),
+  filename: text("filename").unique(),
+  effectiveDate: timestamp("effective_date", { withTimezone: true }),
+  lastReviewed: timestamp("last_reviewed", { withTimezone: true }),
 });
 
 export const orgFrameworks = pgTable(
@@ -94,6 +109,10 @@ export const frameworkControls = pgTable(
       .notNull()
       .references(() => controls.id),
     articleRef: text("article_ref"),
+    regulatorGuidance: text("regulator_guidance"),
+    evidenceRequirements: text("evidence_requirements"),
+    localizedTitle: text("localized_title"),
+    localizedDescription: text("localized_description"),
     requirementLevel: text("requirement_level").notNull().default("mandatory"),
     sortOrder: integer("sort_order").default(0),
   },

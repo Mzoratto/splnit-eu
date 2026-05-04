@@ -1,0 +1,411 @@
+{
+  "app": {
+    "name": "Splnit.eu",
+    "tagline": "Compliance automation for EU SMB teams"
+  },
+  "navigation": {
+    "sections": {
+      "overview": "Overview",
+      "operations": "Operations",
+      "team": "Team"
+    },
+    "dashboard": "Dashboard",
+    "frameworks": "Frameworks",
+    "controls": "Controls",
+    "evidence": "Evidence",
+    "integrations": "Integrations",
+    "policies": "Policies",
+    "vendors": "Vendors",
+    "questionnaires": "Questionnaires",
+    "incidents": "Incidents",
+    "risks": "Risks",
+    "clients": "Clients",
+    "team": "Team",
+    "settings": "Settings"
+  },
+  "shell": {
+    "plan": "Plan",
+    "search": "Search (⌘K)...",
+    "trustCenter": "Trust centre",
+    "notifications": "Notifications",
+    "freePlanBanner": "The free plan is active. Business features unlock after upgrade.",
+    "upgradePlan": "Upgrade plan"
+  },
+  "marketing": {
+    "nav": {
+      "platform": "Platform",
+      "regulations": "EU Regulations",
+      "blog": "Blog",
+      "earlyAccess": "Early access",
+      "about": "About",
+      "pricing": "Pricing",
+      "signIn": "Sign in",
+      "cta": "Design partner",
+      "menu": "Menu"
+    },
+    "footer": {
+      "tagline": "Early access platform for EU compliance automation.",
+      "newsletterTitle": "Monthly EU regulation briefing",
+      "newsletterSuccess": "Subscription active",
+      "newsletterLoading": "Saving",
+      "newsletterSubmit": "Subscribe",
+      "newsletterError": "Subscription could not be saved.",
+      "product": "Product",
+      "monitoring": "Monitoring",
+      "integrations": "Integrations",
+      "trustCenter": "Trust Center",
+      "about": "About",
+      "pricing": "Pricing",
+      "regulations": "Regulations",
+      "contact": "Contact",
+      "operator": "Splnit.eu — operated as OSVČ",
+      "location": "Olomouc, Czech Republic",
+      "pendingEntity": "Final business ID and ARES link will be added before launch.",
+      "copyright": "© 2026 Splnit.eu · Built in Olomouc · OSVČ details will be added before production launch",
+      "privacy": "Privacy",
+      "terms": "Terms"
+    },
+    "stickyCta": "Design partner",
+    "cookies": {
+      "title": "Cookies",
+      "body": "We use required cookies and optional traffic measurement to improve Splnit.eu.",
+      "reject": "Reject",
+      "accept": "Accept"
+    },
+    "earlyAccess": {
+      "tag": "Early access",
+      "title": "Looking for our first 10 design partners.",
+      "body": "Splnit.eu is in early access. I'm building it as a solo developer in Olomouc and looking for companies that want to shape the product before public launch.",
+      "primaryCta": "Apply as a design partner",
+      "secondaryCta": "Who's behind it",
+      "filledLabel": "Currently signed",
+      "emptyProof": "No public references are listed yet. When they exist, they will go on the site only with the customer's permission.",
+      "benefitsTitle": "What you get",
+      "asksTitle": "What I ask",
+      "onboardingTag": "Onboarding",
+      "onboardingTitle": "Three weeks on a real project.",
+      "onboardingBody": "The goal is not a demo account. The goal is to use Splnit.eu on a real NIS2 or GDPR problem and find what the product still misses.",
+      "benefits": {
+        "businessFree": "12 months free on the Business plan",
+        "guidedOnboarding": "3 weeks of guided onboarding directly with the founder",
+        "sectorFeatures": "Features prioritised around your sector",
+        "directContact": "Direct contact without a ticket queue"
+      },
+      "asks": {
+        "realUse": "Real use on your NIS2 or GDPR project",
+        "weeklyFeedback": "30 minutes of weekly feedback during onboarding",
+        "referencePermission": "Permission to use your name as a reference only when you are happy"
+      },
+      "weeks": {
+        "week1Title": "Week 1",
+        "week1Heading": "Scoping and gap analysis",
+        "week1Body": "We confirm jurisdiction, walk through NIS2 applicability, and prepare the first priority list.",
+        "week2Title": "Week 2",
+        "week2Heading": "Integrations and evidence",
+        "week2Body": "We connect Microsoft 365, AWS, or GitHub and configure the first automated checks.",
+        "week3Title": "Week 3",
+        "week3Heading": "Documents and audit pack",
+        "week3Body": "We generate the first document set and prepare an evidence format for your auditor."
+      }
+    },
+    "about": {
+      "tag": "About",
+      "photoPlaceholder": "Founder photo before launch",
+      "title": "Who's behind Splnit.eu.",
+      "body": "Splnit.eu is built by a solo developer in Olomouc for European SMB teams that need evidence, controls, and documents for NIS2, GDPR, and ISO 27001 without endless spreadsheets.",
+      "primaryCta": "Become a design partner",
+      "realTodayTitle": "What's true today",
+      "notYetTitle": "What we do not claim yet",
+      "whyTag": "Why",
+      "whyTitle": "Developer-built, local-law aware compliance.",
+      "whyP1": "Large global compliance platforms often cover generic frameworks well, but EU SMB teams also need local transpositions, clear citations, and practical onboarding.",
+      "whyP2": "Splnit.eu starts smaller: automated checks for systems companies already use, documents ready for legal review, and direct founder work with the first design partners.",
+      "realToday": {
+        "solo": "Splnit.eu is an early access product built by a solo developer in Olomouc.",
+        "focus": "The product focuses on EU compliance automation for NIS2, GDPR, and ISO 27001.",
+        "legalReview": "The DPA and final legal documents are ready for legal review before production launch.",
+        "noFakeProof": "Public references and metrics are not shown until they are verified."
+      },
+      "notYet": {
+        "legalAdvice": "This is not legal advice, an audit opinion, or certification.",
+        "enterprise": "Splnit.eu is not yet an enterprise vendor with a 24/7 SLA and penalties.",
+        "certification": "ISO 27001 or SOC 2 certification for Splnit.eu itself is not publicly claimed.",
+        "entity": "Final OSVČ identification details must be added before production launch."
+      }
+    }
+  },
+  "home": {
+    "badge": "Born in Czechia · Built for EU regulation",
+    "titleLine1": "Prepare for audit.",
+    "titleLine2": "With automated compliance.",
+    "mobileLead": "Prepare GDPR, NIS2, and ISO 27001 evidence without spreadsheets.",
+    "lead": "A central platform for European SMB teams. Prepare evidence for GDPR, NIS2, and ISO 27001 with automated checks for Microsoft 365, AWS, and GitHub.",
+    "primaryCta": "Become a design partner",
+    "secondaryCta": "View demo",
+    "trustLine": "Early access · Direct founder contact · EU data residency target",
+    "partnerTag": "Looking for our first 10 design partners",
+    "partnerFilled": "0 / 10 filled",
+    "partnerFree": "12 months of Business free",
+    "partnerOnboarding": "3 weeks founder-led onboarding",
+    "stepsTag": "How it works",
+    "stepsTitle": "Set it once. Keep it running.",
+    "stepsBody": "Three steps from first system connection to a usable evidence pack.",
+    "featuresTag": "Key features",
+    "featuresTitle": "Compliance built for modern teams.",
+    "featuresBody": "Connect local and global infrastructure. Controls are mapped to Czech and international standards.",
+    "offerTitle": "Founding customer offer for the first 10 companies.",
+    "offerBody": "Splnit.eu is in early access. The first design partners get the Business plan free for 12 months and three weeks of guided onboarding directly with the founder.",
+    "offerCta": "View early access",
+    "referencePlaceholder": "Real references will be added only after verified use and with customer permission.",
+    "referenceCount": "0 / 10 design partners",
+    "referenceNote": "The first references still need to be earned",
+    "finalTitle": "Prepare your first audit evidence.",
+    "finalBody": "Become a design partner and help build the product around a real NIS2 or GDPR project.",
+    "docsCta": "View documentation",
+    "steps": {
+      "connectTitle": "Connect tools",
+      "connectBody": "Connect Microsoft 365, GitHub, or AWS. Setup takes 5 minutes.",
+      "testsTitle": "Checks run automatically",
+      "testsBody": "Automated checks monitor connected systems and save results as audit evidence.",
+      "resultsTitle": "Get results",
+      "resultsBody": "Dashboard, failure alerts, and audit documentation prepared for your auditor."
+    },
+    "features": {
+      "residencyTitle": "EU data residency target",
+      "residencyBody": "The architecture is designed for European hosting regions. The exact production region will be confirmed before launch.",
+      "monitoringTitle": "Continuous monitoring",
+      "monitoringBody": "Catch configuration drift in Microsoft 365 or AWS immediately.",
+      "documentsTitle": "Automated documents",
+      "documentsBody": "Generate working documents and evidence packs that can go to a lawyer, auditor, or consultant for final review."
+    },
+    "trustBadges": {
+      "early": "Early access",
+      "dpa": "DPA ready for legal review",
+      "residency": "EU data residency target",
+      "onboarding": "Founder-led onboarding"
+    }
+  },
+  "leadCapture": {
+    "tag": "Personalised overview",
+    "title": "Which EU regulations apply to you?",
+    "subtitle": "Get a personalised obligations overview in 2 minutes.",
+    "cta": "Get overview",
+    "success": "Sent. Your overview will arrive within 2 minutes.",
+    "placeholder": "work@company.eu",
+    "footnote": "No credit card · Immediate results · Unsubscribe anytime"
+  },
+  "pricing": {
+    "title": "Transparent pricing. No surprises.",
+    "subtitle": "Less than one consultant hour per month.",
+    "footnote": "All plans include EU data storage · No hidden fees · Cancel anytime",
+    "partnerTitle": "Are you a consultant or MSP?",
+    "partnerBody": "Unlimited clients, white-label option, partner badge.",
+    "partnerPrice": "CZK 7,475/month",
+    "partnerCta": "Learn more →",
+    "comparisonTag": "Feature comparison",
+    "comparisonTitle": "Choose by automation depth.",
+    "faqTag": "FAQ",
+    "faqTitle": "Common questions",
+    "finalTitle": "Start preparing compliance work today.",
+    "finalBody": "Early access is open for the first design partners who want to use Splnit.eu on a real NIS2 or GDPR project.",
+    "primaryCta": "Become a design partner",
+    "secondaryCta": "View documentation",
+    "cards": {
+      "monthly": "Monthly",
+      "annual": "Annual",
+      "billingToggle": "Toggle billing",
+      "saving": "Save 2 months",
+      "featured": "Most popular",
+      "currency": "CZK",
+      "monthlySuffix": "/month",
+      "annualSuffix": "/month annually",
+      "free": {
+        "name": "Free",
+        "description": "Try the platform without commitment.",
+        "cta": "Start free",
+        "features": ["1 regulation", "Manual controls", "3 document templates", "1 user", "Community support"]
+      },
+      "starter": {
+        "name": "Starter",
+        "description": "For companies taking compliance seriously.",
+        "cta": "Become a design partner",
+        "features": ["2 regulations (NIS2 + 1 more)", "3 integrations", "Automated checks for Microsoft 365, AWS, and GitHub", "Evidence vault", "Document templates", "Deadline alerts", "5 users", "Email support"]
+      },
+      "business": {
+        "name": "Business",
+        "description": "Complete platform for the whole team.",
+        "cta": "Contact sales",
+        "features": ["5 regulations", "10 integrations", "Trust Center", "Vendor risk module", "Access reviews", "Incident log", "25 users", "Priority support"]
+      }
+    },
+    "comparison": {
+      "feature": "Feature",
+      "free": "Free",
+      "optional": "optional",
+      "lite": "lite",
+      "soon": "soon",
+      "selected": "selected integrations",
+      "unlimited": "unlimited",
+      "groups": {
+        "regulations": "Regulations",
+        "integrations": "Integrations",
+        "automation": "Automation",
+        "documents": "Documents",
+        "trustCenter": "Trust Center",
+        "team": "Team",
+        "support": "Support"
+      }
+    },
+    "faqs": {
+      "cancelQuestion": "Can I cancel anytime?",
+      "cancelAnswer": "Yes. There are no annual commitments on the monthly plan. For annual plans, we refund the proportional part.",
+      "dataQuestion": "Is my data stored in the EU?",
+      "dataAnswer": "The production setup is designed for EU regions. Exact processing locations and any transfer mechanisms outside the EU/EEA are confirmed in the DPA and sub-processor list.",
+      "setupQuestion": "Do I need technical knowledge to set it up?",
+      "setupAnswer": "No. The setup wizard takes 15 minutes without an IT department.",
+      "legalQuestion": "Is Splnit.eu legal advice?",
+      "legalAnswer": "No. The platform helps you prepare for legal review; it does not replace a qualified lawyer.",
+      "discountQuestion": "Do you offer discounts for non-profits or startups?",
+      "discountAnswer": "Yes. Contact hello@splnit.eu for special terms.",
+      "cancelDataQuestion": "What happens to my data after cancellation?",
+      "cancelDataAnswer": "You have 30 days to export all data. After that, it is permanently deleted."
+    }
+  },
+  "regulations": {
+    "pageName": "Splnit.eu EU Regulations",
+    "jsonLdDescription": "Overview of EU regulations and compliance automation in Splnit.eu.",
+    "title": "Which EU regulations apply to you?",
+    "subtitle": "A plain-language guide to EU obligations for SMBs, with deadlines, enforcement risk, and practical next steps.",
+    "learnMore": "Learn more →",
+    "timelineTag": "Regulatory timeline",
+    "timelineTitle": "Dates you should not miss.",
+    "currentMilestone": "Current milestone",
+    "downloadTitle": "Download for free",
+    "downloadSubtitle": "Obligations overview, document templates, and checklists for each regulation.",
+    "downloadCta": "Download all for free",
+    "resources": ["NIS2 checklist", "EU AI Act overview", "AI policy template", "AI literacy training", "AI use record", "Annex III reference"],
+    "cards": {
+      "available": "Available",
+      "soon": "Soon",
+      "nis2": {"regulator": "National authority", "deadline": "October 2024", "description": "Cybersecurity obligations for medium and large organisations."},
+      "eu-ai-act": {"regulator": "EU / national authorities", "deadline": "August 2026", "description": "Obligations for organisations deploying AI systems."},
+      "gdpr": {"regulator": "Data protection authority", "deadline": "Active", "description": "Personal data protection obligations for every company."},
+      "iso-27001": {"regulator": "ISO", "deadline": "Continuous", "description": "International standard for information security management."},
+      "csrd": {"regulator": "National ESG authority", "deadline": "2026+", "description": "ESG reporting pressure for suppliers of large companies."},
+      "dora": {"regulator": "Financial regulator", "deadline": "January 2025", "description": "Digital operational resilience for financial institutions."}
+    },
+    "timeline": [
+      {"date": "February 2025", "title": "Ban on harmful AI practices"},
+      {"date": "October 2024", "title": "NIS2 transposition deadline"},
+      {"date": "August 2025", "title": "AI literacy obligation for staff"},
+      {"date": "August 2026", "title": "High-risk AI systems must comply"},
+      {"date": "August 2027", "title": "Remaining AI systems embedded in products"}
+    ],
+    "detail": {
+      "metadataTitleSuffix": "Splnit.eu — obligations, deadlines, and compliance automation",
+      "metadataDescription": "{name}: plain-language overview of obligations, sanctions, and next steps for SMBs.",
+      "jsonLdDescription": "{name}: obligations overview and compliance automation in Splnit.eu.",
+      "backLink": "← All regulations",
+      "appliesTag": "Who must comply",
+      "appliesTitle": "Practical impact for EU SMBs.",
+      "obligationsTag": "Key obligations",
+      "obligationsTitle": "What needs to be provable.",
+      "deadlineLabel": "Due",
+      "finesTag": "Fines and sanctions",
+      "finesTitle": "Risk is measured in money, contracts, and lost trust.",
+      "violationHeader": "Violation type",
+      "maximumHeader": "Maximum sanction",
+      "enforcerHeader": "Enforcement",
+      "helpsTag": "How Splnit.eu helps",
+      "helpsTitle": "Turn obligations into controls, evidence, and deadlines.",
+      "platformCta": "See the platform",
+      "resourcesTitle": "Download resources"
+    }
+  },
+  "onboarding": {
+    "eyebrow": "Onboarding",
+    "title": "Organisation setup",
+    "description": "Five steps set the basic profile, frameworks, tools, and first recommended integration.",
+    "saveStepError": "The step could not be saved.",
+    "finishError": "Onboarding could not be completed.",
+    "steps": {
+      "company": "Company",
+      "frameworks": "Frameworks",
+      "tools": "Tools",
+      "integration": "Integration",
+      "score": "Score"
+    },
+    "company": {
+      "title": "Company details",
+      "name": "Company name",
+      "legalId": "Legal identifier",
+      "sector": "Sector",
+      "employeeCount": "Employee count",
+      "country": "Country",
+      "primaryJurisdiction": "Primary jurisdiction",
+      "locale": "Locale",
+      "continue": "Continue"
+    },
+    "buttons": {
+      "back": "Back",
+      "saveFrameworks": "Save frameworks",
+      "saveTools": "Save tools",
+      "showScore": "Show score",
+      "finish": "Finish onboarding"
+    },
+    "frameworks": {
+      "title": "Choose frameworks",
+      "descriptions": {
+        "nis2": "Cybersecurity, risk management, incident reporting, and management accountability.",
+        "ai-act": "AI deployer obligations, AI literacy, high-risk AI, and transparency requirements.",
+        "gdpr": "Personal data protection, records of processing activities, security, and breach notification.",
+        "iso27001": "Information security management system and security control catalogue.",
+        "csrd": "ESG reporting, double materiality, data evidence, and supplier questionnaires."
+      }
+    },
+    "tools": {
+      "title": "AI tools and SaaS inventory"
+    },
+    "integration": {
+      "title": "Recommended integration",
+      "body": "The first automated checks cover MFA, Conditional Access, guests, and privileged roles.",
+      "open": "Open integration settings"
+    },
+    "score": {
+      "label": "Initial score",
+      "title": "The first baseline is ready",
+      "body": "The score is based on selected frameworks and tool inventory. Automated tests will refine it after integrations are connected."
+    },
+    "sectors": {
+      "technology": "Technology",
+      "finance": "Finance",
+      "healthcare": "Healthcare",
+      "manufacturing": "Manufacturing",
+      "public-sector": "Public sector",
+      "professional-services": "Professional services"
+    },
+    "countries": {
+      "CZ": "Czech Republic",
+      "IT": "Italy",
+      "DE": "Germany",
+      "FR": "France",
+      "ES": "Spain",
+      "NL": "Netherlands",
+      "PL": "Poland",
+      "SK": "Slovakia",
+      "AT": "Austria",
+      "BE": "Belgium",
+      "IE": "Ireland"
+    },
+    "jurisdictions": {
+      "CZ": "Czech Republic",
+      "IT": "Italy",
+      "EU": "EU / English"
+    },
+    "locales": {
+      "cs-CZ": "Čeština",
+      "en-EU": "English EU",
+      "it-IT": "Italiano"
+    }
+  }
+}

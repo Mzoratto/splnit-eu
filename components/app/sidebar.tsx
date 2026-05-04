@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { useTranslations } from "next-intl";
 import {
   AlertTriangle,
   BarChart3,
@@ -22,31 +23,31 @@ import {
 const navigation = [
   {
     items: [
-      { href: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
-      { href: "/frameworks", label: "Frameworky", icon: Landmark },
-      { href: "/controls", label: "Kontroly", icon: BookOpenCheck },
-      { href: "/evidence", label: "Evidence", icon: FileArchive },
+      { href: "/dashboard", labelKey: "dashboard", icon: LayoutDashboard },
+      { href: "/frameworks", labelKey: "frameworks", icon: Landmark },
+      { href: "/controls", labelKey: "controls", icon: BookOpenCheck },
+      { href: "/evidence", labelKey: "evidence", icon: FileArchive },
     ],
-    section: "Přehled",
+    sectionKey: "overview",
   },
   {
     items: [
-      { href: "/integrations", label: "Integrace", icon: Plug },
-      { href: "/policies", label: "Politiky", icon: ScrollText },
-      { href: "/vendors", label: "Dodavatelé", icon: Boxes },
-      { href: "/questionnaires", label: "Dotazníky", icon: FileQuestion },
+      { href: "/integrations", labelKey: "integrations", icon: Plug },
+      { href: "/policies", labelKey: "policies", icon: ScrollText },
+      { href: "/vendors", labelKey: "vendors", icon: Boxes },
+      { href: "/questionnaires", labelKey: "questionnaires", icon: FileQuestion },
     ],
-    section: "Provoz",
+    sectionKey: "operations",
   },
   {
     items: [
-      { href: "/incidents", label: "Incidenty", icon: AlertTriangle },
-      { href: "/risks", label: "Rizika", icon: BarChart3 },
-      { href: "/clients", label: "Klienti", icon: BriefcaseBusiness },
-      { href: "/team", label: "Tým", icon: Users },
-      { href: "/settings/organisation", label: "Nastavení", icon: Settings },
+      { href: "/incidents", labelKey: "incidents", icon: AlertTriangle },
+      { href: "/risks", labelKey: "risks", icon: BarChart3 },
+      { href: "/clients", labelKey: "clients", icon: BriefcaseBusiness },
+      { href: "/team", labelKey: "team", icon: Users },
+      { href: "/settings/organisation", labelKey: "settings", icon: Settings },
     ],
-    section: "Tým",
+    sectionKey: "team",
   },
 ];
 
@@ -80,6 +81,7 @@ export function Sidebar({
   regulationUpdateCount?: number;
 }) {
   const pathname = usePathname();
+  const t = useTranslations("navigation");
 
   return (
     <aside className="fixed inset-y-0 left-0 hidden w-[220px] border-r border-border bg-background lg:block">
@@ -93,9 +95,9 @@ export function Sidebar({
       </div>
       <nav className="grid gap-3 p-3 text-sm">
         {navigation.map((group) => (
-          <div key={group.section}>
+          <div key={group.sectionKey}>
             <p className="px-3 pb-2 pt-2 text-[11px] font-medium text-foreground/48">
-              {group.section}
+              {t(`sections.${group.sectionKey}`)}
             </p>
             <div className="grid gap-1">
               {group.items.map((item) => {
@@ -110,9 +112,9 @@ export function Sidebar({
                         ? "bg-[var(--accent-subtle)] font-medium text-primary"
                         : "text-foreground/70 hover:bg-bg-hover hover:text-foreground"
                     }`}
-                  >
+                    >
                     <item.icon className="h-4 w-4" aria-hidden="true" strokeWidth={1.5} />
-                    {item.label}
+                    {t(item.labelKey)}
                     {item.href === "/dashboard" ? (
                       <Badge count={regulationUpdateCount} />
                     ) : null}
@@ -133,6 +135,7 @@ export function MobileTabBar({
   regulationUpdateCount?: number;
 }) {
   const pathname = usePathname();
+  const t = useTranslations("navigation");
 
   return (
     <nav className="fixed inset-x-0 bottom-0 z-30 grid grid-cols-5 border-t border-border bg-surface/95 px-2 pb-[calc(0.5rem+env(safe-area-inset-bottom))] pt-1 backdrop-blur-xl lg:hidden">
@@ -155,7 +158,7 @@ export function MobileTabBar({
                 <span className="absolute -right-2 -top-2 h-2 w-2 rounded-full bg-danger" />
               ) : null}
             </span>
-            <span className="max-w-full truncate">{item.label}</span>
+            <span className="max-w-full truncate">{t(item.labelKey)}</span>
           </Link>
         );
       })}

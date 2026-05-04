@@ -2,19 +2,23 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { useTranslations } from "next-intl";
 import { useState } from "react";
+import { LocaleSwitcher } from "@/components/locale-switcher";
 import { Icon } from "@/components/marketing/local-icon";
 
 const links = [
-  { href: "/platform", label: "Platforma" },
-  { href: "/predpisy", label: "EU Předpisy" },
-  { href: "/blog", label: "Blog" },
-  { href: "/zakaznici", label: "Zákazníci" },
-  { href: "/cenik", label: "Ceník" },
+  { href: "/platform", labelKey: "platform" },
+  { href: "/predpisy", labelKey: "regulations" },
+  { href: "/blog", labelKey: "blog" },
+  { href: "/early-access", labelKey: "earlyAccess" },
+  { href: "/about", labelKey: "about" },
+  { href: "/cenik", labelKey: "pricing" },
 ];
 
 export function Nav() {
   const pathname = usePathname();
+  const t = useTranslations("marketing.nav");
   const [open, setOpen] = useState(false);
 
   return (
@@ -52,25 +56,28 @@ export function Nav() {
                     : "font-medium text-zinc-500"
                 }`}
               >
-                {link.label}
+                {t(link.labelKey)}
               </Link>
             );
           })}
         </div>
 
         <div className="flex items-center gap-3">
+          <div className="hidden md:block">
+            <LocaleSwitcher compact />
+          </div>
           <Link
             href="/sign-in"
             className="hidden text-sm font-medium text-zinc-600 transition-colors hover:text-zinc-900 md:block"
           >
-            Přihlásit se
+            {t("signIn")}
           </Link>
           <div className="rounded-full bg-gradient-to-b from-blue-400 to-blue-700 p-px shadow-sm shadow-blue-200/60 transition-shadow hover:shadow-blue-200">
             <Link
-              href="/sign-up"
+              href="/early-access"
               className="flex items-center gap-1.5 rounded-full bg-blue-600 px-4 py-1.5 text-sm font-medium text-white transition-colors hover:bg-blue-500"
             >
-              Začít zdarma
+              {t("cta")}
               <Icon
                 icon="solar:arrow-right-linear"
                 className="text-xs opacity-75"
@@ -81,7 +88,7 @@ export function Nav() {
           <button
             type="button"
             className="p-1 text-zinc-600 transition-colors hover:text-zinc-900 md:hidden"
-            aria-label="Menu"
+            aria-label={t("menu")}
             aria-expanded={open}
             onClick={() => setOpen((value) => !value)}
           >
@@ -112,16 +119,19 @@ export function Nav() {
                   }`}
                   onClick={() => setOpen(false)}
                 >
-                  {link.label}
+                  {t(link.labelKey)}
                 </Link>
               );
             })}
+            <div className="px-3 py-2">
+              <LocaleSwitcher />
+            </div>
             <Link
               href="/sign-in"
               className="rounded-xl px-3 py-3 text-sm text-zinc-600 hover:bg-white"
               onClick={() => setOpen(false)}
             >
-              Přihlásit se
+              {t("signIn")}
             </Link>
           </div>
         </div>

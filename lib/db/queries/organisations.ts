@@ -55,9 +55,12 @@ export async function updateOrganisationBilling(input: {
 
 export async function upsertOrganisationProfile(input: {
   clerkOrgId: string;
+  country: string;
   employeeCount: string;
   ico: string | null;
+  locale: string;
   name: string;
+  primaryJurisdiction: string;
   sector: string;
 }) {
   const db = getDb();
@@ -67,18 +70,24 @@ export async function upsertOrganisationProfile(input: {
     .insert(organisations)
     .values({
       clerkOrgId: input.clerkOrgId,
+      country: input.country,
       employeeCount: input.employeeCount,
       ico: input.ico,
+      locale: input.locale,
       name: input.name,
+      primaryJurisdiction: input.primaryJurisdiction,
       sector: input.sector,
       updatedAt,
     })
     .onConflictDoUpdate({
       target: organisations.clerkOrgId,
       set: {
+        country: input.country,
         employeeCount: input.employeeCount,
         ico: input.ico,
+        locale: input.locale,
         name: input.name,
+        primaryJurisdiction: input.primaryJurisdiction,
         sector: input.sector,
         updatedAt,
       },
