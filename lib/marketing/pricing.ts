@@ -1,166 +1,157 @@
+export type PlanKey = "free" | "starter" | "business";
+
 export type Plan = {
-  name: string;
-  description: string;
-  monthly: number;
-  annual: number;
   featured?: boolean;
-  cta: string;
   href: string;
-  features: string[];
+  key: PlanKey;
+};
+
+export type ComparisonCell =
+  | "-"
+  | "✓"
+  | "1"
+  | "3"
+  | "5"
+  | "25"
+  | "optional"
+  | "lite"
+  | "soon"
+  | "selected"
+  | "unlimited";
+
+export type ComparisonGroupKey =
+  | "regulations"
+  | "integrations"
+  | "automation"
+  | "documents"
+  | "trustCenter"
+  | "team"
+  | "support";
+
+export type ComparisonFeatureKey =
+  | "nis2"
+  | "euAiAct"
+  | "gdpr"
+  | "iso27001"
+  | "csrd"
+  | "dora"
+  | "microsoft365"
+  | "github"
+  | "aws"
+  | "azure"
+  | "googleWorkspace"
+  | "nukibFeed"
+  | "automatedChecks"
+  | "automatedEvidence"
+  | "failureAlerts"
+  | "scheduler"
+  | "policyTemplates"
+  | "pdfGeneration"
+  | "trainingTemplates"
+  | "auditorExport"
+  | "publicPage"
+  | "ndaGate"
+  | "subdomain"
+  | "customDomain"
+  | "userCount"
+  | "rolesPermissions"
+  | "ssoSaml"
+  | "email"
+  | "priorityEmail"
+  | "dedicatedCsm"
+  | "sla";
+
+export type ComparisonRow = {
+  cells: ComparisonCell[];
+  key: ComparisonFeatureKey;
+};
+
+export type ComparisonGroup = {
+  key: ComparisonGroupKey;
+  rows: ComparisonRow[];
 };
 
 export const plans: Plan[] = [
   {
-    name: "Zdarma",
-    description: "Vyzkoušejte platformu bez závazků.",
-    monthly: 0,
-    annual: 0,
-    cta: "Začít zdarma",
     href: "/early-access",
-    features: [
-      "1 předpis",
-      "Manuální kontroly",
-      "3 vzory dokumentů",
-      "1 uživatel",
-      "Komunitní podpora",
-    ],
+    key: "free",
   },
   {
-    name: "Starter",
-    description: "Pro firmy, které berou soulad vážně.",
-    monthly: 1475,
-    annual: 1225,
     featured: true,
-    cta: "Stát se design partnerem",
     href: "/early-access",
-    features: [
-      "2 předpisy (NIS2 + 1 další)",
-      "3 integrace",
-      "Automatické kontroly pro Microsoft 365, AWS a GitHub",
-      "Evidence vault",
-      "Šablony dokumentů",
-      "Upozornění na termíny",
-      "5 uživatelů",
-      "Email podpora",
-    ],
+    key: "starter",
   },
   {
-    name: "Business",
-    description: "Kompletní platforma pro celý tým.",
-    monthly: 3725,
-    annual: 3100,
-    cta: "Kontaktovat obchod",
     href: "mailto:hello@splnit.eu",
-    features: [
-      "5 předpisů",
-      "10 integrací",
-      "Trust Center",
-      "Vendor risk modul",
-      "Access reviews",
-      "Incident log",
-      "25 uživatelů",
-      "Prioritní podpora",
-    ],
+    key: "business",
   },
 ];
 
-export const comparisonGroups = [
+export const comparisonGroups: ComparisonGroup[] = [
   {
-    name: "Předpisy",
+    key: "regulations",
     rows: [
-      ["NIS2", "✓", "✓", "✓"],
-      ["EU AI Act", "-", "volitelné", "✓"],
-      ["GDPR", "✓", "✓", "✓"],
-      ["ISO 27001", "-", "volitelné", "✓"],
-      ["CSRD", "-", "-", "lite"],
-      ["DORA", "-", "-", "brzy"],
+      { cells: ["✓", "✓", "✓"], key: "nis2" },
+      { cells: ["-", "optional", "✓"], key: "euAiAct" },
+      { cells: ["✓", "✓", "✓"], key: "gdpr" },
+      { cells: ["-", "optional", "✓"], key: "iso27001" },
+      { cells: ["-", "-", "lite"], key: "csrd" },
+      { cells: ["-", "-", "soon"], key: "dora" },
     ],
   },
   {
-    name: "Integrace",
+    key: "integrations",
     rows: [
-      ["Microsoft 365", "-", "✓", "✓"],
-      ["GitHub", "-", "✓", "✓"],
-      ["AWS", "-", "✓", "✓"],
-      ["Azure", "-", "-", "✓"],
-      ["Google Workspace", "-", "-", "✓"],
-      ["NÚKIB feed", "-", "✓", "✓"],
+      { cells: ["-", "✓", "✓"], key: "microsoft365" },
+      { cells: ["-", "✓", "✓"], key: "github" },
+      { cells: ["-", "✓", "✓"], key: "aws" },
+      { cells: ["-", "-", "✓"], key: "azure" },
+      { cells: ["-", "-", "✓"], key: "googleWorkspace" },
+      { cells: ["-", "✓", "✓"], key: "nukibFeed" },
     ],
   },
   {
-    name: "Automatizace",
+    key: "automation",
     rows: [
-      ["Automatické kontroly", "-", "vybrané integrace", "vybrané integrace"],
-      ["Automatický sběr důkazů", "-", "✓", "✓"],
-      ["Upozornění na selhání", "-", "✓", "✓"],
-      ["Scheduler", "-", "✓", "✓"],
+      { cells: ["-", "selected", "selected"], key: "automatedChecks" },
+      { cells: ["-", "✓", "✓"], key: "automatedEvidence" },
+      { cells: ["-", "✓", "✓"], key: "failureAlerts" },
+      { cells: ["-", "✓", "✓"], key: "scheduler" },
     ],
   },
   {
-    name: "Dokumenty",
+    key: "documents",
     rows: [
-      ["Vzory politik", "3", "neomezeně", "neomezeně"],
-      ["Generování PDF", "-", "✓", "✓"],
-      ["Šablony školení", "-", "✓", "✓"],
-      ["Export pro auditora", "-", "✓", "✓"],
+      { cells: ["3", "unlimited", "unlimited"], key: "policyTemplates" },
+      { cells: ["-", "✓", "✓"], key: "pdfGeneration" },
+      { cells: ["-", "✓", "✓"], key: "trainingTemplates" },
+      { cells: ["-", "✓", "✓"], key: "auditorExport" },
     ],
   },
   {
-    name: "Trust Center",
+    key: "trustCenter",
     rows: [
-      ["Veřejná stránka", "-", "-", "✓"],
-      ["NDA brána", "-", "-", "✓"],
-      ["Vlastní subdoména", "-", "-", "✓"],
-      ["Vlastní doména", "-", "-", "volitelně"],
+      { cells: ["-", "-", "✓"], key: "publicPage" },
+      { cells: ["-", "-", "✓"], key: "ndaGate" },
+      { cells: ["-", "-", "✓"], key: "subdomain" },
+      { cells: ["-", "-", "optional"], key: "customDomain" },
     ],
   },
   {
-    name: "Tým",
+    key: "team",
     rows: [
-      ["Počet uživatelů", "1", "5", "25"],
-      ["Role a oprávnění", "-", "✓", "✓"],
-      ["SSO/SAML", "-", "-", "volitelně"],
+      { cells: ["1", "5", "25"], key: "userCount" },
+      { cells: ["-", "✓", "✓"], key: "rolesPermissions" },
+      { cells: ["-", "-", "optional"], key: "ssoSaml" },
     ],
   },
   {
-    name: "Podpora",
+    key: "support",
     rows: [
-      ["Email", "-", "✓", "✓"],
-      ["Prioritní email", "-", "-", "✓"],
-      ["Dedikovaný CSM", "-", "-", "volitelně"],
-      ["SLA", "-", "-", "volitelně"],
+      { cells: ["-", "✓", "✓"], key: "email" },
+      { cells: ["-", "-", "✓"], key: "priorityEmail" },
+      { cells: ["-", "-", "optional"], key: "dedicatedCsm" },
+      { cells: ["-", "-", "optional"], key: "sla" },
     ],
-  },
-];
-
-export const faqs = [
-  {
-    question: "Mohu zrušit předplatné kdykoliv?",
-    answer:
-      "Ano. Žádné roční závazky u měsíčního tarifu. U ročního tarifu vrátíme poměrnou část.",
-  },
-  {
-    question: "Jsou moje data uložena v EU?",
-    answer:
-      "Produkční konfigurace je navržená pro EU regiony. Přesné lokace zpracování a případné mechanismy předání mimo EU/EHP potvrzujeme v DPA a subdodavatelském přehledu.",
-  },
-  {
-    question: "Potřebuji technické znalosti k nastavení?",
-    answer: "Ne. Průvodce nastavením zabere 15 minut bez IT oddělení.",
-  },
-  {
-    question: "Je Splnit.eu právní poradenství?",
-    answer:
-      "Ne. Platforma vám pomáhá připravit se na právní přezkum — nenahrazuje kvalifikovaného právníka.",
-  },
-  {
-    question: "Nabízíte slevu pro neziskové organizace nebo startupy?",
-    answer:
-      "Ano. Kontaktujte nás na hello@splnit.eu pro speciální podmínky.",
-  },
-  {
-    question: "Co se stane s mými daty po zrušení?",
-    answer:
-      "Máte 30 dní na export veškerých dat. Poté jsou trvale smazána.",
   },
 ];

@@ -3,34 +3,14 @@
 import { useLocale, useTranslations } from "next-intl";
 import { useMemo, useState } from "react";
 import { Icon } from "@/components/marketing/local-icon";
-import { comparisonGroups, faqs, plans } from "@/lib/marketing/pricing";
+import {
+  comparisonGroups,
+  plans,
+  type ComparisonCell,
+} from "@/lib/marketing/pricing";
 import { PricingCta } from "@/components/marketing/pricing-cta";
 import type { Locale } from "@/i18n/routing";
 
-const planKeys = ["free", "starter", "business"] as const;
-const comparisonGroupKeys = [
-  "regulations",
-  "integrations",
-  "automation",
-  "documents",
-  "trustCenter",
-  "team",
-  "support",
-] as const;
-const comparisonFeatureKeys = [
-  ["nis2", "euAiAct", "gdpr", "iso27001", "csrd", "dora"],
-  ["microsoft365", "github", "aws", "azure", "googleWorkspace", "nukibFeed"],
-  [
-    "automatedChecks",
-    "automatedEvidence",
-    "failureAlerts",
-    "scheduler",
-  ],
-  ["policyTemplates", "pdfGeneration", "trainingTemplates", "auditorExport"],
-  ["publicPage", "ndaGate", "subdomain", "customDomain"],
-  ["userCount", "rolesPermissions", "ssoSaml"],
-  ["email", "priorityEmail", "dedicatedCsm", "sla"],
-] as const;
 const faqKeys = [
   "cancel",
   "data",
@@ -104,7 +84,7 @@ export function PricingCards() {
 
       <div className="mt-12 grid gap-5 lg:grid-cols-3">
         {plans.map((plan, index) => {
-          const planKey = planKeys[index];
+          const planKey = plan.key;
           const planName = t(`${planKey}.name`);
           const price = annual ? priceSet.annual[index] : priceSet.monthly[index];
           const features = t.raw(`${planKey}.features`) as string[];
@@ -173,7 +153,7 @@ export function PricingCards() {
 
           return (
             <article
-              key={plan.name}
+              key={plan.key}
               className={`plan-card relative rounded-[22px] p-px shadow-sm ${
                 plan.featured
                   ? "shadow-xl"
@@ -201,22 +181,20 @@ export function ComparisonTable() {
   const t = useTranslations("pricing.comparison");
   const cardT = useTranslations("pricing.cards");
   const [openGroups, setOpenGroups] = useState<string[]>(
-    comparisonGroups.slice(0, 3).map((group) => group.name),
+    comparisonGroups.slice(0, 3).map((group) => group.key),
   );
 
-  function translateCell(cell: string) {
+  function translateCell(cell: ComparisonCell) {
     switch (cell) {
-      case "Zdarma":
-        return t("free");
-      case "volitelné":
+      case "optional":
         return t("optional");
       case "lite":
         return t("lite");
-      case "brzy":
+      case "soon":
         return t("soon");
-      case "vybrané integrace":
+      case "selected":
         return t("selected");
-      case "neomezeně":
+      case "unlimited":
         return t("unlimited");
       default:
         return cell;
@@ -239,18 +217,17 @@ export function ComparisonTable() {
         <span>{cardT("starter.name")}</span>
         <span>{cardT("business.name")}</span>
       </div>
-      {comparisonGroups.map((group, groupIndex) => {
-        const groupKey = comparisonGroupKeys[groupIndex];
-        const open = openGroups.includes(group.name);
+      {comparisonGroups.map((group) => {
+        const open = openGroups.includes(group.key);
 
         return (
-          <div key={group.name} className="border-b border-zinc-100 last:border-b-0">
+          <div key={group.key} className="border-b border-zinc-100 last:border-b-0">
             <button
               type="button"
               className="flex w-full items-center justify-between px-4 py-4 text-left text-sm font-semibold text-zinc-900 md:px-6"
-              onClick={() => toggle(group.name)}
+              onClick={() => toggle(group.key)}
             >
-              {t(`groups.${groupKey}`)}
+              {t(`groups.${group.key}`)}
               <Icon
                 icon="solar:alt-arrow-down-linear"
                 className={`transition-transform ${open ? "rotate-180" : ""}`}
@@ -263,29 +240,24 @@ export function ComparisonTable() {
               }`}
             >
               <div className="overflow-hidden">
-                {group.rows.map((row, rowIndex) => {
-                  const featureKey = comparisonFeatureKeys[groupIndex]?.[rowIndex];
-
-                  return (
-                    <div
-                      key={row[0]}
-                      className="grid grid-cols-[1.4fr_repeat(3,0.8fr)] px-4 py-3 text-xs text-zinc-600 md:px-6"
-                    >
-                      {row.map((cell, index) => (
-                        <span
-                          key={`${row[0]}-${index}`}
-                          className={
-                            cell === "✓" ? "font-semibold text-emerald-600" : ""
-                          }
-                        >
-                          {index === 0 && featureKey
-                            ? t(`features.${featureKey}`)
-                            : translateCell(cell)}
-                        </span>
-                      ))}
-                    </div>
-                  );
-                })}
+                {group.rows.map((row) => (
+                  <div
+                    key={row.key}
+                    className="grid grid-cols-[1.4fr_repeat(3,0.8fr)] px-4 py-3 text-xs text-zinc-600 md:px-6"
+                  >
+                    <span>{t(`features.${row.key}`)}</span>
+                    {row.cells.map((cell, index) => (
+                      <span
+                        key={`${row.key}-${index}`}
+                        className={
+                          cell === "✓" ? "font-semibold text-emerald-600" : ""
+                        }
+                      >
+                        {translateCell(cell)}
+                      </span>
+                    ))}
+                  </div>
+                ))}
               </div>
             </div>
           </div>
@@ -301,12 +273,11 @@ export function FaqAccordion() {
 
   return (
     <div className="divide-y divide-zinc-200 rounded-[24px] border border-zinc-200 bg-white">
-      {faqs.map((faq, index) => {
+      {faqKeys.map((faqKey, index) => {
         const active = open === index;
-        const faqKey = faqKeys[index];
 
         return (
-          <div key={faq.question}>
+          <div key={faqKey}>
             <button
               type="button"
               className="flex w-full items-center justify-between gap-4 px-5 py-5 text-left text-sm font-semibold text-zinc-900"
