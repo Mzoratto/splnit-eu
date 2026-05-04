@@ -95,6 +95,44 @@
       }
     }
   },
+  "evidence": {
+    "eyebrow": "Evidence",
+    "title": "Evidence vault",
+    "subtitle": "Úložiště manuálních uploadů a automatických snapshotů napojených na kontroly.",
+    "noDate": "bez data",
+    "filters": {
+      "title": "Filtry",
+      "framework": "Framework",
+      "allFrameworks": "Všechny",
+      "status": "Status",
+      "allStatuses": "Všechny",
+      "expiry": "Expirace",
+      "anyExpiry": "Vše",
+      "next30Days": "Do 30 dnů",
+      "expired": "Po expiraci",
+      "noExpiry": "Bez expirace",
+      "apply": "Použít filtry"
+    },
+    "statuses": {
+      "pass": "Splněno",
+      "fail": "Nesplněno",
+      "manualReview": "Částečně",
+      "unknown": "Neznámé"
+    },
+    "records": {
+      "title": "Záznamy evidence",
+      "empty": "Žádné záznamy neodpovídají aktuálním filtrům."
+    },
+    "expiry": {
+      "label": "Expirace",
+      "daysUntil": "{days} dní",
+      "daysOverdue": "po expiraci {days} dní"
+    },
+    "actions": {
+      "file": "Soubor",
+      "control": "Kontrola"
+    }
+  },
   "marketing": {
     "nav": {
       "platform": "Platforma",

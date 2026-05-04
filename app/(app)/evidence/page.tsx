@@ -1,11 +1,18 @@
 import Link from "next/link";
 import { auth } from "@clerk/nextjs/server";
+import { getLocale } from "next-intl/server";
 import { ArrowRight, Download, FileText, Filter } from "lucide-react";
 import { PageHeader } from "@/components/app/page-header";
 import { StatusPill, type StatusPillTone } from "@/components/app/status-pill";
+import { getMessagesForLocale } from "@/i18n/messages";
+import { normalizeLocale, type Locale } from "@/i18n/routing";
 import { hasDatabaseUrl } from "@/lib/db";
+import { getOrganisationByClerkOrgId } from "@/lib/db/queries/organisations";
 import { listEvidenceVault } from "@/lib/db/queries/evidence";
 import { FRAMEWORK_LIBRARY } from "@/lib/frameworks/registry";
+
+type EvidenceRow = Awaited<ReturnType<typeof listEvidenceVault>>[number];
+type EvidenceCopy = ReturnType<typeof getMessagesForLocale>["evidence"];
 
 type SearchParams = {
   expiry?: string;
@@ -13,12 +20,16 @@ type SearchParams = {
   status?: string;
 };
 
-function formatDate(value: Date | string | null | undefined) {
+function formatDate(
+  value: Date | string | null | undefined,
+  locale: Locale,
+  emptyLabel: string,
+) {
   if (!value) {
-    return "bez data";
+    return emptyLabel;
   }
 
-  return new Intl.DateTimeFormat("cs-CZ").format(new Date(value));
+  return new Intl.DateTimeFormat(locale).format(new Date(value));
 }
 
 function getDaysUntil(value: Date | string | null) {
@@ -63,25 +74,63 @@ function statusLabel(status: string | null | undefined) {
   return labels[status ?? "unknown"] ?? "PENDING";
 }
 
+function getControlTitle(item: EvidenceRow, locale: Locale) {
+  return locale === "cs-CZ"
+    ? item.controlTitleCs ?? item.controlTitle
+    : item.controlTitleEn ?? item.controlTitle;
+}
+
+function getFrameworkName(
+  framework: (typeof FRAMEWORK_LIBRARY)[number],
+  locale: Locale,
+) {
+  return locale === "cs-CZ" ? framework.nameCs : framework.nameEn;
+}
+
+function getEvidenceFrameworkName(
+  framework: EvidenceRow["frameworks"][number],
+  locale: Locale,
+) {
+  return locale === "cs-CZ"
+    ? framework.frameworkNameCs ?? framework.frameworkName
+    : framework.frameworkNameEn ?? framework.frameworkName;
+}
+
+function formatDaysUntil(days: number, copy: EvidenceCopy) {
+  if (days < 0) {
+    return copy.expiry.daysOverdue.replace("{days}", String(Math.abs(days)));
+  }
+
+  return copy.expiry.daysUntil.replace("{days}", String(days));
+}
+
 async function loadEvidenceRows() {
   const clerkConfigured =
     Boolean(process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY) &&
     Boolean(process.env.CLERK_SECRET_KEY);
 
   if (!clerkConfigured || !hasDatabaseUrl()) {
-    return [];
+    return { organisationLocale: null, rows: [] };
   }
 
   const session = await auth();
 
   if (!session.orgId) {
-    return [];
+    return { organisationLocale: null, rows: [] };
   }
 
   try {
-    return listEvidenceVault(session.orgId);
+    const [organisation, rows] = await Promise.all([
+      getOrganisationByClerkOrgId(session.orgId),
+      listEvidenceVault(session.orgId),
+    ]);
+
+    return {
+      organisationLocale: organisation?.locale ?? null,
+      rows,
+    };
   } catch {
-    return [];
+    return { organisationLocale: null, rows: [] };
   }
 }
 
@@ -90,8 +139,11 @@ export default async function EvidencePage({
 }: {
   searchParams: Promise<SearchParams>;
 }) {
+  const requestLocale = normalizeLocale(await getLocale()) ?? "cs-CZ";
   const filters = await searchParams;
-  const rows = await loadEvidenceRows();
+  const { organisationLocale, rows } = await loadEvidenceRows();
+  const locale = normalizeLocale(organisationLocale) ?? requestLocale;
+  const copy = getMessagesForLocale(locale).evidence;
   const filteredRows = rows.filter((row) => {
     const status = row.status ?? "unknown";
     const frameworkMatch =
@@ -114,57 +166,57 @@ export default async function EvidencePage({
   return (
     <section className="space-y-6">
       <PageHeader
-        eyebrow="Evidence"
-        title="Evidence vault"
-        subtitle="Úložiště manuálních uploadů a automatických snapshotů napojených na kontroly."
+        eyebrow={copy.eyebrow}
+        title={copy.title}
+        subtitle={copy.subtitle}
       />
 
       <form className="card">
         <div className="mb-4 flex items-center gap-2">
           <Filter className="h-5 w-5 text-primary" aria-hidden="true" strokeWidth={1.5} />
-          <h2 className="text-lg font-medium">Filtry</h2>
+          <h2 className="text-lg font-medium">{copy.filters.title}</h2>
         </div>
         <div className="grid gap-4 md:grid-cols-4">
           <label className="grid gap-2 text-xs font-medium text-foreground/68">
-            Framework
+            {copy.filters.framework}
             <select
               name="framework"
               defaultValue={filters.framework ?? ""}
               className="h-9 rounded-md border border-border-default bg-[var(--bg-input)] px-3 text-sm text-foreground"
             >
-              <option value="">Všechny</option>
+              <option value="">{copy.filters.allFrameworks}</option>
               {FRAMEWORK_LIBRARY.map((framework) => (
                 <option key={framework.slug} value={framework.slug}>
-                  {framework.nameCs}
+                  {getFrameworkName(framework, locale)}
                 </option>
               ))}
             </select>
           </label>
           <label className="grid gap-2 text-xs font-medium text-foreground/68">
-            Status
+            {copy.filters.status}
             <select
               name="status"
               defaultValue={filters.status ?? ""}
               className="h-9 rounded-md border border-border-default bg-[var(--bg-input)] px-3 text-sm text-foreground"
             >
-              <option value="">Všechny</option>
-              <option value="pass">Splněno</option>
-              <option value="fail">Nesplněno</option>
-              <option value="manual_review">Částečně</option>
-              <option value="unknown">Neznámé</option>
+              <option value="">{copy.filters.allStatuses}</option>
+              <option value="pass">{copy.statuses.pass}</option>
+              <option value="fail">{copy.statuses.fail}</option>
+              <option value="manual_review">{copy.statuses.manualReview}</option>
+              <option value="unknown">{copy.statuses.unknown}</option>
             </select>
           </label>
           <label className="grid gap-2 text-xs font-medium text-foreground/68">
-            Expirace
+            {copy.filters.expiry}
             <select
               name="expiry"
               defaultValue={filters.expiry ?? ""}
               className="h-9 rounded-md border border-border-default bg-[var(--bg-input)] px-3 text-sm text-foreground"
             >
-              <option value="">Vše</option>
-              <option value="30">Do 30 dnů</option>
-              <option value="expired">Po expiraci</option>
-              <option value="none">Bez expirace</option>
+              <option value="">{copy.filters.anyExpiry}</option>
+              <option value="30">{copy.filters.next30Days}</option>
+              <option value="expired">{copy.filters.expired}</option>
+              <option value="none">{copy.filters.noExpiry}</option>
             </select>
           </label>
           <div className="flex items-end">
@@ -172,7 +224,7 @@ export default async function EvidencePage({
               type="submit"
               className="btn btn-primary w-full"
             >
-              Použít filtry
+              {copy.filters.apply}
               <Filter className="h-4 w-4" aria-hidden="true" strokeWidth={1.5} />
             </button>
           </div>
@@ -181,7 +233,7 @@ export default async function EvidencePage({
 
       <section className="overflow-hidden rounded-lg border border-border bg-surface">
         <div className="flex items-center justify-between gap-4 border-b border-border p-5">
-          <h2 className="text-lg font-medium">Záznamy evidence</h2>
+          <h2 className="text-lg font-medium">{copy.records.title}</h2>
           <span className="rounded-sm bg-surface-muted px-2 py-1 font-mono text-xs text-foreground/64">
             {filteredRows.length} / {rows.length}
           </span>
@@ -190,6 +242,7 @@ export default async function EvidencePage({
           {filteredRows.length > 0 ? (
             filteredRows.map((item) => {
               const daysUntilExpiry = getDaysUntil(item.expiresAt);
+              const controlTitle = getControlTitle(item, locale);
 
               return (
                 <article
@@ -200,14 +253,15 @@ export default async function EvidencePage({
                     <div className="flex flex-wrap items-center gap-2">
                       <FileText className="h-4 w-4 text-status-pass" aria-hidden="true" strokeWidth={1.5} />
                       <h3 className="font-mono text-sm font-medium">
-                        {item.description ?? item.controlTitle}
+                        {item.description ?? controlTitle}
                       </h3>
                       <StatusPill tone={statusTone(item.status)}>
                         {statusLabel(item.status)}
                       </StatusPill>
                     </div>
                     <p className="mt-2 text-sm text-foreground/58">
-                      {item.controlTitle} · {item.type} · {formatDate(item.collectedAt)}
+                      {controlTitle} · {item.type} ·{" "}
+                      {formatDate(item.collectedAt, locale, copy.noDate)}
                     </p>
                     <div className="mt-3 flex flex-wrap gap-2">
                       {item.frameworks.map((framework) => (
@@ -215,22 +269,25 @@ export default async function EvidencePage({
                           key={`${item.evidenceId}-${framework.frameworkSlug}`}
                           className="rounded-sm bg-[var(--accent-subtle)] px-2 py-1 text-xs text-primary"
                         >
-                          {framework.frameworkName}
+                          {getEvidenceFrameworkName(framework, locale)}
                         </span>
                       ))}
                     </div>
                   </div>
                   <div className="flex flex-col gap-3 lg:items-end">
                     <span className="rounded-md bg-surface-muted px-2 py-1 text-xs text-foreground/64">
-                      Expirace {formatDate(item.expiresAt)}
-                      {daysUntilExpiry !== null ? ` (${daysUntilExpiry} dnů)` : ""}
+                      {copy.expiry.label}{" "}
+                      {formatDate(item.expiresAt, locale, copy.noDate)}
+                      {daysUntilExpiry !== null
+                        ? ` (${formatDaysUntil(daysUntilExpiry, copy)})`
+                        : ""}
                     </span>
                     {item.blobUrl ? (
                       <Link
                         href={`/api/evidence/${item.evidenceId}/download`}
                         className="btn btn-secondary h-8 px-3"
                       >
-                        Soubor
+                        {copy.actions.file}
                         <Download className="h-4 w-4" aria-hidden="true" strokeWidth={1.5} />
                       </Link>
                     ) : null}
@@ -238,7 +295,7 @@ export default async function EvidencePage({
                       href={`/controls/${item.controlKey}`}
                       className="btn btn-secondary h-8 px-3"
                     >
-                      Kontrola
+                      {copy.actions.control}
                       <ArrowRight className="h-4 w-4" aria-hidden="true" strokeWidth={1.5} />
                     </Link>
                   </div>
@@ -247,7 +304,7 @@ export default async function EvidencePage({
             })
           ) : (
             <p className="p-5 text-sm text-foreground/58">
-              Žádné záznamy neodpovídají aktuálním filtrům.
+              {copy.records.empty}
             </p>
           )}
         </div>

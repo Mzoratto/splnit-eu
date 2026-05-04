@@ -95,6 +95,44 @@
       }
     }
   },
+  "evidence": {
+    "eyebrow": "Evidenze",
+    "title": "Archivio evidenze",
+    "subtitle": "Archivio per upload manuali e snapshot automatici collegati ai controlli.",
+    "noDate": "nessuna data",
+    "filters": {
+      "title": "Filtri",
+      "framework": "Framework",
+      "allFrameworks": "Tutti",
+      "status": "Stato",
+      "allStatuses": "Tutti",
+      "expiry": "Scadenza",
+      "anyExpiry": "Qualsiasi",
+      "next30Days": "Prossimi 30 giorni",
+      "expired": "Scadute",
+      "noExpiry": "Senza scadenza",
+      "apply": "Applica filtri"
+    },
+    "statuses": {
+      "pass": "Superato",
+      "fail": "Fallito",
+      "manualReview": "Parziale",
+      "unknown": "Sconosciuto"
+    },
+    "records": {
+      "title": "Record evidenze",
+      "empty": "Nessun record di evidenza corrisponde ai filtri attuali."
+    },
+    "expiry": {
+      "label": "Scadenza",
+      "daysUntil": "{days} giorni",
+      "daysOverdue": "{days} giorni di ritardo"
+    },
+    "actions": {
+      "file": "File",
+      "control": "Controllo"
+    }
+  },
   "marketing": {
     "nav": {
       "platform": "Piattaforma",

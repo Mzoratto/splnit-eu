@@ -141,6 +141,8 @@ export async function listEvidenceVault(clerkOrgId: string) {
       controlId: evidence.controlId,
       controlKey: controls.key,
       controlTitle: controls.titleCs,
+      controlTitleCs: controls.titleCs,
+      controlTitleEn: controls.titleEn,
       description: evidence.description,
       evidenceId: evidence.id,
       expiresAt: evidence.expiresAt,
@@ -169,6 +171,8 @@ export async function listEvidenceVault(clerkOrgId: string) {
           .select({
             controlId: frameworkControls.controlId,
             frameworkName: frameworks.nameCs,
+            frameworkNameCs: frameworks.nameCs,
+            frameworkNameEn: frameworks.nameEn,
             frameworkSlug: frameworks.slug,
           })
           .from(frameworkControls)
@@ -177,13 +181,20 @@ export async function listEvidenceVault(clerkOrgId: string) {
       : [];
   const frameworksByControl = new Map<
     string,
-    { frameworkName: string; frameworkSlug: string }[]
+    {
+      frameworkName: string;
+      frameworkNameCs: string;
+      frameworkNameEn: string;
+      frameworkSlug: string;
+    }[]
   >();
 
   for (const row of mappingRows) {
     const existing = frameworksByControl.get(row.controlId) ?? [];
     existing.push({
       frameworkName: row.frameworkName,
+      frameworkNameCs: row.frameworkNameCs,
+      frameworkNameEn: row.frameworkNameEn,
       frameworkSlug: row.frameworkSlug,
     });
     frameworksByControl.set(row.controlId, existing);

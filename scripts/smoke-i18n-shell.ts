@@ -6,6 +6,7 @@ const requiredNamespaces = [
   "navigation",
   "shell",
   "dashboard",
+  "evidence",
   "onboarding",
   "organisationSettings",
 ] as const;
@@ -23,6 +24,7 @@ for (const locale of locales) {
 
   assert.ok(messages.navigation.dashboard, `${locale} should label dashboard`);
   assert.ok(messages.dashboard.metrics.scoreTitle, `${locale} should label dashboard score`);
+  assert.ok(messages.evidence.filters.apply, `${locale} should label evidence filters`);
   assert.ok(messages.shell.demoOrganisation, `${locale} should label demo organisation`);
   assert.ok(messages.shell.search, `${locale} should label shell search`);
   assert.ok(messages.onboarding.title, `${locale} should label onboarding`);
@@ -35,6 +37,7 @@ for (const locale of locales) {
 const en = getMessagesForLocale("en-EU");
 assert.equal(en.shell.upgradePlan, "Upgrade plan");
 assert.equal(en.dashboard.metrics.scoreTitle, "Compliance score");
+assert.equal(en.evidence.filters.apply, "Apply filters");
 assert.equal(en.navigation.evidence, "Evidence");
 assert.equal(en.organisationSettings.profile.save, "Save changes");
 assert.notEqual(en.shell.freePlanBanner, getMessagesForLocale("cs-CZ").shell.freePlanBanner);
@@ -42,6 +45,7 @@ assert.notEqual(en.shell.freePlanBanner, getMessagesForLocale("cs-CZ").shell.fre
 const it = getMessagesForLocale("it-IT");
 assert.equal(it.shell.upgradePlan, "Aggiorna piano");
 assert.equal(it.dashboard.metrics.scoreTitle, "Punteggio compliance");
+assert.equal(it.evidence.filters.apply, "Applica filtri");
 assert.equal(it.navigation.evidence, "Evidenze");
 assert.equal(it.organisationSettings.profile.save, "Salva modifiche");
 assert.notEqual(it.shell.freePlanBanner, getMessagesForLocale("cs-CZ").shell.freePlanBanner);

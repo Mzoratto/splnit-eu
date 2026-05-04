@@ -95,6 +95,44 @@
       }
     }
   },
+  "evidence": {
+    "eyebrow": "Evidence",
+    "title": "Evidence vault",
+    "subtitle": "Storage for manual uploads and automated snapshots linked to controls.",
+    "noDate": "no date",
+    "filters": {
+      "title": "Filters",
+      "framework": "Framework",
+      "allFrameworks": "All",
+      "status": "Status",
+      "allStatuses": "All",
+      "expiry": "Expiry",
+      "anyExpiry": "Any",
+      "next30Days": "Next 30 days",
+      "expired": "Expired",
+      "noExpiry": "No expiry",
+      "apply": "Apply filters"
+    },
+    "statuses": {
+      "pass": "Passed",
+      "fail": "Failed",
+      "manualReview": "Partial",
+      "unknown": "Unknown"
+    },
+    "records": {
+      "title": "Evidence records",
+      "empty": "No evidence records match the current filters."
+    },
+    "expiry": {
+      "label": "Expiry",
+      "daysUntil": "{days} days",
+      "daysOverdue": "{days} days overdue"
+    },
+    "actions": {
+      "file": "File",
+      "control": "Control"
+    }
+  },
   "marketing": {
     "nav": {
       "platform": "Platform",
