@@ -67,6 +67,7 @@ export default async function BlogPostPage({
         pageName={`Splnit.eu Blog: ${post.category}`}
         path={`/blog/${post.slug}`}
         description={post.description}
+        locale={locale}
       />
       <main>
         <article>

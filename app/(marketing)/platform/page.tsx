@@ -30,6 +30,7 @@ export default async function PlatformPage() {
         pageName={copy.pageName}
         path="/platform"
         description={copy.jsonLdDescription}
+        locale={locale}
       />
       <main>
         <section data-hero className="bg-white px-5 pb-20 pt-32">

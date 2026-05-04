@@ -31,6 +31,7 @@ export default async function BlogPage() {
         pageName="Splnit.eu Blog"
         path="/blog"
         description={copy.jsonLdDescription}
+        locale={locale}
       />
       <main>
         <section data-hero className="px-5 pb-16 pt-32">

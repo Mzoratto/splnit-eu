@@ -1,7 +1,9 @@
 "use client";
 
 import Link from "next/link";
+import { useLocale } from "next-intl";
 import { useEffect, useState } from "react";
+import { normalizeLocale, type Locale } from "@/i18n/routing";
 import {
   cookieConsentChangedEvent,
   hasOptionalAnalyticsConsent,
@@ -12,10 +14,22 @@ const PRICING_CTA_FLAG = "pricing_cta_copy";
 const POSTHOG_DEFAULTS = "2026-01-30";
 type PostHogClient = typeof import("posthog-js").default;
 
-const ctaVariants: Record<string, string> = {
-  audit: "Získat auditní přehled",
-  savings: "Spočítat úsporu",
-  trial: "Zahájit 14denní zkušební verzi",
+const ctaVariants: Record<Locale, Record<string, string>> = {
+  "cs-CZ": {
+    audit: "Získat auditní přehled",
+    savings: "Spočítat úsporu",
+    trial: "Zahájit 14denní zkušební verzi",
+  },
+  "en-EU": {
+    audit: "Get an audit overview",
+    savings: "Calculate savings",
+    trial: "Start a 14-day trial",
+  },
+  "it-IT": {
+    audit: "Ottieni panoramica audit",
+    savings: "Calcola il risparmio",
+    trial: "Avvia prova di 14 giorni",
+  },
 };
 
 declare global {
@@ -70,14 +84,14 @@ function stopPostHog() {
   }
 }
 
-function getFlaggedCopy(posthog: PostHogClient, fallback: string) {
+function getFlaggedCopy(posthog: PostHogClient, fallback: string, locale: Locale) {
   const variant = posthog.getFeatureFlag(PRICING_CTA_FLAG);
 
   if (typeof variant !== "string") {
     return fallback;
   }
 
-  return ctaVariants[variant] ?? fallback;
+  return ctaVariants[locale][variant] ?? fallback;
 }
 
 export function PricingCta({
@@ -91,9 +105,12 @@ export function PricingCta({
   label: string;
   planName: string;
 }) {
+  const locale = normalizeLocale(useLocale()) ?? "cs-CZ";
   const [copy, setCopy] = useState(label);
 
   useEffect(() => {
+    setCopy(label);
+
     if (planName !== "Starter") {
       return;
     }
@@ -109,7 +126,7 @@ export function PricingCta({
       }
 
       const applyVariant = () => {
-        setCopy(getFlaggedCopy(posthog, label));
+        setCopy(getFlaggedCopy(posthog, label, locale));
       };
 
       applyVariant();
@@ -143,7 +160,7 @@ export function PricingCta({
       window.removeEventListener(cookieConsentChangedEvent, onConsentChange);
       unsubscribe?.();
     };
-  }, [label, planName]);
+  }, [label, locale, planName]);
 
   return (
     <Link

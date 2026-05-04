@@ -65,6 +65,7 @@ export default async function RegulationDetailPage({
         pageName={`Splnit.eu ${framework.name}`}
         path={`/predpisy/${framework.slug}`}
         description={t("jsonLdDescription", { name: framework.name })}
+        locale={locale}
       />
       <main>
         <section data-hero className="px-5 pb-16 pt-32">

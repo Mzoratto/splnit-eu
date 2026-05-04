@@ -50,6 +50,7 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 export default async function RegulationsPage() {
+  const locale = normalizeLocale(await getLocale()) ?? "cs-CZ";
   const t = await getTranslations("regulations");
   const resources = t.raw("resources") as string[];
   const timelineItems = t.raw("timeline") as Array<{
@@ -63,6 +64,7 @@ export default async function RegulationsPage() {
         pageName={t("pageName")}
         path="/predpisy"
         description={t("jsonLdDescription")}
+        locale={locale}
       />
       <main>
         <section data-hero className="px-5 pb-20 pt-32 text-center">
