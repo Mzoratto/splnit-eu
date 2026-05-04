@@ -1,7 +1,10 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { auth } from "@clerk/nextjs/server";
+import { getLocale } from "next-intl/server";
 import { ArrowLeft, Brush, CheckCircle2, ShieldCheck } from "lucide-react";
+import { getMessagesForLocale } from "@/i18n/messages";
+import { normalizeLocale, type Locale } from "@/i18n/routing";
 import { hasDatabaseUrl } from "@/lib/db";
 import { getConsultantClientDetail } from "@/lib/db/queries/consultant-clients";
 import { getOrganisationByClerkOrgId } from "@/lib/db/queries/organisations";
@@ -16,7 +19,9 @@ type PageProps = {
   params: Promise<{ clientOrgId: string }>;
 };
 
-function demoClient(clientOrgId: string) {
+type ClientDetailCopy = ReturnType<typeof getMessagesForLocale>["clientDetailPage"];
+
+function demoClient(clientOrgId: string, locale: Locale, copy: ClientDetailCopy) {
   if (!clientOrgId.startsWith("demo-")) {
     return null;
   }
@@ -27,11 +32,11 @@ function demoClient(clientOrgId: string) {
         category: control.category,
         key: control.key,
         status: index === 0 ? "fail" : "manual_review",
-        title: control.titleCs,
+        title: locale === "cs-CZ" ? control.titleCs : control.titleEn,
       })),
     },
     frameworks: FRAMEWORK_LIBRARY.slice(0, 4).map((framework, index) => ({
-      name: framework.nameCs,
+      name: locale === "cs-CZ" ? framework.nameCs : framework.nameEn,
       regulator: framework.regulator,
       score: [84, 71, 77, 65][index] ?? 0,
       slug: framework.slug,
@@ -43,10 +48,10 @@ function demoClient(clientOrgId: string) {
         clerkOrgId: clientOrgId,
         name:
           clientOrgId === "demo-client-b"
-            ? "Ukázkový klient B"
-            : "Ukázkový klient A",
+            ? copy.demo.clientB
+            : copy.demo.clientA,
         plan: clientOrgId === "demo-client-b" ? "starter" : "business",
-        sector: clientOrgId === "demo-client-b" ? "Finance" : "Výroba",
+        sector: clientOrgId === "demo-client-b" ? "Finance" : copy.demo.manufacturing,
       },
       inviteEmail:
         clientOrgId === "demo-client-b"
@@ -59,7 +64,11 @@ function demoClient(clientOrgId: string) {
   };
 }
 
-async function loadClient(clientOrgId: string) {
+async function loadClient(
+  clientOrgId: string,
+  requestLocale: Locale,
+  copy: ClientDetailCopy,
+) {
   const clerkConfigured =
     Boolean(process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY) &&
     Boolean(process.env.CLERK_SECRET_KEY);
@@ -67,7 +76,8 @@ async function loadClient(clientOrgId: string) {
   if (!clerkConfigured || !hasDatabaseUrl()) {
     return {
       canMutate: false,
-      data: demoClient(clientOrgId),
+      data: demoClient(clientOrgId, requestLocale, copy),
+      organisationLocale: null,
     };
   }
 
@@ -76,6 +86,7 @@ async function loadClient(clientOrgId: string) {
     return {
       canMutate: false,
       data: null,
+      organisationLocale: null,
     };
   }
 
@@ -86,6 +97,7 @@ async function loadClient(clientOrgId: string) {
     return {
       canMutate: false,
       data: null,
+      organisationLocale: organisation?.locale ?? null,
     };
   }
 
@@ -95,6 +107,7 @@ async function loadClient(clientOrgId: string) {
       clientOrgId,
       consultantOrgId: session.orgId,
     }),
+    organisationLocale: organisation?.locale ?? null,
   };
 }
 
@@ -110,14 +123,35 @@ function averageScore(frameworks: { score: number | null }[]) {
   return Math.round(scores.reduce((total, score) => total + score, 0) / scores.length);
 }
 
+function getCategoryLabel(category: string | null | undefined, copy: ClientDetailCopy) {
+  if (!category) {
+    return copy.emptyValue;
+  }
+
+  return copy.categories[category as keyof typeof copy.categories] ?? category;
+}
+
+function statusLabel(status: string, copy: ClientDetailCopy) {
+  return copy.statuses[status as keyof typeof copy.statuses] ?? status;
+}
+
 export default async function ConsultantClientPage({ params }: PageProps) {
   const { clientOrgId } = await params;
-  const { canMutate, data } = await loadClient(clientOrgId);
+  const requestLocale = normalizeLocale(await getLocale()) ?? "cs-CZ";
+  const requestCopy = getMessagesForLocale(requestLocale).clientDetailPage;
+  const loaded = await loadClient(clientOrgId, requestLocale, requestCopy);
+  const locale = normalizeLocale(loaded.organisationLocale) ?? requestLocale;
+  const copy = getMessagesForLocale(locale).clientDetailPage;
+  const data =
+    locale === requestLocale
+      ? loaded.data
+      : loaded.data ?? demoClient(clientOrgId, locale, copy);
 
   if (!data) {
     notFound();
   }
 
+  const canMutate = loaded.canMutate;
   const client = data.relationship.client;
   const score = averageScore(data.frameworks);
   const priorityControls = data.dashboard.priorityControls.length
@@ -126,7 +160,7 @@ export default async function ConsultantClientPage({ params }: PageProps) {
         category: control.category,
         key: control.key,
         status: "unknown",
-        title: control.titleCs,
+        title: locale === "cs-CZ" ? control.titleCs : control.titleEn,
       }));
 
   return (
@@ -137,23 +171,23 @@ export default async function ConsultantClientPage({ params }: PageProps) {
           className="inline-flex items-center gap-2 text-sm font-medium text-primary"
         >
           <ArrowLeft className="h-4 w-4" aria-hidden="true" />
-          Zpět na klienty
+          {copy.back}
         </Link>
         <div className="mt-6 flex flex-col justify-between gap-4 md:flex-row md:items-end">
           <div>
             <p className="text-sm font-medium uppercase tracking-[0.14em] text-primary">
-              Scoped client view
+              {copy.eyebrow}
             </p>
             <h1 className="mt-2 text-3xl font-semibold tracking-normal">
               {client.name}
             </h1>
             <p className="mt-2 text-sm leading-6 text-foreground/64">
-              {client.sector ?? "sektor neuveden"} · {client.plan} · přístup{" "}
-              {data.relationship.accessLevel}
+              {client.sector ?? copy.sectorEmpty} · {client.plan} ·{" "}
+              {copy.access} {data.relationship.accessLevel}
             </p>
           </div>
           <div className="rounded-lg border border-border bg-surface px-5 py-4">
-            <p className="text-sm text-foreground/58">Průměrné skóre</p>
+            <p className="text-sm text-foreground/58">{copy.averageScore}</p>
             <p className="mt-1 font-mono text-4xl font-semibold text-primary">
               {score}%
             </p>
@@ -163,19 +197,19 @@ export default async function ConsultantClientPage({ params }: PageProps) {
 
       <div className="grid gap-4 md:grid-cols-3">
         <article className="rounded-lg border border-border bg-surface p-5">
-          <p className="text-sm text-foreground/58">Frameworky</p>
+          <p className="text-sm text-foreground/58">{copy.frameworksMetric}</p>
           <p className="mt-2 font-mono text-3xl font-semibold text-primary">
             {data.frameworks.length}
           </p>
         </article>
         <article className="rounded-lg border border-border bg-surface p-5">
-          <p className="text-sm text-foreground/58">Prioritní kontroly</p>
+          <p className="text-sm text-foreground/58">{copy.priorityControlsMetric}</p>
           <p className="mt-2 font-mono text-3xl font-semibold text-primary">
             {priorityControls.length}
           </p>
         </article>
         <article className="rounded-lg border border-border bg-surface p-5">
-          <p className="text-sm text-foreground/58">Trust Center barva</p>
+          <p className="text-sm text-foreground/58">{copy.trustCenterColour}</p>
           <div
             className="mt-3 h-8 rounded-md border border-border"
             style={{
@@ -190,7 +224,7 @@ export default async function ConsultantClientPage({ params }: PageProps) {
         <section className="rounded-lg border border-border bg-surface">
           <div className="flex items-center gap-2 border-b border-border p-5">
             <ShieldCheck className="h-5 w-5 text-primary" aria-hidden="true" />
-            <h2 className="text-lg font-semibold">Framework skóre</h2>
+            <h2 className="text-lg font-semibold">{copy.frameworkScores}</h2>
           </div>
           <div className="grid gap-4 p-5 md:grid-cols-2">
             {data.frameworks.map((framework) => (
@@ -199,11 +233,11 @@ export default async function ConsultantClientPage({ params }: PageProps) {
                   <div>
                     <h3 className="font-semibold">{framework.name}</h3>
                     <p className="mt-1 text-sm text-foreground/58">
-                      {framework.regulator ?? "regulator n/a"}
+                      {framework.regulator ?? copy.regulatorEmpty}
                     </p>
                   </div>
                   <span className="rounded-md bg-background px-2 py-1 text-xs">
-                    {framework.status}
+                    {statusLabel(framework.status, copy)}
                   </span>
                 </div>
                 <p className="mt-5 font-mono text-3xl font-semibold text-primary">
@@ -224,7 +258,7 @@ export default async function ConsultantClientPage({ params }: PageProps) {
             className="space-y-4 p-5"
           >
             <label className="grid gap-2 text-sm">
-              Logo URL
+              {copy.logoUrl}
               <input
                 name="logoUrl"
                 type="url"
@@ -234,7 +268,7 @@ export default async function ConsultantClientPage({ params }: PageProps) {
               />
             </label>
             <label className="grid gap-2 text-sm">
-              Accent colour
+              {copy.accentColour}
               <input
                 name="accentColor"
                 type="color"
@@ -250,7 +284,7 @@ export default async function ConsultantClientPage({ params }: PageProps) {
               disabled={!canMutate}
               className="inline-flex items-center gap-2 rounded-md bg-primary px-4 py-3 text-sm font-medium text-primary-foreground disabled:cursor-not-allowed disabled:opacity-50"
             >
-              Uložit branding
+              {copy.saveBranding}
               <CheckCircle2 className="h-4 w-4" aria-hidden="true" />
             </button>
           </form>
@@ -259,7 +293,7 @@ export default async function ConsultantClientPage({ params }: PageProps) {
 
       <section className="rounded-lg border border-border bg-surface">
         <div className="border-b border-border p-5">
-          <h2 className="text-lg font-semibold">Prioritní kontroly klienta</h2>
+          <h2 className="text-lg font-semibold">{copy.priorityControlsTitle}</h2>
         </div>
         <div className="divide-y divide-border">
           {priorityControls.map((control) => (
@@ -267,11 +301,11 @@ export default async function ConsultantClientPage({ params }: PageProps) {
               <div>
                 <p className="font-medium">{control.title}</p>
                 <p className="mt-1 text-sm text-foreground/58">
-                  {control.category}
+                  {getCategoryLabel(control.category, copy)}
                 </p>
               </div>
               <span className="rounded-md bg-surface-muted px-2 py-1 text-sm">
-                {control.status}
+                {statusLabel(control.status, copy)}
               </span>
             </article>
           ))}

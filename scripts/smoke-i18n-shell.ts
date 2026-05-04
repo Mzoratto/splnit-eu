@@ -6,6 +6,8 @@ const requiredNamespaces = [
   "navigation",
   "shell",
   "accessReviews",
+  "auditLogPage",
+  "clientDetailPage",
   "controlsPage",
   "dashboard",
   "clientsPage",
@@ -37,6 +39,8 @@ for (const locale of locales) {
     messages.accessReviews.form.start,
     `${locale} should label access reviews`,
   );
+  assert.ok(messages.auditLogPage.filters.apply, `${locale} should label audit log`);
+  assert.ok(messages.clientDetailPage.back, `${locale} should label client detail`);
   assert.ok(messages.controlsPage.index.openControl, `${locale} should label controls`);
   assert.ok(messages.dashboard.metrics.scoreTitle, `${locale} should label dashboard score`);
   assert.ok(messages.clientsPage.form.save, `${locale} should label clients page`);
@@ -68,6 +72,8 @@ const en = getMessagesForLocale("en-EU");
 assert.equal(en.shell.upgradePlan, "Upgrade plan");
 assert.equal(en.accessReviews.title, "Access reviews");
 assert.equal(en.accessReviews.form.start, "Load users");
+assert.equal(en.auditLogPage.records.title, "Records");
+assert.equal(en.clientDetailPage.back, "Back to clients");
 assert.equal(en.controlsPage.index.title, "Control library");
 assert.equal(en.controlsPage.detail.saveStatus, "Save status");
 assert.equal(en.dashboard.metrics.scoreTitle, "Compliance score");
@@ -97,6 +103,8 @@ const it = getMessagesForLocale("it-IT");
 assert.equal(it.shell.upgradePlan, "Aggiorna piano");
 assert.equal(it.accessReviews.title, "Revisioni accessi");
 assert.equal(it.accessReviews.form.start, "Carica utenti");
+assert.equal(it.auditLogPage.records.title, "Record");
+assert.equal(it.clientDetailPage.back, "Torna ai clienti");
 assert.equal(it.controlsPage.index.title, "Libreria controlli");
 assert.equal(it.controlsPage.detail.saveStatus, "Salva stato");
 assert.equal(it.dashboard.metrics.scoreTitle, "Punteggio compliance");

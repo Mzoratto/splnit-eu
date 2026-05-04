@@ -630,6 +630,91 @@
       "esg_governance": "ESG governance"
     }
   },
+  "auditLogPage": {
+    "noDate": "bez data",
+    "noMetadata": "bez metadat",
+    "eyebrow": "Audit",
+    "title": "Activity log",
+    "subtitle": "Append-only historie compliance akcí pro aktivní Clerk organizaci.",
+    "exportCsv": "CSV export",
+    "filters": {
+      "title": "Filtry",
+      "action": "Akce",
+      "entity": "Entita",
+      "from": "Od",
+      "to": "Do",
+      "all": "Všechny",
+      "apply": "Použít"
+    },
+    "records": {
+      "title": "Záznamy",
+      "time": "Čas",
+      "action": "Akce",
+      "entity": "Entita",
+      "user": "Uživatel",
+      "metadata": "Metadata",
+      "empty": "Žádné auditní záznamy neodpovídají aktuálním filtrům."
+    },
+    "actions": {
+      "control.status_changed": "Status kontroly změněn",
+      "evidence.uploaded": "Evidence nahrána",
+      "policy.generated": "Dokument vygenerován",
+      "integration.connected": "Integrace připojena",
+      "integration.disconnected": "Integrace odpojena",
+      "user.invited": "Uživatel pozván",
+      "consultant_client.linked": "Klient konzultanta propojen"
+    },
+    "entityTypes": {
+      "control": "kontrola",
+      "evidence": "evidence",
+      "policy": "dokument",
+      "integration": "integrace",
+      "consultant_client": "klient konzultanta"
+    }
+  },
+  "clientDetailPage": {
+    "emptyValue": "n/a",
+    "back": "Zpět na klienty",
+    "eyebrow": "Scoped client view",
+    "sectorEmpty": "sektor neuveden",
+    "access": "přístup",
+    "averageScore": "Průměrné skóre",
+    "frameworksMetric": "Frameworky",
+    "priorityControlsMetric": "Prioritní kontroly",
+    "trustCenterColour": "Trust Center barva",
+    "frameworkScores": "Framework skóre",
+    "regulatorEmpty": "regulator n/a",
+    "logoUrl": "Logo URL",
+    "accentColour": "Accent colour",
+    "saveBranding": "Uložit branding",
+    "priorityControlsTitle": "Prioritní kontroly klienta",
+    "demo": {
+      "clientA": "Ukázkový klient A",
+      "clientB": "Ukázkový klient B",
+      "manufacturing": "Výroba"
+    },
+    "statuses": {
+      "active": "active",
+      "unknown": "neznámé",
+      "fail": "nesplněno",
+      "manual_review": "částečně"
+    },
+    "categories": {
+      "access_control": "Řízení přístupů",
+      "training": "Školení",
+      "incident": "Incidenty",
+      "data_protection": "Ochrana dat",
+      "asset_management": "Správa aktiv",
+      "supplier": "Dodavatelé",
+      "physical": "Fyzická bezpečnost",
+      "business_continuity": "Kontinuita provozu",
+      "ai_governance": "AI governance",
+      "governance": "Governance",
+      "esg_environment": "ESG environment",
+      "esg_social": "ESG social",
+      "esg_governance": "ESG governance"
+    }
+  },
   "accessReviews": {
     "noDate": "nenastaveno",
     "eyebrow": "Access reviews",

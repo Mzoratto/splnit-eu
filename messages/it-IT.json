@@ -630,6 +630,91 @@
       "esg_governance": "ESG governance"
     }
   },
+  "auditLogPage": {
+    "noDate": "senza data",
+    "noMetadata": "senza metadati",
+    "eyebrow": "Audit",
+    "title": "Log attività",
+    "subtitle": "Storico append-only delle azioni compliance per l'organizzazione Clerk attiva.",
+    "exportCsv": "Esporta CSV",
+    "filters": {
+      "title": "Filtri",
+      "action": "Azione",
+      "entity": "Entità",
+      "from": "Da",
+      "to": "A",
+      "all": "Tutte",
+      "apply": "Applica"
+    },
+    "records": {
+      "title": "Record",
+      "time": "Ora",
+      "action": "Azione",
+      "entity": "Entità",
+      "user": "Utente",
+      "metadata": "Metadati",
+      "empty": "Nessun record audit corrisponde ai filtri attuali."
+    },
+    "actions": {
+      "control.status_changed": "Stato controllo modificato",
+      "evidence.uploaded": "Evidenza caricata",
+      "policy.generated": "Documento generato",
+      "integration.connected": "Integrazione collegata",
+      "integration.disconnected": "Integrazione scollegata",
+      "user.invited": "Utente invitato",
+      "consultant_client.linked": "Cliente consulenza collegato"
+    },
+    "entityTypes": {
+      "control": "controllo",
+      "evidence": "evidenza",
+      "policy": "documento",
+      "integration": "integrazione",
+      "consultant_client": "cliente consulenza"
+    }
+  },
+  "clientDetailPage": {
+    "emptyValue": "n/d",
+    "back": "Torna ai clienti",
+    "eyebrow": "Vista cliente",
+    "sectorEmpty": "settore non indicato",
+    "access": "accesso",
+    "averageScore": "Punteggio medio",
+    "frameworksMetric": "Framework",
+    "priorityControlsMetric": "Controlli prioritari",
+    "trustCenterColour": "Colore Trust Center",
+    "frameworkScores": "Punteggi framework",
+    "regulatorEmpty": "regolatore n/d",
+    "logoUrl": "URL logo",
+    "accentColour": "Colore accent",
+    "saveBranding": "Salva branding",
+    "priorityControlsTitle": "Controlli prioritari cliente",
+    "demo": {
+      "clientA": "Cliente demo A",
+      "clientB": "Cliente demo B",
+      "manufacturing": "Manifatturiero"
+    },
+    "statuses": {
+      "active": "attivo",
+      "unknown": "sconosciuto",
+      "fail": "fallito",
+      "manual_review": "parziale"
+    },
+    "categories": {
+      "access_control": "Controllo accessi",
+      "training": "Formazione",
+      "incident": "Risposta agli incidenti",
+      "data_protection": "Protezione dati",
+      "asset_management": "Gestione asset",
+      "supplier": "Sicurezza fornitori",
+      "physical": "Sicurezza fisica",
+      "business_continuity": "Continuità operativa",
+      "ai_governance": "Governance AI",
+      "governance": "Governance",
+      "esg_environment": "ESG ambiente",
+      "esg_social": "ESG sociale",
+      "esg_governance": "ESG governance"
+    }
+  },
   "accessReviews": {
     "noDate": "non impostato",
     "eyebrow": "Access review",
