@@ -225,7 +225,7 @@ Tasks:
 
 - [ ] Audit `templates.ts` for Czech-law references, including IČO, ÚOOÚ, ČTÚ, Czech legal entity labels, and Czech-only GDPR phrasing.
 - [ ] Replace hardcoded labels with tenant and jurisdiction placeholders.
-- [ ] Add a jurisdiction context provider for authority names, citation formats, and local labels.
+- [x] Add a jurisdiction context provider for authority names, citation formats, and local labels.
 - [ ] Use a resolver that tries exact tenant jurisdiction and locale, then EU/EN, then throws a clear `TemplateNotFoundError`.
 
 ### 2.2 i18n Shell
