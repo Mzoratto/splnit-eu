@@ -235,10 +235,9 @@ Completed and verified locally:
 - Canonical control content is jurisdiction-neutral; Czech regulator references are scoped to Czech framework guidance.
 - `source_documents` exists and seed data now preserves each template/source document jurisdiction and locale instead of forcing everything to Czech.
 - Local migration and seed ran successfully; seed verified `23` source document rows across Czech, Italian, and EU locales.
+- Policy list, policy detail pages, generated policy metadata, and generated PDFs resolve source document title/citation through `source_documents` with safe template fallbacks.
 
-Remaining before calling Phase 1 fully done:
-
-- Replace policy-template filename display with resolved `source_documents` title/citation where documents are shown or generated.
+Phase 1 is locally complete. Before a production launch, repeat migration/seed against the production database and verify public/legal identity details from Phase 0.
 
 ## Phase 2 - Locale-Aware Templates and UI
 
