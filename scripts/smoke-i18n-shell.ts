@@ -5,6 +5,7 @@ import type { Locale } from "../i18n/routing";
 const requiredNamespaces = [
   "navigation",
   "shell",
+  "accessReviews",
   "dashboard",
   "clientsPage",
   "evidence",
@@ -29,6 +30,10 @@ for (const locale of locales) {
   }
 
   assert.ok(messages.navigation.dashboard, `${locale} should label dashboard`);
+  assert.ok(
+    messages.accessReviews.form.start,
+    `${locale} should label access reviews`,
+  );
   assert.ok(messages.dashboard.metrics.scoreTitle, `${locale} should label dashboard score`);
   assert.ok(messages.clientsPage.form.save, `${locale} should label clients page`);
   assert.ok(messages.evidence.filters.apply, `${locale} should label evidence filters`);
@@ -55,6 +60,8 @@ for (const locale of locales) {
 
 const en = getMessagesForLocale("en-EU");
 assert.equal(en.shell.upgradePlan, "Upgrade plan");
+assert.equal(en.accessReviews.title, "Access reviews");
+assert.equal(en.accessReviews.form.start, "Load users");
 assert.equal(en.dashboard.metrics.scoreTitle, "Compliance score");
 assert.equal(en.clientsPage.title, "Client dashboard");
 assert.equal(en.clientsPage.form.save, "Save link");
@@ -76,6 +83,8 @@ assert.notEqual(en.shell.freePlanBanner, getMessagesForLocale("cs-CZ").shell.fre
 
 const it = getMessagesForLocale("it-IT");
 assert.equal(it.shell.upgradePlan, "Aggiorna piano");
+assert.equal(it.accessReviews.title, "Revisioni accessi");
+assert.equal(it.accessReviews.form.start, "Carica utenti");
 assert.equal(it.dashboard.metrics.scoreTitle, "Punteggio compliance");
 assert.equal(it.clientsPage.title, "Dashboard clienti");
 assert.equal(it.clientsPage.form.save, "Salva collegamento");

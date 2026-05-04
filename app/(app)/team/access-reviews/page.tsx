@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { auth } from "@clerk/nextjs/server";
+import { getLocale } from "next-intl/server";
 import {
   CheckCircle2,
   Download,
@@ -7,11 +8,14 @@ import {
   ShieldCheck,
   UsersRound,
 } from "lucide-react";
+import { getMessagesForLocale } from "@/i18n/messages";
+import { normalizeLocale, type Locale } from "@/i18n/routing";
 import { hasDatabaseUrl } from "@/lib/db";
 import {
   getAccessReviewDetail,
   listAccessReviewsForOrg,
 } from "@/lib/db/queries/access-reviews";
+import { getOrganisationByClerkOrgId } from "@/lib/db/queries/organisations";
 import {
   completeAccessReviewAction,
   startAccessReviewAction,
@@ -25,23 +29,30 @@ type ReviewDetail = NonNullable<
   Awaited<ReturnType<typeof getAccessReviewDetail>>
 >;
 type ReviewItem = ReviewDetail["items"][number];
+type AccessReviewsCopy = ReturnType<typeof getMessagesForLocale>["accessReviews"];
 
-async function loadAccessReviews(selectedReviewId?: string) {
+async function loadAccessReviews(
+  selectedReviewId: string | undefined,
+  requestLocale: Locale,
+) {
   const clerkConfigured =
     Boolean(process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY) &&
     Boolean(process.env.CLERK_SECRET_KEY);
 
   if (!clerkConfigured || !hasDatabaseUrl()) {
-    return getDemoData();
+    return getDemoData(getMessagesForLocale(requestLocale).accessReviews);
   }
 
   const session = await auth();
 
   if (!session.orgId) {
-    return getDemoData();
+    return getDemoData(getMessagesForLocale(requestLocale).accessReviews);
   }
 
-  const reviews = await listAccessReviewsForOrg(session.orgId).catch(() => []);
+  const [organisation, reviews] = await Promise.all([
+    getOrganisationByClerkOrgId(session.orgId).catch(() => null),
+    listAccessReviewsForOrg(session.orgId).catch(() => []),
+  ]);
   const activeReviewId = selectedReviewId ?? reviews[0]?.id ?? null;
   const detail = activeReviewId
     ? await getAccessReviewDetail({
@@ -53,13 +64,15 @@ async function loadAccessReviews(selectedReviewId?: string) {
   return {
     canMutate: true,
     detail,
+    organisationLocale: organisation?.locale ?? null,
     reviews,
   };
 }
 
-function getDemoData(): {
+function getDemoData(copy: AccessReviewsCopy): {
   canMutate: boolean;
   detail: ReviewDetail;
+  organisationLocale: string | null;
   reviews: Review[];
 } {
   const createdAt = new Date();
@@ -72,7 +85,7 @@ function getDemoData(): {
     createdAt,
     dueDate,
     id: "demo-access-review",
-    name: "Quarterly access review · Microsoft 365 + GitHub",
+    name: copy.demo.reviewName,
     provider: "all",
     reviewedItems: 2,
     status: "in_progress",
@@ -80,7 +93,7 @@ function getDemoData(): {
   } satisfies Review;
   const items = [
     {
-      accessLevel: "Member · enabled",
+      accessLevel: copy.demo.items.memberEnabled,
       clerkOrgId: "demo",
       decidedAt: new Date(),
       decidedBy: "demo-admin",
@@ -92,7 +105,7 @@ function getDemoData(): {
       userName: "Anna Novak",
     },
     {
-      accessLevel: "Guest · enabled",
+      accessLevel: copy.demo.items.guestEnabled,
       clerkOrgId: "demo",
       decidedAt: null,
       decidedBy: null,
@@ -101,10 +114,10 @@ function getDemoData(): {
       resource: "Microsoft Entra ID",
       reviewId: review.id,
       userEmail: "vendor@example.com",
-      userName: "Vendor User",
+      userName: copy.demo.items.vendorUser,
     },
     {
-      accessLevel: "User",
+      accessLevel: copy.demo.items.userAccess,
       clerkOrgId: "demo",
       decidedAt: new Date(),
       decidedBy: "demo-admin",
@@ -116,7 +129,7 @@ function getDemoData(): {
       userName: "platform-owner",
     },
     {
-      accessLevel: "User",
+      accessLevel: copy.demo.items.userAccess,
       clerkOrgId: "demo",
       decidedAt: null,
       decidedBy: null,
@@ -135,16 +148,21 @@ function getDemoData(): {
       items,
       review,
     },
+    organisationLocale: null,
     reviews: [review],
   };
 }
 
-function formatDate(value: Date | string | null | undefined) {
+function formatDate(
+  value: Date | string | null | undefined,
+  locale: Locale,
+  emptyLabel: string,
+) {
   if (!value) {
-    return "nenastaveno";
+    return emptyLabel;
   }
 
-  return new Intl.DateTimeFormat("cs-CZ").format(new Date(value));
+  return new Intl.DateTimeFormat(locale).format(new Date(value));
 }
 
 function decisionClass(decision: string | null, candidate: string) {
@@ -183,13 +201,48 @@ function getProgress(review: Review) {
   return Math.round(((review.reviewedItems ?? 0) / review.totalItems) * 100);
 }
 
+function interpolate(template: string, values: Record<string, string | number>) {
+  return Object.entries(values).reduce(
+    (text, [key, value]) => text.replaceAll(`{${key}}`, String(value)),
+    template,
+  );
+}
+
+function statusLabel(status: string, copy: AccessReviewsCopy) {
+  return copy.statuses[status as keyof typeof copy.statuses] ?? status;
+}
+
+function providerLabel(provider: string | null | undefined, copy: AccessReviewsCopy) {
+  if (!provider) {
+    return copy.providers.none;
+  }
+
+  return copy.providers[provider as keyof typeof copy.providers] ?? provider;
+}
+
+function decisionLabel(decision: string | null, copy: AccessReviewsCopy) {
+  if (!decision) {
+    return copy.decisions.pending;
+  }
+
+  return copy.decisions[decision as keyof typeof copy.decisions] ?? decision;
+}
+
 export default async function AccessReviewsPage({
   searchParams,
 }: {
   searchParams: Promise<{ reviewId?: string }>;
 }) {
   const { reviewId } = await searchParams;
-  const { canMutate, detail, reviews } = await loadAccessReviews(reviewId);
+  const requestLocale = normalizeLocale(await getLocale()) ?? "cs-CZ";
+  const {
+    canMutate,
+    detail,
+    organisationLocale,
+    reviews,
+  } = await loadAccessReviews(reviewId, requestLocale);
+  const locale = normalizeLocale(organisationLocale) ?? requestLocale;
+  const copy = getMessagesForLocale(locale).accessReviews;
   const activeReview = detail?.review ?? null;
   const activeItems = detail?.items ?? [];
   const progress = activeReview ? getProgress(activeReview) : 0;
@@ -202,13 +255,13 @@ export default async function AccessReviewsPage({
       <div className="flex flex-col justify-between gap-4 md:flex-row md:items-end">
         <div>
           <p className="text-sm font-medium uppercase tracking-[0.14em] text-primary">
-            Access reviews
+            {copy.eyebrow}
           </p>
           <h1 className="mt-2 text-3xl font-semibold tracking-normal">
-            Přístupové revize
+            {copy.title}
           </h1>
           <p className="mt-2 max-w-2xl text-sm leading-6 text-foreground/64">
-            Pull Entra ID a GitHub uživatelů, rozhodnutí keep/revoke/modify a CSV evidence pro ISO 27001 A.9.2.3.
+            {copy.subtitle}
           </p>
         </div>
         {activeReview ? (
@@ -216,7 +269,7 @@ export default async function AccessReviewsPage({
             href={`/api/access-reviews/${activeReview.id}/export`}
             className="inline-flex items-center gap-2 rounded-md border border-border px-4 py-3 text-sm font-medium hover:bg-surface-muted"
           >
-            Export CSV
+            {copy.exportCsv}
             <Download className="h-4 w-4" aria-hidden="true" />
           </a>
         ) : null}
@@ -226,35 +279,39 @@ export default async function AccessReviewsPage({
         <article className="rounded-lg border border-border bg-surface p-5">
           <div className="flex items-center gap-2">
             <UsersRound className="h-5 w-5 text-primary" aria-hidden="true" />
-            <h2 className="text-lg font-semibold">Aktivní revize</h2>
+            <h2 className="text-lg font-semibold">{copy.metrics.activeTitle}</h2>
           </div>
           <p className="mt-4 font-mono text-2xl font-semibold">
             {reviews.filter((review) => review.status !== "completed").length}
           </p>
           <p className="mt-2 text-sm text-foreground/58">
-            Posledních {reviews.length} revizí v historii.
+            {interpolate(copy.metrics.activeBody, { count: reviews.length })}
           </p>
         </article>
         <article className="rounded-lg border border-border bg-surface p-5">
           <div className="flex items-center gap-2">
             <CheckCircle2 className="h-5 w-5 text-primary" aria-hidden="true" />
-            <h2 className="text-lg font-semibold">Progress</h2>
+            <h2 className="text-lg font-semibold">{copy.metrics.progressTitle}</h2>
           </div>
           <p className="mt-4 font-mono text-2xl font-semibold">{progress}%</p>
           <p className="mt-2 text-sm text-foreground/58">
-            {activeReview?.reviewedItems ?? 0} / {activeReview?.totalItems ?? 0} rozhodnutí.
+            {interpolate(copy.metrics.progressBody, {
+              reviewed: activeReview?.reviewedItems ?? 0,
+              total: activeReview?.totalItems ?? 0,
+            })}
           </p>
         </article>
         <article className="rounded-lg border border-border bg-surface p-5">
           <div className="flex items-center gap-2">
             <GitBranch className="h-5 w-5 text-primary" aria-hidden="true" />
-            <h2 className="text-lg font-semibold">Provider</h2>
+            <h2 className="text-lg font-semibold">{copy.metrics.providerTitle}</h2>
           </div>
           <p className="mt-4 font-mono text-2xl font-semibold">
-            {activeReview?.provider ?? "none"}
+            {providerLabel(activeReview?.provider, copy)}
           </p>
           <p className="mt-2 text-sm text-foreground/58">
-            Due {formatDate(activeReview?.dueDate)}
+            {copy.metrics.due}{" "}
+            {formatDate(activeReview?.dueDate, locale, copy.noDate)}
           </p>
         </article>
       </div>
@@ -264,33 +321,33 @@ export default async function AccessReviewsPage({
           <article className="rounded-lg border border-border bg-surface p-5">
             <div className="flex items-center gap-2">
               <ShieldCheck className="h-5 w-5 text-primary" aria-hidden="true" />
-              <h2 className="text-lg font-semibold">Start review</h2>
+              <h2 className="text-lg font-semibold">{copy.form.title}</h2>
             </div>
             <form action={startAccessReviewAction} className="mt-5 space-y-4">
               <label className="grid gap-2 text-sm">
-                Název
+                {copy.form.name}
                 <input
                   name="name"
-                  placeholder="Quarterly access review"
+                  placeholder={copy.form.namePlaceholder}
                   disabled={!canMutate}
                   className="rounded-md border border-border bg-background px-3 py-2"
                 />
               </label>
               <label className="grid gap-2 text-sm">
-                Provider
+                {copy.form.provider}
                 <select
                   name="provider"
                   defaultValue="all"
                   disabled={!canMutate}
                   className="rounded-md border border-border bg-background px-3 py-2"
                 >
-                  <option value="all">Microsoft 365 + GitHub</option>
-                  <option value="microsoft365">Microsoft 365</option>
-                  <option value="github">GitHub</option>
+                  <option value="all">{copy.providers.all}</option>
+                  <option value="microsoft365">{copy.providers.microsoft365}</option>
+                  <option value="github">{copy.providers.github}</option>
                 </select>
               </label>
               <label className="grid gap-2 text-sm">
-                Due date
+                {copy.form.dueDate}
                 <input
                   name="dueDate"
                   type="date"
@@ -304,7 +361,7 @@ export default async function AccessReviewsPage({
                 disabled={!canMutate}
                 className="inline-flex items-center gap-2 rounded-md bg-primary px-4 py-3 text-sm font-medium text-primary-foreground disabled:cursor-not-allowed disabled:opacity-50"
               >
-                Načíst uživatele
+                {copy.form.start}
                 <UsersRound className="h-4 w-4" aria-hidden="true" />
               </button>
             </form>
@@ -312,7 +369,7 @@ export default async function AccessReviewsPage({
 
           <article className="rounded-lg border border-border bg-surface">
             <div className="border-b border-border p-5">
-              <h2 className="text-lg font-semibold">Historie</h2>
+              <h2 className="text-lg font-semibold">{copy.history.title}</h2>
             </div>
             <div className="divide-y divide-border">
               {reviews.length ? (
@@ -329,17 +386,18 @@ export default async function AccessReviewsPage({
                           review.status,
                         )}`}
                       >
-                        {review.status}
+                        {statusLabel(review.status, copy)}
                       </span>
                     </div>
                     <p className="mt-1 text-sm text-foreground/58">
-                      {review.provider} · {review.reviewedItems ?? 0}/{review.totalItems ?? 0}
+                      {providerLabel(review.provider, copy)} ·{" "}
+                      {review.reviewedItems ?? 0}/{review.totalItems ?? 0}
                     </p>
                   </Link>
                 ))
               ) : (
                 <p className="p-5 text-sm text-foreground/58">
-                  Zatím není založená žádná přístupová revize.
+                  {copy.history.empty}
                 </p>
               )}
             </div>
@@ -350,10 +408,15 @@ export default async function AccessReviewsPage({
           <div className="flex flex-col justify-between gap-3 border-b border-border p-5 md:flex-row md:items-center">
             <div>
               <h2 className="text-lg font-semibold">
-                {activeReview?.name ?? "Review items"}
+                {activeReview?.name ?? copy.items.titleFallback}
               </h2>
               <p className="mt-1 text-sm text-foreground/58">
-                {activeReview ? `${activeReview.reviewedItems ?? 0}/${activeReview.totalItems ?? 0} rozhodnutí` : "Vyberte nebo založte revizi."}
+                {activeReview
+                  ? interpolate(copy.items.progress, {
+                      reviewed: activeReview.reviewedItems ?? 0,
+                      total: activeReview.totalItems ?? 0,
+                    })
+                  : copy.items.selectOrCreate}
               </p>
             </div>
             {activeReview ? (
@@ -363,7 +426,7 @@ export default async function AccessReviewsPage({
                   disabled={!canMutate || activeReview.status === "completed"}
                   className="inline-flex items-center gap-2 rounded-md border border-border px-4 py-3 text-sm font-medium hover:bg-surface-muted disabled:cursor-not-allowed disabled:opacity-50"
                 >
-                  Uzavřít review
+                  {copy.items.complete}
                   <CheckCircle2 className="h-4 w-4" aria-hidden="true" />
                 </button>
               </form>
@@ -385,10 +448,10 @@ export default async function AccessReviewsPage({
                       </span>
                     </div>
                     <p className="mt-1 text-sm text-foreground/58">
-                      {item.userEmail ?? "bez emailu"} · {item.accessLevel}
+                      {item.userEmail ?? copy.items.noEmail} · {item.accessLevel}
                     </p>
                     <p className="mt-1 text-sm text-foreground/58">
-                      Rozhodnutí: {item.decision ?? "pending"}
+                      {copy.items.decision}: {decisionLabel(item.decision, copy)}
                     </p>
                   </div>
                   <form
@@ -411,7 +474,7 @@ export default async function AccessReviewsPage({
                           decision,
                         )}`}
                       >
-                        {decision}
+                        {decisionLabel(decision, copy)}
                       </button>
                     ))}
                   </form>
@@ -419,7 +482,7 @@ export default async function AccessReviewsPage({
               ))
             ) : (
               <p className="p-5 text-sm text-foreground/58">
-                Připojte Microsoft 365 nebo GitHub a založte review.
+                {copy.items.empty}
               </p>
             )}
           </div>

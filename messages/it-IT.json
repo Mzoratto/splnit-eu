@@ -483,6 +483,68 @@
       }
     ]
   },
+  "accessReviews": {
+    "noDate": "non impostato",
+    "eyebrow": "Access review",
+    "title": "Revisioni accessi",
+    "subtitle": "Importa utenti da Entra ID e GitHub, registra decisioni keep/revoke/modify ed esporta evidenze CSV per ISO 27001 A.9.2.3.",
+    "exportCsv": "Esporta CSV",
+    "metrics": {
+      "activeTitle": "Revisioni attive",
+      "activeBody": "Ultime {count} revisioni nello storico.",
+      "progressTitle": "Avanzamento",
+      "progressBody": "{reviewed} / {total} decisioni.",
+      "providerTitle": "Provider",
+      "due": "Scadenza"
+    },
+    "form": {
+      "title": "Avvia revisione",
+      "name": "Nome",
+      "namePlaceholder": "Revisione accessi trimestrale",
+      "provider": "Provider",
+      "dueDate": "Scadenza",
+      "start": "Carica utenti"
+    },
+    "history": {
+      "title": "Storico",
+      "empty": "Non è ancora stata avviata nessuna revisione accessi."
+    },
+    "items": {
+      "titleFallback": "Elementi revisione",
+      "progress": "{reviewed}/{total} decisioni",
+      "selectOrCreate": "Seleziona o avvia una revisione.",
+      "complete": "Chiudi revisione",
+      "noEmail": "senza email",
+      "decision": "Decisione",
+      "empty": "Collega Microsoft 365 o GitHub e avvia una revisione."
+    },
+    "statuses": {
+      "completed": "completata",
+      "ready": "pronta",
+      "in_progress": "in corso"
+    },
+    "decisions": {
+      "keep": "mantieni",
+      "modify": "modifica",
+      "revoke": "revoca",
+      "pending": "in attesa"
+    },
+    "providers": {
+      "all": "Microsoft 365 + GitHub",
+      "microsoft365": "Microsoft 365",
+      "github": "GitHub",
+      "none": "nessuno"
+    },
+    "demo": {
+      "reviewName": "Revisione accessi trimestrale · Microsoft 365 + GitHub",
+      "items": {
+        "memberEnabled": "Membro · attivo",
+        "guestEnabled": "Ospite · attivo",
+        "userAccess": "Utente",
+        "vendorUser": "Utente fornitore"
+      }
+    }
+  },
   "trustCenterSettings": {
     "never": "mai",
     "title": "Centro compliance pubblico",

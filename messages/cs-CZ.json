@@ -483,6 +483,68 @@
       }
     ]
   },
+  "accessReviews": {
+    "noDate": "nenastaveno",
+    "eyebrow": "Access reviews",
+    "title": "Přístupové revize",
+    "subtitle": "Pull Entra ID a GitHub uživatelů, rozhodnutí keep/revoke/modify a CSV evidence pro ISO 27001 A.9.2.3.",
+    "exportCsv": "Export CSV",
+    "metrics": {
+      "activeTitle": "Aktivní revize",
+      "activeBody": "Posledních {count} revizí v historii.",
+      "progressTitle": "Progress",
+      "progressBody": "{reviewed} / {total} rozhodnutí.",
+      "providerTitle": "Provider",
+      "due": "Due"
+    },
+    "form": {
+      "title": "Spustit revizi",
+      "name": "Název",
+      "namePlaceholder": "Quarterly access review",
+      "provider": "Provider",
+      "dueDate": "Due date",
+      "start": "Načíst uživatele"
+    },
+    "history": {
+      "title": "Historie",
+      "empty": "Zatím není založená žádná přístupová revize."
+    },
+    "items": {
+      "titleFallback": "Review items",
+      "progress": "{reviewed}/{total} rozhodnutí",
+      "selectOrCreate": "Vyberte nebo založte revizi.",
+      "complete": "Uzavřít review",
+      "noEmail": "bez emailu",
+      "decision": "Rozhodnutí",
+      "empty": "Připojte Microsoft 365 nebo GitHub a založte review."
+    },
+    "statuses": {
+      "completed": "dokončeno",
+      "ready": "připraveno",
+      "in_progress": "probíhá"
+    },
+    "decisions": {
+      "keep": "ponechat",
+      "modify": "upravit",
+      "revoke": "odebrat",
+      "pending": "čeká"
+    },
+    "providers": {
+      "all": "Microsoft 365 + GitHub",
+      "microsoft365": "Microsoft 365",
+      "github": "GitHub",
+      "none": "none"
+    },
+    "demo": {
+      "reviewName": "Quarterly access review · Microsoft 365 + GitHub",
+      "items": {
+        "memberEnabled": "Člen · aktivní",
+        "guestEnabled": "Host · aktivní",
+        "userAccess": "User",
+        "vendorUser": "Vendor User"
+      }
+    }
+  },
   "trustCenterSettings": {
     "never": "nikdy",
     "title": "Veřejné compliance centrum",

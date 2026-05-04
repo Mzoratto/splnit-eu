@@ -483,6 +483,68 @@
       }
     ]
   },
+  "accessReviews": {
+    "noDate": "not set",
+    "eyebrow": "Access reviews",
+    "title": "Access reviews",
+    "subtitle": "Pull Entra ID and GitHub users, record keep/revoke/modify decisions, and export CSV evidence for ISO 27001 A.9.2.3.",
+    "exportCsv": "Export CSV",
+    "metrics": {
+      "activeTitle": "Active reviews",
+      "activeBody": "Last {count} reviews in history.",
+      "progressTitle": "Progress",
+      "progressBody": "{reviewed} / {total} decisions.",
+      "providerTitle": "Provider",
+      "due": "Due"
+    },
+    "form": {
+      "title": "Start review",
+      "name": "Name",
+      "namePlaceholder": "Quarterly access review",
+      "provider": "Provider",
+      "dueDate": "Due date",
+      "start": "Load users"
+    },
+    "history": {
+      "title": "History",
+      "empty": "No access review has been started yet."
+    },
+    "items": {
+      "titleFallback": "Review items",
+      "progress": "{reviewed}/{total} decisions",
+      "selectOrCreate": "Select or start a review.",
+      "complete": "Close review",
+      "noEmail": "no email",
+      "decision": "Decision",
+      "empty": "Connect Microsoft 365 or GitHub and start a review."
+    },
+    "statuses": {
+      "completed": "completed",
+      "ready": "ready",
+      "in_progress": "in progress"
+    },
+    "decisions": {
+      "keep": "keep",
+      "modify": "modify",
+      "revoke": "revoke",
+      "pending": "pending"
+    },
+    "providers": {
+      "all": "Microsoft 365 + GitHub",
+      "microsoft365": "Microsoft 365",
+      "github": "GitHub",
+      "none": "none"
+    },
+    "demo": {
+      "reviewName": "Quarterly access review · Microsoft 365 + GitHub",
+      "items": {
+        "memberEnabled": "Member · enabled",
+        "guestEnabled": "Guest · enabled",
+        "userAccess": "User",
+        "vendorUser": "Vendor User"
+      }
+    }
+  },
   "trustCenterSettings": {
     "never": "never",
     "title": "Public compliance centre",
