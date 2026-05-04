@@ -483,6 +483,26 @@
       }
     ]
   },
+  "teamPage": {
+    "eyebrow": "Tým",
+    "title": "Přístupy a školení",
+    "subtitle": "Evidence přístupových revizí, rolí a školení na jednom místě.",
+    "open": "Otevřít",
+    "modules": {
+      "accessReviews": {
+        "title": "Přístupové revize",
+        "description": "Kvartální workflow keep/revoke/modify pro uživatele Microsoft 365 a GitHubu."
+      },
+      "roleAssignments": {
+        "title": "Role a oprávnění",
+        "description": "Vlastníci rolí, administrátoři a inventář přístupu dodavatelů."
+      },
+      "trainingLog": {
+        "title": "Školení",
+        "description": "Evidence bezpečnostního školení a AI gramotnosti pro audit."
+      }
+    }
+  },
   "accessReviews": {
     "noDate": "nenastaveno",
     "eyebrow": "Access reviews",

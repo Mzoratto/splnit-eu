@@ -483,6 +483,26 @@
       }
     ]
   },
+  "teamPage": {
+    "eyebrow": "Team",
+    "title": "Accessi e formazione",
+    "subtitle": "Revisioni accessi, responsabilità dei ruoli ed evidenze formative in un unico posto.",
+    "open": "Apri",
+    "modules": {
+      "accessReviews": {
+        "title": "Revisioni accessi",
+        "description": "Workflow trimestrale keep/revoke/modify per utenti Microsoft 365 e GitHub."
+      },
+      "roleAssignments": {
+        "title": "Ruoli e permessi",
+        "description": "Responsabili dei ruoli, amministratori e inventario degli accessi dei fornitori."
+      },
+      "trainingLog": {
+        "title": "Registro formazione",
+        "description": "Evidenze di formazione sicurezza e alfabetizzazione AI per gli audit."
+      }
+    }
+  },
   "accessReviews": {
     "noDate": "non impostato",
     "eyebrow": "Access review",

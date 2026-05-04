@@ -1,39 +1,58 @@
 import Link from "next/link";
-import { ArrowRight, GraduationCap, ShieldCheck, UsersRound } from "lucide-react";
+import { getLocale } from "next-intl/server";
+import {
+  ArrowRight,
+  GraduationCap,
+  ShieldCheck,
+  UsersRound,
+} from "lucide-react";
+import { getMessagesForLocale } from "@/i18n/messages";
+import { normalizeLocale } from "@/i18n/routing";
 
-const modules = [
-  {
-    description: "Quarterly keep/revoke/modify workflow for Microsoft 365 and GitHub users.",
-    href: "/team/access-reviews",
-    icon: ShieldCheck,
-    title: "Access reviews",
-  },
-  {
-    description: "Role ownership, admins and contractor access inventory.",
-    href: "/team",
-    icon: UsersRound,
-    title: "Role assignments",
-  },
-  {
-    description: "Security and AI literacy attendance evidence for auditors.",
-    href: "/team",
-    icon: GraduationCap,
-    title: "Training log",
-  },
-];
+const moduleIcons = {
+  accessReviews: ShieldCheck,
+  roleAssignments: UsersRound,
+  trainingLog: GraduationCap,
+} as const;
 
-export default function TeamPage() {
+const moduleLinks = {
+  accessReviews: "/team/access-reviews",
+  roleAssignments: "/team",
+  trainingLog: "/team",
+} as const;
+
+export default async function TeamPage() {
+  const locale = normalizeLocale(await getLocale()) ?? "cs-CZ";
+  const copy = getMessagesForLocale(locale).teamPage;
+  const modules = [
+    {
+      ...copy.modules.accessReviews,
+      href: moduleLinks.accessReviews,
+      icon: moduleIcons.accessReviews,
+    },
+    {
+      ...copy.modules.roleAssignments,
+      href: moduleLinks.roleAssignments,
+      icon: moduleIcons.roleAssignments,
+    },
+    {
+      ...copy.modules.trainingLog,
+      href: moduleLinks.trainingLog,
+      icon: moduleIcons.trainingLog,
+    },
+  ];
+
   return (
     <section className="space-y-8">
       <div>
         <p className="text-sm font-medium uppercase tracking-[0.14em] text-primary">
-          Tým
+          {copy.eyebrow}
         </p>
         <h1 className="mt-2 text-3xl font-semibold tracking-normal">
-          Přístupy a školení
+          {copy.title}
         </h1>
         <p className="mt-2 max-w-2xl text-sm leading-6 text-foreground/64">
-          Evidence přístupových revizí, rolí a školení na jednom místě.
+          {copy.subtitle}
         </p>
       </div>
 
@@ -50,7 +69,7 @@ export default function TeamPage() {
               {module.description}
             </p>
             <span className="mt-4 inline-flex items-center gap-2 text-sm font-medium">
-              Otevřít
+              {copy.open}
               <ArrowRight className="h-4 w-4" aria-hidden="true" />
             </span>
           </Link>

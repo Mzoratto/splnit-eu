@@ -483,6 +483,26 @@
       }
     ]
   },
+  "teamPage": {
+    "eyebrow": "Team",
+    "title": "Access and training",
+    "subtitle": "Access reviews, role ownership, and training evidence in one place.",
+    "open": "Open",
+    "modules": {
+      "accessReviews": {
+        "title": "Access reviews",
+        "description": "Quarterly keep/revoke/modify workflow for Microsoft 365 and GitHub users."
+      },
+      "roleAssignments": {
+        "title": "Role assignments",
+        "description": "Role owners, administrators, and contractor access inventory."
+      },
+      "trainingLog": {
+        "title": "Training log",
+        "description": "Security and AI literacy attendance evidence for auditors."
+      }
+    }
+  },
   "accessReviews": {
     "noDate": "not set",
     "eyebrow": "Access reviews",

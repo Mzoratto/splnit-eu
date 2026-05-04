@@ -15,6 +15,7 @@ const requiredNamespaces = [
   "onboarding",
   "organisationSettings",
   "risks",
+  "teamPage",
   "trustCenterSettings",
 ] as const;
 const locales: Locale[] = ["cs-CZ", "en-EU", "it-IT"];
@@ -52,6 +53,7 @@ for (const locale of locales) {
     `${locale} should label organisation settings save`,
   );
   assert.ok(messages.risks.form.add, `${locale} should label risks`);
+  assert.ok(messages.teamPage.open, `${locale} should label team page`);
   assert.ok(
     messages.trustCenterSettings.saveSettings,
     `${locale} should label Trust Center settings save`,
@@ -77,6 +79,8 @@ assert.equal(en.navigation.evidence, "Evidence");
 assert.equal(en.organisationSettings.profile.save, "Save changes");
 assert.equal(en.risks.title, "Risks");
 assert.equal(en.risks.form.add, "Add risk");
+assert.equal(en.teamPage.title, "Access and training");
+assert.equal(en.teamPage.open, "Open");
 assert.equal(en.trustCenterSettings.title, "Public compliance centre");
 assert.equal(en.trustCenterSettings.saveSettings, "Save settings");
 assert.notEqual(en.shell.freePlanBanner, getMessagesForLocale("cs-CZ").shell.freePlanBanner);
@@ -100,6 +104,8 @@ assert.equal(it.navigation.evidence, "Evidenze");
 assert.equal(it.organisationSettings.profile.save, "Salva modifiche");
 assert.equal(it.risks.title, "Rischi");
 assert.equal(it.risks.form.add, "Aggiungi rischio");
+assert.equal(it.teamPage.title, "Accessi e formazione");
+assert.equal(it.teamPage.open, "Apri");
 assert.equal(it.trustCenterSettings.title, "Centro compliance pubblico");
 assert.equal(it.trustCenterSettings.saveSettings, "Salva impostazioni");
 assert.notEqual(it.shell.freePlanBanner, getMessagesForLocale("cs-CZ").shell.freePlanBanner);
