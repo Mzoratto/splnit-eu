@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useTranslations } from "next-intl";
+import { LogoMark } from "@/components/brand/logo-mark";
 import {
   AlertTriangle,
   BarChart3,
@@ -16,7 +17,6 @@ import {
   Plug,
   ScrollText,
   Settings,
-  ShieldCheck,
   Users,
 } from "lucide-react";
 
@@ -86,11 +86,7 @@ export function Sidebar({
   return (
     <aside className="fixed inset-y-0 left-0 hidden w-[220px] border-r border-border bg-background lg:block">
       <div className="flex h-14 items-center gap-2 border-b border-border px-4 text-sm font-medium">
-        <ShieldCheck
-          className="h-5 w-5 text-primary"
-          aria-hidden="true"
-          strokeWidth={1.5}
-        />
+        <LogoMark className="h-5 w-5" />
         Splnit.eu
       </div>
       <nav className="grid gap-3 p-3 text-sm">

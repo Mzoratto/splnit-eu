@@ -1,3 +1,4 @@
+import { LogoMark } from "@/components/brand/logo-mark";
 import { Icon } from "@/components/marketing/local-icon";
 import type { Locale } from "@/i18n/routing";
 
@@ -143,13 +144,7 @@ export function DashboardMockup({ locale = "cs-CZ" }: { locale?: Locale }) {
             <aside className="hidden w-52 shrink-0 flex-col gap-0.5 border-r border-zinc-100 bg-white p-4 md:flex">
               <div className="mb-3 px-2 py-1.5">
                 <div className="flex items-center gap-2">
-                  <div className="flex h-5 w-5 items-center justify-center rounded bg-blue-600">
-                    <Icon
-                      icon="solar:shield-keyhole-linear"
-                      className="text-[10px] text-white"
-                      aria-hidden="true"
-                    />
-                  </div>
+                  <LogoMark className="h-5 w-5" />
                   <span className="text-xs font-semibold text-zinc-700">
                     Splnit.eu
                   </span>

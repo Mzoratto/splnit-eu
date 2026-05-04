@@ -4,6 +4,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useTranslations } from "next-intl";
 import { useState } from "react";
+import { LogoMark } from "@/components/brand/logo-mark";
 import { LocaleSwitcher } from "@/components/locale-switcher";
 import { Icon } from "@/components/marketing/local-icon";
 
@@ -43,13 +44,7 @@ export function Nav() {
           className="flex shrink-0 items-center gap-2"
           onClick={() => setOpen(false)}
         >
-          <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-blue-600 shadow-sm shadow-blue-200">
-            <Icon
-              icon="solar:shield-keyhole-linear"
-              className="text-sm text-white"
-              aria-hidden="true"
-            />
-          </div>
+          <LogoMark priority />
           <span className="font-semibold tracking-tight text-zinc-900">
             Splnit<span className="text-blue-600">.eu</span>
           </span>

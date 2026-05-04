@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useTranslations } from "next-intl";
 import { FormEvent, useState } from "react";
+import { LogoMark } from "@/components/brand/logo-mark";
 import { LocaleSwitcher } from "@/components/locale-switcher";
 import { Icon } from "@/components/marketing/local-icon";
 
@@ -40,13 +41,7 @@ export function Footer() {
         <div className="mb-14 grid grid-cols-2 gap-8 md:grid-cols-6">
           <div className="col-span-2">
             <div className="mb-4 flex items-center gap-2">
-              <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-blue-600">
-                <Icon
-                  icon="solar:shield-keyhole-linear"
-                  className="text-sm text-white"
-                  aria-hidden="true"
-                />
-              </div>
+              <LogoMark />
               <span className="font-semibold tracking-tight text-zinc-900">
                 Splnit<span className="text-blue-600">.eu</span>
               </span>

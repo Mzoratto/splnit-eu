@@ -1,6 +1,7 @@
-const CACHE_NAME = "splnit-offline-v2";
+const CACHE_NAME = "splnit-offline-v3";
 const APP_SHELL = [
   "/",
+  "/icon.svg",
   "/icon-192x192.png",
   "/icon-512x512.png",
 ];
