@@ -1,7 +1,13 @@
 import { ImageResponse } from "next/og";
+import { cookies } from "next/headers";
 import { hasDatabaseUrl } from "@/lib/db";
 import { getPublicTrustCenter } from "@/lib/db/queries/trust-center";
 import { FRAMEWORK_LIBRARY } from "@/lib/frameworks/registry";
+import type { Locale } from "@/i18n/routing";
+import {
+  getPublicTrustCopy,
+  getPublicTrustLocaleFromCookie,
+} from "@/lib/trust-center/public-copy";
 import { getTrustCenterSummary } from "@/lib/trust-center/renderer";
 
 export const alt = "Splnit.eu Trust Center";
@@ -18,7 +24,10 @@ export default async function Image({
   params: Promise<{ orgSlug: string }>;
 }) {
   const { orgSlug } = await params;
-  const trustData = await loadTrustCenter(orgSlug);
+  const cookieStore = await cookies();
+  const locale = getPublicTrustLocaleFromCookie(cookieStore.toString());
+  const copy = getPublicTrustCopy(locale);
+  const trustData = await loadTrustCenter(orgSlug, locale);
   const visibleFrameworks = trustData.ndaRequired ? [] : trustData.frameworks;
   const summary = getTrustCenterSummary(visibleFrameworks);
 
@@ -52,16 +61,16 @@ export default async function Image({
             {trustData.organisationName}
           </div>
           <div style={{ color: "#5d6b62", fontSize: 30 }}>
-            Verified automatically · {summary.frameworkCount} frameworks visible
+            {copy.verified} · {summary.frameworkCount} {copy.frameworkCount}
           </div>
         </div>
         <div style={{ display: "flex", gap: 24 }}>
-          <Metric label="Average score" value={`${summary.averageScore ?? "-"}%`} />
+          <Metric label={copy.averageScore} value={`${summary.averageScore ?? "-"}%`} />
           <Metric
-            label="NDA gate"
-            value={trustData.ndaRequired ? "Enabled" : "Open"}
+            label={copy.ndaGate}
+            value={trustData.ndaRequired ? copy.ndaRequired : copy.ndaNotRequired}
           />
-          <Metric label="Frameworks" value={String(summary.frameworkCount)} />
+          <Metric label={copy.frameworkCount} value={String(summary.frameworkCount)} />
         </div>
       </div>
     ),
@@ -89,7 +98,7 @@ function Metric({ label, value }: { label: string; value: string }) {
   );
 }
 
-async function loadTrustCenter(orgSlug: string) {
+async function loadTrustCenter(orgSlug: string, locale: Locale) {
   if (hasDatabaseUrl()) {
     const data = await getPublicTrustCenter({ orgSlug }).catch(() => null);
 
@@ -106,6 +115,7 @@ async function loadTrustCenter(orgSlug: string) {
       status: "active",
     })),
     ndaRequired: false,
-    organisationName: orgSlug === "demo" ? "Demo organizace" : "Splnit.eu",
+    organisationName:
+      orgSlug === "demo" ? getPublicTrustCopy(locale).demoOrganisation : "Splnit.eu",
   };
 }

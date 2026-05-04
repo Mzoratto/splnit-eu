@@ -2,6 +2,11 @@ import { NextResponse } from "next/server";
 import { hasDatabaseUrl } from "@/lib/db";
 import { getPublicTrustCenter } from "@/lib/db/queries/trust-center";
 import { FRAMEWORK_LIBRARY } from "@/lib/frameworks/registry";
+import type { Locale } from "@/i18n/routing";
+import {
+  getPublicTrustCopy,
+  getPublicTrustLocaleFromCookie,
+} from "@/lib/trust-center/public-copy";
 import { getTrustCenterSummary } from "@/lib/trust-center/renderer";
 
 export async function GET(
@@ -10,28 +15,32 @@ export async function GET(
 ) {
   const { orgSlug } = await params;
   const accessToken = new URL(request.url).searchParams.get("access");
+  const locale = getPublicTrustLocaleFromCookie(request.headers.get("cookie"));
   const trustData = hasDatabaseUrl()
     ? await getPublicTrustCenter({ accessToken, orgSlug }).catch(() => null)
-    : loadDemoTrustCenter(orgSlug);
+    : loadDemoTrustCenter(orgSlug, locale);
+  const resolvedTrustData = trustData ?? loadDemoTrustCenter(orgSlug, locale);
 
-  if (!trustData) {
+  if (!resolvedTrustData) {
     return NextResponse.json({ error: "Trust Center not found" }, { status: 404 });
   }
 
-  const visibleFrameworks = trustData.accessGranted ? trustData.frameworks : [];
+  const visibleFrameworks = resolvedTrustData.accessGranted
+    ? resolvedTrustData.frameworks
+    : [];
 
   return NextResponse.json({
-    accessGranted: trustData.accessGranted,
+    accessGranted: resolvedTrustData.accessGranted,
     frameworks: visibleFrameworks,
-    lastTestedAt: trustData.lastTestedAt,
-    ndaRequired: trustData.ndaRequired,
+    lastTestedAt: resolvedTrustData.lastTestedAt,
+    ndaRequired: resolvedTrustData.ndaRequired,
     orgSlug,
-    organisationName: trustData.organisationName,
+    organisationName: resolvedTrustData.organisationName,
     summary: getTrustCenterSummary(visibleFrameworks),
   });
 }
 
-function loadDemoTrustCenter(orgSlug: string) {
+function loadDemoTrustCenter(orgSlug: string, locale: Locale) {
   if (orgSlug !== "demo") {
     return null;
   }
@@ -47,6 +56,6 @@ function loadDemoTrustCenter(orgSlug: string) {
     frameworks,
     lastTestedAt: new Date(Date.now() - 11 * 60 * 1000),
     ndaRequired: false,
-    organisationName: "Demo organizace",
+    organisationName: getPublicTrustCopy(locale).demoOrganisation,
   };
 }

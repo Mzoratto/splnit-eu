@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { getLocale } from "next-intl/server";
 import { notFound } from "next/navigation";
 import {
   CheckCircle2,
@@ -9,6 +10,13 @@ import {
 import { hasDatabaseUrl } from "@/lib/db";
 import { getPublicTrustCenter } from "@/lib/db/queries/trust-center";
 import { FRAMEWORK_LIBRARY } from "@/lib/frameworks/registry";
+import { normalizeLocale, type Locale } from "@/i18n/routing";
+import {
+  formatTrustRelativeTime,
+  getPublicTrustCopy,
+  getRegulatorLabel,
+  getStatusLabel,
+} from "@/lib/trust-center/public-copy";
 import { getTrustCenterSummary } from "@/lib/trust-center/renderer";
 import { requestTrustCenterAccessAction } from "./actions";
 
@@ -25,16 +33,18 @@ export async function generateMetadata({
   params: Promise<{ orgSlug: string }>;
 }): Promise<Metadata> {
   const { orgSlug } = await params;
-  const trustData = await loadTrustCenter(orgSlug, null);
+  const locale = normalizeLocale(await getLocale()) ?? "cs-CZ";
+  const copy = getPublicTrustCopy(locale);
+  const trustData = await loadTrustCenter(orgSlug, null, locale);
 
   if (!trustData) {
     return {
-      title: "Trust Center",
+      title: copy.metadataFallbackTitle,
     };
   }
 
   return {
-    description: `Veřejné compliance skóre pro ${trustData.organisationName}.`,
+    description: copy.metadataDescription(trustData.organisationName),
     title: `${trustData.organisationName} Trust Center`,
   };
 }
@@ -44,7 +54,9 @@ export default async function TrustCenterPage({
   searchParams,
 }: PageProps) {
   const [{ orgSlug }, query] = await Promise.all([params, searchParams]);
-  const trustData = await loadTrustCenter(orgSlug, query.access ?? null);
+  const locale = normalizeLocale(await getLocale()) ?? "cs-CZ";
+  const copy = getPublicTrustCopy(locale);
+  const trustData = await loadTrustCenter(orgSlug, query.access ?? null, locale);
 
   if (!trustData) {
     notFound();
@@ -83,33 +95,32 @@ export default async function TrustCenterPage({
             {trustData.organisationName}
           </h1>
           <p className="mt-3 max-w-2xl text-white/75">
-            Veřejný přehled vybraných compliance frameworků, automatických testů
-            a dostupných bezpečnostních důkazů.
+            {copy.description}
           </p>
           <p className="mt-6 inline-flex rounded-md bg-white/12 px-3 py-2 text-sm text-white/78">
-            Verified automatically · Last test:{" "}
-            {formatRelativeTime(trustData.lastTestedAt)}
+            {copy.verified} · {copy.lastTest}:{" "}
+            {formatTrustRelativeTime(trustData.lastTestedAt, locale)}
           </p>
         </div>
       </section>
 
       <section className="mx-auto grid max-w-6xl gap-4 px-5 py-8 md:grid-cols-3">
         <div className="rounded-lg border border-border bg-surface p-5">
-          <p className="text-sm text-foreground/58">Frameworky</p>
+          <p className="text-sm text-foreground/58">{copy.frameworkCount}</p>
           <p className="mt-2 font-mono text-3xl font-semibold text-primary">
             {summary.frameworkCount}
           </p>
         </div>
         <div className="rounded-lg border border-border bg-surface p-5">
-          <p className="text-sm text-foreground/58">Průměrné skóre</p>
+          <p className="text-sm text-foreground/58">{copy.averageScore}</p>
           <p className="mt-2 font-mono text-3xl font-semibold text-primary">
             {locked ? "NDA" : `${summary.averageScore ?? "-"}%`}
           </p>
         </div>
         <div className="rounded-lg border border-border bg-surface p-5">
-          <p className="text-sm text-foreground/58">NDA gate</p>
+          <p className="text-sm text-foreground/58">{copy.ndaGate}</p>
           <p className="mt-2 text-lg font-semibold">
-            {trustData.ndaRequired ? "Vyžadováno" : "Nevyžadováno"}
+            {trustData.ndaRequired ? copy.ndaRequired : copy.ndaNotRequired}
           </p>
         </div>
       </section>
@@ -120,15 +131,14 @@ export default async function TrustCenterPage({
             <div>
               <div className="flex items-center gap-2">
                 <LockKeyhole className="h-5 w-5 text-primary" aria-hidden="true" />
-                <h2 className="text-lg font-semibold">NDA přístup</h2>
+                <h2 className="text-lg font-semibold">{copy.ndaAccessTitle}</h2>
               </div>
               <p className="mt-3 text-sm leading-6 text-foreground/64">
-                Detailní skóre a frameworky jsou dostupné po schválení žádosti.
-                Schválený odkaz platí 24 hodin.
+                {copy.ndaAccessBody}
               </p>
               {query.requested === "1" ? (
                 <p className="mt-4 inline-flex rounded-md bg-emerald-50 px-3 py-2 text-sm text-emerald-800">
-                  Žádost byla odeslána vlastníkovi Trust Center.
+                  {copy.requestedMessage}
                 </p>
               ) : null}
             </div>
@@ -137,7 +147,7 @@ export default async function TrustCenterPage({
               className="space-y-4"
             >
               <label className="grid gap-2 text-sm">
-                Pracovní email
+                {copy.workEmail}
                 <input
                   name="email"
                   required
@@ -146,7 +156,7 @@ export default async function TrustCenterPage({
                 />
               </label>
               <label className="grid gap-2 text-sm">
-                Firma
+                {copy.company}
                 <input
                   name="company"
                   className="rounded-md border border-border bg-background px-3 py-2"
@@ -156,7 +166,7 @@ export default async function TrustCenterPage({
                 type="submit"
                 className="inline-flex items-center gap-2 rounded-md bg-primary px-4 py-3 text-sm font-medium text-primary-foreground"
               >
-                Požádat o přístup
+                {copy.requestAccess}
                 <FileLock2 className="h-4 w-4" aria-hidden="true" />
               </button>
             </form>
@@ -172,14 +182,14 @@ export default async function TrustCenterPage({
               <div className="flex items-start justify-between gap-4">
                 <div>
                   <p className="text-sm text-foreground/58">
-                    {item.framework.regulator}
+                    {getRegulatorLabel(item.framework, locale)}
                   </p>
                   <h2 className="mt-1 text-xl font-semibold">
                     {item.framework.nameCs}
                   </h2>
                 </div>
                 <span className="rounded-md bg-surface-muted px-2 py-1 text-xs">
-                  {item.status}
+                  {getStatusLabel(item.status, locale)}
                 </span>
               </div>
               <p className="mt-5 font-mono text-3xl font-semibold text-primary">
@@ -193,7 +203,7 @@ export default async function TrustCenterPage({
               </div>
               <p className="mt-4 flex items-center gap-2 text-sm text-foreground/58">
                 <CheckCircle2 className="h-4 w-4 text-accent" aria-hidden="true" />
-                Verified automatically where integrations are connected
+                {copy.verifiedAutomatically}
               </p>
             </article>
           ))}
@@ -203,7 +213,7 @@ export default async function TrustCenterPage({
   );
 }
 
-function loadDemoTrustCenter(orgSlug: string) {
+function loadDemoTrustCenter(orgSlug: string, locale: Locale) {
   if (orgSlug !== "demo") {
     return null;
   }
@@ -219,41 +229,23 @@ function loadDemoTrustCenter(orgSlug: string) {
     lastTestedAt: new Date(Date.now() - 11 * 60 * 1000),
     logoUrl: null,
     ndaRequired: false,
-    organisationName: "Demo organizace",
+    organisationName: getPublicTrustCopy(locale).demoOrganisation,
     subdomain: "demo",
   };
 }
 
-async function loadTrustCenter(orgSlug: string, accessToken: string | null) {
+async function loadTrustCenter(
+  orgSlug: string,
+  accessToken: string | null,
+  locale: Locale,
+) {
   if (!hasDatabaseUrl()) {
-    return loadDemoTrustCenter(orgSlug);
+    return loadDemoTrustCenter(orgSlug, locale);
   }
 
   const data = await getPublicTrustCenter({ accessToken, orgSlug }).catch(
     () => null,
   );
 
-  return data ?? loadDemoTrustCenter(orgSlug);
-}
-
-function formatRelativeTime(value: Date | string | null | undefined) {
-  if (!value) {
-    return "not run yet";
-  }
-
-  const diffMinutes = Math.max(
-    0,
-    Math.round((Date.now() - new Date(value).getTime()) / 60_000),
-  );
-
-  if (diffMinutes < 1) {
-    return "just now";
-  }
-
-  if (diffMinutes < 60) {
-    return `${diffMinutes} min ago`;
-  }
-
-  const diffHours = Math.round(diffMinutes / 60);
-  return `${diffHours} h ago`;
+  return data ?? loadDemoTrustCenter(orgSlug, locale);
 }
