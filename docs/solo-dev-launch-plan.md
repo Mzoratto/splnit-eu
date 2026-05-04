@@ -226,13 +226,13 @@ Tasks:
 - [ ] Audit `templates.ts` for Czech-law references, including IČO, ÚOOÚ, ČTÚ, Czech legal entity labels, and Czech-only GDPR phrasing.
 - [ ] Replace hardcoded labels with tenant and jurisdiction placeholders.
 - [x] Add a jurisdiction context provider for authority names, citation formats, and local labels.
-- [ ] Use a resolver that tries exact tenant jurisdiction and locale, then EU/EN, then throws a clear `TemplateNotFoundError`.
+- [x] Use a resolver that tries exact tenant jurisdiction and locale, then EU/EN, then throws a clear `TemplateNotFoundError`.
 
 ### 2.2 i18n Shell
 
-- [ ] Confirm `next-intl` setup or install it if missing.
-- [ ] Create locale files for `cs-CZ`, `en-EU`, and `it-IT`.
-- [ ] Wire SSR locale to tenant locale.
+- [x] Confirm `next-intl` setup or install it if missing.
+- [x] Create locale files for `cs-CZ`, `en-EU`, and `it-IT`.
+- [x] Wire SSR locale to tenant locale.
 - [ ] Translate critical paths in this order: public marketing pages, signup/onboarding, dashboard navigation, document generation UI, error messages, and email templates.
 - [ ] Leave admin UIs in English unless there is a direct product reason to translate them.
 

@@ -1,7 +1,10 @@
 import { redirect } from "next/navigation";
 import { ClerkThemeProvider } from "@/components/app/clerk-theme-provider";
 import { auth } from "@clerk/nextjs/server";
+import { NextIntlClientProvider } from "next-intl";
 import { AppShell } from "@/components/app/app-shell";
+import { getMessagesForLocale } from "@/i18n/messages";
+import { normalizeLocale, type Locale } from "@/i18n/routing";
 import { hasDatabaseUrl } from "@/lib/db";
 import { getOrganisationByClerkOrgId } from "@/lib/db/queries/organisations";
 import { countUnreadRelevantRegulationUpdates } from "@/lib/db/queries/regulation-updates";
@@ -20,6 +23,7 @@ export default async function ProtectedLayout({
   let organisationName = "Demo organizace";
   let plan: PlanKey = "free";
   let regulationUpdateCount = 0;
+  let tenantLocale: Locale = "cs-CZ";
 
   if (clerkConfigured) {
     const session = await auth();
@@ -35,18 +39,24 @@ export default async function ProtectedLayout({
       organisationName = organisation?.name ?? "Organizace";
       plan = normalizePlanKey(organisation?.plan);
       regulationUpdateCount = unreadRegulationUpdateCount;
+      tenantLocale = normalizeLocale(organisation?.locale) ?? "cs-CZ";
     }
   }
 
   const shell = (
-    <AppShell
-      clerkEnabled={clerkConfigured}
-      organisationName={organisationName}
-      plan={plan}
-      regulationUpdateCount={regulationUpdateCount}
+    <NextIntlClientProvider
+      locale={tenantLocale}
+      messages={getMessagesForLocale(tenantLocale)}
     >
-      {children}
-    </AppShell>
+      <AppShell
+        clerkEnabled={clerkConfigured}
+        organisationName={organisationName}
+        plan={plan}
+        regulationUpdateCount={regulationUpdateCount}
+      >
+        {children}
+      </AppShell>
+    </NextIntlClientProvider>
   );
 
   if (!clerkConfigured) {
