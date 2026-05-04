@@ -212,6 +212,43 @@
           "Retention degli audit log Workspace"
         ]
       }
+    },
+    "providerPages": {
+      "common": {
+        "status": "Stato",
+        "lastSync": "Ultimo sync",
+        "lastErrorEmpty": "Nessun errore recente",
+        "automatedTests": "Test automatici",
+        "runResults": "Risultati esecuzioni",
+        "runResultsEmpty": "I risultati appariranno dopo la prima esecuzione del runner.",
+        "testSuite": "Test suite"
+      },
+      "aws": {
+        "title": "Integrazione AWS",
+        "subtitle": "Un ruolo read-only cross-account controlla CloudTrail, crittografia S3, IAM MFA, root MFA e VPC Flow Logs.",
+        "accountMissing": "nessun account AWS",
+        "testsBody": "Mappato su audit log, crittografia, MFA e monitoraggio di rete.",
+        "connectRole": "Collega ruolo",
+        "validateSave": "Valida e salva"
+      },
+      "github": {
+        "title": "Integrazione GitHub",
+        "subtitle": "Una GitHub App read-only controlla 2FA, branch protection, secret scanning, dependency alerts e code scanning.",
+        "editInstall": "Modifica installazione",
+        "installApp": "Installa GitHub App",
+        "installMissing": "nessuna installazione",
+        "repositories": "Repository",
+        "repositoriesEmpty": "I repository appariranno dopo l'installazione della GitHub App.",
+        "testsBody": "Mappato su MFA, code review, secrets e controlli sulle dipendenze."
+      },
+      "microsoft365": {
+        "title": "Integrazione Microsoft 365",
+        "subtitle": "La connessione OAuth esegue controlli su MFA, Conditional Access, ospiti, ruoli privilegiati, sensitivity labels e formazione.",
+        "reconnect": "Ricollega",
+        "connect": "Collega Microsoft 365",
+        "tokenExpires": "Token scade",
+        "testsBody": "Mappato su controlli NIS2, ISO 27001 e GDPR."
+      }
     }
   },
   "marketing": {

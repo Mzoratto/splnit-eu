@@ -1,10 +1,14 @@
 import Link from "next/link";
 import { auth } from "@clerk/nextjs/server";
+import { getLocale } from "next-intl/server";
 import { ArrowRight, CheckCircle2, GitBranch, ShieldAlert } from "lucide-react";
 import { PageHeader } from "@/components/app/page-header";
 import { StatusPill, type StatusPillTone } from "@/components/app/status-pill";
+import { getMessagesForLocale } from "@/i18n/messages";
+import { normalizeLocale, type Locale } from "@/i18n/routing";
 import { hasDatabaseUrl } from "@/lib/db";
 import { getIntegrationDetail } from "@/lib/db/queries/integrations";
+import { getOrganisationByClerkOrgId } from "@/lib/db/queries/organisations";
 import {
   getGitHubAppInstallUrl,
   hasGitHubAppConfig,
@@ -12,12 +16,16 @@ import {
 } from "@/lib/integrations/github/app";
 import { GITHUB_TEST_DEFINITIONS } from "@/lib/integrations/github/test-definitions";
 
-function formatDate(value: Date | string | null | undefined) {
+function formatDate(
+  value: Date | string | null | undefined,
+  locale: Locale,
+  emptyLabel: string,
+) {
   if (!value) {
-    return "nikdy";
+    return emptyLabel;
   }
 
-  return new Intl.DateTimeFormat("cs-CZ", {
+  return new Intl.DateTimeFormat(locale, {
     dateStyle: "medium",
     timeStyle: "short",
   }).format(new Date(value));
@@ -51,6 +59,7 @@ async function loadGitHubData() {
     return {
       detail: null,
       installUrl: null,
+      organisationLocale: null,
       repositories: [],
     };
   }
@@ -61,16 +70,20 @@ async function loadGitHubData() {
     return {
       detail: null,
       installUrl: null,
+      organisationLocale: null,
       repositories: [],
     };
   }
 
-  const detail = hasDatabaseUrl()
-    ? await getIntegrationDetail({
-        clerkOrgId: session.orgId,
-        provider: "github",
-      }).catch(() => null)
-    : null;
+  const [detail, organisation] = hasDatabaseUrl()
+    ? await Promise.all([
+        getIntegrationDetail({
+          clerkOrgId: session.orgId,
+          provider: "github",
+        }).catch(() => null),
+        getOrganisationByClerkOrgId(session.orgId).catch(() => null),
+      ])
+    : [null, null];
   const repositories = detail?.integration
     ? await listGitHubInstallationRepositories(detail.integration).catch(() => [])
     : [];
@@ -78,12 +91,17 @@ async function loadGitHubData() {
   return {
     detail,
     installUrl: hasGitHubAppConfig() ? getGitHubAppInstallUrl(session.orgId) : null,
+    organisationLocale: organisation?.locale ?? null,
     repositories,
   };
 }
 
 export default async function GitHubIntegrationPage() {
-  const { detail, installUrl, repositories } = await loadGitHubData();
+  const requestLocale = normalizeLocale(await getLocale()) ?? "cs-CZ";
+  const { detail, installUrl, organisationLocale, repositories } = await loadGitHubData();
+  const locale = normalizeLocale(organisationLocale) ?? requestLocale;
+  const copy = getMessagesForLocale(locale).integrations;
+  const providerCopy = copy.providerPages;
   const integration = detail?.integration ?? null;
   const runs = detail?.runs ?? [];
   const tests = detail?.tests.length ? detail.tests : GITHUB_TEST_DEFINITIONS;
@@ -98,17 +116,17 @@ export default async function GitHubIntegrationPage() {
     <section className="space-y-8">
       <PageHeader
         eyebrow="GitHub App"
-        title="GitHub integrace"
-        subtitle="Read-only GitHub App kontroluje 2FA, branch protection, secret scanning, dependency alerts a code scanning."
+        title={providerCopy.github.title}
+        subtitle={providerCopy.github.subtitle}
         actions={
           installUrl ? (
             <Link href={installUrl} className="btn btn-primary">
-              {connected ? "Upravit instalaci" : "Instalovat GitHub App"}
+              {connected ? providerCopy.github.editInstall : providerCopy.github.installApp}
               <ArrowRight className="h-4 w-4" aria-hidden="true" strokeWidth={1.5} />
             </Link>
           ) : (
             <button type="button" disabled className="btn btn-primary opacity-50">
-              Instalovat GitHub App
+              {providerCopy.github.installApp}
               <ArrowRight className="h-4 w-4" aria-hidden="true" strokeWidth={1.5} />
             </button>
           )
@@ -127,7 +145,7 @@ export default async function GitHubIntegrationPage() {
             ) : (
               <GitBranch className="h-5 w-5 text-primary" aria-hidden="true" strokeWidth={1.5} />
             )}
-            <h2 className="text-lg font-medium">Stav</h2>
+            <h2 className="text-lg font-medium">{providerCopy.common.status}</h2>
           </div>
           <div className="mt-4">
             <StatusPill tone={connectionStatus.tone}>
@@ -135,29 +153,29 @@ export default async function GitHubIntegrationPage() {
             </StatusPill>
           </div>
           <p className="mt-2 text-sm text-foreground/58">
-            {config.owner ?? "bez instalace"} · {config.accountType ?? "unknown"}
+            {config.owner ?? providerCopy.github.installMissing} · {config.accountType ?? "unknown"}
           </p>
         </article>
         <article className="card">
           <div className="flex items-center gap-2">
             <GitBranch className="h-5 w-5 text-primary" aria-hidden="true" strokeWidth={1.5} />
-            <h2 className="text-lg font-medium">Repozitáře</h2>
+            <h2 className="text-lg font-medium">{providerCopy.github.repositories}</h2>
           </div>
           <p className="mt-4 font-mono text-2xl font-medium">
             {repositories.length}
           </p>
           <p className="mt-2 text-sm text-foreground/58">
-            Poslední sync {formatDate(integration?.lastSyncedAt)}
+            {providerCopy.common.lastSync} {formatDate(integration?.lastSyncedAt, locale, copy.never)}
           </p>
         </article>
         <article className="card">
           <div className="flex items-center gap-2">
             <ShieldAlert className="h-5 w-5 text-primary" aria-hidden="true" strokeWidth={1.5} />
-            <h2 className="text-lg font-medium">Automatické testy</h2>
+            <h2 className="text-lg font-medium">{providerCopy.common.automatedTests}</h2>
           </div>
           <p className="mt-4 font-mono text-2xl font-medium">{tests.length}</p>
           <p className="mt-2 text-sm text-foreground/58">
-            Mapované na MFA, code review, secrets a dependency kontroly.
+            {providerCopy.github.testsBody}
           </p>
         </article>
       </div>
@@ -165,7 +183,7 @@ export default async function GitHubIntegrationPage() {
       <div className="grid gap-4 lg:grid-cols-[1fr_1.2fr]">
         <section className="overflow-hidden rounded-lg border border-border bg-surface">
           <div className="border-b border-border p-5">
-            <h2 className="text-lg font-medium">Repozitáře</h2>
+            <h2 className="text-lg font-medium">{providerCopy.github.repositories}</h2>
           </div>
           <div className="divide-y divide-border">
             {repositories.length > 0 ? (
@@ -187,7 +205,7 @@ export default async function GitHubIntegrationPage() {
               ))
             ) : (
               <p className="p-5 text-sm text-foreground/58">
-                Repozitáře se zobrazí po instalaci GitHub App.
+                {providerCopy.github.repositoriesEmpty}
               </p>
             )}
           </div>
@@ -195,7 +213,7 @@ export default async function GitHubIntegrationPage() {
 
         <section className="overflow-hidden rounded-lg border border-border bg-surface">
           <div className="border-b border-border p-5">
-            <h2 className="text-lg font-medium">Výsledky běhů</h2>
+            <h2 className="text-lg font-medium">{providerCopy.common.runResults}</h2>
           </div>
           <div className="divide-y divide-border">
             {runs.length > 0 ? (
@@ -205,7 +223,7 @@ export default async function GitHubIntegrationPage() {
                     <div>
                       <p className="font-medium">{run.testName}</p>
                       <p className="mt-1 text-sm text-foreground/58">
-                        {formatDate(run.ranAt)}
+                        {formatDate(run.ranAt, locale, copy.never)}
                       </p>
                     </div>
                     <StatusPill tone={statusMeta(run.status).tone}>
@@ -221,7 +239,7 @@ export default async function GitHubIntegrationPage() {
               ))
             ) : (
               <p className="p-5 text-sm text-foreground/58">
-                Výsledky se zobrazí po prvním běhu runneru.
+                {providerCopy.common.runResultsEmpty}
               </p>
             )}
           </div>
@@ -230,7 +248,7 @@ export default async function GitHubIntegrationPage() {
 
       <section className="overflow-hidden rounded-lg border border-border bg-surface">
         <div className="border-b border-border p-5">
-          <h2 className="text-lg font-medium">Test suite</h2>
+          <h2 className="text-lg font-medium">{providerCopy.common.testSuite}</h2>
         </div>
         <div className="grid gap-0 md:grid-cols-2">
           {tests.map((test) => (

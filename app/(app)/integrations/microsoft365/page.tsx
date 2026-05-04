@@ -1,19 +1,27 @@
 import Link from "next/link";
 import { auth } from "@clerk/nextjs/server";
+import { getLocale } from "next-intl/server";
 import { ArrowRight, CheckCircle2, Clock3, Plug, ShieldAlert } from "lucide-react";
 import { PageHeader } from "@/components/app/page-header";
 import { StatusPill, type StatusPillTone } from "@/components/app/status-pill";
+import { getMessagesForLocale } from "@/i18n/messages";
+import { normalizeLocale, type Locale } from "@/i18n/routing";
 import { hasDatabaseUrl } from "@/lib/db";
 import { getIntegrationDetail } from "@/lib/db/queries/integrations";
+import { getOrganisationByClerkOrgId } from "@/lib/db/queries/organisations";
 import { getMicrosoft365AuthUrl } from "@/lib/integrations/microsoft365/oauth";
 import { MICROSOFT365_TEST_DEFINITIONS } from "@/lib/integrations/microsoft365/test-definitions";
 
-function formatDate(value: Date | string | null | undefined) {
+function formatDate(
+  value: Date | string | null | undefined,
+  locale: Locale,
+  emptyLabel: string,
+) {
   if (!value) {
-    return "nikdy";
+    return emptyLabel;
   }
 
-  return new Intl.DateTimeFormat("cs-CZ", {
+  return new Intl.DateTimeFormat(locale, {
     dateStyle: "medium",
     timeStyle: "short",
   }).format(new Date(value));
@@ -51,6 +59,7 @@ async function loadMicrosoft365Data() {
     return {
       authUrl: null,
       detail: null,
+      organisationLocale: null,
     };
   }
 
@@ -60,6 +69,7 @@ async function loadMicrosoft365Data() {
     return {
       authUrl: null,
       detail: null,
+      organisationLocale: null,
     };
   }
 
@@ -68,21 +78,29 @@ async function loadMicrosoft365Data() {
     process.env.MICROSOFT_CLIENT_ID && process.env.MICROSOFT_CLIENT_SECRET
       ? getMicrosoft365AuthUrl(session.orgId, redirectUri)
       : null;
-  const detail = hasDatabaseUrl()
-    ? await getIntegrationDetail({
-        clerkOrgId: session.orgId,
-        provider: "microsoft365",
-      }).catch(() => null)
-    : null;
+  const [detail, organisation] = hasDatabaseUrl()
+    ? await Promise.all([
+        getIntegrationDetail({
+          clerkOrgId: session.orgId,
+          provider: "microsoft365",
+        }).catch(() => null),
+        getOrganisationByClerkOrgId(session.orgId).catch(() => null),
+      ])
+    : [null, null];
 
   return {
     authUrl,
     detail,
+    organisationLocale: organisation?.locale ?? null,
   };
 }
 
 export default async function Microsoft365IntegrationPage() {
-  const { authUrl, detail } = await loadMicrosoft365Data();
+  const requestLocale = normalizeLocale(await getLocale()) ?? "cs-CZ";
+  const { authUrl, detail, organisationLocale } = await loadMicrosoft365Data();
+  const locale = normalizeLocale(organisationLocale) ?? requestLocale;
+  const copy = getMessagesForLocale(locale).integrations;
+  const providerCopy = copy.providerPages;
   const integration = detail?.integration ?? null;
   const runs = detail?.runs ?? [];
   const tests = detail?.tests.length ? detail.tests : MICROSOFT365_TEST_DEFINITIONS;
@@ -93,12 +111,12 @@ export default async function Microsoft365IntegrationPage() {
     <section className="space-y-8">
       <PageHeader
         eyebrow="Microsoft Graph"
-        title="Microsoft 365 integrace"
-        subtitle="OAuth připojení spouští kontroly MFA, Conditional Access, hostů, privilegovaných rolí, sensitivity labels a školení."
+        title={providerCopy.microsoft365.title}
+        subtitle={providerCopy.microsoft365.subtitle}
         actions={
           authUrl ? (
             <Link href={authUrl} className="btn btn-primary">
-              {connected ? "Znovu připojit" : "Připojit Microsoft 365"}
+              {connected ? providerCopy.microsoft365.reconnect : providerCopy.microsoft365.connect}
               <ArrowRight className="h-4 w-4" aria-hidden="true" strokeWidth={1.5} />
             </Link>
           ) : (
@@ -107,7 +125,7 @@ export default async function Microsoft365IntegrationPage() {
               disabled
               className="btn btn-primary opacity-50"
             >
-              Připojit Microsoft 365
+              {providerCopy.microsoft365.connect}
               <ArrowRight className="h-4 w-4" aria-hidden="true" strokeWidth={1.5} />
             </button>
           )
@@ -126,7 +144,7 @@ export default async function Microsoft365IntegrationPage() {
             ) : (
               <Plug className="h-5 w-5 text-primary" aria-hidden="true" strokeWidth={1.5} />
             )}
-            <h2 className="text-lg font-medium">Stav</h2>
+            <h2 className="text-lg font-medium">{providerCopy.common.status}</h2>
           </div>
           <div className="mt-4">
             <StatusPill tone={connectionStatus.tone}>
@@ -134,29 +152,29 @@ export default async function Microsoft365IntegrationPage() {
             </StatusPill>
           </div>
           <p className="mt-2 text-sm text-foreground/58">
-            Token expiruje {formatDate(integration?.tokenExpiresAt)}
+            {providerCopy.microsoft365.tokenExpires} {formatDate(integration?.tokenExpiresAt, locale, copy.never)}
           </p>
         </article>
         <article className="card">
           <div className="flex items-center gap-2">
             <Clock3 className="h-5 w-5 text-primary" aria-hidden="true" strokeWidth={1.5} />
-            <h2 className="text-lg font-medium">Poslední sync</h2>
+            <h2 className="text-lg font-medium">{providerCopy.common.lastSync}</h2>
           </div>
           <p className="mt-4 font-mono text-2xl font-medium">
-            {formatDate(integration?.lastSyncedAt)}
+            {formatDate(integration?.lastSyncedAt, locale, copy.never)}
           </p>
           <p className="mt-2 text-sm text-foreground/58">
-            {integration?.lastErrorMsg ?? "Bez poslední chyby"}
+            {integration?.lastErrorMsg ?? providerCopy.common.lastErrorEmpty}
           </p>
         </article>
         <article className="card">
           <div className="flex items-center gap-2">
             <ShieldAlert className="h-5 w-5 text-primary" aria-hidden="true" strokeWidth={1.5} />
-            <h2 className="text-lg font-medium">Automatické testy</h2>
+            <h2 className="text-lg font-medium">{providerCopy.common.automatedTests}</h2>
           </div>
           <p className="mt-4 font-mono text-2xl font-medium">{tests.length}</p>
           <p className="mt-2 text-sm text-foreground/58">
-            Mapované na NIS2, ISO 27001 a GDPR kontroly.
+            {providerCopy.microsoft365.testsBody}
           </p>
         </article>
       </div>
@@ -164,7 +182,7 @@ export default async function Microsoft365IntegrationPage() {
       <div className="grid gap-4 lg:grid-cols-[1fr_1.2fr]">
         <section className="overflow-hidden rounded-lg border border-border bg-surface">
           <div className="border-b border-border p-5">
-            <h2 className="text-lg font-medium">Test suite</h2>
+            <h2 className="text-lg font-medium">{providerCopy.common.testSuite}</h2>
           </div>
           <div className="divide-y divide-border">
             {tests.map((test) => (
@@ -185,7 +203,7 @@ export default async function Microsoft365IntegrationPage() {
 
         <section className="overflow-hidden rounded-lg border border-border bg-surface">
           <div className="border-b border-border p-5">
-            <h2 className="text-lg font-medium">Výsledky běhů</h2>
+            <h2 className="text-lg font-medium">{providerCopy.common.runResults}</h2>
           </div>
           <div className="divide-y divide-border">
             {runs.length > 0 ? (
@@ -195,7 +213,7 @@ export default async function Microsoft365IntegrationPage() {
                     <div>
                       <p className="font-medium">{run.testName}</p>
                       <p className="mt-1 text-sm text-foreground/58">
-                        {formatDate(run.ranAt)}
+                        {formatDate(run.ranAt, locale, copy.never)}
                       </p>
                     </div>
                     <StatusPill tone={statusMeta(run.status).tone}>
@@ -211,7 +229,7 @@ export default async function Microsoft365IntegrationPage() {
               ))
             ) : (
               <p className="p-5 text-sm text-foreground/58">
-                Výsledky se zobrazí po prvním běhu runneru.
+                {providerCopy.common.runResultsEmpty}
               </p>
             )}
           </div>

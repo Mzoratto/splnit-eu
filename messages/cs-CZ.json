@@ -212,6 +212,43 @@
           "Retence Workspace audit logů"
         ]
       }
+    },
+    "providerPages": {
+      "common": {
+        "status": "Stav",
+        "lastSync": "Poslední sync",
+        "lastErrorEmpty": "Bez poslední chyby",
+        "automatedTests": "Automatické testy",
+        "runResults": "Výsledky běhů",
+        "runResultsEmpty": "Výsledky se zobrazí po prvním běhu runneru.",
+        "testSuite": "Test suite"
+      },
+      "aws": {
+        "title": "AWS integrace",
+        "subtitle": "Cross-account read-only role kontroluje CloudTrail, S3 šifrování, IAM MFA, root MFA a VPC Flow Logs.",
+        "accountMissing": "bez AWS účtu",
+        "testsBody": "Mapované na audit logy, šifrování, MFA a monitoring sítě.",
+        "connectRole": "Připojit roli",
+        "validateSave": "Validovat a uložit"
+      },
+      "github": {
+        "title": "GitHub integrace",
+        "subtitle": "Read-only GitHub App kontroluje 2FA, branch protection, secret scanning, dependency alerts a code scanning.",
+        "editInstall": "Upravit instalaci",
+        "installApp": "Instalovat GitHub App",
+        "installMissing": "bez instalace",
+        "repositories": "Repozitáře",
+        "repositoriesEmpty": "Repozitáře se zobrazí po instalaci GitHub App.",
+        "testsBody": "Mapované na MFA, code review, secrets a dependency kontroly."
+      },
+      "microsoft365": {
+        "title": "Microsoft 365 integrace",
+        "subtitle": "OAuth připojení spouští kontroly MFA, Conditional Access, hostů, privilegovaných rolí, sensitivity labels a školení.",
+        "reconnect": "Znovu připojit",
+        "connect": "Připojit Microsoft 365",
+        "tokenExpires": "Token expiruje",
+        "testsBody": "Mapované na NIS2, ISO 27001 a GDPR kontroly."
+      }
     }
   },
   "marketing": {

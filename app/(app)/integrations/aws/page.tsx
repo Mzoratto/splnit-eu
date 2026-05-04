@@ -1,4 +1,5 @@
 import { auth } from "@clerk/nextjs/server";
+import { getLocale } from "next-intl/server";
 import {
   CheckCircle2,
   Cloud,
@@ -8,8 +9,11 @@ import {
 } from "lucide-react";
 import { PageHeader } from "@/components/app/page-header";
 import { StatusPill, type StatusPillTone } from "@/components/app/status-pill";
+import { getMessagesForLocale } from "@/i18n/messages";
+import { normalizeLocale, type Locale } from "@/i18n/routing";
 import { hasDatabaseUrl } from "@/lib/db";
 import { getIntegrationDetail } from "@/lib/db/queries/integrations";
+import { getOrganisationByClerkOrgId } from "@/lib/db/queries/organisations";
 import { getAwsCloudFormationTemplate } from "@/lib/integrations/aws/cloudformation";
 import {
   type AwsIntegrationConfig,
@@ -19,12 +23,16 @@ import {
 import { AWS_TEST_DEFINITIONS } from "@/lib/integrations/aws/test-definitions";
 import { connectAwsIntegrationAction } from "./actions";
 
-function formatDate(value: Date | string | null | undefined) {
+function formatDate(
+  value: Date | string | null | undefined,
+  locale: Locale,
+  emptyLabel: string,
+) {
   if (!value) {
-    return "nikdy";
+    return emptyLabel;
   }
 
-  return new Intl.DateTimeFormat("cs-CZ", {
+  return new Intl.DateTimeFormat(locale, {
     dateStyle: "medium",
     timeStyle: "short",
   }).format(new Date(value));
@@ -59,6 +67,7 @@ async function loadAwsData() {
       canMutate: false,
       detail: null,
       externalId: "splnit-preview",
+      organisationLocale: null,
     };
   }
 
@@ -69,25 +78,34 @@ async function loadAwsData() {
       canMutate: false,
       detail: null,
       externalId: "splnit-preview",
+      organisationLocale: null,
     };
   }
 
-  const detail = hasDatabaseUrl()
-    ? await getIntegrationDetail({
-        clerkOrgId: session.orgId,
-        provider: "aws",
-      }).catch(() => null)
-    : null;
+  const [detail, organisation] = hasDatabaseUrl()
+    ? await Promise.all([
+        getIntegrationDetail({
+          clerkOrgId: session.orgId,
+          provider: "aws",
+        }).catch(() => null),
+        getOrganisationByClerkOrgId(session.orgId).catch(() => null),
+      ])
+    : [null, null];
 
   return {
     canMutate: true,
     detail,
     externalId: getAwsExternalId(session.orgId),
+    organisationLocale: organisation?.locale ?? null,
   };
 }
 
 export default async function AwsIntegrationPage() {
-  const { canMutate, detail, externalId } = await loadAwsData();
+  const requestLocale = normalizeLocale(await getLocale()) ?? "cs-CZ";
+  const { canMutate, detail, externalId, organisationLocale } = await loadAwsData();
+  const locale = normalizeLocale(organisationLocale) ?? requestLocale;
+  const copy = getMessagesForLocale(locale).integrations;
+  const providerCopy = copy.providerPages;
   const integration = detail?.integration ?? null;
   const runs = detail?.runs ?? [];
   const tests = detail?.tests.length ? detail.tests : AWS_TEST_DEFINITIONS;
@@ -102,8 +120,8 @@ export default async function AwsIntegrationPage() {
     <section className="space-y-8">
       <PageHeader
         eyebrow="AWS SecurityAudit"
-        title="AWS integrace"
-        subtitle="Cross-account read-only role kontroluje CloudTrail, S3 šifrování, IAM MFA, root MFA a VPC Flow Logs."
+        title={providerCopy.aws.title}
+        subtitle={providerCopy.aws.subtitle}
       />
 
       <div className="grid gap-4 lg:grid-cols-3">
@@ -118,7 +136,7 @@ export default async function AwsIntegrationPage() {
             ) : (
               <Cloud className="h-5 w-5 text-primary" aria-hidden="true" strokeWidth={1.5} />
             )}
-            <h2 className="text-lg font-medium">Stav</h2>
+            <h2 className="text-lg font-medium">{providerCopy.common.status}</h2>
           </div>
           <div className="mt-4">
             <StatusPill tone={connectionStatus.tone}>
@@ -126,29 +144,29 @@ export default async function AwsIntegrationPage() {
             </StatusPill>
           </div>
           <p className="mt-2 text-sm text-foreground/58">
-            {config.accountId ?? "bez AWS účtu"} · {selectedRegion}
+            {config.accountId ?? providerCopy.aws.accountMissing} · {selectedRegion}
           </p>
         </article>
         <article className="card">
           <div className="flex items-center gap-2">
             <ServerCog className="h-5 w-5 text-primary" aria-hidden="true" strokeWidth={1.5} />
-            <h2 className="text-lg font-medium">Poslední sync</h2>
+            <h2 className="text-lg font-medium">{providerCopy.common.lastSync}</h2>
           </div>
           <p className="mt-4 font-mono text-2xl font-medium">
-            {formatDate(integration?.lastSyncedAt)}
+            {formatDate(integration?.lastSyncedAt, locale, copy.never)}
           </p>
           <p className="mt-2 text-sm text-foreground/58">
-            {integration?.lastErrorMsg ?? "Bez poslední chyby"}
+            {integration?.lastErrorMsg ?? providerCopy.common.lastErrorEmpty}
           </p>
         </article>
         <article className="card">
           <div className="flex items-center gap-2">
             <ShieldAlert className="h-5 w-5 text-primary" aria-hidden="true" strokeWidth={1.5} />
-            <h2 className="text-lg font-medium">Automatické testy</h2>
+            <h2 className="text-lg font-medium">{providerCopy.common.automatedTests}</h2>
           </div>
           <p className="mt-4 font-mono text-2xl font-medium">{tests.length}</p>
           <p className="mt-2 text-sm text-foreground/58">
-            Mapované na audit logy, šifrování, MFA a monitoring sítě.
+            {providerCopy.aws.testsBody}
           </p>
         </article>
       </div>
@@ -157,7 +175,7 @@ export default async function AwsIntegrationPage() {
         <section className="card">
           <div className="flex items-center gap-2">
             <KeyRound className="h-5 w-5 text-primary" aria-hidden="true" strokeWidth={1.5} />
-            <h2 className="text-lg font-medium">Připojit roli</h2>
+            <h2 className="text-lg font-medium">{providerCopy.aws.connectRole}</h2>
           </div>
           <form action={connectAwsIntegrationAction} className="mt-5 space-y-4">
             <label className="grid gap-2 text-xs font-medium text-foreground/68">
@@ -195,7 +213,7 @@ export default async function AwsIntegrationPage() {
               disabled={!canMutate}
               className="btn btn-primary disabled:cursor-not-allowed disabled:opacity-50"
             >
-              Validovat a uložit
+              {providerCopy.aws.validateSave}
               <CheckCircle2 className="h-4 w-4" aria-hidden="true" strokeWidth={1.5} />
             </button>
           </form>
@@ -214,7 +232,7 @@ export default async function AwsIntegrationPage() {
       <div className="grid gap-4 lg:grid-cols-[1fr_1.2fr]">
         <section className="overflow-hidden rounded-lg border border-border bg-surface">
           <div className="border-b border-border p-5">
-            <h2 className="text-lg font-medium">Test suite</h2>
+            <h2 className="text-lg font-medium">{providerCopy.common.testSuite}</h2>
           </div>
           <div className="divide-y divide-border">
             {tests.map((test) => (
@@ -235,7 +253,7 @@ export default async function AwsIntegrationPage() {
 
         <section className="overflow-hidden rounded-lg border border-border bg-surface">
           <div className="border-b border-border p-5">
-            <h2 className="text-lg font-medium">Výsledky běhů</h2>
+            <h2 className="text-lg font-medium">{providerCopy.common.runResults}</h2>
           </div>
           <div className="divide-y divide-border">
             {runs.length > 0 ? (
@@ -245,7 +263,7 @@ export default async function AwsIntegrationPage() {
                     <div>
                       <p className="font-medium">{run.testName}</p>
                       <p className="mt-1 text-sm text-foreground/58">
-                        {formatDate(run.ranAt)}
+                        {formatDate(run.ranAt, locale, copy.never)}
                       </p>
                     </div>
                     <StatusPill tone={statusMeta(run.status).tone}>
@@ -261,7 +279,7 @@ export default async function AwsIntegrationPage() {
               ))
             ) : (
               <p className="p-5 text-sm text-foreground/58">
-                Výsledky se zobrazí po prvním běhu runneru.
+                {providerCopy.common.runResultsEmpty}
               </p>
             )}
           </div>
