@@ -133,6 +133,45 @@
       "control": "Kontrola"
     }
   },
+  "frameworks": {
+    "descriptions": {
+      "nis2": "Kybernetická bezpečnost, řízení rizik, incident reporting a odpovědnost managementu.",
+      "ai-act": "Povinnosti nasazovatelů AI systémů, AI gramotnost, vysoce riziková AI a transparentnost.",
+      "gdpr": "Ochrana osobních údajů, záznamy o činnostech zpracování, bezpečnost a oznamování porušení.",
+      "iso27001": "Systém řízení bezpečnosti informací a katalog bezpečnostních opatření.",
+      "csrd": "ESG reporting, dvojí materialita, datová evidence a dodavatelské dotazníky."
+    },
+    "index": {
+      "eyebrow": "Frameworky",
+      "title": "Regulace a standardy",
+      "subtitle": "Vyberte framework, spusťte assessment a sledujte stav namapovaných kontrol.",
+      "open": "Otevřít",
+      "assessment": "Assessment"
+    },
+    "detail": {
+      "breadcrumb": "Dashboard / Předpisy",
+      "runAssessment": "Spustit assessment",
+      "scoreLabel": "Skóre",
+      "statusTitle": "Stav frameworku",
+      "controlsMetric": "Kontroly",
+      "openMetric": "Otevřené",
+      "deadlineMetric": "Termín",
+      "continuous": "Průběžně",
+      "downloadLatestPdf": "Stáhnout poslední PDF",
+      "gapReportEmpty": "PDF se vytvoří po prvním vyhodnocení frameworku.",
+      "generatePdf": "Vygenerovat PDF",
+      "isoPackageTitle": "ISO 27001 certification package",
+      "isoPackageBody": "ZIP export obsahuje Statement of Applicability, splněné kontroly, dostupné důkazy, aktivní politiky a odkazy na certifikační orgány.",
+      "downloadZip": "Stáhnout ZIP",
+      "certificationLinksTitle": "Certifikační odkazy",
+      "csrdQuestionnaireTitle": "Supply-chain questionnaire template",
+      "csrdQuestionnaireBody": "Výchozí sada otázek pro dodavatele a enterprise zákazníky.",
+      "controlsTitle": "Kontroly a povinnosti",
+      "noReference": "Bez reference",
+      "automated": "Automatická",
+      "manual": "Manuální"
+    }
+  },
   "marketing": {
     "nav": {
       "platform": "Platforma",

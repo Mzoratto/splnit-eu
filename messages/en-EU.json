@@ -133,6 +133,45 @@
       "control": "Control"
     }
   },
+  "frameworks": {
+    "descriptions": {
+      "nis2": "Cybersecurity, risk management, incident reporting, and management accountability.",
+      "ai-act": "Obligations for AI deployers, AI literacy, high-risk AI, and transparency.",
+      "gdpr": "Personal data protection, processing records, security, and breach notification.",
+      "iso27001": "Information security management system and security control catalogue.",
+      "csrd": "ESG reporting, double materiality, data evidence, and supplier questionnaires."
+    },
+    "index": {
+      "eyebrow": "Frameworks",
+      "title": "Regulations and standards",
+      "subtitle": "Choose a framework, run an assessment, and track mapped control status.",
+      "open": "Open",
+      "assessment": "Assessment"
+    },
+    "detail": {
+      "breadcrumb": "Dashboard / Frameworks",
+      "runAssessment": "Run assessment",
+      "scoreLabel": "Score",
+      "statusTitle": "Framework status",
+      "controlsMetric": "Controls",
+      "openMetric": "Open",
+      "deadlineMetric": "Deadline",
+      "continuous": "Continuous",
+      "downloadLatestPdf": "Download latest PDF",
+      "gapReportEmpty": "The PDF will be created after the first framework assessment.",
+      "generatePdf": "Generate PDF",
+      "isoPackageTitle": "ISO 27001 certification package",
+      "isoPackageBody": "The ZIP export includes the Statement of Applicability, completed controls, available evidence, active policies, and certification body links.",
+      "downloadZip": "Download ZIP",
+      "certificationLinksTitle": "Certification links",
+      "csrdQuestionnaireTitle": "Supply-chain questionnaire template",
+      "csrdQuestionnaireBody": "Default question set for suppliers and enterprise customers.",
+      "controlsTitle": "Controls and obligations",
+      "noReference": "No reference",
+      "automated": "Automated",
+      "manual": "Manual"
+    }
+  },
   "marketing": {
     "nav": {
       "platform": "Platform",

@@ -133,6 +133,45 @@
       "control": "Controllo"
     }
   },
+  "frameworks": {
+    "descriptions": {
+      "nis2": "Cybersecurity, gestione del rischio, incident reporting e responsabilità del management.",
+      "ai-act": "Obblighi per deployer AI, alfabetizzazione AI, AI ad alto rischio e trasparenza.",
+      "gdpr": "Protezione dei dati personali, registri dei trattamenti, sicurezza e notifica violazioni.",
+      "iso27001": "Sistema di gestione della sicurezza delle informazioni e catalogo dei controlli.",
+      "csrd": "Reporting ESG, doppia materialità, evidenze dati e questionari fornitori."
+    },
+    "index": {
+      "eyebrow": "Framework",
+      "title": "Normative e standard",
+      "subtitle": "Scegliete un framework, avviate un assessment e seguite lo stato dei controlli mappati.",
+      "open": "Apri",
+      "assessment": "Assessment"
+    },
+    "detail": {
+      "breadcrumb": "Dashboard / Framework",
+      "runAssessment": "Avvia assessment",
+      "scoreLabel": "Punteggio",
+      "statusTitle": "Stato framework",
+      "controlsMetric": "Controlli",
+      "openMetric": "Aperti",
+      "deadlineMetric": "Scadenza",
+      "continuous": "Continuativo",
+      "downloadLatestPdf": "Scarica ultimo PDF",
+      "gapReportEmpty": "Il PDF verrà creato dopo il primo assessment del framework.",
+      "generatePdf": "Genera PDF",
+      "isoPackageTitle": "Pacchetto certificazione ISO 27001",
+      "isoPackageBody": "L'export ZIP include Statement of Applicability, controlli completati, evidenze disponibili, policy attive e link agli organismi di certificazione.",
+      "downloadZip": "Scarica ZIP",
+      "certificationLinksTitle": "Link certificazione",
+      "csrdQuestionnaireTitle": "Template questionario supply-chain",
+      "csrdQuestionnaireBody": "Set iniziale di domande per fornitori e clienti enterprise.",
+      "controlsTitle": "Controlli e obblighi",
+      "noReference": "Nessun riferimento",
+      "automated": "Automatico",
+      "manual": "Manuale"
+    }
+  },
   "marketing": {
     "nav": {
       "platform": "Piattaforma",
