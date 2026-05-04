@@ -17,6 +17,20 @@ const comparisonGroupKeys = [
   "team",
   "support",
 ] as const;
+const comparisonFeatureKeys = [
+  ["nis2", "euAiAct", "gdpr", "iso27001", "csrd", "dora"],
+  ["microsoft365", "github", "aws", "azure", "googleWorkspace", "nukibFeed"],
+  [
+    "automatedChecks",
+    "automatedEvidence",
+    "failureAlerts",
+    "scheduler",
+  ],
+  ["policyTemplates", "pdfGeneration", "trainingTemplates", "auditorExport"],
+  ["publicPage", "ndaGate", "subdomain", "customDomain"],
+  ["userCount", "rolesPermissions", "ssoSaml"],
+  ["email", "priorityEmail", "dedicatedCsm", "sla"],
+] as const;
 const faqKeys = [
   "cancel",
   "data",
@@ -225,8 +239,8 @@ export function ComparisonTable() {
         <span>{cardT("starter.name")}</span>
         <span>{cardT("business.name")}</span>
       </div>
-      {comparisonGroups.map((group) => {
-        const groupKey = comparisonGroupKeys[comparisonGroups.indexOf(group)];
+      {comparisonGroups.map((group, groupIndex) => {
+        const groupKey = comparisonGroupKeys[groupIndex];
         const open = openGroups.includes(group.name);
 
         return (
@@ -249,21 +263,29 @@ export function ComparisonTable() {
               }`}
             >
               <div className="overflow-hidden">
-                {group.rows.map((row) => (
-                  <div
-                    key={row[0]}
-                    className="grid grid-cols-[1.4fr_repeat(3,0.8fr)] px-4 py-3 text-xs text-zinc-600 md:px-6"
-                  >
-                    {row.map((cell, index) => (
-                      <span
-                        key={`${row[0]}-${index}`}
-                        className={cell === "✓" ? "font-semibold text-emerald-600" : ""}
-                      >
-                        {translateCell(cell)}
-                      </span>
-                    ))}
-                  </div>
-                ))}
+                {group.rows.map((row, rowIndex) => {
+                  const featureKey = comparisonFeatureKeys[groupIndex]?.[rowIndex];
+
+                  return (
+                    <div
+                      key={row[0]}
+                      className="grid grid-cols-[1.4fr_repeat(3,0.8fr)] px-4 py-3 text-xs text-zinc-600 md:px-6"
+                    >
+                      {row.map((cell, index) => (
+                        <span
+                          key={`${row[0]}-${index}`}
+                          className={
+                            cell === "✓" ? "font-semibold text-emerald-600" : ""
+                          }
+                        >
+                          {index === 0 && featureKey
+                            ? t(`features.${featureKey}`)
+                            : translateCell(cell)}
+                        </span>
+                      ))}
+                    </div>
+                  );
+                })}
               </div>
             </div>
           </div>
