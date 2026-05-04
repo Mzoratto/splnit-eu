@@ -1,22 +1,53 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { getTranslations } from "next-intl/server";
+import { getLocale, getTranslations } from "next-intl/server";
 import { Icon } from "@/components/marketing/local-icon";
 import { LeadCapture } from "@/components/marketing/lead-capture";
 import { MarketingShell } from "@/components/marketing/marketing-shell";
 import { RegulationSelector } from "@/components/marketing/regulation-selector";
 import { SoftwareApplicationJsonLd } from "@/components/marketing/software-json-ld";
+import { normalizeLocale, type Locale } from "@/i18n/routing";
 import { frameworkCards, timeline } from "@/lib/marketing/frameworks";
 
-export const metadata: Metadata = {
-  title:
-    "EU Předpisy | NIS2, EU AI Act, GDPR, ISO 27001 — přehled povinností pro česká MSP",
-  description:
-    "Průvodce EU předpisy pro české firmy: NIS2, EU AI Act, GDPR, ISO 27001, CSRD a DORA s termíny, pokutami a kroky k souladu.",
-  openGraph: {
+const metadataByLocale: Record<
+  Locale,
+  Required<Pick<Metadata, "title" | "description">> & { locale: string }
+> = {
+  "cs-CZ": {
+    description:
+      "Průvodce EU předpisy pro české firmy: NIS2, EU AI Act, GDPR, ISO 27001, CSRD a DORA s termíny, pokutami a kroky k souladu.",
     locale: "cs_CZ",
+    title:
+      "EU Předpisy | NIS2, EU AI Act, GDPR, ISO 27001 - přehled povinností pro česká MSP",
+  },
+  "en-EU": {
+    description:
+      "Plain-language guide to EU regulations for SMBs: NIS2, EU AI Act, GDPR, ISO 27001, CSRD, and DORA with deadlines, sanctions, and practical compliance steps.",
+    locale: "en_EU",
+    title:
+      "EU Regulations | NIS2, EU AI Act, GDPR, ISO 27001 - SMB compliance guide",
+  },
+  "it-IT": {
+    description:
+      "Guida in linguaggio semplice alle normative UE per PMI: NIS2, EU AI Act, GDPR, ISO 27001, CSRD e DORA con scadenze, sanzioni e passi pratici.",
+    locale: "it_IT",
+    title:
+      "Normative UE | NIS2, EU AI Act, GDPR, ISO 27001 - guida compliance per PMI",
   },
 };
+
+export async function generateMetadata(): Promise<Metadata> {
+  const locale = normalizeLocale(await getLocale()) ?? "cs-CZ";
+  const metadata = metadataByLocale[locale];
+
+  return {
+    description: metadata.description,
+    openGraph: {
+      locale: metadata.locale,
+    },
+    title: metadata.title,
+  };
+}
 
 export default async function RegulationsPage() {
   const t = await getTranslations("regulations");
