@@ -12,6 +12,7 @@
     "test:e2e": "playwright test",
     "test:e2e:ui": "playwright test --ui",
     "smoke:i18n-shell": "tsx scripts/smoke-i18n-shell.ts",
+    "smoke:copy-hygiene": "tsx scripts/smoke-copy-hygiene.ts",
     "smoke:jurisdictions": "tsx scripts/smoke-jurisdiction-context.ts",
     "smoke:templates": "tsx scripts/smoke-template-resolution.ts",
     "db:generate": "drizzle-kit generate",

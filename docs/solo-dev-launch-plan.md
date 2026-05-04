@@ -267,6 +267,7 @@ Completed and verified locally:
 - Policy template resolver materializes tenant and jurisdiction placeholders for legal identifier labels, authority names, and regulation citations.
 - Czech templates no longer hardcode the repeated `IČO`, `ÚOOÚ`, and `ČTÚ` values directly in reusable sections; they resolve through jurisdiction context.
 - Template smoke tests assert Czech exact-match resolution, English-EU exact-match resolution, Italian fallback to EU/EN, and no unresolved `{{...}}` placeholders in resolved templates.
+- Copy hygiene smoke tests guard EN/IT messages and authenticated app code against Czech regulator/UI copy regressions.
 
 Remaining before calling Phase 2 fully done:
 
