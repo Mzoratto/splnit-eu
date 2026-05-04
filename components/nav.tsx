@@ -20,6 +20,20 @@ export function Nav() {
   const pathname = usePathname();
   const t = useTranslations("marketing.nav");
   const [open, setOpen] = useState(false);
+  const onEarlyAccessPage =
+    pathname === "/early-access" || pathname.startsWith("/early-access/");
+  const ctaClassName =
+    "flex items-center gap-1.5 rounded-full bg-blue-600 px-4 py-1.5 text-sm font-medium text-white transition-colors hover:bg-blue-500";
+  const ctaContent = (
+    <>
+      {t("cta")}
+      <Icon
+        icon="solar:arrow-right-linear"
+        className="text-xs opacity-75"
+        aria-hidden="true"
+      />
+    </>
+  );
 
   return (
     <nav className="nav-blur fixed left-0 right-0 top-0 z-50 h-16 border-b border-zinc-200/60 transition-all duration-300">
@@ -73,17 +87,18 @@ export function Nav() {
             {t("signIn")}
           </Link>
           <div className="rounded-full bg-gradient-to-b from-blue-400 to-blue-700 p-px shadow-sm shadow-blue-200/60 transition-shadow hover:shadow-blue-200">
-            <Link
-              href="/early-access"
-              className="flex items-center gap-1.5 rounded-full bg-blue-600 px-4 py-1.5 text-sm font-medium text-white transition-colors hover:bg-blue-500"
-            >
-              {t("cta")}
-              <Icon
-                icon="solar:arrow-right-linear"
-                className="text-xs opacity-75"
-                aria-hidden="true"
-              />
-            </Link>
+            {onEarlyAccessPage ? (
+              <a
+                href="mailto:hello@splnit.eu?subject=Design%20partner%20Splnit.eu"
+                className={ctaClassName}
+              >
+                {ctaContent}
+              </a>
+            ) : (
+              <Link href="/early-access" className={ctaClassName}>
+                {ctaContent}
+              </Link>
+            )}
           </div>
           <button
             type="button"
