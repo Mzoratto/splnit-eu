@@ -172,6 +172,48 @@
       "manual": "Manuální"
     }
   },
+  "integrations": {
+    "never": "nikdy",
+    "providers": {
+      "microsoft365": "MFA, Conditional Access, hosté, privilegované role a sensitivity labels.",
+      "github": "Branch protection, secret scanning, 2FA enforcement a dependency alerts.",
+      "aws": "CloudTrail, S3 šifrování, IAM MFA, root MFA a VPC Flow Logs.",
+      "google_workspace": "Workspace audit logy, sdílení Drive a administrátorské účty."
+    },
+    "index": {
+      "eyebrow": "Integrace",
+      "title": "Automatické testy",
+      "subtitle": "Připojené služby dodávají důkazy a aktualizují stavy kontrol.",
+      "tests": "Testy",
+      "lastSync": "Poslední sync",
+      "results24h": "Výsledky za 24h",
+      "comingSoon": "Připravuje se",
+      "manage": "Spravovat",
+      "connect": "Připojit",
+      "disconnect": "Odpojit"
+    },
+    "planned": {
+      "eyebrow": "Plánovaná integrace",
+      "back": "Zpět na integrace",
+      "statusTitle": "Stav",
+      "statusBody": "OAuth tok ani ukládání tokenů pro tohoto poskytovatele zatím nejsou aktivní.",
+      "plannedChecksTitle": "Plánované kontroly",
+      "plannedChecksBody": "Kontroly zatím nejsou zapojené do registru runnerů.",
+      "dependencyTitle": "Závislost",
+      "dependencyPhase": "Fáze 2+",
+      "dependencyBody": "Adaptér přidejte až po ověření aktuální sady poskytovatelů.",
+      "scopeTitle": "Rozsah",
+      "scopeItemStatus": "Plánováno. Produkční runner zatím není zapnutý.",
+      "googleWorkspace": {
+        "description": "Google Workspace audit logy, sdílení Drive a kontrola administrátorských účtů jsou naplánované po ověření Microsoft 365, GitHub a AWS integrací.",
+        "checks": [
+          "MFA administrátorů a revize privilegovaných účtů",
+          "Externí sdílení v Google Drive",
+          "Retence Workspace audit logů"
+        ]
+      }
+    }
+  },
   "marketing": {
     "nav": {
       "platform": "Platforma",

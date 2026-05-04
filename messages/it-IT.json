@@ -172,6 +172,48 @@
       "manual": "Manuale"
     }
   },
+  "integrations": {
+    "never": "mai",
+    "providers": {
+      "microsoft365": "MFA, Conditional Access, ospiti, ruoli privilegiati e sensitivity labels.",
+      "github": "Branch protection, secret scanning, enforcement 2FA e dependency alerts.",
+      "aws": "CloudTrail, crittografia S3, IAM MFA, root MFA e VPC Flow Logs.",
+      "google_workspace": "Audit log Workspace, condivisione Drive e account amministratore."
+    },
+    "index": {
+      "eyebrow": "Integrazioni",
+      "title": "Test automatici",
+      "subtitle": "I servizi collegati forniscono evidenze e aggiornano lo stato dei controlli.",
+      "tests": "Test",
+      "lastSync": "Ultimo sync",
+      "results24h": "Risultati in 24h",
+      "comingSoon": "In preparazione",
+      "manage": "Gestisci",
+      "connect": "Collega",
+      "disconnect": "Scollega"
+    },
+    "planned": {
+      "eyebrow": "Integrazione pianificata",
+      "back": "Torna alle integrazioni",
+      "statusTitle": "Stato",
+      "statusBody": "Flusso OAuth e salvataggio token per questo provider non sono ancora attivi.",
+      "plannedChecksTitle": "Controlli pianificati",
+      "plannedChecksBody": "Questi controlli non sono ancora collegati al registro dei runner.",
+      "dependencyTitle": "Dipendenza",
+      "dependencyPhase": "Fase 2+",
+      "dependencyBody": "Aggiungete questo adapter dopo aver validato il set attuale di provider.",
+      "scopeTitle": "Ambito",
+      "scopeItemStatus": "Pianificato. Il runner di produzione non è ancora abilitato.",
+      "googleWorkspace": {
+        "description": "Audit log Google Workspace, condivisione Drive e controlli sugli account amministratore sono pianificati dopo la validazione delle integrazioni Microsoft 365, GitHub e AWS.",
+        "checks": [
+          "MFA admin e revisione degli account privilegiati",
+          "Condivisione esterna in Google Drive",
+          "Retention degli audit log Workspace"
+        ]
+      }
+    }
+  },
   "marketing": {
     "nav": {
       "platform": "Piattaforma",

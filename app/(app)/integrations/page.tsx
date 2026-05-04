@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { auth } from "@clerk/nextjs/server";
+import { getLocale } from "next-intl/server";
 import {
   ArrowRight,
   CheckCircle2,
@@ -12,15 +13,16 @@ import {
 } from "lucide-react";
 import { PageHeader } from "@/components/app/page-header";
 import { StatusPill, type StatusPillTone } from "@/components/app/status-pill";
+import { getMessagesForLocale } from "@/i18n/messages";
+import { normalizeLocale, type Locale } from "@/i18n/routing";
 import { hasDatabaseUrl } from "@/lib/db";
 import { getIntegrationsHubData } from "@/lib/db/queries/integrations";
+import { getOrganisationByClerkOrgId } from "@/lib/db/queries/organisations";
 import { disconnectIntegrationAction } from "./actions";
 import { IntegrationStatusRefresh } from "./status-refresh";
 
 const providers = [
   {
-    description:
-      "MFA, Conditional Access, hosté, privilegované role a sensitivity labels.",
     href: "/integrations/microsoft365",
     icon: MonitorCog,
     key: "microsoft365",
@@ -29,8 +31,6 @@ const providers = [
     testCount: 6,
   },
   {
-    description:
-      "Branch protection, secret scanning, 2FA enforcement a dependency alerts.",
     href: "/integrations/github",
     icon: GitBranch,
     key: "github",
@@ -39,7 +39,6 @@ const providers = [
     testCount: 5,
   },
   {
-    description: "CloudTrail, S3 šifrování, IAM MFA, root MFA a VPC Flow Logs.",
     href: "/integrations/aws",
     icon: Cloud,
     key: "aws",
@@ -48,7 +47,6 @@ const providers = [
     testCount: 5,
   },
   {
-    description: "Workspace audit logy, sdílení Drive a administrátorské účty.",
     href: "/integrations/google-workspace",
     icon: PlugZap,
     key: "google_workspace",
@@ -56,9 +54,11 @@ const providers = [
     planned: true,
     testCount: 0,
   },
-];
+] as const;
 
 type HubData = Awaited<ReturnType<typeof getIntegrationsHubData>>;
+type IntegrationProviderKey = (typeof providers)[number]["key"];
+type IntegrationsCopy = ReturnType<typeof getMessagesForLocale>["integrations"];
 
 async function loadHubData() {
   const clerkConfigured =
@@ -66,24 +66,40 @@ async function loadHubData() {
     Boolean(process.env.CLERK_SECRET_KEY);
 
   if (!clerkConfigured || !hasDatabaseUrl()) {
-    return null;
+    return { data: null, organisationLocale: null };
   }
 
   const session = await auth();
 
   if (!session.orgId) {
-    return null;
+    return { data: null, organisationLocale: null };
   }
 
-  return getIntegrationsHubData(session.orgId).catch(() => null);
+  try {
+    const [data, organisation] = await Promise.all([
+      getIntegrationsHubData(session.orgId),
+      getOrganisationByClerkOrgId(session.orgId),
+    ]);
+
+    return {
+      data,
+      organisationLocale: organisation?.locale ?? null,
+    };
+  } catch {
+    return { data: null, organisationLocale: null };
+  }
 }
 
-function formatDate(value: Date | string | null | undefined) {
+function formatDate(
+  value: Date | string | null | undefined,
+  locale: Locale,
+  emptyLabel: string,
+) {
   if (!value) {
-    return "nikdy";
+    return emptyLabel;
   }
 
-  return new Intl.DateTimeFormat("cs-CZ", {
+  return new Intl.DateTimeFormat(locale, {
     dateStyle: "medium",
     timeStyle: "short",
   }).format(new Date(value));
@@ -137,8 +153,18 @@ function getTestCount(provider: string, fallback: number, data: HubData | null) 
   return data.tests.filter((test) => test.provider === provider).length;
 }
 
+function getProviderDescription(
+  providerKey: IntegrationProviderKey,
+  copy: IntegrationsCopy,
+) {
+  return copy.providers[providerKey];
+}
+
 export default async function IntegrationsPage() {
-  const data = await loadHubData();
+  const requestLocale = normalizeLocale(await getLocale()) ?? "cs-CZ";
+  const { data, organisationLocale } = await loadHubData();
+  const locale = normalizeLocale(organisationLocale) ?? requestLocale;
+  const copy = getMessagesForLocale(locale).integrations;
   const integrationMap = new Map(
     data?.integrations.map((integration) => [
       integration.provider,
@@ -153,9 +179,9 @@ export default async function IntegrationsPage() {
     <section className="space-y-6">
       <IntegrationStatusRefresh enabled={hasConnecting} />
       <PageHeader
-        eyebrow="Integrace"
-        title="Automatické testy"
-        subtitle="Připojené služby dodávají důkazy a aktualizují stavy kontrol."
+        eyebrow={copy.index.eyebrow}
+        title={copy.index.title}
+        subtitle={copy.index.subtitle}
       />
 
       <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
@@ -198,27 +224,27 @@ export default async function IntegrationsPage() {
                 )}
               </div>
               <p className="mt-3 min-h-24 text-sm leading-6 text-foreground/64">
-                {provider.description}
+                {getProviderDescription(provider.key, copy)}
               </p>
 
               <dl className="mt-4 grid grid-cols-2 gap-3 text-sm">
                 <div>
-                  <dt className="text-foreground/52">Testy</dt>
+                  <dt className="text-foreground/52">{copy.index.tests}</dt>
                   <dd className="mt-1 font-mono text-lg font-medium">
                     {testCount}
                   </dd>
                 </div>
                 <div>
-                  <dt className="text-foreground/52">Poslední sync</dt>
+                  <dt className="text-foreground/52">{copy.index.lastSync}</dt>
                   <dd className="mt-1 text-xs text-foreground/68">
-                    {formatDate(integration?.lastSyncedAt)}
+                    {formatDate(integration?.lastSyncedAt, locale, copy.never)}
                   </dd>
                 </div>
               </dl>
 
               <div className="mt-4 rounded-md bg-surface-muted p-3">
                 <p className="text-xs font-medium text-foreground/60">
-                  Výsledky za 24h
+                  {copy.index.results24h}
                 </p>
                 <div className="mt-2 grid grid-cols-5 gap-2 text-center font-mono text-xs">
                   <span className="rounded-sm bg-background px-1 py-1 text-status-pass">
@@ -246,14 +272,14 @@ export default async function IntegrationsPage() {
                     disabled
                     className="btn btn-secondary opacity-50"
                   >
-                    Připravuje se
+                    {copy.index.comingSoon}
                   </button>
                 ) : (
                   <Link
                     href={provider.href}
                     className="btn btn-secondary"
                   >
-                    {connected ? "Spravovat" : "Připojit"}
+                    {connected ? copy.index.manage : copy.index.connect}
                     <ArrowRight className="h-4 w-4" aria-hidden="true" strokeWidth={1.5} />
                   </Link>
                 )}
@@ -263,7 +289,7 @@ export default async function IntegrationsPage() {
                       type="submit"
                       className="btn btn-danger"
                     >
-                      Odpojit
+                      {copy.index.disconnect}
                       <XCircle className="h-4 w-4" aria-hidden="true" strokeWidth={1.5} />
                     </button>
                   </form>

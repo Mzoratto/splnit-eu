@@ -172,6 +172,48 @@
       "manual": "Manual"
     }
   },
+  "integrations": {
+    "never": "never",
+    "providers": {
+      "microsoft365": "MFA, Conditional Access, guests, privileged roles, and sensitivity labels.",
+      "github": "Branch protection, secret scanning, 2FA enforcement, and dependency alerts.",
+      "aws": "CloudTrail, S3 encryption, IAM MFA, root MFA, and VPC Flow Logs.",
+      "google_workspace": "Workspace audit logs, Drive sharing, and administrator accounts."
+    },
+    "index": {
+      "eyebrow": "Integrations",
+      "title": "Automated tests",
+      "subtitle": "Connected services provide evidence and update control statuses.",
+      "tests": "Tests",
+      "lastSync": "Last sync",
+      "results24h": "Results over 24h",
+      "comingSoon": "Coming soon",
+      "manage": "Manage",
+      "connect": "Connect",
+      "disconnect": "Disconnect"
+    },
+    "planned": {
+      "eyebrow": "Planned integration",
+      "back": "Back to integrations",
+      "statusTitle": "Status",
+      "statusBody": "OAuth flow and token storage for this provider are not active yet.",
+      "plannedChecksTitle": "Planned checks",
+      "plannedChecksBody": "These checks are not connected to the runner registry yet.",
+      "dependencyTitle": "Dependency",
+      "dependencyPhase": "Phase 2+",
+      "dependencyBody": "Add this adapter after the current provider set has been validated.",
+      "scopeTitle": "Scope",
+      "scopeItemStatus": "Planned. Production runner is not enabled yet.",
+      "googleWorkspace": {
+        "description": "Google Workspace audit logs, Drive sharing, and administrator account checks are planned after Microsoft 365, GitHub, and AWS integrations are validated.",
+        "checks": [
+          "Admin MFA and privileged account review",
+          "External sharing in Google Drive",
+          "Workspace audit log retention"
+        ]
+      }
+    }
+  },
   "marketing": {
     "nav": {
       "platform": "Platform",
