@@ -64,6 +64,13 @@
       "when": 1777842195296,
       "tag": "0008_sudden_mauler",
       "breakpoints": true
+    },
+    {
+      "idx": 9,
+      "version": "7",
+      "when": 1777877379701,
+      "tag": "0009_public_justin_hammer",
+      "breakpoints": true
     }
   ]
 }

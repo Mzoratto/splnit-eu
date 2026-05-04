@@ -1,30 +1,24 @@
+import type { CSSProperties } from "react";
 import type { Metadata } from "next";
-import { getLocale } from "next-intl/server";
 import { notFound } from "next/navigation";
+import { CheckCircle2 } from "lucide-react";
 import {
-  CheckCircle2,
-  FileLock2,
-  LockKeyhole,
-  ShieldCheck,
-} from "lucide-react";
-import { hasDatabaseUrl } from "@/lib/db";
-import { getPublicTrustCenter } from "@/lib/db/queries/trust-center";
-import { FRAMEWORK_LIBRARY } from "@/lib/frameworks/registry";
-import { normalizeLocale, type Locale } from "@/i18n/routing";
-import {
-  formatTrustRelativeTime,
-  getPublicTrustCopy,
-  getRegulatorLabel,
-  getStatusLabel,
-} from "@/lib/trust-center/public-copy";
-import { getTrustCenterSummary } from "@/lib/trust-center/renderer";
-import { requestTrustCenterAccessAction } from "./actions";
+  ContactSection,
+  DocumentsSection,
+  FrameworkCard,
+  HeroActions,
+  LiveIndicator,
+  TrustFooter,
+  TrustSignalsStrip,
+  TrustTopbar,
+} from "@/components/trust-center/public-trust-ui";
+import { getPublicTrustCenterModel } from "@/lib/trust-center/public-model";
 
 export const dynamic = "force-dynamic";
 
 type PageProps = {
   params: Promise<{ orgSlug: string }>;
-  searchParams: Promise<{ access?: string; requested?: string }>;
+  searchParams: Promise<{ access?: string }>;
 };
 
 export async function generateMetadata({
@@ -33,19 +27,17 @@ export async function generateMetadata({
   params: Promise<{ orgSlug: string }>;
 }): Promise<Metadata> {
   const { orgSlug } = await params;
-  const locale = normalizeLocale(await getLocale()) ?? "cs-CZ";
-  const copy = getPublicTrustCopy(locale);
-  const trustData = await loadTrustCenter(orgSlug, null, locale);
+  const trustCenter = await getPublicTrustCenterModel({ orgSlug });
 
-  if (!trustData) {
+  if (!trustCenter) {
     return {
-      title: copy.metadataFallbackTitle,
+      title: "Trust Center",
     };
   }
 
   return {
-    description: copy.metadataDescription(trustData.organisationName),
-    title: `${trustData.organisationName} Trust Center`,
+    description: `${trustCenter.organisationName} průběžně ověřuje bezpečnostní kontroly, dokumenty a stav souladu s EU předpisy.`,
+    title: `${trustCenter.organisationName} · Trust Center`,
   };
 }
 
@@ -54,198 +46,84 @@ export default async function TrustCenterPage({
   searchParams,
 }: PageProps) {
   const [{ orgSlug }, query] = await Promise.all([params, searchParams]);
-  const locale = normalizeLocale(await getLocale()) ?? "cs-CZ";
-  const copy = getPublicTrustCopy(locale);
-  const trustData = await loadTrustCenter(orgSlug, query.access ?? null, locale);
+  const trustCenter = await getPublicTrustCenterModel({
+    accessToken: query.access ?? null,
+    orgSlug,
+  });
 
-  if (!trustData) {
+  if (!trustCenter) {
     notFound();
   }
 
-  const locked = trustData.ndaRequired && !trustData.accessGranted;
-  const summary = getTrustCenterSummary(locked ? [] : trustData.frameworks);
+  const frameworkCount = trustCenter.frameworks.length;
+  const controlCount = trustCenter.frameworks.reduce(
+    (total, item) => total + item.totalControls,
+    0,
+  );
 
   return (
-    <main className="min-h-screen bg-background">
-      <section
-        className="border-b border-border text-white"
-        style={{ backgroundColor: trustData.accentColor }}
-      >
-        <div className="mx-auto max-w-6xl px-5 py-14">
-          <div className="flex items-center gap-3">
-            {trustData.logoUrl ? (
-              <span
-                aria-hidden="true"
-                className="h-9 w-9 rounded-md bg-white/12 object-contain p-1"
-                style={{
-                  backgroundImage: `url(${trustData.logoUrl})`,
-                  backgroundPosition: "center",
-                  backgroundRepeat: "no-repeat",
-                  backgroundSize: "contain",
-                }}
-              />
-            ) : (
-              <ShieldCheck className="h-7 w-7 text-white" aria-hidden="true" />
-            )}
-            <span className="text-sm uppercase tracking-[0.16em] text-white/70">
-              Trust Center
-            </span>
-          </div>
-          <h1 className="mt-6 text-4xl font-semibold tracking-normal">
-            {trustData.organisationName}
+    <main
+      className="min-h-screen bg-background text-foreground"
+      style={{ "--accent": trustCenter.accentColor } as CSSProperties}
+    >
+      <TrustTopbar trustCenter={trustCenter} />
+
+      <section className="mx-auto max-w-7xl px-4 pb-10 pt-12 sm:px-6 lg:pt-16">
+        <div className="max-w-4xl">
+          <p className="inline-flex items-center gap-2 font-mono text-xs uppercase tracking-[0.16em] text-[var(--accent)]">
+            <CheckCircle2 className="h-4 w-4" aria-hidden="true" />
+            TRUST CENTER · VERIFIED CONTINUOUSLY
+          </p>
+          <h1 className="mt-5 max-w-4xl text-[32px] font-medium leading-tight tracking-normal text-foreground sm:text-[40px]">
+            {`${trustCenter.organisationName} průběžně testuje ${controlCount} bezpečnostních kontrol napříč ${frameworkCount} EU předpisy.`}
           </h1>
-          <p className="mt-3 max-w-2xl text-white/75">
-            {copy.description}
+          <p className="mt-5 max-w-3xl text-base leading-7 text-foreground/62">
+            Tento Trust Center ukazuje veřejný souhrn automatických kontrol,
+            regulatorních frameworků a dokumentů. Detaily důkazů a konkrétní
+            control IDs zůstávají chráněné a jsou dostupné pouze po schválení
+            přístupu.
           </p>
-          <p className="mt-6 inline-flex rounded-md bg-white/12 px-3 py-2 text-sm text-white/78">
-            {copy.verified} · {copy.lastTest}:{" "}
-            {formatTrustRelativeTime(trustData.lastTestedAt, locale)}
-          </p>
+          <LiveIndicator
+            lastTestedAt={trustCenter.lastTestedAt}
+            nextTestAt={trustCenter.nextTestAt}
+          />
+          <HeroActions orgName={trustCenter.organisationName} />
         </div>
       </section>
 
-      <section className="mx-auto grid max-w-6xl gap-4 px-5 py-8 md:grid-cols-3">
-        <div className="rounded-lg border border-border bg-surface p-5">
-          <p className="text-sm text-foreground/58">{copy.frameworkCount}</p>
-          <p className="mt-2 font-mono text-3xl font-semibold text-primary">
-            {summary.frameworkCount}
-          </p>
-        </div>
-        <div className="rounded-lg border border-border bg-surface p-5">
-          <p className="text-sm text-foreground/58">{copy.averageScore}</p>
-          <p className="mt-2 font-mono text-3xl font-semibold text-primary">
-            {locked ? "NDA" : `${summary.averageScore ?? "-"}%`}
-          </p>
-        </div>
-        <div className="rounded-lg border border-border bg-surface p-5">
-          <p className="text-sm text-foreground/58">{copy.ndaGate}</p>
-          <p className="mt-2 text-lg font-semibold">
-            {trustData.ndaRequired ? copy.ndaRequired : copy.ndaNotRequired}
-          </p>
-        </div>
-      </section>
+      <TrustSignalsStrip signals={trustCenter.trustSignals} />
 
-      {locked ? (
-        <section className="mx-auto max-w-6xl px-5 pb-16">
-          <div className="grid gap-4 rounded-lg border border-border bg-surface p-5 lg:grid-cols-[1fr_0.9fr]">
-            <div>
-              <div className="flex items-center gap-2">
-                <LockKeyhole className="h-5 w-5 text-primary" aria-hidden="true" />
-                <h2 className="text-lg font-semibold">{copy.ndaAccessTitle}</h2>
-              </div>
-              <p className="mt-3 text-sm leading-6 text-foreground/64">
-                {copy.ndaAccessBody}
-              </p>
-              {query.requested === "1" ? (
-                <p className="mt-4 inline-flex rounded-md bg-emerald-50 px-3 py-2 text-sm text-emerald-800">
-                  {copy.requestedMessage}
-                </p>
-              ) : null}
-            </div>
-            <form
-              action={requestTrustCenterAccessAction.bind(null, orgSlug)}
-              className="space-y-4"
-            >
-              <label className="grid gap-2 text-sm">
-                {copy.workEmail}
-                <input
-                  name="email"
-                  required
-                  type="email"
-                  className="rounded-md border border-border bg-background px-3 py-2"
-                />
-              </label>
-              <label className="grid gap-2 text-sm">
-                {copy.company}
-                <input
-                  name="company"
-                  className="rounded-md border border-border bg-background px-3 py-2"
-                />
-              </label>
-              <button
-                type="submit"
-                className="inline-flex items-center gap-2 rounded-md bg-primary px-4 py-3 text-sm font-medium text-primary-foreground"
-              >
-                {copy.requestAccess}
-                <FileLock2 className="h-4 w-4" aria-hidden="true" />
-              </button>
-            </form>
+      <section className="mx-auto max-w-7xl px-4 py-10 sm:px-6">
+        <div className="flex flex-col justify-between gap-3 sm:flex-row sm:items-end">
+          <div>
+            <p className="font-mono text-xs uppercase tracking-[0.16em] text-foreground/48">
+              FRAMEWORKS
+            </p>
+            <h2 className="mt-2 text-2xl font-medium tracking-normal">
+              Stav EU předpisů
+            </h2>
           </div>
-        </section>
-      ) : (
-        <section className="mx-auto grid max-w-6xl gap-4 px-5 pb-16 md:grid-cols-2">
-          {trustData.frameworks.map((item) => (
-            <article
-              key={item.framework.slug}
-              className="rounded-lg border border-border bg-surface p-5"
-            >
-              <div className="flex items-start justify-between gap-4">
-                <div>
-                  <p className="text-sm text-foreground/58">
-                    {getRegulatorLabel(item.framework, locale)}
-                  </p>
-                  <h2 className="mt-1 text-xl font-semibold">
-                    {item.framework.nameCs}
-                  </h2>
-                </div>
-                <span className="rounded-md bg-surface-muted px-2 py-1 text-xs">
-                  {getStatusLabel(item.status, locale)}
-                </span>
-              </div>
-              <p className="mt-5 font-mono text-3xl font-semibold text-primary">
-                {item.score ?? "-"}%
-              </p>
-              <div className="mt-4 h-2 rounded-full bg-surface-muted">
-                <div
-                  className="h-2 rounded-full bg-primary"
-                  style={{ width: `${item.score ?? 0}%` }}
-                />
-              </div>
-              <p className="mt-4 flex items-center gap-2 text-sm text-foreground/58">
-                <CheckCircle2 className="h-4 w-4 text-accent" aria-hidden="true" />
-                {copy.verifiedAutomatically}
-              </p>
-            </article>
+          <p className="max-w-xl text-sm leading-6 text-foreground/58">
+            Skóre je agregované z kontrol v rozsahu. Veřejná stránka zobrazuje
+            souhrny kategorií, ne jednotlivé testy nebo názvy důkazů.
+          </p>
+        </div>
+        <div className="mt-6 grid gap-4">
+          {trustCenter.frameworks.map((framework) => (
+            <FrameworkCard
+              key={framework.framework.slug}
+              framework={framework}
+              href={`/trust/${trustCenter.orgSlug}/frameworks/${framework.framework.slug}`}
+              showDrilldown={trustCenter.showFrameworkDrilldown}
+              showPercentages={trustCenter.showFrameworkPercentages}
+            />
           ))}
-        </section>
-      )}
+        </div>
+      </section>
+
+      <DocumentsSection documents={trustCenter.documents} />
+      <ContactSection orgName={trustCenter.organisationName} />
+      <TrustFooter trustCenter={trustCenter} />
     </main>
   );
-}
-
-function loadDemoTrustCenter(orgSlug: string, locale: Locale) {
-  if (orgSlug !== "demo") {
-    return null;
-  }
-
-  return {
-    accessGranted: true,
-    accentColor: "#1b7f5a",
-    frameworks: FRAMEWORK_LIBRARY.slice(0, 3).map((framework, index) => ({
-      framework,
-      score: [72, 64, 81][index] ?? null,
-      status: "active",
-    })),
-    lastTestedAt: new Date(Date.now() - 11 * 60 * 1000),
-    logoUrl: null,
-    ndaRequired: false,
-    organisationName: getPublicTrustCopy(locale).demoOrganisation,
-    subdomain: "demo",
-  };
-}
-
-async function loadTrustCenter(
-  orgSlug: string,
-  accessToken: string | null,
-  locale: Locale,
-) {
-  if (!hasDatabaseUrl()) {
-    return loadDemoTrustCenter(orgSlug, locale);
-  }
-
-  const data = await getPublicTrustCenter({ accessToken, orgSlug }).catch(
-    () => null,
-  );
-
-  return data ?? loadDemoTrustCenter(orgSlug, locale);
 }

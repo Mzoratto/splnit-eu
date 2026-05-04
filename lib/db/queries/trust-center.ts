@@ -18,6 +18,8 @@ export type TrustCenterSettingsInput = {
   customDomain?: string | null;
   isPublic: boolean;
   ndaRequired: boolean;
+  showFrameworkDrilldown: boolean;
+  showFrameworkPercentages: boolean;
   subdomain: string;
   visibleFrameworks: string[];
 };
@@ -70,6 +72,8 @@ export async function upsertTrustCenterSettings(input: TrustCenterSettingsInput)
     isPublic: input.isPublic,
     lastUpdated: new Date(),
     ndaRequired: input.ndaRequired,
+    showFrameworkDrilldown: input.showFrameworkDrilldown,
+    showFrameworkPercentages: input.showFrameworkPercentages,
     subdomain: input.subdomain,
     visibleFrameworks: input.visibleFrameworks,
   };

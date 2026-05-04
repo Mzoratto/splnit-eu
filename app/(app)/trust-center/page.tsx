@@ -77,7 +77,7 @@ export default async function TrustCenterSettingsPage() {
             Veřejné compliance centrum
           </h1>
           <p className="mt-2 max-w-2xl text-sm leading-6 text-foreground/64">
-            Nastavení veřejné stránky, viditelných frameworků a NDA gate.
+            Nastavení veřejné stránky, viditelných frameworků a přístupu k dokumentům.
           </p>
         </div>
         <Link
@@ -134,7 +134,25 @@ export default async function TrustCenterSettingsPage() {
                   defaultChecked={trustCenter?.ndaRequired ?? false}
                   disabled={!canMutate}
                 />
-                Vyžadovat NDA gate
+                Vyžadovat schválený přístup k dokumentům
+              </label>
+              <label className="flex items-center gap-3 rounded-md border border-border px-3 py-3 text-sm">
+                <input
+                  name="showFrameworkDrilldown"
+                  type="checkbox"
+                  defaultChecked={trustCenter?.showFrameworkDrilldown ?? true}
+                  disabled={!canMutate}
+                />
+                Povolit detail frameworků
+              </label>
+              <label className="flex items-center gap-3 rounded-md border border-border px-3 py-3 text-sm">
+                <input
+                  name="showFrameworkPercentages"
+                  type="checkbox"
+                  defaultChecked={trustCenter?.showFrameworkPercentages ?? true}
+                  disabled={!canMutate}
+                />
+                Zobrazovat procentuální skóre
               </label>
             </div>
             <div>

@@ -316,6 +316,8 @@ export const trustCenters = pgTable("trust_centers", {
   subdomain: text("subdomain").unique(),
   isPublic: boolean("is_public").notNull().default(false),
   ndaRequired: boolean("nda_required").notNull().default(false),
+  showFrameworkDrilldown: boolean("show_framework_drilldown").notNull().default(true),
+  showFrameworkPercentages: boolean("show_framework_percentages").notNull().default(true),
   visibleFrameworks: jsonb("visible_frameworks").$type<string[]>().default([]),
   customDomain: text("custom_domain"),
   logoUrl: text("logo_url"),

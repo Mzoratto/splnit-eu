@@ -1,13 +1,5 @@
 import { NextResponse } from "next/server";
-import { hasDatabaseUrl } from "@/lib/db";
-import { getPublicTrustCenter } from "@/lib/db/queries/trust-center";
-import { FRAMEWORK_LIBRARY } from "@/lib/frameworks/registry";
-import type { Locale } from "@/i18n/routing";
-import {
-  getPublicTrustCopy,
-  getPublicTrustLocaleFromCookie,
-} from "@/lib/trust-center/public-copy";
-import { getTrustCenterSummary } from "@/lib/trust-center/renderer";
+import { getPublicTrustCenterModel } from "@/lib/trust-center/public-model";
 
 export async function GET(
   request: Request,
@@ -15,47 +7,42 @@ export async function GET(
 ) {
   const { orgSlug } = await params;
   const accessToken = new URL(request.url).searchParams.get("access");
-  const locale = getPublicTrustLocaleFromCookie(request.headers.get("cookie"));
-  const trustData = hasDatabaseUrl()
-    ? await getPublicTrustCenter({ accessToken, orgSlug }).catch(() => null)
-    : loadDemoTrustCenter(orgSlug, locale);
-  const resolvedTrustData = trustData ?? loadDemoTrustCenter(orgSlug, locale);
+  const trustCenter = await getPublicTrustCenterModel({ accessToken, orgSlug });
 
-  if (!resolvedTrustData) {
+  if (!trustCenter) {
     return NextResponse.json({ error: "Trust Center not found" }, { status: 404 });
   }
 
-  const visibleFrameworks = resolvedTrustData.accessGranted
-    ? resolvedTrustData.frameworks
-    : [];
-
   return NextResponse.json({
-    accessGranted: resolvedTrustData.accessGranted,
-    frameworks: visibleFrameworks,
-    lastTestedAt: resolvedTrustData.lastTestedAt,
-    ndaRequired: resolvedTrustData.ndaRequired,
-    orgSlug,
-    organisationName: resolvedTrustData.organisationName,
-    summary: getTrustCenterSummary(visibleFrameworks),
+    documents: trustCenter.documents.map((document) => ({
+      id: document.id,
+      isLocked: document.isLocked,
+      title: document.title,
+    })),
+    frameworks: trustCenter.frameworks.map((framework) => ({
+      categories: framework.categories.map((category) => ({
+        category: category.category,
+        inProgress: category.inProgress,
+        notApplicable: category.notApplicable,
+        status: category.status,
+        total: category.total,
+        verified: category.verified,
+      })),
+      inProgress: framework.inProgress,
+      lastAssessedAt: framework.lastAssessedAt,
+      notApplicable: framework.notApplicable,
+      score: framework.score,
+      slug: framework.framework.slug,
+      status: framework.statusLabel,
+      totalControls: framework.totalControls,
+      verified: framework.verified,
+    })),
+    lastTestedAt: trustCenter.lastTestedAt,
+    nextTestAt: trustCenter.nextTestAt,
+    orgSlug: trustCenter.orgSlug,
+    organisationName: trustCenter.organisationName,
+    showFrameworkDrilldown: trustCenter.showFrameworkDrilldown,
+    showFrameworkPercentages: trustCenter.showFrameworkPercentages,
+    trustSignals: trustCenter.trustSignals,
   });
-}
-
-function loadDemoTrustCenter(orgSlug: string, locale: Locale) {
-  if (orgSlug !== "demo") {
-    return null;
-  }
-
-  const frameworks = FRAMEWORK_LIBRARY.slice(0, 3).map((framework, index) => ({
-    framework,
-    score: [72, 64, 81][index] ?? null,
-    status: "active",
-  }));
-
-  return {
-    accessGranted: true,
-    frameworks,
-    lastTestedAt: new Date(Date.now() - 11 * 60 * 1000),
-    ndaRequired: false,
-    organisationName: getPublicTrustCopy(locale).demoOrganisation,
-  };
 }

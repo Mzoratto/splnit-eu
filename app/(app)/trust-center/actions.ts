@@ -25,6 +25,8 @@ const settingsSchema = z.object({
     .or(z.literal("")),
   isPublic: z.boolean(),
   ndaRequired: z.boolean(),
+  showFrameworkDrilldown: z.boolean(),
+  showFrameworkPercentages: z.boolean(),
   subdomain: z
     .string()
     .trim()
@@ -60,6 +62,8 @@ export async function updateTrustCenterSettingsAction(formData: FormData) {
     accentColor: getStringValue(formData, "accentColor"),
     isPublic: formData.get("isPublic") === "on",
     ndaRequired: formData.get("ndaRequired") === "on",
+    showFrameworkDrilldown: formData.get("showFrameworkDrilldown") === "on",
+    showFrameworkPercentages: formData.get("showFrameworkPercentages") === "on",
     subdomain: getStringValue(formData, "subdomain"),
     visibleFrameworks: formData
       .getAll("visibleFrameworks")
@@ -71,6 +75,8 @@ export async function updateTrustCenterSettingsAction(formData: FormData) {
     clerkOrgId: session.clerkOrgId,
     isPublic: parsed.isPublic,
     ndaRequired: parsed.ndaRequired,
+    showFrameworkDrilldown: parsed.showFrameworkDrilldown,
+    showFrameworkPercentages: parsed.showFrameworkPercentages,
     subdomain: parsed.subdomain,
     visibleFrameworks: parsed.visibleFrameworks,
   });

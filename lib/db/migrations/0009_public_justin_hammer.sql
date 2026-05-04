@@ -1,0 +1,2 @@
+ALTER TABLE "trust_centers" ADD COLUMN "show_framework_drilldown" boolean DEFAULT true NOT NULL;--> statement-breakpoint
+ALTER TABLE "trust_centers" ADD COLUMN "show_framework_percentages" boolean DEFAULT true NOT NULL;
