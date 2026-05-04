@@ -42,6 +42,11 @@
     "body": "The event was recorded. Refresh the page or return to the dashboard.",
     "retry": "Try again"
   },
+  "authFallback": {
+    "title": "Clerk is not configured",
+    "signInBody": "Add NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY and CLERK_SECRET_KEY to the environment to enable sign-in.",
+    "signUpBody": "Add the Clerk keys to the environment to enable registration and organisations."
+  },
   "billingSettings": {
     "monthSuffix": "/month",
     "annualMonthly": "{price}/month when billed annually"

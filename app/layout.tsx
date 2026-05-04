@@ -5,6 +5,7 @@ import { NextIntlClientProvider } from "next-intl";
 import { getLocale, getMessages } from "next-intl/server";
 import { CookieConsent } from "@/components/cookie-consent";
 import { RegisterServiceWorker } from "@/components/pwa/register-service-worker";
+import { normalizeLocale, type Locale } from "@/i18n/routing";
 import {
   cookieConsentName,
   type CookieConsentValue,
@@ -45,50 +46,81 @@ function normalizeCookieConsent(
   return value === "accepted" || value === "rejected" ? value : null;
 }
 
-export const metadata: Metadata = {
-  applicationName: "Splnit.eu",
-  metadataBase: new URL(process.env.NEXT_PUBLIC_APP_URL || "https://splnit.eu"),
-  manifest: "/manifest.webmanifest",
-  title:
-    "Splnit.eu — Compliance automation pro evropské SMB týmy",
-  description:
-    "Splnit.eu propojí Microsoft 365, AWS nebo GitHub a pomůže připravit auditní důkazy pro NIS2, GDPR a ISO 27001.",
-  openGraph: {
+const metadataCopy: Record<
+  Locale,
+  {
+    description: string;
+    locale: string;
+    title: string;
+  }
+> = {
+  "cs-CZ": {
+    description:
+      "Splnit.eu propojí Microsoft 365, AWS nebo GitHub a pomůže připravit auditní důkazy pro NIS2, GDPR a ISO 27001.",
     locale: "cs_CZ",
-    title: "Splnit.eu — Compliance automation pro evropské SMB týmy",
+    title: "Splnit.eu — Compliance automatizace pro evropské SMB týmy",
+  },
+  "en-EU": {
     description:
-      "Připravte NIS2, GDPR a ISO 27001 důkazy s automatickými kontrolami.",
-    images: [
-      {
-        url: "/opengraph-image",
-        width: 1200,
-        height: 630,
-        alt: "Splnit.eu compliance automation dashboard",
-      },
-    ],
-    type: "website",
+      "Connect Microsoft 365, AWS, or GitHub and prepare audit evidence for NIS2, GDPR, and ISO 27001.",
+    locale: "en_EU",
+    title: "Splnit.eu — Compliance automation for European SMB teams",
   },
-  twitter: {
-    card: "summary_large_image",
-    title: "Splnit.eu — Compliance automation pro evropské SMB týmy",
+  "it-IT": {
     description:
-      "Připravte NIS2, GDPR a ISO 27001 důkazy s automatickými kontrolami.",
-    images: ["/opengraph-image"],
-  },
-  appleWebApp: {
-    capable: true,
-    statusBarStyle: "default",
-    title: "Splnit.eu",
-  },
-  icons: {
-    icon: [
-      { url: "/icon.svg", type: "image/svg+xml" },
-      { url: "/icon-192x192.png", sizes: "192x192", type: "image/png" },
-      { url: "/icon-512x512.png", sizes: "512x512", type: "image/png" },
-    ],
-    apple: [{ url: "/apple-touch-icon.png", sizes: "180x180" }],
+      "Collega Microsoft 365, AWS o GitHub e prepara evidenze audit per NIS2, GDPR e ISO 27001.",
+    locale: "it_IT",
+    title: "Splnit.eu — Automazione compliance per PMI europee",
   },
 };
+
+export async function generateMetadata(): Promise<Metadata> {
+  const locale = normalizeLocale(await getLocale()) ?? "cs-CZ";
+  const copy = metadataCopy[locale];
+
+  return {
+    appleWebApp: {
+      capable: true,
+      statusBarStyle: "default",
+      title: "Splnit.eu",
+    },
+    applicationName: "Splnit.eu",
+    description: copy.description,
+    icons: {
+      apple: [{ url: "/apple-touch-icon.png", sizes: "180x180" }],
+      icon: [
+        { url: "/icon.svg", type: "image/svg+xml" },
+        { url: "/icon-192x192.png", sizes: "192x192", type: "image/png" },
+        { url: "/icon-512x512.png", sizes: "512x512", type: "image/png" },
+      ],
+    },
+    manifest: "/manifest.webmanifest",
+    metadataBase: new URL(
+      process.env.NEXT_PUBLIC_APP_URL || "https://splnit.eu",
+    ),
+    openGraph: {
+      description: copy.description,
+      images: [
+        {
+          alt: "Splnit.eu compliance automation dashboard",
+          height: 630,
+          url: "/opengraph-image",
+          width: 1200,
+        },
+      ],
+      locale: copy.locale,
+      title: copy.title,
+      type: "website",
+    },
+    title: copy.title,
+    twitter: {
+      card: "summary_large_image",
+      description: copy.description,
+      images: ["/opengraph-image"],
+      title: copy.title,
+    },
+  };
+}
 
 export default async function RootLayout({
   children,

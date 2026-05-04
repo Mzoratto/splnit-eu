@@ -42,6 +42,11 @@
     "body": "Událost byla zaznamenána. Zkuste stránku obnovit, nebo se vraťte do dashboardu.",
     "retry": "Zkusit znovu"
   },
+  "authFallback": {
+    "title": "Clerk není nakonfigurovaný",
+    "signInBody": "Přidejte NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY a CLERK_SECRET_KEY do prostředí pro aktivaci přihlášení.",
+    "signUpBody": "Přidejte Clerk klíče do prostředí pro aktivaci registrace a organizací."
+  },
   "billingSettings": {
     "monthSuffix": "/měsíc",
     "annualMonthly": "{price}/měsíc při roční fakturaci"
