@@ -224,6 +224,22 @@ Tasks:
 - [ ] Populate the table with current Czech sources.
 - [ ] Regression test that Czech tenants still see the same practical content.
 
+### Phase 1 Verification - 2026-05-04
+
+Completed and verified locally:
+
+- `docs/architecture/jurisdiction.md` exists and records the jurisdiction decisions before further schema work.
+- `organisations` has `country`, `primary_jurisdiction`, and `locale` with Czech defaults for existing tenants.
+- Onboarding and organisation settings expose country, primary jurisdiction, and locale.
+- `framework_controls` has regulator guidance, evidence requirements, localized title, and localized description fields.
+- Canonical control content is jurisdiction-neutral; Czech regulator references are scoped to Czech framework guidance.
+- `source_documents` exists and seed data now preserves each template/source document jurisdiction and locale instead of forcing everything to Czech.
+- Local migration and seed ran successfully; seed verified `23` source document rows across Czech, Italian, and EU locales.
+
+Remaining before calling Phase 1 fully done:
+
+- Replace policy-template filename display with resolved `source_documents` title/citation where documents are shown or generated.
+
 ## Phase 2 - Locale-Aware Templates and UI
 
 Goal: templates resolve by jurisdiction and locale; UI can render Czech, English-EU, and Italian.

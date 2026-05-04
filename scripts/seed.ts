@@ -20,6 +20,42 @@ loadEnvConfig(process.cwd());
 
 const SOURCE_DOCUMENT_LIBRARY = [
   {
+    citation: "Zákon č. 264/2025 Sb., o kybernetické bezpečnosti",
+    effectiveDate: "2025-11-01",
+    filename: "cz/zakon-264-2025-sb.html",
+    jurisdiction: "CZ",
+    locale: "cs-CZ",
+    title: "Zákon č. 264/2025 Sb. - o kybernetické bezpečnosti",
+    url: "https://public.psp.cz/sqw/sbirka.sqw?cz=264&r=2025",
+  },
+  {
+    citation: "NÚKIB - Byl publikován nový zákon o kybernetické bezpečnosti",
+    effectiveDate: "2025-08-04",
+    filename: "cz/nukib-publikovan-novy-zakon-o-kyberneticke-bezpecnosti.html",
+    jurisdiction: "CZ",
+    locale: "cs-CZ",
+    title: "NÚKIB - nový zákon o kybernetické bezpečnosti",
+    url: "https://nukib.gov.cz/cs/infoservis/aktuality/2286-byl-publikovan-novy-zakon-o-kyberneticke-bezpecnosti",
+  },
+  {
+    citation: "Regulation (EU) 2016/679, CELEX 32016R0679",
+    effectiveDate: "2018-05-25",
+    filename: "eu/gdpr-2016-679-cs.html",
+    jurisdiction: "EU",
+    locale: "cs-CZ",
+    title: "GDPR - české znění EUR-Lex",
+    url: "https://eur-lex.europa.eu/legal-content/cs/TXT/?uri=CELEX%3A32016R0679",
+  },
+  {
+    citation: "ÚOOÚ - postavení úřadu a působnost podle GDPR",
+    effectiveDate: null,
+    filename: "cz/uoou-postaveni-uradu.html",
+    jurisdiction: "CZ",
+    locale: "cs-CZ",
+    title: "ÚOOÚ - postavení úřadu",
+    url: "https://uoou.gov.cz/urad/postaveni-uradu",
+  },
+  {
     citation: "D.Lgs. 4 settembre 2024, n. 138 (GU Serie Generale n. 230 del 01-10-2024)",
     effectiveDate: "2024-10-16",
     filename: "it/dlgs-138-2024.html",
@@ -276,18 +312,18 @@ async function seedSourceDocuments() {
       .values({
         citation: template.description,
         filename: template.sourceDocument,
-        jurisdiction: "CZ",
+        jurisdiction: template.jurisdiction,
         lastReviewed,
-        locale: "cs-CZ",
+        locale: template.locale,
         title: template.titleCs,
       })
       .onConflictDoUpdate({
         target: sourceDocuments.filename,
         set: {
           citation: template.description,
-          jurisdiction: "CZ",
+          jurisdiction: template.jurisdiction,
           lastReviewed,
-          locale: "cs-CZ",
+          locale: template.locale,
           title: template.titleCs,
         },
       });
