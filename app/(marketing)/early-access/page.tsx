@@ -10,7 +10,7 @@ const metadataByLocale: Record<
   Required<Pick<Metadata, "title" | "description">> & { locale: string }
 > = {
   "cs-CZ": {
-    title: "Early access | Splnit.eu",
+    title: "Předběžný přístup | Splnit.eu",
     description:
       "Splnit.eu hledá prvních 10 design partnerů pro NIS2 a GDPR compliance automation.",
     locale: "cs_CZ",
@@ -22,7 +22,7 @@ const metadataByLocale: Record<
     locale: "en_EU",
   },
   "it-IT": {
-    title: "Early access | Splnit.eu",
+    title: "Accesso anticipato | Splnit.eu",
     description:
       "Splnit.eu cerca i primi 10 design partner per l'automazione compliance NIS2 e GDPR.",
     locale: "it_IT",

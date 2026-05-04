@@ -1089,7 +1089,7 @@
       "platform": "Piattaforma",
       "regulations": "Normative UE",
       "blog": "Blog",
-      "earlyAccess": "Early access",
+      "earlyAccess": "Accesso anticipato",
       "about": "Chi siamo",
       "pricing": "Prezzi",
       "signIn": "Accedi",
@@ -1097,7 +1097,7 @@
       "menu": "Menu"
     },
     "footer": {
-      "tagline": "Piattaforma early access per automatizzare la compliance UE.",
+      "tagline": "Piattaforma in accesso anticipato per automatizzare la compliance UE.",
       "newsletterTitle": "Aggiornamento mensile sulle normative UE",
       "newsletterSuccess": "Iscrizione attiva",
       "newsletterLoading": "Salvataggio",
@@ -1126,9 +1126,9 @@
       "accept": "Accetta"
     },
     "earlyAccess": {
-      "tag": "Early access",
+      "tag": "Accesso anticipato",
       "title": "Cerchiamo i primi 10 design partner.",
-      "body": "Splnit.eu è in early access. Lo sto costruendo come solo developer a Olomouc e cerco aziende che vogliono influenzare il prodotto prima del lancio pubblico.",
+      "body": "Splnit.eu è in accesso anticipato. Lo sto costruendo come solo developer a Olomouc e cerco aziende che vogliono influenzare il prodotto prima del lancio pubblico.",
       "primaryCta": "Candidati come design partner",
       "secondaryCta": "Chi c'è dietro",
       "filledLabel": "Attualmente firmati",
@@ -1174,7 +1174,7 @@
       "whyP1": "Le grandi piattaforme globali coprono spesso bene i framework generici, ma le PMI europee hanno bisogno anche di recepimenti locali, citazioni chiare e onboarding pratico.",
       "whyP2": "Splnit.eu parte più piccolo: controlli automatici sui sistemi già usati dalle aziende, documenti pronti per revisione legale e lavoro diretto col founder per i primi design partner.",
       "realToday": {
-        "solo": "Splnit.eu è un prodotto early access costruito da un solo developer a Olomouc.",
+        "solo": "Splnit.eu è un prodotto in accesso anticipato costruito da un solo developer a Olomouc.",
         "focus": "Il prodotto si concentra sull'automazione compliance UE per NIS2, GDPR e ISO 27001.",
         "legalReview": "DPA e documenti legali finali sono pronti per revisione legale prima del lancio in produzione.",
         "noFakeProof": "Referenze pubbliche e metriche non vengono mostrate finché non sono verificate."
@@ -1195,7 +1195,7 @@
     "lead": "Una piattaforma centrale per PMI europee. Preparate evidenze per GDPR, NIS2 e ISO 27001 con controlli automatici per Microsoft 365, AWS e GitHub.",
     "primaryCta": "Diventa design partner",
     "secondaryCta": "Guarda demo",
-    "trustLine": "Early access · Contatto diretto col founder · Dati nell'UE come obiettivo",
+    "trustLine": "Accesso anticipato · Contatto diretto col founder · Dati nell'UE come obiettivo",
     "partnerTag": "Cerchiamo i primi 10 design partner",
     "partnerFilled": "0 / 10 occupati",
     "partnerFree": "12 mesi Business gratis",
@@ -1207,8 +1207,8 @@
     "featuresTitle": "Compliance costruita per team moderni.",
     "featuresBody": "Collegate infrastrutture locali e globali. I controlli vengono mappati agli standard cechi e internazionali.",
     "offerTitle": "Offerta founding customer per le prime 10 aziende.",
-    "offerBody": "Splnit.eu è in early access. I primi design partner ricevono il piano Business gratis per 12 mesi e tre settimane di onboarding guidato direttamente col founder.",
-    "offerCta": "Vai all'early access",
+    "offerBody": "Splnit.eu è in accesso anticipato. I primi design partner ricevono il piano Business gratis per 12 mesi e tre settimane di onboarding guidato direttamente col founder.",
+    "offerCta": "Vai all'accesso anticipato",
     "referencePlaceholder": "Le referenze reali saranno aggiunte solo dopo uso verificato e con consenso del cliente.",
     "referenceCount": "0 / 10 design partner",
     "referenceNote": "Le prime referenze devono ancora essere conquistate",
@@ -1232,7 +1232,7 @@
       "documentsBody": "Generate documenti di lavoro ed evidence pack da inviare a legale, auditor o consulente per revisione finale."
     },
     "trustBadges": {
-      "early": "Early access",
+      "early": "Accesso anticipato",
       "dpa": "DPA pronto per revisione legale",
       "residency": "Dati nell'UE come obiettivo",
       "onboarding": "Onboarding col founder"
@@ -1260,7 +1260,7 @@
     "faqTag": "FAQ",
     "faqTitle": "Domande frequenti",
     "finalTitle": "Iniziate oggi a prepararvi alla compliance.",
-    "finalBody": "L'early access è aperto ai primi design partner che vogliono usare Splnit.eu su un progetto reale NIS2 o GDPR.",
+    "finalBody": "L'accesso anticipato è aperto ai primi design partner che vogliono usare Splnit.eu su un progetto reale NIS2 o GDPR.",
     "primaryCta": "Diventa design partner",
     "secondaryCta": "Vedi documentazione",
     "cards": {

@@ -12,7 +12,7 @@ const metadataByLocale: Record<
   "cs-CZ": {
     title: "About | Splnit.eu",
     description:
-      "Kdo stojí za Splnit.eu a co je v early access produktu dnes skutečně hotové.",
+      "Kdo stojí za Splnit.eu a co je v produktu v předběžném přístupu dnes skutečně hotové.",
     locale: "cs_CZ",
   },
   "en-EU": {
@@ -24,7 +24,7 @@ const metadataByLocale: Record<
   "it-IT": {
     title: "Chi siamo | Splnit.eu",
     description:
-      "Chi c'è dietro Splnit.eu e cosa è realmente pronto oggi nel prodotto in early access.",
+      "Chi c'è dietro Splnit.eu e cosa è realmente pronto oggi nel prodotto in accesso anticipato.",
     locale: "it_IT",
   },
 };

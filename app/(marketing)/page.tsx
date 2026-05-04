@@ -324,7 +324,7 @@ export default async function HomePage() {
                     <div className="absolute bottom-4 left-4 right-4">
                       <div className="rounded-xl border border-zinc-800/50 bg-zinc-900/90 p-3 backdrop-blur">
                         <div className="mono mb-1 text-[10px] text-zinc-400">
-                          Early access
+                          {t("trustBadges.early")}
                         </div>
                         <div className="text-sm font-semibold text-white">
                           {t("referenceCount")}

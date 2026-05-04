@@ -9,6 +9,7 @@ import { Icon } from "@/components/marketing/local-icon";
 
 export function Footer() {
   const t = useTranslations("marketing.footer");
+  const navT = useTranslations("marketing.nav");
   const [email, setEmail] = useState("");
   const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">(
     "idle",
@@ -100,7 +101,7 @@ export function Footer() {
               [t("monitoring"), "/platform#monitoring"],
               [t("integrations"), "/platform#integrations"],
               [t("trustCenter"), "/platform#trust-center"],
-              ["Early access", "/early-access"],
+              [navT("earlyAccess"), "/early-access"],
               [t("about"), "/about"],
               [t("pricing"), "/cenik"],
             ]}
