@@ -86,7 +86,7 @@ export default async function PlatformPage() {
           </div>
         </section>
 
-        <section id="integrace" className="overflow-hidden border-t border-zinc-200/50 py-20">
+        <section id="integrations" className="overflow-hidden border-t border-zinc-200/50 py-20">
           <div className="mx-auto flex max-w-7xl flex-col items-center gap-16 px-5 lg:flex-row">
             <div className="scroll-animate w-full lg:w-1/2">
               <div className="rounded-[26px] p-px grad-border">

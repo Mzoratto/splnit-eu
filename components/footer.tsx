@@ -98,7 +98,7 @@ export function Footer() {
             title={t("product")}
             links={[
               [t("monitoring"), "/platform#monitoring"],
-              [t("integrations"), "/platform#integrace"],
+              [t("integrations"), "/platform#integrations"],
               [t("trustCenter"), "/platform#trust-center"],
               ["Early access", "/early-access"],
               [t("about"), "/about"],
