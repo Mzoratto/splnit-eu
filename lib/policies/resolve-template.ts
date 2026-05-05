@@ -76,12 +76,21 @@ function materializeTemplate(
   };
 }
 
+export function isCustomerUsablePolicyTemplate(template: PolicyTemplate) {
+  return template.reviewStatus !== "draft";
+}
+
+function getCustomerUsablePolicyTemplates() {
+  return POLICY_TEMPLATES.filter(isCustomerUsablePolicyTemplate);
+}
+
 export function resolvePolicyTemplate(
   family: PolicyTemplateType,
   tenant?: TemplateTenant | null,
 ): PolicyTemplate {
   const context = getTenantContext(tenant);
-  const exact = POLICY_TEMPLATES.find(
+  const templates = getCustomerUsablePolicyTemplates();
+  const exact = templates.find(
     (template) =>
       template.templateFamily === family &&
       template.jurisdiction === context.primaryJurisdiction &&
@@ -92,7 +101,7 @@ export function resolvePolicyTemplate(
     return materializeTemplate(exact, context);
   }
 
-  const euFallback = POLICY_TEMPLATES.find(
+  const euFallback = templates.find(
     (template) =>
       template.templateFamily === family &&
       template.jurisdiction === "EU" &&
@@ -111,5 +120,17 @@ export function listResolvedPolicyTemplates(
 ): PolicyTemplate[] {
   return POLICY_TEMPLATE_TYPES.map((family) =>
     resolvePolicyTemplate(family, tenant),
+  );
+}
+
+export function listDraftPolicyTemplatesForReview(input: {
+  jurisdiction?: PolicyTemplate["jurisdiction"];
+  locale?: PolicyTemplate["locale"];
+} = {}): PolicyTemplate[] {
+  return POLICY_TEMPLATES.filter(
+    (template) =>
+      template.reviewStatus === "draft" &&
+      (!input.jurisdiction || template.jurisdiction === input.jurisdiction) &&
+      (!input.locale || template.locale === input.locale),
   );
 }

@@ -575,6 +575,14 @@ Each template must:
 - [ ] Set `templateFamily` to link translated siblings.
 - [ ] Pass Italian advisor review before customer use.
 
+Progress note - 2026-05-05:
+
+- Added review-only Italian drafts for `security_policy` and `incident_response`.
+- Added a policy resolver guard so customer-facing template resolution ignores `reviewStatus: "draft"` templates and Italian tenants continue to fall back to reviewed EU/EN templates.
+- Added `policies:export:template-review` to generate `docs/legal-reviews/italian-policy-template-batch-1-review.md` for advisor review without database access.
+- `smoke:templates` now verifies the draft guard and confirms Italian draft templates are available only through the review-export path.
+- Do not change either Italian template to `reviewed` until an Italian advisor explicitly approves it.
+
 ### 3.4 Notification Flows
 
 - [ ] Build ACN incident notification workflow: 24-hour early warning, 72-hour notification, and 1-month report.

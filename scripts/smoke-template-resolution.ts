@@ -1,5 +1,6 @@
 import assert from "node:assert/strict";
 import {
+  listDraftPolicyTemplatesForReview,
   listResolvedPolicyTemplates,
   resolvePolicyTemplate,
   TemplateNotFoundError,
@@ -110,6 +111,25 @@ for (const family of POLICY_TEMPLATE_TYPES) {
     template.locale,
     "cs-CZ",
     `Italian tenant must not receive Czech locale for ${family}`,
+  );
+}
+
+const italianDraftTemplates = listDraftPolicyTemplatesForReview({
+  jurisdiction: "IT",
+  locale: "it-IT",
+});
+
+assert.deepEqual(
+  italianDraftTemplates.map((template) => template.templateFamily).sort(),
+  ["incident_response", "security_policy"],
+  "Italian draft templates should be available for advisor review only",
+);
+
+for (const draftTemplate of italianDraftTemplates) {
+  assert.equal(
+    draftTemplate.reviewStatus,
+    "draft",
+    `${draftTemplate.templateFamily} should stay marked draft`,
   );
 }
 

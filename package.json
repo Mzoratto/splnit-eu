@@ -32,6 +32,7 @@
     "smoke:reviewed-article-links": "tsx scripts/smoke-reviewed-article-links.ts",
     "smoke:source-documents": "tsx scripts/smoke-source-documents.ts",
     "smoke:templates": "tsx scripts/smoke-template-resolution.ts",
+    "policies:export:template-review": "tsx scripts/export-policy-template-review.ts",
     "knowledge:counts": "tsx scripts/report-knowledge-counts.ts",
     "knowledge:extract:czech-review-batch": "tsx scripts/extract-czech-mapping-review-batch.ts",
     "knowledge:import:czech-cyber-law": "tsx scripts/import-czech-cyber-law-drafts.ts",

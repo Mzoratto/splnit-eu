@@ -20,6 +20,7 @@ export type PolicyTemplate = {
   templateFamily: PolicyTemplateType;
   jurisdiction: "CZ" | "EU" | "IT";
   locale: "cs-CZ" | "en-EU" | "it-IT";
+  reviewStatus?: "draft" | "reviewed";
   titleCs: string;
   description: string;
   sourceDocument: string;
@@ -610,6 +611,166 @@ export const POLICY_TEMPLATES: PolicyTemplate[] = [
       {
         title: "Post-incident review",
         fields: ["Root cause", "Corrective measures", "Owner", "Deadline"],
+      },
+    ],
+  },
+  {
+    type: "security_policy",
+    templateFamily: "security_policy",
+    jurisdiction: "IT",
+    locale: "it-IT",
+    reviewStatus: "draft",
+    titleCs: "Politica di sicurezza delle informazioni",
+    description:
+      "Bozza italiana per revisione advisor: politica InfoSec per PMI soggette a D.Lgs. 138/2024, GDPR e controlli di sicurezza proporzionati.",
+    sourceDocument: "tpl-004-security-policy-it-draft.md",
+    controlKeys: [
+      "ctrl_mfa_all_users",
+      "ctrl_privileged_access_reviewed",
+      "ctrl_incident_plan_documented",
+      "ctrl_data_encrypted_at_rest",
+      "ctrl_patch_management",
+      "ctrl_backup_tested",
+      "ctrl_logging_monitoring",
+      "ctrl_vendor_security_assessment",
+      "ctrl_asset_inventory",
+    ],
+    sections: [
+      {
+        title: "Identificazione del documento",
+        fields: [
+          "Organizzazione",
+          "{{tenant.legalIdentifier}}",
+          "Versione",
+          "Data di emissione",
+          "Approvato da",
+          "Prossima revisione",
+        ],
+      },
+      {
+        title: "Scopo e campo di applicazione",
+        body: "La presente politica definisce le regole minime per proteggere persone, sistemi, dati, fornitori e servizi cloud dell'organizzazione.",
+      },
+      {
+        title: "Riferimenti normativi",
+        body: "La politica e' una bozza operativa da verificare rispetto a {{jurisdiction.nis2Citation}}, {{jurisdiction.gdprCitation}}, Codice Privacy e indicazioni ACN applicabili.",
+      },
+      {
+        title: "Ruoli e responsabilita'",
+        fields: [
+          "Direzione",
+          "Responsabile sicurezza informatica",
+          "Responsabili di processo",
+          "Utenti",
+          "Fornitori critici",
+        ],
+      },
+      {
+        title: "Controllo degli accessi",
+        body: "Gli account usano MFA ove applicabile, i privilegi sono limitati al necessario e gli accessi vengono riesaminati periodicamente.",
+      },
+      {
+        title: "Protezione dei dati e crittografia",
+        body: "I dati sensibili sono classificati, protetti e cifrati in funzione del rischio, dello scopo del trattamento e degli obblighi contrattuali o normativi.",
+      },
+      {
+        title: "Vulnerabilita' e modifiche",
+        body: "Le vulnerabilita' critiche sono prese in carico, priorizzate e corrette; le modifiche ai sistemi di produzione sono approvate e tracciabili.",
+      },
+      {
+        title: "Fornitori",
+        body: "I fornitori con accesso a dati, reti o sistemi sono valutati prima dell'attivazione e vincolati da requisiti di sicurezza, notifica incidenti e continuita'.",
+      },
+      {
+        title: "Monitoraggio, log e riesame",
+        fields: [
+          "Fonti di log",
+          "Responsabile alert",
+          "Periodo di conservazione",
+          "Data ultimo riesame",
+          "Azioni correttive",
+        ],
+      },
+    ],
+  },
+  {
+    type: "incident_response",
+    templateFamily: "incident_response",
+    jurisdiction: "IT",
+    locale: "it-IT",
+    reviewStatus: "draft",
+    titleCs: "Piano di gestione degli incidenti",
+    description:
+      "Bozza italiana per revisione advisor: piano di risposta agli incidenti con escalation, conservazione evidenze e valutazione delle notifiche ACN/Garante.",
+    sourceDocument: "tpl-006-incident-response-it-draft.md",
+    controlKeys: [
+      "ctrl_incident_plan_documented",
+      "ctrl_incident_72h_notification",
+      "ctrl_logging_monitoring",
+      "ctrl_security_event_alerting",
+      "ctrl_business_continuity_plan",
+    ],
+    sections: [
+      {
+        title: "Scopo e ruoli",
+        fields: [
+          "Incident manager",
+          "Referente IT",
+          "Referente privacy",
+          "Direzione",
+          "Contatti dei fornitori critici",
+        ],
+      },
+      {
+        title: "Classificazione dell'incidente",
+        fields: [
+          "Basso",
+          "Medio",
+          "Alto",
+          "Critico",
+          "Criteri per incidente significativo NIS",
+          "Criteri per violazione dei dati personali",
+        ],
+      },
+      {
+        title: "Prima risposta",
+        body: "Mettere in sicurezza persone e sistemi, limitare l'impatto, preservare le evidenze e attivare i ruoli responsabili.",
+      },
+      {
+        title: "Valutazione notifiche",
+        body: "Gli incidenti cyber sono valutati rispetto a {{jurisdiction.nis2Citation}} e alle indicazioni ACN; le violazioni di dati personali sono valutate rispetto a {{jurisdiction.gdprCitation}} art. 33 e 34 e alle indicazioni del {{jurisdiction.dataProtectionAuthority}}.",
+      },
+      {
+        title: "Timeline operativa",
+        fields: [
+          "Ora di rilevazione",
+          "Ora di triage",
+          "Decisione su preallarme",
+          "Decisione su notifica",
+          "Decisione su relazione finale",
+          "Responsabile decisione",
+        ],
+      },
+      {
+        title: "Evidenze e comunicazioni",
+        fields: [
+          "Sistemi coinvolti",
+          "Log conservati",
+          "Dati personali coinvolti",
+          "Misure adottate",
+          "Comunicazioni interne",
+          "Comunicazioni esterne",
+        ],
+      },
+      {
+        title: "Riesame post-incidente",
+        fields: [
+          "Causa radice",
+          "Azioni correttive",
+          "Responsabile",
+          "Scadenza",
+          "Data verifica efficacia",
+        ],
       },
     ],
   },

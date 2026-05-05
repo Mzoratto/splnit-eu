@@ -258,7 +258,9 @@ async function seedSourceDocuments() {
   const lastReviewed = new Date("2026-05-05T00:00:00.000Z");
   let count = 0;
 
-  for (const template of POLICY_TEMPLATES) {
+  for (const template of POLICY_TEMPLATES.filter(
+    (item) => item.reviewStatus !== "draft",
+  )) {
     await db
       .insert(sourceDocuments)
       .values({
