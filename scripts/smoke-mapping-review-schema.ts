@@ -59,7 +59,12 @@ async function main() {
             'jurisdiction',
             'language',
             'control_embedding',
-            'source_embedding'
+            'source_embedding',
+            'agent_verdict',
+            'agent_confidence',
+            'stage2_passes',
+            'stage3_checks',
+            'classified_at'
           )
         ORDER BY column_name
       `,
@@ -74,6 +79,11 @@ async function main() {
     assert.equal(columnTypes.language, "mapping_review_language");
     assert.equal(columnTypes.control_embedding, "vector");
     assert.equal(columnTypes.source_embedding, "vector");
+    assert.equal(columnTypes.agent_verdict, "mapping_review_decision");
+    assert.equal(columnTypes.agent_confidence, "mapping_review_confidence");
+    assert.equal(columnTypes.stage2_passes, "jsonb");
+    assert.equal(columnTypes.stage3_checks, "jsonb");
+    assert.equal(columnTypes.classified_at, "timestamptz");
   } finally {
     await pool.end();
   }

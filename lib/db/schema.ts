@@ -43,6 +43,17 @@ export const mappingReviewStatusEnum = pgEnum("mapping_review_status", [
   "promoted",
   "rejected",
 ]);
+export const mappingReviewDecisionEnum = pgEnum("mapping_review_decision", [
+  "approved",
+  "wrong_article",
+  "too_broad",
+  "needs_research",
+]);
+export const mappingReviewConfidenceEnum = pgEnum("mapping_review_confidence", [
+  "high",
+  "medium",
+  "low",
+]);
 
 export const organisations = pgTable("organisations", {
   id: uuid("id").primaryKey().defaultRandom(),
@@ -255,6 +266,17 @@ export const mappingReviewQueue = pgTable(
     controlEmbedding: vector("control_embedding", { dimensions: 1536 }),
     sourceEmbedding: vector("source_embedding", { dimensions: 1536 }),
     similarityScore: real("similarity_score"),
+    agentVerdict: mappingReviewDecisionEnum("agent_verdict"),
+    agentConfidence: mappingReviewConfidenceEnum("agent_confidence"),
+    stage2Passes: jsonb("stage2_passes")
+      .$type<Record<string, unknown>>()
+      .notNull()
+      .default({}),
+    stage3Checks: jsonb("stage3_checks")
+      .$type<Record<string, unknown>>()
+      .notNull()
+      .default({}),
+    classifiedAt: timestamp("classified_at", { withTimezone: true }),
     status: mappingReviewStatusEnum("status").notNull().default("unclassified"),
     createdAt: timestamp("created_at", { withTimezone: true }).defaultNow(),
     updatedAt: timestamp("updated_at", { withTimezone: true }).defaultNow(),
