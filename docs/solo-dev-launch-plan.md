@@ -171,7 +171,7 @@ Aligned and already present:
 Not aligned yet:
 
 - No imported legal article row should be treated as authoritative until it is manually promoted to `reviewStatus='reviewed'`.
-- Automated integration runs now create automated evidence snapshots on the first result, on status change, or after a 24-hour refresh window. They still need explicit source-citation metadata before they are fully auditor-ready.
+- Automated integration runs now create automated evidence snapshots on the first result, on status change, or after a 24-hour refresh window. Snapshots include reviewed article/source citations when available and explicitly mark when no reviewed citations exist.
 - Questionnaire AI does not yet retrieve official articles, validate citations, or save generated answers into the evidence vault automatically.
 - There is no pgvector/RAG layer. This is intentional for now.
 - The product must not publicly claim `247 controls` until the database actually contains 247 reviewed controls and the copy hygiene guard allows that claim. Current factual count is `92` seeded canonical controls.
@@ -275,7 +275,10 @@ Layer 1 trust signal generation slice - 2026-05-05:
 - [x] Evidence is created conservatively: first automated result, status change, or one refresh per 24 hours.
 - [x] Integration-run summaries now report how many evidence records were created.
 - [x] Added `smoke:integration-evidence-policy` to guard the evidence cadence.
-- [ ] Automated evidence snapshots still need explicit links to reviewed source/article citations before they should be described as fully auditor-ready.
+- [x] Automated evidence snapshots now include reviewed source/article citations when reviewed mappings exist.
+- [x] Snapshots with no reviewed article support now store `citationStatus='no_reviewed_citations'` instead of implying legal support.
+- [x] Added `smoke:automated-evidence-citations` so stored automated snapshots fail verification if they include draft citations or lack citation status.
+- [ ] Most current legal article rows are still draft, so many snapshots will correctly carry `no_reviewed_citations` until official review is complete.
 
 ### Layer 2 - RAG Knowledge Layer
 

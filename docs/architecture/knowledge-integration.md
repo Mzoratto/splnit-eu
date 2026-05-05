@@ -55,6 +55,7 @@ The product must not claim `247 controls` publicly until the database actually c
 - `npm run smoke:draft-extraction-sources` enforces that Zákony pro lidi extraction rows remain `draft`.
 - Evidence templates describe expected evidence; actual customer evidence remains in `evidence`.
 - Automated integration runs create `evidence` snapshots only on the first result, status change, or after a 24-hour refresh window. Do not create evidence for every hourly cron result.
+- Automated evidence snapshots may include legal/source citations only from `articles.review_status = 'reviewed'`. If no reviewed citation exists, store an explicit `citationStatus = 'no_reviewed_citations'`.
 - Public Trust Center pages must continue to show category-level aggregates only, never individual control IDs or evidence filenames.
 
 ## Layer 2 Deferral Criteria
