@@ -8,6 +8,11 @@ import {
   renderToBuffer,
 } from "@react-pdf/renderer";
 import type { incidents } from "@/lib/db/schema";
+import {
+  getIncidentReportLabels,
+  getIncidentReportProfile,
+  type IncidentReportTrack,
+} from "@/lib/incidents/reporting";
 
 type Incident = typeof incidents.$inferSelect;
 
@@ -16,9 +21,11 @@ type IncidentNotificationInput = {
   incident: Incident;
   organisation: {
     ico: string | null;
+    locale?: string | null;
     name: string;
+    primaryJurisdiction?: string | null;
   };
-  regulator: "nukib" | "uoou";
+  track: IncidentReportTrack;
 };
 
 const styles = StyleSheet.create({
@@ -93,83 +100,97 @@ function formatDate(value: Date | string | null | undefined) {
   return new Date(value).toISOString();
 }
 
-function getRegulatorTitle(regulator: "nukib" | "uoou") {
-  return regulator === "nukib"
-    ? "NUKIB initial notification template"
-    : "UOOU GDPR breach notification template";
-}
-
 function IncidentNotification({
   generatedAt,
   incident,
   organisation,
-  regulator,
+  track,
 }: IncidentNotificationInput) {
-  const article =
-    regulator === "nukib" ? "NIS2 Article 23" : "GDPR Article 33";
+  const profile = getIncidentReportProfile({
+    jurisdiction: organisation.primaryJurisdiction,
+    locale: organisation.locale,
+    track,
+  });
+  const labels = getIncidentReportLabels({
+    jurisdiction: organisation.primaryJurisdiction,
+    locale: organisation.locale,
+  });
 
   return (
     <Document
       author="Splnit.eu"
-      subject={getRegulatorTitle(regulator)}
-      title={getRegulatorTitle(regulator)}
+      subject={profile.subject}
+      title={profile.title}
     >
       <Page size="A4" style={styles.page}>
         <Text style={styles.eyebrow}>Splnit.eu incident management</Text>
-        <Text style={styles.title}>{getRegulatorTitle(regulator)}</Text>
+        <Text style={styles.title}>{profile.title}</Text>
         <Text style={styles.muted}>
-          Generated {generatedAt.toISOString().slice(0, 10)} · {article}
+          {labels.generated} {generatedAt.toISOString().slice(0, 10)} ·{" "}
+          {profile.citation}
         </Text>
 
         <View style={styles.grid}>
           <View style={styles.box}>
-            <Text style={styles.label}>Organisation</Text>
+            <Text style={styles.label}>{labels.organisation}</Text>
             <Text style={styles.value}>{organisation.name}</Text>
           </View>
           <View style={styles.box}>
-            <Text style={styles.label}>ICO</Text>
+            <Text style={styles.label}>{labels.legalId}</Text>
             <Text style={styles.value}>{organisation.ico ?? "N/A"}</Text>
           </View>
           <View style={styles.box}>
-            <Text style={styles.label}>Severity</Text>
-            <Text style={styles.value}>{incident.severity}</Text>
+            <Text style={styles.label}>{labels.authority}</Text>
+            <Text style={styles.value}>{profile.authority}</Text>
           </View>
         </View>
 
         <View style={styles.section}>
-          <Text style={styles.sectionTitle}>Incident summary</Text>
-          <Text>Title: {incident.title}</Text>
-          <Text>Status: {incident.status}</Text>
-          <Text>Detected at: {formatDate(incident.detectedAt)}</Text>
-          <Text>Resolved at: {formatDate(incident.resolvedAt)}</Text>
+          <Text style={styles.sectionTitle}>{labels.incidentSummary}</Text>
           <Text>
-            Personal data affected: {incident.affectsPersonalData ? "yes" : "no"}
+            {labels.title}: {incident.title}
           </Text>
           <Text>
-            Critical systems affected:{" "}
-            {incident.affectsCriticalSystems ? "yes" : "no"}
+            {labels.status}: {incident.status}
+          </Text>
+          <Text>
+            {labels.detectedAt}: {formatDate(incident.detectedAt)}
+          </Text>
+          <Text>
+            {labels.resolvedAt}: {formatDate(incident.resolvedAt)}
+          </Text>
+          <Text>
+            {labels.affectedPersonalData}:{" "}
+            {incident.affectsPersonalData ? labels.yes : labels.no}
+          </Text>
+          <Text>
+            {labels.affectedCriticalSystems}:{" "}
+            {incident.affectsCriticalSystems ? labels.yes : labels.no}
           </Text>
         </View>
 
         <View style={styles.section}>
-          <Text style={styles.sectionTitle}>Description</Text>
-          <Text>{incident.description ?? "No description provided."}</Text>
+          <Text style={styles.sectionTitle}>{labels.description}</Text>
+          <Text>{incident.description ?? labels.noDescription}</Text>
         </View>
 
         <View style={styles.section}>
-          <Text style={styles.sectionTitle}>Notification checklist</Text>
-          <Text style={styles.checklistItem}>
-            [ ] Incident classification and severity reviewed
-          </Text>
-          <Text style={styles.checklistItem}>
-            [ ] Affected systems and users identified
-          </Text>
-          <Text style={styles.checklistItem}>
-            [ ] Containment and mitigation actions documented
-          </Text>
-          <Text style={styles.checklistItem}>
-            [ ] Follow-up report owner assigned
-          </Text>
+          <Text style={styles.sectionTitle}>{labels.legalBasisAndTimeline}</Text>
+          <Text>{profile.legalBasis}</Text>
+          {profile.timeline.map((item) => (
+            <Text key={item} style={styles.checklistItem}>
+              [ ] {item}
+            </Text>
+          ))}
+        </View>
+
+        <View style={styles.section}>
+          <Text style={styles.sectionTitle}>{labels.notificationChecklist}</Text>
+          {profile.checklist.map((item) => (
+            <Text key={item} style={styles.checklistItem}>
+              [ ] {item}
+            </Text>
+          ))}
         </View>
       </Page>
     </Document>

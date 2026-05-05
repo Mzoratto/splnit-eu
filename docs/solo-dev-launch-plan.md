@@ -591,6 +591,16 @@ Progress note - 2026-05-05:
 - [ ] Use Italian SMB-appropriate labels.
 - [ ] Verify output format with the advisor before shipping.
 
+Progress note - 2026-05-05:
+
+- Added jurisdiction-aware incident report profiles for cybersecurity authority and data-protection authority exports.
+- Added generic export routes: `/api/incidents/[incidentId]/cybersecurity-report` and `/api/incidents/[incidentId]/data-protection-report`.
+- Kept legacy Czech `/nukib-report` and `/uoou-report` routes as compatibility aliases.
+- Italian cybersecurity exports now use ACN / CSIRT Italia copy with D.Lgs. 138/2024 Art. 25 and the 24h preallarme, 72h notifica, and one-month relazione finale checklist.
+- Italian data-protection exports now use Garante copy with GDPR Art. 33-34 and 72-hour breach-notification checklist.
+- Added `smoke:incident-notifications` to verify ACN/Garante report profiles and PDF rendering.
+- Output is still a draft worksheet for internal/customer preparation; advisor review is required before claiming portal-format compatibility.
+
 ## Phase 4 - Italian Site and Advisor Readiness
 
 Goal: marketing presence and support signals match the Italian product direction.

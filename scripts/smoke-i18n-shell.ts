@@ -155,7 +155,10 @@ assert.equal(it.clientsPage.title, "Dashboard clienti");
 assert.equal(it.clientsPage.form.save, "Salva collegamento");
 assert.equal(it.evidence.filters.apply, "Applica filtri");
 assert.equal(it.frameworks.index.title, "Normative e standard");
-assert.equal(it.frameworks.regulators.nis2, "ACN");
+assert.equal(
+  it.frameworks.regulators.nis2,
+  "ACN — Agenzia per la Cybersicurezza Nazionale",
+);
 assert.equal(it.frameworkWizard.submit, "Valuta");
 for (const questionId of frameworkQuestionIds) {
   assert.ok(

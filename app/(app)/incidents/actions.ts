@@ -9,6 +9,7 @@ import {
   markIncidentReported,
   updateIncidentStatus,
 } from "@/lib/db/queries/incidents";
+import { legacyRegulatorToReportTrack } from "@/lib/incidents/reporting";
 
 const incidentSchema = z.object({
   affectsCriticalSystems: z.boolean(),
@@ -19,7 +20,12 @@ const incidentSchema = z.object({
   title: z.string().trim().min(3).max(180),
 });
 const statusSchema = z.enum(["open", "investigating", "contained", "resolved"]);
-const regulatorSchema = z.enum(["nukib", "uoou"]);
+const reportTrackSchema = z.enum([
+  "cybersecurity",
+  "dataProtection",
+  "nukib",
+  "uoou",
+]);
 
 function getStringValue(formData: FormData, key: string) {
   const value = formData.get(key);
@@ -91,12 +97,18 @@ export async function markIncidentReportedAction(
   formData: FormData,
 ) {
   const session = await requireActiveSession();
-  const regulator = regulatorSchema.parse(getStringValue(formData, "regulator"));
+  const track = legacyRegulatorToReportTrack(
+    reportTrackSchema.parse(getStringValue(formData, "regulator")),
+  );
+
+  if (!track) {
+    throw new Error("Unsupported incident report track.");
+  }
 
   await markIncidentReported({
     clerkOrgId: session.clerkOrgId,
     incidentId,
-    regulator,
+    track,
   });
 
   revalidatePath("/incidents");

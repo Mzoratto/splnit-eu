@@ -1,6 +1,7 @@
 import { and, desc, eq } from "drizzle-orm";
 import { getDb } from "@/lib/db";
 import { incidents } from "@/lib/db/schema";
+import type { IncidentReportTrack } from "@/lib/incidents/reporting";
 
 export async function listIncidentsForOrg(clerkOrgId: string) {
   const db = getDb();
@@ -84,7 +85,7 @@ export async function updateIncidentStatus(input: {
 export async function markIncidentReported(input: {
   clerkOrgId: string;
   incidentId: string;
-  regulator: "nukib" | "uoou";
+  track: IncidentReportTrack;
 }) {
   const db = getDb();
   const reportedAt = new Date();
@@ -92,7 +93,7 @@ export async function markIncidentReported(input: {
   await db
     .update(incidents)
     .set(
-      input.regulator === "nukib"
+      input.track === "cybersecurity"
         ? {
             nukibReportedAt: reportedAt,
             reportedToNukib: true,

@@ -275,7 +275,7 @@ export default async function IncidentsPage({
           activeIncident ? (
             <>
               <a
-                href={`/api/incidents/${activeIncident.id}/nukib-report`}
+                href={`/api/incidents/${activeIncident.id}/cybersecurity-report`}
                 className="btn btn-nukib"
               >
                 {formatMessage(copy.actions.cybersecurityPdf, {
@@ -284,7 +284,7 @@ export default async function IncidentsPage({
                 <Download className="h-4 w-4" aria-hidden="true" strokeWidth={1.5} />
               </a>
               <a
-                href={`/api/incidents/${activeIncident.id}/uoou-report`}
+                href={`/api/incidents/${activeIncident.id}/data-protection-report`}
                 className="btn btn-secondary"
               >
                 {formatMessage(copy.actions.dataProtectionPdf, {
@@ -577,7 +577,7 @@ export default async function IncidentsPage({
                       activeIncident.id,
                     )}
                   >
-                    <input type="hidden" name="regulator" value="nukib" />
+                    <input type="hidden" name="regulator" value="cybersecurity" />
                     <button
                       type="submit"
                       disabled={
@@ -599,7 +599,7 @@ export default async function IncidentsPage({
                       activeIncident.id,
                     )}
                   >
-                    <input type="hidden" name="regulator" value="uoou" />
+                    <input type="hidden" name="regulator" value="dataProtection" />
                     <button
                       type="submit"
                       disabled={
