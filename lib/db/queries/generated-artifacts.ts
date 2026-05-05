@@ -1,7 +1,31 @@
+import { createAuditLog } from "@/lib/db/queries/audit-logs";
 import { getDb } from "@/lib/db";
 import { generatedArtifacts } from "@/lib/db/schema";
 
 export type GeneratedArtifactKind = "questionnaire_answers" | "gap_analysis";
+
+export const GENERATED_ARTIFACT_ENTITY_TYPE = "generated_artifact";
+export const GENERATED_ARTIFACT_CREATED_ACTION = "generated_artifact.created";
+
+export function buildGeneratedArtifactAuditLog(input: {
+  artifactId: string;
+  kind: GeneratedArtifactKind;
+  model: string | null;
+  source: string;
+  title: string;
+}) {
+  return {
+    action: GENERATED_ARTIFACT_CREATED_ACTION,
+    entityId: input.artifactId,
+    entityType: GENERATED_ARTIFACT_ENTITY_TYPE,
+    metadata: {
+      kind: input.kind,
+      model: input.model,
+      source: input.source,
+      title: input.title,
+    },
+  };
+}
 
 export async function createGeneratedArtifact(input: {
   clerkOrgId: string;
@@ -13,6 +37,7 @@ export async function createGeneratedArtifact(input: {
   title: string;
 }) {
   const db = getDb();
+  const source = input.source ?? "questionnaire_ai";
   const rows = await db
     .insert(generatedArtifacts)
     .values({
@@ -21,7 +46,7 @@ export async function createGeneratedArtifact(input: {
       createdBy: input.createdBy,
       kind: input.kind,
       model: input.model,
-      source: input.source ?? "questionnaire_ai",
+      source,
       title: input.title,
     })
     .returning({
@@ -33,6 +58,18 @@ export async function createGeneratedArtifact(input: {
   if (!artifact) {
     throw new Error("Failed to create generated artifact.");
   }
+
+  await createAuditLog({
+    ...buildGeneratedArtifactAuditLog({
+      artifactId: artifact.id,
+      kind: input.kind,
+      model: input.model,
+      source,
+      title: input.title,
+    }),
+    clerkOrgId: input.clerkOrgId,
+    clerkUserId: input.createdBy,
+  });
 
   return artifact;
 }

@@ -295,6 +295,7 @@ Layer 1 trust signal generation slice - 2026-05-05:
 - [x] Questionnaire AI now uses a provider boundary (`QUESTIONNAIRE_AI_PROVIDER`, default `anthropic`) so app pages/actions do not import Anthropic-specific code.
 - [x] Questionnaire AI now persists generated answer sets as `generated_artifacts` rows and returns the saved artifact ID to the UI/export payload.
 - [x] Gap report generation now also writes a `generated_artifacts` row linked to the private PDF blob and framework metadata.
+- [x] Generated artifacts now create audit-log records without duplicating generated content or private blob URLs into audit metadata.
 - [ ] Czech mappings still need compliance/legal review before they can become reviewed auditor-ready citations.
 
 ### Layer 2 - RAG Knowledge Layer
