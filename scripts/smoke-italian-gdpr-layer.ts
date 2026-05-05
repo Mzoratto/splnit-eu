@@ -14,6 +14,15 @@ const requiredGaranteArticleKeys = [
   "Garante Registro Trattamenti FAQ",
 ] as const;
 
+const requiredGdprArticleKeys = [
+  "Article 5",
+  "Article 30",
+  "Article 32",
+  "Article 33",
+  "Article 35",
+  "Article 99",
+] as const;
+
 async function main() {
   const pool = new Pool({ connectionString: databaseUrl, max: 1 });
 
@@ -31,6 +40,7 @@ async function main() {
     `,
       [
         [
+          "eu/gdpr-2016-679-it.pdf",
           "it/codice-privacy-dlgs-196-2003.html",
           "it/garante-data-breach.html",
           "it/garante-dpia.html",
@@ -41,7 +51,7 @@ async function main() {
 
     assert.equal(
       sourceResult.rows.length,
-      4,
+      5,
       "Italian GDPR source documents should exist.",
     );
 
@@ -49,7 +59,13 @@ async function main() {
       assert.ok(source.last_reviewed, `${source.filename} should have lastReviewed.`);
       const hostname = new URL(source.url ?? "").hostname;
 
-      if (source.filename === "it/codice-privacy-dlgs-196-2003.html") {
+      if (source.filename === "eu/gdpr-2016-679-it.pdf") {
+        assert.equal(
+          hostname,
+          "eur-lex.europa.eu",
+          `${source.filename} should use the official EUR-Lex hostname.`,
+        );
+      } else if (source.filename === "it/codice-privacy-dlgs-196-2003.html") {
         assert.equal(
           hostname,
           "www.normattiva.it",
@@ -137,6 +153,68 @@ async function main() {
       "Garante ROPA FAQ should contain processing-record text.",
     );
 
+    const gdprArticlesResult = await pool.query<{
+      article_key: string;
+      official_text: string;
+      review_status: string;
+      source_filename: string;
+      title: string | null;
+    }>(
+      `
+      SELECT
+        a.article_key,
+        a.official_text,
+        a.review_status,
+        sd.filename AS source_filename,
+        a.title
+      FROM articles a
+      JOIN source_documents sd ON sd.id = a.source_document_id
+      WHERE a.jurisdiction = 'EU'
+        AND a.locale = 'it-IT'
+        AND sd.filename = 'eu/gdpr-2016-679-it.pdf'
+      ORDER BY a.article_key
+    `,
+    );
+
+    assert.equal(
+      gdprArticlesResult.rows.length,
+      99,
+      "Italian GDPR EUR-Lex source import should create 99 reviewed article rows.",
+    );
+
+    const gdprArticlesByKey = new Map(
+      gdprArticlesResult.rows.map((row) => [row.article_key, row]),
+    );
+
+    for (const articleKey of requiredGdprArticleKeys) {
+      const row = gdprArticlesByKey.get(articleKey);
+
+      assert.ok(row, `${articleKey} should be imported from Italian GDPR.`);
+      assert.equal(row.review_status, "reviewed", `${articleKey} should be reviewed.`);
+      assert.equal(
+        row.source_filename,
+        "eu/gdpr-2016-679-it.pdf",
+        `${articleKey} should come from the Italian GDPR EUR-Lex source document.`,
+      );
+      assert.ok(row.title, `${articleKey} should have a title.`);
+    }
+
+    assert.match(
+      gdprArticlesByKey.get("Article 30")?.official_text ?? "",
+      /Registri delle attività di trattamento|registro delle attività di trattamento/i,
+      "GDPR Article 30 should contain processing-record text.",
+    );
+    assert.match(
+      gdprArticlesByKey.get("Article 32")?.official_text ?? "",
+      /sicurezza del trattamento|misure tecniche e organizzative/i,
+      "GDPR Article 32 should contain security-of-processing text.",
+    );
+    assert.match(
+      gdprArticlesByKey.get("Article 99")?.official_text ?? "",
+      /25 maggio 2018|Entrata in vigore e applicazione/i,
+      "GDPR Article 99 should contain application-date text.",
+    );
+
     const linkedMappings = await pool.query<{ count: number }>(
       `
       SELECT COUNT(*)::int AS count
@@ -144,7 +222,7 @@ async function main() {
       JOIN articles a ON a.id = fca.article_id
       WHERE a.article_key = ANY($1::text[])
     `,
-      [["D.Lgs. 196/2003", ...requiredGaranteArticleKeys]],
+      [["D.Lgs. 196/2003", ...requiredGaranteArticleKeys, ...requiredGdprArticleKeys]],
     );
 
     assert.equal(

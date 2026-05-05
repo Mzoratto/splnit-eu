@@ -29,20 +29,21 @@ Layer 1 is the current priority. The repo already has `controls`, `frameworks`, 
 
 ## Current Counts
 
-Current local database after the 2026-05-05 official-source verification contains:
+Current local database after the 2026-05-05 source-ingestion pass contains:
 
 - 92 canonical controls.
 - 184 database framework-control mappings after seed.
-- 48 source documents, including canonical EUR-Lex PDF source rows, Italian Gazzetta Ufficiale rows, official ACN/Garante rows, and official e-Sbírka PZZ PDF sources for 264/2025, 409/2025, and 410/2025.
-- 91 article rows:
-  - 2 reviewed NIS2 EU rows linked to the canonical EUR-Lex CELEX PDF source row.
-  - 3 reviewed Italian NIS2 rows from Gazzetta Ufficiale.
+- 54 source documents, including canonical EUR-Lex PDF source rows, Italian Gazzetta Ufficiale rows, official ACN/Garante/Normattiva rows, official e-Sbírka PZZ PDF sources for 264/2025, 409/2025, and 410/2025, and ISO Store reference rows.
+- 248 article rows:
+  - 99 reviewed Italian GDPR rows from the official EUR-Lex/CELLAR Formex manifestation, tied to the canonical EUR-Lex CELEX PDF source row.
+  - 61 reviewed Italian rows: all 44 D.Lgs. 138/2024 articles from Gazzetta Ufficiale, 13 ACN NIS determinations, 3 Garante guidance rows, and 1 Normattiva Codice Privacy row.
   - 42 reviewed Czech rows from official e-Sbírka PZZ PDFs.
   - 42 draft Czech extraction rows from the provided Zákony pro lidi PDFs kept only as provenance/audit aids.
-  - 2 legacy OP/EU extraction rows kept as draft after the EUR-Lex source migration.
-- 434 framework-control article links:
-  - 34 reviewed direct EU Article 21/23 links.
+  - 4 legacy EU/NIS2 extraction rows kept as draft after the EUR-Lex source migration.
+- 468 framework-control article links:
+  - 34 reviewed direct EU NIS2 Article 21/23 links.
   - Czech links copied to official e-Sbírka rows remain `confidence='draft'` pending compliance/legal mapping review.
+  - Italian NIS2 links remain `confidence='draft'` pending mapping review.
 - 34 evidence templates for the current NIS2 framework-control mappings after `npm run db:seed`.
 - 16 integration test definitions across Microsoft 365, GitHub, and AWS.
 
@@ -92,6 +93,8 @@ Use `npm run knowledge:import:italian-nis2-acn` to fetch official ACN NIS PDFs, 
 Use `npm run knowledge:import:italian-gdpr-garante` to fetch official Garante GDPR guidance pages for data breach, DPIA, and processing-record FAQ, normalize their HTML to source text, and store them as reviewed Italian GDPR guidance rows in `articles`. These rows are source text only; `smoke:italian-gdpr-layer` verifies that the importer does not create or promote mapping links.
 
 Use `npm run knowledge:import:italian-gdpr-codice` to fetch the official Normattiva consolidated Codice Privacy page, normalize its HTML to source text, and store it as a reviewed Italian GDPR supplementary-law row in `articles`. It is source text only and requires separate mapping review before any control citation can become auditor-ready.
+
+Use `npm run knowledge:import:gdpr-eu-it` to resolve the official Italian GDPR Formex manifestation from the Publications Office/CELLAR resource and import all 99 GDPR articles as reviewed Italian source text tied to the canonical EUR-Lex CELEX PDF source row. It creates no `framework_control_articles` links; mapping remains a separate review workflow.
 
 ## Layer 2 Deferral Criteria
 
