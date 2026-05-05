@@ -138,6 +138,7 @@ async function listReviewedCitationsForControl(
       and(
         eq(frameworkControls.controlId, controlId),
         eq(articles.reviewStatus, "reviewed"),
+        eq(frameworkControlArticles.confidence, "reviewed"),
       ),
     )
     .orderBy(asc(frameworks.slug), asc(articles.articleKey));

@@ -29,17 +29,18 @@ Layer 1 is the current priority. The repo already has `controls`, `frameworks`, 
 
 ## Current Counts
 
-As of this decision, the code seed contains:
+Current local database after the 2026-05-05 official-source verification contains:
 
 - 92 canonical controls.
 - 184 database framework-control mappings after seed.
-- 33 source documents after seed, including the official OP/EU NIS2 XHTML source.
-- 2 draft NIS2 EU article rows after running `npm run knowledge:import:nis2-eu`.
-- 34 draft NIS2 framework-control article links after running `npm run knowledge:import:nis2-eu`.
-- 5 draft Czech cyber law section rows after running `npm run knowledge:import:czech-cyber-law` with the provided extraction PDF.
-- 68 additional draft NIS2 framework-control article links to Czech transposition sections.
-- 37 draft Czech implementing decree section rows after running `npm run knowledge:import:czech-decrees` with the provided 409/410 extraction PDFs.
-- 132 additional draft NIS2 framework-control article links to Czech implementing decree sections.
+- 36 source documents, including official OP/EU NIS2 XHTML and official e-Sbírka PZZ PDF sources for 264/2025, 409/2025, and 410/2025.
+- 86 article rows:
+  - 2 reviewed NIS2 EU rows from official OP/EU XHTML.
+  - 42 reviewed Czech rows from official e-Sbírka PZZ PDFs.
+  - 42 draft Czech extraction rows from the provided Zákony pro lidi PDFs kept only as provenance/audit aids.
+- 434 framework-control article links:
+  - 34 reviewed direct EU Article 21/23 links.
+  - Czech links copied to official e-Sbírka rows remain `confidence='draft'` pending compliance/legal mapping review.
 - 34 evidence templates for the current NIS2 framework-control mappings after `npm run db:seed`.
 - 16 integration test definitions across Microsoft 365, GitHub, and AWS.
 
@@ -49,13 +50,15 @@ The product must not claim `247 controls` publicly until the database actually c
 
 - `framework_controls.articleRef` remains as a compatibility label, but new auditable citation behavior should use `framework_control_articles`.
 - An article is not authoritative until `articles.review_status = 'reviewed'`.
-- AI extraction can draft article rows, but manual review is required before `reviewed`.
-- Source-extracted article rows must stay `draft` until manually checked against the official source.
+- AI extraction can draft article rows, but official-source verification or manual review is required before `reviewed`.
+- Source-extracted article rows must stay `draft` until checked against the official source.
 - Zákony pro lidi PDFs may be used as extraction aids only. Do not promote those rows to `reviewed` until the text is checked against e-Sbírka or another official source.
 - `npm run smoke:draft-extraction-sources` enforces that Zákony pro lidi extraction rows remain `draft`.
+- `npm run knowledge:verify:official-sources` compares imported rows against official OP/EU and e-Sbírka sources without writing to the database.
+- `npm run knowledge:promote:official-sources` performs the same verification and then promotes verified official-source article rows.
 - Evidence templates describe expected evidence; actual customer evidence remains in `evidence`.
 - Automated integration runs create `evidence` snapshots only on the first result, status change, or after a 24-hour refresh window. Do not create evidence for every hourly cron result.
-- Automated evidence snapshots may include legal/source citations only from `articles.review_status = 'reviewed'`. If no reviewed citation exists, store an explicit `citationStatus = 'no_reviewed_citations'`.
+- Automated evidence snapshots may include legal/source citations only from `articles.review_status = 'reviewed'` and `framework_control_articles.confidence = 'reviewed'`. If no reviewed citation exists, store an explicit `citationStatus = 'no_reviewed_citations'`.
 - Public Trust Center pages must continue to show category-level aggregates only, never individual control IDs or evidence filenames.
 
 ## Layer 2 Deferral Criteria

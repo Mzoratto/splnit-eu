@@ -45,14 +45,16 @@ async function main() {
 
       return row.snapshot_data.reviewedCitations.some(
         (citation) =>
-          !isRecord(citation) || citation.reviewStatus !== "reviewed",
+          !isRecord(citation) ||
+          citation.reviewStatus !== "reviewed" ||
+          citation.confidence !== "reviewed",
       );
     });
 
     assert.deepEqual(
       invalidRows,
       [],
-      `Automated evidence snapshots must include only reviewed citations and an explicit citation status: ${JSON.stringify(
+      `Automated evidence snapshots must include only reviewed citations, reviewed mapping confidence, and an explicit citation status: ${JSON.stringify(
         invalidRows,
         null,
         2,

@@ -164,14 +164,18 @@ Aligned and already present:
 
 - `controls`, `frameworks`, `framework_controls`, `tests`, `source_documents`, `evidence`, `integration_runs`, `org_control_statuses`, and Trust Center visibility settings exist in Drizzle/Postgres.
 - `framework_controls` already carries `articleRef`, regulator guidance, evidence requirements, localized title, and localized description.
-- Current local database seed contains `92` canonical controls, `184` framework-control mappings, `34` evidence templates, and `16` integration test definitions across Microsoft 365, GitHub, and AWS.
+- Current local database seed contains `92` canonical controls, `184` framework-control mappings, `36` source documents, `86` article rows, `434` framework-control article links, `34` evidence templates, and `16` integration test definitions across Microsoft 365, GitHub, and AWS.
+- Official-source verification now passes for NIS2 EU Article 21/23 against OP/EU XHTML and for Czech 264/2025, 409/2025, and 410/2025 imported sections against e-Sbírka PZZ PDFs.
+- EU Article 21/23 rows and direct NIS2 framework-control links are promoted to reviewed.
+- Czech e-Sbírka article rows are promoted to reviewed source text, but Czech control-to-article mappings remain `confidence='draft'` until compliance/legal mapping review.
 - Integration runs update organisation control status, and the evidence table can store manual uploads and automated snapshots.
 - Questionnaire AI exists, but it is currently Anthropic-based and grounded only in organisation controls, evidence, and policies.
 
 Not aligned yet:
 
-- No imported legal article row should be treated as authoritative until it is manually promoted to `reviewStatus='reviewed'`.
-- Automated integration runs now create automated evidence snapshots on the first result, on status change, or after a 24-hour refresh window. Snapshots include reviewed article/source citations when available and explicitly mark when no reviewed citations exist.
+- The original Zákony pro lidi extraction rows remain draft and must stay draft; they are extraction aids, not official source rows.
+- Czech control-to-article mappings are not reviewed yet, so they must not be used as auditor-ready reviewed citations.
+- Automated integration runs now create automated evidence snapshots on the first result, on status change, or after a 24-hour refresh window. Snapshots include reviewed article/source citations only when both the article and mapping are reviewed, and explicitly mark when no reviewed citations exist.
 - Questionnaire AI does not yet retrieve official articles, validate citations, or save generated answers into the evidence vault automatically.
 - There is no pgvector/RAG layer. This is intentional for now.
 - The product must not publicly claim `247 controls` until the database actually contains 247 reviewed controls and the copy hygiene guard allows that claim. Current factual count is `92` seeded canonical controls.
@@ -234,9 +238,10 @@ Layer 1 next tasks:
 
 - [x] Create `docs/architecture/knowledge-integration.md` with this three-layer decision.
 - [x] Add Drizzle schema and migration for `articles`, `framework_control_articles`, and `evidence_templates`.
-- [ ] Seed NIS2 EU directive and Czech law article rows from official sources only.
-- [ ] Keep AI extraction as drafting support only; manually review every article before `reviewStatus='reviewed'`.
-- [ ] Link existing NIS2 framework-control rows to reviewed article rows.
+- [x] Seed NIS2 EU directive and Czech law/decree article rows from official sources.
+- [x] Keep extraction PDFs as drafting support only; original extraction rows remain draft.
+- [ ] Review Czech framework-control-to-article mappings before promoting their `confidence` to `reviewed`.
+- [x] Link existing NIS2 framework-control rows to reviewed EU article rows.
 - [x] Add smoke tests that fail when a reviewed framework control has no linked official article.
 - [x] Add seed/report script that prints real counts for controls, mappings, articles, source documents, evidence templates, and tests.
 
@@ -260,13 +265,17 @@ Layer 1 official source ingestion slice - 2026-05-05:
 - [x] Added NIS2 evidence requirements for all `34` NIS2 framework-control mappings and seeded `34` evidence templates.
 - [x] Added `smoke:nis2-evidence-templates` so NIS2 mappings fail verification if evidence requirements or active evidence templates are missing.
 - [x] Local count report now verifies `92` controls, `184` framework-control mappings, `33` source documents, `44` articles, `234` framework-control article mappings, `34` evidence templates, and `16` integration tests.
-- [ ] Manual legal/content review is still required before any imported article row can be promoted to `reviewStatus='reviewed'`.
+- [x] Added `knowledge:verify:official-sources` to compare imported legal text against official OP/EU and e-Sbírka sources without database writes.
+- [x] Added `knowledge:promote:official-sources` to verify and promote reviewed official-source article rows.
+- [x] Promoted `2` NIS2 EU article rows and `34` direct EU framework-control article links to reviewed after exact official OP/EU source verification.
 - [x] Added `knowledge:import:czech-cyber-law` and imported draft Czech law rows for `Zákon č. 264/2025 Sb.` sections § 12-§ 16 from the provided extraction PDF.
 - [x] Linked `68` NIS2 framework-control mappings to draft Czech transposition sections.
-- [ ] Czech law rows must stay draft until checked against e-Sbírka or another official source.
+- [x] Verified those `5` Czech law sections against official e-Sbírka PZZ PDF and inserted reviewed official e-Sbírka article rows.
+- [x] The original Zákony pro lidi law rows stay draft and are still guarded by `smoke:draft-extraction-sources`.
 - [x] Added `knowledge:import:czech-decrees` and imported `37` draft section rows for Vyhláška 409/2025 Sb. and Vyhláška 410/2025 Sb.
 - [x] Linked `132` NIS2 framework-control mappings to draft Czech implementing decree sections.
-- [ ] Vyhláška 409/2025 Sb. and Vyhláška 410/2025 Sb. rows must stay draft until checked against e-Sbírka or another official source.
+- [x] Verified `25` Vyhláška 409/2025 Sb. sections and `12` Vyhláška 410/2025 Sb. sections against official e-Sbírka PZZ PDFs and inserted reviewed official e-Sbírka article rows.
+- [x] Czech framework-control article links copied to the official e-Sbírka rows remain `confidence='draft'` pending compliance/legal mapping review.
 - [x] Added `smoke:draft-extraction-sources` so Zákony pro lidi extraction rows fail verification if marked `reviewed`.
 
 Layer 1 trust signal generation slice - 2026-05-05:
@@ -277,8 +286,9 @@ Layer 1 trust signal generation slice - 2026-05-05:
 - [x] Added `smoke:integration-evidence-policy` to guard the evidence cadence.
 - [x] Automated evidence snapshots now include reviewed source/article citations when reviewed mappings exist.
 - [x] Snapshots with no reviewed article support now store `citationStatus='no_reviewed_citations'` instead of implying legal support.
-- [x] Added `smoke:automated-evidence-citations` so stored automated snapshots fail verification if they include draft citations or lack citation status.
-- [ ] Most current legal article rows are still draft, so many snapshots will correctly carry `no_reviewed_citations` until official review is complete.
+- [x] Automated evidence citation lookup now requires both reviewed article source text and reviewed mapping confidence.
+- [x] Added `smoke:automated-evidence-citations` so stored automated snapshots fail verification if they include draft citations, draft mapping confidence, or lack citation status.
+- [ ] Czech mappings still need compliance/legal review before they can become reviewed auditor-ready citations.
 
 ### Layer 2 - RAG Knowledge Layer
 
