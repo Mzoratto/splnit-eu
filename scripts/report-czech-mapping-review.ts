@@ -60,6 +60,18 @@ function renderMarkdown(rows: MappingReviewRow[]) {
   const generatedAt = new Date().toISOString();
   const summary = summarizeRows(rows);
   const draftRows = rows.filter((row) => row.confidence !== "reviewed");
+  const sourceRows = Array.from(
+    new Map(
+      rows.map((row) => [
+        row.source_filename,
+        {
+          count: summary.bySource.get(row.source_filename) ?? 0,
+          title: row.source_title,
+          url: row.source_url,
+        },
+      ]),
+    ),
+  ).sort(([a], [b]) => a.localeCompare(b));
 
   const lines = [
     "# Czech NIS2 Mapping Review Queue",
@@ -77,14 +89,25 @@ function renderMarkdown(rows: MappingReviewRow[]) {
     "",
     "## Sources",
     "",
-    ...Array.from(summary.bySource)
-      .sort(([a], [b]) => a.localeCompare(b))
-      .map(([source, count]) => `- ${source}: ${count}`),
+    ...sourceRows.map(([source, data]) => {
+      const url = data.url ? ` · ${data.url}` : "";
+      return `- ${source}: ${data.count} links · ${data.title}${url}`;
+    }),
+    "",
+    "## Reviewer Workflow",
+    "",
+    "For each draft link:",
+    "",
+    "1. Read the control title, EU reference, Czech source, and evidence requirement.",
+    "2. Check the official Czech article text in e-Sbírka.",
+    "3. Mark the reviewer decision as `approved`, `wrong_article`, `too_broad`, or `needs_research`.",
+    "4. Add a short reviewer note when the decision is anything other than `approved`.",
+    "5. Promote the database link to `reviewed` only for rows marked `approved`.",
     "",
     "## Draft Mapping Links",
     "",
-    "| Control | EU ref | Czech source | Czech article | Mapping note | Evidence requirement |",
-    "| --- | --- | --- | --- | --- | --- |",
+    "| Control | EU ref | Czech source | Czech article | Mapping note | Evidence requirement | Reviewer decision | Reviewer note |",
+    "| --- | --- | --- | --- | --- | --- | --- | --- |",
     ...draftRows.map((row) => {
       const cells = [
         `${oneLine(row.control_key)} - ${oneLine(row.title_en)}`,
@@ -93,6 +116,8 @@ function renderMarkdown(rows: MappingReviewRow[]) {
         `${oneLine(row.article_citation)}${row.article_title ? ` - ${oneLine(row.article_title)}` : ""}`,
         oneLine(row.citation_note),
         oneLine(row.evidence_requirements),
+        "",
+        "",
       ];
 
       return `| ${cells.join(" | ")} |`;
