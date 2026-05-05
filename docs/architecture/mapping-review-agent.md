@@ -17,13 +17,15 @@ Implemented:
 - `npm run agent:review:stage1` parses mapping-review Markdown, hydrates control/source text from Postgres by `framework_control_articles.id`, and imports rows into `mapping_review_queue` only when `--apply` is passed. Add `--embed` with `--apply` to populate `text-embedding-3-small` vectors and cosine similarity when `OPENAI_API_KEY` is configured.
 - `npm run agent:review:stage2` classifies queued rows with the three-pass skeptic/advocate/auditor flow. It is read-only unless `--apply` is passed, and it stores final verdict/confidence plus the complete pass payload on the queue row.
 - `npm run agent:review:stage3` runs similarity, citation-format, domain-blacklist, and adversarial spot-check filters. It is read-only unless `--apply` is passed, and it stores Stage 3 check details on the queue row.
+- `npm run agent:review:stage4` promotes only rows that are already `agent_decided` + `approved`, have reviewed source articles, have Stage 3 final status `agent_decided`, and have no Stage 3 overrides. It is read-only unless `--apply` is passed.
+- `npm run agent:review:promote` is an alias for Stage 4.
 - `npm run agent:review:export` writes a framework/jurisdiction review Markdown package from reviewed official article text and draft framework-control article links.
 - `npm run agent:review:report` exports the queued Stage 2/Stage 3 agent output into a human-review package without promoting rows.
 - `npm run agent:review:report:all` prints a cross-framework queue summary by framework, jurisdiction, status, verdict, and confidence.
 
 Not implemented yet:
 
-- Generalized promotion command.
+- Batch orchestration command that runs stages 1-4 in sequence.
 
 ## Migration Status
 
@@ -61,7 +63,7 @@ Add `--apply` to write rows into `mapping_review_queue`. Add `--replace` with `-
 
 The importer does not fabricate source text from Markdown. It uses the Mapping ID column to load the canonical control and article text from Postgres. This keeps the queue tied to the structured knowledge layer instead of a copied review packet.
 
-Italian NIS2 is now the first target for the full agent pipeline. `docs/legal-reviews/nis2-it-mapping-review.md` is generated from reviewed Gazzetta Ufficiale article text for D.Lgs. 138/2024 Art. 23-25 and draft Italian framework-control links. Stage 1 has imported and embedded all 34 Italian NIS2 rows in local `mapping_review_queue` with ACN as the jurisdiction regulator. Stage 2 classified all 34 rows: 1 high-confidence `agent_decided` approval, 27 approval candidates routed to human because broad Art. 24 similarity stayed below threshold, and 6 `too_broad` candidates routed to human. Stage 3 cross-checked all 34 rows, persisted `stage3_checks`, and moved the single `agent_decided` incident-notification row back to `needs_human` because NIS2 incident/deadline mappings are domain-blacklisted. `docs/legal-reviews/nis2-it-agent-review.md` now exports those agent results for human review. No Italian mapping row has been promoted to `reviewed`.
+Italian NIS2 is now the first target for the full agent pipeline. `docs/legal-reviews/nis2-it-mapping-review.md` is generated from reviewed Gazzetta Ufficiale article text for D.Lgs. 138/2024 Art. 23-25 and draft Italian framework-control links. Stage 1 has imported and embedded all 34 Italian NIS2 rows in local `mapping_review_queue` with ACN as the jurisdiction regulator. Stage 2 classified all 34 rows: 1 high-confidence `agent_decided` approval, 27 approval candidates routed to human because broad Art. 24 similarity stayed below threshold, and 6 `too_broad` candidates routed to human. Stage 3 cross-checked all 34 rows, persisted `stage3_checks`, and moved the single `agent_decided` incident-notification row back to `needs_human` because NIS2 incident/deadline mappings are domain-blacklisted. Stage 4 dry-run and apply both found 0 promotable Italian rows. `docs/legal-reviews/nis2-it-agent-review.md` now exports those agent results for human review. No Italian mapping row has been promoted to `reviewed`.
 
 ## Stage 2 Classification
 
@@ -115,6 +117,30 @@ npm run agent:review:report -- --framework=nis2 --jurisdiction=it --output docs/
 ```
 
 The report is read-only. It includes queue IDs, mapping IDs, source citations, similarity scores, Stage 2 pass reasoning, Stage 3 overrides, and blank human-decision columns. Human reviewers still choose one of `approved`, `wrong_article`, `too_broad`, or `needs_research`; promotion remains a separate step.
+
+## Stage 4 Promotion
+
+Dry-run:
+
+```bash
+npm run agent:review:stage4 -- --framework=nis2 --jurisdiction=it
+```
+
+Apply:
+
+```bash
+npm run agent:review:stage4 -- --framework=nis2 --jurisdiction=it --apply
+```
+
+Stage 4 promotes only queue rows that already passed every earlier gate:
+
+- `mapping_review_queue.status = 'agent_decided'`
+- `agent_verdict = 'approved'`
+- linked article has `review_status = 'reviewed'`
+- Stage 3 recorded `finalStatus = 'agent_decided'`
+- Stage 3 has no overrides
+
+For each promoted row it sets `framework_control_articles.confidence = 'reviewed'`, marks the queue row `promoted`, and inserts a `mapping_promotion_audit` record with the Stage 2 and Stage 3 payloads. A row routed to `needs_human` is never promoted by this command.
 
 ## Safety Rules
 
