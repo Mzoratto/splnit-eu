@@ -33,6 +33,9 @@ As of this decision, the code seed contains:
 
 - 92 canonical controls.
 - 184 database framework-control mappings after seed.
+- 30 source documents after seed, including the official OP/EU NIS2 XHTML source.
+- 2 draft NIS2 EU article rows after running `npm run knowledge:import:nis2-eu`.
+- 34 draft NIS2 framework-control article links after running `npm run knowledge:import:nis2-eu`.
 - 16 integration test definitions across Microsoft 365, GitHub, and AWS.
 
 The product must not claim `247 controls` publicly until the database actually contains 247 reviewed controls and the copy hygiene guard is intentionally updated.
@@ -42,6 +45,7 @@ The product must not claim `247 controls` publicly until the database actually c
 - `framework_controls.articleRef` remains as a compatibility label, but new auditable citation behavior should use `framework_control_articles`.
 - An article is not authoritative until `articles.review_status = 'reviewed'`.
 - AI extraction can draft article rows, but manual review is required before `reviewed`.
+- Source-extracted article rows must stay `draft` until manually checked against the official source.
 - Evidence templates describe expected evidence; actual customer evidence remains in `evidence`.
 - Public Trust Center pages must continue to show category-level aggregates only, never individual control IDs or evidence filenames.
 

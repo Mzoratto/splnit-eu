@@ -250,6 +250,18 @@ Layer 1 foundation verification - 2026-05-05:
 - [x] Added `knowledge:counts` and `smoke:knowledge-layer`.
 - [x] Local count report verified `92` controls, `184` framework-control mappings, `29` source documents, `16` integration tests, and intentionally `0` articles/evidence templates before reviewed legal content is seeded.
 
+Layer 1 official source ingestion slice - 2026-05-05:
+
+- [x] Added the official OP/EU NIS2 XHTML source document for `Directive (EU) 2022/2555, CELEX 32022L2555`.
+- [x] Added `knowledge:import:nis2-eu` to fetch or read the official XHTML source and import Article 21 and Article 23.
+- [x] Imported `2` draft NIS2 EU article rows into local Postgres: Article 21 and Article 23.
+- [x] Linked `34` existing NIS2 framework-control rows to those draft article rows.
+- [x] Parser sanity check confirmed Article 21 extraction does not include Article 22.
+- [x] Local count report now verifies `92` controls, `184` framework-control mappings, `30` source documents, `2` articles, `34` framework-control article mappings, `0` evidence templates, and `16` integration tests.
+- [ ] Manual legal/content review is still required before any imported article row can be promoted to `reviewStatus='reviewed'`.
+- [ ] Czech law article rows are still pending.
+- [ ] Reviewed article-link smoke test is still pending and should be added once reviewed article rows exist.
+
 ### Layer 2 - RAG Knowledge Layer
 
 Status: explicitly deferred.

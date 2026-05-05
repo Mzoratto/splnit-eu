@@ -15,10 +15,12 @@ import { AWS_TEST_DEFINITIONS } from "../lib/integrations/aws/test-definitions";
 import { GITHUB_TEST_DEFINITIONS } from "../lib/integrations/github/test-definitions";
 import { MICROSOFT365_TEST_DEFINITIONS } from "../lib/integrations/microsoft365/test-definitions";
 import { POLICY_TEMPLATES } from "../lib/policies/templates";
+import { NIS2_EU_SOURCE } from "../lib/regulations/nis2-eu";
 
 loadEnvConfig(process.cwd());
 
 const SOURCE_DOCUMENT_LIBRARY = [
+  NIS2_EU_SOURCE,
   {
     citation: "Zákon č. 264/2025 Sb., o kybernetické bezpečnosti",
     effectiveDate: "2025-11-01",

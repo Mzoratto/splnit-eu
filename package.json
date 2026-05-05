@@ -20,6 +20,7 @@
     "smoke:source-documents": "tsx scripts/smoke-source-documents.ts",
     "smoke:templates": "tsx scripts/smoke-template-resolution.ts",
     "knowledge:counts": "tsx scripts/report-knowledge-counts.ts",
+    "knowledge:import:nis2-eu": "tsx scripts/import-nis2-eu-articles.ts",
     "db:generate": "drizzle-kit generate",
     "db:migrate": "drizzle-kit migrate",
     "db:seed": "tsx scripts/seed.ts",
