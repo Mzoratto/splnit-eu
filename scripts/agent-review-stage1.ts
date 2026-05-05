@@ -2,6 +2,11 @@ import { readFile } from "node:fs/promises";
 import { loadEnvConfig } from "@next/env";
 import { Pool } from "pg";
 import { parseMappingReviewMarkdown } from "../lib/agents/mapping-review/markdown";
+import {
+  cosineSimilarity,
+  createEmbeddings,
+  formatPgVector,
+} from "../lib/agents/mapping-review/openai-embeddings";
 
 loadEnvConfig(process.cwd());
 
@@ -36,6 +41,14 @@ type QueueRow = {
   mappingId: string;
   regulator: string | null;
   sourceText: string;
+};
+
+type QueueEmbeddingRow = {
+  control_description: string | null;
+  control_id: string;
+  control_title: string;
+  id: string;
+  source_text: string;
 };
 
 function getArg(name: string) {
@@ -208,6 +221,111 @@ async function insertQueueRows(pool: Pool, rows: QueueRow[]) {
   return result.rowCount ?? 0;
 }
 
+async function listQueueRowsForEmbedding(
+  pool: Pool,
+  input: {
+    framework: MappingReviewFramework;
+    jurisdiction: MappingReviewJurisdiction;
+    language: MappingReviewLanguage;
+    mappingIds: string[];
+  },
+) {
+  const result = await pool.query<QueueEmbeddingRow>(
+    `
+      SELECT
+        id::text,
+        control_id,
+        control_title,
+        control_description,
+        source_text
+      FROM mapping_review_queue
+      WHERE framework = $1
+        AND jurisdiction = $2
+        AND language = $3
+        AND mapping_id = ANY($4::uuid[])
+      ORDER BY mapping_id
+    `,
+    [input.framework, input.jurisdiction, input.language, input.mappingIds],
+  );
+
+  return result.rows;
+}
+
+async function updateQueueEmbeddings(
+  pool: Pool,
+  rows: QueueEmbeddingRow[],
+  controlVectors: number[][],
+  sourceVectors: number[][],
+) {
+  for (let index = 0; index < rows.length; index += 1) {
+    const row = rows[index];
+    const controlVector = controlVectors[index];
+    const sourceVector = sourceVectors[index];
+
+    if (!row || !controlVector || !sourceVector) {
+      throw new Error(`Missing embedding payload for row index ${index}.`);
+    }
+
+    await pool.query(
+      `
+        UPDATE mapping_review_queue
+        SET
+          control_embedding = $2::vector,
+          source_embedding = $3::vector,
+          similarity_score = $4,
+          updated_at = NOW()
+        WHERE id = $1::uuid
+      `,
+      [
+        row.id,
+        formatPgVector(controlVector),
+        formatPgVector(sourceVector),
+        cosineSimilarity(controlVector, sourceVector),
+      ],
+    );
+  }
+
+  return rows.length;
+}
+
+async function embedQueueRows(
+  pool: Pool,
+  input: {
+    framework: MappingReviewFramework;
+    jurisdiction: MappingReviewJurisdiction;
+    language: MappingReviewLanguage;
+    mappingIds: string[];
+    openaiApiKey: string;
+  },
+) {
+  const rows = await listQueueRowsForEmbedding(pool, input);
+
+  if (rows.length === 0) {
+    return 0;
+  }
+
+  const controlInputs = rows.map((row) =>
+    [
+      `Control ID: ${row.control_id}`,
+      `Title: ${row.control_title}`,
+      row.control_description ? `Description: ${row.control_description}` : null,
+    ]
+      .filter(Boolean)
+      .join("\n"),
+  );
+  const sourceInputs = rows.map((row) => row.source_text);
+  const controlVectors = await createEmbeddings({
+    apiKey: input.openaiApiKey,
+    inputs: controlInputs,
+  });
+  const sourceVectors = await createEmbeddings({
+    apiKey: input.openaiApiKey,
+    inputs: sourceInputs,
+  });
+
+  return updateQueueEmbeddings(pool, rows, controlVectors, sourceVectors);
+}
+
 function buildQueueRows(input: {
   framework: MappingReviewFramework;
   hydratedRows: HydratedMappingRow[];
@@ -277,11 +395,17 @@ async function main() {
     : inferLanguage(jurisdiction);
   const inputPath = getArg("--input") ?? getDefaultInputPath(framework, jurisdiction);
   const shouldApply = process.argv.includes("--apply");
+  const shouldEmbed = process.argv.includes("--embed");
   const shouldReplace = process.argv.includes("--replace");
   const databaseUrl = process.env.DATABASE_URL?.trim();
+  const openaiApiKey = process.env.OPENAI_API_KEY?.trim();
 
   if (!databaseUrl) {
     throw new Error("DATABASE_URL is required for Stage 1 extraction.");
+  }
+
+  if (shouldApply && shouldEmbed && !openaiApiKey) {
+    throw new Error("OPENAI_API_KEY is required when Stage 1 is run with --embed.");
   }
 
   const markdown = await readFile(inputPath, "utf8");
@@ -319,6 +443,8 @@ async function main() {
           {
             apply: false,
             existingRows: existingMappingIds.size,
+            embed: false,
+            embedRequested: shouldEmbed,
             framework,
             inputPath,
             jurisdiction,
@@ -346,11 +472,22 @@ async function main() {
     }
 
     const insertedRows = await insertQueueRows(pool, rowsToInsert);
+    const embeddedRows =
+      shouldEmbed && openaiApiKey
+        ? await embedQueueRows(pool, {
+            framework,
+            jurisdiction,
+            language,
+            mappingIds,
+            openaiApiKey,
+          })
+        : 0;
 
     console.log(
       JSON.stringify(
         {
           deletedRows,
+          embeddedRows,
           framework,
           inputPath,
           insertedRows,

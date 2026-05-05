@@ -12,7 +12,7 @@ Implemented:
 - `mapping_promotion_audit` Drizzle schema with framework, jurisdiction, language, decision source, Stage 2 reasoning payload, Stage 3 checks payload, and promotion timestamp.
 - Migration `0012_unusual_living_lightning` includes `CREATE EXTENSION IF NOT EXISTS vector`.
 - `npm run smoke:mapping-review-schema` verifies pgvector, the two review tables, and the vector columns.
-- `npm run agent:review:stage1` parses mapping-review Markdown, hydrates control/source text from Postgres by `framework_control_articles.id`, and imports rows into `mapping_review_queue` only when `--apply` is passed.
+- `npm run agent:review:stage1` parses mapping-review Markdown, hydrates control/source text from Postgres by `framework_control_articles.id`, and imports rows into `mapping_review_queue` only when `--apply` is passed. Add `--embed` with `--apply` to populate `text-embedding-3-small` vectors and cosine similarity when `OPENAI_API_KEY` is configured.
 
 Not implemented yet:
 
@@ -53,7 +53,7 @@ npm run agent:review:stage1 -- --framework=nis2 --jurisdiction=it
 npm run agent:review:stage1 -- --framework=nis2 --jurisdiction=cz --input docs/legal-reviews/czech-nis2-batch-1-review.md
 ```
 
-Add `--apply` to write rows into `mapping_review_queue`. Add `--replace` with `--apply` when regenerating a queue for the same mapping IDs.
+Add `--apply` to write rows into `mapping_review_queue`. Add `--replace` with `--apply` when regenerating a queue for the same mapping IDs. Add `--embed` with `--apply` to call the OpenAI embeddings API and populate `control_embedding`, `source_embedding`, and `similarity_score`.
 
 The importer does not fabricate source text from Markdown. It uses the Mapping ID column to load the canonical control and article text from Postgres. This keeps the queue tied to the structured knowledge layer instead of a copied review packet.
 
