@@ -16,6 +16,11 @@ import {
   FRAMEWORK_QUESTIONS,
   type FrameworkAnswer,
 } from "@/lib/frameworks/questions";
+import {
+  getFrameworkDisplayDescription,
+  getFrameworkDisplayName,
+  getFrameworkDisplayRegulator,
+} from "@/lib/frameworks/localization";
 import { FRAMEWORK_LIBRARY } from "@/lib/frameworks/registry";
 import { getMessagesForLocale } from "@/i18n/messages";
 import { normalizeLocale } from "@/i18n/routing";
@@ -107,16 +112,18 @@ export async function generateGapReportAction(frameworkSlug: string) {
           : control.titleEn ?? control.title,
     })),
     framework: {
-      description:
-        locale === "cs-CZ"
-          ? detail.framework.descriptionCs
-          : copy.descriptions[parsedSlug] ?? detail.framework.descriptionCs,
+      description: getFrameworkDisplayDescription(
+        detail.framework,
+        locale,
+        copy.descriptions,
+      ),
       mandatoryDeadline: detail.framework.mandatoryDeadline,
-      name:
-        locale === "cs-CZ"
-          ? detail.framework.nameCs
-          : detail.framework.nameEn,
-      regulator: detail.framework.regulator,
+      name: getFrameworkDisplayName(detail.framework, locale),
+      regulator: getFrameworkDisplayRegulator(
+        detail.framework,
+        locale,
+        copy.regulators,
+      ),
       version: detail.framework.version,
     },
     generatedAt,

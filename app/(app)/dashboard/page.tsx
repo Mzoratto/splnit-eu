@@ -20,6 +20,11 @@ import { normalizeLocale, type Locale } from "@/i18n/routing";
 import { CONTROL_LIBRARY } from "@/lib/controls/library";
 import { hasDatabaseUrl } from "@/lib/db";
 import { getDashboardData } from "@/lib/db/queries/dashboard";
+import {
+  getFrameworkDisplayDescription,
+  getFrameworkDisplayName,
+  getFrameworkDisplayRegulator,
+} from "@/lib/frameworks/localization";
 import { FRAMEWORK_LIBRARY } from "@/lib/frameworks/registry";
 import { getJurisdictionContext } from "@/lib/jurisdictions/context";
 
@@ -68,25 +73,6 @@ function getFallbackUpdates(copy: DashboardCopy) {
       title: copy.demoUpdates.uoouGuidance.title,
     },
   ];
-}
-
-function getFrameworkName(
-  framework: (typeof FRAMEWORK_LIBRARY)[number],
-  locale: Locale,
-) {
-  return locale === "cs-CZ" ? framework.nameCs : framework.nameEn;
-}
-
-function getFrameworkDescription(
-  framework: (typeof FRAMEWORK_LIBRARY)[number],
-  locale: Locale,
-  copy: DashboardCopy,
-) {
-  if (locale === "cs-CZ") {
-    return framework.descriptionCs;
-  }
-
-  return copy.frameworkDescriptions[framework.slug] ?? framework.descriptionCs;
 }
 
 async function loadDashboardData() {
@@ -321,6 +307,7 @@ export default async function DashboardPage() {
   );
   const messages = getMessagesForLocale(locale);
   const copy = messages.dashboard;
+  const frameworkCopy = messages.frameworks;
   const fallbackUpdates = getFallbackUpdates(copy);
   const frameworkScores =
     data?.frameworkScores.length
@@ -328,8 +315,16 @@ export default async function DashboardPage() {
       : fallbackFrameworkScores.map((item) => {
           const framework = FRAMEWORK_LIBRARY.find((fw) => fw.slug === item.slug);
           return {
-            name: framework ? getFrameworkName(framework, locale) : item.slug,
-            regulator: framework?.regulator ?? null,
+            name: framework
+              ? getFrameworkDisplayName(framework, locale)
+              : item.slug,
+            regulator: framework
+              ? getFrameworkDisplayRegulator(
+                  framework,
+                  locale,
+                  frameworkCopy.regulators,
+                )
+              : null,
             score: item.score,
             slug: item.slug,
             status: item.status,
@@ -485,11 +480,17 @@ export default async function DashboardPage() {
                   <FrameworkIcon tone={tone} />
                   <div className="min-w-0">
                     <p className="truncate font-medium">
-                      {framework ? getFrameworkName(framework, locale) : item.name}
+                      {framework
+                        ? getFrameworkDisplayName(framework, locale)
+                        : item.name}
                     </p>
                     <p className="mt-0.5 truncate text-xs text-foreground/52">
                       {framework
-                        ? getFrameworkDescription(framework, locale, copy)
+                        ? getFrameworkDisplayDescription(
+                            framework,
+                            locale,
+                            copy.frameworkDescriptions,
+                          )
                         : item.regulator ?? "Framework"}
                     </p>
                   </div>
@@ -622,16 +623,24 @@ export default async function DashboardPage() {
               <div className="flex items-start justify-between gap-3">
                 <div>
                   <p className="text-sm font-medium">
-                    {getFrameworkName(framework, locale)}
+                    {getFrameworkDisplayName(framework, locale)}
                   </p>
                   <p className="mt-1 text-xs text-foreground/52">
-                    {framework.regulator}
+                    {getFrameworkDisplayRegulator(
+                      framework,
+                      locale,
+                      frameworkCopy.regulators,
+                    )}
                   </p>
                 </div>
                 <FileArchive className="h-4 w-4 text-primary" aria-hidden="true" strokeWidth={1.5} />
               </div>
               <p className="mt-4 text-sm text-foreground/72">
-                {getFrameworkDescription(framework, locale, copy)}
+                {getFrameworkDisplayDescription(
+                  framework,
+                  locale,
+                  copy.frameworkDescriptions,
+                )}
               </p>
               <div className="mt-4 flex items-center justify-between gap-3">
                 <span className="font-mono text-xs text-foreground/52">

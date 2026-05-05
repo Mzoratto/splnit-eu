@@ -415,6 +415,13 @@
       "iso27001": "Information security management system and security control catalogue.",
       "csrd": "ESG reporting, double materiality, data evidence, and supplier questionnaires."
     },
+    "regulators": {
+      "nis2": "National cybersecurity authority",
+      "ai-act": "EU / national AI authorities",
+      "gdpr": "Data protection authority",
+      "iso27001": "ISO",
+      "csrd": "National ESG authority"
+    },
     "index": {
       "eyebrow": "Frameworks",
       "title": "Regulations and standards",

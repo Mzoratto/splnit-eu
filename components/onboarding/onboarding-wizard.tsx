@@ -170,6 +170,7 @@ export function OnboardingWizard({
   tools: ToolInventoryItem[];
 }) {
   const t = useTranslations("onboarding");
+  const frameworkT = useTranslations("frameworks");
   const [pending, startTransition] = useTransition();
   const [error, setError] = useState<string | null>(null);
   const [state, dispatch] = useReducer(reducer, {
@@ -420,7 +421,7 @@ export function OnboardingWizard({
                     <div>
                       <p className="font-medium">{framework.nameCs}</p>
                       <p className="mt-1 text-xs text-foreground/58">
-                        {framework.regulator}
+                        {frameworkT(`regulators.${framework.slug}`)}
                       </p>
                     </div>
                     {selected ? <Check className="h-5 w-5 text-primary" /> : null}

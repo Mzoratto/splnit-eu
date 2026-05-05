@@ -25,6 +25,11 @@ import {
   ISO27001_ANNEX_A_MAPPINGS,
   ISO27001_CERTIFICATION_BODIES,
 } from "@/lib/frameworks/iso27001-annex-a";
+import {
+  getFrameworkDisplayDescription,
+  getFrameworkDisplayName,
+  getFrameworkDisplayRegulator,
+} from "@/lib/frameworks/localization";
 import { FRAMEWORK_LIBRARY } from "@/lib/frameworks/registry";
 
 type FrameworkControl = {
@@ -74,23 +79,6 @@ function getStatusTone(status: string | null): StatusPillTone {
   }
 
   return "neutral";
-}
-
-function getFrameworkName(
-  framework: (typeof FRAMEWORK_LIBRARY)[number],
-  locale: Locale,
-) {
-  return locale === "cs-CZ" ? framework.nameCs : framework.nameEn;
-}
-
-function getFrameworkDescription(
-  framework: (typeof FRAMEWORK_LIBRARY)[number],
-  locale: Locale,
-  descriptions: Record<string, string>,
-) {
-  return locale === "cs-CZ"
-    ? framework.descriptionCs
-    : descriptions[framework.slug] ?? framework.descriptionCs;
 }
 
 function getControlTitle(control: FrameworkControl, locale: Locale) {
@@ -256,9 +244,13 @@ export default async function FrameworkDetailPage({
     <section className="space-y-8">
       <PageHeader
         breadcrumb={copy.detail.breadcrumb}
-        eyebrow={seedFramework.regulator}
-        title={getFrameworkName(seedFramework, locale)}
-        subtitle={getFrameworkDescription(
+        eyebrow={getFrameworkDisplayRegulator(
+          seedFramework,
+          locale,
+          copy.regulators,
+        )}
+        title={getFrameworkDisplayName(seedFramework, locale)}
+        subtitle={getFrameworkDisplayDescription(
           seedFramework,
           locale,
           copy.descriptions,

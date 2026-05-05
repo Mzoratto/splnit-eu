@@ -3,25 +3,13 @@ import { getLocale } from "next-intl/server";
 import { ArrowRight, ClipboardCheck } from "lucide-react";
 import { PageHeader } from "@/components/app/page-header";
 import { getMessagesForLocale } from "@/i18n/messages";
-import { normalizeLocale, type Locale } from "@/i18n/routing";
+import { normalizeLocale } from "@/i18n/routing";
+import {
+  getFrameworkDisplayDescription,
+  getFrameworkDisplayName,
+  getFrameworkDisplayRegulator,
+} from "@/lib/frameworks/localization";
 import { FRAMEWORK_LIBRARY } from "@/lib/frameworks/registry";
-
-function getFrameworkName(
-  framework: (typeof FRAMEWORK_LIBRARY)[number],
-  locale: Locale,
-) {
-  return locale === "cs-CZ" ? framework.nameCs : framework.nameEn;
-}
-
-function getFrameworkDescription(
-  framework: (typeof FRAMEWORK_LIBRARY)[number],
-  locale: Locale,
-  descriptions: Record<string, string>,
-) {
-  return locale === "cs-CZ"
-    ? framework.descriptionCs
-    : descriptions[framework.slug] ?? framework.descriptionCs;
-}
 
 export default async function FrameworksPage() {
   const locale = normalizeLocale(await getLocale()) ?? "cs-CZ";
@@ -43,9 +31,15 @@ export default async function FrameworksPage() {
           >
             <div className="flex items-start justify-between gap-4">
               <div>
-                <p className="text-sm text-foreground/58">{framework.regulator}</p>
+                <p className="text-sm text-foreground/58">
+                  {getFrameworkDisplayRegulator(
+                    framework,
+                    locale,
+                    copy.regulators,
+                  )}
+                </p>
                 <h2 className="mt-1 text-lg font-medium">
-                  {getFrameworkName(framework, locale)}
+                  {getFrameworkDisplayName(framework, locale)}
                 </h2>
               </div>
               <ClipboardCheck
@@ -55,7 +49,7 @@ export default async function FrameworksPage() {
               />
             </div>
             <p className="mt-3 min-h-16 text-sm leading-6 text-foreground/64">
-              {getFrameworkDescription(
+              {getFrameworkDisplayDescription(
                 framework,
                 locale,
                 copy.descriptions,

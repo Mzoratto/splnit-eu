@@ -101,6 +101,7 @@ assert.equal(en.clientsPage.title, "Client dashboard");
 assert.equal(en.clientsPage.form.save, "Save link");
 assert.equal(en.evidence.filters.apply, "Apply filters");
 assert.equal(en.frameworks.index.title, "Regulations and standards");
+assert.equal(en.frameworks.regulators.nis2, "National cybersecurity authority");
 assert.equal(en.frameworkWizard.submit, "Assess");
 for (const questionId of frameworkQuestionIds) {
   assert.ok(
@@ -154,6 +155,7 @@ assert.equal(it.clientsPage.title, "Dashboard clienti");
 assert.equal(it.clientsPage.form.save, "Salva collegamento");
 assert.equal(it.evidence.filters.apply, "Applica filtri");
 assert.equal(it.frameworks.index.title, "Normative e standard");
+assert.equal(it.frameworks.regulators.nis2, "ACN");
 assert.equal(it.frameworkWizard.submit, "Valuta");
 for (const questionId of frameworkQuestionIds) {
   assert.ok(

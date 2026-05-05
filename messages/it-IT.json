@@ -415,6 +415,13 @@
       "iso27001": "Sistema di gestione della sicurezza delle informazioni e catalogo dei controlli.",
       "csrd": "Reporting ESG, doppia materialità, evidenze dati e questionari fornitori."
     },
+    "regulators": {
+      "nis2": "ACN",
+      "ai-act": "Autorità UE/nazionali",
+      "gdpr": "Garante Privacy",
+      "iso27001": "ISO",
+      "csrd": "Autorità ESG nazionale"
+    },
     "index": {
       "eyebrow": "Framework",
       "title": "Normative e standard",

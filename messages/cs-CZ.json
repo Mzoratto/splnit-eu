@@ -186,6 +186,13 @@
       "iso27001": "Systém řízení bezpečnosti informací a katalog bezpečnostních opatření.",
       "csrd": "ESG reporting, dvojí materialita, datová evidence a dodavatelské dotazníky."
     },
+    "regulators": {
+      "nis2": "NÚKIB",
+      "ai-act": "ČTÚ",
+      "gdpr": "ÚOOÚ",
+      "iso27001": "ISO",
+      "csrd": "MŽP"
+    },
     "index": {
       "eyebrow": "Frameworky",
       "title": "Regulace a standardy",
