@@ -504,11 +504,14 @@ Started and verified locally:
 - Generated `docs/legal-reviews/nis2-it-mapping-review.md` with 34 Italian NIS2 draft mapping rows.
 - Ran Stage 1 for Italian NIS2 with embeddings and Stage 2 classification for all 34 rows. Result: 1 `agent_decided` approval, 33 `needs_human`, 0 promoted mappings.
 - Added and ran Stage 3 for Italian NIS2. It persisted cross-check metadata for all 34 rows and forced the single incident-notification approval back to `needs_human` because NIS2 incident/deadline mappings require human review.
+- Added `agent:review:report` and generated `docs/legal-reviews/nis2-it-agent-review.md` so an Italian reviewer can see Stage 2 reasoning, Stage 3 overrides, source citations, and blank human-decision columns without database access.
+- Current Italian NIS2 queue status after Stage 3: 34 `needs_human`, 0 `agent_decided`, 0 promoted.
 
 Still open before calling 3.1 complete:
 
 - Verify whether later ACN determinations on the NIS portal/CSIRT referent, including 333017/2025 and later 2025 updates mentioned in secondary sources, have official ACN document URLs. Do not seed them until the official source is found.
 - Add official ACN guidance/reading-guide documents if ACN publishes a stable source URL.
+- Keep EU-level citation work on EUR-Lex CELEX-backed sources, national transpositions on official state journals or official consolidated law databases, regulator guidance on regulator websites, and ISO references limited to licensed/internal use without reproducing ISO control text.
 
 ### 3.2 Italian Control Mapping
 

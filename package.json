@@ -46,6 +46,8 @@
     "agent:review:stage2": "tsx scripts/agent-review-stage2.ts",
     "agent:review:stage3": "tsx scripts/agent-review-stage3.ts",
     "agent:review:export": "tsx scripts/report-mapping-review.ts",
+    "agent:review:report": "tsx scripts/report-agent-review-queue.ts",
+    "agent:review:report:all": "tsx scripts/report-agent-review-queue.ts --all",
     "db:generate": "drizzle-kit generate",
     "db:migrate": "drizzle-kit migrate",
     "db:seed": "tsx scripts/seed.ts",
