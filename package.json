@@ -18,6 +18,7 @@
     "smoke:tenant-locales": "tsx scripts/smoke-tenant-locales.ts",
     "smoke:jurisdictions": "tsx scripts/smoke-jurisdiction-context.ts",
     "smoke:knowledge-layer": "tsx scripts/report-knowledge-counts.ts --smoke",
+    "smoke:nis2-evidence-templates": "tsx scripts/smoke-nis2-evidence-templates.ts",
     "smoke:reviewed-article-links": "tsx scripts/smoke-reviewed-article-links.ts",
     "smoke:source-documents": "tsx scripts/smoke-source-documents.ts",
     "smoke:templates": "tsx scripts/smoke-template-resolution.ts",

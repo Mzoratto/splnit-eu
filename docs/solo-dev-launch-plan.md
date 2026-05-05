@@ -164,15 +164,13 @@ Aligned and already present:
 
 - `controls`, `frameworks`, `framework_controls`, `tests`, `source_documents`, `evidence`, `integration_runs`, `org_control_statuses`, and Trust Center visibility settings exist in Drizzle/Postgres.
 - `framework_controls` already carries `articleRef`, regulator guidance, evidence requirements, localized title, and localized description.
-- Current local database seed contains `92` canonical controls, `184` framework-control mappings, and `16` integration test definitions across Microsoft 365, GitHub, and AWS.
+- Current local database seed contains `92` canonical controls, `184` framework-control mappings, `34` evidence templates, and `16` integration test definitions across Microsoft 365, GitHub, and AWS.
 - Integration runs update organisation control status, and the evidence table can store manual uploads and automated snapshots.
 - Questionnaire AI exists, but it is currently Anthropic-based and grounded only in organisation controls, evidence, and policies.
 
 Not aligned yet:
 
-- There is no first-class `articles` table containing official article text, stable article IDs, and citation format.
-- `framework_controls.articleRef` is a text reference, not an auditable link to a reviewed official article row.
-- There is no `evidence_templates` table that defines what good evidence looks like per control or control/framework pair.
+- No imported legal article row should be treated as authoritative until it is manually promoted to `reviewStatus='reviewed'`.
 - Automated integration runs update control statuses, but they do not yet consistently create auditor-ready evidence records with source citations and retention metadata.
 - Questionnaire AI does not yet retrieve official articles, validate citations, or save generated answers into the evidence vault automatically.
 - There is no pgvector/RAG layer. This is intentional for now.
@@ -234,13 +232,13 @@ export const evidenceTemplates = pgTable("evidence_templates", {
 
 Layer 1 next tasks:
 
-- [ ] Create `docs/architecture/knowledge-integration.md` with this three-layer decision.
-- [ ] Add Drizzle schema and migration for `articles`, `framework_control_articles`, and `evidence_templates`.
+- [x] Create `docs/architecture/knowledge-integration.md` with this three-layer decision.
+- [x] Add Drizzle schema and migration for `articles`, `framework_control_articles`, and `evidence_templates`.
 - [ ] Seed NIS2 EU directive and Czech law article rows from official sources only.
 - [ ] Keep AI extraction as drafting support only; manually review every article before `reviewStatus='reviewed'`.
 - [ ] Link existing NIS2 framework-control rows to reviewed article rows.
 - [x] Add smoke tests that fail when a reviewed framework control has no linked official article.
-- [ ] Add seed/report script that prints real counts for controls, mappings, articles, source documents, evidence templates, and tests.
+- [x] Add seed/report script that prints real counts for controls, mappings, articles, source documents, evidence templates, and tests.
 
 Layer 1 foundation verification - 2026-05-05:
 
@@ -258,8 +256,10 @@ Layer 1 official source ingestion slice - 2026-05-05:
 - [x] Linked `34` existing NIS2 framework-control rows to those draft article rows.
 - [x] Parser sanity check confirmed Article 21 extraction does not include Article 22.
 - [x] Added `smoke:reviewed-article-links`; it passes while rows are draft and will fail once reviewed article rows exist without matching framework-control links.
-- [x] Added idempotent `evidence_templates` seeding for mappings that explicitly define `evidenceRequirements`; current count remains `0` because the control library does not yet contain those requirements.
-- [x] Local count report now verifies `92` controls, `184` framework-control mappings, `30` source documents, `2` articles, `34` framework-control article mappings, `0` evidence templates, and `16` integration tests.
+- [x] Added idempotent `evidence_templates` seeding for mappings that explicitly define `evidenceRequirements`.
+- [x] Added NIS2 evidence requirements for all `34` NIS2 framework-control mappings and seeded `34` evidence templates.
+- [x] Added `smoke:nis2-evidence-templates` so NIS2 mappings fail verification if evidence requirements or active evidence templates are missing.
+- [x] Local count report now verifies `92` controls, `184` framework-control mappings, `33` source documents, `44` articles, `234` framework-control article mappings, `34` evidence templates, and `16` integration tests.
 - [ ] Manual legal/content review is still required before any imported article row can be promoted to `reviewStatus='reviewed'`.
 - [x] Added `knowledge:import:czech-cyber-law` and imported draft Czech law rows for `Zákon č. 264/2025 Sb.` sections § 12-§ 16 from the provided extraction PDF.
 - [x] Linked `68` NIS2 framework-control mappings to draft Czech transposition sections.

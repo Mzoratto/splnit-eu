@@ -1,3 +1,5 @@
+import { NIS2_EVIDENCE_REQUIREMENTS_BY_CONTROL } from "./evidence-requirements";
+
 export type FrameworkSlug = "nis2" | "ai-act" | "gdpr" | "iso27001" | "csrd";
 
 export type ControlCategory =
@@ -1067,8 +1069,30 @@ const CSRD_DATA_POINT_CONTROLS: ControlSeed[] = [
   ],
 }));
 
+function withNis2EvidenceRequirements(control: ControlSeed): ControlSeed {
+  const evidenceRequirements = NIS2_EVIDENCE_REQUIREMENTS_BY_CONTROL[control.key];
+
+  if (!evidenceRequirements) {
+    return control;
+  }
+
+  return {
+    ...control,
+    frameworkMappings: control.frameworkMappings.map((mapping) => {
+      if (mapping.frameworkSlug !== "nis2" || mapping.evidenceRequirements) {
+        return mapping;
+      }
+
+      return {
+        ...mapping,
+        evidenceRequirements,
+      };
+    }),
+  };
+}
+
 export const CONTROL_LIBRARY: ControlSeed[] = [
-  ...BASE_CONTROL_LIBRARY,
+  ...BASE_CONTROL_LIBRARY.map(withNis2EvidenceRequirements),
   ...ISO27001_EXTENSION_CONTROLS,
   ...CSRD_DATA_POINT_CONTROLS,
 ];
