@@ -10,8 +10,10 @@ assert.ok(databaseUrl, "DATABASE_URL is required for draft extraction source smo
 
 type PromotedDraftRow = {
   article_key: string;
+  citation: string;
   filename: string;
   review_status: string;
+  source_title: string;
   title: string | null;
 };
 
@@ -22,15 +24,21 @@ async function main() {
     const promotedDrafts = await pool.query<PromotedDraftRow>(`
       SELECT
         a.article_key,
+        a.citation,
         a.review_status,
         a.title,
-        sd.filename
+        sd.filename,
+        sd.title AS source_title
       FROM articles a
       JOIN source_documents sd ON sd.id = a.source_document_id
-      WHERE sd.filename IN (
-        'cz/zakonyprolidi_cs_2025_264_v20251101.pdf',
-        'cz/zakonyprolidi_cs_2025_409_v20251101.pdf',
-        'cz/zakonyprolidi_cs_2025_410_v20251101.pdf'
+      WHERE (
+        lower(coalesce(sd.filename, '')) LIKE '%zakonyprolidi%'
+        OR lower(coalesce(sd.filename, '')) LIKE '%draft%'
+        OR lower(coalesce(sd.filename, '')) LIKE '%extraction%'
+        OR lower(sd.title) LIKE '%draft%'
+        OR lower(sd.title) LIKE '%extraction%'
+        OR lower(sd.citation) LIKE '%draft%'
+        OR lower(sd.citation) LIKE '%extraction%'
       )
         AND a.review_status <> 'draft'
       ORDER BY sd.filename, a.article_key
@@ -39,7 +47,7 @@ async function main() {
     assert.deepEqual(
       promotedDrafts.rows,
       [],
-      `Zákony pro lidi extraction rows must stay draft until checked against an official source: ${JSON.stringify(promotedDrafts.rows, null, 2)}`,
+      `Draft/extraction source rows must stay draft until checked against an official source: ${JSON.stringify(promotedDrafts.rows, null, 2)}`,
     );
   } finally {
     await pool.end();
