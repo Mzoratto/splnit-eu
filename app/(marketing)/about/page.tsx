@@ -89,7 +89,7 @@ export default async function AboutPage() {
         </section>
 
         <section className="border-t border-zinc-200/50 bg-white py-20">
-          <div className="mx-auto grid max-w-7xl gap-8 px-5 md:grid-cols-2">
+          <div className="mx-auto max-w-5xl px-5">
             <article className="rounded-[24px] border border-emerald-100 bg-emerald-50/50 p-8">
               <h2 className="text-2xl font-semibold text-zinc-900">
                 {t("realTodayTitle")}
@@ -102,23 +102,6 @@ export default async function AboutPage() {
                       className="mt-0.5 shrink-0 text-lg text-emerald-500"
                     />
                     <span>{t(`realToday.${key}`)}</span>
-                  </li>
-                ))}
-              </ul>
-            </article>
-
-            <article className="rounded-[24px] border border-zinc-200 bg-white p-8">
-              <h2 className="text-2xl font-semibold text-zinc-900">
-                {t("notYetTitle")}
-              </h2>
-              <ul className="mt-6 space-y-3 text-sm leading-6 text-zinc-600">
-                {notYetKeys.map((key) => (
-                  <li key={key} className="flex gap-3">
-                    <Icon
-                      icon="solar:forbidden-circle-linear"
-                      className="mt-0.5 shrink-0 text-lg text-zinc-400"
-                    />
-                    <span>{t(`notYet.${key}`)}</span>
                   </li>
                 ))}
               </ul>
@@ -136,6 +119,26 @@ export default async function AboutPage() {
               <p>{t("whyP1")}</p>
               <p>{t("whyP2")}</p>
             </div>
+          </div>
+        </section>
+
+        <section className="border-t border-zinc-200/50 bg-zinc-50 py-14">
+          <div className="mx-auto max-w-4xl px-5">
+            <h2 className="text-lg font-semibold text-zinc-900">
+              {t("notYetTitle")}
+            </h2>
+            <ul className="mt-5 grid gap-3 text-sm leading-6 text-zinc-500 md:grid-cols-2">
+              {notYetKeys.map((key) => (
+                <li key={key} className="flex gap-3">
+                  <Icon
+                    icon="solar:forbidden-circle-linear"
+                    className="mt-0.5 shrink-0 text-base text-zinc-400"
+                    aria-hidden="true"
+                  />
+                  <span>{t(`notYet.${key}`)}</span>
+                </li>
+              ))}
+            </ul>
           </div>
         </section>
       </main>

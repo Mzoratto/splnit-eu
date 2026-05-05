@@ -908,7 +908,7 @@
     "earlyAccess": {
       "tag": "Předběžný přístup",
       "title": "Hledáme prvních 10 design partnerů.",
-      "body": "Splnit.eu je v předběžném přístupu. Stavím ho jako solo developer v Olomouci a hledám firmy, které chtějí ovlivnit produkt před veřejným spuštěním.",
+      "body": "Splnit.eu je v předběžném přístupu. Jde o fondátorem vedenou platformu postavenou v Olomouci pro firmy, které chtějí ovlivnit produkt před veřejným spuštěním.",
       "primaryCta": "Přihlásit se jako design partner",
       "secondaryCta": "Kdo za tím stojí",
       "filledLabel": "Aktuálně obsazeno",
@@ -945,7 +945,7 @@
       "tag": "About",
       "photoPlaceholder": "Founder photo before launch",
       "title": "Kdo stojí za Splnit.eu.",
-      "body": "Splnit.eu staví solo developer v Olomouci. Produkt vzniká pro evropské SMB týmy, které potřebují připravit důkazy, kontroly a dokumenty pro NIS2, GDPR a ISO 27001 bez nekonečných tabulek.",
+      "body": "Splnit.eu je zaměřená, fondátorem vedená platforma postavená seniorním IT inženýrem s hlubokou znalostí evropských compliance frameworků.",
       "primaryCta": "Stát se design partnerem",
       "realTodayTitle": "Co je pravda dnes",
       "notYetTitle": "Co zatím netvrdíme",
@@ -954,7 +954,7 @@
       "whyP1": "Velké globální compliance platformy často pokrývají obecné rámce dobře, ale SMB týmy v EU potřebují také lokální transpozice, jasné citace a praktický onboarding.",
       "whyP2": "Splnit.eu začíná menší: automatické kontroly pro systémy, které firmy už používají, dokumenty připravené k právní kontrole a přímá práce se zakladatelem u prvních design partnerů.",
       "realToday": {
-        "solo": "Splnit.eu je produkt v předběžném přístupu stavěný solo developerem v Olomouci.",
+        "solo": "Splnit.eu je fondátorem vedený produkt v předběžném přístupu postavený v Olomouci.",
         "focus": "Produkt se zaměřuje na EU compliance automation pro NIS2, GDPR a ISO 27001.",
         "legalReview": "DPA a finální právní dokumenty jsou připravené k právní kontrole před produkčním spuštěním.",
         "noFakeProof": "Veřejné reference a metriky nejsou uvedené, dokud nebudou ověřené."
@@ -968,11 +968,11 @@
     }
   },
   "home": {
-    "badge": "Narozeno v Česku · Vytvořeno pro EU předpisy",
-    "titleLine1": "Připravte se na audit.",
-    "titleLine2": "S automatizovanou compliance platformou.",
-    "mobileLead": "Připravte důkazy pro GDPR, NIS2 a ISO 27001 bez tabulek.",
-    "lead": "Centralizovaná platforma pro evropské SMB týmy. Připravte důkazy pro GDPR, NIS2 a ISO 27001 s automatickými kontrolami pro Microsoft 365, AWS a GitHub.",
+    "badge": "Compliance EU pro české firmy",
+    "titleLine1": "Compliance plynulá ve vaší jurisdikci.",
+    "titleLine2": "",
+    "mobileLead": "NIS2, EU AI Act, GDPR a ISO 27001 nativně, s citacemi předpisů, které váš auditor očekává.",
+    "lead": "NIS2, EU AI Act, GDPR a ISO 27001 nativně, s citacemi předpisů, které váš auditor očekává. Postaveno pro evropské SMB v italštině, češtině a angličtině.",
     "primaryCta": "Stát se design partnerem",
     "secondaryCta": "Zobrazit demo",
     "trustLine": "Předběžný přístup · Přímý kontakt se zakladatelem · EU data residency cíl",

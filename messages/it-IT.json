@@ -1137,7 +1137,7 @@
     "earlyAccess": {
       "tag": "Accesso anticipato",
       "title": "Cerchiamo i primi 10 design partner.",
-      "body": "Splnit.eu è in accesso anticipato. Lo sto costruendo come solo developer a Olomouc e cerco aziende che vogliono influenzare il prodotto prima del lancio pubblico.",
+      "body": "Splnit.eu è in accesso anticipato. È una piattaforma guidata dal fondatore, costruita a Olomouc per aziende che vogliono influenzare il prodotto prima del lancio pubblico.",
       "primaryCta": "Candidati come design partner",
       "secondaryCta": "Chi c'è dietro",
       "filledLabel": "Attualmente firmati",
@@ -1174,7 +1174,7 @@
       "tag": "Chi siamo",
       "photoPlaceholder": "Foto del founder prima del lancio",
       "title": "Chi c'è dietro Splnit.eu.",
-      "body": "Splnit.eu è costruito da un solo developer a Olomouc per team SMB europei che devono preparare evidenze, controlli e documenti per NIS2, GDPR e ISO 27001 senza fogli di calcolo infiniti.",
+      "body": "Splnit.eu è una piattaforma focalizzata, guidata dal fondatore, costruita da un ingegnere IT senior con esperienza approfondita nei framework di compliance europei.",
       "primaryCta": "Diventa design partner",
       "realTodayTitle": "Cosa è vero oggi",
       "notYetTitle": "Cosa non dichiariamo ancora",
@@ -1183,7 +1183,7 @@
       "whyP1": "Le grandi piattaforme globali coprono spesso bene i framework generici, ma le PMI europee hanno bisogno anche di recepimenti locali, citazioni chiare e onboarding pratico.",
       "whyP2": "Splnit.eu parte più piccolo: controlli automatici sui sistemi già usati dalle aziende, documenti pronti per revisione legale e lavoro diretto col founder per i primi design partner.",
       "realToday": {
-        "solo": "Splnit.eu è un prodotto in accesso anticipato costruito da un solo developer a Olomouc.",
+        "solo": "Splnit.eu è un prodotto in accesso anticipato guidato dal fondatore e costruito a Olomouc.",
         "focus": "Il prodotto si concentra sull'automazione compliance UE per NIS2, GDPR e ISO 27001.",
         "legalReview": "DPA e documenti legali finali sono pronti per revisione legale prima del lancio in produzione.",
         "noFakeProof": "Referenze pubbliche e metriche non vengono mostrate finché non sono verificate."
@@ -1197,11 +1197,11 @@
     }
   },
   "home": {
-    "badge": "Nato in Cechia · Costruito per le normative UE",
-    "titleLine1": "Preparatevi all'audit.",
-    "titleLine2": "Con una piattaforma compliance automatizzata.",
-    "mobileLead": "Preparate evidenze per GDPR, NIS2 e ISO 27001 senza fogli di calcolo.",
-    "lead": "Una piattaforma centrale per PMI europee. Preparate evidenze per GDPR, NIS2 e ISO 27001 con controlli automatici per Microsoft 365, AWS e GitHub.",
+    "badge": "Compliance EU per le PMI italiane",
+    "titleLine1": "Compliance fluente nella tua giurisdizione.",
+    "titleLine2": "",
+    "mobileLead": "NIS2, EU AI Act, GDPR e ISO 27001 nativi, con le citazioni normative che il tuo auditor locale si aspetta.",
+    "lead": "NIS2, EU AI Act, GDPR e ISO 27001 nativi, con le citazioni normative che il tuo auditor locale si aspetta. Costruita per le PMI europee in italiano, ceco e inglese.",
     "primaryCta": "Diventa design partner",
     "secondaryCta": "Guarda demo",
     "trustLine": "Accesso anticipato · Contatto diretto col founder · Dati nell'UE come obiettivo",

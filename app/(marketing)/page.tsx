@@ -84,6 +84,7 @@ const trustBadges = [
 export default async function HomePage() {
   const locale = normalizeLocale(await getLocale()) ?? "cs-CZ";
   const t = await getTranslations("home");
+  const titleLine2 = t("titleLine2");
 
   return (
     <MarketingShell>
@@ -112,9 +113,11 @@ export default async function HomePage() {
                 <span className="block text-zinc-900">
                   {t("titleLine1")}
                 </span>
-                <span className="mt-1 block text-zinc-400">
-                  {t("titleLine2")}
-                </span>
+                {titleLine2 ? (
+                  <span className="mt-1 block text-zinc-400">
+                    {titleLine2}
+                  </span>
+                ) : null}
               </h1>
 
               <p className="mx-auto mb-10 max-w-lg text-sm leading-6 text-zinc-600 md:max-w-2xl md:text-xl md:leading-relaxed">
