@@ -51,6 +51,7 @@ The product must not claim `247 controls` publicly until the database actually c
 - AI extraction can draft article rows, but manual review is required before `reviewed`.
 - Source-extracted article rows must stay `draft` until manually checked against the official source.
 - Zákony pro lidi PDFs may be used as extraction aids only. Do not promote those rows to `reviewed` until the text is checked against e-Sbírka or another official source.
+- `npm run smoke:draft-extraction-sources` enforces that Zákony pro lidi extraction rows remain `draft`.
 - Evidence templates describe expected evidence; actual customer evidence remains in `evidence`.
 - Public Trust Center pages must continue to show category-level aggregates only, never individual control IDs or evidence filenames.
 

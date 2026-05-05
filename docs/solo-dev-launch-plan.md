@@ -267,6 +267,7 @@ Layer 1 official source ingestion slice - 2026-05-05:
 - [x] Added `knowledge:import:czech-decrees` and imported `37` draft section rows for Vyhláška 409/2025 Sb. and Vyhláška 410/2025 Sb.
 - [x] Linked `132` NIS2 framework-control mappings to draft Czech implementing decree sections.
 - [ ] Vyhláška 409/2025 Sb. and Vyhláška 410/2025 Sb. rows must stay draft until checked against e-Sbírka or another official source.
+- [x] Added `smoke:draft-extraction-sources` so Zákony pro lidi extraction rows fail verification if marked `reviewed`.
 
 ### Layer 2 - RAG Knowledge Layer
 
