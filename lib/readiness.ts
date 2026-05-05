@@ -1,3 +1,5 @@
+import { getQuestionnaireAiProviderStatus } from "@/lib/questionnaires/provider";
+
 type ReadinessLevel = "required" | "recommended";
 type ReadinessStatus = "configured" | "missing";
 
@@ -112,7 +114,18 @@ const recommendedChecks: EnvCheck[] = [
   {
     level: "recommended",
     name: "questionnaires",
-    variables: ["ANTHROPIC_API_KEY"],
+    variables: [],
+    getMissing: () => {
+      const status = getQuestionnaireAiProviderStatus();
+
+      if (!status.supported) {
+        return [
+          `QUESTIONNAIRE_AI_PROVIDER supported value (currently ${status.providerId})`,
+        ];
+      }
+
+      return status.configured ? [] : [`${status.label} credentials`];
+    },
   },
   {
     level: "recommended",

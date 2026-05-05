@@ -82,4 +82,4 @@ Customer-facing AI must:
 - Frame output as draft material for legal or compliance review.
 - Save generated outputs into the evidence/audit trail when they affect customer-facing compliance work.
 
-The current Questionnaire AI is Anthropic-based and grounded in controls, evidence, and policies. Before expanding it, add provider abstraction, reviewed article retrieval, citation validation, and generated-output storage.
+The current Questionnaire AI uses a provider boundary with Anthropic as the only implemented provider. It is grounded in controls, evidence, policies, and reviewed legal citations, validates returned references against supplied context, stores generated outputs as generated artifacts, and writes artifact creation to the audit trail. Before adding another AI provider, update subprocessors, retention, opt-in wording, and data-processing docs for that provider.

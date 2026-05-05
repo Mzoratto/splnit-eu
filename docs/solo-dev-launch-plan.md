@@ -169,7 +169,7 @@ Aligned and already present:
 - EU Article 21/23 rows and direct NIS2 framework-control links are promoted to reviewed.
 - Czech e-Sbírka article rows are promoted to reviewed source text, but Czech control-to-article mappings remain `confidence='draft'` until compliance/legal mapping review.
 - Integration runs update organisation control status, and the evidence table can store manual uploads and automated snapshots.
-- Questionnaire AI exists, but it is currently Anthropic-based and grounded only in organisation controls, evidence, and policies.
+- Questionnaire AI exists behind a provider boundary, with Anthropic as the only implemented provider today. It is grounded in organisation controls, evidence, policies, and reviewed legal citations, and stores generated outputs as generated artifacts with audit-log entries.
 
 Not aligned yet:
 
