@@ -34,8 +34,8 @@ const copy: Record<Locale, DashboardMockupCopy> = {
     auditReadinessBody: "Ukázkový stav kontrol a důkazů",
     checkRun: "Ukázkový běh kontrol",
     dataResidencyBody:
-      "AWS eu-central-1 (Frankfurt) · Microsoft 365 EU Data Boundary",
-    dataResidencyTitle: "Produkční hosting v EU",
+      "Vercel hosting · Neon Postgres · DPA přehled",
+    dataResidencyTitle: "Produkční stack zdokumentovaný",
     demoBadge: "Demo",
     demoWorkspace: "Demo workspace · ukázková data",
     evidence: "Důkazy",
@@ -60,8 +60,8 @@ const copy: Record<Locale, DashboardMockupCopy> = {
     auditReadinessBody: "Sample control and evidence status",
     checkRun: "Sample control run",
     dataResidencyBody:
-      "AWS eu-central-1 (Frankfurt) · Microsoft 365 EU Data Boundary",
-    dataResidencyTitle: "Production hosting in the EU",
+      "Vercel hosting · Neon Postgres · DPA overview",
+    dataResidencyTitle: "Production stack documented",
     demoBadge: "Demo",
     demoWorkspace: "Demo workspace · sample data",
     evidence: "Evidence",
@@ -86,8 +86,8 @@ const copy: Record<Locale, DashboardMockupCopy> = {
     auditReadinessBody: "Stato demo di controlli ed evidenze",
     checkRun: "Esecuzione controlli demo",
     dataResidencyBody:
-      "AWS eu-central-1 (Francoforte) · Microsoft 365 EU Data Boundary",
-    dataResidencyTitle: "Hosting di produzione nell'UE",
+      "Vercel hosting · Neon Postgres · panoramica DPA",
+    dataResidencyTitle: "Stack produzione documentato",
     demoBadge: "Demo",
     demoWorkspace: "Workspace demo · dati di esempio",
     evidence: "Evidenze",

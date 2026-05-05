@@ -149,8 +149,8 @@ const copy: Record<Locale, PlatformCopy> = {
     finalNote:
       "Bezpečnostní a právní dokumentace se doplňuje podle reálného stavu před produkčním spuštěním.",
     trustBadges: [
-      "AWS eu-central-1 (Frankfurt)",
-      "Šifrování AES-256",
+      "Vercel hosting",
+      "Neon Postgres",
       "DPA k právní kontrole",
       "Subdodavatelé evidovaní",
     ],
@@ -248,8 +248,8 @@ const copy: Record<Locale, PlatformCopy> = {
     finalNote:
       "Security and legal documentation is completed according to the real production setup before launch.",
     trustBadges: [
-      "AWS eu-central-1 (Frankfurt)",
-      "AES-256 encryption",
+      "Vercel hosting",
+      "Neon Postgres",
       "DPA ready for legal review",
       "Sub-processors tracked",
     ],
@@ -347,8 +347,8 @@ const copy: Record<Locale, PlatformCopy> = {
     finalNote:
       "La documentazione sicurezza e legale viene completata in base al reale setup di produzione prima del lancio.",
     trustBadges: [
-      "AWS eu-central-1 (Francoforte)",
-      "Cifratura AES-256",
+      "Vercel hosting",
+      "Neon Postgres",
       "DPA pronto per revisione legale",
       "Sub-responsabili tracciati",
     ],

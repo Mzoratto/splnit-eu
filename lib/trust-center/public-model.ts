@@ -1053,7 +1053,7 @@ function splnitTrustCopy(locale: Locale) {
         "This page publishes the current Splnit.eu security posture, legal documents, and sub-processor information. Splnit.eu is in early access, so certifications that are not complete are shown as in progress rather than claimed.",
       eyebrow: "SPLNIT.EU TRUST CENTER · EARLY ACCESS",
       gdpr: "Privacy docs published",
-      hosting: "EU · Frankfurt",
+      hosting: "Vercel · Neon",
       iso: "In progress · 2026",
       security: "security@splnit.eu",
       title:
@@ -1068,7 +1068,7 @@ function splnitTrustCopy(locale: Locale) {
         "Questa pagina pubblica la postura di sicurezza attuale di Splnit.eu, i documenti legali e le informazioni sui sub-responsabili. Splnit.eu è in accesso anticipato: certificazioni non completate sono indicate come in corso, non come ottenute.",
       eyebrow: "TRUST CENTER SPLNIT.EU · ACCESSO ANTICIPATO",
       gdpr: "Documenti privacy pubblicati",
-      hosting: "UE · Francoforte",
+      hosting: "Vercel · Neon",
       iso: "In corso · 2026",
       security: "security@splnit.eu",
       title:
@@ -1082,7 +1082,7 @@ function splnitTrustCopy(locale: Locale) {
       "Tato stránka publikuje aktuální bezpečnostní postoj Splnit.eu, právní dokumenty a informace o subdodavatelích. Splnit.eu je v early access, takže nedokončené certifikace uvádíme jako rozpracované, ne jako získané.",
     eyebrow: "SPLNIT.EU TRUST CENTER · EARLY ACCESS",
     gdpr: "Privacy dokumenty publikovány",
-    hosting: "EU · Frankfurt",
+    hosting: "Vercel · Neon",
     iso: "Probíhá · 2026",
     security: "security@splnit.eu",
     title:

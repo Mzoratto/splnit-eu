@@ -1207,7 +1207,7 @@
     "lead": "Native NIS2, EU AI Act, GDPR, and ISO 27001 with the regulatory citations your local auditor expects. Built for European SMBs in Italian, Czech, and English.",
     "primaryCta": "Become a design partner",
     "secondaryCta": "View demo",
-    "trustLine": "Early access · Direct founder contact · Production hosting AWS eu-central-1 (Frankfurt)",
+    "trustLine": "Early access · Direct founder contact · Production stack Vercel + Neon",
     "partnerTag": "Founding cohort open",
     "partnerFilled": "10 design partner spots available",
     "partnerFree": "12 months Business plan free",
@@ -1236,8 +1236,8 @@
       "resultsBody": "Dashboard, failure alerts, and audit documentation prepared for your auditor."
     },
     "features": {
-      "residencyTitle": "Production hosting in the EU",
-      "residencyBody": "Production hosting: AWS eu-central-1 (Frankfurt). Microsoft 365 EU Data Boundary for office productivity.",
+      "residencyTitle": "Production stack documented",
+      "residencyBody": "Production uses Vercel for hosting and Neon Postgres for the database. Sub-processors and processing context are listed in the DPA overview.",
       "monitoringTitle": "Continuous monitoring",
       "monitoringBody": "Catch configuration drift in Microsoft 365 or AWS immediately.",
       "documentsTitle": "Automated documents",
@@ -1246,7 +1246,7 @@
     "trustBadges": {
       "early": "Early access",
       "dpa": "DPA ready for legal review",
-      "residency": "AWS eu-central-1 (Frankfurt)",
+      "residency": "Vercel hosting · Neon Postgres",
       "onboarding": "Founder-led onboarding"
     }
   },

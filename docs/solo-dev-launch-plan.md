@@ -644,6 +644,7 @@ Progress note - 2026-05-05:
 - Added public `/security` and Italian-localized `/it/sicurezza` routes with honest early-access posture, done/in-progress sections, and `security@splnit.eu` / `privacy@splnit.eu` contacts.
 - Added public `/status` route backed by the readiness check counts and `/api/health` link; this is explicitly not an SLA or historical uptime report.
 - Updated Splnit.eu's own Trust Center document link from a missing markdown path to `/security`.
+- Replaced older AWS-hosting marketing claims with the documented provider stack: Vercel hosting plus Neon Postgres. Exact production processing regions still need vendor-dashboard confirmation before the data-residency checklist item can be closed.
 - Kept certification, legal-review, and ACN/Garante portal-format claims as in progress until human/advisor review is complete.
 
 ## Phase 5 - Italian Outreach and First Design Partner
