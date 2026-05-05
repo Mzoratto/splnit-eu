@@ -21,6 +21,7 @@ type MappingReviewRow = {
   evidence_requirements: string | null;
   framework_article_ref: string | null;
   localized_title: string | null;
+  mapping_id: string;
   source_filename: string;
   source_title: string;
   source_url: string | null;
@@ -103,13 +104,15 @@ function renderMarkdown(rows: MappingReviewRow[]) {
     "3. Mark the reviewer decision as `approved`, `wrong_article`, `too_broad`, or `needs_research`.",
     "4. Add a short reviewer note when the decision is anything other than `approved`.",
     "5. Promote the database link to `reviewed` only for rows marked `approved`.",
+    "6. Do not edit the Mapping ID column; the promotion script uses it as the exact database key.",
     "",
     "## Draft Mapping Links",
     "",
-    "| Control | EU ref | Czech source | Czech article | Mapping note | Evidence requirement | Reviewer decision | Reviewer note |",
-    "| --- | --- | --- | --- | --- | --- | --- | --- |",
+    "| Mapping ID | Control | EU ref | Czech source | Czech article | Mapping note | Evidence requirement | Reviewer decision | Reviewer note |",
+    "| --- | --- | --- | --- | --- | --- | --- | --- | --- |",
     ...draftRows.map((row) => {
       const cells = [
+        oneLine(row.mapping_id),
         `${oneLine(row.control_key)} - ${oneLine(row.title_en)}`,
         oneLine(row.framework_article_ref),
         oneLine(row.source_filename),
@@ -135,6 +138,7 @@ function renderMarkdown(rows: MappingReviewRow[]) {
 async function listCzechMappingRows(pool: Pool) {
   const result = await pool.query<MappingReviewRow>(`
     SELECT
+      fca.id::text AS mapping_id,
       a.article_key,
       a.citation AS article_citation,
       a.title AS article_title,
