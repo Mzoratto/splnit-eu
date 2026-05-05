@@ -48,6 +48,7 @@
     "agent:review:stage3": "tsx scripts/agent-review-stage3.ts",
     "agent:review:stage4": "tsx scripts/agent-review-stage4.ts",
     "agent:review:promote": "tsx scripts/agent-review-stage4.ts",
+    "agent:review:human": "tsx scripts/agent-review-human-decisions.ts",
     "agent:review:full": "tsx scripts/agent-review-pipeline.ts",
     "agent:review:export": "tsx scripts/report-mapping-review.ts",
     "agent:review:report": "tsx scripts/report-agent-review-queue.ts",

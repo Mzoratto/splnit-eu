@@ -22,6 +22,7 @@ Implemented:
 - `npm run agent:review:export` writes a framework/jurisdiction review Markdown package from reviewed official article text and draft framework-control article links.
 - `npm run agent:review:report` exports the queued Stage 2/Stage 3 agent output into a human-review package without promoting rows.
 - `npm run agent:review:report:all` prints a cross-framework queue summary by framework, jurisdiction, status, verdict, and confidence.
+- `npm run agent:review:human` applies explicit human decisions from an agent-review Markdown package. Only `approved` rows promote mappings, and every human promotion records `decision_source = 'human_approved'` in `mapping_promotion_audit`.
 - `npm run agent:review:full` runs Stage 1 through Stage 4 in sequence. It is dry-run by default and passes `--apply` through only when explicitly provided.
 
 ## Migration Status
@@ -130,6 +131,27 @@ npm run agent:review:report -- --framework=nis2 --jurisdiction=it --output docs/
 ```
 
 The report is read-only. It includes queue IDs, mapping IDs, source citations, similarity scores, Stage 2 pass reasoning, Stage 3 overrides, and blank human-decision columns. Human reviewers still choose one of `approved`, `wrong_article`, `too_broad`, or `needs_research`; promotion remains a separate step.
+
+## Human Review Decisions
+
+After a reviewer fills the `Human decision` column in an agent-review package, dry-run the import:
+
+```bash
+npm run agent:review:human -- --framework=nis2 --jurisdiction=it --input docs/legal-reviews/nis2-it-agent-review.md
+```
+
+Apply only after the dry-run summary matches the reviewer package:
+
+```bash
+npm run agent:review:human -- --framework=nis2 --jurisdiction=it --input docs/legal-reviews/nis2-it-agent-review.md --apply
+```
+
+Human decision handling:
+
+- `approved` sets the linked mapping confidence to `reviewed`, marks the queue row `promoted`, and writes a `human_approved` promotion audit record with Stage 2/Stage 3 payloads plus the human note.
+- `wrong_article` and `too_broad` mark the queue row `rejected`; they never promote a mapping.
+- `needs_research` keeps the queue row in `needs_human`.
+- Approved rows still require the linked article source to be `reviewed`.
 
 ## Stage 4 Promotion
 

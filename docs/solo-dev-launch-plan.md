@@ -508,6 +508,7 @@ Started and verified locally:
 - Added `agent:review:report` and generated `docs/legal-reviews/nis2-it-agent-review.md` so an Italian reviewer can see Stage 2 reasoning, Stage 3 overrides, source citations, and blank human-decision columns without database access.
 - Added `agent:review:stage4` / `agent:review:promote` as the generalized promotion gate. It promotes only `agent_decided` + `approved` rows with reviewed articles, Stage 3 final status `agent_decided`, and no Stage 3 overrides.
 - Added `agent:review:full` to run Stage 1 through Stage 4 in sequence while preserving dry-run-by-default behavior.
+- Added `agent:review:human` so an advisor can fill `docs/legal-reviews/nis2-it-agent-review.md` and promote only explicitly `approved` mappings with a `human_approved` audit trail.
 - Centralized Italian ACN/Garante source rows in `lib/regulations/authoritative-sources.ts` so `knowledge:import:authoritative-sources` can reproduce Phase 3.1 source ingestion without a full `db:seed`.
 - Switched the Italian Codice Privacy source row from a Garante convenience PDF to the official Normattiva consolidated legal text, and made the importer retire the old unreferenced convenience row when present.
 - Current Italian NIS2 queue status after Stage 3: 34 `needs_human`, 0 `agent_decided`, 0 promoted.
