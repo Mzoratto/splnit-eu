@@ -11,10 +11,11 @@ Implemented:
 - `mapping_review_queue` Drizzle schema with framework, jurisdiction, language, source/control text, citation, regulator, `vector(1536)` embeddings, similarity score, and status.
 - `mapping_promotion_audit` Drizzle schema with framework, jurisdiction, language, decision source, Stage 2 reasoning payload, Stage 3 checks payload, and promotion timestamp.
 - Migration `0012_unusual_living_lightning` includes `CREATE EXTENSION IF NOT EXISTS vector`.
+- `npm run smoke:mapping-review-schema` verifies pgvector, the two review tables, and the vector columns.
+- `npm run agent:review:stage1` parses mapping-review Markdown, hydrates control/source text from Postgres by `framework_control_articles.id`, and imports rows into `mapping_review_queue` only when `--apply` is passed.
 
 Not implemented yet:
 
-- Stage 1 markdown extraction into `mapping_review_queue`.
 - OpenAI embedding generation.
 - Three-pass classifier.
 - Cross-check/domain blacklist stage.
@@ -42,6 +43,21 @@ npm run db:migrate
 ```
 
 Neon production/staging databases must have pgvector enabled before this migration is applied.
+
+## Stage 1 Extraction
+
+Stage 1 is intentionally dry-run by default:
+
+```bash
+npm run agent:review:stage1 -- --framework=nis2 --jurisdiction=it
+npm run agent:review:stage1 -- --framework=nis2 --jurisdiction=cz --input docs/legal-reviews/czech-nis2-batch-1-review.md
+```
+
+Add `--apply` to write rows into `mapping_review_queue`. Add `--replace` with `--apply` when regenerating a queue for the same mapping IDs.
+
+The importer does not fabricate source text from Markdown. It uses the Mapping ID column to load the canonical control and article text from Postgres. This keeps the queue tied to the structured knowledge layer instead of a copied review packet.
+
+Italian NIS2 remains the first target for the full agent pipeline, but the repository does not yet contain `docs/legal-reviews/nis2-it-mapping-review.md`. Until that file exists, the Stage 1 importer can be smoke-tested against the Czech batch package without promoting Czech mappings or blocking Italian/English-EU work.
 
 ## Safety Rules
 
