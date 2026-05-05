@@ -239,7 +239,7 @@ Layer 1 next tasks:
 - [ ] Seed NIS2 EU directive and Czech law article rows from official sources only.
 - [ ] Keep AI extraction as drafting support only; manually review every article before `reviewStatus='reviewed'`.
 - [ ] Link existing NIS2 framework-control rows to reviewed article rows.
-- [ ] Add smoke tests that fail when a reviewed framework control has no linked official article.
+- [x] Add smoke tests that fail when a reviewed framework control has no linked official article.
 - [ ] Add seed/report script that prints real counts for controls, mappings, articles, source documents, evidence templates, and tests.
 
 Layer 1 foundation verification - 2026-05-05:
@@ -257,10 +257,10 @@ Layer 1 official source ingestion slice - 2026-05-05:
 - [x] Imported `2` draft NIS2 EU article rows into local Postgres: Article 21 and Article 23.
 - [x] Linked `34` existing NIS2 framework-control rows to those draft article rows.
 - [x] Parser sanity check confirmed Article 21 extraction does not include Article 22.
+- [x] Added `smoke:reviewed-article-links`; it passes while rows are draft and will fail once reviewed article rows exist without matching framework-control links.
 - [x] Local count report now verifies `92` controls, `184` framework-control mappings, `30` source documents, `2` articles, `34` framework-control article mappings, `0` evidence templates, and `16` integration tests.
 - [ ] Manual legal/content review is still required before any imported article row can be promoted to `reviewStatus='reviewed'`.
 - [ ] Czech law article rows are still pending.
-- [ ] Reviewed article-link smoke test is still pending and should be added once reviewed article rows exist.
 
 ### Layer 2 - RAG Knowledge Layer
 
