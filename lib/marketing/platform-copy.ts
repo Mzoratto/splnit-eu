@@ -149,7 +149,7 @@ const copy: Record<Locale, PlatformCopy> = {
     finalNote:
       "Bezpečnostní a právní dokumentace se doplňuje podle reálného stavu před produkčním spuštěním.",
     trustBadges: [
-      "EU data residency cíl",
+      "AWS eu-central-1 (Frankfurt)",
       "Šifrování AES-256",
       "DPA k právní kontrole",
       "Subdodavatelé evidovaní",
@@ -248,7 +248,7 @@ const copy: Record<Locale, PlatformCopy> = {
     finalNote:
       "Security and legal documentation is completed according to the real production setup before launch.",
     trustBadges: [
-      "EU data residency target",
+      "AWS eu-central-1 (Frankfurt)",
       "AES-256 encryption",
       "DPA ready for legal review",
       "Sub-processors tracked",
@@ -257,17 +257,17 @@ const copy: Record<Locale, PlatformCopy> = {
   "it-IT": {
     metadata: {
       description:
-        "La piattaforma Splnit.eu per controlli automatici, evidence vault e documenti per NIS2, GDPR e ISO 27001.",
+        "La piattaforma Splnit.eu per controlli automatici, evidence vault e documenti per NIS2, GDPR e ISO 27001 con riferimenti italiani ad ACN, Garante e AGID — Agenzia per l'Italia Digitale.",
       locale: "it_IT",
       title:
         "Piattaforma | Splnit.eu — controlli automatici per Microsoft 365, AWS e GitHub",
     },
     jsonLdDescription:
-      "Splnit.eu automatizza controlli compliance, raccolta evidenze e Trust Center per NIS2, EU AI Act, GDPR e ISO 27001.",
+      "Splnit.eu automatizza controlli compliance, raccolta evidenze e Trust Center per NIS2, EU AI Act, GDPR e ISO 27001 con riferimenti a D.Lgs. 138/2024, ACN, Garante e AGID — Agenzia per l'Italia Digitale.",
     pageName: "Splnit.eu Piattaforma",
     hero: {
       body:
-        "Collegate una volta Microsoft 365, GitHub o AWS. Splnit.eu testa in modo continuo i controlli di sicurezza e genera automaticamente evidenze per audit.",
+        "Collegate una volta Microsoft 365, GitHub o AWS. Splnit.eu testa i controlli e genera evidenze collegate a D.Lgs. 138/2024, ACN, Garante e standard ISO.",
       cta: "Prenota demo",
       tag: "Developer First",
       title: "Controlli automatici per i sistemi che usate già.",
@@ -298,12 +298,12 @@ const copy: Record<Locale, PlatformCopy> = {
       bullets: [
         "Integrazioni per Microsoft 365, GitHub e AWS",
         "Alert in app quando un controllo fallisce",
-        "Fonti normative locali dove sono state verificate",
+        "Fonti italiane: D.Lgs. 138/2024, ACN, Garante e AGID — Agenzia per l'Italia Digitale dove applicabile",
         "Architettura API-first per strumenti interni",
       ],
       localSourcesBadge: "Solo verificato",
       localSourcesBody:
-        "Fonti ceche disponibili oggi; altre giurisdizioni vengono aggiunte dopo verifica",
+        "Fonti italiane e UE aggiunte solo quando sono presenti nella knowledge base e verificate",
       localSourcesTitle: "Fonti normative locali",
       tag: "Integrazioni",
       title: "Collegate gli strumenti che usate già.",
@@ -347,7 +347,7 @@ const copy: Record<Locale, PlatformCopy> = {
     finalNote:
       "La documentazione sicurezza e legale viene completata in base al reale setup di produzione prima del lancio.",
     trustBadges: [
-      "Dati nell'UE come obiettivo",
+      "AWS eu-central-1 (Francoforte)",
       "Cifratura AES-256",
       "DPA pronto per revisione legale",
       "Sub-responsabili tracciati",

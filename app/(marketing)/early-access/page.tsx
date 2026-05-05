@@ -3,6 +3,7 @@ import Link from "next/link";
 import { getLocale, getTranslations } from "next-intl/server";
 import { Icon } from "@/components/marketing/local-icon";
 import { MarketingShell } from "@/components/marketing/marketing-shell";
+import { getLocalizedMarketingPath } from "@/i18n/marketing-paths";
 import { normalizeLocale, type Locale } from "@/i18n/routing";
 
 const metadataByLocale: Record<
@@ -54,6 +55,7 @@ const askKeys = ["realUse", "weeklyFeedback", "referencePermission"];
 const weekKeys = ["week1", "week2", "week3"];
 
 export default async function EarlyAccessPage() {
+  const locale = normalizeLocale(await getLocale()) ?? "cs-CZ";
   const t = await getTranslations("marketing.earlyAccess");
 
   return (
@@ -77,7 +79,7 @@ export default async function EarlyAccessPage() {
                   {t("primaryCta")}
                 </Link>
                 <Link
-                  href="/about"
+                  href={getLocalizedMarketingPath("/about", locale)}
                   className="inline-flex justify-center rounded-full border border-zinc-200 bg-white px-7 py-3 text-sm font-medium text-zinc-800 shadow-sm transition-colors hover:bg-zinc-50"
                 >
                   {t("secondaryCta")}
@@ -91,10 +93,10 @@ export default async function EarlyAccessPage() {
               </p>
               <div className="mt-5 flex items-end gap-3">
                 <span className="text-7xl font-semibold tracking-tight text-zinc-900">
-                  0
+                  10
                 </span>
-                <span className="pb-3 text-2xl font-semibold text-zinc-400">
-                  / 10
+                <span className="pb-3 text-xl font-semibold leading-7 text-zinc-400">
+                  {t("spotsAvailable")}
                 </span>
               </div>
               <p className="mt-5 text-sm leading-6 text-zinc-500">

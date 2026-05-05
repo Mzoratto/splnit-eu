@@ -5,6 +5,7 @@ import { Icon } from "@/components/marketing/local-icon";
 import { DashboardMockup } from "@/components/marketing/dashboard-mockup";
 import { LeadCapture } from "@/components/marketing/lead-capture";
 import { MarketingShell } from "@/components/marketing/marketing-shell";
+import { getLocalizedMarketingPath } from "@/i18n/marketing-paths";
 import { normalizeLocale, type Locale } from "@/i18n/routing";
 
 const metadataByLocale: Record<
@@ -132,7 +133,7 @@ export default async function HomePage() {
               <div className="mb-6 flex flex-col items-center justify-center gap-3 sm:flex-row">
                 <div className="rounded-full bg-gradient-to-b from-blue-400 to-blue-700 p-px shadow-md shadow-blue-200/50 transition-all hover:scale-[1.02] hover:shadow-lg hover:shadow-blue-200/70">
                   <Link
-                    href="/early-access"
+                    href={getLocalizedMarketingPath("/early-access", locale)}
                     className="flex items-center gap-2 rounded-full bg-blue-600 px-7 py-3 font-medium text-white transition-colors hover:bg-blue-500"
                   >
                     {t("primaryCta")}
@@ -144,7 +145,7 @@ export default async function HomePage() {
                   </Link>
                 </div>
                 <Link
-                  href="/platform"
+                  href={getLocalizedMarketingPath("/platform", locale)}
                   className="flex items-center gap-2 rounded-full border border-zinc-200 bg-white px-7 py-3 font-medium text-zinc-800 shadow-sm transition-all hover:scale-[1.02] hover:bg-zinc-50 hover:shadow-md"
                 >
                   <Icon
@@ -298,7 +299,7 @@ export default async function HomePage() {
                   {t("offerBody")}
                 </p>
                 <Link
-                  href="/early-access"
+                  href={getLocalizedMarketingPath("/early-access", locale)}
                   className="inline-flex items-center gap-2 rounded-full bg-white px-6 py-3 text-sm font-medium text-zinc-950 transition-colors hover:bg-zinc-100"
                 >
                   {t("offerCta")}
@@ -349,7 +350,9 @@ export default async function HomePage() {
           title={t("finalTitle")}
           body={t("finalBody")}
           primaryCta={t("primaryCta")}
+          primaryHref={getLocalizedMarketingPath("/early-access", locale)}
           secondaryCta={t("docsCta")}
+          secondaryHref={getLocalizedMarketingPath("/platform", locale)}
         />
       </main>
     </MarketingShell>
@@ -381,12 +384,16 @@ function TrustBar({
 function FinalCta({
   body,
   primaryCta,
+  primaryHref,
   secondaryCta,
+  secondaryHref,
   title,
 }: {
   body: string;
   primaryCta: string;
+  primaryHref: string;
   secondaryCta: string;
+  secondaryHref: string;
   title: string;
 }) {
   return (
@@ -415,7 +422,7 @@ function FinalCta({
         <div className="flex flex-col items-center justify-center gap-3 sm:flex-row">
           <div className="rounded-full bg-gradient-to-b from-zinc-600 to-zinc-900 p-px shadow-md transition-all hover:scale-[1.02] hover:shadow-lg">
             <Link
-              href="/early-access"
+              href={primaryHref}
               className="flex items-center gap-2 rounded-full bg-zinc-900 px-8 py-3 font-medium text-white transition-colors hover:bg-zinc-800"
             >
               {primaryCta}
@@ -427,7 +434,7 @@ function FinalCta({
             </Link>
           </div>
           <Link
-            href="/platform"
+            href={secondaryHref}
             className="flex items-center gap-2 rounded-full border border-zinc-200 bg-white px-8 py-3 font-medium text-zinc-800 shadow-sm transition-all hover:scale-[1.02] hover:bg-zinc-50 hover:shadow-md"
           >
             <Icon icon="solar:book-linear" className="text-zinc-400" aria-hidden="true" />
