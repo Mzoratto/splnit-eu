@@ -87,6 +87,8 @@ Use `npm run knowledge:import:authoritative-sources` to upsert these rows into `
 
 Use `npm run knowledge:import:italian-nis2-acn` to fetch official ACN NIS PDFs, extract their text with `pdftotext`, and store Determinazioni 136117/2025 and 164179/2025 plus annexes 1-4 as reviewed regulator guidance rows in `articles`. These rows are source text only; they do not promote any `framework_control_articles` mapping.
 
+Use `npm run knowledge:import:italian-gdpr-garante` to fetch official Garante GDPR guidance pages for data breach, DPIA, and processing-record FAQ, normalize their HTML to source text, and store them as reviewed Italian GDPR guidance rows in `articles`. These rows are source text only; `smoke:italian-gdpr-layer` verifies that the importer does not create or promote mapping links.
+
 ## Layer 2 Deferral Criteria
 
 Do not build pgvector/RAG until at least one condition is true:

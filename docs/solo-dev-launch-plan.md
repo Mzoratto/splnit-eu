@@ -489,7 +489,7 @@ Ingest each source into `source_documents` with citation, URL, effective date, a
 - [ ] Current ACN determinations from acn.gov.it.
 - [ ] GDPR Regulation (EU) 2016/679 Italian text from EUR-Lex.
 - [ ] Current consolidated D.Lgs. 196/2003, Codice Privacy.
-- [ ] Garante guidance relevant to SMBs.
+- [x] Garante guidance relevant to SMBs.
 
 ### Phase 3 Source Ingestion - 2026-05-05
 
@@ -512,10 +512,13 @@ Started and verified locally:
 - Centralized Italian ACN/Garante source rows in `lib/regulations/authoritative-sources.ts` so `knowledge:import:authoritative-sources` can reproduce Phase 3.1 source ingestion without a full `db:seed`.
 - Switched the Italian Codice Privacy source row from a Garante convenience PDF to the official Normattiva consolidated legal text, and made the importer retire the old unreferenced convenience row when present.
 - Added `knowledge:import:italian-nis2-acn` to import ACN Determinazioni 136117/2025 and 164179/2025 plus annexes 1-4 as reviewed regulator guidance text rows in `articles`.
+- Added `knowledge:import:italian-gdpr-garante` to import official Garante guidance pages for data breach, DPIA, and registro delle attività di trattamento as reviewed Italian GDPR guidance text rows in `articles`.
+- Added `smoke:italian-gdpr-layer` to verify those Garante article rows are reviewed, sourced from `www.garanteprivacy.it`, and do not create or promote any framework-control mapping links.
 - Current Italian NIS2 queue status after Stage 3: 34 `needs_human`, 0 `agent_decided`, 0 promoted.
 
 Still open before calling 3.1 complete:
 
+- EUR-Lex CLI fetching for GDPR Regulation 2016/679 is currently blocked by a non-PDF HTML response; keep the EUR-Lex CELEX source rows but do not import fake or third-party GDPR article text.
 - Later ACN determinations on the NIS portal/CSIRT referent, including 333017/2025 and later 2025 updates, still need official ACN document URLs before seeding. Secondary-source mentions were found, but no official ACN URL was confirmed in this pass, so no new row was added.
 - Add official ACN guidance/reading-guide documents if ACN publishes a stable source URL.
 - Keep EU-level citation work on EUR-Lex CELEX-backed sources, national transpositions on official state journals or official consolidated law databases, regulator guidance on regulator websites, and ISO references limited to licensed/internal use without reproducing ISO control text.
