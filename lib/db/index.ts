@@ -8,12 +8,29 @@ type Database = ReturnType<typeof drizzleNeon<typeof schema>>;
 
 let db: Database | null = null;
 
+function getDatabaseUrl() {
+  const databaseUrl = process.env.DATABASE_URL?.trim();
+
+  if (!databaseUrl || databaseUrl === '""' || databaseUrl === "''") {
+    return null;
+  }
+
+  try {
+    const { protocol } = new URL(databaseUrl);
+    return protocol === "postgres:" || protocol === "postgresql:"
+      ? databaseUrl
+      : null;
+  } catch {
+    return null;
+  }
+}
+
 export function hasDatabaseUrl() {
-  return Boolean(process.env.DATABASE_URL?.trim());
+  return Boolean(getDatabaseUrl());
 }
 
 export function getDb(): Database {
-  const databaseUrl = process.env.DATABASE_URL?.trim();
+  const databaseUrl = getDatabaseUrl();
 
   if (!databaseUrl) {
     throw new Error("DATABASE_URL is required for database access.");
