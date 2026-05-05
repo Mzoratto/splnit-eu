@@ -5,6 +5,7 @@ import { getLocale, getTranslations } from "next-intl/server";
 import { Icon } from "@/components/marketing/local-icon";
 import { MarketingShell } from "@/components/marketing/marketing-shell";
 import { SoftwareApplicationJsonLd } from "@/components/marketing/software-json-ld";
+import { getLocalizedMarketingPath } from "@/i18n/marketing-paths";
 import { normalizeLocale } from "@/i18n/routing";
 import { localizeFrameworkDetail } from "@/lib/marketing/framework-detail-copy";
 import {
@@ -63,7 +64,7 @@ export default async function RegulationDetailPage({
     <MarketingShell>
       <SoftwareApplicationJsonLd
         pageName={`Splnit.eu ${framework.name}`}
-        path={`/predpisy/${framework.slug}`}
+        path={getLocalizedMarketingPath(`/predpisy/${framework.slug}`, locale)}
         description={t("jsonLdDescription", { name: framework.name })}
         locale={locale}
       />
@@ -71,7 +72,7 @@ export default async function RegulationDetailPage({
         <section data-hero className="px-5 pb-16 pt-32">
           <div className="mx-auto max-w-5xl">
             <Link
-              href="/predpisy"
+              href={getLocalizedMarketingPath("/predpisy", locale)}
               className="mb-8 inline-flex text-sm font-medium text-blue-600 hover:text-blue-700"
             >
               {t("backLink")}
@@ -210,7 +211,7 @@ export default async function RegulationDetailPage({
               ))}
             </div>
             <Link
-              href="/platform"
+              href={getLocalizedMarketingPath("/platform", locale)}
               className="mt-8 inline-flex rounded-full bg-blue-600 px-6 py-2.5 text-sm font-medium text-white transition-colors hover:bg-blue-500"
             >
               {t("platformCta")}

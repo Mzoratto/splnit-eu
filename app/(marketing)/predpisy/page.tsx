@@ -6,6 +6,7 @@ import { LeadCapture } from "@/components/marketing/lead-capture";
 import { MarketingShell } from "@/components/marketing/marketing-shell";
 import { RegulationSelector } from "@/components/marketing/regulation-selector";
 import { SoftwareApplicationJsonLd } from "@/components/marketing/software-json-ld";
+import { getLocalizedMarketingPath } from "@/i18n/marketing-paths";
 import { normalizeLocale, type Locale } from "@/i18n/routing";
 import { frameworkCards, timeline } from "@/lib/marketing/frameworks";
 
@@ -62,7 +63,7 @@ export default async function RegulationsPage() {
     <MarketingShell>
       <SoftwareApplicationJsonLd
         pageName={t("pageName")}
-        path="/predpisy"
+        path={getLocalizedMarketingPath("/predpisy", locale)}
         description={t("jsonLdDescription")}
         locale={locale}
       />
@@ -124,7 +125,10 @@ export default async function RegulationsPage() {
                       {t(`cards.${framework.slug}.description`)}
                     </p>
                     <Link
-                      href={`/predpisy/${framework.slug}`}
+                      href={getLocalizedMarketingPath(
+                        `/predpisy/${framework.slug}`,
+                        locale,
+                      )}
                       className="mt-6 inline-flex text-sm font-medium text-blue-600 hover:text-blue-700"
                     >
                       {t("learnMore")}
