@@ -1616,7 +1616,7 @@
     "title": "Questionari di sicurezza",
     "subtitle": "Genera bozze di risposta ai questionari clienti usando controlli superati, evidenze e policy già presenti in Splnit.eu.",
     "disclaimer": "Le risposte generate sono bozze da sottoporre a revisione legale e compliance. Non sono consulenza legale, certificazione o garanzia di conformità.",
-    "disabledNotice": "Questionnaire AI richiede Clerk, DATABASE_URL e un provider AI configurato.",
+    "disabledNotice": "Questionnaire AI richiede Clerk, DATABASE_URL, QUESTIONNAIRE_AI_ENABLED=true e un provider AI configurato.",
     "fallbacks": {
       "demoOrganisation": "Organizzazione demo",
       "organisation": "Organizzazione"
@@ -1659,7 +1659,7 @@
     "actionErrors": {
       "authRequired": "Sono richiesti accesso e organizzazione attiva.",
       "invalidInput": "Incolla il testo del questionario o carica un file di testo.",
-      "missingConfig": "Il provider per Questionnaire AI non è configurato.",
+      "missingConfig": "Questionnaire AI non è abilitata o il provider non è configurato.",
       "noQuestions": "Non sono state trovate domande nel questionario.",
       "rateLimit": "Il limite mensile di {limit} questionari è stato raggiunto.",
       "generationFailed": "Generazione delle risposte non riuscita.",

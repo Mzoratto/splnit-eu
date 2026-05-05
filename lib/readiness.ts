@@ -117,14 +117,23 @@ const recommendedChecks: EnvCheck[] = [
     variables: [],
     getMissing: () => {
       const status = getQuestionnaireAiProviderStatus();
+      const missing: string[] = [];
 
-      if (!status.supported) {
-        return [
-          `QUESTIONNAIRE_AI_PROVIDER supported value (currently ${status.providerId})`,
-        ];
+      if (!status.enabled) {
+        missing.push("QUESTIONNAIRE_AI_ENABLED=true");
       }
 
-      return status.configured ? [] : [`${status.label} credentials`];
+      if (!status.supported) {
+        missing.push(
+          `QUESTIONNAIRE_AI_PROVIDER supported value (currently ${status.providerId})`,
+        );
+      }
+
+      if (status.supported && !status.providerConfigured) {
+        missing.push(`${status.label} credentials`);
+      }
+
+      return missing;
     },
   },
   {

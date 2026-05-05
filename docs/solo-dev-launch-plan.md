@@ -169,7 +169,7 @@ Aligned and already present:
 - EU Article 21/23 rows and direct NIS2 framework-control links are promoted to reviewed.
 - Czech e-Sbírka article rows are promoted to reviewed source text, but Czech control-to-article mappings remain `confidence='draft'` until compliance/legal mapping review.
 - Integration runs update organisation control status, and the evidence table can store manual uploads and automated snapshots.
-- Questionnaire AI exists behind a provider boundary, with Anthropic as the only implemented provider today. It is grounded in organisation controls, evidence, policies, and reviewed legal citations, and stores generated outputs as generated artifacts with audit-log entries.
+- Questionnaire AI exists behind a provider boundary, with Anthropic as the only implemented provider today. Provider calls require `QUESTIONNAIRE_AI_ENABLED=true` in addition to credentials. It is grounded in organisation controls, evidence, policies, and reviewed legal citations, and stores generated outputs as generated artifacts with audit-log entries.
 
 Not aligned yet:
 
@@ -291,6 +291,7 @@ Layer 1 trust signal generation slice - 2026-05-05:
 - [x] Added `smoke:questionnaire-citations` so draft or invented questionnaire citation references are rejected before export/display.
 - [x] Questionnaire AI now returns a conservative localized fallback without calling the model when the workspace has no controls, evidence, policies, or reviewed legal citations.
 - [x] Questionnaire AI now uses a provider boundary (`QUESTIONNAIRE_AI_PROVIDER`, default `anthropic`) so app pages/actions do not import Anthropic-specific code.
+- [x] Questionnaire AI provider calls now require the explicit `QUESTIONNAIRE_AI_ENABLED=true` gate so credentials alone do not send customer content to a provider.
 - [x] Questionnaire AI now persists generated answer sets as `generated_artifacts` rows and returns the saved artifact ID to the UI/export payload.
 - [x] Gap report generation now also writes a `generated_artifacts` row linked to the private PDF blob and framework metadata.
 - [x] Generated artifacts now create audit-log records without duplicating generated content or private blob URLs into audit metadata.

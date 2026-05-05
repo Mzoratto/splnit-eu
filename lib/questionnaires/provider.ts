@@ -8,6 +8,10 @@ import type {
 const QUESTIONNAIRE_AI_PROVIDERS = [anthropicQuestionnaireProvider] as const;
 const DEFAULT_QUESTIONNAIRE_AI_PROVIDER = "anthropic";
 
+export function isQuestionnaireAiEnabled() {
+  return process.env.QUESTIONNAIRE_AI_ENABLED?.trim().toLowerCase() === "true";
+}
+
 export function getQuestionnaireAiProviderId() {
   return (
     process.env.QUESTIONNAIRE_AI_PROVIDER?.trim() ||
@@ -25,16 +29,20 @@ export function getQuestionnaireAiProvider(): QuestionnaireAiProvider | null {
 }
 
 export function hasQuestionnaireAiConfig() {
-  return Boolean(getQuestionnaireAiProvider()?.isConfigured());
+  return isQuestionnaireAiEnabled() && Boolean(getQuestionnaireAiProvider()?.isConfigured());
 }
 
 export function getQuestionnaireAiProviderStatus() {
   const providerId = getQuestionnaireAiProviderId();
   const provider = getQuestionnaireAiProvider();
+  const providerConfigured = Boolean(provider?.isConfigured());
+  const enabled = isQuestionnaireAiEnabled();
 
   return {
-    configured: Boolean(provider?.isConfigured()),
+    configured: enabled && providerConfigured,
+    enabled,
     label: provider?.label ?? null,
+    providerConfigured,
     providerId,
     supported: Boolean(provider),
   };
@@ -43,6 +51,10 @@ export function getQuestionnaireAiProviderStatus() {
 export async function answerQuestionnaireWithProvider(
   input: QuestionnaireAiInput,
 ): Promise<QuestionnaireAiOutput> {
+  if (!isQuestionnaireAiEnabled()) {
+    throw new Error("Questionnaire AI is not enabled.");
+  }
+
   const provider = getQuestionnaireAiProvider();
 
   if (!provider) {
