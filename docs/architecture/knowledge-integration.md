@@ -89,6 +89,8 @@ Use `npm run knowledge:import:italian-nis2-acn` to fetch official ACN NIS PDFs, 
 
 Use `npm run knowledge:import:italian-gdpr-garante` to fetch official Garante GDPR guidance pages for data breach, DPIA, and processing-record FAQ, normalize their HTML to source text, and store them as reviewed Italian GDPR guidance rows in `articles`. These rows are source text only; `smoke:italian-gdpr-layer` verifies that the importer does not create or promote mapping links.
 
+Use `npm run knowledge:import:italian-gdpr-codice` to fetch the official Normattiva consolidated Codice Privacy page, normalize its HTML to source text, and store it as a reviewed Italian GDPR supplementary-law row in `articles`. It is source text only and requires separate mapping review before any control citation can become auditor-ready.
+
 ## Layer 2 Deferral Criteria
 
 Do not build pgvector/RAG until at least one condition is true:

@@ -31,6 +31,7 @@ async function main() {
     `,
       [
         [
+          "it/codice-privacy-dlgs-196-2003.html",
           "it/garante-data-breach.html",
           "it/garante-dpia.html",
           "it/garante-ropa-faq.html",
@@ -40,17 +41,27 @@ async function main() {
 
     assert.equal(
       sourceResult.rows.length,
-      3,
-      "All three Garante source documents should exist.",
+      4,
+      "Italian GDPR source documents should exist.",
     );
 
     for (const source of sourceResult.rows) {
       assert.ok(source.last_reviewed, `${source.filename} should have lastReviewed.`);
-      assert.equal(
-        new URL(source.url ?? "").hostname,
-        "www.garanteprivacy.it",
-        `${source.filename} should use the official Garante hostname.`,
-      );
+      const hostname = new URL(source.url ?? "").hostname;
+
+      if (source.filename === "it/codice-privacy-dlgs-196-2003.html") {
+        assert.equal(
+          hostname,
+          "www.normattiva.it",
+          `${source.filename} should use the official Normattiva hostname.`,
+        );
+      } else {
+        assert.equal(
+          hostname,
+          "www.garanteprivacy.it",
+          `${source.filename} should use the official Garante hostname.`,
+        );
+      }
     }
 
     const articlesResult = await pool.query<{
@@ -72,7 +83,7 @@ async function main() {
         AND a.article_key = ANY($1::text[])
       ORDER BY a.article_key
     `,
-      [requiredGaranteArticleKeys],
+      [["D.Lgs. 196/2003", ...requiredGaranteArticleKeys]],
     );
 
     const articlesByKey = new Map(
@@ -90,6 +101,25 @@ async function main() {
         `${articleKey} should come from a Garante source document.`,
       );
     }
+
+    const codice = articlesByKey.get("D.Lgs. 196/2003");
+
+    assert.ok(codice, "D.Lgs. 196/2003 should be imported as Codice Privacy.");
+    assert.equal(
+      codice.review_status,
+      "reviewed",
+      "D.Lgs. 196/2003 should be reviewed.",
+    );
+    assert.equal(
+      codice.source_filename,
+      "it/codice-privacy-dlgs-196-2003.html",
+      "D.Lgs. 196/2003 should come from the Normattiva source document.",
+    );
+    assert.match(
+      codice.official_text,
+      /Codice in materia di protezione dei dati personali|regolamento \(UE\) n\. 2016\/679/i,
+      "Codice Privacy source text should contain the consolidated privacy-code title.",
+    );
 
     assert.match(
       articlesByKey.get("Garante Data Breach")?.official_text ?? "",
@@ -114,13 +144,13 @@ async function main() {
       JOIN articles a ON a.id = fca.article_id
       WHERE a.article_key = ANY($1::text[])
     `,
-      [requiredGaranteArticleKeys],
+      [["D.Lgs. 196/2003", ...requiredGaranteArticleKeys]],
     );
 
     assert.equal(
       linkedMappings.rows[0]?.count ?? 0,
       0,
-      "Garante guidance import should not create or promote mapping links.",
+      "Italian GDPR source import should not create or promote mapping links.",
     );
   } finally {
     await pool.end();
@@ -129,7 +159,7 @@ async function main() {
 
 main()
   .then(() => {
-    console.log("Italian GDPR Garante guidance smoke test passed.");
+    console.log("Italian GDPR source-layer smoke test passed.");
   })
   .catch((error: unknown) => {
     console.error(error);

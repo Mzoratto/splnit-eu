@@ -2,7 +2,7 @@ import { eq } from "drizzle-orm";
 import { loadEnvConfig } from "@next/env";
 import { getDb } from "../lib/db";
 import { articles, frameworks, sourceDocuments } from "../lib/db/schema";
-import { ITALIAN_GDPR_GARANTE_GUIDANCE_DOCUMENTS } from "../lib/regulations/italian-gdpr-garante";
+import { ITALIAN_GDPR_CODICE_PRIVACY_DOCUMENT } from "../lib/regulations/italian-gdpr-codice-privacy";
 import { htmlToSourceText } from "../lib/regulations/html-source-text";
 import type { AuthoritativeSourceDocument } from "../lib/regulations/authoritative-sources";
 
@@ -23,7 +23,7 @@ async function fetchHtmlText(url: string, filename: string) {
 
   if (response.status !== 200) {
     throw new Error(
-      `Garante source fetch failed for ${filename}: ${response.status} ${response.statusText}.`,
+      `Normattiva source fetch failed for ${filename}: ${response.status} ${response.statusText}.`,
     );
   }
 
@@ -31,15 +31,15 @@ async function fetchHtmlText(url: string, filename: string) {
 
   if (!contentType.includes("html")) {
     throw new Error(
-      `Garante source ${filename} returned unexpected content-type: ${contentType}`,
+      `Normattiva source ${filename} returned unexpected content-type: ${contentType}`,
     );
   }
 
   const text = htmlToSourceText(await response.text());
 
-  if (text.length < 1_000) {
+  if (text.length < 10_000) {
     throw new Error(
-      `Garante source ${filename} produced unexpectedly short text (${text.length} chars).`,
+      `Normattiva source ${filename} produced unexpectedly short text (${text.length} chars).`,
     );
   }
 
@@ -97,56 +97,51 @@ async function getGdprFrameworkId() {
 async function main() {
   const db = getDb();
   const frameworkId = await getGdprFrameworkId();
-  let imported = 0;
+  const definition = ITALIAN_GDPR_CODICE_PRIVACY_DOCUMENT;
+  const sourceDocumentId = await upsertSourceDocument(definition.sourceDocument);
+  const officialText = await fetchHtmlText(
+    definition.sourceDocument.url,
+    definition.sourceDocument.filename,
+  );
 
-  for (const definition of ITALIAN_GDPR_GARANTE_GUIDANCE_DOCUMENTS) {
-    const sourceDocumentId = await upsertSourceDocument(definition.sourceDocument);
-    const officialText = await fetchHtmlText(
-      definition.sourceDocument.url,
-      definition.sourceDocument.filename,
+  if (!definition.requiredTextPattern.test(officialText)) {
+    throw new Error(
+      `Normattiva source ${definition.sourceDocument.filename} did not contain expected text pattern ${definition.requiredTextPattern}.`,
     );
+  }
 
-    if (!definition.requiredTextPattern.test(officialText)) {
-      throw new Error(
-        `Garante source ${definition.sourceDocument.filename} did not contain expected text pattern ${definition.requiredTextPattern}.`,
-      );
-    }
-
-    await db
-      .insert(articles)
-      .values({
-        articleKey: definition.articleKey,
+  await db
+    .insert(articles)
+    .values({
+      articleKey: definition.articleKey,
+      citation: definition.citation,
+      effectiveDate: toEffectiveDate(definition.sourceDocument.effectiveDate),
+      frameworkId,
+      jurisdiction: definition.sourceDocument.jurisdiction,
+      lastReviewed,
+      locale: definition.sourceDocument.locale,
+      officialText,
+      reviewStatus: "reviewed",
+      sourceDocumentId,
+      title: definition.sourceDocument.title,
+      updatedAt: new Date(),
+    })
+    .onConflictDoUpdate({
+      target: [articles.sourceDocumentId, articles.locale, articles.articleKey],
+      set: {
         citation: definition.citation,
         effectiveDate: toEffectiveDate(definition.sourceDocument.effectiveDate),
         frameworkId,
         jurisdiction: definition.sourceDocument.jurisdiction,
         lastReviewed,
-        locale: definition.sourceDocument.locale,
         officialText,
         reviewStatus: "reviewed",
-        sourceDocumentId,
         title: definition.sourceDocument.title,
         updatedAt: new Date(),
-      })
-      .onConflictDoUpdate({
-        target: [articles.sourceDocumentId, articles.locale, articles.articleKey],
-        set: {
-          citation: definition.citation,
-          effectiveDate: toEffectiveDate(definition.sourceDocument.effectiveDate),
-          frameworkId,
-          jurisdiction: definition.sourceDocument.jurisdiction,
-          lastReviewed,
-          officialText,
-          reviewStatus: "reviewed",
-          title: definition.sourceDocument.title,
-          updatedAt: new Date(),
-        },
-      });
+      },
+    });
 
-    imported += 1;
-  }
-
-  console.log(`Imported ${imported} reviewed Italian GDPR Garante guidance rows.`);
+  console.log("Imported 1 reviewed Italian GDPR Codice Privacy row.");
 }
 
 main().catch((error: unknown) => {
