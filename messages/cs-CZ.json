@@ -1386,6 +1386,7 @@
     "eyebrow": "Questionnaire AI",
     "title": "Bezpečnostní dotazníky",
     "subtitle": "Automaticky navrhujte odpovědi na zákaznické dotazníky podle splněných kontrol, evidence a aktivních politik ve Splnit.eu.",
+    "disclaimer": "Vygenerované odpovědi jsou pracovní návrhy pro právní a compliance kontrolu. Nejde o právní radu, certifikaci ani garanci souladu.",
     "disabledNotice": "Questionnaire AI vyžaduje Clerk, DATABASE_URL a ANTHROPIC_API_KEY.",
     "fallbacks": {
       "demoOrganisation": "Demo organizace",
@@ -1414,6 +1415,7 @@
       "noResultSubtitle": "Odpovědi se zobrazí po vygenerování.",
       "emptyBody": "Claude odpovědi budou založené na splněných kontrolách, evidenci a aktivních politikách v pracovním prostoru {organisation}.",
       "evidence": "Evidence",
+      "legal": "Právní citace",
       "policies": "Politiky",
       "none": "žádné",
       "sampleQuestions": [

@@ -1615,6 +1615,7 @@
     "eyebrow": "Questionnaire AI",
     "title": "Questionari di sicurezza",
     "subtitle": "Genera bozze di risposta ai questionari clienti usando controlli superati, evidenze e policy già presenti in Splnit.eu.",
+    "disclaimer": "Le risposte generate sono bozze da sottoporre a revisione legale e compliance. Non sono consulenza legale, certificazione o garanzia di conformità.",
     "disabledNotice": "Questionnaire AI richiede Clerk, DATABASE_URL e ANTHROPIC_API_KEY.",
     "fallbacks": {
       "demoOrganisation": "Organizzazione demo",
@@ -1643,6 +1644,7 @@
       "noResultSubtitle": "Le risposte appariranno qui dopo la generazione.",
       "emptyBody": "Le risposte di Claude saranno basate sui controlli superati, sulle evidenze e sulle policy attive nello spazio di lavoro {organisation}.",
       "evidence": "Evidenze",
+      "legal": "Citazioni normative",
       "policies": "Policy",
       "none": "nessuna",
       "sampleQuestions": [

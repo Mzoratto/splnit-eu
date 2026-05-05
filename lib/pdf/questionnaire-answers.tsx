@@ -88,6 +88,9 @@ function QuestionnaireAnswers({ result }: { result: QuestionnaireResult }) {
               Evidence: {answer.evidenceRefs.join(", ") || "none"}
             </Text>
             <Text style={styles.meta}>
+              Legal: {answer.legalRefs.join(", ") || "none"}
+            </Text>
+            <Text style={styles.meta}>
               Policies: {answer.policyRefs.join(", ") || "none"}
             </Text>
             {answer.notes ? <Text style={styles.meta}>{answer.notes}</Text> : null}

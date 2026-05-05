@@ -288,6 +288,9 @@ Layer 1 trust signal generation slice - 2026-05-05:
 - [x] Snapshots with no reviewed article support now store `citationStatus='no_reviewed_citations'` instead of implying legal support.
 - [x] Automated evidence citation lookup now requires both reviewed article source text and reviewed mapping confidence.
 - [x] Added `smoke:automated-evidence-citations` so stored automated snapshots fail verification if they include draft citations, draft mapping confidence, or lack citation status.
+- [x] Questionnaire AI context now includes only reviewed legal citations from Layer 1 for the tenant's supported controls.
+- [x] Generated questionnaire answers now expose `legalRefs` and strip any evidence, policy, or legal reference not present in the supplied context.
+- [x] Added `smoke:questionnaire-citations` so draft or invented questionnaire citation references are rejected before export/display.
 - [ ] Czech mappings still need compliance/legal review before they can become reviewed auditor-ready citations.
 
 ### Layer 2 - RAG Knowledge Layer
@@ -314,10 +317,10 @@ Short-term decision: keep the simple Layer-1 retrieval path before custom RAG. C
 Required before expanding AI features:
 
 - [ ] Add provider abstraction so Questionnaire AI is not hardwired to Anthropic-specific code paths.
-- [ ] Add citation validation: generated answers may cite only article IDs, source document IDs, evidence IDs, policy IDs, and control IDs provided in context.
+- [x] Add citation validation: generated questionnaire answers may cite only reviewed legal citation IDs, evidence IDs, and policy IDs provided in context.
 - [ ] Add refusal/fallback behavior when no supporting evidence or reviewed article exists.
 - [ ] Save generated questionnaire answers and gap-analysis outputs as evidence-vault records or linked generated artifacts.
-- [ ] Add legal disclaimer copy: generated answers are drafts for customer legal/compliance review, not legal advice or certification.
+- [x] Add legal disclaimer copy: generated answers are drafts for customer legal/compliance review, not legal advice or certification.
 - [ ] Update subprocessors and data-processing docs before sending customer content to any new AI provider.
 
 Model note: the earlier `gpt-4o-mini` / `gpt-4o` plan is directionally valid as a small/strong model split, and current official OpenAI model pages still list those models. Current OpenAI model docs also list newer GPT-5.x families, so the exact production model should be chosen from current docs during implementation, not hardcoded in the plan.

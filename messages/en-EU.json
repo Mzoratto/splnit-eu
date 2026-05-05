@@ -1615,6 +1615,7 @@
     "eyebrow": "Questionnaire AI",
     "title": "Security questionnaires",
     "subtitle": "Auto-answer inbound customer questionnaires using passing controls, evidence, and policies already stored in Splnit.eu.",
+    "disclaimer": "Generated answers are drafts for legal and compliance review. They are not legal advice, certification, or a guarantee of compliance.",
     "disabledNotice": "Questionnaire AI requires Clerk, DATABASE_URL, and ANTHROPIC_API_KEY.",
     "fallbacks": {
       "demoOrganisation": "Demo organisation",
@@ -1643,6 +1644,7 @@
       "noResultSubtitle": "Answers appear here after generation.",
       "emptyBody": "Claude answers will be grounded in passing controls, evidence, and active policies from the {organisation} workspace.",
       "evidence": "Evidence",
+      "legal": "Legal citations",
       "policies": "Policies",
       "none": "none",
       "sampleQuestions": [

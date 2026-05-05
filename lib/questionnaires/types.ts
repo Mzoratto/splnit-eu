@@ -4,6 +4,7 @@ export const QuestionnaireAnswerSchema = z.object({
   answer: z.string().min(1),
   confidence: z.enum(["high", "medium", "low"]),
   evidenceRefs: z.array(z.string()).default([]),
+  legalRefs: z.array(z.string()).default([]),
   notes: z.string().default(""),
   policyRefs: z.array(z.string()).default([]),
   question: z.string().min(1),

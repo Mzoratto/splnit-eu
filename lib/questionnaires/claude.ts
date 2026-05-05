@@ -1,5 +1,6 @@
 import { z } from "zod";
 import type { getQuestionnaireComplianceContext } from "@/lib/db/queries/questionnaires";
+import { sanitizeQuestionnaireAnswers } from "@/lib/questionnaires/citation-guard";
 import {
   QuestionnaireAnswerSchema,
   type QuestionnaireAnswer,
@@ -74,6 +75,10 @@ export async function answerQuestionnaireWithClaude(input: {
                       items: { type: "string" },
                       type: "array",
                     },
+                    legalRefs: {
+                      items: { type: "string" },
+                      type: "array",
+                    },
                     notes: { type: "string" },
                     policyRefs: {
                       items: { type: "string" },
@@ -86,6 +91,7 @@ export async function answerQuestionnaireWithClaude(input: {
                     "answer",
                     "confidence",
                     "evidenceRefs",
+                    "legalRefs",
                     "policyRefs",
                     "notes",
                   ],
@@ -122,7 +128,10 @@ export async function answerQuestionnaireWithClaude(input: {
   if (toolUse?.input) {
     const parsed = ClaudeToolInputSchema.parse(toolUse.input);
     return {
-      answers: alignAnswers(input.questions, parsed.answers),
+      answers: sanitizeQuestionnaireAnswers({
+        answers: alignAnswers(input.questions, parsed.answers),
+        context: input.context,
+      }),
       model: message.model ?? model,
       summary: parsed.summary,
     };
@@ -133,7 +142,10 @@ export async function answerQuestionnaireWithClaude(input: {
   if (text) {
     const parsed = ClaudeToolInputSchema.parse(JSON.parse(text));
     return {
-      answers: alignAnswers(input.questions, parsed.answers),
+      answers: sanitizeQuestionnaireAnswers({
+        answers: alignAnswers(input.questions, parsed.answers),
+        context: input.context,
+      }),
       model: message.model ?? model,
       summary: parsed.summary,
     };
@@ -146,7 +158,9 @@ function buildSystemPrompt(context: QuestionnaireContext) {
   return [
     "You answer inbound security questionnaires for Splnit.eu customer organisations.",
     "Use only the supplied organisation controls, evidence and policies. Do not invent certifications, tooling, dates or policy names.",
+    "Use legal citations only when the exact legalCitationId is present in Reviewed legal citations. Never cite draft or missing laws.",
     "If support is missing, answer conservatively and state what evidence is missing.",
+    "This is a draft for legal/compliance review, not binding legal advice. Do not state that a customer is legally certified or guaranteed compliant.",
     "Confidence rules: high = automated evidence or direct evidence supports the answer; medium = passing manual control or active policy supports it; low = no direct support.",
     "",
     `Organisation: ${context.organisation?.name ?? "Unknown organisation"}`,
@@ -167,6 +181,9 @@ function buildSystemPrompt(context: QuestionnaireContext) {
     "",
     "Policies:",
     JSON.stringify(context.policies, null, 2),
+    "",
+    "Reviewed legal citations:",
+    JSON.stringify(context.legalCitations, null, 2),
   ].join("\n");
 }
 
@@ -185,6 +202,7 @@ function alignAnswers(
     answer: answers[index]?.answer ?? "No supported answer available from the current compliance data.",
     confidence: answers[index]?.confidence ?? "low",
     evidenceRefs: answers[index]?.evidenceRefs ?? [],
+    legalRefs: answers[index]?.legalRefs ?? [],
     notes: answers[index]?.notes ?? "No direct supporting evidence was found.",
     policyRefs: answers[index]?.policyRefs ?? [],
     question,

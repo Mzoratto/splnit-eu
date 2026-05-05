@@ -77,6 +77,9 @@ export default async function QuestionnairesPage() {
         <p className="mt-2 max-w-2xl text-sm leading-6 text-foreground/64">
           {copy.subtitle}
         </p>
+        <p className="mt-3 max-w-2xl rounded-md border border-border bg-surface-muted p-3 text-xs leading-5 text-foreground/62">
+          {copy.disclaimer}
+        </p>
       </div>
 
       <div className="grid gap-4 lg:grid-cols-3">

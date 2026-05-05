@@ -31,6 +31,7 @@ type QuestionnaireWorkbenchCopy = {
   noResultSubtitle: string;
   emptyBody: string;
   evidence: string;
+  legal: string;
   policies: string;
   none: string;
 };
@@ -197,10 +198,13 @@ export function QuestionnaireWorkbench({
                   <p className="mt-3 text-sm leading-6 text-foreground/72">
                     {answer.answer}
                   </p>
-                  <div className="mt-3 grid gap-2 text-xs text-foreground/58 md:grid-cols-2">
+                  <div className="mt-3 grid gap-2 text-xs text-foreground/58 md:grid-cols-3">
                     <p>
                       {copy.evidence}:{" "}
                       {answer.evidenceRefs.join(", ") || copy.none}
+                    </p>
+                    <p>
+                      {copy.legal}: {answer.legalRefs.join(", ") || copy.none}
                     </p>
                     <p>
                       {copy.policies}: {answer.policyRefs.join(", ") || copy.none}

@@ -5,12 +5,21 @@ export async function renderQuestionnaireAnswersXlsx(
   result: QuestionnaireResult,
 ) {
   const rows = [
-    ["Question", "Answer", "Confidence", "Evidence refs", "Policy refs", "Notes"],
+    [
+      "Question",
+      "Answer",
+      "Confidence",
+      "Evidence refs",
+      "Legal refs",
+      "Policy refs",
+      "Notes",
+    ],
     ...result.answers.map((answer) => [
       answer.question,
       answer.answer,
       answer.confidence,
       answer.evidenceRefs.join(", "),
+      answer.legalRefs.join(", "),
       answer.policyRefs.join(", "),
       answer.notes,
     ]),
@@ -22,6 +31,7 @@ export async function renderQuestionnaireAnswersXlsx(
       { width: 80 },
       { width: 14 },
       { width: 32 },
+      { width: 36 },
       { width: 32 },
       { width: 48 },
     ],
