@@ -16,6 +16,7 @@ Implemented:
 - `npm run smoke:mapping-review-schema` verifies pgvector, the two review tables, and the vector columns.
 - `npm run agent:review:stage1` parses mapping-review Markdown, hydrates control/source text from Postgres by `framework_control_articles.id`, and imports rows into `mapping_review_queue` only when `--apply` is passed. Add `--embed` with `--apply` to populate `text-embedding-3-small` vectors and cosine similarity when `OPENAI_API_KEY` is configured.
 - `npm run agent:review:stage2` classifies queued rows with the three-pass skeptic/advocate/auditor flow. It is read-only unless `--apply` is passed, and it stores final verdict/confidence plus the complete pass payload on the queue row.
+- `npm run agent:review:export` writes a framework/jurisdiction review Markdown package from reviewed official article text and draft framework-control article links.
 
 Not implemented yet:
 
@@ -58,7 +59,7 @@ Add `--apply` to write rows into `mapping_review_queue`. Add `--replace` with `-
 
 The importer does not fabricate source text from Markdown. It uses the Mapping ID column to load the canonical control and article text from Postgres. This keeps the queue tied to the structured knowledge layer instead of a copied review packet.
 
-Italian NIS2 remains the first target for the full agent pipeline, but the repository does not yet contain `docs/legal-reviews/nis2-it-mapping-review.md`. Until that file exists, the Stage 1 importer can be smoke-tested against the Czech batch package without promoting Czech mappings or blocking Italian/English-EU work.
+Italian NIS2 is now the first target for the full agent pipeline. `docs/legal-reviews/nis2-it-mapping-review.md` is generated from reviewed Gazzetta Ufficiale article text for D.Lgs. 138/2024 Art. 23-25 and draft Italian framework-control links. Stage 1 has imported and embedded all 34 Italian NIS2 rows in local `mapping_review_queue` with ACN as the jurisdiction regulator. Stage 2 classified all 34 rows: 1 high-confidence `agent_decided` approval, 27 approval candidates routed to human because broad Art. 24 similarity stayed below threshold, and 6 `too_broad` candidates routed to human. No Italian mapping row has been promoted to `reviewed`.
 
 ## Stage 2 Classification
 

@@ -91,6 +91,29 @@ function getFrameworkSlug(framework: MappingReviewFramework) {
   return framework === "eu_ai_act" ? "ai-act" : framework;
 }
 
+function getJurisdictionRegulator(
+  framework: MappingReviewFramework,
+  jurisdiction: MappingReviewJurisdiction,
+  fallback: string | null,
+) {
+  if (framework === "nis2") {
+    if (jurisdiction === "it") return "ACN - Agenzia per la Cybersicurezza Nazionale";
+    if (jurisdiction === "cz") return "NÚKIB";
+  }
+
+  if (framework === "gdpr") {
+    if (jurisdiction === "it") return "Garante per la protezione dei dati personali";
+    if (jurisdiction === "cz") return "ÚOOÚ";
+  }
+
+  if (framework === "eu_ai_act") {
+    if (jurisdiction === "it") return "AGCOM/MIMIT (da confermare)";
+    if (jurisdiction === "cz") return "ČTÚ (k potvrzení)";
+  }
+
+  return fallback;
+}
+
 function inferLanguage(jurisdiction: MappingReviewJurisdiction): MappingReviewLanguage {
   if (jurisdiction === "it") return "it";
   if (jurisdiction === "cz") return "cs";
@@ -374,7 +397,11 @@ function buildQueueRows(input: {
       jurisdiction: input.jurisdiction,
       language: input.language,
       mappingId: row.mapping_id,
-      regulator: row.regulator,
+      regulator: getJurisdictionRegulator(
+        input.framework,
+        input.jurisdiction,
+        row.regulator,
+      ),
       sourceText: row.article_text,
     };
   });
