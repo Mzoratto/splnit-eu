@@ -734,6 +734,7 @@ Prepared materials:
 - `docs/outreach/italy-verification-batch-2.md` verifies priorities 11-20 from the queue. Result: 0 / 10 send-ready; Cubbit, Netalia and DigitalPA remain strong top-queue candidates, while several below-ICP companies should be moved to learning/channel unless intentionally selected.
 - `docs/outreach/italy-verification-batch-3.md` verifies priorities 21-25 and closes the first 25-company verification queue. Result: 0 / 5 send-ready; Cleafy and Cyber Guru remain the strongest candidates, while Cerbeyra, Ermes and Swascan are better treated as learning/channel or market-research rows unless a precise owner is identified.
 - `docs/outreach/italy-contact-verification-shortlist.md` narrows the next pass to six Tier 1 companies: Cubbit, Cleafy, Netalia, DigitalPA, Cyber Guru / LibraCyber, and ReeVo. The next blocker is one verified role owner and hook per company, not more broad sourcing.
+- `docs/outreach/italy-tier-1-contact-pass.md` records owner-candidate rows and exact hooks for the six Tier 1 companies. Cubbit, Cleafy and DigitalPA are the first three send-prep draft candidates; Netalia and Cyber Guru / LibraCyber are second-wave; ReeVo stays blocked until a durable partner/channel owner is verified.
 
 ### 5.5 First Design Partner Onboarding
 
