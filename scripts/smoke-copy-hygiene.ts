@@ -20,10 +20,27 @@ const forbiddenPatterns = [
   /neodesláno/,
 ] as const;
 
+const globalForbiddenPatterns = [
+  /Splnit Technology/i,
+  /Splnit Technology\s+s\.r\.o\.\s*[—-]\s*Ostrava/i,
+  /\b200\+\s+(automatic|automated|automatick(?:é|ých|ych)?|testy|tests|kontrol|controls|controlli)/i,
+  /\b247\s+(automatic|automated|automatick(?:é|ých|ych)?|testy|tests|kontrol|controls|controlli)/i,
+] as const;
+
 const checkedFiles = [
   "messages/en-EU.json",
   "messages/it-IT.json",
   ...listSourceFiles("app/(app)"),
+];
+
+const globalCheckedFiles = [
+  "messages/cs-CZ.json",
+  "messages/en-EU.json",
+  "messages/it-IT.json",
+  ...listSourceFiles("app"),
+  ...listSourceFiles("components"),
+  ...listSourceFiles("lib"),
+  ...listSourceFiles("public"),
 ];
 
 function listSourceFiles(directory: string): string[] {
@@ -35,7 +52,7 @@ function listSourceFiles(directory: string): string[] {
       return listSourceFiles(path);
     }
 
-    return /\.(ts|tsx)$/.test(path) ? [path] : [];
+    return /\.(json|js|ts|tsx)$/.test(path) ? [path] : [];
   });
 }
 
@@ -49,6 +66,18 @@ for (const file of checkedFiles) {
 
     if (match) {
       failures.push(`${file}: forbidden copy matched ${pattern}`);
+    }
+  }
+}
+
+for (const file of globalCheckedFiles) {
+  const content = readFileSync(file, "utf8");
+
+  for (const pattern of globalForbiddenPatterns) {
+    const match = content.match(pattern);
+
+    if (match) {
+      failures.push(`${file}: public honesty guard matched ${pattern}`);
     }
   }
 }
