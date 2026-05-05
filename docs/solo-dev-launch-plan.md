@@ -422,7 +422,7 @@ Completed and verified locally:
 - Local migration and seed ran successfully; seed verified `23` source document rows across Czech, Italian, and EU locales.
 - Policy list, policy detail pages, generated policy metadata, and generated PDFs resolve source document title/citation through `source_documents` with safe template fallbacks.
 
-Phase 1 is locally complete. Before a production launch, repeat migration/seed against the production database and verify public/legal identity details from Phase 0.
+Phase 1 is locally complete. Production `DATABASE_URL` was set on Vercel and the current source-ingestion scripts were applied against the production database on 2026-05-05. Before public launch, still verify public/legal identity details from Phase 0 and rerun any newer migrations or seeds added after that date.
 
 ## Phase 2 - Locale-Aware Templates and UI
 
@@ -515,6 +515,7 @@ Started and verified locally:
 - Added `knowledge:import:italian-nis2-acn` to import ACN Determinazioni 136117/2025 and 164179/2025 plus annexes 1-4 as reviewed regulator guidance text rows in `articles`.
 - Added `knowledge:import:italian-gdpr-garante` to import official Garante guidance pages for data breach, DPIA, and registro delle attività di trattamento as reviewed Italian GDPR guidance text rows in `articles`.
 - Added `smoke:italian-gdpr-layer` to verify those Garante article rows are reviewed, sourced from `www.garanteprivacy.it`, and do not create or promote any framework-control mapping links.
+- Applied the current source-ingestion scripts against the Vercel production database after fixing the previously empty Production `DATABASE_URL`; local and production `knowledge:counts` both report `47` source documents, `101` article rows, and `468` framework-control article links.
 - Current Italian NIS2 queue status after Stage 3: 34 `needs_human`, 0 `agent_decided`, 0 promoted.
 
 Still open before calling 3.1 complete:
