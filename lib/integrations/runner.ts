@@ -8,6 +8,10 @@ import {
   tests,
 } from "@/lib/db/schema";
 import { recalculateFrameworkScore } from "@/lib/controls/scorer";
+import {
+  createAutomatedEvidenceForIntegrationRun,
+  shouldCollectAutomatedEvidence,
+} from "./evidence";
 import { acquireIntegrationRunLock } from "./locks";
 import { getAdapter } from "./registry";
 
@@ -16,6 +20,7 @@ type RunTestsOptions = {
 };
 
 type ProviderRunSummary = {
+  evidenceCreated: number;
   errors: number;
   integrationId: string;
   lockEnabled: boolean;
@@ -48,6 +53,7 @@ export async function runTestsForOrg(
     const adapter = getAdapter(integration.provider);
     if (!adapter) {
       summaries.push({
+        evidenceCreated: 0,
         errors: 0,
         integrationId: integration.id,
         lockEnabled: false,
@@ -65,6 +71,7 @@ export async function runTestsForOrg(
 
     if (!lock.acquired) {
       summaries.push({
+        evidenceCreated: 0,
         errors: 0,
         integrationId: integration.id,
         lockEnabled: lock.enabled,
@@ -81,38 +88,102 @@ export async function runTestsForOrg(
       .where(eq(tests.integrationType, integration.provider));
     let testsRun = 0;
     let errors = 0;
+    let evidenceCreated = 0;
 
     try {
       for (const test of relevantTests) {
         const now = new Date();
 
         try {
+          const currentStatusRows = await db
+            .select({
+              lastEvidenceAt: orgControlStatuses.lastEvidenceAt,
+              status: orgControlStatuses.status,
+            })
+            .from(orgControlStatuses)
+            .where(
+              and(
+                eq(orgControlStatuses.clerkOrgId, clerkOrgId),
+                eq(orgControlStatuses.controlId, test.controlId),
+              ),
+            )
+            .limit(1);
+          const currentStatus = currentStatusRows[0] ?? null;
           const result = await adapter.runTest(test.checkLogic, integration);
 
-          await db.insert(integrationRuns).values({
-            integrationId: integration.id,
-            testId: test.id,
-            clerkOrgId,
-            status: result.status,
-            resultData: result.data,
-            failureReason: result.failureReason,
+          const insertedRuns = await db
+            .insert(integrationRuns)
+            .values({
+              integrationId: integration.id,
+              testId: test.id,
+              clerkOrgId,
+              status: result.status,
+              resultData: result.data,
+              failureReason: result.failureReason,
+            })
+            .returning({ id: integrationRuns.id });
+          const integrationRunId = insertedRuns[0]?.id;
+
+          if (!integrationRunId) {
+            throw new Error("Failed to create integration run.");
+          }
+
+          const shouldCreateEvidence = shouldCollectAutomatedEvidence({
+            lastEvidenceAt: currentStatus?.lastEvidenceAt ?? null,
+            now,
+            previousStatus: currentStatus?.status ?? null,
+            resultStatus: result.status,
           });
+
+          if (shouldCreateEvidence) {
+            await createAutomatedEvidenceForIntegrationRun({
+              checkLogic: test.checkLogic,
+              clerkOrgId,
+              controlId: test.controlId,
+              failureReason: result.failureReason,
+              integrationRunId,
+              passCriteria: test.passCriteria,
+              provider: integration.provider,
+              resultData: result.data,
+              status: result.status,
+              testName: test.name,
+            });
+            evidenceCreated += 1;
+          }
+
+          const statusValues = shouldCreateEvidence
+            ? {
+                clerkOrgId,
+                controlId: test.controlId,
+                lastEvidenceAt: now,
+                lastTestedAt: now,
+                status: result.status,
+              }
+            : {
+                clerkOrgId,
+                controlId: test.controlId,
+                lastTestedAt: now,
+                status: result.status,
+              };
+          const statusUpdate = shouldCreateEvidence
+            ? {
+                lastEvidenceAt: now,
+                lastTestedAt: now,
+                status: result.status,
+                updatedAt: now,
+              }
+            : {
+                lastTestedAt: now,
+                status: result.status,
+                updatedAt: now,
+              };
 
           await db
             .insert(orgControlStatuses)
-            .values({
-              clerkOrgId,
-              controlId: test.controlId,
-              status: result.status,
-              lastTestedAt: now,
-            })
+            .values(statusValues)
             .onConflictDoUpdate({
               target: [orgControlStatuses.clerkOrgId, orgControlStatuses.controlId],
-              set: {
-                status: result.status,
-                lastTestedAt: now,
-                updatedAt: now,
-              },
+              set: statusUpdate,
             });
           testsRun += 1;
         } catch (error) {
@@ -136,6 +207,7 @@ export async function runTestsForOrg(
         .where(eq(integrations.id, integration.id));
 
       summaries.push({
+        evidenceCreated,
         errors,
         integrationId: integration.id,
         lockEnabled: lock.enabled,

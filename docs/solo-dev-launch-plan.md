@@ -171,7 +171,7 @@ Aligned and already present:
 Not aligned yet:
 
 - No imported legal article row should be treated as authoritative until it is manually promoted to `reviewStatus='reviewed'`.
-- Automated integration runs update control statuses, but they do not yet consistently create auditor-ready evidence records with source citations and retention metadata.
+- Automated integration runs now create automated evidence snapshots on the first result, on status change, or after a 24-hour refresh window. They still need explicit source-citation metadata before they are fully auditor-ready.
 - Questionnaire AI does not yet retrieve official articles, validate citations, or save generated answers into the evidence vault automatically.
 - There is no pgvector/RAG layer. This is intentional for now.
 - The product must not publicly claim `247 controls` until the database actually contains 247 reviewed controls and the copy hygiene guard allows that claim. Current factual count is `92` seeded canonical controls.
@@ -268,6 +268,14 @@ Layer 1 official source ingestion slice - 2026-05-05:
 - [x] Linked `132` NIS2 framework-control mappings to draft Czech implementing decree sections.
 - [ ] Vyhláška 409/2025 Sb. and Vyhláška 410/2025 Sb. rows must stay draft until checked against e-Sbírka or another official source.
 - [x] Added `smoke:draft-extraction-sources` so Zákony pro lidi extraction rows fail verification if marked `reviewed`.
+
+Layer 1 trust signal generation slice - 2026-05-05:
+
+- [x] Added automated evidence snapshot creation for integration runs.
+- [x] Evidence is created conservatively: first automated result, status change, or one refresh per 24 hours.
+- [x] Integration-run summaries now report how many evidence records were created.
+- [x] Added `smoke:integration-evidence-policy` to guard the evidence cadence.
+- [ ] Automated evidence snapshots still need explicit links to reviewed source/article citations before they should be described as fully auditor-ready.
 
 ### Layer 2 - RAG Knowledge Layer
 
