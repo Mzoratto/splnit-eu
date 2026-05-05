@@ -175,8 +175,6 @@ Not aligned yet:
 
 - The original Zákony pro lidi extraction rows remain draft and must stay draft; they are extraction aids, not official source rows.
 - Czech control-to-article mappings are not reviewed yet, so they must not be used as auditor-ready reviewed citations.
-- Automated integration runs now create automated evidence snapshots on the first result, on status change, or after a 24-hour refresh window. Snapshots include reviewed article/source citations only when both the article and mapping are reviewed, and explicitly mark when no reviewed citations exist.
-- Questionnaire AI does not yet retrieve official articles, validate citations, or save generated answers into the evidence vault automatically.
 - There is no pgvector/RAG layer. This is intentional for now.
 - The product must not publicly claim `247 controls` until the database actually contains 247 reviewed controls and the copy hygiene guard allows that claim. Current factual count is `92` seeded canonical controls.
 
@@ -315,7 +313,7 @@ Embedding/provider note: OpenAI `text-embedding-3-small` remains a plausible low
 
 ### Layer 3 - AI Generation Layer
 
-Status: partially present as Questionnaire AI, but not citation-complete.
+Status: Questionnaire AI is citation-guarded for the current feature, but broader AI features are not built yet.
 
 Short-term decision: keep the simple Layer-1 retrieval path before custom RAG. Customer-facing AI should receive only scoped, structured context from Postgres: active controls, reviewed articles, evidence records, policies, and source citations.
 
