@@ -148,6 +148,22 @@ async function main() {
       "Italian NIS2 mappings must not be reviewed before mapping review.",
     );
 
+    const acnGuidanceArticleKeys = [
+      "ACN 136117/2025",
+      "ACN 164179/2025",
+      "ACN 164179/2025 Allegato 1",
+      "ACN 164179/2025 Allegato 2",
+      "ACN 164179/2025 Allegato 3",
+      "ACN 164179/2025 Allegato 4",
+      "ACN 112335/2026",
+      "ACN 276206/2025",
+      "ACN 127437/2026",
+      "ACN 136118/2025",
+      "ACN 379907/2025",
+      "ACN 127434/2026",
+      "ACN 155238/2026",
+    ] as const;
+
     const acnGuidanceResult = await pool.query<{
       article_key: string;
       official_text: string;
@@ -167,29 +183,13 @@ async function main() {
         AND a.article_key = ANY($1::text[])
       ORDER BY a.article_key
     `,
-      [
-        [
-          "ACN 136117/2025",
-          "ACN 164179/2025",
-          "ACN 164179/2025 Allegato 1",
-          "ACN 164179/2025 Allegato 2",
-          "ACN 164179/2025 Allegato 3",
-          "ACN 164179/2025 Allegato 4",
-        ],
-      ],
+      [acnGuidanceArticleKeys],
     );
     const acnGuidanceByKey = new Map(
       acnGuidanceResult.rows.map((row) => [row.article_key, row]),
     );
 
-    for (const articleKey of [
-      "ACN 136117/2025",
-      "ACN 164179/2025",
-      "ACN 164179/2025 Allegato 1",
-      "ACN 164179/2025 Allegato 2",
-      "ACN 164179/2025 Allegato 3",
-      "ACN 164179/2025 Allegato 4",
-    ]) {
+    for (const articleKey of acnGuidanceArticleKeys) {
       const row = acnGuidanceByKey.get(articleKey);
 
       assert.ok(row, `${articleKey} should be imported as ACN guidance.`);
@@ -205,6 +205,16 @@ async function main() {
       acnGuidanceByKey.get("ACN 164179/2025 Allegato 1")?.official_text ?? "",
       /Misure di sicurezza di base per i soggetti importanti/i,
       "ACN Allegato 1 should contain important-entity baseline measures.",
+    );
+    assert.match(
+      acnGuidanceByKey.get("ACN 379907/2025")?.official_text ?? "",
+      /specifiche di base|articoli 23, 24, 25, 29 e 32/i,
+      "ACN 379907/2025 should contain updated NIS obligations text.",
+    );
+    assert.match(
+      acnGuidanceByKey.get("ACN 155238/2026")?.official_text ?? "",
+      /elencazione, caratterizzazione e categorizzazione/i,
+      "ACN 155238/2026 should contain categorization text.",
     );
   } finally {
     await pool.end();

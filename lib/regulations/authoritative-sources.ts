@@ -211,6 +211,76 @@ export const REGULATOR_GUIDANCE_SOURCE_DOCUMENTS = [
     url: "https://www.acn.gov.it/portale/documents/d/guest/detacn_nis_specifiche_2025_164179_allegato4",
   },
   {
+    citation:
+      "ACN, Determinazione n. 112335/2026 - composizione del Tavolo per l'attuazione della disciplina NIS",
+    effectiveDate: null,
+    filename: "it/acn-nis-tavolo-competenze-2026-112335.pdf",
+    jurisdiction: "IT",
+    locale: "it-IT",
+    title: "ACN - Determinazione NIS composizione Tavolo",
+    url: "https://www.acn.gov.it/portale/documents/d/guest/2026_112335_detacn_comptavolo_signed",
+  },
+  {
+    citation:
+      "ACN, Determinazione n. 276206 del 16 luglio 2025 - funzionamento del Tavolo NIS",
+    effectiveDate: null,
+    filename: "it/acn-nis-tavolo-funzionamento-2025-276206.pdf",
+    jurisdiction: "IT",
+    locale: "it-IT",
+    title: "ACN - Determinazione NIS funzionamento Tavolo",
+    url: "https://www.acn.gov.it/portale/documents/d/guest/2025_276206_determinazioneacn_tavolonis_funzionamento-v4-clean-v1_signed",
+  },
+  {
+    citation:
+      "ACN, Determinazione n. 127437/2026 - piattaforma digitale NIS",
+    effectiveDate: null,
+    filename: "it/acn-nis-piattaforma-2026-127437.pdf",
+    jurisdiction: "IT",
+    locale: "it-IT",
+    title: "ACN - Determinazione NIS piattaforma 2026",
+    url: "https://www.acn.gov.it/portale/documents/d/guest/detacn_piattaformanis_251218-v9_signed",
+  },
+  {
+    citation:
+      "ACN, Determinazione n. 136118 del 10 aprile 2025 - accordi di condivisione delle informazioni",
+    effectiveDate: null,
+    filename: "it/acn-nis-accordi-condivisione-2025-136118.pdf",
+    jurisdiction: "IT",
+    locale: "it-IT",
+    title: "ACN - Determinazione NIS accordi di condivisione",
+    url: "https://www.acn.gov.it/portale/documents/d/guest/detacn_nis_accordi_2025_136118_signed",
+  },
+  {
+    citation:
+      "ACN, Determinazione n. 379907/2025 - specifiche di base per obblighi NIS",
+    effectiveDate: null,
+    filename: "it/acn-nis-obblighi-2025-379907.pdf",
+    jurisdiction: "IT",
+    locale: "it-IT",
+    title: "ACN - Determinazione NIS obblighi 2025",
+    url: "https://www.acn.gov.it/portale/documents/d/guest/detacn_obblighi_2511-v3_signed",
+  },
+  {
+    citation:
+      "ACN, Determinazione n. 127434/2026 - termini per obblighi NIS per nuovi soggetti",
+    effectiveDate: null,
+    filename: "it/acn-nis-misure-sicurezza-2026-127434.pdf",
+    jurisdiction: "IT",
+    locale: "it-IT",
+    title: "ACN - Determinazione NIS termini obblighi 2026",
+    url: "https://www.acn.gov.it/portale/documents/d/guest/detacn_misuresicurezza-v4_post",
+  },
+  {
+    citation:
+      "ACN, Determinazione n. 155238/2026 - categorizzazione attività e servizi",
+    effectiveDate: null,
+    filename: "it/acn-nis-categorizzazione-2026-155238.pdf",
+    jurisdiction: "IT",
+    locale: "it-IT",
+    title: "ACN - Determinazione NIS categorizzazione",
+    url: "https://www.acn.gov.it/portale/documents/d/guest/detacn_categorizzazione_260409-v8_signed",
+  },
+  {
     citation: "Garante Privacy - Data Breach, violazioni di dati personali",
     effectiveDate: null,
     filename: "it/garante-data-breach.html",

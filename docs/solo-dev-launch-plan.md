@@ -486,7 +486,7 @@ Goal: a real Italian KB credible enough for a design partner.
 Ingest each source into `source_documents` with citation, URL, effective date, and last reviewed date:
 
 - [x] D.Lgs. 4 settembre 2024, n. 138 from Gazzetta Ufficiale.
-- [ ] Current ACN determinations from acn.gov.it.
+- [x] Current ACN determinations from acn.gov.it.
 - [ ] GDPR Regulation (EU) 2016/679 Italian text from EUR-Lex.
 - [x] Current consolidated D.Lgs. 196/2003, Codice Privacy.
 - [x] Garante guidance relevant to SMBs.
@@ -513,16 +513,16 @@ Started and verified locally:
 - Switched the Italian Codice Privacy source row from a Garante convenience PDF to the official Normattiva consolidated legal text, and made the importer retire the old unreferenced convenience row when present.
 - Added `knowledge:import:italian-gdpr-codice` to import the official Normattiva consolidated Codice Privacy text as a reviewed Italian GDPR source-text row in `articles`.
 - Added `knowledge:import:italian-nis2-acn` to import ACN Determinazioni 136117/2025 and 164179/2025 plus annexes 1-4 as reviewed regulator guidance text rows in `articles`.
+- Extended `knowledge:import:italian-nis2-acn` with current ACN NIS determinations listed on the official ACN "La normativa" page: 112335/2026, 276206/2025, 127437/2026, 136118/2025, 379907/2025, 127434/2026, and 155238/2026.
 - Added `knowledge:import:italian-gdpr-garante` to import official Garante guidance pages for data breach, DPIA, and registro delle attività di trattamento as reviewed Italian GDPR guidance text rows in `articles`.
 - Added `smoke:italian-gdpr-layer` to verify those Garante article rows are reviewed, sourced from `www.garanteprivacy.it`, and do not create or promote any framework-control mapping links.
-- Applied the current source-ingestion scripts against the Vercel production database after fixing the previously empty Production `DATABASE_URL`; after importing all Gazzetta D.Lgs. 138/2024 articles, local and production `knowledge:counts` both report `47` source documents, `142` article rows, and `468` framework-control article links.
+- Applied the current source-ingestion scripts against the Vercel production database after fixing the previously empty Production `DATABASE_URL`; after importing all Gazzetta D.Lgs. 138/2024 articles and current ACN NIS determinations, local and production `knowledge:counts` both report `54` source documents, `149` article rows, and `468` framework-control article links.
 - Current Italian NIS2 queue status after Stage 3: 34 `needs_human`, 0 `agent_decided`, 0 promoted.
 
 Still open before calling 3.1 complete:
 
 - EUR-Lex CLI fetching for GDPR Regulation 2016/679 is currently blocked by a non-PDF HTML response; keep the EUR-Lex CELEX source rows but do not import fake or third-party GDPR article text.
-- Later ACN determinations on the NIS portal/CSIRT referent, including 333017/2025 and later 2025 updates, still need official ACN document URLs before seeding. Secondary-source mentions were found, but no official ACN URL was confirmed in this pass, so no new row was added.
-- Add official ACN guidance/reading-guide documents if ACN publishes a stable source URL.
+- Add official ACN guidance/reading-guide documents if ACN publishes additional stable source URLs beyond the determinations already listed on the official "La normativa" page.
 - Keep EU-level citation work on EUR-Lex CELEX-backed sources, national transpositions on official state journals or official consolidated law databases, regulator guidance on regulator websites, and ISO references limited to licensed/internal use without reproducing ISO control text.
 
 ### 3.2 Italian Control Mapping
