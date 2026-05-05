@@ -44,6 +44,7 @@
     "knowledge:promote:official-sources": "tsx scripts/verify-official-legal-sources.ts --promote-reviewed",
     "agent:review:stage1": "tsx scripts/agent-review-stage1.ts",
     "agent:review:stage2": "tsx scripts/agent-review-stage2.ts",
+    "agent:review:stage3": "tsx scripts/agent-review-stage3.ts",
     "agent:review:export": "tsx scripts/report-mapping-review.ts",
     "db:generate": "drizzle-kit generate",
     "db:migrate": "drizzle-kit migrate",

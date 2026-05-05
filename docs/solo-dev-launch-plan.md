@@ -503,6 +503,7 @@ Started and verified locally:
 - Added `smoke:italian-nis2-layer` to verify Italian article text is reviewed while Italian framework-control mapping links remain draft pending mapping review.
 - Generated `docs/legal-reviews/nis2-it-mapping-review.md` with 34 Italian NIS2 draft mapping rows.
 - Ran Stage 1 for Italian NIS2 with embeddings and Stage 2 classification for all 34 rows. Result: 1 `agent_decided` approval, 33 `needs_human`, 0 promoted mappings.
+- Added and ran Stage 3 for Italian NIS2. It persisted cross-check metadata for all 34 rows and forced the single incident-notification approval back to `needs_human` because NIS2 incident/deadline mappings require human review.
 
 Still open before calling 3.1 complete:
 

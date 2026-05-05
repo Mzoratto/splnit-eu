@@ -16,11 +16,11 @@ Implemented:
 - `npm run smoke:mapping-review-schema` verifies pgvector, the two review tables, and the vector columns.
 - `npm run agent:review:stage1` parses mapping-review Markdown, hydrates control/source text from Postgres by `framework_control_articles.id`, and imports rows into `mapping_review_queue` only when `--apply` is passed. Add `--embed` with `--apply` to populate `text-embedding-3-small` vectors and cosine similarity when `OPENAI_API_KEY` is configured.
 - `npm run agent:review:stage2` classifies queued rows with the three-pass skeptic/advocate/auditor flow. It is read-only unless `--apply` is passed, and it stores final verdict/confidence plus the complete pass payload on the queue row.
+- `npm run agent:review:stage3` runs similarity, citation-format, domain-blacklist, and adversarial spot-check filters. It is read-only unless `--apply` is passed, and it stores Stage 3 check details on the queue row.
 - `npm run agent:review:export` writes a framework/jurisdiction review Markdown package from reviewed official article text and draft framework-control article links.
 
 Not implemented yet:
 
-- Cross-check/domain blacklist stage.
 - Generalized promotion command.
 
 ## Migration Status
@@ -59,7 +59,7 @@ Add `--apply` to write rows into `mapping_review_queue`. Add `--replace` with `-
 
 The importer does not fabricate source text from Markdown. It uses the Mapping ID column to load the canonical control and article text from Postgres. This keeps the queue tied to the structured knowledge layer instead of a copied review packet.
 
-Italian NIS2 is now the first target for the full agent pipeline. `docs/legal-reviews/nis2-it-mapping-review.md` is generated from reviewed Gazzetta Ufficiale article text for D.Lgs. 138/2024 Art. 23-25 and draft Italian framework-control links. Stage 1 has imported and embedded all 34 Italian NIS2 rows in local `mapping_review_queue` with ACN as the jurisdiction regulator. Stage 2 classified all 34 rows: 1 high-confidence `agent_decided` approval, 27 approval candidates routed to human because broad Art. 24 similarity stayed below threshold, and 6 `too_broad` candidates routed to human. No Italian mapping row has been promoted to `reviewed`.
+Italian NIS2 is now the first target for the full agent pipeline. `docs/legal-reviews/nis2-it-mapping-review.md` is generated from reviewed Gazzetta Ufficiale article text for D.Lgs. 138/2024 Art. 23-25 and draft Italian framework-control links. Stage 1 has imported and embedded all 34 Italian NIS2 rows in local `mapping_review_queue` with ACN as the jurisdiction regulator. Stage 2 classified all 34 rows: 1 high-confidence `agent_decided` approval, 27 approval candidates routed to human because broad Art. 24 similarity stayed below threshold, and 6 `too_broad` candidates routed to human. Stage 3 cross-checked all 34 rows, persisted `stage3_checks`, and moved the single `agent_decided` incident-notification row back to `needs_human` because NIS2 incident/deadline mappings are domain-blacklisted. No Italian mapping row has been promoted to `reviewed`.
 
 ## Stage 2 Classification
 
@@ -76,6 +76,27 @@ npm run agent:review:stage2 -- --framework=nis2 --jurisdiction=cz --limit=5 --ap
 ```
 
 Stage 2 does not promote mappings. It only updates queue rows from `unclassified` to either `agent_decided` or `needs_human`. Czech approvals are conservative: even unanimous approvals are routed to human review when the embedding similarity is below the stricter Czech threshold.
+
+## Stage 3 Cross-Check
+
+Run a dry run first:
+
+```bash
+npm run agent:review:stage3 -- --framework=nis2 --jurisdiction=it --limit=34
+```
+
+Persist checks only after the output shape looks correct:
+
+```bash
+npm run agent:review:stage3 -- --framework=nis2 --jurisdiction=it --limit=34 --apply
+```
+
+Stage 3 records:
+
+- Similarity threshold outcome: 0.4 for Italy/EU, 0.6 for Czech, 0.65 for future jurisdictions without reviewer coverage.
+- Citation-format validation per framework/jurisdiction.
+- Domain blacklist matches that force human review for sensitive areas.
+- A deterministic 5% adversarial spot-check of `agent_decided` approvals, with at least one row when approvals exist.
 
 ## Safety Rules
 
