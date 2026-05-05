@@ -720,6 +720,11 @@ Buona giornata,
 - [ ] Week 12: send 25 more first-touch emails plus follow-ups to Week 11 non-replies.
 - [ ] Track company, contact, sector, date sent, opened, replied, call booked, and outcome in one spreadsheet.
 
+Prepared materials:
+
+- `docs/outreach/italy-design-partner-outreach.md` defines target criteria, hook quality rules, first-touch/follow-up templates, cadence, and outcome codes.
+- `docs/outreach/italy-target-tracker.csv` provides the initial tracker columns for the first 50 researched targets.
+
 ### 5.5 First Design Partner Onboarding
 
 - [ ] Schedule the 3-week onboarding.
@@ -727,6 +732,10 @@ Buona giornata,
 - [ ] Take notes immediately after each session.
 - [ ] Update the KB and templates based on real friction.
 - [ ] At the end of onboarding, ask for written feedback and permission to use the company as a reference.
+
+Prepared materials:
+
+- `docs/onboarding/design-partner-onboarding-playbook.md` defines intake, Week 1-3 agendas, note templates, feedback request, and reference-permission guardrails.
 
 ## Founder-Facing Reusable Materials
 
@@ -836,6 +845,8 @@ Every Sunday evening, commit a short review to `docs/weekly-reviews/YYYY-MM-DD.m
 3. What did I learn about Italian, EU, or Czech compliance buyers?
 4. What did I learn about the product?
 5. One change I am making to the plan and why.
+
+Use `docs/weekly-reviews/TEMPLATE.md` for the weekly entry format.
 
 ## 12-Week Definition of Done
 
