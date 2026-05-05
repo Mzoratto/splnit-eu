@@ -5,12 +5,44 @@ import {
   integer,
   interval,
   jsonb,
+  pgEnum,
   pgTable,
+  real,
   text,
   timestamp,
   unique,
   uuid,
+  vector,
 } from "drizzle-orm/pg-core";
+
+export const mappingReviewFrameworkEnum = pgEnum("mapping_review_framework", [
+  "nis2",
+  "eu_ai_act",
+  "gdpr",
+  "iso27001",
+]);
+
+export const mappingReviewJurisdictionEnum = pgEnum(
+  "mapping_review_jurisdiction",
+  ["it", "cz", "eu", "de", "fr", "es", "other"],
+);
+
+export const mappingReviewLanguageEnum = pgEnum("mapping_review_language", [
+  "it",
+  "cs",
+  "en",
+  "de",
+  "fr",
+  "es",
+]);
+
+export const mappingReviewStatusEnum = pgEnum("mapping_review_status", [
+  "unclassified",
+  "needs_human",
+  "agent_decided",
+  "promoted",
+  "rejected",
+]);
 
 export const organisations = pgTable("organisations", {
   id: uuid("id").primaryKey().defaultRandom(),
@@ -201,6 +233,74 @@ export const evidenceTemplates = pgTable(
       table.frameworkControlId,
     ),
     index("idx_evidence_templates_locale").on(table.locale),
+  ],
+);
+
+export const mappingReviewQueue = pgTable(
+  "mapping_review_queue",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    framework: mappingReviewFrameworkEnum("framework").notNull(),
+    jurisdiction: mappingReviewJurisdictionEnum("jurisdiction").notNull(),
+    language: mappingReviewLanguageEnum("language").notNull(),
+    mappingId: uuid("mapping_id").references(() => frameworkControlArticles.id, {
+      onDelete: "cascade",
+    }),
+    controlId: text("control_id").notNull(),
+    controlTitle: text("control_title").notNull(),
+    controlDescription: text("control_description"),
+    sourceText: text("source_text").notNull(),
+    citation: text("citation").notNull(),
+    regulator: text("regulator"),
+    controlEmbedding: vector("control_embedding", { dimensions: 1536 }),
+    sourceEmbedding: vector("source_embedding", { dimensions: 1536 }),
+    similarityScore: real("similarity_score"),
+    status: mappingReviewStatusEnum("status").notNull().default("unclassified"),
+    createdAt: timestamp("created_at", { withTimezone: true }).defaultNow(),
+    updatedAt: timestamp("updated_at", { withTimezone: true }).defaultNow(),
+  },
+  (table) => [
+    index("idx_mapping_review_queue_scope_status").on(
+      table.framework,
+      table.jurisdiction,
+      table.status,
+    ),
+    index("idx_mapping_review_queue_mapping").on(table.mappingId),
+  ],
+);
+
+export const mappingPromotionAudit = pgTable(
+  "mapping_promotion_audit",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    queueId: uuid("queue_id").references(() => mappingReviewQueue.id, {
+      onDelete: "set null",
+    }),
+    mappingId: uuid("mapping_id").references(() => frameworkControlArticles.id, {
+      onDelete: "set null",
+    }),
+    framework: mappingReviewFrameworkEnum("framework").notNull(),
+    jurisdiction: mappingReviewJurisdictionEnum("jurisdiction").notNull(),
+    language: mappingReviewLanguageEnum("language").notNull(),
+    decisionSource: text("decision_source").notNull(),
+    stage2Passes: jsonb("stage2_passes")
+      .$type<Record<string, unknown>>()
+      .notNull()
+      .default({}),
+    stage3Checks: jsonb("stage3_checks")
+      .$type<Record<string, unknown>>()
+      .notNull()
+      .default({}),
+    promotedAt: timestamp("promoted_at", { withTimezone: true }).defaultNow(),
+    createdAt: timestamp("created_at", { withTimezone: true }).defaultNow(),
+  },
+  (table) => [
+    index("idx_mapping_promotion_audit_scope").on(
+      table.framework,
+      table.jurisdiction,
+      table.promotedAt,
+    ),
+    index("idx_mapping_promotion_audit_mapping").on(table.mappingId),
   ],
 );
 
@@ -561,4 +661,6 @@ export type Integration = typeof integrations.$inferSelect;
 export type IntegrationRun = typeof integrationRuns.$inferSelect;
 export type Evidence = typeof evidence.$inferSelect;
 export type GeneratedArtifact = typeof generatedArtifacts.$inferSelect;
+export type MappingReviewQueueItem = typeof mappingReviewQueue.$inferSelect;
+export type MappingPromotionAudit = typeof mappingPromotionAudit.$inferSelect;
 export type AuditLog = typeof auditLogs.$inferSelect;
