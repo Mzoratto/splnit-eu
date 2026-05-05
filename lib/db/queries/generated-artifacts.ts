@@ -1,6 +1,7 @@
 import { createAuditLog } from "@/lib/db/queries/audit-logs";
 import { getDb } from "@/lib/db";
 import { generatedArtifacts } from "@/lib/db/schema";
+import { desc, eq } from "drizzle-orm";
 
 export type GeneratedArtifactKind = "questionnaire_answers" | "gap_analysis";
 
@@ -25,6 +26,35 @@ export function buildGeneratedArtifactAuditLog(input: {
       title: input.title,
     },
   };
+}
+
+export function normalizeGeneratedArtifactLimit(limit = 10) {
+  if (!Number.isFinite(limit)) {
+    return 10;
+  }
+
+  return Math.min(Math.max(Math.trunc(limit), 1), 50);
+}
+
+export async function listGeneratedArtifactSummaries(input: {
+  clerkOrgId: string;
+  limit?: number;
+}) {
+  const db = getDb();
+
+  return db
+    .select({
+      createdAt: generatedArtifacts.createdAt,
+      id: generatedArtifacts.id,
+      kind: generatedArtifacts.kind,
+      model: generatedArtifacts.model,
+      source: generatedArtifacts.source,
+      title: generatedArtifacts.title,
+    })
+    .from(generatedArtifacts)
+    .where(eq(generatedArtifacts.clerkOrgId, input.clerkOrgId))
+    .orderBy(desc(generatedArtifacts.createdAt))
+    .limit(normalizeGeneratedArtifactLimit(input.limit));
 }
 
 export async function createGeneratedArtifact(input: {

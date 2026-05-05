@@ -1629,6 +1629,16 @@
       "policies": "Policies",
       "policiesBody": "Active documents support medium confidence."
     },
+    "history": {
+      "title": "Saved outputs",
+      "subtitle": "Recent questionnaire answers and gap reports stored in this workspace.",
+      "empty": "No generated outputs have been saved yet.",
+      "notAvailable": "no date",
+      "kinds": {
+        "questionnaireAnswers": "Questionnaire answers",
+        "gapAnalysis": "Gap report"
+      }
+    },
     "workbench": {
       "inputTitle": "Questionnaire input",
       "pasteLabel": "Paste questionnaire",

@@ -3,6 +3,7 @@ import {
   buildGeneratedArtifactAuditLog,
   GENERATED_ARTIFACT_CREATED_ACTION,
   GENERATED_ARTIFACT_ENTITY_TYPE,
+  normalizeGeneratedArtifactLimit,
 } from "@/lib/db/queries/generated-artifacts";
 
 const auditLog = buildGeneratedArtifactAuditLog({
@@ -24,5 +25,10 @@ assert.deepEqual(auditLog.metadata, {
 });
 assert.equal("content" in auditLog.metadata, false);
 assert.equal("blobUrl" in auditLog.metadata, false);
+assert.equal(normalizeGeneratedArtifactLimit(), 10);
+assert.equal(normalizeGeneratedArtifactLimit(Number.NaN), 10);
+assert.equal(normalizeGeneratedArtifactLimit(0), 1);
+assert.equal(normalizeGeneratedArtifactLimit(51), 50);
+assert.equal(normalizeGeneratedArtifactLimit(12.9), 12);
 
 console.log("Generated artifact audit smoke passed.");

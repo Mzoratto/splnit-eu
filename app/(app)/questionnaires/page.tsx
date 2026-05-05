@@ -5,6 +5,7 @@ import { QuestionnaireWorkbench } from "@/components/questionnaires/questionnair
 import { getMessagesForLocale } from "@/i18n/messages";
 import { normalizeLocale } from "@/i18n/routing";
 import { hasDatabaseUrl } from "@/lib/db";
+import { listGeneratedArtifactSummaries } from "@/lib/db/queries/generated-artifacts";
 import { getQuestionnaireComplianceContext } from "@/lib/db/queries/questionnaires";
 import { hasQuestionnaireAiConfig } from "@/lib/questionnaires/provider";
 
@@ -20,6 +21,7 @@ async function loadQuestionnairePageData() {
       canGenerate: false,
       controlCount: 14,
       evidenceCount: 9,
+      generatedArtifacts: [],
       isDemo: true,
       organisationLocale: null,
       organisationName: null,
@@ -34,6 +36,7 @@ async function loadQuestionnairePageData() {
       canGenerate: false,
       controlCount: 0,
       evidenceCount: 0,
+      generatedArtifacts: [],
       isDemo: false,
       organisationLocale: null,
       organisationName: null,
@@ -44,16 +47,32 @@ async function loadQuestionnairePageData() {
   const context = await getQuestionnaireComplianceContext(session.orgId).catch(
     () => null,
   );
+  const generatedArtifacts = await listGeneratedArtifactSummaries({
+    clerkOrgId: session.orgId,
+    limit: 8,
+  }).catch(() => []);
 
   return {
     canGenerate: Boolean(context && hasQuestionnaireAiConfig()),
     controlCount: context?.controls.length ?? 0,
     evidenceCount: context?.evidence.length ?? 0,
+    generatedArtifacts,
     isDemo: false,
     organisationLocale: context?.organisation?.locale ?? null,
     organisationName: context?.organisation?.name ?? null,
     policyCount: context?.policies.length ?? 0,
   };
+}
+
+function formatArtifactDate(value: Date | null, locale: string) {
+  if (!value) {
+    return null;
+  }
+
+  return new Intl.DateTimeFormat(locale, {
+    dateStyle: "medium",
+    timeStyle: "short",
+  }).format(value);
 }
 
 export default async function QuestionnairesPage() {
@@ -131,6 +150,53 @@ export default async function QuestionnairesPage() {
         canGenerate={data.canGenerate}
         organisationName={organisationName}
       />
+
+      <section className="rounded-lg border border-border bg-surface">
+        <div className="border-b border-border p-5">
+          <h2 className="text-lg font-semibold">{copy.history.title}</h2>
+          <p className="mt-1 text-sm text-foreground/58">
+            {copy.history.subtitle}
+          </p>
+        </div>
+        {data.generatedArtifacts.length > 0 ? (
+          <div className="divide-y divide-border">
+            {data.generatedArtifacts.map((artifact) => {
+              const createdAt = formatArtifactDate(artifact.createdAt, locale);
+              const kind =
+                artifact.kind === "gap_analysis"
+                  ? copy.history.kinds.gapAnalysis
+                  : copy.history.kinds.questionnaireAnswers;
+
+              return (
+                <article
+                  className="grid gap-3 p-5 md:grid-cols-[1fr_auto]"
+                  key={artifact.id}
+                >
+                  <div>
+                    <div className="flex flex-wrap items-center gap-2">
+                      <h3 className="font-medium">{artifact.title}</h3>
+                      <span className="rounded-md bg-surface-muted px-2 py-1 text-xs text-foreground/62">
+                        {kind}
+                      </span>
+                    </div>
+                    <p className="mt-2 font-mono text-xs text-foreground/48">
+                      {artifact.id}
+                    </p>
+                  </div>
+                  <div className="text-left text-sm text-foreground/58 md:text-right">
+                    <p>{createdAt ?? copy.history.notAvailable}</p>
+                    <p className="mt-1 font-mono text-xs">
+                      {artifact.model ?? artifact.source}
+                    </p>
+                  </div>
+                </article>
+              );
+            })}
+          </div>
+        ) : (
+          <p className="p-5 text-sm text-foreground/58">{copy.history.empty}</p>
+        )}
+      </section>
     </section>
   );
 }

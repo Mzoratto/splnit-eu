@@ -1629,6 +1629,16 @@
       "policies": "Policy",
       "policiesBody": "I documenti attivi supportano risposte a confidenza media."
     },
+    "history": {
+      "title": "Output salvati",
+      "subtitle": "Risposte ai questionari e gap report generati di recente in questo workspace.",
+      "empty": "Non ci sono ancora output generati salvati.",
+      "notAvailable": "senza data",
+      "kinds": {
+        "questionnaireAnswers": "Risposte questionario",
+        "gapAnalysis": "Gap report"
+      }
+    },
     "workbench": {
       "inputTitle": "Input questionario",
       "pasteLabel": "Incolla questionario",

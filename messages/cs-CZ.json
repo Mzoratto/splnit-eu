@@ -1400,6 +1400,16 @@
       "policies": "Politiky",
       "policiesBody": "Aktivní dokumenty podporují střední jistotu odpovědí."
     },
+    "history": {
+      "title": "Uložené výstupy",
+      "subtitle": "Nedávno vygenerované dotazníky a gap reporty uložené v pracovním prostoru.",
+      "empty": "Zatím nejsou uložené žádné generované výstupy.",
+      "notAvailable": "bez data",
+      "kinds": {
+        "questionnaireAnswers": "Odpovědi na dotazník",
+        "gapAnalysis": "Gap report"
+      }
+    },
     "workbench": {
       "inputTitle": "Vstup dotazníku",
       "pasteLabel": "Vložit dotazník",
