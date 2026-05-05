@@ -78,6 +78,8 @@ Third-party legal copies, summaries, commercial law portals, blogs, and vendor c
 
 - NIS2 Directive, GDPR, and EU AI Act from EUR-Lex in EN, IT, and CS.
 - Italian NIS2 transposition from Gazzetta Ufficiale.
+- Italian ACN NIS determinations and Garante GDPR guidance from regulator-owned URLs.
+- Italian Codice Privacy from Normattiva consolidated legal text.
 - Czech NIS2 and Czech privacy law references from e-Sbírka.
 - ISO 27001 and ISO 27002 store references, without publishing ISO copyrighted control text.
 

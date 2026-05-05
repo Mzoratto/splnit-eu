@@ -20,8 +20,8 @@ const requiredItalianSources = [
   "it/acn-nis-specifiche-2025-164179-allegato2.pdf",
   "it/acn-nis-specifiche-2025-164179-allegato3.pdf",
   "it/acn-nis-specifiche-2025-164179-allegato4.pdf",
-  "eu/gdpr-2016-679-it.html",
-  "it/codice-privacy-dlgs-196-2003.pdf",
+  "eu/gdpr-2016-679-it.pdf",
+  "it/codice-privacy-dlgs-196-2003.html",
   "it/garante-data-breach.html",
   "it/garante-dpia.html",
   "it/garante-ropa-faq.html",
@@ -54,15 +54,17 @@ function assertOfficialAuthority(filename: string, url: string) {
     return;
   }
 
-  if (
-    filename.startsWith("it/garante-") ||
-    filename === "it/codice-privacy-dlgs-196-2003.pdf"
-  ) {
+  if (filename.startsWith("it/garante-")) {
     assert.equal(
       host,
       "www.garanteprivacy.it",
       `${filename} should use Garante Privacy.`,
     );
+    return;
+  }
+
+  if (filename === "it/codice-privacy-dlgs-196-2003.html") {
+    assert.equal(host, "www.normattiva.it", `${filename} should use Normattiva.`);
     return;
   }
 
@@ -134,8 +136,8 @@ async function main() {
       "it/dlgs-138-2024.html",
       "it/acn-nis-piattaforma-2025-136117.pdf",
       "it/acn-nis-specifiche-2025-164179.pdf",
-      "eu/gdpr-2016-679-it.html",
-      "it/codice-privacy-dlgs-196-2003.pdf",
+      "eu/gdpr-2016-679-it.pdf",
+      "it/codice-privacy-dlgs-196-2003.html",
     ]) {
       assert.ok(
         rowsByFilename.get(filename)?.effective_date,
