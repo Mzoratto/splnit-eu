@@ -165,7 +165,7 @@ Aligned and already present:
 - `controls`, `frameworks`, `framework_controls`, `tests`, `source_documents`, `evidence`, `integration_runs`, `org_control_statuses`, and Trust Center visibility settings exist in Drizzle/Postgres.
 - `framework_controls` already carries `articleRef`, regulator guidance, evidence requirements, localized title, and localized description.
 - Current local database seed contains `92` canonical controls, `184` framework-control mappings, `36` source documents, `86` article rows, `434` framework-control article links, `34` evidence templates, and `16` integration test definitions across Microsoft 365, GitHub, and AWS.
-- Official-source verification now passes for NIS2 EU Article 21/23 against OP/EU XHTML and for Czech 264/2025, 409/2025, and 410/2025 imported sections against e-Sbírka PZZ PDFs.
+- Official-source verification now uses the EUR-Lex CELEX-backed NIS2 PDF source row for EU Article 21/23 and e-Sbírka PZZ PDFs for Czech 264/2025, 409/2025, and 410/2025 imported sections.
 - EU Article 21/23 rows and direct NIS2 framework-control links are promoted to reviewed.
 - Czech e-Sbírka article rows are promoted to reviewed source text, but Czech control-to-article mappings remain `confidence='draft'` until compliance/legal mapping review.
 - Integration runs update organisation control status, and the evidence table can store manual uploads and automated snapshots.
@@ -253,8 +253,8 @@ Layer 1 foundation verification - 2026-05-05:
 
 Layer 1 official source ingestion slice - 2026-05-05:
 
-- [x] Added the official OP/EU NIS2 XHTML source document for `Directive (EU) 2022/2555, CELEX 32022L2555`.
-- [x] Added `knowledge:import:nis2-eu` to fetch or read the official XHTML source and import Article 21 and Article 23.
+- [x] Added the official NIS2 EU source document for `Directive (EU) 2022/2555, CELEX 32022L2555`.
+- [x] Added `knowledge:import:nis2-eu` to read the canonical EUR-Lex PDF source or a local `--file` copy and import Article 21 and Article 23.
 - [x] Imported `2` draft NIS2 EU article rows into local Postgres: Article 21 and Article 23.
 - [x] Linked `34` existing NIS2 framework-control rows to those draft article rows.
 - [x] Parser sanity check confirmed Article 21 extraction does not include Article 22.
@@ -263,9 +263,10 @@ Layer 1 official source ingestion slice - 2026-05-05:
 - [x] Added NIS2 evidence requirements for all `34` NIS2 framework-control mappings and seeded `34` evidence templates.
 - [x] Added `smoke:nis2-evidence-templates` so NIS2 mappings fail verification if evidence requirements or active evidence templates are missing.
 - [x] Local count report now verifies `92` controls, `184` framework-control mappings, `33` source documents, `44` articles, `234` framework-control article mappings, `34` evidence templates, and `16` integration tests.
-- [x] Added `knowledge:verify:official-sources` to compare imported legal text against official OP/EU and e-Sbírka sources without database writes.
+- [x] Added `knowledge:verify:official-sources` to compare imported legal text against official EUR-Lex and e-Sbírka sources without database writes.
 - [x] Added `knowledge:promote:official-sources` to verify and promote reviewed official-source article rows.
-- [x] Promoted `2` NIS2 EU article rows and `34` direct EU framework-control article links to reviewed after exact official OP/EU source verification.
+- [x] Promoted `2` NIS2 EU article rows and `34` direct EU framework-control article links to reviewed.
+- [x] Migrated NIS2 EU Article 21/23 provenance from the legacy OP/EU XHTML helper row to the canonical EUR-Lex CELEX PDF source row; the legacy OP/EU rows now remain draft and unlinked.
 - [x] Added `knowledge:import:czech-cyber-law` and imported draft Czech law rows for `Zákon č. 264/2025 Sb.` sections § 12-§ 16 from the provided extraction PDF.
 - [x] Linked `68` NIS2 framework-control mappings to draft Czech transposition sections.
 - [x] Verified those `5` Czech law sections against official e-Sbírka PZZ PDF and inserted reviewed official e-Sbírka article rows.

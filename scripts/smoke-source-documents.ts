@@ -34,6 +34,13 @@ const requiredSourceDocuments = [
   ]),
 ];
 
+type ReviewedEuArticleSourceRow = {
+  article_key: string;
+  citation: string;
+  filename: string | null;
+  url: string | null;
+};
+
 function assertOfficialAuthority(filename: string, url: string) {
   const host = new URL(url).hostname.toLowerCase();
 
@@ -133,6 +140,30 @@ async function main() {
       assert.ok(
         rowsByFilename.get(filename)?.effective_date,
         `${filename} should have an effective date.`,
+      );
+    }
+
+    const reviewedEuArticleSources = await pool.query<ReviewedEuArticleSourceRow>(
+      `
+        SELECT
+          a.article_key,
+          a.citation,
+          sd.filename,
+          sd.url
+        FROM articles a
+        JOIN source_documents sd ON sd.id = a.source_document_id
+        WHERE a.jurisdiction = 'EU'
+          AND a.review_status = 'reviewed'
+        ORDER BY sd.filename, a.article_key
+      `,
+    );
+
+    for (const row of reviewedEuArticleSources.rows) {
+      assert.ok(row.url, `${row.citation} should have a source URL.`);
+      assert.equal(
+        new URL(row.url).hostname.toLowerCase(),
+        "eur-lex.europa.eu",
+        `${row.citation} (${row.filename ?? "no filename"}) should use EUR-Lex as authoritative EU source.`,
       );
     }
   } finally {

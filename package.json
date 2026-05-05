@@ -38,6 +38,7 @@
     "knowledge:import:authoritative-sources": "tsx scripts/import-authoritative-source-documents.ts",
     "knowledge:import:italian-nis2": "tsx scripts/import-italian-nis2-articles.ts",
     "knowledge:import:nis2-eu": "tsx scripts/import-nis2-eu-articles.ts",
+    "knowledge:migrate:nis2-eu-eurlex-source": "tsx scripts/migrate-nis2-eu-source-to-eurlex.ts",
     "knowledge:promote:czech-mappings": "tsx scripts/promote-czech-mapping-review.ts",
     "knowledge:review:czech-mappings": "tsx scripts/report-czech-mapping-review.ts",
     "knowledge:verify:official-sources": "tsx scripts/verify-official-legal-sources.ts",

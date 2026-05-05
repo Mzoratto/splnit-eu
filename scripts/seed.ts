@@ -17,13 +17,11 @@ import { GITHUB_TEST_DEFINITIONS } from "../lib/integrations/github/test-definit
 import { MICROSOFT365_TEST_DEFINITIONS } from "../lib/integrations/microsoft365/test-definitions";
 import { POLICY_TEMPLATES } from "../lib/policies/templates";
 import { AUTHORITATIVE_SOURCE_DOCUMENTS } from "../lib/regulations/authoritative-sources";
-import { NIS2_EU_SOURCE } from "../lib/regulations/nis2-eu";
 
 loadEnvConfig(process.cwd());
 
 const SOURCE_DOCUMENT_LIBRARY = [
   ...AUTHORITATIVE_SOURCE_DOCUMENTS,
-  NIS2_EU_SOURCE,
   {
     citation: "Zákon č. 264/2025 Sb., o kybernetické bezpečnosti",
     effectiveDate: "2025-11-01",

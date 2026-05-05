@@ -1,11 +1,12 @@
 import { spawnSync } from "node:child_process";
-import { mkdir, writeFile } from "node:fs/promises";
+import { mkdir, readFile, writeFile } from "node:fs/promises";
 import path from "node:path";
 import { loadEnvConfig } from "@next/env";
 import { Pool } from "pg";
 import { CZECH_CYBER_LAW_264_SECTIONS } from "../lib/regulations/czech-cyber-law";
 import { CZECH_CYBER_DECREE_SOURCES } from "../lib/regulations/czech-decrees";
 import { extractCzechSection } from "../lib/regulations/czech-sections";
+import { extractEurLexArticleText } from "../lib/regulations/eur-lex-text";
 import { extractOfficialJournalArticle } from "../lib/regulations/official-journal";
 import { NIS2_EU_ARTICLES, NIS2_EU_SOURCE } from "../lib/regulations/nis2-eu";
 
@@ -36,6 +37,11 @@ type ExtractedArticle = {
   title: string | null;
 };
 
+type EuSourceInput = {
+  format: "pdf-text" | "xhtml";
+  text: string;
+};
+
 type CzechOfficialSource = {
   citation: string;
   draftFilename: string;
@@ -60,6 +66,17 @@ function normalizeForComparison(value: string) {
     .replace(/([\p{L}])-\s+([\p{Ll}])/gu, "$1$2")
     .replace(/\s+/g, " ")
     .trim();
+}
+
+function getArg(name: string) {
+  const inlineValue = process.argv.find((arg) => arg.startsWith(`${name}=`));
+
+  if (inlineValue) {
+    return inlineValue.slice(name.length + 1) || null;
+  }
+
+  const index = process.argv.indexOf(name);
+  return index === -1 ? null : process.argv[index + 1] ?? null;
 }
 
 function repairCzechPdfHyphenation(value: string) {
@@ -126,6 +143,46 @@ function pdftotext(pdfPath: string) {
   }
 
   return result.stdout;
+}
+
+function euSourceFormatFromPath(filePath: string): EuSourceInput["format"] {
+  return filePath.toLowerCase().endsWith(".pdf") ? "pdf-text" : "xhtml";
+}
+
+async function loadEuOfficialSource(): Promise<EuSourceInput> {
+  const file = getArg("--nis2-eu-file") ?? process.env.NIS2_EU_SOURCE_FILE ?? null;
+
+  if (file) {
+    const format = euSourceFormatFromPath(file);
+    const text = format === "pdf-text" ? pdftotext(file) : await readFile(file, "utf8");
+
+    return { format, text };
+  }
+
+  await mkdir(DOWNLOAD_DIR, { recursive: true });
+  const pdfPath = path.join(DOWNLOAD_DIR, "nis2-eu-eurlex.pdf");
+  const response = await fetch(NIS2_EU_SOURCE.url);
+
+  if (response.status !== 200) {
+    throw new Error(
+      `NIS2 EU EUR-Lex PDF fetch failed: ${response.status} ${response.statusText}. If EUR-Lex blocks CLI access, download ${NIS2_EU_SOURCE.url} manually and rerun with --nis2-eu-file <pdf-path>.`,
+    );
+  }
+
+  await writeFile(pdfPath, Buffer.from(await response.arrayBuffer()));
+
+  return {
+    format: "pdf-text",
+    text: pdftotext(pdfPath),
+  };
+}
+
+function extractEuArticle(source: EuSourceInput, articleId: string) {
+  if (source.format === "xhtml") {
+    return extractOfficialJournalArticle(source.text, articleId);
+  }
+
+  return extractEurLexArticleText(source.text, articleId);
 }
 
 function czechSources(): CzechOfficialSource[] {
@@ -452,9 +509,9 @@ async function copyDraftMappingsToOfficialArticles(
 }
 
 async function verifyEu(pool: Pool) {
-  const xhtml = await fetchText(NIS2_EU_SOURCE.url);
+  const officialSource = await loadEuOfficialSource();
   const extracted = NIS2_EU_ARTICLES.map((definition) => {
-    const article = extractOfficialJournalArticle(xhtml, definition.articleId);
+    const article = extractEuArticle(officialSource, definition.articleId);
 
     return {
       articleKey: article.articleKey,
@@ -480,7 +537,7 @@ async function verifyEu(pool: Pool) {
   }
 
   console.log(
-    `Verified ${extracted.length} NIS2 EU article rows against the official OP/EU XHTML source.`,
+    `Verified ${extracted.length} NIS2 EU article rows against the official EUR-Lex CELEX source.`,
   );
 }
 

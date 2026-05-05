@@ -1,4 +1,7 @@
-import { readFile } from "node:fs/promises";
+import { spawnSync } from "node:child_process";
+import { mkdtemp, readFile, rm, writeFile } from "node:fs/promises";
+import os from "node:os";
+import path from "node:path";
 import { eq } from "drizzle-orm";
 import { loadEnvConfig } from "@next/env";
 import { getDb } from "../lib/db";
@@ -9,31 +12,74 @@ import {
   frameworks,
   sourceDocuments,
 } from "../lib/db/schema";
+import { extractEurLexArticleText } from "../lib/regulations/eur-lex-text";
 import { extractOfficialJournalArticle } from "../lib/regulations/official-journal";
 import { NIS2_EU_ARTICLES, NIS2_EU_SOURCE } from "../lib/regulations/nis2-eu";
 
 loadEnvConfig(process.cwd());
+
+type SourceInput = {
+  format: "pdf-text" | "xhtml";
+  text: string;
+};
 
 function getFileArg() {
   const index = process.argv.indexOf("--file");
   return index === -1 ? null : process.argv[index + 1] ?? null;
 }
 
-async function loadOfficialXhtml() {
+function pdftotext(pdfPath: string) {
+  const result = spawnSync("pdftotext", ["-layout", pdfPath, "-"], {
+    encoding: "utf8",
+    maxBuffer: 50 * 1024 * 1024,
+  });
+
+  if (result.error) {
+    throw result.error;
+  }
+
+  if (result.status !== 0) {
+    throw new Error(result.stderr || `pdftotext failed for ${pdfPath}`);
+  }
+
+  return result.stdout;
+}
+
+function sourceFormatFromPath(filePath: string): SourceInput["format"] {
+  return filePath.toLowerCase().endsWith(".pdf") ? "pdf-text" : "xhtml";
+}
+
+async function loadOfficialSource(): Promise<SourceInput> {
   const file = getFileArg();
 
   if (file) {
-    return readFile(file, "utf8");
+    const format = sourceFormatFromPath(file);
+    const text = format === "pdf-text" ? pdftotext(file) : await readFile(file, "utf8");
+
+    return { format, text };
   }
 
-  const sourceUrl = process.env.NIS2_EU_XHTML_URL ?? NIS2_EU_SOURCE.url;
+  const sourceUrl = process.env.NIS2_EU_PDF_URL ?? NIS2_EU_SOURCE.url;
   const response = await fetch(sourceUrl);
 
-  if (!response.ok) {
-    throw new Error(`NIS2 EU source fetch failed: ${response.status} ${response.statusText}`);
+  if (response.status !== 200) {
+    throw new Error(
+      `NIS2 EU EUR-Lex PDF fetch failed: ${response.status} ${response.statusText}. If EUR-Lex blocks CLI access, download ${NIS2_EU_SOURCE.url} manually and rerun with --file <pdf-path>.`,
+    );
   }
 
-  return response.text();
+  const temporaryDirectory = await mkdtemp(path.join(os.tmpdir(), "splnit-nis2-eu-"));
+  const pdfPath = path.join(temporaryDirectory, "nis2-eu.pdf");
+
+  try {
+    await writeFile(pdfPath, Buffer.from(await response.arrayBuffer()));
+    return {
+      format: "pdf-text",
+      text: pdftotext(pdfPath),
+    };
+  } finally {
+    await rm(temporaryDirectory, { force: true, recursive: true });
+  }
 }
 
 async function upsertSourceDocument() {
@@ -85,13 +131,21 @@ async function getNis2FrameworkId() {
   return row.id;
 }
 
-async function upsertArticles(xhtml: string, sourceDocumentId: string, frameworkId: string) {
+function extractArticle(source: SourceInput, articleId: string) {
+  if (source.format === "xhtml") {
+    return extractOfficialJournalArticle(source.text, articleId);
+  }
+
+  return extractEurLexArticleText(source.text, articleId);
+}
+
+async function upsertArticles(source: SourceInput, sourceDocumentId: string, frameworkId: string) {
   const db = getDb();
   const effectiveDate = new Date(`${NIS2_EU_SOURCE.effectiveDate}T00:00:00.000Z`);
   const articleIds = new Map<string, string>();
 
   for (const definition of NIS2_EU_ARTICLES) {
-    const extracted = extractOfficialJournalArticle(xhtml, definition.articleId);
+    const extracted = extractArticle(source, definition.articleId);
     const [row] = await db
       .insert(articles)
       .values({
@@ -191,14 +245,14 @@ async function linkNis2FrameworkControls(
 }
 
 async function main() {
-  const xhtml = await loadOfficialXhtml();
+  const source = await loadOfficialSource();
   const sourceDocumentId = await upsertSourceDocument();
   const frameworkId = await getNis2FrameworkId();
-  const articleIds = await upsertArticles(xhtml, sourceDocumentId, frameworkId);
+  const articleIds = await upsertArticles(source, sourceDocumentId, frameworkId);
   const linkedMappings = await linkNis2FrameworkControls(frameworkId, articleIds);
 
   console.log(
-    `Imported ${articleIds.size} draft NIS2 EU articles and linked ${linkedMappings} NIS2 framework-control mappings.`,
+    `Imported ${articleIds.size} draft NIS2 EU articles from ${NIS2_EU_SOURCE.url} and linked ${linkedMappings} NIS2 framework-control mappings.`,
   );
 }
 

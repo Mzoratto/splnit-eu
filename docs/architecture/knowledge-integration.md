@@ -33,11 +33,13 @@ Current local database after the 2026-05-05 official-source verification contain
 
 - 92 canonical controls.
 - 184 database framework-control mappings after seed.
-- 36 source documents, including official OP/EU NIS2 XHTML and official e-Sbírka PZZ PDF sources for 264/2025, 409/2025, and 410/2025.
-- 86 article rows:
-  - 2 reviewed NIS2 EU rows from official OP/EU XHTML.
+- 48 source documents, including canonical EUR-Lex PDF source rows, Italian Gazzetta Ufficiale rows, official ACN/Garante rows, and official e-Sbírka PZZ PDF sources for 264/2025, 409/2025, and 410/2025.
+- 91 article rows:
+  - 2 reviewed NIS2 EU rows linked to the canonical EUR-Lex CELEX PDF source row.
+  - 3 reviewed Italian NIS2 rows from Gazzetta Ufficiale.
   - 42 reviewed Czech rows from official e-Sbírka PZZ PDFs.
   - 42 draft Czech extraction rows from the provided Zákony pro lidi PDFs kept only as provenance/audit aids.
+  - 2 legacy OP/EU extraction rows kept as draft after the EUR-Lex source migration.
 - 434 framework-control article links:
   - 34 reviewed direct EU Article 21/23 links.
   - Czech links copied to official e-Sbírka rows remain `confidence='draft'` pending compliance/legal mapping review.
@@ -54,7 +56,7 @@ The product must not claim `247 controls` publicly until the database actually c
 - Source-extracted article rows must stay `draft` until checked against the official source.
 - Zákony pro lidi PDFs may be used as extraction aids only. Do not promote those rows to `reviewed` until the text is checked against e-Sbírka or another official source.
 - `npm run smoke:draft-extraction-sources` enforces that Zákony pro lidi extraction rows remain `draft`.
-- `npm run knowledge:verify:official-sources` compares imported rows against official OP/EU and e-Sbírka sources without writing to the database.
+- `npm run knowledge:verify:official-sources` compares imported rows against official EUR-Lex and e-Sbírka sources without writing to the database. If EUR-Lex blocks CLI PDF fetches, download the CELEX PDF manually and pass `--nis2-eu-file <path>`.
 - `npm run knowledge:promote:official-sources` performs the same verification and then promotes verified official-source article rows.
 - Evidence templates describe expected evidence; actual customer evidence remains in `evidence`.
 - Automated integration runs create `evidence` snapshots only on the first result, status change, or after a 24-hour refresh window. Do not create evidence for every hourly cron result.
