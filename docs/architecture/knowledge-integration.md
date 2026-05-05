@@ -61,6 +61,26 @@ The product must not claim `247 controls` publicly until the database actually c
 - Automated evidence snapshots may include legal/source citations only from `articles.review_status = 'reviewed'` and `framework_control_articles.confidence = 'reviewed'`. If no reviewed citation exists, store an explicit `citationStatus = 'no_reviewed_citations'`.
 - Public Trust Center pages must continue to show category-level aggregates only, never individual control IDs or evidence filenames.
 
+## Authoritative Source Policy
+
+Authoritative citation rows must come only from primary sources:
+
+- EU regulations and directives: EUR-Lex, using CELEX-backed URLs and locale-specific official text.
+- National transpositions: official state journals or official consolidated law databases.
+- Regulator guidance: the regulator's own website, such as ACN, NÚKIB, Garante, ÚOOÚ, AGID, or the European Commission AI Office.
+- ISO 27001/27002: ISO Store or national standards bodies for internal licensed reference only.
+
+Third-party legal copies, summaries, commercial law portals, blogs, and vendor commentary may be used only as research/provenance aids. They must not be marked as authoritative source documents for auditor-ready citations.
+
+`lib/regulations/authoritative-sources.ts` is the canonical registry for core source-document rows:
+
+- NIS2 Directive, GDPR, and EU AI Act from EUR-Lex in EN, IT, and CS.
+- Italian NIS2 transposition from Gazzetta Ufficiale.
+- Czech NIS2 and Czech privacy law references from e-Sbírka.
+- ISO 27001 and ISO 27002 store references, without publishing ISO copyrighted control text.
+
+Use `npm run knowledge:import:authoritative-sources` to upsert these rows into `source_documents`. Use `npm run smoke:source-documents` to verify required source rows, source URLs, review timestamps, and official-source hostnames.
+
 ## Layer 2 Deferral Criteria
 
 Do not build pgvector/RAG until at least one condition is true:

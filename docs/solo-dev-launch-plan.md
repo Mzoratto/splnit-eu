@@ -273,6 +273,8 @@ Layer 1 official source ingestion slice - 2026-05-05:
 - [x] Added `knowledge:import:czech-decrees` and imported `37` draft section rows for Vyhláška 409/2025 Sb. and Vyhláška 410/2025 Sb.
 - [x] Linked `132` NIS2 framework-control mappings to draft Czech implementing decree sections.
 - [x] Verified `25` Vyhláška 409/2025 Sb. sections and `12` Vyhláška 410/2025 Sb. sections against official e-Sbírka PZZ PDFs and inserted reviewed official e-Sbírka article rows.
+- [x] Added `lib/regulations/authoritative-sources.ts` as the canonical source registry for EUR-Lex EN/IT/CS PDFs, Italian and Czech official national references, and ISO Store references.
+- [x] Added `knowledge:import:authoritative-sources` and expanded `smoke:source-documents` so source rows must use official hostnames only.
 - [x] Czech framework-control article links copied to the official e-Sbírka rows remain `confidence='draft'` pending compliance/legal mapping review.
 - [x] Added `smoke:draft-extraction-sources` so Zákony pro lidi extraction rows fail verification if marked `reviewed`.
 
@@ -496,7 +498,7 @@ Started and verified locally:
 - Added ACN Determinazione n. 164179/2025 on NIS baseline specifications; PDF text states it applies from 2025-04-30.
 - Added ACN 164179/2025 annexes 1-4 for important/essential security measures and incident categories.
 - Kept ACN Determinazione n. 38565/2024 in the source library as superseded history and marked it as replaced by 136117/2025.
-- Added `smoke:source-documents` to verify required Italian NIS/GDPR/Garante source rows, URLs, effective dates where known, and review timestamps.
+- Added `smoke:source-documents` to verify required Italian NIS/GDPR/Garante source rows, canonical EUR-Lex EN/IT/CS PDF rows, official hostnames, effective dates where known, and review timestamps.
 
 Still open before calling 3.1 complete:
 
