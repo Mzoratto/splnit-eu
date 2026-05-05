@@ -28,6 +28,7 @@
     "knowledge:import:czech-cyber-law": "tsx scripts/import-czech-cyber-law-drafts.ts",
     "knowledge:import:czech-decrees": "tsx scripts/import-czech-decree-drafts.ts",
     "knowledge:import:nis2-eu": "tsx scripts/import-nis2-eu-articles.ts",
+    "knowledge:review:czech-mappings": "tsx scripts/report-czech-mapping-review.ts",
     "knowledge:verify:official-sources": "tsx scripts/verify-official-legal-sources.ts",
     "knowledge:promote:official-sources": "tsx scripts/verify-official-legal-sources.ts --promote-reviewed",
     "db:generate": "drizzle-kit generate",
