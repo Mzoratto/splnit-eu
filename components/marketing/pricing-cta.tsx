@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useLocale } from "next-intl";
 import { useEffect, useState } from "react";
+import { getLocalizedMarketingPath } from "@/i18n/marketing-paths";
 import { normalizeLocale, type Locale } from "@/i18n/routing";
 import {
   cookieConsentChangedEvent,
@@ -164,7 +165,7 @@ export function PricingCta({
 
   return (
     <Link
-      href={href}
+      href={href.startsWith("/") ? getLocalizedMarketingPath(href, locale) : href}
       data-attr={planName === "Starter" ? PRICING_CTA_FLAG : undefined}
       className={
         featured

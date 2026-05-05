@@ -8,6 +8,7 @@ import {
   FaqAccordion,
   PricingCards,
 } from "@/components/marketing/pricing-widgets";
+import { getLocalizedMarketingPath } from "@/i18n/marketing-paths";
 import { normalizeLocale, type Locale } from "@/i18n/routing";
 
 const metadataByLocale: Record<Locale, Required<Pick<Metadata, "title" | "description">> & { locale: string }> = {
@@ -48,6 +49,7 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 export default async function PricingPage() {
+  const locale = normalizeLocale(await getLocale()) ?? "cs-CZ";
   const t = await getTranslations("pricing");
 
   return (
@@ -138,13 +140,13 @@ export default async function PricingPage() {
             </p>
             <div className="mt-10 flex flex-col justify-center gap-3 sm:flex-row">
               <Link
-                href="/early-access"
+                href={getLocalizedMarketingPath("/early-access", locale)}
                 className="rounded-full bg-zinc-900 px-8 py-3 text-sm font-medium text-white transition-colors hover:bg-zinc-800"
               >
                 {t("primaryCta")}
               </Link>
               <Link
-                href="/platform"
+                href={getLocalizedMarketingPath("/platform", locale)}
                 className="rounded-full border border-zinc-200 bg-white px-8 py-3 text-sm font-medium text-zinc-800 shadow-sm transition-colors hover:bg-zinc-50"
               >
                 {t("secondaryCta")}

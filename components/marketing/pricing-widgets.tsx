@@ -1,7 +1,7 @@
 "use client";
 
 import { useLocale, useTranslations } from "next-intl";
-import { useMemo, useState } from "react";
+import { useState } from "react";
 import { Icon } from "@/components/marketing/local-icon";
 import {
   comparisonGroups,
@@ -23,6 +23,8 @@ const planPrices: Record<
   Locale,
   {
     currency: string;
+    equivalentMonthly?: [number, number, number];
+    equivalentAnnual?: [number, number, number];
     monthly: [number, number, number];
     annual: [number, number, number];
   }
@@ -30,6 +32,8 @@ const planPrices: Record<
   "cs-CZ": {
     annual: [0, 1225, 3100],
     currency: "CZK",
+    equivalentAnnual: [0, 49, 124],
+    equivalentMonthly: [0, 59, 149],
     monthly: [0, 1475, 3725],
   },
   "en-EU": {
@@ -44,20 +48,19 @@ const planPrices: Record<
   },
 };
 
+function formatPlanPrice(price: number, locale: Locale, currency: string) {
+  if (currency === "EUR") {
+    return `€${price}`;
+  }
+
+  return `${new Intl.NumberFormat(locale).format(price)} Kč`;
+}
+
 export function PricingCards() {
   const locale = useLocale() as Locale;
   const t = useTranslations("pricing.cards");
   const [annual, setAnnual] = useState(false);
   const priceSet = planPrices[locale] ?? planPrices["cs-CZ"];
-  const formatCurrency = useMemo(
-    () =>
-      new Intl.NumberFormat(locale, {
-        currency: priceSet.currency,
-        maximumFractionDigits: 0,
-        style: "currency",
-      }),
-    [locale, priceSet.currency],
-  );
 
   return (
     <>
@@ -87,6 +90,12 @@ export function PricingCards() {
           const planKey = plan.key;
           const planName = t(`${planKey}.name`);
           const price = annual ? priceSet.annual[index] : priceSet.monthly[index];
+          const equivalentPrice =
+            locale === "cs-CZ" && price > 0
+              ? annual
+                ? priceSet.equivalentAnnual?.[index]
+                : priceSet.equivalentMonthly?.[index]
+              : null;
           const features = t.raw(`${planKey}.features`) as string[];
           const card = (
             <div className="flex h-full flex-col rounded-[21px] bg-white p-7">
@@ -107,11 +116,16 @@ export function PricingCards() {
                 </p>
                 <div className="flex items-baseline gap-1">
                   <span className="text-4xl font-semibold tracking-tight text-zinc-900 transition-opacity">
-                    {formatCurrency.format(price)}
+                    {formatPlanPrice(price, locale, priceSet.currency)}
                   </span>
                   <span className="text-sm text-zinc-400">
                     {annual && price > 0 ? t("annualSuffix") : t("monthlySuffix")}
                   </span>
+                  {equivalentPrice ? (
+                    <span className="text-xs text-zinc-400">
+                      (€{equivalentPrice})
+                    </span>
+                  ) : null}
                 </div>
                 <p className="mt-2 text-xs text-zinc-500">
                   {t(`${planKey}.description`)}

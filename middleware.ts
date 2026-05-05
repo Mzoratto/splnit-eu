@@ -1,5 +1,6 @@
 import { clerkMiddleware, createRouteMatcher } from "@clerk/nextjs/server";
 import { NextFetchEvent, NextRequest, NextResponse } from "next/server";
+import { toInternalMarketingPath } from "./i18n/marketing-paths";
 import { localeCookieName, normalizeLocale, routing } from "./i18n/routing";
 
 const isProtectedRoute = createRouteMatcher([
@@ -47,16 +48,49 @@ function getPreferredLocale(request: NextRequest) {
   return routing.defaultLocale;
 }
 
+function getPrefixedLocaleRoute(request: NextRequest) {
+  const { pathname } = request.nextUrl;
+
+  if (pathname === "/it" || pathname.startsWith("/it/")) {
+    return { locale: "it-IT" as const };
+  }
+
+  if (pathname === "/en" || pathname.startsWith("/en/")) {
+    return { locale: "en-EU" as const };
+  }
+
+  if (pathname === "/cs" || pathname.startsWith("/cs/")) {
+    return { locale: "cs-CZ" as const };
+  }
+
+  return null;
+}
+
 function applyLocale(request: NextRequest) {
-  const locale = getPreferredLocale(request);
+  const prefixedRoute = getPrefixedLocaleRoute(request);
+  const locale = prefixedRoute?.locale ?? getPreferredLocale(request);
   const headers = new Headers(request.headers);
   headers.set("X-NEXT-INTL-LOCALE", locale);
 
-  const response = NextResponse.next({
-    request: {
-      headers,
-    },
-  });
+  const rewriteUrl = prefixedRoute
+    ? new URL(toInternalMarketingPath(request.nextUrl.pathname), request.nextUrl)
+    : null;
+
+  if (rewriteUrl) {
+    rewriteUrl.search = request.nextUrl.search;
+  }
+
+  const response = rewriteUrl
+    ? NextResponse.rewrite(rewriteUrl, {
+        request: {
+          headers,
+        },
+      })
+    : NextResponse.next({
+        request: {
+          headers,
+        },
+      });
 
   if (request.cookies.get(localeCookieName)?.value !== locale) {
     response.cookies.set(localeCookieName, locale, {

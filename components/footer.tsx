@@ -1,13 +1,16 @@
 "use client";
 
 import Link from "next/link";
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import { FormEvent, useState } from "react";
 import { LogoMark } from "@/components/brand/logo-mark";
 import { LocaleSwitcher } from "@/components/locale-switcher";
 import { Icon } from "@/components/marketing/local-icon";
+import { getLocalizedMarketingPath } from "@/i18n/marketing-paths";
+import { normalizeLocale, type Locale } from "@/i18n/routing";
 
 export function Footer() {
+  const locale = normalizeLocale(useLocale()) ?? "cs-CZ";
   const t = useTranslations("marketing.footer");
   const navT = useTranslations("marketing.nav");
   const [email, setEmail] = useState("");
@@ -105,6 +108,7 @@ export function Footer() {
               [t("about"), "/about"],
               [t("pricing"), "/cenik"],
             ]}
+            locale={locale}
           />
           <FooterColumn
             title={t("regulations")}
@@ -114,6 +118,7 @@ export function Footer() {
               ["GDPR", "/predpisy/gdpr"],
               ["ISO 27001", "/predpisy/iso-27001"],
             ]}
+            locale={locale}
           />
 
           <div className="col-span-2 md:pl-4">
@@ -165,9 +170,11 @@ export function Footer() {
 function FooterColumn({
   title,
   links,
+  locale,
 }: {
   title: string;
   links: [string, string][];
+  locale: Locale;
 }) {
   return (
     <div>
@@ -177,7 +184,10 @@ function FooterColumn({
       <ul className="space-y-2.5 text-xs text-zinc-500">
         {links.map(([label, href]) => (
           <li key={href}>
-            <Link href={href} className="transition-colors hover:text-zinc-900">
+            <Link
+              href={getLocalizedMarketingPath(href, locale)}
+              className="transition-colors hover:text-zinc-900"
+            >
               {label}
             </Link>
           </li>

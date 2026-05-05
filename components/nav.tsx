@@ -2,11 +2,16 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import { useState } from "react";
 import { LogoMark } from "@/components/brand/logo-mark";
 import { LocaleSwitcher } from "@/components/locale-switcher";
 import { Icon } from "@/components/marketing/local-icon";
+import {
+  getLocalizedMarketingPath,
+  toInternalMarketingPath,
+} from "@/i18n/marketing-paths";
+import { normalizeLocale } from "@/i18n/routing";
 
 const links = [
   { href: "/platform", labelKey: "platform" },
@@ -19,10 +24,13 @@ const links = [
 
 export function Nav() {
   const pathname = usePathname();
+  const locale = normalizeLocale(useLocale()) ?? "cs-CZ";
+  const internalPathname = toInternalMarketingPath(pathname);
   const t = useTranslations("marketing.nav");
   const [open, setOpen] = useState(false);
   const onEarlyAccessPage =
-    pathname === "/early-access" || pathname.startsWith("/early-access/");
+    internalPathname === "/early-access" ||
+    internalPathname.startsWith("/early-access/");
   const ctaClassName =
     "flex items-center gap-1.5 rounded-full bg-blue-600 px-4 py-1.5 text-sm font-medium text-white transition-colors hover:bg-blue-500";
   const ctaContent = (
@@ -40,7 +48,7 @@ export function Nav() {
     <nav className="nav-blur fixed left-0 right-0 top-0 z-50 h-16 border-b border-zinc-200/60 transition-all duration-300">
       <div className="mx-auto flex h-full max-w-7xl items-center justify-between gap-4 px-5">
         <Link
-          href="/"
+          href={getLocalizedMarketingPath("/", locale)}
           className="flex shrink-0 items-center gap-2"
           onClick={() => setOpen(false)}
         >
@@ -52,13 +60,15 @@ export function Nav() {
 
         <div className="hidden items-center gap-1 md:flex">
           {links.map((link) => {
+            const href = getLocalizedMarketingPath(link.href, locale);
             const active =
-              pathname === link.href || pathname.startsWith(`${link.href}/`);
+              internalPathname === link.href ||
+              internalPathname.startsWith(`${link.href}/`);
 
             return (
               <Link
                 key={link.href}
-                href={link.href}
+                href={href}
                 className={`nav-link rounded-md px-3 py-1.5 text-sm transition-colors hover:bg-zinc-100/70 hover:text-zinc-900 ${
                   active
                     ? "font-medium text-zinc-900"
@@ -90,7 +100,10 @@ export function Nav() {
                 {ctaContent}
               </a>
             ) : (
-              <Link href="/early-access" className={ctaClassName}>
+              <Link
+                href={getLocalizedMarketingPath("/early-access", locale)}
+                className={ctaClassName}
+              >
                 {ctaContent}
               </Link>
             )}
@@ -115,13 +128,15 @@ export function Nav() {
         <div className="border-b border-zinc-200/70 bg-stone-50/95 px-5 py-4 shadow-lg shadow-zinc-200/40 backdrop-blur md:hidden">
           <div className="mx-auto grid max-w-7xl gap-1">
             {links.map((link) => {
+              const href = getLocalizedMarketingPath(link.href, locale);
               const active =
-                pathname === link.href || pathname.startsWith(`${link.href}/`);
+                internalPathname === link.href ||
+                internalPathname.startsWith(`${link.href}/`);
 
               return (
                 <Link
                   key={link.href}
-                  href={link.href}
+                  href={href}
                   className={`rounded-xl px-3 py-3 text-sm ${
                     active
                       ? "bg-blue-50 font-medium text-blue-700"

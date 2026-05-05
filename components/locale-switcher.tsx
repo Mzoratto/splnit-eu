@@ -1,7 +1,8 @@
 "use client";
 
 import { useLocale } from "next-intl";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
+import { getLocalizedMarketingPath } from "@/i18n/marketing-paths";
 import { localeCookieName, type Locale } from "@/i18n/routing";
 
 const localeOptions: Array<{ label: string; value: Locale }> = [
@@ -16,10 +17,12 @@ export function LocaleSwitcher({
   compact?: boolean;
 }) {
   const activeLocale = useLocale();
+  const pathname = usePathname();
   const router = useRouter();
 
   function selectLocale(locale: Locale) {
     document.cookie = `${localeCookieName}=${locale}; path=/; SameSite=Lax`;
+    router.push(getLocalizedMarketingPath(pathname, locale));
     router.refresh();
   }
 
