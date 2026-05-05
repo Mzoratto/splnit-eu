@@ -1387,7 +1387,7 @@
     "title": "Bezpečnostní dotazníky",
     "subtitle": "Automaticky navrhujte odpovědi na zákaznické dotazníky podle splněných kontrol, evidence a aktivních politik ve Splnit.eu.",
     "disclaimer": "Vygenerované odpovědi jsou pracovní návrhy pro právní a compliance kontrolu. Nejde o právní radu, certifikaci ani garanci souladu.",
-    "disabledNotice": "Questionnaire AI vyžaduje Clerk, DATABASE_URL a ANTHROPIC_API_KEY.",
+    "disabledNotice": "Questionnaire AI vyžaduje Clerk, DATABASE_URL a nastaveného AI providera.",
     "fallbacks": {
       "demoOrganisation": "Demo organizace",
       "organisation": "Organizace"
@@ -1429,7 +1429,7 @@
     "actionErrors": {
       "authRequired": "Přihlášení a aktivní organizace jsou povinné.",
       "invalidInput": "Vložte text dotazníku nebo nahrajte textový soubor.",
-      "missingConfig": "ANTHROPIC_API_KEY není nastavený.",
+      "missingConfig": "Provider pro Questionnaire AI není nastavený.",
       "noQuestions": "Nepodařilo se najít otázky v dotazníku.",
       "rateLimit": "Měsíční limit {limit} dotazníků je vyčerpaný.",
       "generationFailed": "Generování odpovědí se nepodařilo.",

@@ -1616,7 +1616,7 @@
     "title": "Security questionnaires",
     "subtitle": "Auto-answer inbound customer questionnaires using passing controls, evidence, and policies already stored in Splnit.eu.",
     "disclaimer": "Generated answers are drafts for legal and compliance review. They are not legal advice, certification, or a guarantee of compliance.",
-    "disabledNotice": "Questionnaire AI requires Clerk, DATABASE_URL, and ANTHROPIC_API_KEY.",
+    "disabledNotice": "Questionnaire AI requires Clerk, DATABASE_URL, and a configured AI provider.",
     "fallbacks": {
       "demoOrganisation": "Demo organisation",
       "organisation": "Organisation"
@@ -1658,7 +1658,7 @@
     "actionErrors": {
       "authRequired": "Sign-in and an active organisation are required.",
       "invalidInput": "Paste questionnaire text or upload a text file.",
-      "missingConfig": "ANTHROPIC_API_KEY is not configured.",
+      "missingConfig": "Questionnaire AI provider is not configured.",
       "noQuestions": "No questions were found in the questionnaire.",
       "rateLimit": "The monthly limit of {limit} questionnaires has been reached.",
       "generationFailed": "Answer generation failed.",

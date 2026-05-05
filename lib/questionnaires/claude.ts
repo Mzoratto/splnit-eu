@@ -1,14 +1,13 @@
 import { z } from "zod";
-import type { getQuestionnaireComplianceContext } from "@/lib/db/queries/questionnaires";
 import { sanitizeQuestionnaireAnswers } from "@/lib/questionnaires/citation-guard";
+import type {
+  QuestionnaireAiInput,
+  QuestionnaireAiProvider,
+} from "@/lib/questionnaires/provider-types";
 import {
   QuestionnaireAnswerSchema,
   type QuestionnaireAnswer,
 } from "@/lib/questionnaires/types";
-
-type QuestionnaireContext = Awaited<
-  ReturnType<typeof getQuestionnaireComplianceContext>
->;
 
 const ClaudeToolInputSchema = z.object({
   answers: z.array(QuestionnaireAnswerSchema),
@@ -34,8 +33,8 @@ export function getClaudeModel() {
 }
 
 export async function answerQuestionnaireWithClaude(input: {
-  context: QuestionnaireContext;
-  questions: string[];
+  context: QuestionnaireAiInput["context"];
+  questions: QuestionnaireAiInput["questions"];
 }) {
   if (!process.env.ANTHROPIC_API_KEY) {
     throw new Error("ANTHROPIC_API_KEY is required for Questionnaire AI.");
@@ -154,7 +153,7 @@ export async function answerQuestionnaireWithClaude(input: {
   throw new Error("Claude response did not include questionnaire answers.");
 }
 
-function buildSystemPrompt(context: QuestionnaireContext) {
+function buildSystemPrompt(context: QuestionnaireAiInput["context"]) {
   return [
     "You answer inbound security questionnaires for Splnit.eu customer organisations.",
     "Use only the supplied organisation controls, evidence and policies. Do not invent certifications, tooling, dates or policy names.",
@@ -186,6 +185,13 @@ function buildSystemPrompt(context: QuestionnaireContext) {
     JSON.stringify(context.legalCitations, null, 2),
   ].join("\n");
 }
+
+export const anthropicQuestionnaireProvider: QuestionnaireAiProvider = {
+  answer: answerQuestionnaireWithClaude,
+  id: "anthropic",
+  isConfigured: hasClaudeConfig,
+  label: "Anthropic Claude",
+};
 
 function buildUserPrompt(questions: string[]) {
   return [

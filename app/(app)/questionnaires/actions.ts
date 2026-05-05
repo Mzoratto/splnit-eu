@@ -7,10 +7,6 @@ import { normalizeLocale, type Locale } from "@/i18n/routing";
 import { getQuestionnaireComplianceContext } from "@/lib/db/queries/questionnaires";
 import { getOrganisationByClerkOrgId } from "@/lib/db/queries/organisations";
 import {
-  answerQuestionnaireWithClaude,
-  hasClaudeConfig,
-} from "@/lib/questionnaires/claude";
-import {
   buildUnsupportedQuestionnaireAnswers,
   hasQuestionnaireSupportContext,
 } from "@/lib/questionnaires/fallback";
@@ -18,6 +14,10 @@ import {
   parseQuestionnaireText,
   truncateQuestionnaireText,
 } from "@/lib/questionnaires/parser";
+import {
+  answerQuestionnaireWithProvider,
+  hasQuestionnaireAiConfig,
+} from "@/lib/questionnaires/provider";
 import { enforceQuestionnaireRateLimit } from "@/lib/questionnaires/rate-limit";
 import type { QuestionnaireResult } from "@/lib/questionnaires/types";
 
@@ -119,7 +119,7 @@ export async function answerQuestionnaireAction(
       };
     }
 
-    if (!hasClaudeConfig()) {
+    if (!hasQuestionnaireAiConfig()) {
       return {
         ...initialQuestionnaireState,
         error: copy.missingConfig,
@@ -127,7 +127,7 @@ export async function answerQuestionnaireAction(
       };
     }
 
-    const generated = await answerQuestionnaireWithClaude({
+    const generated = await answerQuestionnaireWithProvider({
       context,
       questions,
     });

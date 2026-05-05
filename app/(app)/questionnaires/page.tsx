@@ -6,7 +6,7 @@ import { getMessagesForLocale } from "@/i18n/messages";
 import { normalizeLocale } from "@/i18n/routing";
 import { hasDatabaseUrl } from "@/lib/db";
 import { getQuestionnaireComplianceContext } from "@/lib/db/queries/questionnaires";
-import { hasClaudeConfig } from "@/lib/questionnaires/claude";
+import { hasQuestionnaireAiConfig } from "@/lib/questionnaires/provider";
 
 export const dynamic = "force-dynamic";
 
@@ -46,7 +46,7 @@ async function loadQuestionnairePageData() {
   );
 
   return {
-    canGenerate: Boolean(context && hasClaudeConfig()),
+    canGenerate: Boolean(context && hasQuestionnaireAiConfig()),
     controlCount: context?.controls.length ?? 0,
     evidenceCount: context?.evidence.length ?? 0,
     isDemo: false,
