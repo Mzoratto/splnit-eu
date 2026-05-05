@@ -38,6 +38,8 @@ As of this decision, the code seed contains:
 - 34 draft NIS2 framework-control article links after running `npm run knowledge:import:nis2-eu`.
 - 5 draft Czech cyber law section rows after running `npm run knowledge:import:czech-cyber-law` with the provided extraction PDF.
 - 68 additional draft NIS2 framework-control article links to Czech transposition sections.
+- 37 draft Czech implementing decree section rows after running `npm run knowledge:import:czech-decrees` with the provided 409/410 extraction PDFs.
+- 132 additional draft NIS2 framework-control article links to Czech implementing decree sections.
 - 16 integration test definitions across Microsoft 365, GitHub, and AWS.
 
 The product must not claim `247 controls` publicly until the database actually contains 247 reviewed controls and the copy hygiene guard is intentionally updated.

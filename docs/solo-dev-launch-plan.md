@@ -264,7 +264,9 @@ Layer 1 official source ingestion slice - 2026-05-05:
 - [x] Added `knowledge:import:czech-cyber-law` and imported draft Czech law rows for `Zákon č. 264/2025 Sb.` sections § 12-§ 16 from the provided extraction PDF.
 - [x] Linked `68` NIS2 framework-control mappings to draft Czech transposition sections.
 - [ ] Czech law rows must stay draft until checked against e-Sbírka or another official source.
-- [ ] Vyhláška 409/2025 Sb. and Vyhláška 410/2025 Sb. detailed control mappings are still pending.
+- [x] Added `knowledge:import:czech-decrees` and imported `37` draft section rows for Vyhláška 409/2025 Sb. and Vyhláška 410/2025 Sb.
+- [x] Linked `132` NIS2 framework-control mappings to draft Czech implementing decree sections.
+- [ ] Vyhláška 409/2025 Sb. and Vyhláška 410/2025 Sb. rows must stay draft until checked against e-Sbírka or another official source.
 
 ### Layer 2 - RAG Knowledge Layer
 
