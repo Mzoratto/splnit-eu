@@ -164,7 +164,7 @@ Aligned and already present:
 
 - `controls`, `frameworks`, `framework_controls`, `tests`, `source_documents`, `evidence`, `integration_runs`, `org_control_statuses`, and Trust Center visibility settings exist in Drizzle/Postgres.
 - `framework_controls` already carries `articleRef`, regulator guidance, evidence requirements, localized title, and localized description.
-- Current code seed contains `92` canonical controls, `129` framework-control mappings, and `16` integration test definitions across Microsoft 365, GitHub, and AWS.
+- Current local database seed contains `92` canonical controls, `184` framework-control mappings, and `16` integration test definitions across Microsoft 365, GitHub, and AWS.
 - Integration runs update organisation control status, and the evidence table can store manual uploads and automated snapshots.
 - Questionnaire AI exists, but it is currently Anthropic-based and grounded only in organisation controls, evidence, and policies.
 
@@ -241,6 +241,14 @@ Layer 1 next tasks:
 - [ ] Link existing NIS2 framework-control rows to reviewed article rows.
 - [ ] Add smoke tests that fail when a reviewed framework control has no linked official article.
 - [ ] Add seed/report script that prints real counts for controls, mappings, articles, source documents, evidence templates, and tests.
+
+Layer 1 foundation verification - 2026-05-05:
+
+- [x] Added `docs/architecture/knowledge-integration.md`.
+- [x] Added Drizzle schema and migration for `articles`, `framework_control_articles`, and `evidence_templates`.
+- [x] Applied migration `0010_familiar_stepford_cuckoos` to local Postgres `splnit_eu_dev`.
+- [x] Added `knowledge:counts` and `smoke:knowledge-layer`.
+- [x] Local count report verified `92` controls, `184` framework-control mappings, `29` source documents, `16` integration tests, and intentionally `0` articles/evidence templates before reviewed legal content is seeded.
 
 ### Layer 2 - RAG Knowledge Layer
 

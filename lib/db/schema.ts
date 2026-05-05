@@ -119,6 +119,91 @@ export const frameworkControls = pgTable(
   (table) => [unique().on(table.frameworkId, table.controlId, table.articleRef)],
 );
 
+export const articles = pgTable(
+  "articles",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    sourceDocumentId: uuid("source_document_id")
+      .notNull()
+      .references(() => sourceDocuments.id),
+    frameworkId: uuid("framework_id")
+      .notNull()
+      .references(() => frameworks.id),
+    jurisdiction: text("jurisdiction").notNull(),
+    locale: text("locale").notNull(),
+    articleKey: text("article_key").notNull(),
+    title: text("title"),
+    officialText: text("official_text").notNull(),
+    citation: text("citation").notNull(),
+    effectiveDate: timestamp("effective_date", { withTimezone: true }),
+    lastReviewed: timestamp("last_reviewed", { withTimezone: true }),
+    reviewStatus: text("review_status").notNull().default("draft"),
+    createdAt: timestamp("created_at", { withTimezone: true }).defaultNow(),
+    updatedAt: timestamp("updated_at", { withTimezone: true }).defaultNow(),
+  },
+  (table) => [
+    unique().on(table.sourceDocumentId, table.locale, table.articleKey),
+    index("idx_articles_framework_jurisdiction").on(
+      table.frameworkId,
+      table.jurisdiction,
+      table.locale,
+    ),
+    index("idx_articles_review_status").on(table.reviewStatus),
+  ],
+);
+
+export const frameworkControlArticles = pgTable(
+  "framework_control_articles",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    frameworkControlId: uuid("framework_control_id")
+      .notNull()
+      .references(() => frameworkControls.id, { onDelete: "cascade" }),
+    articleId: uuid("article_id")
+      .notNull()
+      .references(() => articles.id, { onDelete: "cascade" }),
+    citationNote: text("citation_note"),
+    confidence: text("confidence").notNull().default("reviewed"),
+    createdAt: timestamp("created_at", { withTimezone: true }).defaultNow(),
+  },
+  (table) => [
+    unique().on(table.frameworkControlId, table.articleId),
+    index("idx_framework_control_articles_article").on(table.articleId),
+  ],
+);
+
+export const evidenceTemplates = pgTable(
+  "evidence_templates",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    controlId: uuid("control_id").references(() => controls.id, {
+      onDelete: "cascade",
+    }),
+    frameworkControlId: uuid("framework_control_id").references(
+      () => frameworkControls.id,
+      { onDelete: "cascade" },
+    ),
+    title: text("title").notNull(),
+    description: text("description").notNull(),
+    evidenceType: text("evidence_type").notNull(),
+    exampleFields: jsonb("example_fields")
+      .$type<Record<string, unknown>>()
+      .default({}),
+    locale: text("locale").notNull().default("en-EU"),
+    sortOrder: integer("sort_order").default(0),
+    isActive: boolean("is_active").notNull().default(true),
+    createdAt: timestamp("created_at", { withTimezone: true }).defaultNow(),
+    updatedAt: timestamp("updated_at", { withTimezone: true }).defaultNow(),
+  },
+  (table) => [
+    index("idx_evidence_templates_control").on(table.controlId),
+    index("idx_evidence_templates_framework_control").on(
+      table.frameworkControlId,
+    ),
+    index("idx_evidence_templates_locale").on(table.locale),
+  ],
+);
+
 export const tests = pgTable("tests", {
   id: uuid("id").primaryKey().defaultRandom(),
   controlId: uuid("control_id")
