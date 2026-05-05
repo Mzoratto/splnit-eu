@@ -294,6 +294,7 @@ Layer 1 trust signal generation slice - 2026-05-05:
 - [x] Questionnaire AI now returns a conservative localized fallback without calling the model when the workspace has no controls, evidence, policies, or reviewed legal citations.
 - [x] Questionnaire AI now uses a provider boundary (`QUESTIONNAIRE_AI_PROVIDER`, default `anthropic`) so app pages/actions do not import Anthropic-specific code.
 - [x] Questionnaire AI now persists generated answer sets as `generated_artifacts` rows and returns the saved artifact ID to the UI/export payload.
+- [x] Gap report generation now also writes a `generated_artifacts` row linked to the private PDF blob and framework metadata.
 - [ ] Czech mappings still need compliance/legal review before they can become reviewed auditor-ready citations.
 
 ### Layer 2 - RAG Knowledge Layer
@@ -323,7 +324,7 @@ Required before expanding AI features:
 - [x] Add citation validation: generated questionnaire answers may cite only reviewed legal citation IDs, evidence IDs, and policy IDs provided in context.
 - [x] Add refusal/fallback behavior when no supporting evidence or reviewed article exists.
 - [x] Save generated questionnaire answers as linked generated artifacts.
-- [ ] Save gap-analysis outputs as evidence-vault records or linked generated artifacts.
+- [x] Save gap-analysis outputs as evidence-vault records or linked generated artifacts.
 - [x] Add legal disclaimer copy: generated answers are drafts for customer legal/compliance review, not legal advice or certification.
 - [ ] Update subprocessors and data-processing docs before sending customer content to any new AI provider.
 

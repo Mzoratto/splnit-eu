@@ -6,6 +6,7 @@ import { revalidatePath } from "next/cache";
 import { z } from "zod";
 import { deleteBlobUrlsAfterFailedSave } from "@/lib/blob/cleanup";
 import type { FrameworkSlug } from "@/lib/controls/library";
+import { createGeneratedArtifact } from "@/lib/db/queries/generated-artifacts";
 import {
   assessFramework,
   getFrameworkDetail,
@@ -16,6 +17,10 @@ import {
   FRAMEWORK_QUESTIONS,
   type FrameworkAnswer,
 } from "@/lib/frameworks/questions";
+import {
+  buildGapAnalysisArtifactContent,
+  GAP_ANALYSIS_ARTIFACT_KIND,
+} from "@/lib/frameworks/gap-artifacts";
 import {
   getFrameworkDisplayDescription,
   getFrameworkDisplayName,
@@ -40,13 +45,20 @@ function parseFrameworkSlug(slug: string): FrameworkSlug {
 }
 
 async function getActiveOrgId() {
+  return (await getActiveSessionContext()).clerkOrgId;
+}
+
+async function getActiveSessionContext() {
   const session = await auth();
 
   if (!session.userId || !session.orgId) {
     throw new Error("Active Clerk organisation is required.");
   }
 
-  return session.orgId;
+  return {
+    clerkOrgId: session.orgId,
+    userId: session.userId,
+  };
 }
 
 export async function assessFrameworkAction(
@@ -80,7 +92,8 @@ export async function assessFrameworkAction(
 
 export async function generateGapReportAction(frameworkSlug: string) {
   const parsedSlug = parseFrameworkSlug(frameworkSlug);
-  const clerkOrgId = await getActiveOrgId();
+  const session = await getActiveSessionContext();
+  const clerkOrgId = session.clerkOrgId;
   const detail = await getFrameworkDetail({
     clerkOrgId,
     frameworkSlug: parsedSlug,
@@ -139,23 +152,39 @@ export async function generateGapReportAction(frameworkSlug: string) {
     },
   );
 
+  const metadata = {
+    generatedAt: generatedAt.toISOString(),
+    locale,
+    openControls: detail.controls.filter((control) =>
+      ["fail", "manual_review", "unknown", null].includes(control.status),
+    ).length,
+    score,
+    totalControls: detail.controls.length,
+  };
+  const title = `${seedFramework?.nameEn ?? detail.framework.nameEn} gap report`;
+
   await saveGapReportRecord({
     blobUrl: blob.url,
     clerkOrgId,
     frameworkSlug: parsedSlug,
-    metadata: {
-      generatedAt: generatedAt.toISOString(),
-      locale,
-      openControls: detail.controls.filter((control) =>
-        ["fail", "manual_review", "unknown", null].includes(control.status),
-      ).length,
-      score,
-      totalControls: detail.controls.length,
-    },
-    title: `${seedFramework?.nameEn ?? detail.framework.nameEn} gap report`,
+    metadata,
+    title,
   }).catch((error: unknown) =>
     deleteBlobUrlsAfterFailedSave([blob.url], error),
   );
+  await createGeneratedArtifact({
+    clerkOrgId,
+    content: buildGapAnalysisArtifactContent({
+      blobUrl: blob.url,
+      frameworkSlug: parsedSlug,
+      metadata,
+    }),
+    createdBy: session.userId,
+    kind: GAP_ANALYSIS_ARTIFACT_KIND,
+    model: null,
+    source: "gap_report_pdf",
+    title,
+  });
 
   revalidatePath(`/frameworks/${parsedSlug}`);
 }
