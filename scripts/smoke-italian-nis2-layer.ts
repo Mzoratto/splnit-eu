@@ -99,6 +99,65 @@ async function main() {
       0,
       "Italian NIS2 mappings must not be reviewed before mapping review.",
     );
+
+    const acnGuidanceResult = await pool.query<{
+      article_key: string;
+      official_text: string;
+      review_status: string;
+      source_filename: string;
+    }>(
+      `
+      SELECT
+        a.article_key,
+        a.official_text,
+        a.review_status,
+        sd.filename AS source_filename
+      FROM articles a
+      JOIN source_documents sd ON sd.id = a.source_document_id
+      WHERE a.jurisdiction = 'IT'
+        AND a.locale = 'it-IT'
+        AND a.article_key = ANY($1::text[])
+      ORDER BY a.article_key
+    `,
+      [
+        [
+          "ACN 136117/2025",
+          "ACN 164179/2025",
+          "ACN 164179/2025 Allegato 1",
+          "ACN 164179/2025 Allegato 2",
+          "ACN 164179/2025 Allegato 3",
+          "ACN 164179/2025 Allegato 4",
+        ],
+      ],
+    );
+    const acnGuidanceByKey = new Map(
+      acnGuidanceResult.rows.map((row) => [row.article_key, row]),
+    );
+
+    for (const articleKey of [
+      "ACN 136117/2025",
+      "ACN 164179/2025",
+      "ACN 164179/2025 Allegato 1",
+      "ACN 164179/2025 Allegato 2",
+      "ACN 164179/2025 Allegato 3",
+      "ACN 164179/2025 Allegato 4",
+    ]) {
+      const row = acnGuidanceByKey.get(articleKey);
+
+      assert.ok(row, `${articleKey} should be imported as ACN guidance.`);
+      assert.equal(row.review_status, "reviewed", `${articleKey} should be reviewed.`);
+      assert.match(
+        row.source_filename,
+        /^it\/acn-/,
+        `${articleKey} should come from an ACN source document.`,
+      );
+    }
+
+    assert.match(
+      acnGuidanceByKey.get("ACN 164179/2025 Allegato 1")?.official_text ?? "",
+      /Misure di sicurezza di base per i soggetti importanti/i,
+      "ACN Allegato 1 should contain important-entity baseline measures.",
+    );
   } finally {
     await pool.end();
   }

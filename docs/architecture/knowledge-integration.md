@@ -85,6 +85,8 @@ Third-party legal copies, summaries, commercial law portals, blogs, and vendor c
 
 Use `npm run knowledge:import:authoritative-sources` to upsert these rows into `source_documents`. Use `npm run smoke:source-documents` to verify required source rows, source URLs, review timestamps, and official-source hostnames.
 
+Use `npm run knowledge:import:italian-nis2-acn` to fetch official ACN NIS PDFs, extract their text with `pdftotext`, and store Determinazioni 136117/2025 and 164179/2025 plus annexes 1-4 as reviewed regulator guidance rows in `articles`. These rows are source text only; they do not promote any `framework_control_articles` mapping.
+
 ## Layer 2 Deferral Criteria
 
 Do not build pgvector/RAG until at least one condition is true:

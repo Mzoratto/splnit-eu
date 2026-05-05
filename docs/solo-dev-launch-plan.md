@@ -511,6 +511,7 @@ Started and verified locally:
 - Added `agent:review:human` so an advisor can fill `docs/legal-reviews/nis2-it-agent-review.md` and promote only explicitly `approved` mappings with a `human_approved` audit trail.
 - Centralized Italian ACN/Garante source rows in `lib/regulations/authoritative-sources.ts` so `knowledge:import:authoritative-sources` can reproduce Phase 3.1 source ingestion without a full `db:seed`.
 - Switched the Italian Codice Privacy source row from a Garante convenience PDF to the official Normattiva consolidated legal text, and made the importer retire the old unreferenced convenience row when present.
+- Added `knowledge:import:italian-nis2-acn` to import ACN Determinazioni 136117/2025 and 164179/2025 plus annexes 1-4 as reviewed regulator guidance text rows in `articles`.
 - Current Italian NIS2 queue status after Stage 3: 34 `needs_human`, 0 `agent_decided`, 0 promoted.
 
 Still open before calling 3.1 complete:

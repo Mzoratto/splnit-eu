@@ -36,6 +36,7 @@
     "knowledge:import:czech-cyber-law": "tsx scripts/import-czech-cyber-law-drafts.ts",
     "knowledge:import:czech-decrees": "tsx scripts/import-czech-decree-drafts.ts",
     "knowledge:import:authoritative-sources": "tsx scripts/import-authoritative-source-documents.ts",
+    "knowledge:import:italian-nis2-acn": "tsx scripts/import-italian-nis2-acn-guidance.ts",
     "knowledge:import:italian-nis2": "tsx scripts/import-italian-nis2-articles.ts",
     "knowledge:import:nis2-eu": "tsx scripts/import-nis2-eu-articles.ts",
     "knowledge:migrate:nis2-eu-eurlex-source": "tsx scripts/migrate-nis2-eu-source-to-eurlex.ts",
