@@ -1663,6 +1663,11 @@
       "rateLimit": "Il limite mensile di {limit} questionari è stato raggiunto.",
       "generationFailed": "Generazione delle risposte non riuscita.",
       "organisationFallback": "Organizzazione"
+    },
+    "unsupported": {
+      "summary": "Non è ancora disponibile un contesto compliance supportato per questo workspace.",
+      "answer": "Dai dati attuali del workspace Splnit.eu non è disponibile una risposta documentabile.",
+      "notes": "Aggiungi controlli superati, evidenze, policy attive o citazioni normative verificate prima di usare questa risposta verso l'esterno."
     }
   }
 }

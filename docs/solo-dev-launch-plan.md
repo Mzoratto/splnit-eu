@@ -291,6 +291,7 @@ Layer 1 trust signal generation slice - 2026-05-05:
 - [x] Questionnaire AI context now includes only reviewed legal citations from Layer 1 for the tenant's supported controls.
 - [x] Generated questionnaire answers now expose `legalRefs` and strip any evidence, policy, or legal reference not present in the supplied context.
 - [x] Added `smoke:questionnaire-citations` so draft or invented questionnaire citation references are rejected before export/display.
+- [x] Questionnaire AI now returns a conservative localized fallback without calling the model when the workspace has no controls, evidence, policies, or reviewed legal citations.
 - [ ] Czech mappings still need compliance/legal review before they can become reviewed auditor-ready citations.
 
 ### Layer 2 - RAG Knowledge Layer
@@ -318,7 +319,7 @@ Required before expanding AI features:
 
 - [ ] Add provider abstraction so Questionnaire AI is not hardwired to Anthropic-specific code paths.
 - [x] Add citation validation: generated questionnaire answers may cite only reviewed legal citation IDs, evidence IDs, and policy IDs provided in context.
-- [ ] Add refusal/fallback behavior when no supporting evidence or reviewed article exists.
+- [x] Add refusal/fallback behavior when no supporting evidence or reviewed article exists.
 - [ ] Save generated questionnaire answers and gap-analysis outputs as evidence-vault records or linked generated artifacts.
 - [x] Add legal disclaimer copy: generated answers are drafts for customer legal/compliance review, not legal advice or certification.
 - [ ] Update subprocessors and data-processing docs before sending customer content to any new AI provider.

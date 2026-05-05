@@ -6,8 +6,18 @@ import { getMessagesForLocale } from "@/i18n/messages";
 import { normalizeLocale, type Locale } from "@/i18n/routing";
 import { getQuestionnaireComplianceContext } from "@/lib/db/queries/questionnaires";
 import { getOrganisationByClerkOrgId } from "@/lib/db/queries/organisations";
-import { answerQuestionnaireWithClaude, hasClaudeConfig } from "@/lib/questionnaires/claude";
-import { parseQuestionnaireText, truncateQuestionnaireText } from "@/lib/questionnaires/parser";
+import {
+  answerQuestionnaireWithClaude,
+  hasClaudeConfig,
+} from "@/lib/questionnaires/claude";
+import {
+  buildUnsupportedQuestionnaireAnswers,
+  hasQuestionnaireSupportContext,
+} from "@/lib/questionnaires/fallback";
+import {
+  parseQuestionnaireText,
+  truncateQuestionnaireText,
+} from "@/lib/questionnaires/parser";
 import { enforceQuestionnaireRateLimit } from "@/lib/questionnaires/rate-limit";
 import type { QuestionnaireResult } from "@/lib/questionnaires/types";
 
@@ -41,7 +51,8 @@ export async function answerQuestionnaireAction(
   formData: FormData,
 ): Promise<QuestionnaireActionState> {
   const locale = getActionLocale(formData);
-  const copy = getMessagesForLocale(locale).questionnairePage.actionErrors;
+  const pageCopy = getMessagesForLocale(locale).questionnairePage;
+  const copy = pageCopy.actionErrors;
   const session = await auth();
 
   if (!session.userId || !session.orgId) {
@@ -58,13 +69,6 @@ export async function answerQuestionnaireAction(
     return {
       ...initialQuestionnaireState,
       error: copy.invalidInput,
-    };
-  }
-
-  if (!hasClaudeConfig()) {
-    return {
-      ...initialQuestionnaireState,
-      error: copy.missingConfig,
     };
   }
 
@@ -93,6 +97,36 @@ export async function answerQuestionnaireAction(
 
   try {
     const context = await getQuestionnaireComplianceContext(session.orgId);
+
+    if (!hasQuestionnaireSupportContext(context)) {
+      const fallback = buildUnsupportedQuestionnaireAnswers({
+        copy: pageCopy.unsupported,
+        questions,
+      });
+
+      return {
+        error: null,
+        rateLimit,
+        result: {
+          answers: fallback.answers,
+          generatedAt: new Date().toISOString(),
+          model: fallback.model,
+          organisationName:
+            context.organisation?.name ?? organisation?.name ?? copy.organisationFallback,
+          questionCount: questions.length,
+          summary: fallback.summary,
+        },
+      };
+    }
+
+    if (!hasClaudeConfig()) {
+      return {
+        ...initialQuestionnaireState,
+        error: copy.missingConfig,
+        rateLimit,
+      };
+    }
+
     const generated = await answerQuestionnaireWithClaude({
       context,
       questions,

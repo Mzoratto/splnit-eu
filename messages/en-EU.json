@@ -1663,6 +1663,11 @@
       "rateLimit": "The monthly limit of {limit} questionnaires has been reached.",
       "generationFailed": "Answer generation failed.",
       "organisationFallback": "Organisation"
+    },
+    "unsupported": {
+      "summary": "No supported compliance context is available for this workspace yet.",
+      "answer": "No supported answer is available from the current Splnit.eu workspace data.",
+      "notes": "Add passing controls, evidence, active policies, or reviewed legal citations before using this answer externally."
     }
   }
 }

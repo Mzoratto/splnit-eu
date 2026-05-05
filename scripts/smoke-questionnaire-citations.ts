@@ -1,5 +1,9 @@
 import assert from "node:assert/strict";
 import { sanitizeQuestionnaireAnswers } from "@/lib/questionnaires/citation-guard";
+import {
+  buildUnsupportedQuestionnaireAnswers,
+  hasQuestionnaireSupportContext,
+} from "@/lib/questionnaires/fallback";
 import type { QuestionnaireAnswer } from "@/lib/questionnaires/types";
 
 type SanitizeInput = Parameters<typeof sanitizeQuestionnaireAnswers>[0];
@@ -55,5 +59,31 @@ const [unsupportedOnly] = sanitizeQuestionnaireAnswers({
 });
 
 assert.equal(unsupportedOnly.confidence, "low");
+
+assert.equal(hasQuestionnaireSupportContext({ ...context, controls: [] }), true);
+assert.equal(
+  hasQuestionnaireSupportContext({
+    controls: [],
+    evidence: [],
+    legalCitations: [],
+    policies: [],
+  }),
+  false,
+);
+
+const unsupportedFallback = buildUnsupportedQuestionnaireAnswers({
+  copy: {
+    answer: "No supported answer.",
+    notes: "Add context first.",
+    summary: "No context.",
+  },
+  questions: ["Do you enforce MFA?", "Do you have an incident process?"],
+});
+
+assert.equal(unsupportedFallback.model, "fallback:no-supported-context");
+assert.equal(unsupportedFallback.summary, "No context.");
+assert.equal(unsupportedFallback.answers.length, 2);
+assert.equal(unsupportedFallback.answers[0]?.confidence, "low");
+assert.deepEqual(unsupportedFallback.answers[0]?.legalRefs, []);
 
 console.log("Questionnaire citation guard smoke passed.");

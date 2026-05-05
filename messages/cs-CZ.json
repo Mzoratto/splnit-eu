@@ -1434,6 +1434,11 @@
       "rateLimit": "Měsíční limit {limit} dotazníků je vyčerpaný.",
       "generationFailed": "Generování odpovědí se nepodařilo.",
       "organisationFallback": "Organizace"
+    },
+    "unsupported": {
+      "summary": "Pro tento pracovní prostor zatím není dostupný žádný podpůrný compliance kontext.",
+      "answer": "Z aktuálních dat pracovního prostoru Splnit.eu není dostupná žádná doložitelná odpověď.",
+      "notes": "Před externím použitím doplňte splněné kontroly, evidenci, aktivní politiky nebo zkontrolované právní citace."
     }
   }
 }
