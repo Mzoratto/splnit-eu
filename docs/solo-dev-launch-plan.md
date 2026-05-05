@@ -725,6 +725,7 @@ Prepared materials:
 - `docs/outreach/italy-design-partner-outreach.md` defines target criteria, hook quality rules, first-touch/follow-up templates, cadence, and outcome codes.
 - `docs/outreach/italy-target-tracker.csv` provides the initial tracker columns for the first 50 researched targets.
 - `docs/outreach/italy-target-batch-1.md` records the first 10 company-level Italian candidates with source URLs, hooks, and verification caveats. These are not send-ready until employee range and contact owner are verified.
+- `docs/outreach/italy-target-batch-2.md` records the next 10 company-level Italian candidates across platform SaaS, sovereign cloud, industrial IoT, healthcare software, and cybersecurity ecosystem targets. These are not send-ready until employee range, contact owner, and low-confidence source rows are verified.
 
 ### 5.5 First Design Partner Onboarding
 
