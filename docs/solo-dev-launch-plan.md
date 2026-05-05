@@ -729,6 +729,7 @@ Prepared materials:
 - `docs/outreach/italy-target-batch-3.md` records another 10 Italian candidates across privacy SaaS, cloud/data sovereignty, cybersecurity assessment, healthcare software, PA-facing SaaS, and compliance-software ecosystem targets. Competitor or ecosystem rows must be treated as learning targets unless a clear outreach rationale is verified.
 - `docs/outreach/italy-target-batch-4.md` records another 10 Italian candidates around NIS2 incident management, SOC/MXDR, cybersecurity training, VAPT, threat intelligence, sovereign AI, and SaaS modernization. Several rows are competitor or ecosystem learning targets, not first-choice design-partner prospects.
 - `docs/outreach/italy-target-batch-5.md` records the final 10 candidates needed for the initial 50-company source list, spanning regulated-finance cybersecurity, awareness SaaS, browser security, RegTech AI, AI SaaS, accessibility compliance, and OT/ICS cybersecurity. Rows with indirect fit or outside-ICP size must remain research-only until a concrete contact and hook are verified.
+- `docs/outreach/italy-outreach-verification-queue.md` triages the 50 sourced targets into a first 25-company verification queue, secondary queue, and learning-only / competitor-watch list. It is not a send list; each row still needs employee range, contact owner, and hook verification before outreach.
 
 ### 5.5 First Design Partner Onboarding
 
