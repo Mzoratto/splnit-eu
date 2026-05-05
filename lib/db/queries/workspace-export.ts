@@ -8,6 +8,7 @@ import {
   controls,
   evidence,
   frameworks,
+  generatedArtifacts,
   incidents,
   integrationRuns,
   integrations,
@@ -57,6 +58,20 @@ function redactPolicy(row: typeof policies.$inferSelect) {
   };
 }
 
+function redactGeneratedArtifact(row: typeof generatedArtifacts.$inferSelect) {
+  const content = row.content ?? {};
+  const { blobUrl, ...safeContent } =
+    typeof content === "object" && !Array.isArray(content)
+      ? (content as Record<string, unknown>)
+      : { blobUrl: null, value: content };
+
+  return {
+    ...row,
+    content: safeContent,
+    hasBlob: Boolean(blobUrl),
+  };
+}
+
 export async function getWorkspaceExport(clerkOrgId: string) {
   const db = getDb();
   const organisationRows = await db
@@ -77,6 +92,7 @@ export async function getWorkspaceExport(clerkOrgId: string) {
     integrationRows,
     integrationRunRows,
     evidenceRows,
+    generatedArtifactRows,
     policyRows,
     policyControlRows,
     vendorRows,
@@ -155,6 +171,11 @@ export async function getWorkspaceExport(clerkOrgId: string) {
       .from(evidence)
       .where(eq(evidence.clerkOrgId, clerkOrgId))
       .orderBy(desc(evidence.collectedAt)),
+    db
+      .select()
+      .from(generatedArtifacts)
+      .where(eq(generatedArtifacts.clerkOrgId, clerkOrgId))
+      .orderBy(desc(generatedArtifacts.createdAt)),
     db
       .select()
       .from(policies)
@@ -258,6 +279,7 @@ export async function getWorkspaceExport(clerkOrgId: string) {
     frameworks: {
       enrolled: orgFrameworkRows,
     },
+    generatedArtifacts: generatedArtifactRows.map(redactGeneratedArtifact),
     incidents: incidentRows,
     integrations: {
       connections: integrationRows.map(redactIntegration),
@@ -273,6 +295,7 @@ export async function getWorkspaceExport(clerkOrgId: string) {
       "integrations.accessTokenEnc",
       "integrations.refreshTokenEnc",
       "evidence.blobUrl",
+      "generatedArtifacts.content.blobUrl",
       "policies.blobUrl",
     ],
     regulationUpdates: {
