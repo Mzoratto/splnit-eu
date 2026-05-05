@@ -261,7 +261,10 @@ Layer 1 official source ingestion slice - 2026-05-05:
 - [x] Added idempotent `evidence_templates` seeding for mappings that explicitly define `evidenceRequirements`; current count remains `0` because the control library does not yet contain those requirements.
 - [x] Local count report now verifies `92` controls, `184` framework-control mappings, `30` source documents, `2` articles, `34` framework-control article mappings, `0` evidence templates, and `16` integration tests.
 - [ ] Manual legal/content review is still required before any imported article row can be promoted to `reviewStatus='reviewed'`.
-- [ ] Czech law article rows are still pending.
+- [x] Added `knowledge:import:czech-cyber-law` and imported draft Czech law rows for `Zákon č. 264/2025 Sb.` sections § 12-§ 16 from the provided extraction PDF.
+- [x] Linked `68` NIS2 framework-control mappings to draft Czech transposition sections.
+- [ ] Czech law rows must stay draft until checked against e-Sbírka or another official source.
+- [ ] Vyhláška 409/2025 Sb. and Vyhláška 410/2025 Sb. detailed control mappings are still pending.
 
 ### Layer 2 - RAG Knowledge Layer
 
