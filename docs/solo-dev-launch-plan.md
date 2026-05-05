@@ -731,6 +731,7 @@ Prepared materials:
 - `docs/outreach/italy-target-batch-5.md` records the final 10 candidates needed for the initial 50-company source list, spanning regulated-finance cybersecurity, awareness SaaS, browser security, RegTech AI, AI SaaS, accessibility compliance, and OT/ICS cybersecurity. Rows with indirect fit or outside-ICP size must remain research-only until a concrete contact and hook are verified.
 - `docs/outreach/italy-outreach-verification-queue.md` triages the 50 sourced targets into a first 25-company verification queue, secondary queue, and learning-only / competitor-watch list. It is not a send list; each row still needs employee range, contact owner, and hook verification before outreach.
 - `docs/outreach/italy-verification-batch-1.md` verifies the first 10 companies from the queue at company-fit level. Result: 0 / 10 send-ready because named contact/owner verification is still missing.
+- `docs/outreach/italy-verification-batch-2.md` verifies priorities 11-20 from the queue. Result: 0 / 10 send-ready; Cubbit, Netalia and DigitalPA remain strong top-queue candidates, while several below-ICP companies should be moved to learning/channel unless intentionally selected.
 
 ### 5.5 First Design Partner Onboarding
 
