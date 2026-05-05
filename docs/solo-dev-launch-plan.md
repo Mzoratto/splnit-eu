@@ -611,7 +611,7 @@ Goal: marketing presence and support signals match the Italian product direction
 - [x] `/chi-siamo`.
 - [x] `/normative` pages for D.Lgs. 138/2024, GDPR plus Codice Privacy, ISO 27001, and EU AI Act.
 - [x] `/prezzi`.
-- [ ] No linked coming-soon pages. If content is not ready, it is not linked.
+- [x] No linked coming-soon pages. If content is not ready, it is not linked.
 
 Italian homepage structure:
 
@@ -647,6 +647,7 @@ Progress note - 2026-05-05:
 - Replaced older AWS-hosting marketing claims with the documented provider stack: Vercel hosting plus Neon Postgres. Exact production processing regions still need vendor-dashboard confirmation before the data-residency checklist item can be closed.
 - Kept certification, legal-review, and ACN/Garante portal-format claims as in progress until human/advisor review is complete.
 - Added Italian-friendly marketing aliases and sitemap entries for `/it/chi-siamo`, `/it/accesso-anticipato`, `/it/normative`, `/it/normative/*`, `/it/prezzi`, and `/it/sicurezza`; middleware rewrites these to the existing localized page implementations.
+- Removed links and sitemap entries for coming-soon framework detail pages; DORA can still appear as a roadmap card, but it is not linked as a ready content page.
 
 ## Phase 5 - Italian Outreach and First Design Partner
 

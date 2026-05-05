@@ -124,15 +124,21 @@ export default async function RegulationsPage() {
                     <p className="mt-5 flex-1 text-sm leading-6 text-zinc-500">
                       {t(`cards.${framework.slug}.description`)}
                     </p>
-                    <Link
-                      href={getLocalizedMarketingPath(
-                        `/predpisy/${framework.slug}`,
-                        locale,
-                      )}
-                      className="mt-6 inline-flex text-sm font-medium text-blue-600 hover:text-blue-700"
-                    >
-                      {t("learnMore")}
-                    </Link>
+                    {framework.status === "available" ? (
+                      <Link
+                        href={getLocalizedMarketingPath(
+                          `/predpisy/${framework.slug}`,
+                          locale,
+                        )}
+                        className="mt-6 inline-flex text-sm font-medium text-blue-600 hover:text-blue-700"
+                      >
+                        {t("learnMore")}
+                      </Link>
+                    ) : (
+                      <span className="mt-6 inline-flex text-sm font-medium text-zinc-400">
+                        {t("cards.soon")}
+                      </span>
+                    )}
                   </div>
                 </article>
               ))}

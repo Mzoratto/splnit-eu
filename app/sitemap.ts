@@ -27,7 +27,9 @@ function buildRouteSet() {
     }
   }
 
-  for (const framework of frameworkCards) {
+  for (const framework of frameworkCards.filter(
+    (framework) => framework.status === "available",
+  )) {
     for (const locale of locales) {
       paths.add(getLocalizedMarketingPath(`/predpisy/${framework.slug}`, locale));
     }

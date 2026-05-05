@@ -5,6 +5,7 @@ import {
 } from "../i18n/marketing-paths";
 import { getMessagesForLocale } from "../i18n/messages";
 import type { Locale } from "../i18n/routing";
+import sitemap from "../app/sitemap";
 import { FRAMEWORK_QUESTIONS } from "../lib/frameworks/questions";
 
 const requiredNamespaces = [
@@ -219,5 +220,19 @@ assert.equal(toInternalMarketingPath("/it/accesso-anticipato"), "/early-access")
 assert.equal(toInternalMarketingPath("/it/normative/nis2"), "/predpisy/nis2");
 assert.equal(toInternalMarketingPath("/it/prezzi"), "/cenik");
 assert.equal(toInternalMarketingPath("/it/sicurezza"), "/security");
+
+const sitemapUrls = sitemap().map((entry) => entry.url);
+assert.ok(
+  sitemapUrls.includes("https://splnit.eu/it/chi-siamo"),
+  "sitemap should include Italian about alias",
+);
+assert.ok(
+  sitemapUrls.includes("https://splnit.eu/it/normative/nis2"),
+  "sitemap should include available Italian framework pages",
+);
+assert.ok(
+  !sitemapUrls.some((url) => url.includes("/dora")),
+  "sitemap should not link coming-soon framework pages",
+);
 
 console.log("i18n shell smoke test passed.");
