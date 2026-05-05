@@ -112,6 +112,19 @@ function parseLimit(value: string | null) {
   return parsed;
 }
 
+function parseCsvArg(value: string | null) {
+  if (!value) {
+    return null;
+  }
+
+  const values = value
+    .split(",")
+    .map((item) => item.trim())
+    .filter(Boolean);
+
+  return values.length > 0 ? values : null;
+}
+
 function isRecord(value: unknown): value is Record<string, unknown> {
   return typeof value === "object" && value !== null && !Array.isArray(value);
 }
@@ -244,6 +257,7 @@ function summarizeRows(rows: QueueRow[]) {
 }
 
 function renderMarkdown(input: {
+  categories: string[] | null;
   framework: MappingReviewFramework;
   jurisdiction: MappingReviewJurisdiction;
   rows: QueueRow[];
@@ -273,6 +287,9 @@ function renderMarkdown(input: {
     "## Summary",
     "",
     `- Total rows: ${summary.total}`,
+    ...(input.categories
+      ? [`- Category filter: ${input.categories.join(", ")}`]
+      : []),
     ...Array.from(summary.byStatus)
       .sort(([a], [b]) => a.localeCompare(b))
       .map(([status, count]) => `- status ${status}: ${count}`),
@@ -343,6 +360,7 @@ function renderMarkdown(input: {
 async function listRows(
   pool: Pool,
   input: {
+    categories: string[] | null;
     framework: MappingReviewFramework;
     jurisdiction: MappingReviewJurisdiction;
     limit: number;
@@ -381,6 +399,7 @@ async function listRows(
       LEFT JOIN controls c ON c.key = mrq.control_id
       WHERE mrq.framework = $1
         AND mrq.jurisdiction = $2
+        AND ($4::text[] IS NULL OR c.category = ANY($4::text[]))
       ORDER BY
         CASE mrq.status
           WHEN 'agent_decided' THEN 1
@@ -397,7 +416,7 @@ async function listRows(
         mrq.id
       LIMIT $3
     `,
-    [input.framework, input.jurisdiction, input.limit],
+    [input.framework, input.jurisdiction, input.limit, input.categories],
   );
 
   return result.rows;
@@ -448,12 +467,21 @@ async function main() {
         ? "eu"
         : requireEnum(getArg("--jurisdiction"), VALID_JURISDICTIONS, "--jurisdiction");
     const limit = parseLimit(getArg("--limit"));
+    const categories = parseCsvArg(getArg("--categories"));
     const outputPath = getArg("--output");
-    const rows = await listRows(pool, { framework, jurisdiction, limit });
+    const rows = await listRows(pool, {
+      categories,
+      framework,
+      jurisdiction,
+      limit,
+    });
     const summary = summarizeRows(rows);
 
     if (outputPath) {
-      await writeFile(outputPath, renderMarkdown({ framework, jurisdiction, rows }));
+      await writeFile(
+        outputPath,
+        renderMarkdown({ categories, framework, jurisdiction, rows }),
+      );
       console.log(
         `Wrote ${rows.length} ${framework}/${jurisdiction} agent review rows to ${outputPath}.`,
       );

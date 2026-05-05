@@ -543,6 +543,13 @@ Working method:
 4. Cross-check with at least one published commentary or official guidance.
 5. Do not ship uncertain legal mapping as authoritative.
 
+Progress note - 2026-05-05:
+
+- Generated `docs/legal-reviews/nis2-it-batch-1-agent-review.md` for the first advisor pass: identity/access, incident response/logging, and backup/continuity rows.
+- The batch contains 14 NIS2 IT rows, all still `needs_human`.
+- Ran `agent:review:human` dry-run against the batch file; it found 0 human decisions and promoted nothing.
+- Do not run `agent:review:human -- --apply` until an Italian reviewer fills the Human decision column with explicit `approved`, `wrong_article`, `too_broad`, or `needs_research` values.
+
 ### 3.3 Italian Document Templates
 
 Produce and get advisor review for:
