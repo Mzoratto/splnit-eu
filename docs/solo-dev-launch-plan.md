@@ -727,6 +727,7 @@ Prepared materials:
 - `docs/outreach/italy-target-batch-1.md` records the first 10 company-level Italian candidates with source URLs, hooks, and verification caveats. These are not send-ready until employee range and contact owner are verified.
 - `docs/outreach/italy-target-batch-2.md` records the next 10 company-level Italian candidates across platform SaaS, sovereign cloud, industrial IoT, healthcare software, and cybersecurity ecosystem targets. These are not send-ready until employee range, contact owner, and low-confidence source rows are verified.
 - `docs/outreach/italy-target-batch-3.md` records another 10 Italian candidates across privacy SaaS, cloud/data sovereignty, cybersecurity assessment, healthcare software, PA-facing SaaS, and compliance-software ecosystem targets. Competitor or ecosystem rows must be treated as learning targets unless a clear outreach rationale is verified.
+- `docs/outreach/italy-target-batch-4.md` records another 10 Italian candidates around NIS2 incident management, SOC/MXDR, cybersecurity training, VAPT, threat intelligence, sovereign AI, and SaaS modernization. Several rows are competitor or ecosystem learning targets, not first-choice design-partner prospects.
 
 ### 5.5 First Design Partner Onboarding
 
