@@ -258,6 +258,7 @@ Layer 1 official source ingestion slice - 2026-05-05:
 - [x] Linked `34` existing NIS2 framework-control rows to those draft article rows.
 - [x] Parser sanity check confirmed Article 21 extraction does not include Article 22.
 - [x] Added `smoke:reviewed-article-links`; it passes while rows are draft and will fail once reviewed article rows exist without matching framework-control links.
+- [x] Added idempotent `evidence_templates` seeding for mappings that explicitly define `evidenceRequirements`; current count remains `0` because the control library does not yet contain those requirements.
 - [x] Local count report now verifies `92` controls, `184` framework-control mappings, `30` source documents, `2` articles, `34` framework-control article mappings, `0` evidence templates, and `16` integration tests.
 - [ ] Manual legal/content review is still required before any imported article row can be promoted to `reviewStatus='reviewed'`.
 - [ ] Czech law article rows are still pending.

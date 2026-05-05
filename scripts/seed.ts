@@ -4,6 +4,7 @@ import { CONTROL_LIBRARY } from "../lib/controls/library";
 import { getDb } from "../lib/db";
 import {
   controls,
+  evidenceTemplates,
   frameworkControls,
   frameworks,
   sourceDocuments,
@@ -506,12 +507,108 @@ async function seedIntegrationTests(controlIds: Map<string, string>) {
   return count;
 }
 
+function getEvidenceType(testType: (typeof CONTROL_LIBRARY)[number]["testType"]) {
+  if (testType === "automated") {
+    return "automated_snapshot";
+  }
+
+  if (testType === "hybrid") {
+    return "system_export_or_manual_review";
+  }
+
+  return "document_or_attestation";
+}
+
+async function seedEvidenceTemplates(
+  frameworkIds: Map<string, string>,
+  controlIds: Map<string, string>,
+) {
+  const db = getDb();
+  let count = 0;
+
+  for (const control of CONTROL_LIBRARY) {
+    const controlId = controlIds.get(control.key);
+
+    if (!controlId) {
+      throw new Error(`Missing control id for ${control.key}`);
+    }
+
+    for (const mapping of control.frameworkMappings) {
+      if (!mapping.evidenceRequirements) {
+        continue;
+      }
+
+      const frameworkId = frameworkIds.get(mapping.frameworkSlug);
+
+      if (!frameworkId) {
+        throw new Error(`Missing framework id for ${mapping.frameworkSlug}`);
+      }
+
+      const frameworkControlRows = await db
+        .select({ id: frameworkControls.id })
+        .from(frameworkControls)
+        .where(
+          and(
+            eq(frameworkControls.frameworkId, frameworkId),
+            eq(frameworkControls.controlId, controlId),
+            eq(frameworkControls.articleRef, mapping.articleRef),
+          ),
+        )
+        .limit(1);
+      const frameworkControlId = frameworkControlRows[0]?.id;
+
+      if (!frameworkControlId) {
+        throw new Error(
+          `Missing framework-control mapping for ${control.key} ${mapping.frameworkSlug} ${mapping.articleRef}`,
+        );
+      }
+
+      const title = `Evidence for ${mapping.localizedTitle ?? control.titleEn}`;
+      const existingRows = await db
+        .select({ id: evidenceTemplates.id })
+        .from(evidenceTemplates)
+        .where(
+          and(
+            eq(evidenceTemplates.frameworkControlId, frameworkControlId),
+            eq(evidenceTemplates.locale, "en-EU"),
+            eq(evidenceTemplates.title, title),
+          ),
+        )
+        .limit(1);
+      const existing = existingRows[0] ?? null;
+      const values = {
+        controlId,
+        description: mapping.evidenceRequirements,
+        evidenceType: getEvidenceType(control.testType),
+        frameworkControlId,
+        locale: "en-EU",
+        title,
+        updatedAt: new Date(),
+      };
+
+      if (existing) {
+        await db
+          .update(evidenceTemplates)
+          .set(values)
+          .where(eq(evidenceTemplates.id, existing.id));
+      } else {
+        await db.insert(evidenceTemplates).values(values);
+      }
+
+      count += 1;
+    }
+  }
+
+  return count;
+}
+
 async function main() {
   const frameworkIds = await seedFrameworks();
   const controlIds = await seedControls();
   const mappingCount = await seedFrameworkControls(frameworkIds, controlIds);
   const sourceDocumentCount = await seedSourceDocuments();
   const integrationTestCount = await seedIntegrationTests(controlIds);
+  const evidenceTemplateCount = await seedEvidenceTemplates(frameworkIds, controlIds);
 
   const db = getDb();
   const [frameworkRows, controlRows] = await Promise.all([
@@ -520,7 +617,7 @@ async function main() {
   ]);
 
   console.log(
-    `Seeded ${frameworkRows.length} frameworks, ${controlRows.length} controls, ${mappingCount} framework-control mappings, ${sourceDocumentCount} source documents, ${integrationTestCount} integration tests.`,
+    `Seeded ${frameworkRows.length} frameworks, ${controlRows.length} controls, ${mappingCount} framework-control mappings, ${sourceDocumentCount} source documents, ${evidenceTemplateCount} evidence templates, ${integrationTestCount} integration tests.`,
   );
 }
 
