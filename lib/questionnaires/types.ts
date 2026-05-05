@@ -12,6 +12,7 @@ export const QuestionnaireAnswerSchema = z.object({
 
 export const QuestionnaireResultSchema = z.object({
   answers: z.array(QuestionnaireAnswerSchema),
+  artifactId: z.string().nullable().default(null),
   generatedAt: z.string(),
   model: z.string(),
   organisationName: z.string(),

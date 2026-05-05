@@ -14,6 +14,7 @@
     "smoke:i18n-shell": "tsx scripts/smoke-i18n-shell.ts",
     "smoke:automated-evidence-citations": "tsx scripts/smoke-automated-evidence-citations.ts",
     "smoke:integration-evidence-policy": "tsx scripts/smoke-integration-evidence-policy.ts",
+    "smoke:questionnaire-artifacts": "tsx scripts/smoke-questionnaire-artifacts.ts",
     "smoke:questionnaire-citations": "tsx scripts/smoke-questionnaire-citations.ts",
     "smoke:questionnaire-provider": "tsx scripts/smoke-questionnaire-provider.ts",
     "smoke:copy-hygiene": "tsx scripts/smoke-copy-hygiene.ts",

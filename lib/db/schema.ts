@@ -278,6 +278,30 @@ export const evidence = pgTable("evidence", {
   collectedAt: timestamp("collected_at", { withTimezone: true }).defaultNow(),
 });
 
+export const generatedArtifacts = pgTable(
+  "generated_artifacts",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    clerkOrgId: text("clerk_org_id")
+      .notNull()
+      .references(() => organisations.clerkOrgId, { onDelete: "cascade" }),
+    kind: text("kind").notNull(),
+    title: text("title").notNull(),
+    source: text("source").notNull().default("questionnaire_ai"),
+    model: text("model"),
+    content: jsonb("content").$type<Record<string, unknown>>().notNull(),
+    createdBy: text("created_by"),
+    createdAt: timestamp("created_at", { withTimezone: true }).defaultNow(),
+  },
+  (table) => [
+    index("idx_generated_artifacts_org_created_at").on(
+      table.clerkOrgId,
+      table.createdAt,
+    ),
+    index("idx_generated_artifacts_org_kind").on(table.clerkOrgId, table.kind),
+  ],
+);
+
 export const orgControlStatuses = pgTable(
   "org_control_statuses",
   {
@@ -536,4 +560,5 @@ export type Test = typeof tests.$inferSelect;
 export type Integration = typeof integrations.$inferSelect;
 export type IntegrationRun = typeof integrationRuns.$inferSelect;
 export type Evidence = typeof evidence.$inferSelect;
+export type GeneratedArtifact = typeof generatedArtifacts.$inferSelect;
 export type AuditLog = typeof auditLogs.$inferSelect;

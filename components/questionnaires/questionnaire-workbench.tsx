@@ -30,6 +30,7 @@ type QuestionnaireWorkbenchCopy = {
   resultMeta: string;
   noResultSubtitle: string;
   emptyBody: string;
+  artifact: string;
   evidence: string;
   legal: string;
   policies: string;
@@ -148,6 +149,11 @@ export function QuestionnaireWorkbench({
                   })
                 : copy.noResultSubtitle}
             </p>
+            {state.result?.artifactId ? (
+              <p className="mt-1 font-mono text-xs text-foreground/44">
+                {copy.artifact}: {state.result.artifactId}
+              </p>
+            ) : null}
           </div>
           {state.result ? (
             <div className="flex flex-wrap gap-2">

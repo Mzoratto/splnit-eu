@@ -78,6 +78,13 @@
       "when": 1777961262688,
       "tag": "0010_familiar_stepford_cuckoos",
       "breakpoints": true
+    },
+    {
+      "idx": 11,
+      "version": "7",
+      "when": 1777977194777,
+      "tag": "0011_giant_doctor_faustus",
+      "breakpoints": true
     }
   ]
 }

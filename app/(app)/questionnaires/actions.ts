@@ -4,8 +4,14 @@ import { auth } from "@clerk/nextjs/server";
 import { z } from "zod";
 import { getMessagesForLocale } from "@/i18n/messages";
 import { normalizeLocale, type Locale } from "@/i18n/routing";
+import { createGeneratedArtifact } from "@/lib/db/queries/generated-artifacts";
 import { getQuestionnaireComplianceContext } from "@/lib/db/queries/questionnaires";
 import { getOrganisationByClerkOrgId } from "@/lib/db/queries/organisations";
+import {
+  buildQuestionnaireArtifactContent,
+  buildQuestionnaireArtifactTitle,
+  QUESTIONNAIRE_ARTIFACT_KIND,
+} from "@/lib/questionnaires/artifacts";
 import {
   buildUnsupportedQuestionnaireAnswers,
   hasQuestionnaireSupportContext,
@@ -103,12 +109,12 @@ export async function answerQuestionnaireAction(
         copy: pageCopy.unsupported,
         questions,
       });
-
-      return {
-        error: null,
-        rateLimit,
+      const result = await persistQuestionnaireResult({
+        clerkOrgId: session.orgId,
+        createdBy: session.userId,
         result: {
           answers: fallback.answers,
+          artifactId: null,
           generatedAt: new Date().toISOString(),
           model: fallback.model,
           organisationName:
@@ -116,6 +122,12 @@ export async function answerQuestionnaireAction(
           questionCount: questions.length,
           summary: fallback.summary,
         },
+      });
+
+      return {
+        error: null,
+        rateLimit,
+        result,
       };
     }
 
@@ -131,12 +143,12 @@ export async function answerQuestionnaireAction(
       context,
       questions,
     });
-
-    return {
-      error: null,
-      rateLimit,
+    const result = await persistQuestionnaireResult({
+      clerkOrgId: session.orgId,
+      createdBy: session.userId,
       result: {
         answers: generated.answers,
+        artifactId: null,
         generatedAt: new Date().toISOString(),
         model: generated.model,
         organisationName:
@@ -144,6 +156,12 @@ export async function answerQuestionnaireAction(
         questionCount: questions.length,
         summary: generated.summary,
       },
+    });
+
+    return {
+      error: null,
+      rateLimit,
+      result,
     };
   } catch (error) {
     console.error("Questionnaire answer generation failed", error);
@@ -170,4 +188,24 @@ async function getQuestionnaireInput(formData: FormData) {
   }
 
   return truncateQuestionnaireText(chunks.join("\n\n"));
+}
+
+async function persistQuestionnaireResult(input: {
+  clerkOrgId: string;
+  createdBy: string;
+  result: QuestionnaireResult;
+}) {
+  const artifact = await createGeneratedArtifact({
+    clerkOrgId: input.clerkOrgId,
+    content: buildQuestionnaireArtifactContent(input.result),
+    createdBy: input.createdBy,
+    kind: QUESTIONNAIRE_ARTIFACT_KIND,
+    model: input.result.model,
+    title: buildQuestionnaireArtifactTitle(input.result),
+  });
+
+  return {
+    ...input.result,
+    artifactId: artifact.id,
+  };
 }
