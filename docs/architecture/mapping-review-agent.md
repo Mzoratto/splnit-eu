@@ -20,15 +20,22 @@ Not implemented yet:
 - Cross-check/domain blacklist stage.
 - Generalized promotion command.
 
-## Local Migration Prerequisite
+## Migration Status
 
-The local database currently runs PostgreSQL without the `pgvector` extension installed. Applying migration `0012_unusual_living_lightning` locally fails with:
+Local verification on 2026-05-05:
+
+- Installed pgvector `v0.8.2` against local PostgreSQL 14.
+- Applied migration `0012_unusual_living_lightning` to local `splnit_eu_dev`.
+- Verified `mapping_review_queue` and `mapping_promotion_audit` exist.
+- Verified `control_embedding` and `source_embedding` use the `vector` type.
+
+If a fresh local database fails with:
 
 ```text
 could not open extension control file ".../extension/vector.control"
 ```
 
-This is an environment prerequisite, not a schema design error. Before applying the migration locally, install/enable pgvector for the local PostgreSQL server, then run:
+install/enable pgvector for that PostgreSQL server, then run:
 
 ```bash
 npm run db:migrate
