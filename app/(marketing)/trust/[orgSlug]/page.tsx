@@ -86,24 +86,27 @@ export default async function TrustCenterPage({
         <div className="max-w-4xl">
           <p className="inline-flex items-center gap-2 font-mono text-xs uppercase tracking-[0.16em] text-[var(--accent)]">
             <CheckCircle2 className="h-4 w-4" aria-hidden="true" />
-            {copy.main.heroEyebrow}
+            {trustCenter.heroEyebrowOverride ?? copy.main.heroEyebrow}
           </p>
           <h1 className="mt-5 max-w-4xl text-[32px] font-medium leading-tight tracking-normal text-foreground sm:text-[40px]">
-            {copy.main.heroTitle(
-              trustCenter.organisationName,
-              controlCount,
-              frameworkCount,
-            )}
+            {trustCenter.heroTitleOverride ??
+              copy.main.heroTitle(
+                trustCenter.organisationName,
+                controlCount,
+                frameworkCount,
+              )}
           </h1>
           <p className="mt-5 max-w-3xl text-base leading-7 text-foreground/62">
-            {copy.main.description}
+            {trustCenter.descriptionOverride ?? copy.main.description}
           </p>
-          <LiveIndicator
-            copy={copy}
-            lastTestedAt={trustCenter.lastTestedAt}
-            locale={locale}
-            nextTestAt={trustCenter.nextTestAt}
-          />
+          {trustCenter.showLiveIndicator === false ? null : (
+            <LiveIndicator
+              copy={copy}
+              lastTestedAt={trustCenter.lastTestedAt}
+              locale={locale}
+              nextTestAt={trustCenter.nextTestAt}
+            />
+          )}
           <HeroActions copy={copy} orgName={trustCenter.organisationName} />
         </div>
       </section>
@@ -140,7 +143,11 @@ export default async function TrustCenterPage({
       </section>
 
       <DocumentsSection copy={copy} documents={trustCenter.documents} />
-      <ContactSection copy={copy} orgName={trustCenter.organisationName} />
+      <ContactSection
+        contactEmails={trustCenter.contactEmails}
+        copy={copy}
+        orgName={trustCenter.organisationName}
+      />
       <TrustFooter copy={copy} locale={locale} trustCenter={trustCenter} />
     </main>
   );

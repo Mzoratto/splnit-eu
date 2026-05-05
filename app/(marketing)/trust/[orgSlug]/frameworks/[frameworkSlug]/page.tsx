@@ -254,7 +254,11 @@ export default async function TrustFrameworkPage({ params }: PageProps) {
         </div>
       </section>
 
-      <ContactSection copy={copy} orgName={trustCenter.organisationName} />
+      <ContactSection
+        contactEmails={trustCenter.contactEmails}
+        copy={copy}
+        orgName={trustCenter.organisationName}
+      />
       <TrustFooter
         backHref={`/trust/${trustCenter.orgSlug}`}
         copy={copy}

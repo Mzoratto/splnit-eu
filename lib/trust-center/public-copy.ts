@@ -9,6 +9,9 @@ export type PublicTrustCopy = {
     disclosureDescription: string;
     disclosureMeta: string;
     disclosureTitle: string;
+    privacyDescription: string;
+    privacyMeta: string;
+    privacyTitle: string;
     vendorDescription: (orgName: string) => string;
     vendorMeta: string;
     vendorTitle: string;
@@ -108,6 +111,10 @@ export const publicTrustCopy: Record<Locale, PublicTrustCopy> = {
         "Bezpečnostní nálezy a zranitelnosti posílejte přes odpovědný disclosure kanál.",
       disclosureMeta: "PGP klíč na vyžádání · první odpověď do 24 hodin",
       disclosureTitle: "Responsible disclosure",
+      privacyDescription:
+        "Dotazy k ochraně osobních údajů, DPA a subdodavatelům posílejte na privacy kanál.",
+      privacyMeta: "DPA a privacy dotazy · odpověď obvykle do 2 pracovních dnů",
+      privacyTitle: "Privacy contact",
       vendorDescription: (orgName) =>
         `Procurement nebo bezpečnostní tým může požádat o detailnější odpovědi k ${orgName}.`,
       vendorMeta: "Odpověď obvykle do 2 pracovních dnů",
@@ -210,6 +217,10 @@ export const publicTrustCopy: Record<Locale, PublicTrustCopy> = {
         "Send security findings and vulnerabilities through the responsible disclosure channel.",
       disclosureMeta: "PGP key on request · first response within 24 hours",
       disclosureTitle: "Responsible disclosure",
+      privacyDescription:
+        "Send privacy, DPA, and sub-processor questions through the privacy channel.",
+      privacyMeta: "DPA and privacy questions · usually answered within 2 business days",
+      privacyTitle: "Privacy contact",
       vendorDescription: (orgName) =>
         `Procurement or security teams can request more detailed answers about ${orgName}.`,
       vendorMeta: "Usually answered within 2 business days",
@@ -311,6 +322,10 @@ export const publicTrustCopy: Record<Locale, PublicTrustCopy> = {
         "Inviate finding di sicurezza e vulnerabilità tramite il canale responsible disclosure.",
       disclosureMeta: "Chiave PGP su richiesta · prima risposta entro 24 ore",
       disclosureTitle: "Responsible disclosure",
+      privacyDescription:
+        "Inviate domande su privacy, DPA e sub-responsabili tramite il canale privacy.",
+      privacyMeta: "Domande DPA e privacy · risposta di solito entro 2 giorni lavorativi",
+      privacyTitle: "Contatto privacy",
       vendorDescription: (orgName) =>
         `Procurement o team sicurezza possono richiedere risposte più dettagliate su ${orgName}.`,
       vendorMeta: "Risposta di solito entro 2 giorni lavorativi",

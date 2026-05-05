@@ -285,29 +285,43 @@ export function DocumentsSection({
 }
 
 export function ContactSection({
+  contactEmails,
   copy,
   orgName,
 }: {
+  contactEmails?: PublicTrustCenterModel["contactEmails"];
   copy: PublicTrustCopy;
   orgName: string;
 }) {
+  const vendorEmail = contactEmails?.vendor ?? "hello@splnit.eu";
+  const securityEmail = contactEmails?.security ?? "security@splnit.eu";
+
   return (
     <section className="mx-auto max-w-7xl px-4 py-10 sm:px-6">
       <div className="grid gap-4 lg:grid-cols-2">
         <ContactCard
           description={copy.contacts.vendorDescription(orgName)}
-          href="mailto:hello@splnit.eu?subject=Vendor%20risk%20assessment"
+          href={`mailto:${vendorEmail}?subject=Vendor%20risk%20assessment`}
           icon="vendor"
           meta={copy.contacts.vendorMeta}
           title={copy.contacts.vendorTitle}
         />
         <ContactCard
           description={copy.contacts.disclosureDescription}
-          href="mailto:security@splnit.eu?subject=Responsible%20disclosure"
+          href={`mailto:${securityEmail}?subject=Responsible%20disclosure`}
           icon="security"
           meta={copy.contacts.disclosureMeta}
           title={copy.contacts.disclosureTitle}
         />
+        {contactEmails?.privacy ? (
+          <ContactCard
+            description={copy.contacts.privacyDescription}
+            href={`mailto:${contactEmails.privacy}?subject=Privacy%20and%20DPA%20question`}
+            icon="privacy"
+            meta={copy.contacts.privacyMeta}
+            title={copy.contacts.privacyTitle}
+          />
+        ) : null}
       </div>
     </section>
   );
@@ -519,12 +533,18 @@ function ContactCard({
 }: {
   description: string;
   href: string;
-  icon: "vendor" | "security";
+  icon: "privacy" | "vendor" | "security";
   meta: string;
   title: string;
 }) {
-  const Icon = icon === "vendor" ? ClipboardCheck : ShieldAlert;
-  const iconColor = icon === "vendor" ? "var(--accent)" : "var(--status-fail)";
+  const Icon =
+    icon === "vendor" ? ClipboardCheck : icon === "privacy" ? LockKeyhole : ShieldAlert;
+  const iconColor =
+    icon === "vendor"
+      ? "var(--accent)"
+      : icon === "privacy"
+        ? "var(--status-pass)"
+        : "var(--status-fail)";
 
   return (
     <article className="rounded-[var(--r-lg)] border border-border bg-surface p-5">

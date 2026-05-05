@@ -73,8 +73,16 @@ export type TrustFramework = {
 
 export type PublicTrustCenterModel = {
   accentColor: string;
+  contactEmails?: {
+    privacy?: string;
+    security?: string;
+    vendor?: string;
+  };
+  descriptionOverride?: string;
   documents: PublicTrustDocument[];
   frameworks: TrustFramework[];
+  heroEyebrowOverride?: string;
+  heroTitleOverride?: string;
   lastTestedAt: Date | null;
   logoUrl: string | null;
   nextTestAt: Date | null;
@@ -82,6 +90,7 @@ export type PublicTrustCenterModel = {
   orgSlug: string;
   showFrameworkDrilldown: boolean;
   showFrameworkPercentages: boolean;
+  showLiveIndicator?: boolean;
   trustSignals: TrustSignal[];
   uptimePct: number | null;
 };
@@ -354,6 +363,10 @@ export async function getPublicTrustCenterModel(input: {
 }): Promise<PublicTrustCenterModel | null> {
   const locale = input.locale ?? "cs-CZ";
 
+  if (input.orgSlug === "splnit") {
+    return getSplnitTrustCenterModel(locale);
+  }
+
   if (hasDatabaseUrl()) {
     const model = await loadDatabaseTrustCenter({ ...input, locale }).catch(() => null);
 
@@ -486,6 +499,139 @@ async function loadDatabaseTrustCenter(input: {
     trustSignals: buildTrustSignals(frameworks, data.lastTestedAt, uptimePct, input.locale),
     uptimePct,
   };
+}
+
+function getSplnitTrustCenterModel(locale: Locale): PublicTrustCenterModel {
+  const frameworks = [
+    buildSplnitFramework("gdpr", 4, locale),
+    buildSplnitFramework("nis2", 5, locale),
+    buildSplnitFramework("iso27001", 6, locale),
+  ];
+  const copy = splnitTrustCopy(locale);
+
+  return {
+    accentColor: "#1d4ed8",
+    contactEmails: {
+      privacy: "privacy@splnit.eu",
+      security: "security@splnit.eu",
+      vendor: "privacy@splnit.eu",
+    },
+    descriptionOverride: copy.description,
+    documents: getSplnitDocuments(locale),
+    frameworks,
+    heroEyebrowOverride: copy.eyebrow,
+    heroTitleOverride: copy.title,
+    lastTestedAt: null,
+    logoUrl: null,
+    nextTestAt: null,
+    organisationName: "Splnit.eu",
+    orgSlug: "splnit",
+    showFrameworkDrilldown: true,
+    showFrameworkPercentages: false,
+    showLiveIndicator: false,
+    trustSignals: [
+      { icon: "server", label: "Hosting", value: copy.hosting },
+      { icon: "shield", label: "GDPR", value: copy.gdpr },
+      { icon: "badge", label: "ISO 27001", value: copy.iso },
+      { icon: "radar", label: "Security", value: copy.security },
+      { icon: "activity", label: "Uptime", value: copy.uptime },
+    ],
+    uptimePct: null,
+  };
+}
+
+function buildSplnitFramework(
+  slug: FrameworkSeed["slug"],
+  totalControls: number,
+  locale: Locale,
+): TrustFramework {
+  const framework = FRAMEWORK_LIBRARY.find((item) => item.slug === slug);
+
+  if (!framework) {
+    throw new Error(`Unknown Splnit framework: ${slug}`);
+  }
+
+  const categoryKeys =
+    slug === "gdpr"
+      ? (["iam", "cryptography", "incident", "supply_chain"] as PublicControlCategory[])
+      : slug === "iso27001"
+        ? ([
+            "iam",
+            "cryptography",
+            "logging",
+            "backup",
+            "vulnerability",
+            "supply_chain",
+          ] as PublicControlCategory[])
+        : (["iam", "incident", "logging", "backup", "supply_chain"] as PublicControlCategory[]);
+
+  return withFrameworkMeta({
+    categories: categoryKeys.map((category) =>
+      buildCategorySummary({
+        category,
+        inProgress: 1,
+        locale,
+        notApplicable: 0,
+        total: 1,
+        verified: 0,
+      }),
+    ),
+    framework,
+    inProgress: totalControls,
+    lastAssessedAt: null,
+    notApplicable: 0,
+    score: null,
+    totalControls,
+    locale,
+    verified: 0,
+  });
+}
+
+function getSplnitDocuments(locale: Locale): PublicTrustDocument[] {
+  const copy = splnitDocumentCopy(locale);
+
+  return [
+    {
+      description: copy.securityWhitepaperDescription,
+      frameworkSlugs: ["nis2", "iso27001", "gdpr"],
+      href: "/docs/splnit-security-whitepaper.md",
+      id: "splnit-security-whitepaper",
+      isLocked: false,
+      title: copy.securityWhitepaper,
+    },
+    {
+      description: copy.dpaDescription,
+      frameworkSlugs: ["gdpr"],
+      href: "/dpa",
+      id: "splnit-dpa",
+      isLocked: false,
+      title: copy.dpa,
+    },
+    {
+      description: copy.subprocessorsDescription,
+      frameworkSlugs: ["gdpr", "nis2", "iso27001"],
+      href: "/dpa#subprocessors",
+      id: "splnit-subprocessors",
+      isLocked: false,
+      title: copy.subprocessors,
+    },
+    {
+      description: copy.privacyDescription,
+      frameworkSlugs: ["gdpr"],
+      href: "/soukromi",
+      id: "splnit-privacy",
+      isLocked: false,
+      title: copy.privacy,
+    },
+    {
+      description: copy.termsDescription,
+      frameworkSlugs: ["nis2", "iso27001"],
+      href: "/podminky",
+      id: "splnit-terms",
+      isLocked: false,
+      title: copy.terms,
+    },
+  ];
 }
 
 function getDemoTrustCenterModel(
@@ -897,5 +1043,101 @@ function trustSignalCopy(locale: Locale) {
     preparation: "Příprava · Q3 2026",
     ready: "Připraveno",
     waiting: "Čeká na první běh",
+  };
+}
+
+function splnitTrustCopy(locale: Locale) {
+  if (locale === "en-EU") {
+    return {
+      description:
+        "This page publishes the current Splnit.eu security posture, legal documents, and sub-processor information. Splnit.eu is in early access, so certifications that are not complete are shown as in progress rather than claimed.",
+      eyebrow: "SPLNIT.EU TRUST CENTER · EARLY ACCESS",
+      gdpr: "Privacy docs published",
+      hosting: "EU · Frankfurt",
+      iso: "In progress · 2026",
+      security: "security@splnit.eu",
+      title:
+        "Splnit.eu publishes its own Trust Center for security posture, sub-processors, and legal documents.",
+      uptime: "Status page linked",
+    };
+  }
+
+  if (locale === "it-IT") {
+    return {
+      description:
+        "Questa pagina pubblica la postura di sicurezza attuale di Splnit.eu, i documenti legali e le informazioni sui sub-responsabili. Splnit.eu è in accesso anticipato: certificazioni non completate sono indicate come in corso, non come ottenute.",
+      eyebrow: "TRUST CENTER SPLNIT.EU · ACCESSO ANTICIPATO",
+      gdpr: "Documenti privacy pubblicati",
+      hosting: "UE · Francoforte",
+      iso: "In corso · 2026",
+      security: "security@splnit.eu",
+      title:
+        "Splnit.eu pubblica il proprio Trust Center per postura sicurezza, sub-responsabili e documenti legali.",
+      uptime: "Status page collegata",
+    };
+  }
+
+  return {
+    description:
+      "Tato stránka publikuje aktuální bezpečnostní postoj Splnit.eu, právní dokumenty a informace o subdodavatelích. Splnit.eu je v early access, takže nedokončené certifikace uvádíme jako rozpracované, ne jako získané.",
+    eyebrow: "SPLNIT.EU TRUST CENTER · EARLY ACCESS",
+    gdpr: "Privacy dokumenty publikovány",
+    hosting: "EU · Frankfurt",
+    iso: "Probíhá · 2026",
+    security: "security@splnit.eu",
+    title:
+      "Splnit.eu publikuje vlastní Trust Center pro bezpečnostní postoj, subdodavatele a právní dokumenty.",
+    uptime: "Status page propojena",
+  };
+}
+
+function splnitDocumentCopy(locale: Locale) {
+  if (locale === "en-EU") {
+    return {
+      dpa: "DPA",
+      dpaDescription: "Public data processing terms and processor commitments.",
+      privacy: "Privacy Policy",
+      privacyDescription: "Public information about Splnit.eu personal data processing.",
+      securityWhitepaper: "Security Whitepaper",
+      securityWhitepaperDescription:
+        "Current early-access security posture, hosting, access, and incident-response summary.",
+      subprocessors: "Sub-processor list",
+      subprocessorsDescription:
+        "Main sub-processors and processing context maintained in the public DPA page.",
+      terms: "Terms of Service",
+      termsDescription: "Public service terms for Splnit.eu.",
+    };
+  }
+
+  if (locale === "it-IT") {
+    return {
+      dpa: "DPA",
+      dpaDescription: "Termini pubblici di trattamento dati e impegni del responsabile.",
+      privacy: "Privacy Policy",
+      privacyDescription: "Informazioni pubbliche sul trattamento dei dati personali da parte di Splnit.eu.",
+      securityWhitepaper: "Security Whitepaper",
+      securityWhitepaperDescription:
+        "Sintesi aggiornata di sicurezza early-access, hosting, accessi e risposta agli incidenti.",
+      subprocessors: "Lista sub-responsabili",
+      subprocessorsDescription:
+        "Principali sub-responsabili e contesto di trattamento mantenuti nella pagina DPA pubblica.",
+      terms: "Termini di servizio",
+      termsDescription: "Termini pubblici del servizio Splnit.eu.",
+    };
+  }
+
+  return {
+    dpa: "DPA",
+    dpaDescription: "Veřejné podmínky zpracování dat a závazky zpracovatele.",
+    privacy: "Privacy Policy",
+    privacyDescription: "Veřejné informace o zpracování osobních údajů ve Splnit.eu.",
+    securityWhitepaper: "Security Whitepaper",
+    securityWhitepaperDescription:
+      "Aktuální early-access přehled bezpečnosti, hostingu, přístupů a incident response.",
+    subprocessors: "Seznam subdodavatelů",
+    subprocessorsDescription:
+      "Hlavní subdodavatelé a kontext zpracování udržovaný na veřejné DPA stránce.",
+    terms: "Podmínky služby",
+    termsDescription: "Veřejné podmínky služby Splnit.eu.",
   };
 }
