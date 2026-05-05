@@ -4,7 +4,7 @@ Owner: [Your Name], OSVČ, IČO [your number], Olomouc
 Product: splnit.eu - EU compliance automation for NIS2, GDPR, and ISO 27001  
 Status: Pre-launch, no verified customers, solo developer  
 Strategic decision: Path A - pivot to English and Italian markets; Czech becomes secondary  
-Last updated: 2026-05-04
+Last updated: 2026-05-05
 
 ## Phase 0 - Honesty Pass
 
@@ -147,6 +147,132 @@ Still launch-blocking and requiring owner input:
 | 3 | Weeks 5-8 | Italian content production | Real Italian KB |
 | 4 | Weeks 9-10 | Italian site plus advisor outreach | Outreach-ready |
 | 5 | Weeks 11-12 | First 50 Italian emails | Validated demand signal |
+
+## Knowledge Integration Architecture - 2026-05-05 Alignment
+
+The product has three different knowledge problems. Do not solve them with one architecture:
+
+1. Customer-facing AI features: AI Questionnaire, regulation explainer, and gap analysis.
+2. Internal product intelligence: how controls map to NIS2, GDPR, ISO 27001, AI Act, and local laws.
+3. Trust signal generation: how integration runs become auditor-ready evidence with citations.
+
+Decision: build these as three layers, in order. The static mapping layer is the product source of truth. AI can summarize and draft, but it must not invent controls, legal articles, evidence, customers, certifications, or legal conclusions.
+
+### Current Repo State vs Target
+
+Aligned and already present:
+
+- `controls`, `frameworks`, `framework_controls`, `tests`, `source_documents`, `evidence`, `integration_runs`, `org_control_statuses`, and Trust Center visibility settings exist in Drizzle/Postgres.
+- `framework_controls` already carries `articleRef`, regulator guidance, evidence requirements, localized title, and localized description.
+- Current code seed contains `92` canonical controls, `129` framework-control mappings, and `16` integration test definitions across Microsoft 365, GitHub, and AWS.
+- Integration runs update organisation control status, and the evidence table can store manual uploads and automated snapshots.
+- Questionnaire AI exists, but it is currently Anthropic-based and grounded only in organisation controls, evidence, and policies.
+
+Not aligned yet:
+
+- There is no first-class `articles` table containing official article text, stable article IDs, and citation format.
+- `framework_controls.articleRef` is a text reference, not an auditable link to a reviewed official article row.
+- There is no `evidence_templates` table that defines what good evidence looks like per control or control/framework pair.
+- Automated integration runs update control statuses, but they do not yet consistently create auditor-ready evidence records with source citations and retention metadata.
+- Questionnaire AI does not yet retrieve official articles, validate citations, or save generated answers into the evidence vault automatically.
+- There is no pgvector/RAG layer. This is intentional for now.
+- The product must not publicly claim `247 controls` until the database actually contains 247 reviewed controls and the copy hygiene guard allows that claim. Current factual count is `92` seeded canonical controls.
+
+### Layer 1 - Static Mapping Layer
+
+Status: partially built. This is the next foundation to harden before more AI work.
+
+Add `articles`:
+
+```typescript
+export const articles = pgTable("articles", {
+  id: uuid("id").primaryKey().defaultRandom(),
+  sourceDocumentId: uuid("source_document_id").references(() => sourceDocuments.id),
+  frameworkId: uuid("framework_id").references(() => frameworks.id),
+  jurisdiction: text("jurisdiction").notNull(),
+  locale: text("locale").notNull(),
+  articleKey: text("article_key").notNull(),
+  title: text("title"),
+  officialText: text("official_text").notNull(),
+  citation: text("citation").notNull(),
+  effectiveDate: timestamp("effective_date", { withTimezone: true }),
+  lastReviewed: timestamp("last_reviewed", { withTimezone: true }),
+  reviewStatus: text("review_status").notNull().default("draft"),
+});
+```
+
+Add a mapping table rather than overloading `framework_controls.articleRef`:
+
+```typescript
+export const frameworkControlArticles = pgTable(
+  "framework_control_articles",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    frameworkControlId: uuid("framework_control_id").notNull().references(() => frameworkControls.id),
+    articleId: uuid("article_id").notNull().references(() => articles.id),
+    citationNote: text("citation_note"),
+    confidence: text("confidence").notNull().default("reviewed"),
+  },
+  (table) => [unique().on(table.frameworkControlId, table.articleId)],
+);
+```
+
+Add evidence templates:
+
+```typescript
+export const evidenceTemplates = pgTable("evidence_templates", {
+  id: uuid("id").primaryKey().defaultRandom(),
+  controlId: uuid("control_id").references(() => controls.id),
+  frameworkControlId: uuid("framework_control_id").references(() => frameworkControls.id),
+  title: text("title").notNull(),
+  description: text("description").notNull(),
+  evidenceType: text("evidence_type").notNull(),
+  exampleFields: jsonb("example_fields").$type<Record<string, unknown>>().default({}),
+  locale: text("locale").notNull().default("en-EU"),
+});
+```
+
+Layer 1 next tasks:
+
+- [ ] Create `docs/architecture/knowledge-integration.md` with this three-layer decision.
+- [ ] Add Drizzle schema and migration for `articles`, `framework_control_articles`, and `evidence_templates`.
+- [ ] Seed NIS2 EU directive and Czech law article rows from official sources only.
+- [ ] Keep AI extraction as drafting support only; manually review every article before `reviewStatus='reviewed'`.
+- [ ] Link existing NIS2 framework-control rows to reviewed article rows.
+- [ ] Add smoke tests that fail when a reviewed framework control has no linked official article.
+- [ ] Add seed/report script that prints real counts for controls, mappings, articles, source documents, evidence templates, and tests.
+
+### Layer 2 - RAG Knowledge Layer
+
+Status: explicitly deferred.
+
+Do not build pgvector/RAG until one of these is true:
+
+- 50+ paying customers create enough questionnaire volume to justify retrieval infrastructure.
+- The reviewed source corpus no longer fits in prompt context for a scoped framework query.
+- Customer-uploaded policies need per-organisation semantic retrieval.
+- There are 1000+ controls or 10+ active frameworks.
+
+When this starts, use Postgres/Neon with pgvector first unless there is a measured reason to add another vector database. Store citation metadata on every chunk. Regulations should chunk by article, methodologies by section, and controls/evidence templates as one chunk each.
+
+Embedding/provider note: OpenAI `text-embedding-3-small` remains a plausible low-cost default according to current OpenAI docs, but model and pricing must be re-verified immediately before implementation.
+
+### Layer 3 - AI Generation Layer
+
+Status: partially present as Questionnaire AI, but not citation-complete.
+
+Short-term decision: keep the simple Layer-1 retrieval path before custom RAG. Customer-facing AI should receive only scoped, structured context from Postgres: active controls, reviewed articles, evidence records, policies, and source citations.
+
+Required before expanding AI features:
+
+- [ ] Add provider abstraction so Questionnaire AI is not hardwired to Anthropic-specific code paths.
+- [ ] Add citation validation: generated answers may cite only article IDs, source document IDs, evidence IDs, policy IDs, and control IDs provided in context.
+- [ ] Add refusal/fallback behavior when no supporting evidence or reviewed article exists.
+- [ ] Save generated questionnaire answers and gap-analysis outputs as evidence-vault records or linked generated artifacts.
+- [ ] Add legal disclaimer copy: generated answers are drafts for customer legal/compliance review, not legal advice or certification.
+- [ ] Update subprocessors and data-processing docs before sending customer content to any new AI provider.
+
+Model note: the earlier `gpt-4o-mini` / `gpt-4o` plan is directionally valid as a small/strong model split, and current official OpenAI model pages still list those models. Current OpenAI model docs also list newer GPT-5.x families, so the exact production model should be chosen from current docs during implementation, not hardcoded in the plan.
 
 ## Phase 1 - Jurisdiction-Aware Knowledge Base
 
