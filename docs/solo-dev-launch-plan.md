@@ -732,6 +732,7 @@ Prepared materials:
 - `docs/outreach/italy-outreach-verification-queue.md` triages the 50 sourced targets into a first 25-company verification queue, secondary queue, and learning-only / competitor-watch list. It is not a send list; each row still needs employee range, contact owner, and hook verification before outreach.
 - `docs/outreach/italy-verification-batch-1.md` verifies the first 10 companies from the queue at company-fit level. Result: 0 / 10 send-ready because named contact/owner verification is still missing.
 - `docs/outreach/italy-verification-batch-2.md` verifies priorities 11-20 from the queue. Result: 0 / 10 send-ready; Cubbit, Netalia and DigitalPA remain strong top-queue candidates, while several below-ICP companies should be moved to learning/channel unless intentionally selected.
+- `docs/outreach/italy-verification-batch-3.md` verifies priorities 21-25 and closes the first 25-company verification queue. Result: 0 / 5 send-ready; Cleafy and Cyber Guru remain the strongest candidates, while Cerbeyra, Ermes and Swascan are better treated as learning/channel or market-research rows unless a precise owner is identified.
 
 ### 5.5 First Design Partner Onboarding
 
