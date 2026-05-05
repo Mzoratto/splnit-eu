@@ -54,6 +54,25 @@ async function main() {
       articlesResult.rows.map((row) => [row.article_key, row]),
     );
 
+    const allItalianNis2Articles = await pool.query<{ count: number }>(
+      `
+      SELECT COUNT(*)::int AS count
+      FROM articles a
+      JOIN source_documents sd ON sd.id = a.source_document_id
+      WHERE a.jurisdiction = 'IT'
+        AND a.locale = 'it-IT'
+        AND a.review_status = 'reviewed'
+        AND sd.filename = 'it/dlgs-138-2024.html'
+        AND a.article_key ~ '^Art\\. [0-9]+$'
+    `,
+    );
+
+    assert.equal(
+      allItalianNis2Articles.rows[0]?.count ?? 0,
+      44,
+      "All 44 D.Lgs. 138/2024 articles should be imported from Gazzetta.",
+    );
+
     for (const articleKey of ["Art. 23", "Art. 24", "Art. 25"]) {
       const row = articlesByKey.get(articleKey);
 
@@ -71,6 +90,35 @@ async function main() {
       articlesByKey.get("Art. 25")?.official_text ?? "",
       /notifica di incidente/i,
       "Art. 25 should contain incident notification text.",
+    );
+
+    const boundaryArticles = await pool.query<{
+      article_key: string;
+      official_text: string;
+      title: string | null;
+    }>(
+      `
+      SELECT article_key, title, official_text
+      FROM articles
+      WHERE jurisdiction = 'IT'
+        AND locale = 'it-IT'
+        AND article_key = ANY($1::text[])
+    `,
+      [["Art. 1", "Art. 44"]],
+    );
+    const boundaryArticlesByKey = new Map(
+      boundaryArticles.rows.map((row) => [row.article_key, row]),
+    );
+
+    assert.equal(
+      boundaryArticlesByKey.get("Art. 1")?.title,
+      "Oggetto",
+      "Art. 1 should be imported with its official title.",
+    );
+    assert.match(
+      boundaryArticlesByKey.get("Art. 44")?.official_text ?? "",
+      /Disposizioni finanziarie/i,
+      "Art. 44 should contain final financial-provisions text.",
     );
 
     const mappingResult = await pool.query<{

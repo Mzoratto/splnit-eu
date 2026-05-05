@@ -85,6 +85,8 @@ Third-party legal copies, summaries, commercial law portals, blogs, and vendor c
 
 Use `npm run knowledge:import:authoritative-sources` to upsert these rows into `source_documents`. Use `npm run smoke:source-documents` to verify required source rows, source URLs, review timestamps, and official-source hostnames.
 
+Use `npm run knowledge:import:italian-nis2` to fetch D.Lgs. 138/2024 article pages from Gazzetta Ufficiale and store all 44 articles as reviewed Italian NIS2 source text. That importer only creates draft control links for the currently mapped Art. 23-25 citations; it does not promote mappings.
+
 Use `npm run knowledge:import:italian-nis2-acn` to fetch official ACN NIS PDFs, extract their text with `pdftotext`, and store Determinazioni 136117/2025 and 164179/2025 plus annexes 1-4 as reviewed regulator guidance rows in `articles`. These rows are source text only; they do not promote any `framework_control_articles` mapping.
 
 Use `npm run knowledge:import:italian-gdpr-garante` to fetch official Garante GDPR guidance pages for data breach, DPIA, and processing-record FAQ, normalize their HTML to source text, and store them as reviewed Italian GDPR guidance rows in `articles`. These rows are source text only; `smoke:italian-gdpr-layer` verifies that the importer does not create or promote mapping links.

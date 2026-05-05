@@ -11,23 +11,35 @@ export const ITALIAN_NIS2_SOURCE = {
   url: "https://www.gazzettaufficiale.it/eli/id/2024/10/01/24G00155/SG",
 } as const;
 
-export const ITALIAN_NIS2_ARTICLES = [
-  {
-    articleId: 23,
-    citation: "D.Lgs. 138/2024, Art. 23",
-    groupId: 4,
-    url: buildGazzettaArticleUrl(23, 4),
-  },
-  {
-    articleId: 24,
-    citation: "D.Lgs. 138/2024, Art. 24",
-    groupId: 4,
-    url: buildGazzettaArticleUrl(24, 4),
-  },
-  {
-    articleId: 25,
-    citation: "D.Lgs. 138/2024, Art. 25",
-    groupId: 4,
-    url: buildGazzettaArticleUrl(25, 4),
-  },
+const ITALIAN_NIS2_ARTICLE_GROUPS = [
+  { from: 1, groupId: 1, to: 8 },
+  { from: 9, groupId: 2, to: 17 },
+  { from: 18, groupId: 3, to: 22 },
+  { from: 23, groupId: 4, to: 33 },
+  { from: 34, groupId: 5, to: 39 },
+  { from: 40, groupId: 6, to: 44 },
 ] as const;
+
+function getItalianNis2ArticleGroupId(articleId: number) {
+  const group = ITALIAN_NIS2_ARTICLE_GROUPS.find(
+    (item) => articleId >= item.from && articleId <= item.to,
+  );
+
+  if (!group) {
+    throw new Error(`Missing D.Lgs. 138/2024 Gazzetta group for Art. ${articleId}.`);
+  }
+
+  return group.groupId;
+}
+
+export const ITALIAN_NIS2_ARTICLES = Array.from({ length: 44 }, (_, index) => {
+  const articleId = index + 1;
+  const groupId = getItalianNis2ArticleGroupId(articleId);
+
+  return {
+    articleId,
+    citation: `D.Lgs. 138/2024, Art. ${articleId}`,
+    groupId,
+    url: buildGazzettaArticleUrl(articleId, groupId),
+  };
+});

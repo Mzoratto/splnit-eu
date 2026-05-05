@@ -485,7 +485,7 @@ Goal: a real Italian KB credible enough for a design partner.
 
 Ingest each source into `source_documents` with citation, URL, effective date, and last reviewed date:
 
-- [ ] D.Lgs. 4 settembre 2024, n. 138 from Gazzetta Ufficiale.
+- [x] D.Lgs. 4 settembre 2024, n. 138 from Gazzetta Ufficiale.
 - [ ] Current ACN determinations from acn.gov.it.
 - [ ] GDPR Regulation (EU) 2016/679 Italian text from EUR-Lex.
 - [x] Current consolidated D.Lgs. 196/2003, Codice Privacy.
@@ -500,7 +500,7 @@ Started and verified locally:
 - Added ACN 164179/2025 annexes 1-4 for important/essential security measures and incident categories.
 - Kept ACN Determinazione n. 38565/2024 in the source library as superseded history and marked it as replaced by 136117/2025.
 - Added `smoke:source-documents` to verify required Italian NIS/GDPR/Garante source rows, canonical EUR-Lex EN/IT/CS PDF rows, official hostnames, effective dates where known, and review timestamps.
-- Added `knowledge:import:italian-nis2` to import D.Lgs. 138/2024 Art. 23-25 from Gazzetta Ufficiale as reviewed official-source article text.
+- Added `knowledge:import:italian-nis2` to import all 44 D.Lgs. 138/2024 articles from Gazzetta Ufficiale as reviewed official-source article text. Only Art. 23-25 are currently linked to controls, and those links stay draft pending mapping review.
 - Added `smoke:italian-nis2-layer` to verify Italian article text is reviewed while Italian framework-control mapping links remain draft pending mapping review.
 - Generated `docs/legal-reviews/nis2-it-mapping-review.md` with 34 Italian NIS2 draft mapping rows.
 - Ran Stage 1 for Italian NIS2 with embeddings and Stage 2 classification for all 34 rows. Result: 1 `agent_decided` approval, 33 `needs_human`, 0 promoted mappings.
@@ -515,7 +515,7 @@ Started and verified locally:
 - Added `knowledge:import:italian-nis2-acn` to import ACN Determinazioni 136117/2025 and 164179/2025 plus annexes 1-4 as reviewed regulator guidance text rows in `articles`.
 - Added `knowledge:import:italian-gdpr-garante` to import official Garante guidance pages for data breach, DPIA, and registro delle attività di trattamento as reviewed Italian GDPR guidance text rows in `articles`.
 - Added `smoke:italian-gdpr-layer` to verify those Garante article rows are reviewed, sourced from `www.garanteprivacy.it`, and do not create or promote any framework-control mapping links.
-- Applied the current source-ingestion scripts against the Vercel production database after fixing the previously empty Production `DATABASE_URL`; local and production `knowledge:counts` both report `47` source documents, `101` article rows, and `468` framework-control article links.
+- Applied the current source-ingestion scripts against the Vercel production database after fixing the previously empty Production `DATABASE_URL`; after importing all Gazzetta D.Lgs. 138/2024 articles, local and production `knowledge:counts` both report `47` source documents, `142` article rows, and `468` framework-control article links.
 - Current Italian NIS2 queue status after Stage 3: 34 `needs_human`, 0 `agent_decided`, 0 promoted.
 
 Still open before calling 3.1 complete:
