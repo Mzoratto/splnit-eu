@@ -507,6 +507,7 @@ Started and verified locally:
 - Added and ran Stage 3 for Italian NIS2. It persisted cross-check metadata for all 34 rows and forced the single incident-notification approval back to `needs_human` because NIS2 incident/deadline mappings require human review.
 - Added `agent:review:report` and generated `docs/legal-reviews/nis2-it-agent-review.md` so an Italian reviewer can see Stage 2 reasoning, Stage 3 overrides, source citations, and blank human-decision columns without database access.
 - Added `agent:review:stage4` / `agent:review:promote` as the generalized promotion gate. It promotes only `agent_decided` + `approved` rows with reviewed articles, Stage 3 final status `agent_decided`, and no Stage 3 overrides.
+- Added `agent:review:full` to run Stage 1 through Stage 4 in sequence while preserving dry-run-by-default behavior.
 - Current Italian NIS2 queue status after Stage 3: 34 `needs_human`, 0 `agent_decided`, 0 promoted.
 
 Still open before calling 3.1 complete:

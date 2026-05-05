@@ -22,10 +22,7 @@ Implemented:
 - `npm run agent:review:export` writes a framework/jurisdiction review Markdown package from reviewed official article text and draft framework-control article links.
 - `npm run agent:review:report` exports the queued Stage 2/Stage 3 agent output into a human-review package without promoting rows.
 - `npm run agent:review:report:all` prints a cross-framework queue summary by framework, jurisdiction, status, verdict, and confidence.
-
-Not implemented yet:
-
-- Batch orchestration command that runs stages 1-4 in sequence.
+- `npm run agent:review:full` runs Stage 1 through Stage 4 in sequence. It is dry-run by default and passes `--apply` through only when explicitly provided.
 
 ## Migration Status
 
@@ -64,6 +61,22 @@ Add `--apply` to write rows into `mapping_review_queue`. Add `--replace` with `-
 The importer does not fabricate source text from Markdown. It uses the Mapping ID column to load the canonical control and article text from Postgres. This keeps the queue tied to the structured knowledge layer instead of a copied review packet.
 
 Italian NIS2 is now the first target for the full agent pipeline. `docs/legal-reviews/nis2-it-mapping-review.md` is generated from reviewed Gazzetta Ufficiale article text for D.Lgs. 138/2024 Art. 23-25 and draft Italian framework-control links. Stage 1 has imported and embedded all 34 Italian NIS2 rows in local `mapping_review_queue` with ACN as the jurisdiction regulator. Stage 2 classified all 34 rows: 1 high-confidence `agent_decided` approval, 27 approval candidates routed to human because broad Art. 24 similarity stayed below threshold, and 6 `too_broad` candidates routed to human. Stage 3 cross-checked all 34 rows, persisted `stage3_checks`, and moved the single `agent_decided` incident-notification row back to `needs_human` because NIS2 incident/deadline mappings are domain-blacklisted. Stage 4 dry-run and apply both found 0 promotable Italian rows. `docs/legal-reviews/nis2-it-agent-review.md` now exports those agent results for human review. No Italian mapping row has been promoted to `reviewed`.
+
+## Full Pipeline
+
+Dry-run all four stages:
+
+```bash
+npm run agent:review:full -- --framework=nis2 --jurisdiction=it --limit=34
+```
+
+Apply all four stages:
+
+```bash
+npm run agent:review:full -- --framework=nis2 --jurisdiction=it --input docs/legal-reviews/nis2-it-mapping-review.md --limit=34 --replace --embed --apply
+```
+
+The full runner is only orchestration. Each stage keeps its own guardrails: Stage 1 writes only with `--apply`, Stage 2 and Stage 3 call OpenAI only when their own requirements are met, and Stage 4 promotes only rows that passed all promotion gates.
 
 ## Stage 2 Classification
 
