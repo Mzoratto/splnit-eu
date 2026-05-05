@@ -3,6 +3,7 @@ import Link from "next/link";
 import { getLocale, getTranslations } from "next-intl/server";
 import { Icon } from "@/components/marketing/local-icon";
 import { MarketingShell } from "@/components/marketing/marketing-shell";
+import { getLocalizedMarketingPath } from "@/i18n/marketing-paths";
 import { normalizeLocale, type Locale } from "@/i18n/routing";
 
 const metadataByLocale: Record<
@@ -46,6 +47,7 @@ const realTodayKeys = ["solo", "focus", "legalReview", "noFakeProof"];
 const notYetKeys = ["legalAdvice", "enterprise", "certification", "entity"];
 
 export default async function AboutPage() {
+  const locale = normalizeLocale(await getLocale()) ?? "cs-CZ";
   const t = await getTranslations("marketing.about");
 
   return (
@@ -72,7 +74,7 @@ export default async function AboutPage() {
               </p>
               <div className="mt-8 flex flex-col gap-3 sm:flex-row">
                 <Link
-                  href="/early-access"
+                  href={getLocalizedMarketingPath("/early-access", locale)}
                   className="inline-flex justify-center rounded-full bg-blue-600 px-7 py-3 text-sm font-medium text-white transition-colors hover:bg-blue-500"
                 >
                   {t("primaryCta")}

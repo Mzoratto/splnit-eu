@@ -49,6 +49,17 @@ export function toInternalMarketingPath(path: string) {
     return unprefixed.replace("/prezzi", "/cenik") + hash;
   }
 
+  if (unprefixed === "/chi-siamo" || unprefixed.startsWith("/chi-siamo/")) {
+    return unprefixed.replace("/chi-siamo", "/about") + hash;
+  }
+
+  if (
+    unprefixed === "/accesso-anticipato" ||
+    unprefixed.startsWith("/accesso-anticipato/")
+  ) {
+    return unprefixed.replace("/accesso-anticipato", "/early-access") + hash;
+  }
+
   if (unprefixed === "/sicurezza" || unprefixed.startsWith("/sicurezza/")) {
     return unprefixed.replace("/sicurezza", "/security") + hash;
   }
@@ -75,6 +86,14 @@ export function getLocalizedMarketingPath(path: string, locale: Locale) {
 
     if (base === "/cenik" || base.startsWith("/cenik/")) {
       return `${prefix}${base.replace("/cenik", "/prezzi")}${hash}`;
+    }
+
+    if (base === "/about" || base.startsWith("/about/")) {
+      return `${prefix}${base.replace("/about", "/chi-siamo")}${hash}`;
+    }
+
+    if (base === "/early-access" || base.startsWith("/early-access/")) {
+      return `${prefix}${base.replace("/early-access", "/accesso-anticipato")}${hash}`;
     }
 
     if (base === "/security" || base.startsWith("/security/")) {

@@ -1,4 +1,8 @@
 import assert from "node:assert/strict";
+import {
+  getLocalizedMarketingPath,
+  toInternalMarketingPath,
+} from "../i18n/marketing-paths";
 import { getMessagesForLocale } from "../i18n/messages";
 import type { Locale } from "../i18n/routing";
 import { FRAMEWORK_QUESTIONS } from "../lib/frameworks/questions";
@@ -193,5 +197,27 @@ assert.equal(it.trustCenterSettings.saveSettings, "Salva impostazioni");
 assert.equal(it.vendorsPage.title, "Rischio fornitori");
 assert.equal(it.vendorsPage.form.create, "Crea");
 assert.notEqual(it.shell.freePlanBanner, getMessagesForLocale("cs-CZ").shell.freePlanBanner);
+
+assert.equal(getLocalizedMarketingPath("/", "it-IT"), "/it");
+assert.equal(getLocalizedMarketingPath("/about", "it-IT"), "/it/chi-siamo");
+assert.equal(
+  getLocalizedMarketingPath("/early-access", "it-IT"),
+  "/it/accesso-anticipato",
+);
+assert.equal(getLocalizedMarketingPath("/predpisy", "it-IT"), "/it/normative");
+assert.equal(
+  getLocalizedMarketingPath("/predpisy/nis2", "it-IT"),
+  "/it/normative/nis2",
+);
+assert.equal(getLocalizedMarketingPath("/cenik", "it-IT"), "/it/prezzi");
+assert.equal(getLocalizedMarketingPath("/security", "it-IT"), "/it/sicurezza");
+assert.equal(getLocalizedMarketingPath("/about", "en-EU"), "/en/about");
+assert.equal(getLocalizedMarketingPath("/predpisy", "en-EU"), "/en/regulations");
+assert.equal(getLocalizedMarketingPath("/cenik", "en-EU"), "/en/pricing");
+assert.equal(toInternalMarketingPath("/it/chi-siamo"), "/about");
+assert.equal(toInternalMarketingPath("/it/accesso-anticipato"), "/early-access");
+assert.equal(toInternalMarketingPath("/it/normative/nis2"), "/predpisy/nis2");
+assert.equal(toInternalMarketingPath("/it/prezzi"), "/cenik");
+assert.equal(toInternalMarketingPath("/it/sicurezza"), "/security");
 
 console.log("i18n shell smoke test passed.");

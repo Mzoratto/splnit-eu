@@ -607,10 +607,10 @@ Goal: marketing presence and support signals match the Italian product direction
 
 ### 4.1 Italian Public Pages
 
-- [ ] Italian homepage.
-- [ ] `/chi-siamo`.
-- [ ] `/normative` pages for D.Lgs. 138/2024, GDPR plus Codice Privacy, ISO 27001, and EU AI Act.
-- [ ] `/prezzi`.
+- [x] Italian homepage.
+- [x] `/chi-siamo`.
+- [x] `/normative` pages for D.Lgs. 138/2024, GDPR plus Codice Privacy, ISO 27001, and EU AI Act.
+- [x] `/prezzi`.
 - [ ] No linked coming-soon pages. If content is not ready, it is not linked.
 
 Italian homepage structure:
@@ -646,6 +646,7 @@ Progress note - 2026-05-05:
 - Updated Splnit.eu's own Trust Center document link from a missing markdown path to `/security`.
 - Replaced older AWS-hosting marketing claims with the documented provider stack: Vercel hosting plus Neon Postgres. Exact production processing regions still need vendor-dashboard confirmation before the data-residency checklist item can be closed.
 - Kept certification, legal-review, and ACN/Garante portal-format claims as in progress until human/advisor review is complete.
+- Added Italian-friendly marketing aliases and sitemap entries for `/it/chi-siamo`, `/it/accesso-anticipato`, `/it/normative`, `/it/normative/*`, `/it/prezzi`, and `/it/sicurezza`; middleware rewrites these to the existing localized page implementations.
 
 ## Phase 5 - Italian Outreach and First Design Partner
 
