@@ -9,6 +9,8 @@ const staticRoutes = [
   "/predpisy",
   "/early-access",
   "/about",
+  "/security",
+  "/status",
   "/cenik",
   "/pricing",
 ];

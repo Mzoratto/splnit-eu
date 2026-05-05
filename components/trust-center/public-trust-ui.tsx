@@ -349,7 +349,7 @@ export function TrustFooter({
         <div className="flex flex-wrap items-center gap-4 text-sm text-foreground/58">
           {backHref ? <Link href={backHref}>{copy.footer.back}</Link> : null}
           <Link href="/">{copy.footer.home}</Link>
-          <Link href="https://status.splnit.eu">{copy.footer.status}</Link>
+          <Link href="/status">{copy.footer.status}</Link>
           <Link href="/soukromi">{copy.footer.privacy}</Link>
           <Link href="/podminky">{copy.footer.terms}</Link>
         </div>

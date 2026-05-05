@@ -594,7 +594,7 @@ function getSplnitDocuments(locale: Locale): PublicTrustDocument[] {
     {
       description: copy.securityWhitepaperDescription,
       frameworkSlugs: ["nis2", "iso27001", "gdpr"],
-      href: "/docs/splnit-security-whitepaper.md",
+      href: "/security",
       id: "splnit-security-whitepaper",
       isLocked: false,
       title: copy.securityWhitepaper,

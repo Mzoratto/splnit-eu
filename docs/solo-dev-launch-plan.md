@@ -586,9 +586,9 @@ Progress note - 2026-05-05:
 
 ### 3.4 Notification Flows
 
-- [ ] Build ACN incident notification workflow: 24-hour early warning, 72-hour notification, and 1-month report.
-- [ ] Build Garante breach notification workflow.
-- [ ] Use Italian SMB-appropriate labels.
+- [x] Build ACN incident notification workflow: 24-hour early warning, 72-hour notification, and 1-month report.
+- [x] Build Garante breach notification workflow.
+- [x] Use Italian SMB-appropriate labels.
 - [ ] Verify output format with the advisor before shipping.
 
 Progress note - 2026-05-05:
@@ -633,11 +633,18 @@ Senza carta di credito . Contatto diretto col fondatore . Dati nell'UE
 
 - [ ] Sign one Italian advisor on a paid retainer, advisory equity, or paid review cadence.
 - [ ] Credit the advisor publicly only with permission.
-- [ ] Add `/security` or `/sicurezza` with a real security posture: done vs in progress.
-- [ ] Publish a current subprocessor list.
+- [x] Add `/security` or `/sicurezza` with a real security posture: done vs in progress.
+- [x] Publish a current subprocessor list.
 - [ ] State EU data residency with the actual provider and region.
-- [ ] Make DPA available on request or publish it if ready.
-- [ ] Add a simple status page, even if static at launch.
+- [x] Make DPA available on request or publish it if ready.
+- [x] Add a simple status page, even if static at launch.
+
+Progress note - 2026-05-05:
+
+- Added public `/security` and Italian-localized `/it/sicurezza` routes with honest early-access posture, done/in-progress sections, and `security@splnit.eu` / `privacy@splnit.eu` contacts.
+- Added public `/status` route backed by the readiness check counts and `/api/health` link; this is explicitly not an SLA or historical uptime report.
+- Updated Splnit.eu's own Trust Center document link from a missing markdown path to `/security`.
+- Kept certification, legal-review, and ACN/Garante portal-format claims as in progress until human/advisor review is complete.
 
 ## Phase 5 - Italian Outreach and First Design Partner
 

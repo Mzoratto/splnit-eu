@@ -49,6 +49,10 @@ export function toInternalMarketingPath(path: string) {
     return unprefixed.replace("/prezzi", "/cenik") + hash;
   }
 
+  if (unprefixed === "/sicurezza" || unprefixed.startsWith("/sicurezza/")) {
+    return unprefixed.replace("/sicurezza", "/security") + hash;
+  }
+
   if (unprefixed === "/pricing" || unprefixed.startsWith("/pricing/")) {
     return unprefixed.replace("/pricing", "/cenik") + hash;
   }
@@ -71,6 +75,10 @@ export function getLocalizedMarketingPath(path: string, locale: Locale) {
 
     if (base === "/cenik" || base.startsWith("/cenik/")) {
       return `${prefix}${base.replace("/cenik", "/prezzi")}${hash}`;
+    }
+
+    if (base === "/security" || base.startsWith("/security/")) {
+      return `${prefix}${base.replace("/security", "/sicurezza")}${hash}`;
     }
 
     return `${prefix}${base}${hash}`;

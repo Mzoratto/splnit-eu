@@ -104,6 +104,8 @@ export function Footer() {
               [t("monitoring"), "/platform#monitoring"],
               [t("integrations"), "/platform#integrations"],
               [t("trustCenter"), "/platform#trust-center"],
+              [t("security"), "/security"],
+              [t("status"), "/status"],
               [navT("earlyAccess"), "/early-access"],
               [t("about"), "/about"],
               [t("pricing"), "/cenik"],
