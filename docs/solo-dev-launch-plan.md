@@ -577,11 +577,12 @@ Each template must:
 
 Progress note - 2026-05-05:
 
-- Added review-only Italian drafts for `security_policy` and `incident_response`.
+- Added review-only Italian drafts for all 12 Phase 3 template families: `security_policy`, `incident_response`, `record_of_processing`, `dpia`, `data_processing_agreement`, `subprocessor_list`, `asset_inventory`, `risk_assessment`, `acceptable_use`, `vendor_questionnaire`, `business_continuity`, and `access_control`.
 - Added a policy resolver guard so customer-facing template resolution ignores `reviewStatus: "draft"` templates and Italian tenants continue to fall back to reviewed EU/EN templates.
 - Added `policies:export:template-review` to generate `docs/legal-reviews/italian-policy-template-batch-1-review.md` for advisor review without database access.
 - `smoke:templates` now verifies the draft guard and confirms Italian draft templates are available only through the review-export path.
-- Do not change either Italian template to `reviewed` until an Italian advisor explicitly approves it.
+- Draft-only review families are not added to the customer-facing policy generator route list.
+- Do not change any Italian template to `reviewed` until an Italian advisor explicitly approves it.
 
 ### 3.4 Notification Flows
 

@@ -7,6 +7,7 @@ import {
 } from "../lib/policies/resolve-template";
 import {
   POLICY_TEMPLATE_TYPES,
+  isPolicyTemplateType,
   type PolicyTemplateType,
 } from "../lib/policies/templates";
 
@@ -121,7 +122,20 @@ const italianDraftTemplates = listDraftPolicyTemplatesForReview({
 
 assert.deepEqual(
   italianDraftTemplates.map((template) => template.templateFamily).sort(),
-  ["incident_response", "security_policy"],
+  [
+    "acceptable_use",
+    "access_control",
+    "asset_inventory",
+    "business_continuity",
+    "data_processing_agreement",
+    "dpia",
+    "incident_response",
+    "record_of_processing",
+    "risk_assessment",
+    "security_policy",
+    "subprocessor_list",
+    "vendor_questionnaire",
+  ],
   "Italian draft templates should be available for advisor review only",
 );
 
@@ -131,6 +145,16 @@ for (const draftTemplate of italianDraftTemplates) {
     "draft",
     `${draftTemplate.templateFamily} should stay marked draft`,
   );
+
+  if (isPolicyTemplateType(draftTemplate.templateFamily)) {
+    const resolved = resolvePolicyTemplate(draftTemplate.templateFamily, itTenant);
+
+    assert.notEqual(
+      resolved.reviewStatus,
+      "draft",
+      `${draftTemplate.templateFamily} should not resolve to a customer-facing draft`,
+    );
+  }
 }
 
 const czAiPolicy = resolvePolicyTemplate("ai_policy", czTenant);

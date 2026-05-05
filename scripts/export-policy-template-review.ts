@@ -3,7 +3,10 @@ import {
   listDraftPolicyTemplatesForReview,
   resolvePolicyTemplate,
 } from "../lib/policies/resolve-template";
-import type { PolicyTemplate } from "../lib/policies/templates";
+import {
+  isPolicyTemplateType,
+  type PolicyTemplate,
+} from "../lib/policies/templates";
 
 function getArg(name: string) {
   const inlineValue = process.argv.find((arg) => arg.startsWith(`${name}=`));
@@ -111,11 +114,14 @@ async function main() {
   }
 
   for (const template of templates) {
+    if (!isPolicyTemplateType(template.templateFamily)) {
+      continue;
+    }
+
     const resolved = resolvePolicyTemplate(template.templateFamily, {
       locale: "it-IT",
       primaryJurisdiction: "IT",
     });
-
     if (resolved.reviewStatus === "draft") {
       throw new Error(
         `${template.templateFamily} resolved to the draft Italian template. Draft guard is broken.`,
