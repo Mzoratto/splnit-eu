@@ -9,6 +9,7 @@ import { normalizeLocale, type Locale } from "@/i18n/routing";
 import { hasDatabaseUrl } from "@/lib/db";
 import { getOrganisationByClerkOrgId } from "@/lib/db/queries/organisations";
 import { countUnreadRelevantRegulationUpdates } from "@/lib/db/queries/regulation-updates";
+import { getTrustCenterSlugByClerkOrgId } from "@/lib/db/queries/trust-center";
 import { normalizePlanKey, type PlanKey } from "@/lib/stripe/plans";
 
 export const dynamic = "force-dynamic";
@@ -25,6 +26,7 @@ export default async function ProtectedLayout({
   let plan: PlanKey = "free";
   let regulationUpdateCount = 0;
   let tenantLocale: Locale = normalizeLocale(await getLocale()) ?? "cs-CZ";
+  let trustCenterSlug: string | null = null;
 
   if (clerkConfigured) {
     const session = await auth();
@@ -33,14 +35,20 @@ export default async function ProtectedLayout({
     }
 
     if (hasDatabaseUrl()) {
-      const [organisation, unreadRegulationUpdateCount] = await Promise.all([
+      const [
+        organisation,
+        unreadRegulationUpdateCount,
+        savedTrustCenterSlug,
+      ] = await Promise.all([
         getOrganisationByClerkOrgId(session.orgId),
         countUnreadRelevantRegulationUpdates(session.orgId),
+        getTrustCenterSlugByClerkOrgId(session.orgId),
       ]);
       organisationName = organisation?.name ?? null;
       plan = normalizePlanKey(organisation?.plan);
       regulationUpdateCount = unreadRegulationUpdateCount;
       tenantLocale = normalizeLocale(organisation?.locale) ?? tenantLocale;
+      trustCenterSlug = savedTrustCenterSlug;
     }
   }
 
@@ -61,6 +69,9 @@ export default async function ProtectedLayout({
         organisationName={displayOrganisationName}
         plan={plan}
         regulationUpdateCount={regulationUpdateCount}
+        trustCenterHref={
+          trustCenterSlug ? `/trust/${trustCenterSlug}` : "/trust/demo"
+        }
       >
         {children}
       </AppShell>

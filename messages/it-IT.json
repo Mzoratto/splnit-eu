@@ -48,8 +48,51 @@
     "signUpBody": "Aggiungi le chiavi Clerk all'ambiente per abilitare registrazione e organizzazioni."
   },
   "billingSettings": {
+    "eyebrow": "Fatturazione",
+    "title": "Abbonamento",
+    "subtitle": "Piano attuale e stato cliente Stripe per questa organizzazione Clerk.",
+    "customerPortal": "Portale cliente",
+    "currentPlan": "Piano attuale",
+    "frameworks": "Framework",
+    "integrations": "Integrazioni",
+    "users": "Utenti",
+    "stripeConnection": "Connessione Stripe",
+    "stripeConfigured": "Le chiavi di fatturazione sono configurate per checkout e portale.",
+    "stripeMissing": "Le chiavi Stripe non sono ancora configurate in questo ambiente.",
+    "customer": "Cliente",
+    "subscription": "Abbonamento",
+    "notCreated": "Non creato",
+    "none": "nessuno",
+    "stripeSynced": "Sincronizzato con Stripe",
+    "local": "Locale",
     "monthSuffix": "/mese",
-    "annualMonthly": "{price}/mese con fatturazione annuale"
+    "annualMonthly": "{price}/mese con fatturazione annuale",
+    "limitFrameworks": "Framework: {count}",
+    "limitIntegrations": "Integrazioni: {count}",
+    "limitUsers": "Utenti: {count}",
+    "currentPlanButton": "Piano attuale",
+    "monthlyCheckout": "Checkout mensile",
+    "annualCheckout": "Checkout annuale",
+    "planNames": {
+      "free": "Gratis",
+      "starter": "Starter",
+      "business": "Business",
+      "consultant": "Consultant"
+    },
+    "plans": {
+      "starter": {
+        "name": "Starter",
+        "description": "Raccolta automatizzata delle evidenze per un piccolo team compliance."
+      },
+      "business": {
+        "name": "Business",
+        "description": "Trust Center, rischio fornitori, incidenti e revisioni accessi."
+      },
+      "consultant": {
+        "name": "Consultant",
+        "description": "Workspace clienti illimitati e reportistica white-label."
+      }
+    }
   },
   "frameworkWizard": {
     "error": "Non è stato possibile salvare l'assessment.",

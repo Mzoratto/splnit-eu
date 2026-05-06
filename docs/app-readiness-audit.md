@@ -25,7 +25,7 @@ Readiness statuses:
 
 1. **Auth is centralized.** `app/(app)/layout.tsx` redirects to `/sign-in` when Clerk is configured and no `userId` or `orgId` exists. When Clerk is not configured, app pages render in demo mode.
 2. **Demo fallback is common.** Several routes render demo/static data when Clerk or `DATABASE_URL` is unavailable. This is useful for local development but must be obvious in production checks.
-3. **Locale is uneven outside the primary flow.** Primary controls/framework/evidence surfaces now use tenant locale or tenant-aware fallbacks for UI and domain labels. Billing still has hardcoded English copy and CZK formatting for all locales.
+3. **Locale is uneven outside the primary flow.** Primary controls/framework/evidence surfaces now use tenant locale or tenant-aware fallbacks for UI and domain labels. Billing now uses localized copy and EUR for `it-IT`/`en-EU`, CZK for `cs-CZ`; remaining locale gaps are on secondary surfaces.
 4. **Mutations are generally disabled without real data.** Many pages set `canMutate=false` when using demo data. This is good, but action-level authorization still needs a separate smoke pass.
 5. **Primary flow production parity is verified.** Onboarding-equivalent tenant setup, framework enrollment, controls, evidence, policies, report generation, Italian domain labels, Blob persistence/downloadability, and cleanup passed against production runtime secrets and production Neon.
 
@@ -33,7 +33,7 @@ Readiness statuses:
 
 | Area | Routes | Status | Data Source | Empty/Demo State | Locale | Auth/Permissions | Gaps To Close |
 |---|---|---:|---|---|---|---|---|
-| App shell | `/(app)/layout` | partial | Clerk org + organisation query | Demo org name if Clerk disabled | Tenant locale when DB available | Central Clerk redirect when configured | Confirm production never runs with Clerk disabled; Trust Center header link currently points to `/trust/demo` rather than the org slug. |
+| App shell | `/(app)/layout` | partial | Clerk org + organisation query + saved Trust Center slug | Demo org name if Clerk disabled | Tenant locale when DB available | Central Clerk redirect when configured | Confirm production never runs with Clerk disabled; header Trust Center link now uses the saved org slug when present and falls back to `/trust/demo` only without a slug. |
 | Onboarding | `/onboarding` | partial | `getOnboardingState`, framework/tool libraries | Defaults to CZ/NIS2 when no state | Uses wizard initial locale from org/default | Layout handles auth | Production runtime verification covered equivalent persisted IT tenant setup; browser UX can still be polished separately. |
 | Framework index | `/frameworks` | demo-risk | Static `FRAMEWORK_LIBRARY` | Always renders all frameworks | Uses tenant locale when DB/auth is available | Layout handles auth | Does not reflect tenant enrolled frameworks or plan limits. |
 | Framework setup | `/frameworks/[frameworkSlug]/setup` | partial | Needs separate runtime review | Unknown from this pass | Expected localized copy | Layout handles auth | Audit setup actions and persistence before relying on it for onboarding. |
@@ -50,7 +50,7 @@ Readiness statuses:
 | Area | Routes | Status | Data Source | Empty/Demo State | Locale | Auth/Permissions | Gaps To Close |
 |---|---|---:|---|---|---|---|---|
 | Dashboard | `/dashboard` | partial | `getDashboardData`; fallback scores/updates | Demo updates and scores on missing DB | Mostly localized | Layout handles auth | Fallback can mask missing production data; verify regulation update read action and no draft citations leak. |
-| Integrations hub | `/integrations` | partial | `getIntegrationsHubData`; provider config | Provider cards without DB; planned Google link points to missing route | Localized descriptions | Layout handles auth | Google Workspace link is `/integrations/google-workspace` but no page exists; provider status labels are English technical labels by design. |
+| Integrations hub | `/integrations` | partial | `getIntegrationsHubData`; provider config | Provider cards without DB; Google Workspace is disabled as coming soon | Localized descriptions | Layout handles auth | Planned Google Workspace detail route exists with a coming-soon state; provider status labels are English technical labels by design. |
 | Integration detail | `/integrations/microsoft365`, `/github`, `/aws`, `/[provider]` | partial | Needs separate runtime review | Unknown from this pass | Expected localized | Layout handles auth | Verify OAuth callback, disconnect, test run status, and unsupported provider behavior. |
 | Vendors | `/vendors` | partial | `listVendorsForOrg`; demo cloud provider fallback | Demo vendor row when DB missing | Localized page copy | Layout handles auth; mutations disabled in demo | Category option values are raw English values; export endpoint auth needs smoke test. |
 | Vendor detail | `/vendors/[vendorId]` | partial | `getVendorDetail`; demo only for `demo-cloud` | Demo detail read-only | Localized page copy | Org-scoped query | Email questionnaire/send action needs authorization and deliverability check. |
@@ -63,17 +63,15 @@ Readiness statuses:
 | Client detail | `/clients/[clientOrgId]` | partial | Consultant client detail; demo only for demo IDs | Demo read-only | Localized | Plan-gated for consultant | Branding mutation and client visibility need org-boundary tests. |
 | Trust Center admin | `/trust-center` | partial | `getTrustCenterSettings`; fallback demo frameworks | Settings disabled without DB | Localized except hardcoded eyebrow | Layout handles auth | Public URL defaults to `/trust/demo`; ensure saved slug, visibility toggles, and framework detail flags match public route behavior. |
 | Organisation settings | `/settings/organisation` | partial | Organisation query; fallback demo org | Demo read-only | Uses stored locale | Layout handles auth | Country list includes DE even though no German marketing strategy; verify OSVČ/legal identifier labels by jurisdiction. |
-| Billing settings | `/settings/billing` | partial | Organisation + Stripe env | No demo list, buttons disabled without Stripe | Hardcoded English + CZK | Layout handles auth | Localize copy, use EUR for EN/IT, CZK for CS; portal/checkout actions need production Stripe smoke test. |
+| Billing settings | `/settings/billing` | partial | Organisation + Stripe env | No demo list, buttons disabled without Stripe | Localized; EUR for EN/IT, CZK for CS | Layout handles auth | Portal/checkout actions still need production Stripe smoke test. |
 | Audit log | `/settings/audit-log` | partial | `listAuditLogs` | Empty list when no DB/session/error | Localized | Layout handles auth | Export route needs org-boundary and pagination/limit verification. |
 
 ## Immediate Fix Queue
 
 1. **Remove misleading production fallbacks from readiness-critical pages or add explicit demo-mode banners.** Highest risk pages: dashboard, risks, incidents, framework detail, vendors, Trust Center admin.
-2. **Fix billing localization.** `/settings/billing` is visibly not localized and always formats CZK.
-3. **Fix app shell Trust Center link.** Header should link to the current organisation's Trust Center slug when available, not `/trust/demo`.
-4. **Make framework/controls pages org-aware.** Index pages should distinguish available library content from enrolled tenant scope and control status.
-5. **Run action-level authorization smoke tests.** Prioritize control status update, evidence upload/download, policy generation/download, vendor assessment, incident reports, access review decisions, audit export.
-6. **Primary-flow verification follow-up.** Browser-level UX regression coverage remains useful, but the production runtime verification has cleared the critical outreach readiness unknown.
+2. **Make framework/controls pages org-aware.** Index pages should distinguish available library content from enrolled tenant scope and control status.
+3. **Run action-level authorization smoke tests.** Prioritize control status update, evidence upload/download, policy generation/download, vendor assessment, incident reports, access review decisions, audit export.
+4. **Primary-flow verification follow-up.** Browser-level UX regression coverage remains useful, but the production runtime verification has cleared the critical outreach readiness unknown.
 
 ## Verification Needed Next
 

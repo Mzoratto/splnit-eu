@@ -15,6 +15,7 @@ type AppShellProps = {
   organisationName: string;
   plan: PlanKey;
   regulationUpdateCount?: number;
+  trustCenterHref: string;
 };
 
 export function AppShell({
@@ -23,6 +24,7 @@ export function AppShell({
   organisationName,
   plan,
   regulationUpdateCount = 0,
+  trustCenterHref,
 }: AppShellProps) {
   const t = useTranslations("shell");
 
@@ -48,7 +50,7 @@ export function AppShell({
           </label>
           <div className="flex items-center gap-2">
             <Link
-              href="/trust/demo"
+              href={trustCenterHref}
               className="btn btn-secondary hidden h-9 px-3 sm:inline-flex"
             >
               {t("trustCenter")}

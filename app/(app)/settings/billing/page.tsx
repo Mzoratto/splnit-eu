@@ -19,24 +19,11 @@ import {
 
 export const dynamic = "force-dynamic";
 
-const planCopy: Record<BillablePlanKey, { name: string; description: string }> = {
-  starter: {
-    name: "Starter",
-    description: "Automated evidence collection for a small compliance team.",
-  },
-  business: {
-    name: "Business",
-    description: "Trust Center, vendor risk, incidents, and access reviews.",
-  },
-  consultant: {
-    name: "Consultant",
-    description: "Unlimited client workspaces and white-label reporting.",
-  },
-};
+type BillingSettingsCopy = ReturnType<typeof getMessagesForLocale>["billingSettings"];
 
 function formatPrice(cents: number, locale: Locale) {
   return new Intl.NumberFormat(locale, {
-    currency: "CZK",
+    currency: locale === "cs-CZ" ? "CZK" : "EUR",
     maximumFractionDigits: 0,
     style: "currency",
   }).format(cents / 100);
@@ -57,19 +44,26 @@ export default async function BillingSettingsPage() {
   const stripeConfigured = hasStripeBillingConfig();
   const canManageBilling = Boolean(stripeConfigured && session?.userId && session?.orgId);
   const canOpenPortal = Boolean(canManageBilling && organisation?.stripeCustomerId);
+  const planCopy = copy.plans as Record<
+    BillablePlanKey,
+    { description: string; name: string }
+  >;
+  const currentPlanLabel =
+    copy.planNames[currentPlan as keyof BillingSettingsCopy["planNames"]] ??
+    currentPlan;
 
   return (
     <section className="space-y-8">
       <div className="flex flex-col justify-between gap-4 md:flex-row md:items-end">
         <div>
           <p className="text-sm font-medium uppercase tracking-[0.14em] text-primary">
-            Billing
+            {copy.eyebrow}
           </p>
           <h1 className="mt-2 text-3xl font-semibold tracking-normal">
-            Subscription
+            {copy.title}
           </h1>
           <p className="mt-2 max-w-2xl text-sm leading-6 text-foreground/64">
-            Current plan and Stripe customer state for this Clerk organisation.
+            {copy.subtitle}
           </p>
         </div>
         <form action={createCustomerPortalSession}>
@@ -78,7 +72,7 @@ export default async function BillingSettingsPage() {
             disabled={!canOpenPortal}
             className="inline-flex items-center gap-2 rounded-md border border-border px-4 py-3 text-sm font-medium text-foreground enabled:hover:bg-surface-muted disabled:cursor-not-allowed disabled:opacity-45"
           >
-            Customer Portal
+            {copy.customerPortal}
             <ExternalLink className="h-4 w-4" aria-hidden="true" />
           </button>
         </form>
@@ -88,26 +82,26 @@ export default async function BillingSettingsPage() {
         <article className="rounded-lg border border-border bg-surface p-5">
           <div className="flex items-start justify-between gap-4">
             <div>
-              <p className="text-sm text-foreground/58">Current plan</p>
+              <p className="text-sm text-foreground/58">{copy.currentPlan}</p>
               <h2 className="mt-1 text-2xl font-semibold capitalize">
-                {currentPlan}
+                {currentPlanLabel}
               </h2>
             </div>
             <span className="rounded-md bg-surface-muted px-2 py-1 text-xs">
-              {organisation?.stripeSubscriptionId ? "stripe_synced" : "local"}
+              {organisation?.stripeSubscriptionId ? copy.stripeSynced : copy.local}
             </span>
           </div>
           <dl className="mt-6 grid gap-3 text-sm">
             <div className="flex justify-between gap-4">
-              <dt className="text-foreground/58">Frameworks</dt>
+              <dt className="text-foreground/58">{copy.frameworks}</dt>
               <dd className="font-medium">{PLAN_LIMITS[currentPlan].frameworks}</dd>
             </div>
             <div className="flex justify-between gap-4">
-              <dt className="text-foreground/58">Integrations</dt>
+              <dt className="text-foreground/58">{copy.integrations}</dt>
               <dd className="font-medium">{PLAN_LIMITS[currentPlan].integrations}</dd>
             </div>
             <div className="flex justify-between gap-4">
-              <dt className="text-foreground/58">Users</dt>
+              <dt className="text-foreground/58">{copy.users}</dt>
               <dd className="font-medium">{PLAN_LIMITS[currentPlan].users}</dd>
             </div>
           </dl>
@@ -117,25 +111,25 @@ export default async function BillingSettingsPage() {
           <div className="flex items-start gap-3">
             <CreditCard className="mt-1 h-5 w-5 text-primary" aria-hidden="true" />
             <div>
-              <h2 className="text-lg font-semibold">Stripe connection</h2>
+              <h2 className="text-lg font-semibold">{copy.stripeConnection}</h2>
               <p className="mt-1 text-sm leading-6 text-foreground/62">
                 {stripeConfigured
-                  ? "Billing keys are configured for checkout and portal sessions."
-                  : "Stripe keys are not configured in this environment yet."}
+                  ? copy.stripeConfigured
+                  : copy.stripeMissing}
               </p>
             </div>
           </div>
           <dl className="mt-6 grid gap-3 text-sm">
             <div className="grid gap-1 sm:grid-cols-[160px_1fr]">
-              <dt className="text-foreground/58">Customer</dt>
+              <dt className="text-foreground/58">{copy.customer}</dt>
               <dd className="truncate font-mono text-xs">
-                {organisation?.stripeCustomerId ?? "not_created"}
+                {organisation?.stripeCustomerId ?? copy.notCreated}
               </dd>
             </div>
             <div className="grid gap-1 sm:grid-cols-[160px_1fr]">
-              <dt className="text-foreground/58">Subscription</dt>
+              <dt className="text-foreground/58">{copy.subscription}</dt>
               <dd className="truncate font-mono text-xs">
-                {organisation?.stripeSubscriptionId ?? "none"}
+                {organisation?.stripeSubscriptionId ?? copy.none}
               </dd>
             </div>
           </dl>
@@ -180,9 +174,21 @@ export default async function BillingSettingsPage() {
               </div>
 
               <ul className="mt-6 grid gap-2 text-sm text-foreground/68">
-                <li>{planData.limits.frameworks} frameworks</li>
-                <li>{planData.limits.integrations} integrations</li>
-                <li>{planData.limits.users} users</li>
+                <li>
+                  {copy.limitFrameworks.replace(
+                    "{count}",
+                    String(planData.limits.frameworks),
+                  )}
+                </li>
+                <li>
+                  {copy.limitIntegrations.replace(
+                    "{count}",
+                    String(planData.limits.integrations),
+                  )}
+                </li>
+                <li>
+                  {copy.limitUsers.replace("{count}", String(planData.limits.users))}
+                </li>
               </ul>
 
               <div className="mt-auto grid gap-2 pt-6">
@@ -192,7 +198,7 @@ export default async function BillingSettingsPage() {
                     disabled={!canManageBilling || isCurrentPlan}
                     className="w-full rounded-md bg-primary px-4 py-3 text-sm font-medium text-primary-foreground enabled:hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-45"
                   >
-                    {isCurrentPlan ? "Current plan" : "Monthly checkout"}
+                    {isCurrentPlan ? copy.currentPlanButton : copy.monthlyCheckout}
                   </button>
                 </form>
                 <form action={createCheckoutSession.bind(null, plan, "annual")}>
@@ -201,7 +207,7 @@ export default async function BillingSettingsPage() {
                     disabled={!canManageBilling || isCurrentPlan}
                     className="w-full rounded-md border border-border px-4 py-3 text-sm font-medium enabled:hover:bg-surface-muted disabled:cursor-not-allowed disabled:opacity-45"
                   >
-                    Annual checkout
+                    {copy.annualCheckout}
                   </button>
                 </form>
               </div>

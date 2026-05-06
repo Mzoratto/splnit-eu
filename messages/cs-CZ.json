@@ -48,8 +48,51 @@
     "signUpBody": "Přidejte Clerk klíče do prostředí pro aktivaci registrace a organizací."
   },
   "billingSettings": {
+    "eyebrow": "Fakturace",
+    "title": "Předplatné",
+    "subtitle": "Aktuální plán a stav Stripe zákazníka pro tuto Clerk organizaci.",
+    "customerPortal": "Zákaznický portál",
+    "currentPlan": "Aktuální plán",
+    "frameworks": "Frameworky",
+    "integrations": "Integrace",
+    "users": "Uživatelé",
+    "stripeConnection": "Stripe připojení",
+    "stripeConfigured": "Fakturační klíče jsou nakonfigurované pro checkout a portál.",
+    "stripeMissing": "Stripe klíče v tomto prostředí zatím nejsou nakonfigurované.",
+    "customer": "Zákazník",
+    "subscription": "Předplatné",
+    "notCreated": "Nevytvořeno",
+    "none": "žádné",
+    "stripeSynced": "Synchronizováno se Stripe",
+    "local": "Lokální",
     "monthSuffix": "/měsíc",
-    "annualMonthly": "{price}/měsíc při roční fakturaci"
+    "annualMonthly": "{price}/měsíc při roční fakturaci",
+    "limitFrameworks": "Frameworky: {count}",
+    "limitIntegrations": "Integrace: {count}",
+    "limitUsers": "Uživatelé: {count}",
+    "currentPlanButton": "Aktuální plán",
+    "monthlyCheckout": "Měsíční checkout",
+    "annualCheckout": "Roční checkout",
+    "planNames": {
+      "free": "Zdarma",
+      "starter": "Starter",
+      "business": "Business",
+      "consultant": "Consultant"
+    },
+    "plans": {
+      "starter": {
+        "name": "Starter",
+        "description": "Automatizovaný sběr důkazů pro malý compliance tým."
+      },
+      "business": {
+        "name": "Business",
+        "description": "Trust Center, rizika dodavatelů, incidenty a přezkumy přístupů."
+      },
+      "consultant": {
+        "name": "Consultant",
+        "description": "Neomezené klientské workspace a white-label reporting."
+      }
+    }
   },
   "frameworkWizard": {
     "error": "Vyhodnocení se nepodařilo uložit.",

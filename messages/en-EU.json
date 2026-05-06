@@ -48,8 +48,51 @@
     "signUpBody": "Add the Clerk keys to the environment to enable registration and organisations."
   },
   "billingSettings": {
+    "eyebrow": "Billing",
+    "title": "Subscription",
+    "subtitle": "Current plan and Stripe customer state for this Clerk organisation.",
+    "customerPortal": "Customer Portal",
+    "currentPlan": "Current plan",
+    "frameworks": "Frameworks",
+    "integrations": "Integrations",
+    "users": "Users",
+    "stripeConnection": "Stripe connection",
+    "stripeConfigured": "Billing keys are configured for checkout and portal sessions.",
+    "stripeMissing": "Stripe keys are not configured in this environment yet.",
+    "customer": "Customer",
+    "subscription": "Subscription",
+    "notCreated": "Not created",
+    "none": "none",
+    "stripeSynced": "Stripe synced",
+    "local": "Local",
     "monthSuffix": "/month",
-    "annualMonthly": "{price}/month when billed annually"
+    "annualMonthly": "{price}/month when billed annually",
+    "limitFrameworks": "Frameworks: {count}",
+    "limitIntegrations": "Integrations: {count}",
+    "limitUsers": "Users: {count}",
+    "currentPlanButton": "Current plan",
+    "monthlyCheckout": "Monthly checkout",
+    "annualCheckout": "Annual checkout",
+    "planNames": {
+      "free": "Free",
+      "starter": "Starter",
+      "business": "Business",
+      "consultant": "Consultant"
+    },
+    "plans": {
+      "starter": {
+        "name": "Starter",
+        "description": "Automated evidence collection for a small compliance team."
+      },
+      "business": {
+        "name": "Business",
+        "description": "Trust Center, vendor risk, incidents, and access reviews."
+      },
+      "consultant": {
+        "name": "Consultant",
+        "description": "Unlimited client workspaces and white-label reporting."
+      }
+    }
   },
   "frameworkWizard": {
     "error": "The assessment could not be saved.",
