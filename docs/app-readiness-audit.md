@@ -35,10 +35,10 @@ Readiness statuses:
 |---|---|---:|---|---|---|---|---|
 | App shell | `/(app)/layout` | partial | Clerk org + organisation query + saved Trust Center slug | Demo org name if Clerk disabled | Tenant locale when DB available | Central Clerk redirect when configured | Confirm production never runs with Clerk disabled; header Trust Center link now uses the saved org slug when present and falls back to `/trust/demo` only without a slug. |
 | Onboarding | `/onboarding` | partial | `getOnboardingState`, framework/tool libraries | Defaults to CZ/NIS2 when no state | Uses wizard initial locale from org/default | Layout handles auth | Production runtime verification covered equivalent persisted IT tenant setup; browser UX can still be polished separately. |
-| Framework index | `/frameworks` | demo-risk | Static `FRAMEWORK_LIBRARY` | Always renders all frameworks | Uses tenant locale when DB/auth is available | Layout handles auth | Does not reflect tenant enrolled frameworks or plan limits. |
+| Framework index | `/frameworks` | partial | `org_frameworks` plus `FRAMEWORK_LIBRARY` available-to-enroll section | Empty enrolled state when no framework is active | Uses tenant/request locale | Layout handles auth | Plan-limit messaging still needs product decision; setup flow still needs separate runtime review. |
 | Framework setup | `/frameworks/[frameworkSlug]/setup` | partial | Needs separate runtime review | Unknown from this pass | Expected localized copy | Layout handles auth | Audit setup actions and persistence before relying on it for onboarding. |
 | Framework detail/report | `/frameworks/[frameworkSlug]` | partial | `getFrameworkDetail`; local-only library fallback | No fallback controls unless `ENABLE_LOCAL_DEMO_DATA=true` outside production | Mostly localized framework copy | Layout handles auth | Report generation blocked by `BLOB_READ_WRITE_TOKEN` and org framework row; org-awareness work should add a stronger non-enrolled state. |
-| Controls index | `/controls` | demo-risk | Static `CONTROL_LIBRARY` | Always renders library controls | Uses tenant locale with locale-keyed control labels | Layout handles auth | Not org-scoped; not status-aware. |
+| Controls index | `/controls` | partial | Enrolled framework mappings + `org_control_statuses`; library shown separately | Empty in-scope state when no framework is active | Uses tenant/request locale with locale-keyed control labels | Layout handles auth | Action-level status mutation smoke still required. |
 | Control detail | `/controls/[controlId]` | partial | `getControlDetailByKey`; falls back to static control | Forms disabled without DB detail | Uses tenant locale with locale-keyed control labels | Layout handles auth; actions need separate review | Evidence upload blocked without Blob token; verify action-level org checks. |
 | Evidence vault | `/evidence` | partial | `listEvidenceVault` | Empty list when no DB/session/error | Tenant/request locale with localized control/framework labels | Layout handles auth | Production runtime verification covered evidence persistence, Italian labels, and private Blob downloadability. |
 | Policies index | `/policies` | partial | `listPoliciesForOrg`, resolved templates/source docs | Templates render even with no generated policies | Uses jurisdiction context | Layout handles auth | Italian policy templates are still `draft`; IT tenants intentionally resolve customer-usable families to reviewed EU English fallback until legal review promotes them. Generation blocked by Blob token. |
@@ -68,9 +68,8 @@ Readiness statuses:
 
 ## Immediate Fix Queue
 
-1. **Make framework/controls pages org-aware.** Index pages should distinguish available library content from enrolled tenant scope and control status.
-2. **Run action-level authorization smoke tests.** Prioritize control status update, evidence upload/download, policy generation/download, vendor assessment, incident reports, access review decisions, audit export.
-3. **Primary-flow verification follow-up.** Browser-level UX regression coverage remains useful, but the production runtime verification has cleared the critical outreach readiness unknown.
+1. **Run action-level authorization smoke tests.** Prioritize control status update, evidence upload/download, policy generation/download, vendor assessment, incident reports, access review decisions, audit export.
+2. **Primary-flow verification follow-up.** Browser-level UX regression coverage remains useful, but the production runtime verification has cleared the critical outreach readiness unknown.
 
 ## Verification Needed Next
 

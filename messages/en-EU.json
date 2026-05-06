@@ -475,8 +475,16 @@
       "eyebrow": "Frameworks",
       "title": "Regulations and standards",
       "subtitle": "Choose a framework, run an assessment, and track mapped control status.",
+      "enrolledTitle": "Enrolled frameworks",
+      "enrolledSubtitle": "Frameworks currently active in this organisation.",
+      "availableTitle": "Available to enroll",
+      "availableSubtitle": "Library frameworks are shown as setup options, not active tenant scope.",
+      "emptyEnrolled": "No frameworks are enrolled yet.",
+      "scoreLabel": "Score",
+      "statusLabel": "Status",
       "open": "Open",
-      "assessment": "Assessment"
+      "assessment": "Assessment",
+      "setup": "Set up"
     },
     "detail": {
       "breadcrumb": "Dashboard / Frameworks",
@@ -918,6 +926,15 @@
       "eyebrow": "Controls",
       "title": "Control library",
       "subtitle": "Shared controls connect frameworks, manual evidence, and automated tests.",
+      "activeTitle": "Controls in scope",
+      "activeSubtitle": "Controls mapped to frameworks enrolled by this organisation.",
+      "libraryTitle": "Available control library",
+      "librarySubtitle": "Reference controls available through framework enrollment.",
+      "emptyActive": "No controls are in scope yet because no framework is enrolled.",
+      "frameworksLabel": "Frameworks",
+      "statusLabel": "Status",
+      "automated": "Automated",
+      "manual": "Manual",
       "openControl": "Open control"
     },
     "detail": {

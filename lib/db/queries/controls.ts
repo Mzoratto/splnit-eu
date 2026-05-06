@@ -7,6 +7,7 @@ import {
   frameworkControls,
   frameworks,
   orgControlStatuses,
+  orgFrameworks,
   tests,
 } from "@/lib/db/schema";
 
@@ -36,6 +37,96 @@ export async function listOrgControlStatusesForFramework(
         ),
       ),
     );
+}
+
+export async function listOrgControlsForIndex(clerkOrgId: string) {
+  const db = getDb();
+  const rows = await db
+    .select({
+      category: controls.category,
+      controlId: controls.id,
+      descriptionCs: controls.descriptionCs,
+      frameworkNameCs: frameworks.nameCs,
+      frameworkNameEn: frameworks.nameEn,
+      frameworkSlug: frameworks.slug,
+      isAutomated: controls.isAutomated,
+      key: controls.key,
+      status: orgControlStatuses.status,
+      titleCs: controls.titleCs,
+      titleEn: controls.titleEn,
+      updatedAt: orgControlStatuses.updatedAt,
+    })
+    .from(orgFrameworks)
+    .innerJoin(
+      frameworkControls,
+      eq(orgFrameworks.frameworkId, frameworkControls.frameworkId),
+    )
+    .innerJoin(controls, eq(frameworkControls.controlId, controls.id))
+    .innerJoin(frameworks, eq(frameworkControls.frameworkId, frameworks.id))
+    .leftJoin(
+      orgControlStatuses,
+      and(
+        eq(orgControlStatuses.clerkOrgId, clerkOrgId),
+        eq(orgControlStatuses.controlId, controls.id),
+      ),
+    )
+    .where(eq(orgFrameworks.clerkOrgId, clerkOrgId))
+    .orderBy(controls.key);
+
+  const controlMap = new Map<
+    string,
+    {
+      category: string | null;
+      descriptionCs: string | null;
+      frameworks: {
+        nameCs: string;
+        nameEn: string;
+        slug: string;
+      }[];
+      isAutomated: boolean;
+      key: string;
+      status: string | null;
+      titleCs: string;
+      titleEn: string;
+      updatedAt: Date | null;
+    }
+  >();
+
+  for (const row of rows) {
+    const existing = controlMap.get(row.controlId);
+
+    if (existing) {
+      if (!existing.frameworks.some((framework) => framework.slug === row.frameworkSlug)) {
+        existing.frameworks.push({
+          nameCs: row.frameworkNameCs,
+          nameEn: row.frameworkNameEn,
+          slug: row.frameworkSlug,
+        });
+      }
+
+      continue;
+    }
+
+    controlMap.set(row.controlId, {
+      category: row.category,
+      descriptionCs: row.descriptionCs,
+      frameworks: [
+        {
+          nameCs: row.frameworkNameCs,
+          nameEn: row.frameworkNameEn,
+          slug: row.frameworkSlug,
+        },
+      ],
+      isAutomated: row.isAutomated,
+      key: row.key,
+      status: row.status,
+      titleCs: row.titleCs,
+      titleEn: row.titleEn,
+      updatedAt: row.updatedAt,
+    });
+  }
+
+  return [...controlMap.values()];
 }
 
 export async function getControlDetailByKey(input: {

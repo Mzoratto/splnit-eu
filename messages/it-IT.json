@@ -475,8 +475,16 @@
       "eyebrow": "Framework",
       "title": "Normative e standard",
       "subtitle": "Scegliete un framework, avviate un assessment e seguite lo stato dei controlli mappati.",
+      "enrolledTitle": "Framework iscritti",
+      "enrolledSubtitle": "Framework attualmente attivi in questa organizzazione.",
+      "availableTitle": "Disponibili per iscrizione",
+      "availableSubtitle": "I framework della libreria sono opzioni di setup, non scope tenant attivo.",
+      "emptyEnrolled": "Nessun framework è ancora iscritto.",
+      "scoreLabel": "Punteggio",
+      "statusLabel": "Stato",
       "open": "Apri",
-      "assessment": "Assessment"
+      "assessment": "Assessment",
+      "setup": "Configura"
     },
     "detail": {
       "breadcrumb": "Dashboard / Framework",
@@ -918,6 +926,15 @@
       "eyebrow": "Controlli",
       "title": "Libreria controlli",
       "subtitle": "Controlli condivisi collegano normative, evidenze manuali e test automatici.",
+      "activeTitle": "Controlli nello scope",
+      "activeSubtitle": "Controlli mappati ai framework iscritti da questa organizzazione.",
+      "libraryTitle": "Libreria controlli disponibile",
+      "librarySubtitle": "Controlli di riferimento disponibili tramite iscrizione ai framework.",
+      "emptyActive": "Nessun controllo è nello scope perché non è iscritto alcun framework.",
+      "frameworksLabel": "Framework",
+      "statusLabel": "Stato",
+      "automated": "Automatico",
+      "manual": "Manuale",
       "openControl": "Apri controllo"
     },
     "detail": {

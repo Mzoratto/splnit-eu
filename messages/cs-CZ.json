@@ -246,8 +246,16 @@
       "eyebrow": "Frameworky",
       "title": "Regulace a standardy",
       "subtitle": "Vyberte framework, spusťte assessment a sledujte stav namapovaných kontrol.",
+      "enrolledTitle": "Zapsané frameworky",
+      "enrolledSubtitle": "Frameworky aktuálně aktivní v této organizaci.",
+      "availableTitle": "Dostupné k zapnutí",
+      "availableSubtitle": "Knihovní frameworky jsou možnosti nastavení, ne aktivní tenant scope.",
+      "emptyEnrolled": "Zatím není zapsaný žádný framework.",
+      "scoreLabel": "Skóre",
+      "statusLabel": "Stav",
       "open": "Otevřít",
-      "assessment": "Assessment"
+      "assessment": "Assessment",
+      "setup": "Nastavit"
     },
     "detail": {
       "breadcrumb": "Dashboard / Předpisy",
@@ -689,6 +697,15 @@
       "eyebrow": "Kontroly",
       "title": "Knihovna kontrol",
       "subtitle": "Sdílené kontroly propojují frameworky, manuální evidenci a automatické testy.",
+      "activeTitle": "Kontroly ve scope",
+      "activeSubtitle": "Kontroly namapované na frameworky zapsané touto organizací.",
+      "libraryTitle": "Dostupná knihovna kontrol",
+      "librarySubtitle": "Referenční kontroly dostupné přes zápis frameworků.",
+      "emptyActive": "Ve scope zatím nejsou žádné kontroly, protože není zapsaný žádný framework.",
+      "frameworksLabel": "Frameworky",
+      "statusLabel": "Stav",
+      "automated": "Automatizovaná",
+      "manual": "Manuální",
       "openControl": "Otevřít kontrolu"
     },
     "detail": {
