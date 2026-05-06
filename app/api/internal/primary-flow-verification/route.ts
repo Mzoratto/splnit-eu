@@ -331,15 +331,11 @@ async function createFixtures() {
   const orgName = `Splnit Route Primary Flow ${runId}`;
   const email = `splnit-route-primary-flow-${Date.now()}+clerk_live@example.com`;
   const password = `SplnitRoute-${Date.now()}-Aa!`;
-  const username = `splnitroute${Date.now()}`;
   const user = await clerk.users.createUser({
     emailAddress: [email],
     firstName: "Route",
     lastName: "Flow",
     password,
-    skipLegalChecks: true,
-    skipPasswordChecks: true,
-    username,
   });
   const organization = await clerk.organizations.createOrganization({
     createdBy: user.id,
