@@ -64,6 +64,14 @@ export function toInternalMarketingPath(path: string) {
     return unprefixed.replace("/sicurezza", "/security") + hash;
   }
 
+  if (unprefixed === "/strumenti" || unprefixed.startsWith("/strumenti/")) {
+    return unprefixed.replace("/strumenti", "/tools") + hash;
+  }
+
+  if (unprefixed === "/nastroje" || unprefixed.startsWith("/nastroje/")) {
+    return unprefixed.replace("/nastroje", "/tools") + hash;
+  }
+
   if (unprefixed === "/pricing" || unprefixed.startsWith("/pricing/")) {
     return unprefixed.replace("/pricing", "/cenik") + hash;
   }
@@ -100,6 +108,10 @@ export function getLocalizedMarketingPath(path: string, locale: Locale) {
       return `${prefix}${base.replace("/security", "/sicurezza")}${hash}`;
     }
 
+    if (base === "/tools" || base.startsWith("/tools/")) {
+      return `${prefix}${base.replace("/tools", "/strumenti")}${hash}`;
+    }
+
     return `${prefix}${base}${hash}`;
   }
 
@@ -117,6 +129,10 @@ export function getLocalizedMarketingPath(path: string, locale: Locale) {
     }
 
     return `${prefix}${base}${hash}`;
+  }
+
+  if (base === "/tools" || base.startsWith("/tools/")) {
+    return `${base.replace("/tools", "/nastroje")}${hash}`;
   }
 
   return `${base}${hash}`;

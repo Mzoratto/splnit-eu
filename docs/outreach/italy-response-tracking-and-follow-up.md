@@ -54,7 +54,7 @@ Buongiorno [Cognome],
 
 so che l'agenda è piena, non insisto.
 
-Solo una cosa che potrebbe essere utile: ho costruito uno strumento gratuito di scoping NIS2 che in 10 minuti aiuta a capire se e come D.Lgs. 138/2024 riguarda l'azienda. [link]
+Solo una cosa che potrebbe essere utile: ho costruito uno strumento gratuito di scoping NIS2 che in 2 minuti aiuta a capire se e come D.Lgs. 138/2024 può riguardare l'azienda. https://splnit.eu/it/strumenti/nis2-scope
 
 Se in futuro avesse senso parlarne, basta rispondere a questa email.
 

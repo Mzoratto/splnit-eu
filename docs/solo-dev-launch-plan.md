@@ -704,8 +704,9 @@ Buongiorno,
 so che ha l'agenda piena - non insisto.
 
 Solo una cosa che potrebbe servirLe: ho costruito uno strumento
-gratuito di NIS2 scoping che in 10 minuti dice se e come D.Lgs.
-138/2024 La riguarda. [link]
+gratuito di NIS2 scoping che in 2 minuti indica se e come D.Lgs.
+138/2024 può riguardare la Sua azienda.
+https://splnit.eu/it/strumenti/nis2-scope
 
 Se in futuro avesse senso parlarne, basta rispondere a questa email.
 

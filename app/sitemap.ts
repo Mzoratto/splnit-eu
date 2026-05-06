@@ -14,6 +14,7 @@ const staticRoutes = [
   "/about",
   "/security",
   "/status",
+  "/tools/nis2-scope",
   "/cenik",
   "/pricing",
 ];
