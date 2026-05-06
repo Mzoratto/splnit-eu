@@ -866,6 +866,10 @@ Every Sunday evening, commit a short review to `docs/weekly-reviews/YYYY-MM-DD.m
 
 Use `docs/weekly-reviews/TEMPLATE.md` for the weekly entry format.
 
+Progress note - 2026-05-06:
+
+- Added `docs/weekly-reviews/2026-05-06.md` as the first weekly review entry. It records the current outreach-prep state, blockers, buyer/product learnings, and the plan change from sending 25 first-touch emails to sending the first 3 high-quality messages before expanding.
+
 ## 12-Week Definition of Done
 
 - [ ] No false claims anywhere on the site.
