@@ -1,5 +1,6 @@
 import { eq } from "drizzle-orm";
 import { loadEnvConfig } from "@next/env";
+import { pathToFileURL } from "node:url";
 import { getDb } from "../lib/db";
 import { articles, frameworks, sourceDocuments } from "../lib/db/schema";
 import { ITALIAN_GDPR_CODICE_PRIVACY_DOCUMENT } from "../lib/regulations/italian-gdpr-codice-privacy";
@@ -94,7 +95,7 @@ async function getGdprFrameworkId() {
   return row.id;
 }
 
-async function main() {
+export async function importItalianGdprCodicePrivacy() {
   const db = getDb();
   const frameworkId = await getGdprFrameworkId();
   const definition = ITALIAN_GDPR_CODICE_PRIVACY_DOCUMENT;
@@ -141,10 +142,22 @@ async function main() {
       },
     });
 
+  return { imported: 1 };
+}
+
+async function main() {
+  await importItalianGdprCodicePrivacy();
+
   console.log("Imported 1 reviewed Italian GDPR Codice Privacy row.");
 }
 
-main().catch((error: unknown) => {
-  console.error(error);
-  process.exit(1);
-});
+const scriptPath = process.argv[1];
+const isDirectRun =
+  Boolean(scriptPath) && import.meta.url === pathToFileURL(scriptPath).href;
+
+if (isDirectRun) {
+  main().catch((error: unknown) => {
+    console.error(error);
+    process.exit(1);
+  });
+}
