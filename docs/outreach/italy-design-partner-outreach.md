@@ -131,20 +131,21 @@ Week 12:
 
 ## Outcome Codes
 
-Use these values in the tracker:
+Use the canonical tracker state machine in `docs/outreach/italy-response-tracking-and-follow-up.md`.
 
 - `not_sent`: target researched but not contacted.
 - `sent`: first-touch sent.
 - `followed_up`: follow-up sent.
-- `replied_learning`: replied and open to discovery call.
-- `replied_not_now`: polite no or timing issue.
-- `replied_bad_fit`: segment/persona mismatch.
+- `replied`: any human reply received; put `not now`, `bad fit`, or learning context in `outcome`.
 - `call_booked`: meeting scheduled.
-- `call_completed`: discovery call completed.
+- `no_fit`: conversation or reply shows no useful fit.
+- `advisor_interview`: useful market/advisor learning, not a customer path.
+- `channel_partner`: partner/channel conversation, not direct design partner.
+- `follow_up_needed`: problem exists but next step is unclear.
 - `design_partner_verbal_yes`: verbal yes, onboarding not scheduled yet.
 - `design_partner_active`: onboarding scheduled or started.
-- `no_reply`: no response after follow-up window.
-- `bounce`: invalid email.
+
+Do not add ad hoc statuses such as `replied_learning`, `replied_not_now`, or `replied_bad_fit`; keep those details in the `outcome` field so the tracker stays easy to filter.
 
 ## Weekly Review
 

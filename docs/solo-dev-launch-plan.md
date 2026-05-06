@@ -683,14 +683,14 @@ per capire cosa rende la conformità frustrante in azienda - e cosa
 potrebbe davvero aiutare. Posso fare una call quando Le è comodo.
 
 Per i primi 10 design partner ho un'offerta dedicata: piano Business
-gratis per 12 mesi e onboarding personale di 3 settimane. Ma e
+gratis per 12 mesi e onboarding personale di 3 settimane. Ma è
 secondario - l'obiettivo della call è capire il problema, non vendere.
 
 Vale 30 minuti la prossima settimana?
 
 Cordiali saluti,
 [Your Name]
-[Telefono] . [LinkedIn]
+[Telefono] · [LinkedIn]
 Splnit.eu - [Your Name], OSVČ, IČO [number]
 ```
 
@@ -739,6 +739,7 @@ Prepared materials:
 - `docs/outreach/italy-tier-1-send-prep.md` records current public sending routes for Cubbit, Cleafy and DigitalPA. Cubbit and DigitalPA have usable generic public routes; Cleafy needs either a verified LinkedIn route or its official contact form. No tracker row is marked sent.
 - `docs/outreach/italy-tier-1-short-form-variants.md` provides shortened contact-form and LinkedIn-note variants for Cubbit, Cleafy and DigitalPA so generic routes do not receive overlong cold emails.
 - `docs/outreach/italy-discovery-call-playbook.md` defines the 30-minute discovery call agenda, qualification rules, outcome codes, post-call note template, follow-up email, and guardrails for the first Italian replies.
+- `docs/outreach/italy-response-tracking-and-follow-up.md` defines tracker status transitions, daily review routine, one-follow-up rule, reply triage, call-booking response, and weekly outreach reporting.
 
 ### 5.5 First Design Partner Onboarding
 
