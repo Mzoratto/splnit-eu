@@ -1,6 +1,5 @@
 import { eq } from "drizzle-orm";
 import { loadEnvConfig } from "@next/env";
-import { pathToFileURL } from "node:url";
 import { getDb } from "../lib/db";
 import {
   articles,
@@ -186,33 +185,18 @@ async function linkItalianNis2FrameworkControls(
   return count;
 }
 
-export async function importItalianNis2Articles() {
+async function main() {
   const sourceDocumentId = await upsertSourceDocument();
   const frameworkId = await getNis2FrameworkId();
   const articleIds = await upsertArticles(sourceDocumentId, frameworkId);
   const linkedMappings = await linkItalianNis2FrameworkControls(frameworkId, articleIds);
 
-  return {
-    articles: articleIds.size,
-    linkedMappings,
-  };
-}
-
-async function main() {
-  const result = await importItalianNis2Articles();
-
   console.log(
-    `Imported ${result.articles} reviewed Italian NIS2 articles and linked ${result.linkedMappings} draft mappings.`,
+    `Imported ${articleIds.size} reviewed Italian NIS2 articles and linked ${linkedMappings} draft mappings.`,
   );
 }
 
-const scriptPath = process.argv[1];
-const isDirectRun =
-  Boolean(scriptPath) && import.meta.url === pathToFileURL(scriptPath).href;
-
-if (isDirectRun) {
-  main().catch((error: unknown) => {
-    console.error(error);
-    process.exit(1);
-  });
-}
+main().catch((error: unknown) => {
+  console.error(error);
+  process.exit(1);
+});

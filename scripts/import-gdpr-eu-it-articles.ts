@@ -1,6 +1,5 @@
 import { eq } from "drizzle-orm";
 import { loadEnvConfig } from "@next/env";
-import { pathToFileURL } from "node:url";
 import { getDb } from "../lib/db";
 import { articles, frameworks, sourceDocuments } from "../lib/db/schema";
 import { extractFormexArticles } from "../lib/regulations/formex";
@@ -169,31 +168,19 @@ async function upsertArticles(sourceDocumentId: string, frameworkId: string, for
   return imported;
 }
 
-export async function importGdprEuItArticles() {
+async function main() {
   const formexXml = await loadOfficialFormex();
   const sourceDocumentId = await upsertSourceDocument();
   const frameworkId = await getGdprFrameworkId();
   const imported = await upsertArticles(sourceDocumentId, frameworkId, formexXml);
 
-  return { imported };
-}
-
-async function main() {
-  const result = await importGdprEuItArticles();
-
   console.log(
-    `Imported ${result.imported} reviewed Italian GDPR articles from official EUR-Lex/CELLAR Formex source.`,
+    `Imported ${imported} reviewed Italian GDPR articles from official EUR-Lex/CELLAR Formex source.`,
   );
   console.log("No framework-control mapping links were created or promoted.");
 }
 
-const scriptPath = process.argv[1];
-const isDirectRun =
-  Boolean(scriptPath) && import.meta.url === pathToFileURL(scriptPath).href;
-
-if (isDirectRun) {
-  main().catch((error: unknown) => {
-    console.error(error);
-    process.exit(1);
-  });
-}
+main().catch((error: unknown) => {
+  console.error(error);
+  process.exit(1);
+});

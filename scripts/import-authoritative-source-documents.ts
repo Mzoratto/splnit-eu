@@ -1,5 +1,4 @@
 import { loadEnvConfig } from "@next/env";
-import { pathToFileURL } from "node:url";
 import { sql } from "drizzle-orm";
 import { getDb } from "../lib/db";
 import { sourceDocuments } from "../lib/db/schema";
@@ -17,7 +16,7 @@ function toEffectiveDate(value: string | null) {
   return value ? new Date(`${value}T00:00:00.000Z`) : null;
 }
 
-export async function importAuthoritativeSourceDocuments() {
+async function main() {
   const db = getDb();
   let count = 0;
 
@@ -65,23 +64,11 @@ export async function importAuthoritativeSourceDocuments() {
       )
   `);
 
-  return { imported: count };
-}
-
-async function main() {
-  const result = await importAuthoritativeSourceDocuments();
-
-  console.log(`Imported ${result.imported} authoritative source document rows.`);
+  console.log(`Imported ${count} authoritative source document rows.`);
   console.log("Retired unreferenced legacy source document rows when present.");
 }
 
-const scriptPath = process.argv[1];
-const isDirectRun =
-  Boolean(scriptPath) && import.meta.url === pathToFileURL(scriptPath).href;
-
-if (isDirectRun) {
-  main().catch((error: unknown) => {
-    console.error(error);
-    process.exit(1);
-  });
-}
+main().catch((error: unknown) => {
+  console.error(error);
+  process.exit(1);
+});
