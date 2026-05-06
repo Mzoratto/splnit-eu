@@ -3,7 +3,7 @@ import { NextFetchEvent, NextRequest, NextResponse } from "next/server";
 import { toInternalMarketingPath } from "./i18n/marketing-paths";
 import { localeCookieName, normalizeLocale, routing } from "./i18n/routing";
 
-const isProtectedRoute = createRouteMatcher([
+const protectedRoutes = [
   "/dashboard(.*)",
   "/onboarding(.*)",
   "/frameworks(.*)",
@@ -17,6 +17,17 @@ const isProtectedRoute = createRouteMatcher([
   "/risks(.*)",
   "/team(.*)",
   "/settings(.*)",
+];
+
+const localizedProtectedRoutes = protectedRoutes.flatMap((route) => [
+  `/en${route}`,
+  `/it${route}`,
+  `/cs${route}`,
+]);
+
+const isProtectedRoute = createRouteMatcher([
+  ...protectedRoutes,
+  ...localizedProtectedRoutes,
 ]);
 
 const isApiRoute = createRouteMatcher(["/api(.*)", "/trpc(.*)"]);

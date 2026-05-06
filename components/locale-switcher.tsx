@@ -1,7 +1,7 @@
 "use client";
 
 import { useLocale } from "next-intl";
-import { usePathname, useRouter } from "next/navigation";
+import { usePathname } from "next/navigation";
 import { getLocalizedMarketingPath } from "@/i18n/marketing-paths";
 import { localeCookieName, type Locale } from "@/i18n/routing";
 
@@ -18,12 +18,20 @@ export function LocaleSwitcher({
 }) {
   const activeLocale = useLocale();
   const pathname = usePathname();
-  const router = useRouter();
 
   function selectLocale(locale: Locale) {
-    document.cookie = `${localeCookieName}=${locale}; path=/; SameSite=Lax`;
-    router.push(getLocalizedMarketingPath(pathname, locale));
-    router.refresh();
+    const maxAge = 60 * 60 * 24 * 365;
+    const basePath = getLocalizedMarketingPath(pathname, locale);
+    const target = `${basePath}${window.location.search}${window.location.hash}`;
+
+    document.cookie = `${localeCookieName}=${locale}; path=/; max-age=${maxAge}; SameSite=Lax`;
+
+    if (target === `${window.location.pathname}${window.location.search}${window.location.hash}`) {
+      window.location.reload();
+      return;
+    }
+
+    window.location.assign(target);
   }
 
   return (
