@@ -22,6 +22,7 @@
     "smoke:questionnaire-citations": "tsx scripts/smoke-questionnaire-citations.ts",
     "smoke:questionnaire-provider": "tsx scripts/smoke-questionnaire-provider.ts",
     "smoke:copy-hygiene": "tsx scripts/smoke-copy-hygiene.ts",
+    "smoke:authenticated-primary-flow": "tsx scripts/smoke-authenticated-primary-flow.ts",
     "smoke:draft-extraction-sources": "tsx scripts/smoke-draft-extraction-sources.ts",
     "smoke:italian-tenant": "tsx scripts/smoke-tenant-locales.ts",
     "smoke:italian-gdpr-layer": "tsx scripts/smoke-italian-gdpr-layer.ts",
