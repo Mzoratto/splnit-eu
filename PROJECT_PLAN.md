@@ -64,6 +64,7 @@ These are useful later, but not next:
 
 - `PROJECT_PLAN.md` - current plan and priority order.
 - `docs/README.md` - documentation index and archive policy.
+- `docs/app-readiness-audit.md` - authenticated app route readiness matrix and immediate fix queue.
 - `docs/architecture/` - architecture decisions that still affect implementation.
 - `docs/legal-review.md`, `docs/subprocessors.md`, `docs/retention-policy.md`, `docs/data-processing-map.md`, `docs/offboarding-runbook.md`, `docs/audit-log-export-sop.md` - counsel/support handoff drafts.
 - `docs/legal-reviews/` - mapping/template review evidence and reviewer work queues.
@@ -76,15 +77,15 @@ These are useful later, but not next:
 Tracked root files are generally valid for a Next.js/Vercel app:
 
 - Keep: `AGENTS.md`, `CLAUDE.md`, `GEMINI.md`, `README.md`, package/config files, Vercel/Playwright/Sentry/Drizzle configs.
-- Keep ignored local directories: `.next/`, `node_modules/`, `.vercel/`, `.lighthouseci/`, `playwright-report/`, `test-results/`, `agent-skills/`.
+- Keep ignored local directories: `.next/`, `node_modules/`, `.vercel/`, `.lighthouseci/`, `playwright-report/`, `test-results/`.
 - No stale root plan should remain outside this file.
-- `agent-skills/` is an ignored upstream source copy; edit `.agents/skills/` only.
+- `.agents/skills/` is the canonical skills directory. Do not keep a local `agent-skills/` clone in the repo workspace unless temporarily refreshing upstream skills.
 
 ## Next Work Order
 
 Do these before any new features:
 
-1. **App readiness audit:** create a page-by-page matrix for app routes covering auth, data source, empty state, locale, and known gaps.
+1. **App readiness audit:** created in `docs/app-readiness-audit.md`; keep it updated as gaps close.
 2. **Primary flow verification:** verify onboarding -> framework selection -> controls -> evidence -> policies/report outputs with local data.
 3. **Citation safety audit:** run and document smoke checks proving draft mappings cannot reach auditor-ready output.
 4. **Production DB audit:** verify production `DATABASE_URL`, migration state, source document counts, and review queue counts.

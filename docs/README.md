@@ -12,6 +12,7 @@
 
 ### Legal And Operational Drafts
 
+- `app-readiness-audit.md` - authenticated app route readiness matrix and immediate fix queue.
 - `legal-review.md` - counsel handoff checklist.
 - `subprocessors.md` - subprocessor register draft.
 - `retention-policy.md` - retention schedule draft.
