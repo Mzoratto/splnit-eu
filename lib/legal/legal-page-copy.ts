@@ -483,13 +483,13 @@ const legalPageCopy: Record<LegalPageKey, Record<Locale, LegalPageCopy>> = {
           body: [
             "Il titolare per sito web, comunicazioni commerciali, account cliente, fatturazione e sicurezza operativa è l'operatore di Splnit.eu come lavoratore autonomo nella Repubblica Ceca. Nome, identificativo d'impresa, link ARES e indirizzo saranno completati prima del lancio in produzione. Per domande privacy: hello@splnit.eu.",
             "Per i dati personali che i clienti inseriscono nell'app come evidenze, documenti, questionari fornitori o registri audit, il cliente di norma agisce come titolare e Splnit.eu come responsabile secondo il DPA.",
-            "Alla data di pubblicazione non è nominato un responsabile della protezione dei dati. Se questo cambia, il contatto sarà aggiunto qui.",
+            "Alla data di pubblicazione non è stato nominato un Responsabile della protezione dei dati (DPO/RPD). Se questo cambierà, il contatto sarà aggiunto qui.",
           ],
         },
         {
           title: "Dati trattati",
           body: [
-            "Trattiamo dati identificativi e di contatto, dati organizzativi, account utente, ruoli e permessi, metadata di fatturazione, registri audit, log tecnici, eventi di sicurezza e contenuti caricati come evidenze o documenti.",
+            "Trattiamo dati identificativi e di contatto, dati organizzativi, account utente, ruoli e permessi, metadati di fatturazione, registri audit, log tecnici, eventi di sicurezza e contenuti caricati come evidenze o documenti.",
             "Per i visitatori del sito trattiamo dati tecnici di base, lingua, impostazioni cookie e misurazione del traffico solo nei limiti consentiti dalle impostazioni cookie.",
             "Le integrazioni collegate possono trattare dati tecnici dai sistemi connessi, come stato MFA, configurazioni di sicurezza, metadata repository, risultati di controlli cloud e timestamp di sincronizzazione.",
           ],

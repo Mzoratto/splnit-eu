@@ -114,11 +114,11 @@ export const publicTrustCopy: Record<Locale, PublicTrustCopy> = {
       privacyDescription:
         "Dotazy k ochraně osobních údajů, DPA a subdodavatelům posílejte na privacy kanál.",
       privacyMeta: "DPA a privacy dotazy · odpověď obvykle do 2 pracovních dnů",
-      privacyTitle: "Privacy contact",
+      privacyTitle: "Kontakt pro soukromí",
       vendorDescription: (orgName) =>
         `Procurement nebo bezpečnostní tým může požádat o detailnější odpovědi k ${orgName}.`,
       vendorMeta: "Odpověď obvykle do 2 pracovních dnů",
-      vendorTitle: "Vendor risk assessment",
+      vendorTitle: "Hodnocení rizik dodavatele",
     },
     detail: {
       aboutEyebrow: "REGULATION CONTEXT",
@@ -160,14 +160,14 @@ export const publicTrustCopy: Record<Locale, PublicTrustCopy> = {
       home: "Splnit.eu home",
       lastVerified: "Naposledy ověřeno",
       nextTest: "další test",
-      privacy: "Privacy",
+      privacy: "Soukromí",
       status: "status page",
-      terms: "Terms",
+      terms: "Podmínky",
     },
     frameworkCard: {
       auto: "Auto",
       inProgress: "probíhá",
-      lastAssessed: "Last assessed:",
+      lastAssessed: "Poslední hodnocení:",
       notApplicable: "není relevantní",
       regulatorPrefix: "Český regulátor",
       verified: "ověřeno",
@@ -189,7 +189,7 @@ export const publicTrustCopy: Record<Locale, PublicTrustCopy> = {
         "Skóre je agregované z kontrol v rozsahu. Veřejná stránka zobrazuje souhrny kategorií, ne jednotlivé testy nebo názvy důkazů.",
       frameworksEyebrow: "FRAMEWORKS",
       frameworksTitle: "Stav EU předpisů",
-      heroEyebrow: "TRUST CENTER · VERIFIED CONTINUOUSLY",
+      heroEyebrow: "TRUST CENTER · PRŮBĚŽNĚ OVĚŘOVÁNO",
       heroTitle: (orgName, controls, frameworks) =>
         `${orgName} průběžně testuje ${controls} bezpečnostních kontrol napříč ${frameworks} EU předpisy.`,
       metadataDescription: (orgName) =>
@@ -204,7 +204,7 @@ export const publicTrustCopy: Record<Locale, PublicTrustCopy> = {
     topbar: {
       back: "Zpět",
       homeAria: "Přejít na homepage Splnit.eu",
-      verifiedBy: "Verified by Splnit.eu",
+      verifiedBy: "Spravováno pomocí Splnit.eu",
     },
   },
   "en-EU": {
@@ -309,7 +309,7 @@ export const publicTrustCopy: Record<Locale, PublicTrustCopy> = {
     topbar: {
       back: "Back",
       homeAria: "Go to Splnit.eu homepage",
-      verifiedBy: "Verified by Splnit.eu",
+      verifiedBy: "Managed with Splnit.eu",
     },
   },
   "it-IT": {
@@ -350,7 +350,7 @@ export const publicTrustCopy: Record<Locale, PublicTrustCopy> = {
       disclosureTitle: "Perché non mostriamo i singoli controlli?",
       effective: "efficace da",
       infoEffective: "Data di efficacia",
-      infoLaw: "Legge ceca",
+      infoLaw: "Legge o riferimento",
       infoMaxPenalty: "Sanzione massima",
       infoRegulator: "Regolatore",
       lastAssessed: "Ultima valutazione",
@@ -379,7 +379,7 @@ export const publicTrustCopy: Record<Locale, PublicTrustCopy> = {
       inProgress: "in corso",
       lastAssessed: "Ultima valutazione:",
       notApplicable: "non applicabile",
-      regulatorPrefix: "Regolatore ceco",
+      regulatorPrefix: "Autorità competente",
       verified: "verificati",
       viewDetails: "Vedi dettagli framework",
     },
@@ -414,7 +414,7 @@ export const publicTrustCopy: Record<Locale, PublicTrustCopy> = {
     topbar: {
       back: "Indietro",
       homeAria: "Vai alla homepage Splnit.eu",
-      verifiedBy: "Verified by Splnit.eu",
+      verifiedBy: "Gestito con Splnit.eu",
     },
   },
 };

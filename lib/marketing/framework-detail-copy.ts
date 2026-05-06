@@ -458,7 +458,7 @@ const italianDetails: Record<string, FrameworkDetailCopy> = {
     deadline: "Ottobre 2024",
     law: "D.Lgs. 138/2024",
     hero:
-      "NIS2 in Italia è recepita dal D.Lgs. 138/2024 e vigilata da ACN — Agenzia per la Cybersicurezza Nazionale. Splnit.eu traduce obblighi, riferimenti ACN e indicazioni AGID — Agenzia per l'Italia Digitale applicabili in controlli, evidenze e documenti per PMI italiane.",
+      "NIS2 in Italia è recepita dal D.Lgs. 138/2024 e vigilata da ACN — Agenzia per la Cybersicurezza Nazionale. Splnit.eu traduce obblighi e fonti verificate in controlli, evidenze e documenti per PMI italiane.",
     appliesTo: [
       "Organizzazioni medie e grandi nei settori previsti da NIS2, di norma da 50 dipendenti o 10 milioni EUR di fatturato.",
       "Infrastrutture digitali, cloud, servizi IT gestiti, marketplace online e altri fornitori digitali.",
@@ -528,11 +528,11 @@ const italianDetails: Record<string, FrameworkDetailCopy> = {
     resources: ["Checklist NIS2", "Mappa obblighi NIS2", "Template incident log"],
   },
   "eu-ai-act": {
-    regulator: "AGCOM/MIMIT (da confermare)",
+    regulator: "Autorità nazionali italiane da confermare",
     deadline: "Agosto 2026",
     law: "Regolamento (UE) 2024/1689",
     hero:
-      "L'EU AI Act classifica i sistemi AI in base al rischio. In Italia l'autorità nazionale resta da confermare tra AGCOM/MIMIT; Splnit.eu mantiene questo punto esplicito e prepara inventario, AI literacy, trasparenza e controlli per i casi ad alto rischio.",
+      "L'EU AI Act classifica i sistemi AI in base al rischio. In Italia l'autorità nazionale resta da confermare; Splnit.eu mantiene questo punto esplicito e prepara inventario, AI literacy, trasparenza e controlli per i casi ad alto rischio.",
     appliesTo: [
       "Aziende che usano AI per HR, finanza, scoring, sicurezza, customer support o supporto decisionale interno.",
       "Team SaaS che offrono funzionalità AI a clienti nell'UE.",
@@ -824,7 +824,7 @@ const italianDetails: Record<string, FrameworkDetailCopy> = {
     resources: ["Checklist CSRD readiness", "Inventario dati ESG", "Questionario fornitori"],
   },
   dora: {
-    regulator: "Autorità finanziaria",
+    regulator: "Banca d'Italia / IVASS / CONSOB, a seconda del soggetto",
     deadline: "Gennaio 2025",
     law: "Regolamento (UE) 2022/2554",
     hero:
@@ -865,17 +865,17 @@ const italianDetails: Record<string, FrameworkDetailCopy> = {
       {
         violation: "Framework rischio ICT debole",
         maximum: "Dipende dalla legge nazionale",
-        enforcer: "Autorità finanziaria",
+        enforcer: "Banca d'Italia / IVASS / CONSOB, a seconda del soggetto",
       },
       {
         violation: "Incidente ICT rilevante non segnalato",
         maximum: "Dipende dall'impatto",
-        enforcer: "Autorità finanziaria",
+        enforcer: "Banca d'Italia / IVASS / CONSOB, a seconda del soggetto",
       },
       {
         violation: "Controllo fornitori insufficiente",
         maximum: "Ordine di remediation o sanzioni",
-        enforcer: "Autorità finanziaria",
+        enforcer: "Banca d'Italia / IVASS / CONSOB, a seconda del soggetto",
       },
     ],
     splnitHelps: [

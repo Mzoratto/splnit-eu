@@ -265,13 +265,13 @@ const REGULATION_META: Record<
       effectiveDate: "Srpen 2026",
       law: "Nařízení (EU) 2024/1689",
       maxPenalty: "Až €35M nebo 7% obratu",
-      regulator: "ČTÚ",
+      regulator: "EU / národní orgány (bude potvrzeno)",
     },
     csrd: {
       effectiveDate: "Leden 2024",
       law: "Směrnice (EU) 2022/2464",
       maxPenalty: "Dle národní transpozice",
-      regulator: "MŽP",
+      regulator: "Národní ESG dohled",
     },
     gdpr: {
       effectiveDate: "Květen 2018",
@@ -297,13 +297,13 @@ const REGULATION_META: Record<
       effectiveDate: "August 2026",
       law: "Regulation (EU) 2024/1689",
       maxPenalty: "Up to €35M or 7% of turnover",
-      regulator: "ČTÚ",
+      regulator: "EU / národní orgány (bude potvrzeno)",
     },
     csrd: {
       effectiveDate: "January 2024",
       law: "Directive (EU) 2022/2464",
       maxPenalty: "According to national transposition",
-      regulator: "MŽP",
+      regulator: "Národní ESG dohled",
     },
     gdpr: {
       effectiveDate: "May 2018",
@@ -329,13 +329,13 @@ const REGULATION_META: Record<
       effectiveDate: "Agosto 2026",
       law: "Regolamento (UE) 2024/1689",
       maxPenalty: "Fino a €35M o 7% del fatturato",
-      regulator: "ČTÚ",
+      regulator: "EU / národní orgány (bude potvrzeno)",
     },
     csrd: {
       effectiveDate: "Gennaio 2024",
       law: "Direttiva (UE) 2022/2464",
       maxPenalty: "Secondo la trasposizione nazionale",
-      regulator: "MŽP",
+      regulator: "Národní ESG dohled",
     },
     gdpr: {
       effectiveDate: "Maggio 2018",

@@ -174,8 +174,8 @@ assert.match(
 const czRecordOfUse = resolvePolicyTemplate("record_of_use", czTenant);
 assert.match(
   collectTemplateText(czRecordOfUse),
-  /ČTÚ/,
-  "Czech AI Act templates should materialize the Czech telecom authority",
+  /Příslušný národní orgán|EU \/ národní orgány/,
+  "Czech AI Act templates should avoid unconfirmed regulator claims",
 );
 
 assert.throws(

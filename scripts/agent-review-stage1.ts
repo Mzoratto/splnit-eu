@@ -107,8 +107,8 @@ function getJurisdictionRegulator(
   }
 
   if (framework === "eu_ai_act") {
-    if (jurisdiction === "it") return "AGCOM/MIMIT (da confermare)";
-    if (jurisdiction === "cz") return "ČTÚ (k potvrzení)";
+    if (jurisdiction === "it") return "Autorità nazionali italiane da confermare";
+    if (jurisdiction === "cz") return "Příslušný národní orgán (bude potvrzeno)";
   }
 
   return fallback;

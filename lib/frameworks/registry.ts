@@ -5,7 +5,7 @@ export type FrameworkSeed = {
   nameCs: string;
   nameEn: string;
   descriptionCs: string;
-  regulator: "NÚKIB" | "ČTÚ" | "ÚOOÚ" | "ISO" | "MŽP";
+  regulator: string;
   mandatoryDeadline: string | null;
   version: string;
 };
@@ -27,7 +27,7 @@ export const FRAMEWORK_LIBRARY: FrameworkSeed[] = [
     nameEn: "EU AI Act",
     descriptionCs:
       "Povinnosti nasazovatelů AI systémů, AI gramotnost, vysoce riziková AI a transparentnost.",
-    regulator: "ČTÚ",
+    regulator: "EU / národní orgány (bude potvrzeno)",
     mandatoryDeadline: "2026-08-02",
     version: "Regulation (EU) 2024/1689",
   },
@@ -57,7 +57,7 @@ export const FRAMEWORK_LIBRARY: FrameworkSeed[] = [
     nameEn: "CSRD",
     descriptionCs:
       "ESG reporting, dvojí materialita, datová evidence a dodavatelské dotazníky.",
-    regulator: "MŽP",
+    regulator: "Národní ESG dohled",
     mandatoryDeadline: null,
     version: "Directive (EU) 2022/2464",
   },

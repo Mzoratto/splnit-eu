@@ -47,7 +47,7 @@ export const frameworkCards: FrameworkCard[] = [
     slug: "eu-ai-act",
     name: "EU AI Act",
     icon: "solar:cpu-bolt-linear",
-    regulator: "ČTÚ",
+    regulator: "EU / národní orgány (bude potvrzeno)",
     deadline: "Srpen 2026",
     status: "available",
     description: "Povinnosti pro nasazovatele AI systémů.",
@@ -74,7 +74,7 @@ export const frameworkCards: FrameworkCard[] = [
     slug: "csrd",
     name: "CSRD",
     icon: "solar:leaf-linear",
-    regulator: "MŽP",
+    regulator: "Národní ESG dohled",
     deadline: "2026+",
     status: "available",
     description: "ESG reporting pro dodavatele velkých korporací.",
@@ -205,17 +205,17 @@ export const frameworkDetails: FrameworkDetail[] = [
       {
         violation: "Zakázané AI praktiky",
         maximum: "35 mil. EUR nebo 7 % obratu",
-        enforcer: "ČTÚ",
+        enforcer: "Příslušný národní orgán",
       },
       {
         violation: "High-risk povinnosti",
         maximum: "15 mil. EUR nebo 3 % obratu",
-        enforcer: "ČTÚ",
+        enforcer: "Příslušný národní orgán",
       },
       {
         violation: "Nepravdivé informace regulátorovi",
         maximum: "7,5 mil. EUR nebo 1 % obratu",
-        enforcer: "ČTÚ",
+        enforcer: "Příslušný národní orgán",
       },
     ],
     splnitHelps: [
@@ -424,7 +424,7 @@ export const frameworkDetails: FrameworkDetail[] = [
       {
         violation: "Chybějící nebo nesprávný report",
         maximum: "podle národní úpravy",
-        enforcer: "MŽP / finanční regulátor",
+        enforcer: "Příslušný národní orgán",
       },
       {
         violation: "Neauditovatelná data",

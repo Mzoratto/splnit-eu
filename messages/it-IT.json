@@ -466,7 +466,7 @@
     },
     "regulators": {
       "nis2": "ACN — Agenzia per la Cybersicurezza Nazionale",
-      "ai-act": "AGCOM/MIMIT (da confermare)",
+      "ai-act": "Autorità nazionali italiane da confermare",
       "gdpr": "Garante per la protezione dei dati personali",
       "iso27001": "ISO",
       "csrd": "Autorità ESG nazionale"
@@ -610,8 +610,8 @@
       "statusLine": "Stato {status}."
     },
     "countdown": {
-      "notStarted": "GDPR Art. 33 non attivato",
-      "reported": "Segnalato a {authority} {date}",
+      "notStarted": "GDPR Art. 33 non applicabile",
+      "reported": "Notificato a {authority} {date}",
       "overdue": "Scaduto · scadenza {date}",
       "remaining": "{hours}h rimanenti · scadenza {date}"
     },
@@ -1330,7 +1330,7 @@
   "pricing": {
     "title": "Prezzi trasparenti. Nessuna sorpresa.",
     "subtitle": "Meno di un'ora di consulenza al mese.",
-    "footnote": "Tutti i piani includono dati nell'UE · Nessun costo nascosto · Cancellazione quando volete",
+    "footnote": "Configurazione progettata per regioni UE · Nessun costo nascosto · Cancellazione quando volete",
     "partnerTitle": "Siete consulenti o MSP?",
     "partnerBody": "Clienti illimitati, opzione white-label, badge partner.",
     "partnerPrice": "€299 / mese",
@@ -1366,7 +1366,7 @@
       },
       "starter": {
         "name": "Starter",
-        "description": "Per aziende che prendono la compliance sul serio.",
+        "description": "Per aziende che iniziano un lavoro di compliance strutturato.",
         "cta": "Diventa design partner",
         "features": [
           "2 normative (NIS2 + 1 altra)",
@@ -1381,7 +1381,7 @@
       },
       "business": {
         "name": "Business",
-        "description": "Piattaforma completa per tutto il team.",
+        "description": "Per team che gestiscono la compliance su più framework.",
         "cta": "Contattateci",
         "features": [
           "5 normative",
@@ -1490,7 +1490,7 @@
         "description": "Obblighi di cybersecurity per organizzazioni medie e grandi."
       },
       "eu-ai-act": {
-        "regulator": "AGCOM/MIMIT (da confermare)",
+        "regulator": "Autorità nazionali italiane da confermare",
         "deadline": "Agosto 2026",
         "description": "Obblighi per organizzazioni che usano sistemi AI."
       },

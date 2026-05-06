@@ -466,10 +466,10 @@
     },
     "regulators": {
       "nis2": "NÚKIB",
-      "ai-act": "ČTÚ",
+      "ai-act": "EU / národní orgány (bude potvrzeno)",
       "gdpr": "ÚOOÚ",
       "iso27001": "ISO",
-      "csrd": "MŽP"
+      "csrd": "Národní ESG dohled"
     },
     "index": {
       "eyebrow": "Frameworky",
@@ -610,7 +610,7 @@
       "statusLine": "Stav: {status}."
     },
     "countdown": {
-      "notStarted": "GDPR Art. 33 není spuštěn",
+      "notStarted": "Lhůta podle čl. 33 GDPR není aktivní",
       "reported": "Oznámeno na {authority} {date}",
       "overdue": "Po termínu · lhůta {date}",
       "remaining": "Zbývá {hours} h · lhůta {date}"
@@ -625,7 +625,7 @@
     "statuses": {
       "open": "otevřený",
       "investigating": "vyšetřuje se",
-      "contained": "omezený",
+      "contained": "pod kontrolou",
       "resolved": "vyřešený"
     },
     "wizard": {
@@ -661,8 +661,8 @@
       "nis2NotMarked": "Neoznačeno jako kritický systém.",
       "gdprActive": "Sledování 72hodinové lhůty je aktivní.",
       "gdprNotMarked": "Neoznačeno jako osobní údaje.",
-      "markCybersecurity": "Označit {authority}",
-      "markDataProtection": "Označit {authority}"
+      "markCybersecurity": "Označit hlášení pro {authority}",
+      "markDataProtection": "Označit hlášení pro {authority}"
     }
   },
   "risks": {
@@ -1285,7 +1285,7 @@
     "stepsBody": "Tři kroky od prvního propojení systému k použitelnému balíčku evidence.",
     "featuresTag": "Klíčové funkce",
     "featuresTitle": "Compliance pro IT a compliance týmy.",
-    "featuresBody": "Propojte lokální i globální infrastrukturu. Mapujeme kontroly automaticky na české i mezinárodní standardy.",
+    "featuresBody": "Kontroly jsou mapované na lokální i mezinárodní standardy.",
     "offerTitle": "Nabídka pro prvních 10 firem.",
     "offerBody": "Splnit.eu je v předběžném přístupu. První design partneři získají Business plán na 12 měsíců zdarma a tři týdny řízeného onboardingu přímo se zakladatelem.",
     "offerCta": "Zobrazit předběžný přístup",
@@ -1307,7 +1307,7 @@
       "residencyTitle": "Produkční stack zdokumentovaný",
       "residencyBody": "Produkční provoz používá Vercel pro hosting a Neon Postgres pro databázi. Subdodavatelé a zpracování jsou uvedené v DPA přehledu.",
       "monitoringTitle": "Kontinuální monitoring",
-      "monitoringBody": "Zachyťte výpadky konfigurace ve vašem Microsoft 365 nebo AWS okamžitě.",
+      "monitoringBody": "Zachyťte konfigurační odchylky v Microsoft 365 nebo AWS okamžitě.",
       "documentsTitle": "Automatické dokumenty",
       "documentsBody": "Generujte pracovní dokumenty a balíčky evidence, které můžete předat právníkovi, auditorovi nebo konzultantovi k finální kontrole."
     },
@@ -1330,10 +1330,10 @@
   "pricing": {
     "title": "Transparentní ceny. Žádná překvapení.",
     "subtitle": "Méně než jedna hodina konzultanta měsíčně.",
-    "footnote": "Všechny plány zahrnují EU datové úložiště · Bez skrytých poplatků · Zrušení kdykoliv",
+    "footnote": "Produkční nastavení je navržené pro EU regiony · Bez skrytých poplatků · Zrušení kdykoliv",
     "partnerTitle": "Jste poradce nebo MSP?",
     "partnerBody": "Neomezený počet klientů, white-label možnost, partnerský odznak.",
-    "partnerPrice": "7 475 Kč / měsíc (€299)",
+    "partnerPrice": "€299 / měsíc",
     "partnerCta": "Zjistit více →",
     "comparisonTag": "Srovnání funkcí",
     "comparisonTitle": "Vyberte podle hloubky automatizace.",
@@ -1349,7 +1349,7 @@
       "billingToggle": "Přepnout fakturaci",
       "saving": "Ušetřete 2 měsíce",
       "featured": "Nejoblíbenější",
-      "currency": "Kč",
+      "currency": "€",
       "monthlySuffix": "/měsíc",
       "annualSuffix": "/měsíc při roční fakturaci",
       "free": {
@@ -1465,13 +1465,13 @@
     "pageName": "Splnit.eu EU Předpisy",
     "jsonLdDescription": "Přehled EU předpisů pro české firmy a automatizace souladu v platformě Splnit.eu.",
     "title": "Které EU předpisy se vás týkají?",
-    "subtitle": "Průvodce všemi EU předpisy, které platí pro česká MSP — s konkrétními termíny, pokutami a kroky k souladu.",
+    "subtitle": "Srozumitelný průvodce EU povinnostmi pro MSP — s termíny, rizikem vymáhání a praktickými dalšími kroky.",
     "learnMore": "Zjistit více →",
     "timelineTag": "Regulatorní timeline",
     "timelineTitle": "Termíny, které nesmíte minout.",
     "currentMilestone": "Aktuální milník",
     "downloadTitle": "Stáhněte si zdarma",
-    "downloadSubtitle": "Kompletní přehled povinností, šablony dokumentů a checklist pro každý předpis.",
+    "downloadSubtitle": "Přehled povinností, šablony dokumentů a checklisty pro jednotlivé předpisy.",
     "downloadCta": "Stáhnout vše zdarma",
     "resources": [
       "NIS2 checklist",
@@ -1490,7 +1490,7 @@
         "description": "Kybernetická bezpečnost pro střední a velké firmy."
       },
       "eu-ai-act": {
-        "regulator": "ČTÚ",
+        "regulator": "EU / národní orgány (bude potvrzeno)",
         "deadline": "Srpen 2026",
         "description": "Povinnosti pro nasazovatele AI systémů."
       },
@@ -1505,7 +1505,7 @@
         "description": "Mezinárodní standard pro informační bezpečnost."
       },
       "csrd": {
-        "regulator": "MŽP",
+        "regulator": "Národní ESG dohled",
         "deadline": "2026+",
         "description": "ESG reporting pro dodavatele velkých korporací."
       },
@@ -1530,7 +1530,7 @@
       },
       {
         "date": "Srpen 2026",
-      "title": "Vysoce rizikové AI systémy musí být v souladu"
+        "title": "Vysoce rizikové AI systémy musí být v souladu"
       },
       {
         "date": "Srpen 2027",

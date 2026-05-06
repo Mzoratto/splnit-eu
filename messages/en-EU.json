@@ -599,8 +599,8 @@
       "description": "Demo incident covering unauthorized access to a SaaS admin panel and potential personal data exposure."
     },
     "actions": {
-      "cybersecurityPdf": "Cybersecurity authority PDF",
-      "dataProtectionPdf": "Data protection authority PDF"
+      "cybersecurityPdf": "{authority} PDF",
+      "dataProtectionPdf": "{authority} PDF"
     },
     "metrics": {
       "openTitle": "Open",
@@ -661,8 +661,8 @@
       "nis2NotMarked": "Not marked as a critical system.",
       "gdprActive": "72-hour deadline tracking is active.",
       "gdprNotMarked": "Not marked as personal data.",
-      "markCybersecurity": "Mark cybersecurity report",
-      "markDataProtection": "Mark data protection report"
+      "markCybersecurity": "Mark report to {authority}",
+      "markDataProtection": "Mark report to {authority}"
     }
   },
   "risks": {

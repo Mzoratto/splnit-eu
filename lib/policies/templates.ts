@@ -308,7 +308,7 @@ export const POLICY_TEMPLATES: PolicyTemplate[] = [
           "Datum",
           "Popis incidentu",
           "Přijatá opatření",
-          "Hlášen {{jurisdiction.telecomAuthority}}",
+          "Hlášen: Příslušný národní orgán",
         ],
       },
       {
