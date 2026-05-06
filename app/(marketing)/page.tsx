@@ -122,12 +122,7 @@ export default async function HomePage() {
               </h1>
 
               <p className="mx-auto mb-10 max-w-lg text-sm leading-6 text-zinc-600 md:max-w-2xl md:text-xl md:leading-relaxed">
-                <span className="md:hidden">
-                  {t("mobileLead")}
-                </span>
-                <span className="hidden md:inline">
-                  {t("lead")}
-                </span>
+                {t("lead")}
               </p>
 
               <div className="mb-6 flex flex-col items-center justify-center gap-3 sm:flex-row">

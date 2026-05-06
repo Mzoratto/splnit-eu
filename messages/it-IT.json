@@ -1245,7 +1245,6 @@
     },
     "about": {
       "tag": "Chi siamo",
-      "photoPlaceholder": "Foto del fondatore",
       "title": "Chi c'è dietro Splnit.eu.",
       "body": "Splnit.eu è un prodotto mirato, guidato dal fondatore, costruito da un ingegnere IT senior con esperienza approfondita nei framework di compliance europei.",
       "primaryCta": "Diventate design partner",
@@ -1273,7 +1272,6 @@
     "badge": "Compliance EU per le PMI italiane",
     "titleLine1": "Compliance chiara nella vostra giurisdizione.",
     "titleLine2": "",
-    "mobileLead": "NIS2, EU AI Act, GDPR e ISO 27001 con citazioni normative pronte per il vostro revisore.",
     "lead": "NIS2, EU AI Act, GDPR e ISO 27001 con citazioni normative pronte per il vostro revisore. Costruita per le PMI europee in italiano, ceco e inglese.",
     "primaryCta": "Diventate design partner",
     "secondaryCta": "Guardate la demo",

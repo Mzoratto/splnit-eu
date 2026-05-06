@@ -240,8 +240,16 @@ assert.equal(
 const cs = getMessagesForLocale("cs-CZ");
 assert.equal(cs.app.tagline, "Automatizace compliance pro evropské MSP");
 assert.equal(cs.shell.trustCenter, "Trust Center");
+assert.equal(cs.marketing.nav.regulations, "EU Předpisy");
+assert.equal(cs.marketing.footer.operator, "Splnit.eu — OSVČ, Olomouc");
+assert.equal(cs.marketing.footer.copyright, "© 2026 Splnit.eu · OSVČ, Olomouc");
 assert.equal(cs.marketing.about.tag, "O nás");
 assert.equal(cs.marketing.about.whyTag, "Proč");
+assert.equal(
+  cs.marketing.about.whyTitle,
+  "Compliance postavená vývojářem, respektující lokální legislativu.",
+);
+assert.equal(cs.home.trustBadges.onboarding, "Onboarding se zakladatelem");
 assert.equal(cs.evidence.title, "Archiv evidence");
 assert.equal(cs.frameworkWizard.submit, "Spustit vyhodnocení");
 for (const questionId of frameworkQuestionIds) {

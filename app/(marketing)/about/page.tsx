@@ -44,7 +44,7 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 const realTodayKeys = ["solo", "focus", "legalReview", "noFakeProof"];
-const notYetKeys = ["legalAdvice", "enterprise", "certification", "entity"];
+const notYetKeys = ["legalAdvice", "enterprise", "certification"];
 
 export default async function AboutPage() {
   const locale = normalizeLocale(await getLocale()) ?? "cs-CZ";
@@ -55,12 +55,12 @@ export default async function AboutPage() {
       <main>
         <section data-hero className="px-5 pb-20 pt-32">
           <div className="mx-auto grid max-w-7xl gap-12 lg:grid-cols-[0.9fr_1fr] lg:items-center">
-            <div className="aspect-[4/5] overflow-hidden rounded-[28px] border border-zinc-200 bg-zinc-100">
-              <div className="flex h-full flex-col items-center justify-center gap-4 text-zinc-400">
+            <div
+              className="aspect-[4/5] overflow-hidden rounded-[28px] border border-zinc-200 bg-zinc-100"
+              aria-hidden="true"
+            >
+              <div className="flex h-full items-center justify-center text-zinc-400">
                 <Icon icon="solar:user-rounded-linear" className="text-6xl" />
-                <span className="text-sm font-medium">
-                  {t("photoPlaceholder")}
-                </span>
               </div>
             </div>
 

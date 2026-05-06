@@ -1167,7 +1167,7 @@
   "marketing": {
     "nav": {
       "platform": "Platforma",
-      "regulations": "EU předpisy",
+      "regulations": "EU Předpisy",
       "blog": "Blog",
       "earlyAccess": "Předběžný přístup",
       "about": "O nás",
@@ -1245,7 +1245,6 @@
     },
     "about": {
       "tag": "O nás",
-      "photoPlaceholder": "Foto zakladatele",
       "title": "Kdo stojí za Splnit.eu.",
       "body": "Splnit.eu je zaměřená platforma vedená zakladatelem, postavená seniorním IT inženýrem s hlubokou znalostí evropských compliance frameworků.",
       "primaryCta": "Stát se design partnerem",
@@ -1273,7 +1272,6 @@
     "badge": "Compliance EU pro české firmy",
     "titleLine1": "Compliance srozumitelná ve vaší jurisdikci.",
     "titleLine2": "",
-    "mobileLead": "NIS2, EU AI Act, GDPR a ISO 27001 s citacemi předpisů, které váš auditor očekává.",
     "lead": "NIS2, EU AI Act, GDPR a ISO 27001 s citacemi předpisů, které váš auditor očekává. Postaveno pro evropské MSP v italštině, češtině a angličtině.",
     "primaryCta": "Stát se design partnerem",
     "secondaryCta": "Zobrazit demo",

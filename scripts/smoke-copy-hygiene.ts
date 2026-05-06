@@ -24,8 +24,22 @@ const globalForbiddenPatterns = [
   /Splnit Technology/i,
   /Splnit Technology\s+s\.r\.o\.\s*[—-]\s*Ostrava/i,
   /pendingEntity/i,
+  /Finální IČO/i,
+  /Finální OSVČ/i,
+  /ARES odkaz budou doplněn/i,
+  /OSVČ údaje budou doplněn/i,
   /\b200\+\s+(automatic|automated|automatick(?:é|ých|ych)?|testy|tests|kontrol|controls|controlli)/i,
   /\b247\s+(automatic|automated|automatick(?:é|ých|ych)?|testy|tests|kontrol|controls|controlli)/i,
+] as const;
+
+const marketingForbiddenPatterns = [
+  /Splnit Technology/i,
+  /CS\s*\|\s*EN\s*\|\s*DE/i,
+  /platform#integrace/i,
+  /Founder photo before launch/i,
+  /Founder-led onboarding/i,
+  /Finální IČO/i,
+  /OSVČ údaje budou doplněné/i,
 ] as const;
 
 const checkedFiles = [
@@ -42,6 +56,13 @@ const globalCheckedFiles = [
   ...listSourceFiles("components"),
   ...listSourceFiles("lib"),
   ...listSourceFiles("public"),
+];
+
+const marketingCheckedFiles = [
+  ...listSourceFiles("app/(marketing)"),
+  "components/nav.tsx",
+  "components/footer.tsx",
+  "components/locale-switcher.tsx",
 ];
 
 function listSourceFiles(directory: string): string[] {
@@ -79,6 +100,18 @@ for (const file of globalCheckedFiles) {
 
     if (match) {
       failures.push(`${file}: public honesty guard matched ${pattern}`);
+    }
+  }
+}
+
+for (const file of marketingCheckedFiles) {
+  const content = readFileSync(file, "utf8");
+
+  for (const pattern of marketingForbiddenPatterns) {
+    const match = content.match(pattern);
+
+    if (match) {
+      failures.push(`${file}: marketing copy guard matched ${pattern}`);
     }
   }
 }
