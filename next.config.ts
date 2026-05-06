@@ -76,6 +76,12 @@ const nextConfig: NextConfig = {
       },
     ];
   },
+  outputFileTracingIncludes: {
+    "/api/internal/production-maintenance": [
+      "./lib/db/migrations/**/*.sql",
+      "./lib/db/migrations/meta/_journal.json",
+    ],
+  },
   outputFileTracingRoot: process.cwd(),
   poweredByHeader: false,
 };
