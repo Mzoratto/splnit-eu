@@ -119,6 +119,7 @@ assert.equal(en.clientDetailPage.back, "Back to clients");
 assert.equal(en.clientDetailPage.eyebrow, "Client view");
 assert.equal(en.controlsPage.index.title, "Control library");
 assert.equal(en.controlsPage.detail.saveStatus, "Save status");
+assert.equal(en.controlsPage.statuses.fail, "Not passed");
 assert.equal(en.dashboard.metrics.scoreTitle, "Compliance score");
 assert.equal(en.dashboard.nukib.title, "Regulatory feed");
 assert.doesNotMatch(en.dashboard.nukib.title, /NÚKIB|ÚOOÚ/);
@@ -126,9 +127,11 @@ assert.doesNotMatch(en.dashboard.demoUpdates.nukibMethodology.title, /NÚKIB|ÚO
 assert.equal(en.clientsPage.title, "Client dashboard");
 assert.equal(en.clientsPage.form.save, "Save link");
 assert.equal(en.evidence.filters.apply, "Apply filters");
+assert.equal(en.evidence.statuses.fail, "Not passed");
 assert.equal(en.frameworks.index.title, "Regulations and standards");
+assert.equal(en.frameworks.index.enrolledTitle, "Active frameworks");
 assert.equal(en.frameworks.regulators.nis2, "National cybersecurity authority");
-assert.equal(en.frameworkWizard.submit, "Assess");
+assert.equal(en.frameworkWizard.submit, "Run assessment");
 for (const questionId of frameworkQuestionIds) {
   assert.ok(
     (en.frameworkWizard.questions as Record<string, { text: string }>)[questionId]?.text,
@@ -157,7 +160,7 @@ assert.equal(en.risks.title, "Risks");
 assert.equal(en.risks.form.add, "Add risk");
 assert.equal(en.teamPage.title, "Access and training");
 assert.equal(en.teamPage.open, "Open");
-assert.equal(en.trustCenterSettings.title, "Public compliance centre");
+assert.equal(en.trustCenterSettings.title, "Public compliance center");
 assert.equal(en.trustCenterSettings.saveSettings, "Save settings");
 assert.equal(en.vendorsPage.title, "Vendor risk");
 assert.equal(en.vendorsPage.form.create, "Create");
@@ -173,11 +176,12 @@ assert.equal(it.shell.upgradePlan, "Aggiorna piano");
 assert.equal(it.appError.retry, "Riprova");
 assert.equal(it.accessReviews.title, "Revisioni accessi");
 assert.equal(it.accessReviews.form.start, "Carica utenti");
-assert.equal(it.auditLogPage.records.title, "Record");
+assert.equal(it.auditLogPage.records.title, "Voci del log");
 assert.equal(it.billingSettings.monthSuffix, "/mese");
 assert.equal(it.clientDetailPage.back, "Torna ai clienti");
 assert.equal(it.controlsPage.index.title, "Libreria controlli");
 assert.equal(it.controlsPage.detail.saveStatus, "Salva stato");
+assert.equal(it.controlsPage.statuses.fail, "Non superato");
 assert.equal(it.dashboard.metrics.scoreTitle, "Punteggio compliance");
 assert.equal(it.dashboard.nukib.badge, "Monitor UE");
 assert.equal(it.dashboard.nukib.title, "Feed normativo");
@@ -187,6 +191,7 @@ assert.doesNotMatch(it.dashboard.demoUpdates.nukibMethodology.title, /NÚKIB|ÚO
 assert.equal(it.clientsPage.title, "Dashboard clienti");
 assert.equal(it.clientsPage.form.save, "Salva collegamento");
 assert.equal(it.evidence.filters.apply, "Applica filtri");
+assert.equal(it.evidence.statuses.fail, "Non superato");
 assert.equal(it.frameworks.index.title, "Normative e standard");
 assert.equal(
   it.frameworks.regulators.nis2,
@@ -233,8 +238,22 @@ assert.equal(
 );
 
 const cs = getMessagesForLocale("cs-CZ");
+assert.equal(cs.app.tagline, "Automatizace compliance pro evropské MSP");
+assert.equal(cs.shell.trustCenter, "Trust Center");
 assert.equal(cs.marketing.about.tag, "O nás");
 assert.equal(cs.marketing.about.whyTag, "Proč");
+assert.equal(cs.evidence.title, "Archiv evidence");
+assert.equal(cs.frameworkWizard.submit, "Spustit vyhodnocení");
+for (const questionId of frameworkQuestionIds) {
+  assert.ok(
+    (cs.frameworkWizard.questions as Record<string, { text: string }>)[questionId]?.text,
+    `cs-CZ should translate framework wizard question ${questionId}`,
+  );
+}
+assert.equal(
+  (cs.frameworkWizard.questions as Record<string, { text: string }>).mfa.text,
+  "Je MFA povinná pro všechny uživatelské účty?",
+);
 assert.equal(cs.auditLogPage.title, "Log aktivit");
 assert.equal(cs.trustCenterSettings.requestsTitle, "Žádosti o přístup k dokumentům");
 assert.equal(cs.frameworks.detail.breadcrumb, "Dashboard / Frameworky");

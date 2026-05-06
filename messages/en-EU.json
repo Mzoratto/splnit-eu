@@ -49,14 +49,14 @@
   },
   "appDataNotice": {
     "demoTitle": "Local demo data",
-    "demoBody": "This page is showing local demo data because ENABLE_LOCAL_DEMO_DATA is enabled outside production. Do not treat it as tenant data.",
-    "unavailableTitle": "Workspace data unavailable",
-    "unavailableBody": "Live workspace data could not be loaded. Demo data is not shown in production."
+    "demoBody": "This page is showing local demo data because ENABLE_LOCAL_DEMO_DATA is enabled outside production. Do not treat it as organisation data.",
+    "unavailableTitle": "Organisation data unavailable",
+    "unavailableBody": "Live organisation data could not be loaded. Demo data is not shown in production."
   },
   "billingSettings": {
     "eyebrow": "Billing",
     "title": "Subscription",
-    "subtitle": "Current plan and Stripe customer state for this Clerk organisation.",
+    "subtitle": "Current plan and Stripe customer state for this organisation.",
     "customerPortal": "Customer Portal",
     "currentPlan": "Current plan",
     "frameworks": "Frameworks",
@@ -115,7 +115,7 @@
     "questionRange": "Questions {from}-{to}",
     "answered": "Answered {answered} of {total}",
     "back": "Back",
-    "submit": "Assess",
+    "submit": "Run assessment",
     "next": "Continue",
     "answers": {
       "yes": "Yes",
@@ -170,7 +170,7 @@
       },
       "asset_inventory": {
         "text": "Do you maintain a current inventory of assets and systems?",
-        "help": "Include SaaS, cloud, endpoints, applications, and responsible owners."
+        "help": "Include SaaS, cloud, endpoints, applications, and responsible people."
       },
       "business_continuity": {
         "text": "Do you have a documented business continuity plan?",
@@ -358,7 +358,7 @@
     "greeting": "Good morning",
     "summary": {
       "openFindings": "open findings",
-      "failedControls": "controls failed"
+      "failedControls": "controls not passed"
     },
     "aiActWizardCta": "Start AI Act wizard",
     "scoreLabel": "Score",
@@ -367,7 +367,7 @@
       "scoreTitle": "Compliance score",
       "scoreBody": "Average of framework scores and control statuses.",
       "activeFrameworks": "Active frameworks",
-      "failedControls": "Failed controls",
+      "failedControls": "Controls not passed",
       "lastChange": "Latest change"
     },
     "frameworks": {
@@ -438,7 +438,7 @@
     },
     "statuses": {
       "pass": "Passed",
-      "fail": "Failed",
+      "fail": "Not passed",
       "manualReview": "Partial",
       "unknown": "Unknown"
     },
@@ -475,11 +475,11 @@
       "eyebrow": "Frameworks",
       "title": "Regulations and standards",
       "subtitle": "Choose a framework, run an assessment, and track mapped control status.",
-      "enrolledTitle": "Enrolled frameworks",
+      "enrolledTitle": "Active frameworks",
       "enrolledSubtitle": "Frameworks currently active in this organisation.",
-      "availableTitle": "Available to enroll",
-      "availableSubtitle": "Library frameworks are shown as setup options, not active tenant scope.",
-      "emptyEnrolled": "No frameworks are enrolled yet.",
+      "availableTitle": "Available to activate",
+      "availableSubtitle": "Library frameworks are shown as setup options, not active organisation scope.",
+      "emptyEnrolled": "No frameworks are active yet.",
       "scoreLabel": "Score",
       "statusLabel": "Status",
       "open": "Open",
@@ -536,12 +536,12 @@
       "statusTitle": "Status",
       "statusBody": "OAuth flow and token storage for this provider are not active yet.",
       "plannedChecksTitle": "Planned checks",
-      "plannedChecksBody": "These checks are not connected to the runner registry yet.",
+      "plannedChecksBody": "These checks are not connected to automated run history yet.",
       "dependencyTitle": "Dependency",
       "dependencyPhase": "Phase 2+",
-      "dependencyBody": "Add this adapter after the current provider set has been validated.",
+      "dependencyBody": "Add this connector after the current provider set has been validated.",
       "scopeTitle": "Scope",
-      "scopeItemStatus": "Planned. Production runner is not enabled yet.",
+      "scopeItemStatus": "Planned. Production checks are not enabled yet.",
       "googleWorkspace": {
         "description": "Google Workspace audit logs, Drive sharing, and administrator account checks are planned after Microsoft 365, GitHub, and AWS integrations are validated.",
         "checks": [
@@ -558,7 +558,7 @@
         "lastErrorEmpty": "No latest error",
         "automatedTests": "Automated tests",
         "runResults": "Run results",
-        "runResultsEmpty": "Results will appear after the first runner execution.",
+        "runResultsEmpty": "Results will appear after the first automated run.",
         "testSuite": "Test suite"
       },
       "aws": {
@@ -593,7 +593,7 @@
     "noDate": "not set",
     "eyebrow": "Incident management",
     "title": "Incidents",
-    "subtitle": "NIS2 and GDPR incident log with a 72h countdown, regulatory checklists, and notification exports.",
+    "subtitle": "NIS2 and GDPR incident log with 72-hour deadline tracking, regulatory checklists, and notification exports.",
     "demo": {
       "title": "Suspicious admin access",
       "description": "Demo incident covering unauthorized access to a SaaS admin panel and potential personal data exposure."
@@ -659,7 +659,7 @@
       "title": "Regulatory checklist",
       "nis2Required": "Requires impact assessment and notification decision.",
       "nis2NotMarked": "Not marked as a critical system.",
-      "gdprActive": "72h countdown is active.",
+      "gdprActive": "72-hour deadline tracking is active.",
       "gdprNotMarked": "Not marked as personal data.",
       "markCybersecurity": "Mark cybersecurity report",
       "markDataProtection": "Mark data protection report"
@@ -692,8 +692,8 @@
     },
     "seed": {
       "title": "Common SMB risks",
-      "body": "Seeds 10 common SMB risks when the register is empty.",
-      "button": "Seed register"
+      "body": "Add 10 common SMB risks when the register is empty.",
+      "button": "Add common risks"
     },
     "matrix": {
       "title": "Risk matrix",
@@ -830,7 +830,7 @@
     "modules": {
       "accessReviews": {
         "title": "Access reviews",
-        "description": "Quarterly keep/revoke/modify workflow for Microsoft 365 and GitHub users."
+        "description": "Quarterly keep, revoke, or modify workflow for Microsoft 365 and GitHub users."
       },
       "roleAssignments": {
         "title": "Role assignments",
@@ -928,10 +928,10 @@
       "title": "Control library",
       "subtitle": "Shared controls connect frameworks, manual evidence, and automated tests.",
       "activeTitle": "Controls in scope",
-      "activeSubtitle": "Controls mapped to frameworks enrolled by this organisation.",
+      "activeSubtitle": "Controls mapped to frameworks active in this organisation.",
       "libraryTitle": "Available control library",
-      "librarySubtitle": "Reference controls available through framework enrollment.",
-      "emptyActive": "No controls are in scope yet because no framework is enrolled.",
+      "librarySubtitle": "Reference controls available when a framework is activated.",
+      "emptyActive": "No controls are in scope yet because no framework is active.",
       "frameworksLabel": "Frameworks",
       "statusLabel": "Status",
       "automated": "Automated",
@@ -965,7 +965,7 @@
     "statuses": {
       "unknown": "Unknown",
       "pass": "Passed",
-      "fail": "Failed",
+      "fail": "Not passed",
       "manual_review": "Partial",
       "not_applicable": "N/A"
     },
@@ -990,7 +990,7 @@
     "noMetadata": "no metadata",
     "eyebrow": "Audit",
     "title": "Activity log",
-    "subtitle": "Append-only history of compliance actions for the active Clerk organisation.",
+    "subtitle": "Locked history of compliance actions for the active organisation.",
     "exportCsv": "CSV export",
     "filters": {
       "title": "Filters",
@@ -1051,7 +1051,7 @@
     "statuses": {
       "active": "active",
       "unknown": "unknown",
-      "fail": "failed",
+      "fail": "not passed",
       "manual_review": "partial"
     },
     "categories": {
@@ -1074,7 +1074,7 @@
     "noDate": "not set",
     "eyebrow": "Access reviews",
     "title": "Access reviews",
-    "subtitle": "Pull Entra ID and GitHub users, record keep/revoke/modify decisions, and export CSV evidence for ISO 27001 A.9.2.3.",
+    "subtitle": "Pull Entra ID and GitHub users, record keep, revoke, or modify decisions, and export CSV evidence for ISO 27001 A.9.2.3.",
     "exportCsv": "Export CSV",
     "metrics": {
       "activeTitle": "Active reviews",
@@ -1135,7 +1135,7 @@
   "trustCenterSettings": {
     "never": "never",
     "eyebrow": "Trust Center",
-    "title": "Public compliance centre",
+    "title": "Public compliance center",
     "subtitle": "Configure the public page, visible frameworks, and document access.",
     "openPublicPage": "Open public page",
     "configuration": "Configuration",
@@ -1146,7 +1146,7 @@
     "enableFrameworkDetail": "Enable framework detail",
     "showPercentageScores": "Show percentage scores",
     "visibleFrameworks": "Visible frameworks",
-    "visibleFrameworksEmpty": "No enrolled frameworks are available yet.",
+    "visibleFrameworksEmpty": "No active frameworks are available yet.",
     "publicPageUnavailable": "Set a public slug before opening the public page.",
     "regulatorEmpty": "regulator n/a",
     "scoreLabel": "score",
@@ -1193,9 +1193,9 @@
       "pricing": "Pricing",
       "regulations": "Regulations",
       "contact": "Contact",
-      "operator": "Splnit.eu — OSVČ Olomouc",
+      "operator": "Splnit.eu — Czech sole-trader operator, Olomouc",
       "location": "Olomouc, Czech Republic",
-      "copyright": "© 2026 Splnit.eu · OSVČ Olomouc",
+      "copyright": "© 2026 Splnit.eu · Czech sole-trader operator, Olomouc",
       "privacy": "Privacy",
       "terms": "Terms"
     },
@@ -1212,7 +1212,7 @@
       "body": "Splnit.eu is in early access. It is a founder-led platform built in Olomouc for companies that want to shape the product before public launch.",
       "primaryCta": "Apply as a design partner",
       "secondaryCta": "Who's behind it",
-      "filledLabel": "Founding cohort open",
+      "filledLabel": "Initial group open",
       "spotsAvailable": "design partner spots available",
       "emptyProof": "No public references are listed yet. When they exist, they will go on the site only with the customer's permission.",
       "benefitsTitle": "What you get",
@@ -1245,7 +1245,7 @@
     },
     "about": {
       "tag": "About",
-      "photoPlaceholder": "Founder photo before launch",
+      "photoPlaceholder": "Founder photo",
       "title": "Who's behind Splnit.eu.",
       "body": "Splnit.eu is a focused, founder-led platform built by a senior IT engineer with deep experience in European compliance frameworks.",
       "primaryCta": "Become a design partner",
@@ -1265,20 +1265,20 @@
         "legalAdvice": "This is not legal advice, an audit opinion, or certification.",
         "enterprise": "Splnit.eu is not yet an enterprise vendor with a 24/7 SLA and penalties.",
         "certification": "ISO 27001 or SOC 2 certification for Splnit.eu itself is not publicly claimed.",
-        "entity": "Final OSVČ identification details must be added before production launch."
+        "entity": "Operator identification details are published on the legal pages before any contract is signed."
       }
     }
   },
   "home": {
-    "badge": "EU-native compliance for European SMBs",
-    "titleLine1": "Compliance fluent in your jurisdiction.",
+    "badge": "EU compliance for European SMBs",
+    "titleLine1": "Compliance clear in your jurisdiction.",
     "titleLine2": "",
-    "mobileLead": "Native NIS2, EU AI Act, GDPR, and ISO 27001 with the regulatory citations your local auditor expects.",
-    "lead": "Native NIS2, EU AI Act, GDPR, and ISO 27001 with the regulatory citations your local auditor expects. Built for European SMBs in Italian, Czech, and English.",
+    "mobileLead": "NIS2, EU AI Act, GDPR, and ISO 27001 with the regulatory citations your local auditor expects.",
+    "lead": "NIS2, EU AI Act, GDPR, and ISO 27001 with the regulatory citations your local auditor expects. Built for European SMBs in Italian, Czech, and English.",
     "primaryCta": "Become a design partner",
     "secondaryCta": "View demo",
-    "trustLine": "Early access · Direct founder contact · Production stack Vercel + Neon",
-    "partnerTag": "Founding cohort open",
+    "trustLine": "Early access · Direct founder contact · Vercel + Neon infrastructure",
+    "partnerTag": "Initial group open",
     "partnerFilled": "10 design partner spots available",
     "partnerFree": "12 months Business plan free",
     "partnerOnboarding": "Three weeks of founder-led onboarding",
@@ -1286,9 +1286,9 @@
     "stepsTitle": "Set it once. Keep it running.",
     "stepsBody": "Three steps from first system connection to a usable evidence pack.",
     "featuresTag": "Key features",
-    "featuresTitle": "Compliance built for modern teams.",
+    "featuresTitle": "Compliance built for IT and compliance teams.",
     "featuresBody": "Connect local and global infrastructure. Controls are mapped to local and international standards.",
-    "offerTitle": "Founding customer offer for the first 10 companies.",
+    "offerTitle": "Offer for the first 10 companies.",
     "offerBody": "Splnit.eu is in early access. The first design partners get the Business plan free for 12 months and three weeks of guided onboarding directly with the founder.",
     "offerCta": "View early access",
     "referencePlaceholder": "Customer references will be published with explicit consent as design partners complete onboarding.",
@@ -1317,7 +1317,7 @@
       "early": "Early access",
       "dpa": "DPA ready for legal review",
       "residency": "Vercel hosting · Neon Postgres",
-      "onboarding": "Founder-led onboarding"
+      "onboarding": "Founder-guided onboarding"
     }
   },
   "leadCapture": {
@@ -1352,8 +1352,8 @@
       "saving": "Save 2 months",
       "featured": "Most popular",
       "currency": "€",
-      "monthlySuffix": "/ month",
-      "annualSuffix": "/ month annually",
+      "monthlySuffix": "/month",
+      "annualSuffix": "/month, billed annually",
       "free": {
         "name": "Free",
         "description": "Try the platform without commitment.",
@@ -1368,7 +1368,7 @@
       },
       "starter": {
         "name": "Starter",
-        "description": "For companies taking compliance seriously.",
+        "description": "For companies starting structured compliance work.",
         "cta": "Become a design partner",
         "features": [
           "2 regulations (NIS2 + 1 more)",
@@ -1383,7 +1383,7 @@
       },
       "business": {
         "name": "Business",
-        "description": "Complete platform for the whole team.",
+        "description": "For teams managing compliance across frameworks.",
         "cta": "Contact sales",
         "features": [
           "5 regulations",
@@ -1436,7 +1436,7 @@
         "trainingTemplates": "Training templates",
         "auditorExport": "Auditor export",
         "publicPage": "Public page",
-        "ndaGate": "Access request workflow",
+        "ndaGate": "Document access request workflow",
         "subdomain": "Custom subdomain",
         "customDomain": "Custom domain",
         "userCount": "User seats",
@@ -1649,7 +1649,7 @@
   "organisationSettings": {
     "eyebrow": "Settings",
     "title": "Organisation",
-    "description": "Basic organisation identity, classification, and Clerk workspace linkage.",
+    "description": "Basic organisation identity, classification, and Clerk organisation link.",
     "status": {
       "editable": "Editable",
       "demoReadonly": "Demo read-only"
@@ -1674,7 +1674,7 @@
       }
     },
     "workspace": {
-      "title": "Workspace links",
+      "title": "Organisation links",
       "clerkOrg": "Clerk org",
       "plan": "Plan",
       "jurisdiction": "Jurisdiction",
@@ -1685,11 +1685,11 @@
     }
   },
   "questionnairePage": {
-    "eyebrow": "Questionnaire AI",
+    "eyebrow": "AI questionnaires",
     "title": "Security questionnaires",
-    "subtitle": "Auto-answer inbound customer questionnaires using passing controls, evidence, and policies already stored in Splnit.eu.",
+    "subtitle": "Draft answers to customer questionnaires using passing controls, evidence, and policies already stored in Splnit.eu.",
     "disclaimer": "Generated answers are drafts for legal and compliance review. They are not legal advice, certification, or a guarantee of compliance.",
-    "disabledNotice": "Questionnaire AI requires Clerk, DATABASE_URL, QUESTIONNAIRE_AI_ENABLED=true, and a configured AI provider.",
+    "disabledNotice": "AI questionnaires require Clerk, DATABASE_URL, QUESTIONNAIRE_AI_ENABLED=true, and a configured AI provider.",
     "fallbacks": {
       "demoOrganisation": "Demo organisation",
       "organisation": "Organisation"
@@ -1704,7 +1704,7 @@
     },
     "history": {
       "title": "Saved outputs",
-      "subtitle": "Recent questionnaire answers and gap reports stored in this workspace.",
+      "subtitle": "Recent questionnaire answers and gap reports stored for this organisation.",
       "empty": "No generated outputs have been saved yet.",
       "notAvailable": "no date",
       "kinds": {
@@ -1725,8 +1725,8 @@
       "resultsTitle": "Generated answers",
       "resultMeta": "{count} questions · {model}",
       "noResultSubtitle": "Answers appear here after generation.",
-      "emptyBody": "Generated answers will be grounded in passing controls, evidence, and active policies from the {organisation} workspace.",
-      "artifact": "Saved artifact",
+      "emptyBody": "Generated answers will be grounded in passing controls, evidence, and active policies from {organisation}.",
+      "artifact": "Saved output",
       "evidence": "Evidence",
       "legal": "Legal citations",
       "policies": "Policies",
@@ -1742,15 +1742,15 @@
     "actionErrors": {
       "authRequired": "Sign-in and an active organisation are required.",
       "invalidInput": "Paste questionnaire text or upload a text file.",
-      "missingConfig": "Questionnaire AI is not enabled or the provider is not configured.",
+      "missingConfig": "AI questionnaires are not enabled or the provider is not configured.",
       "noQuestions": "No questions were found in the questionnaire.",
       "rateLimit": "The monthly limit of {limit} questionnaires has been reached.",
-      "generationFailed": "Answer generation failed.",
+      "generationFailed": "Answers could not be generated.",
       "organisationFallback": "Organisation"
     },
     "unsupported": {
-      "summary": "No supported compliance context is available for this workspace yet.",
-      "answer": "No supported answer is available from the current Splnit.eu workspace data.",
+      "summary": "No supported compliance context is available for this organisation yet.",
+      "answer": "No answer can be generated from the current Splnit.eu organisation data.",
       "notes": "Add passing controls, evidence, active policies, or reviewed legal citations before using this answer externally."
     }
   }

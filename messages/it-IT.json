@@ -1,7 +1,7 @@
 {
   "app": {
     "name": "Splnit.eu",
-    "tagline": "Automazione compliance per PMI europee"
+    "tagline": "Automazione della compliance per PMI europee"
   },
   "navigation": {
     "sections": {
@@ -26,7 +26,7 @@
   "shell": {
     "plan": "Piano",
     "search": "Cerca (⌘K)...",
-    "trustCenter": "Trust center",
+    "trustCenter": "Trust Center",
     "notifications": "Notifiche",
     "demoOrganisation": "Organizzazione demo",
     "organisationFallback": "Organizzazione",
@@ -38,8 +38,8 @@
   },
   "appError": {
     "eyebrow": "Errore applicazione",
-    "title": "Qualcosa non è stato caricato",
-    "body": "L'evento è stato registrato. Aggiorna la pagina o torna alla dashboard.",
+    "title": "Non siamo riusciti a caricare la pagina",
+    "body": "Abbiamo registrato l'errore. Aggiorna la pagina o torna alla dashboard.",
     "retry": "Riprova"
   },
   "authFallback": {
@@ -49,9 +49,9 @@
   },
   "appDataNotice": {
     "demoTitle": "Dati demo locali",
-    "demoBody": "Questa pagina mostra dati demo locali perché ENABLE_LOCAL_DEMO_DATA è attivo fuori produzione. Non considerarli dati tenant.",
-    "unavailableTitle": "Dati workspace non disponibili",
-    "unavailableBody": "I dati live del workspace non sono stati caricati. In produzione i dati demo non vengono mostrati."
+    "demoBody": "Questa pagina mostra dati demo locali perché ENABLE_LOCAL_DEMO_DATA è attivo fuori produzione. Non considerarli dati dell'organizzazione.",
+    "unavailableTitle": "Dati organizzazione non disponibili",
+    "unavailableBody": "I dati live dell'organizzazione non sono stati caricati. In produzione i dati demo non vengono mostrati."
   },
   "billingSettings": {
     "eyebrow": "Fatturazione",
@@ -96,13 +96,13 @@
       },
       "consultant": {
         "name": "Consultant",
-        "description": "Workspace clienti illimitati e reportistica white-label."
+        "description": "Workspace illimitati per i clienti e reportistica white-label."
       }
     }
   },
   "frameworkWizard": {
-    "error": "Non è stato possibile salvare l'assessment.",
-    "resultTitle": "Gap assessment completato",
+    "error": "Non è stato possibile salvare la valutazione.",
+    "resultTitle": "Analisi dei gap completata",
     "resultBody": "Il risultato è stato salvato negli stati dei controlli e la dashboard è stata ricalcolata.",
     "totalControls": "Controlli",
     "openGaps": "Gap aperti",
@@ -111,7 +111,7 @@
     "controls": "Apri controlli",
     "editAnswers": "Modifica risposte",
     "intro": "Le risposte impostano gli stati iniziali dei controlli e preparano un gap report.",
-    "step": "Step {step}",
+    "step": "Passaggio {step}",
     "questionRange": "Domande {from}-{to}",
     "answered": "Risposte {answered} di {total}",
     "back": "Indietro",
@@ -138,7 +138,7 @@
       },
       "training": {
         "text": "I dipendenti completano formazione di sicurezza periodica?",
-        "help": "Formazione in onboarding e refresh annuale con evidenze."
+        "help": "Formazione in onboarding e aggiornamento annuale con evidenze."
       },
       "incident_plan": {
         "text": "Avete un piano di risposta agli incidenti approvato?",
@@ -170,7 +170,7 @@
       },
       "asset_inventory": {
         "text": "Mantenete un inventario aggiornato di asset e sistemi?",
-        "help": "Includi SaaS, cloud, endpoint, applicazioni e owner responsabili."
+        "help": "Includi SaaS, cloud, endpoint, applicazioni e relativi responsabili."
       },
       "business_continuity": {
         "text": "Avete un piano di continuità operativa documentato?",
@@ -198,10 +198,10 @@
       },
       "ai_inventory": {
         "text": "Mantenete un inventario dei sistemi AI utilizzati?",
-        "help": "Registrate finalità, fornitore, owner, dati e categoria di rischio."
+        "help": "Registrate finalità, fornitore, responsabile, dati e categoria di rischio."
       },
       "ai_literacy": {
-        "text": "I dipendenti che usano AI completano formazione di AI literacy?",
+        "text": "I dipendenti che usano AI completano formazione sull'alfabetizzazione AI?",
         "help": "L’articolo 4 si applica ampiamente a deployer e provider."
       },
       "prohibited_practices": {
@@ -233,7 +233,7 @@
         "help": "Chatbot, contenuti sintetici e output deepfake."
       },
       "data_governance": {
-        "text": "Avete regole per dati di input, dati personali e informazioni sensibili nell’AI?",
+        "text": "Avete regole per dati in ingresso, dati personali e informazioni sensibili nell’AI?",
         "help": "Collega governance AI, GDPR e classificazione dei dati."
       },
       "incident_monitoring": {
@@ -298,11 +298,11 @@
       },
       "cloud_audit": {
         "text": "Avete log di audit cloud e controlli di sicurezza baseline?",
-        "help": "CloudTrail, root MFA, cifratura S3 o equivalenti."
+        "help": "CloudTrail, MFA sull'account root, cifratura S3 o controlli equivalenti."
       },
       "change_management_iso": {
         "text": "Il change management è auditabile?",
-        "help": "Approvazione, test, rollback e owner della modifica."
+        "help": "Approvazione, test, rollback e responsabile della modifica."
       },
       "isms_governance": {
         "text": "Avete definito ambito ISMS, SoA e piano di trattamento del rischio?",
@@ -314,7 +314,7 @@
       },
       "document_control": {
         "text": "Controllate la documentazione e approvate le eccezioni?",
-        "help": "Policy, procedure, eccezioni e record devono avere owner, versione e revisione."
+        "help": "Policy, procedure, eccezioni e record devono avere responsabile, versione e revisione."
       },
       "remote_and_mobile": {
         "text": "Dispositivi mobili e lavoro da remoto sono gestiti in sicurezza?",
@@ -326,7 +326,7 @@
       },
       "emissions": {
         "text": "Misurate emissioni Scope 1, Scope 2 e Scope 3 rilevanti?",
-        "help": "Ogni numero richiede fonte dati, metodo e owner chiari."
+        "help": "Ogni numero richiede fonte dati, metodo e responsabile chiari."
       },
       "resource_use": {
         "text": "Tracciate energia, acqua, rifiuti e incidenti ambientali?",
@@ -358,7 +358,7 @@
     "greeting": "Buongiorno",
     "summary": {
       "openFindings": "rilievi aperti",
-      "failedControls": "controlli falliti"
+      "failedControls": "controlli non superati"
     },
     "aiActWizardCta": "Avvia wizard AI Act",
     "scoreLabel": "Punteggio",
@@ -372,7 +372,7 @@
     },
     "frameworks": {
       "title": "Stato framework",
-      "subtitle": "Punteggi sulle normative attive.",
+      "subtitle": "Punteggi dei framework attivi.",
       "viewAll": "Vedi tutti"
     },
     "frameworkDescriptions": {
@@ -421,7 +421,7 @@
   "evidence": {
     "eyebrow": "Evidenze",
     "title": "Archivio evidenze",
-    "subtitle": "Archivio per upload manuali e snapshot automatici collegati ai controlli.",
+    "subtitle": "Archivio per caricamenti manuali e snapshot automatici collegati ai controlli.",
     "noDate": "nessuna data",
     "filters": {
       "title": "Filtri",
@@ -438,12 +438,12 @@
     },
     "statuses": {
       "pass": "Superato",
-      "fail": "Fallito",
+      "fail": "Non superato",
       "manualReview": "Parziale",
       "unknown": "Sconosciuto"
     },
     "records": {
-      "title": "Record evidenze",
+      "title": "Registro evidenze",
       "empty": "Nessun record di evidenza corrisponde ai filtri attuali."
     },
     "expiry": {
@@ -474,21 +474,21 @@
     "index": {
       "eyebrow": "Framework",
       "title": "Normative e standard",
-      "subtitle": "Scegliete un framework, avviate un assessment e seguite lo stato dei controlli mappati.",
-      "enrolledTitle": "Framework iscritti",
+      "subtitle": "Scegliete un framework, avviate una valutazione e seguite lo stato dei controlli mappati.",
+      "enrolledTitle": "Framework attivi",
       "enrolledSubtitle": "Framework attualmente attivi in questa organizzazione.",
-      "availableTitle": "Disponibili per iscrizione",
-      "availableSubtitle": "I framework della libreria sono opzioni di setup, non scope tenant attivo.",
-      "emptyEnrolled": "Nessun framework è ancora iscritto.",
+      "availableTitle": "Disponibili per l'attivazione",
+      "availableSubtitle": "I framework della libreria sono opzioni di configurazione, non fanno ancora parte dell'ambito attivo dell'organizzazione.",
+      "emptyEnrolled": "Nessun framework è ancora attivo.",
       "scoreLabel": "Punteggio",
       "statusLabel": "Stato",
       "open": "Apri",
-      "assessment": "Assessment",
+      "assessment": "Valutazione",
       "setup": "Configura"
     },
     "detail": {
       "breadcrumb": "Dashboard / Framework",
-      "runAssessment": "Avvia assessment",
+      "runAssessment": "Avvia valutazione",
       "scoreLabel": "Punteggio",
       "statusTitle": "Stato framework",
       "controlsMetric": "Controlli",
@@ -496,13 +496,13 @@
       "deadlineMetric": "Scadenza",
       "continuous": "Continuativo",
       "downloadLatestPdf": "Scarica ultimo PDF",
-      "gapReportEmpty": "Il PDF verrà creato dopo il primo assessment del framework.",
+      "gapReportEmpty": "Il PDF verrà creato dopo la prima valutazione del framework.",
       "generatePdf": "Genera PDF",
       "isoPackageTitle": "Pacchetto certificazione ISO 27001",
       "isoPackageBody": "L'export ZIP include Statement of Applicability, controlli completati, evidenze disponibili, policy attive e link agli organismi di certificazione.",
       "downloadZip": "Scarica ZIP",
       "certificationLinksTitle": "Link certificazione",
-      "csrdQuestionnaireTitle": "Template questionario supply-chain",
+      "csrdQuestionnaireTitle": "Modello di questionario per la supply chain",
       "csrdQuestionnaireBody": "Set iniziale di domande per fornitori e clienti enterprise.",
       "controlsTitle": "Controlli e obblighi",
       "noReference": "Nessun riferimento",
@@ -523,7 +523,7 @@
       "title": "Test automatici",
       "subtitle": "I servizi collegati forniscono evidenze e aggiornano lo stato dei controlli.",
       "tests": "Test",
-      "lastSync": "Ultimo sync",
+      "lastSync": "Ultima sincronizzazione",
       "results24h": "Risultati in 24h",
       "comingSoon": "In preparazione",
       "manage": "Gestisci",
@@ -536,12 +536,12 @@
       "statusTitle": "Stato",
       "statusBody": "Flusso OAuth e salvataggio token per questo provider non sono ancora attivi.",
       "plannedChecksTitle": "Controlli pianificati",
-      "plannedChecksBody": "Questi controlli non sono ancora collegati al registro dei runner.",
+      "plannedChecksBody": "Questi controlli non sono ancora collegati al registro delle esecuzioni.",
       "dependencyTitle": "Dipendenza",
       "dependencyPhase": "Fase 2+",
-      "dependencyBody": "Aggiungete questo adapter dopo aver validato il set attuale di provider.",
+      "dependencyBody": "Aggiungete questo connettore dopo aver validato il set attuale di provider.",
       "scopeTitle": "Ambito",
-      "scopeItemStatus": "Pianificato. Il runner di produzione non è ancora abilitato.",
+      "scopeItemStatus": "Pianificato. L'esecuzione in produzione non è ancora abilitata.",
       "googleWorkspace": {
         "description": "Audit log Google Workspace, condivisione Drive e controlli sugli account amministratore sono pianificati dopo la validazione delle integrazioni Microsoft 365, GitHub e AWS.",
         "checks": [
@@ -554,16 +554,16 @@
     "providerPages": {
       "common": {
         "status": "Stato",
-        "lastSync": "Ultimo sync",
+        "lastSync": "Ultima sincronizzazione",
         "lastErrorEmpty": "Nessun errore recente",
         "automatedTests": "Test automatici",
         "runResults": "Risultati esecuzioni",
-        "runResultsEmpty": "I risultati appariranno dopo la prima esecuzione del runner.",
+        "runResultsEmpty": "I risultati appariranno dopo la prima esecuzione automatica.",
         "testSuite": "Test suite"
       },
       "aws": {
         "title": "Integrazione AWS",
-        "subtitle": "Un ruolo read-only cross-account controlla CloudTrail, crittografia S3, IAM MFA, root MFA e VPC Flow Logs.",
+        "subtitle": "Un ruolo in sola lettura tra account controlla CloudTrail, crittografia S3, MFA IAM, MFA sull'account root e VPC Flow Logs.",
         "accountMissing": "nessun account AWS",
         "testsBody": "Mappato su audit log, crittografia, MFA e monitoraggio di rete.",
         "connectRole": "Collega ruolo",
@@ -571,7 +571,7 @@
       },
       "github": {
         "title": "Integrazione GitHub",
-        "subtitle": "Una GitHub App read-only controlla 2FA, branch protection, secret scanning, dependency alerts e code scanning.",
+        "subtitle": "Una GitHub App in sola lettura controlla 2FA, branch protection, secret scanning, dependency alerts e code scanning.",
         "editInstall": "Modifica installazione",
         "installApp": "Installa GitHub App",
         "installMissing": "nessuna installazione",
@@ -591,9 +591,9 @@
   },
   "incidents": {
     "noDate": "non impostato",
-    "eyebrow": "Incident management",
+    "eyebrow": "Gestione incidenti",
     "title": "Incidenti",
-    "subtitle": "Registro incidenti NIS2 e GDPR con countdown 72h, checklist regolatorie ed export delle notifiche.",
+    "subtitle": "Registro incidenti NIS2 e GDPR con conto alla rovescia di 72 ore, checklist regolatorie e notifiche esportabili.",
     "demo": {
       "title": "Accesso amministratore sospetto",
       "description": "Incidente demo che copre accesso non autorizzato a un pannello admin SaaS e possibile esposizione di dati personali."
@@ -612,8 +612,8 @@
     "countdown": {
       "notStarted": "GDPR Art. 33 non attivato",
       "reported": "Segnalato a {authority} {date}",
-      "overdue": "Scaduto · deadline {date}",
-      "remaining": "{hours}h rimanenti · deadline {date}"
+      "overdue": "Scaduto · scadenza {date}",
+      "remaining": "{hours}h rimanenti · scadenza {date}"
     },
     "severities": {
       "low": "bassa",
@@ -657,19 +657,19 @@
     },
     "checklist": {
       "title": "Checklist regolatoria",
-      "nis2Required": "Richiede assessment dell'impatto e decisione sulla notifica.",
-      "nis2NotMarked": "Non marcato come sistema critico.",
-      "gdprActive": "Countdown 72h attivo.",
-      "gdprNotMarked": "Non marcato come dati personali.",
-      "markCybersecurity": "Marca notifica {authority}",
-      "markDataProtection": "Marca notifica {authority}"
+      "nis2Required": "Richiede valutazione dell'impatto e decisione sulla notifica.",
+      "nis2NotMarked": "Non indicato come sistema critico.",
+      "gdprActive": "Scadenza di 72 ore attiva.",
+      "gdprNotMarked": "Non indicato come dati personali.",
+      "markCybersecurity": "Segna come notificato a {authority}",
+      "markDataProtection": "Segna come notificato a {authority}"
     }
   },
   "risks": {
     "noDate": "non pianificato",
-    "eyebrow": "Risk register",
+    "eyebrow": "Registro rischi",
     "title": "Rischi",
-    "subtitle": "Registro rischi ISO 27001 con punteggio likelihood × impact, responsabile, scadenza e stato della mitigazione.",
+    "subtitle": "Registro rischi ISO 27001 con punteggio probabilità × impatto, responsabile, scadenza e stato della mitigazione.",
     "exportPdf": "Esporta ISO PDF",
     "metrics": {
       "totalTitle": "Rischi totali",
@@ -677,13 +677,13 @@
       "highTitle": "Rischi alti",
       "highBody": "Punteggio 12 o superiore.",
       "averageTitle": "Punteggio medio",
-      "averageBody": "Likelihood × impact."
+      "averageBody": "Probabilità × impatto."
     },
     "form": {
       "title": "Nuovo rischio",
       "name": "Nome",
-      "likelihood": "Likelihood",
-      "impact": "Impact",
+      "likelihood": "Probabilità",
+      "impact": "Impatto",
       "category": "Categoria",
       "owner": "Responsabile",
       "dueDate": "Scadenza",
@@ -697,9 +697,9 @@
     },
     "matrix": {
       "title": "Matrice rischi",
-      "ariaLabel": "Matrice rischi likelihood per impact",
-      "likelihood": "likelihood",
-      "impact": "impact"
+      "ariaLabel": "Matrice dei rischi per probabilità e impatto",
+      "likelihood": "probabilità",
+      "impact": "impatto"
     },
     "register": {
       "title": "Registro",
@@ -726,13 +726,13 @@
         "title": "Ripristino backup non verificato",
         "description": "I backup non sono testati regolarmente e il ripristino potrebbe non rispettare l'RTO.",
         "category": "backup",
-        "owner": "Operations"
+        "owner": "Operazioni"
       },
       {
         "title": "Sicurezza fornitori non gestita",
-        "description": "Un fornitore SaaS critico non ha assessment sicurezza né DPA archiviato.",
+        "description": "Un fornitore SaaS critico non ha una valutazione sicurezza né un DPA archiviato.",
         "category": "vendor",
-        "owner": "Procurement"
+        "owner": "Acquisti"
       },
       {
         "title": "Incident response non pronta",
@@ -753,7 +753,7 @@
         "owner": "Responsabile IT"
       },
       {
-        "title": "Access review irregolari",
+        "title": "Revisioni accessi irregolari",
         "description": "I diritti di accesso di ex dipendenti e fornitori non sono revisionati con costanza.",
         "category": "access",
         "owner": "HR + IT"
@@ -780,13 +780,13 @@
   },
   "clientsPage": {
     "never": "mai",
-    "eyebrow": "Consultant",
+    "eyebrow": "Consulenti",
     "title": "Dashboard clienti",
     "subtitle": "Gestisci organizzazioni cliente, monitora i punteggi e prepara output Trust Center white-label.",
     "planLabel": "Piano",
     "lock": {
       "demoTitle": "Modalità demo",
-      "demoBody": "Clerk o il database non sono disponibili, quindi il form è bloccato e la pagina usa dati cliente demo.",
+      "demoBody": "Clerk o il database non sono disponibili, quindi il modulo è bloccato e la pagina usa dati cliente demo.",
       "planTitle": "Serve il piano Consultant",
       "planBody": "Il collegamento in produzione delle organizzazioni cliente è disponibile solo con il piano consultant."
     },
@@ -830,7 +830,7 @@
     "modules": {
       "accessReviews": {
         "title": "Revisioni accessi",
-        "description": "Workflow trimestrale keep/revoke/modify per utenti Microsoft 365 e GitHub."
+        "description": "Workflow trimestrale per mantenere, revocare o modificare gli accessi degli utenti Microsoft 365 e GitHub."
       },
       "roleAssignments": {
         "title": "Ruoli e permessi",
@@ -869,7 +869,7 @@
     },
     "assessment": {
       "title": "Assessment in 12 domande",
-      "save": "Salva assessment",
+      "save": "Salva valutazione",
       "answers": {
         "yes": "Sì",
         "partial": "Parziale",
@@ -896,8 +896,8 @@
       "send": "Invia questionario"
     },
     "history": {
-      "title": "Storico assessment",
-      "empty": "Nessun assessment è stato completato."
+      "title": "Storico valutazioni",
+      "empty": "Nessuna valutazione è stata completata."
     },
     "riskTiers": {
       "low": "basso",
@@ -915,10 +915,10 @@
     }
   },
   "vendorAssessmentPage": {
-    "eyebrow": "Assessment fornitore",
+    "eyebrow": "Valutazione fornitore",
     "requestDescription": "{organisation} richiede la compilazione di un questionario di sicurezza supply chain.",
     "submitted": "Il questionario è stato inviato.",
-    "submit": "Invia assessment"
+    "submit": "Invia valutazione"
   },
   "controlsPage": {
     "noDate": "senza data",
@@ -927,11 +927,11 @@
       "eyebrow": "Controlli",
       "title": "Libreria controlli",
       "subtitle": "Controlli condivisi collegano normative, evidenze manuali e test automatici.",
-      "activeTitle": "Controlli nello scope",
+      "activeTitle": "Controlli in ambito",
       "activeSubtitle": "Controlli mappati ai framework iscritti da questa organizzazione.",
       "libraryTitle": "Libreria controlli disponibile",
       "librarySubtitle": "Controlli di riferimento disponibili tramite iscrizione ai framework.",
-      "emptyActive": "Nessun controllo è nello scope perché non è iscritto alcun framework.",
+      "emptyActive": "Non ci sono controlli in ambito perché non è stato attivato alcun framework.",
       "frameworksLabel": "Framework",
       "statusLabel": "Stato",
       "automated": "Automatico",
@@ -958,14 +958,14 @@
       "downloadFile": "Scarica file",
       "noEvidence": "Nessuna evidenza è stata caricata.",
       "historyTitle": "Storico modifiche",
-      "noHistory": "Lo storico apparirà dopo la prima modifica di stato o il primo upload.",
+      "noHistory": "Lo storico apparirà dopo la prima modifica di stato o il primo caricamento.",
       "activityStatusChanged": "Stato modificato in {status}",
       "activityEvidenceUploaded": "Evidenza caricata: {evidence}"
     },
     "statuses": {
       "unknown": "Sconosciuto",
       "pass": "Superato",
-      "fail": "Fallito",
+      "fail": "Non superato",
       "manual_review": "Parziale",
       "not_applicable": "N/A"
     },
@@ -990,7 +990,7 @@
     "noMetadata": "senza metadati",
     "eyebrow": "Audit",
     "title": "Log attività",
-    "subtitle": "Storico append-only delle azioni compliance per l'organizzazione Clerk attiva.",
+    "subtitle": "Storico non modificabile delle azioni compliance per l'organizzazione Clerk attiva.",
     "exportCsv": "Esporta CSV",
     "filters": {
       "title": "Filtri",
@@ -1002,7 +1002,7 @@
       "apply": "Applica"
     },
     "records": {
-      "title": "Record",
+      "title": "Voci del log",
       "time": "Ora",
       "action": "Azione",
       "entity": "Entità",
@@ -1017,14 +1017,14 @@
       "integration_connected": "Integrazione collegata",
       "integration_disconnected": "Integrazione scollegata",
       "user_invited": "Utente invitato",
-      "consultant_client_linked": "Cliente consulenza collegato"
+      "consultant_client_linked": "Cliente collegato al consulente"
     },
     "entityTypes": {
       "control": "controllo",
       "evidence": "evidenza",
       "policy": "documento",
       "integration": "integrazione",
-      "consultant_client": "cliente consulenza"
+      "consultant_client": "cliente del consulente"
     }
   },
   "clientDetailPage": {
@@ -1040,7 +1040,7 @@
     "frameworkScores": "Punteggi framework",
     "regulatorEmpty": "regolatore n/d",
     "logoUrl": "URL logo",
-    "accentColour": "Colore accent",
+    "accentColour": "Colore di accento",
     "saveBranding": "Salva branding",
     "priorityControlsTitle": "Controlli prioritari cliente",
     "demo": {
@@ -1051,7 +1051,7 @@
     "statuses": {
       "active": "attivo",
       "unknown": "sconosciuto",
-      "fail": "fallito",
+      "fail": "non superato",
       "manual_review": "parziale"
     },
     "categories": {
@@ -1072,23 +1072,23 @@
   },
   "accessReviews": {
     "noDate": "non impostato",
-    "eyebrow": "Access review",
+    "eyebrow": "Revisione accessi",
     "title": "Revisioni accessi",
-    "subtitle": "Importa utenti da Entra ID e GitHub, registra decisioni keep/revoke/modify ed esporta evidenze CSV per ISO 27001 A.9.2.3.",
+    "subtitle": "Importa utenti da Entra ID e GitHub, registra decisioni di mantenimento, revoca o modifica ed esporta evidenze CSV per ISO 27001 A.9.2.3.",
     "exportCsv": "Esporta CSV",
     "metrics": {
       "activeTitle": "Revisioni attive",
       "activeBody": "Ultime {count} revisioni nello storico.",
       "progressTitle": "Avanzamento",
       "progressBody": "{reviewed} / {total} decisioni.",
-      "providerTitle": "Provider",
+      "providerTitle": "Origine",
       "due": "Scadenza"
     },
     "form": {
       "title": "Avvia revisione",
       "name": "Nome",
       "namePlaceholder": "Revisione accessi trimestrale",
-      "provider": "Provider",
+      "provider": "Origine",
       "dueDate": "Scadenza",
       "start": "Carica utenti"
     },
@@ -1151,10 +1151,10 @@
     "regulatorEmpty": "regolatore n/a",
     "scoreLabel": "punteggio",
     "saveSettings": "Salva impostazioni",
-    "requestsTitle": "Richieste accesso documenti",
+    "requestsTitle": "Richieste di accesso ai documenti",
     "companyEmpty": "azienda non indicata",
     "created": "creata",
-    "accessExpires": "Accesso scade",
+    "accessExpires": "Scadenza accesso",
     "approve": "Approva",
     "decline": "Rifiuta",
     "requestsEmpty": "Non ci sono ancora richieste aperte di accesso ai documenti.",
@@ -1188,14 +1188,14 @@
       "integrations": "Integrazioni",
       "trustCenter": "Trust Center",
       "security": "Sicurezza",
-      "status": "Status",
+      "status": "Stato",
       "about": "Chi siamo",
       "pricing": "Prezzi",
       "regulations": "Normative",
       "contact": "Contatto",
-      "operator": "Splnit.eu — OSVČ Olomouc",
+      "operator": "Splnit.eu — operatore OSVČ (lavoratore autonomo), Olomouc",
       "location": "Olomouc, Repubblica Ceca",
-      "copyright": "© 2026 Splnit.eu · OSVČ Olomouc",
+      "copyright": "© 2026 Splnit.eu · operatore OSVČ, Olomouc",
       "privacy": "Privacy",
       "terms": "Termini"
     },
@@ -1209,10 +1209,10 @@
     "earlyAccess": {
       "tag": "Accesso anticipato",
       "title": "Cerchiamo i primi 10 design partner.",
-      "body": "Splnit.eu è in accesso anticipato. È una piattaforma guidata dal fondatore, costruita a Olomouc per aziende che vogliono influenzare il prodotto prima del lancio pubblico.",
+      "body": "Splnit.eu è in accesso anticipato. È una piattaforma guidata dal fondatore, costruita a Olomouc per aziende che vogliono contribuire a modellare il prodotto prima del lancio pubblico.",
       "primaryCta": "Candidati come design partner",
       "secondaryCta": "Chi c'è dietro",
-      "filledLabel": "Coorte fondatori aperta",
+      "filledLabel": "Gruppo iniziale aperto",
       "spotsAvailable": "posti disponibili per design partner",
       "emptyProof": "Non mostriamo ancora referenze pubbliche. Quando esisteranno, saranno pubblicate solo con il consenso del cliente.",
       "benefitsTitle": "Cosa ricevete",
@@ -1222,7 +1222,7 @@
       "onboardingBody": "L'obiettivo non è un account demo. L'obiettivo è usare Splnit.eu su un problema reale NIS2 o GDPR e capire cosa manca ancora al prodotto.",
       "benefits": {
         "businessFree": "12 mesi gratis sul piano Business",
-        "guidedOnboarding": "3 settimane di onboarding guidato direttamente con il founder",
+        "guidedOnboarding": "3 settimane di onboarding guidato direttamente con il fondatore",
         "sectorFeatures": "Funzionalità prioritarie in base al vostro settore",
         "directContact": "Contatto diretto senza coda ticket"
       },
@@ -1233,22 +1233,22 @@
       },
       "weeks": {
         "week1Title": "Settimana 1",
-        "week1Heading": "Scoping e gap analysis",
+        "week1Heading": "Ambito e gap analysis",
         "week1Body": "Confermiamo la giurisdizione, analizziamo l'applicabilità NIS2 e prepariamo la prima lista di priorità.",
         "week2Title": "Settimana 2",
         "week2Heading": "Integrazioni ed evidenze",
         "week2Body": "Colleghiamo Microsoft 365, AWS o GitHub e configuriamo i primi controlli automatici.",
         "week3Title": "Settimana 3",
         "week3Heading": "Documenti e pacchetto audit",
-        "week3Body": "Generiamo il primo set di documenti e prepariamo il formato delle evidenze per l'auditor."
+        "week3Body": "Generiamo il primo set di documenti e prepariamo il formato delle evidenze per il revisore."
       }
     },
     "about": {
       "tag": "Chi siamo",
-      "photoPlaceholder": "Foto del fondatore prima del lancio",
+      "photoPlaceholder": "Foto del fondatore",
       "title": "Chi c'è dietro Splnit.eu.",
-      "body": "Splnit.eu è una piattaforma focalizzata, guidata dal fondatore, costruita da un ingegnere IT senior con esperienza approfondita nei framework di compliance europei.",
-      "primaryCta": "Diventa design partner",
+      "body": "Splnit.eu è un prodotto mirato, guidato dal fondatore, costruito da un ingegnere IT senior con esperienza approfondita nei framework di compliance europei.",
+      "primaryCta": "Diventate design partner",
       "realTodayTitle": "Cosa è vero oggi",
       "notYetTitle": "Cosa non dichiariamo ancora",
       "whyTag": "Perché",
@@ -1265,38 +1265,38 @@
         "legalAdvice": "Non è consulenza legale, parere di audit o certificazione.",
         "enterprise": "Splnit.eu non è ancora un vendor enterprise con SLA 24/7 e penali.",
         "certification": "Non dichiariamo pubblicamente certificazioni ISO 27001 o SOC 2 per Splnit.eu stesso.",
-        "entity": "I dati identificativi OSVČ finali devono essere aggiunti prima del lancio in produzione."
+        "entity": "I dati identificativi dell'operatore vengono indicati nelle pagine legali prima di qualsiasi contratto."
       }
     }
   },
   "home": {
     "badge": "Compliance EU per le PMI italiane",
-    "titleLine1": "Compliance fluente nella tua giurisdizione.",
+    "titleLine1": "Compliance chiara nella vostra giurisdizione.",
     "titleLine2": "",
-    "mobileLead": "NIS2, EU AI Act, GDPR e ISO 27001 nativi, con le citazioni normative che il tuo auditor locale si aspetta.",
-    "lead": "NIS2, EU AI Act, GDPR e ISO 27001 nativi, con le citazioni normative che il tuo auditor locale si aspetta. Costruita per le PMI europee in italiano, ceco e inglese.",
-    "primaryCta": "Diventa design partner",
-    "secondaryCta": "Guarda demo",
-    "trustLine": "Accesso anticipato · Contatto diretto col founder · Stack produzione Vercel + Neon",
-    "partnerTag": "Coorte fondatori aperta",
+    "mobileLead": "NIS2, EU AI Act, GDPR e ISO 27001 con citazioni normative pronte per il vostro revisore.",
+    "lead": "NIS2, EU AI Act, GDPR e ISO 27001 con citazioni normative pronte per il vostro revisore. Costruita per le PMI europee in italiano, ceco e inglese.",
+    "primaryCta": "Diventate design partner",
+    "secondaryCta": "Guardate la demo",
+    "trustLine": "Accesso anticipato · Contatto diretto con il fondatore · Infrastruttura Vercel + Neon",
+    "partnerTag": "Gruppo iniziale aperto",
     "partnerFilled": "10 posti disponibili per design partner",
     "partnerFree": "12 mesi Business gratuito",
     "partnerOnboarding": "Onboarding di tre settimane diretto col fondatore",
     "stepsTag": "Come funziona",
-    "stepsTitle": "Configurate una volta. Funziona nel tempo.",
+    "stepsTitle": "Configurate una volta, poi resta aggiornato.",
     "stepsBody": "Tre passaggi dal primo collegamento di sistema a un evidence pack utilizzabile.",
     "featuresTag": "Funzioni principali",
-    "featuresTitle": "Compliance costruita per team moderni.",
+    "featuresTitle": "Compliance costruita per team IT e compliance.",
     "featuresBody": "Collegate infrastrutture locali e globali. I controlli vengono mappati agli standard locali e internazionali.",
-    "offerTitle": "Offerta founding customer per le prime 10 aziende.",
-    "offerBody": "Splnit.eu è in accesso anticipato. I primi design partner ricevono il piano Business gratis per 12 mesi e tre settimane di onboarding guidato direttamente col founder.",
-    "offerCta": "Vai all'accesso anticipato",
+    "offerTitle": "Offerta per le prime 10 aziende.",
+    "offerBody": "Splnit.eu è in accesso anticipato. I primi design partner ricevono il piano Business gratis per 12 mesi e tre settimane di onboarding guidato direttamente col fondatore.",
+    "offerCta": "Scoprite l'accesso anticipato",
     "referencePlaceholder": "Le referenze dei clienti saranno pubblicate con consenso esplicito man mano che i design partner completano l'onboarding.",
     "referenceCount": "Referenze solo con consenso",
     "referenceNote": "Pubblicate dopo l'onboarding",
     "finalTitle": "Preparate le prime evidenze per audit.",
     "finalBody": "Diventate design partner e aiutate a costruire il prodotto su un progetto reale NIS2 o GDPR.",
-    "docsCta": "Vedi documentazione",
+    "docsCta": "Vedi la documentazione",
     "steps": {
       "connectTitle": "Collegate gli strumenti",
       "connectBody": "Collegate Microsoft 365, GitHub o AWS. La configurazione richiede 5 minuti.",
@@ -1306,25 +1306,25 @@
       "resultsBody": "Dashboard, avvisi sui fallimenti e documentazione audit pronta per l'auditor."
     },
     "features": {
-      "residencyTitle": "Stack produzione documentato",
+      "residencyTitle": "Infrastruttura di produzione documentata",
       "residencyBody": "La produzione usa Vercel per hosting e Neon Postgres per il database. Sub-responsabili e contesto di trattamento sono indicati nella panoramica DPA.",
       "monitoringTitle": "Monitoraggio continuo",
       "monitoringBody": "Intercettate subito deviazioni di configurazione in Microsoft 365 o AWS.",
       "documentsTitle": "Documenti automatici",
-      "documentsBody": "Generate documenti di lavoro ed evidence pack da inviare a legale, auditor o consulente per revisione finale."
+      "documentsBody": "Generate documenti di lavoro e pacchetti di evidenze da inviare a legale, revisore o consulente per la revisione finale."
     },
     "trustBadges": {
       "early": "Accesso anticipato",
       "dpa": "DPA pronto per revisione legale",
       "residency": "Vercel hosting · Neon Postgres",
-      "onboarding": "Onboarding col founder"
+      "onboarding": "Onboarding con il fondatore"
     }
   },
   "leadCapture": {
     "tag": "Panoramica personalizzata",
     "title": "Quali normative UE vi riguardano?",
     "subtitle": "Ricevete una panoramica personalizzata degli obblighi in 2 minuti.",
-    "cta": "Ottieni panoramica",
+    "cta": "Ricevete la panoramica",
     "success": "Inviato. La panoramica arriverà entro 2 minuti.",
     "placeholder": "lavoro@azienda.it",
     "footnote": "Senza carta di credito · Risultati immediati · Disiscrizione quando volete"
@@ -1336,15 +1336,15 @@
     "partnerTitle": "Siete consulenti o MSP?",
     "partnerBody": "Clienti illimitati, opzione white-label, badge partner.",
     "partnerPrice": "€299 / mese",
-    "partnerCta": "Scopri di più →",
+    "partnerCta": "Scoprite di più →",
     "comparisonTag": "Confronto funzioni",
     "comparisonTitle": "Scegliete in base alla profondità di automazione.",
     "faqTag": "FAQ",
     "faqTitle": "Domande frequenti",
     "finalTitle": "Iniziate oggi a prepararvi alla compliance.",
     "finalBody": "L'accesso anticipato è aperto ai primi design partner che vogliono usare Splnit.eu su un progetto reale NIS2 o GDPR.",
-    "primaryCta": "Diventa design partner",
-    "secondaryCta": "Vedi documentazione",
+    "primaryCta": "Diventate design partner",
+    "secondaryCta": "Vedi la documentazione",
     "cards": {
       "monthly": "Mensile",
       "annual": "Annuale",
@@ -1353,11 +1353,11 @@
       "featured": "Più scelto",
       "currency": "€",
       "monthlySuffix": "/ mese",
-      "annualSuffix": "/ mese annuale",
+      "annualSuffix": "/mese con fatturazione annuale",
       "free": {
         "name": "Gratis",
         "description": "Provate la piattaforma senza impegno.",
-        "cta": "Inizia gratis",
+        "cta": "Iniziate gratis",
         "features": [
           "1 normativa",
           "Controlli manuali",
@@ -1374,7 +1374,7 @@
           "2 normative (NIS2 + 1 altra)",
           "3 integrazioni",
           "Controlli automatici per Microsoft 365, AWS e GitHub",
-          "Evidence vault",
+          "Archivio evidenze",
           "Modelli documento",
           "Avvisi scadenze",
           "5 utenti",
@@ -1384,14 +1384,14 @@
       "business": {
         "name": "Business",
         "description": "Piattaforma completa per tutto il team.",
-        "cta": "Contatta vendite",
+        "cta": "Contattateci",
         "features": [
           "5 normative",
           "10 integrazioni",
           "Trust Center",
-          "Modulo vendor risk",
-          "Access reviews",
-          "Incident log",
+          "Modulo rischio fornitori",
+          "Revisioni accessi",
+          "Registro incidenti",
           "25 utenti",
           "Supporto prioritario"
         ]
@@ -1402,7 +1402,7 @@
       "free": "Gratis",
       "optional": "opzionale",
       "lite": "lite",
-      "soon": "presto",
+      "soon": "in arrivo",
       "selected": "integrazioni selezionate",
       "unlimited": "illimitato",
       "groups": {
@@ -1430,13 +1430,13 @@
         "automatedChecks": "Controlli automatici",
         "automatedEvidence": "Raccolta automatica evidenze",
         "failureAlerts": "Avvisi di errore",
-        "scheduler": "Scheduler",
+        "scheduler": "Pianificatore",
         "policyTemplates": "Modelli policy",
         "pdfGeneration": "Generazione PDF",
-        "trainingTemplates": "Modelli formazione",
-        "auditorExport": "Export per auditor",
+        "trainingTemplates": "Modelli di formazione",
+        "auditorExport": "Export per revisore",
         "publicPage": "Pagina pubblica",
-        "ndaGate": "Workflow richiesta accesso",
+        "ndaGate": "Workflow richieste di accesso ai documenti",
         "subdomain": "Sottodominio personalizzato",
         "customDomain": "Dominio personalizzato",
         "userCount": "Posti utente",
@@ -1469,9 +1469,9 @@
     "title": "Quali normative UE vi riguardano?",
     "subtitle": "Guida in linguaggio semplice agli obblighi UE per PMI, con scadenze, rischi di enforcement e passi pratici.",
     "learnMore": "Scopri di più →",
-    "timelineTag": "Timeline normativa",
+    "timelineTag": "Cronologia normativa",
     "timelineTitle": "Date da non perdere.",
-    "currentMilestone": "Milestone attuale",
+    "currentMilestone": "Tappa attuale",
     "downloadTitle": "Scarica gratis",
     "downloadSubtitle": "Panoramica obblighi, modelli documento e checklist per ogni normativa.",
     "downloadCta": "Scarica tutto gratis",
@@ -1479,9 +1479,9 @@
       "Checklist NIS2",
       "Panoramica EU AI Act",
       "Modello policy AI",
-      "Formazione AI literacy",
+      "Formazione sull'alfabetizzazione AI",
       "Registro uso AI",
-      "Riferimento Annex III"
+      "Riferimento Allegato III"
     ],
     "cards": {
       "available": "Disponibile",
@@ -1512,7 +1512,7 @@
         "description": "Pressione ESG reporting per fornitori di grandi aziende."
       },
       "dora": {
-        "regulator": "Autorità finanziaria",
+        "regulator": "Banca d'Italia / IVASS / CONSOB, a seconda del soggetto",
         "deadline": "Gennaio 2025",
         "description": "Resilienza operativa digitale per istituzioni finanziarie."
       }
@@ -1556,14 +1556,14 @@
       "enforcerHeader": "Autorità",
       "helpsTag": "Come aiuta Splnit.eu",
       "helpsTitle": "Trasforma obblighi in controlli, evidenze e scadenze.",
-      "platformCta": "Vedi la piattaforma",
+      "platformCta": "Scoprite la piattaforma",
       "resourcesTitle": "Scarica risorse"
     }
   },
   "onboarding": {
     "eyebrow": "Onboarding",
     "title": "Configurazione organizzazione",
-    "description": "Cinque passaggi impostano profilo di base, framework, strumenti e prima integrazione consigliata.",
+    "description": "In cinque passaggi impostate profilo di base, framework, strumenti e prima integrazione consigliata.",
     "saveStepError": "Non è stato possibile salvare il passaggio.",
     "finishError": "Non è stato possibile completare l'onboarding.",
     "steps": {
@@ -1571,7 +1571,7 @@
       "frameworks": "Framework",
       "tools": "Strumenti",
       "integration": "Integrazione",
-      "score": "Score"
+      "score": "Punteggio"
     },
     "company": {
       "title": "Dati aziendali",
@@ -1581,14 +1581,14 @@
       "employeeCount": "Numero dipendenti",
       "country": "Paese",
       "primaryJurisdiction": "Giurisdizione primaria",
-      "locale": "Locale",
+      "locale": "Lingua",
       "continue": "Continua"
     },
     "buttons": {
       "back": "Indietro",
       "saveFrameworks": "Salva framework",
       "saveTools": "Salva strumenti",
-      "showScore": "Mostra score",
+      "showScore": "Mostra punteggio",
       "finish": "Completa onboarding"
     },
     "frameworks": {
@@ -1610,9 +1610,9 @@
       "open": "Apri impostazioni integrazione"
     },
     "score": {
-      "label": "Score iniziale",
+      "label": "Punteggio iniziale",
       "title": "La prima baseline è pronta",
-      "body": "Lo score si basa sui framework selezionati e sull'inventario strumenti. I test automatici lo renderanno più preciso dopo il collegamento delle integrazioni."
+      "body": "Il punteggio si basa sui framework selezionati e sull'inventario strumenti. I test automatici lo renderanno più preciso dopo il collegamento delle integrazioni."
     },
     "sectors": {
       "technology": "Tecnologia",
@@ -1638,18 +1638,18 @@
     "jurisdictions": {
       "CZ": "Repubblica Ceca",
       "IT": "Italia",
-      "EU": "UE / English"
+      "EU": "UE / Inglese"
     },
     "locales": {
       "cs-CZ": "Čeština",
-      "en-EU": "English EU",
+      "en-EU": "Inglese UE",
       "it-IT": "Italiano"
     }
   },
   "organisationSettings": {
     "eyebrow": "Impostazioni",
     "title": "Organizzazione",
-    "description": "Identità di base dell'organizzazione, classificazione e collegamento al workspace Clerk.",
+    "description": "Identità di base dell'organizzazione, classificazione e collegamento all'organizzazione Clerk.",
     "status": {
       "editable": "Modificabile",
       "demoReadonly": "Demo in sola lettura"
@@ -1661,7 +1661,7 @@
       "sector": "Settore",
       "country": "Paese",
       "primaryJurisdiction": "Giurisdizione primaria",
-      "locale": "Locale",
+      "locale": "Lingua",
       "save": "Salva modifiche"
     },
     "nis2": {
@@ -1674,8 +1674,8 @@
       }
     },
     "workspace": {
-      "title": "Collegamenti workspace",
-      "clerkOrg": "Clerk org",
+      "title": "Collegamenti organizzazione",
+      "clerkOrg": "Organizzazione Clerk",
       "plan": "Piano",
       "jurisdiction": "Giurisdizione",
       "onboarding": "Onboarding",
@@ -1685,11 +1685,11 @@
     }
   },
   "questionnairePage": {
-    "eyebrow": "Questionnaire AI",
+    "eyebrow": "AI per questionari",
     "title": "Questionari di sicurezza",
     "subtitle": "Genera bozze di risposta ai questionari clienti usando controlli superati, evidenze e policy già presenti in Splnit.eu.",
     "disclaimer": "Le risposte generate sono bozze da sottoporre a revisione legale e compliance. Non sono consulenza legale, certificazione o garanzia di conformità.",
-    "disabledNotice": "Questionnaire AI richiede Clerk, DATABASE_URL, QUESTIONNAIRE_AI_ENABLED=true e un provider AI configurato.",
+    "disabledNotice": "AI per questionari richiede Clerk, DATABASE_URL, QUESTIONNAIRE_AI_ENABLED=true e un fornitore AI configurato.",
     "fallbacks": {
       "demoOrganisation": "Organizzazione demo",
       "organisation": "Organizzazione"
@@ -1704,7 +1704,7 @@
     },
     "history": {
       "title": "Output salvati",
-      "subtitle": "Risposte ai questionari e gap report generati di recente in questo workspace.",
+      "subtitle": "Risposte ai questionari e gap report generati di recente per questa organizzazione.",
       "empty": "Non ci sono ancora output generati salvati.",
       "notAvailable": "senza data",
       "kinds": {
@@ -1713,20 +1713,20 @@
       }
     },
     "workbench": {
-      "inputTitle": "Input questionario",
+      "inputTitle": "Questionario in ingresso",
       "pasteLabel": "Incolla questionario",
       "uploadLabel": "Carica file di testo",
       "generate": "Genera risposte",
       "rateLimitTitle": "Limite utilizzo",
       "rateLimitBody": "Starter: 5/mese. Business e Consultant: illimitati.",
-      "remaining": "Residui",
-      "reset": "reset",
+      "remaining": "Rimanenti",
+      "reset": "ripristino",
       "notAvailable": "n/d",
       "resultsTitle": "Risposte generate",
       "resultMeta": "{count} domande · {model}",
       "noResultSubtitle": "Le risposte appariranno qui dopo la generazione.",
-      "emptyBody": "Le risposte generate saranno basate sui controlli superati, sulle evidenze e sulle policy attive nello spazio di lavoro {organisation}.",
-      "artifact": "Artefatto salvato",
+      "emptyBody": "Le risposte generate saranno basate sui controlli superati, sulle evidenze e sulle policy attive di {organisation}.",
+      "artifact": "Output salvato",
       "evidence": "Evidenze",
       "legal": "Citazioni normative",
       "policies": "Policy",
@@ -1742,15 +1742,15 @@
     "actionErrors": {
       "authRequired": "Sono richiesti accesso e organizzazione attiva.",
       "invalidInput": "Incolla il testo del questionario o carica un file di testo.",
-      "missingConfig": "Questionnaire AI non è abilitata o il provider non è configurato.",
+      "missingConfig": "Il modulo AI per questionari non è abilitato o il provider non è configurato.",
       "noQuestions": "Non sono state trovate domande nel questionario.",
       "rateLimit": "Il limite mensile di {limit} questionari è stato raggiunto.",
       "generationFailed": "Generazione delle risposte non riuscita.",
       "organisationFallback": "Organizzazione"
     },
     "unsupported": {
-      "summary": "Non è ancora disponibile un contesto compliance supportato per questo workspace.",
-      "answer": "Dai dati attuali del workspace Splnit.eu non è disponibile una risposta documentabile.",
+      "summary": "Non è ancora disponibile un contesto compliance supportato per questa organizzazione.",
+      "answer": "Dai dati attuali dell'organizzazione in Splnit.eu non è disponibile una risposta documentabile.",
       "notes": "Aggiungi controlli superati, evidenze, policy attive o citazioni normative verificate prima di usare questa risposta verso l'esterno."
     }
   }

@@ -1,7 +1,7 @@
 {
   "app": {
     "name": "Splnit.eu",
-    "tagline": "Compliance automatizace pro evropské SMB týmy"
+    "tagline": "Automatizace compliance pro evropské MSP"
   },
   "navigation": {
     "sections": {
@@ -24,9 +24,9 @@
     "settings": "Nastavení"
   },
   "shell": {
-    "plan": "Plan",
+    "plan": "Plán",
     "search": "Hledat (⌘K)...",
-    "trustCenter": "Trust centrum",
+    "trustCenter": "Trust Center",
     "notifications": "Oznámení",
     "demoOrganisation": "Demo organizace",
     "organisationFallback": "Organizace",
@@ -49,21 +49,21 @@
   },
   "appDataNotice": {
     "demoTitle": "Lokální demo data",
-    "demoBody": "Tato stránka ukazuje lokální demo data, protože mimo produkci je zapnuté ENABLE_LOCAL_DEMO_DATA. Neberte je jako data tenantů.",
-    "unavailableTitle": "Data workspace nejsou dostupná",
-    "unavailableBody": "Živá data workspace se nepodařilo načíst. Demo data se v produkci nezobrazují."
+    "demoBody": "Tato stránka ukazuje lokální demo data, protože mimo produkci je zapnuté ENABLE_LOCAL_DEMO_DATA. Neberte je jako data organizace.",
+    "unavailableTitle": "Data organizace nejsou dostupná",
+    "unavailableBody": "Živá data organizace se nepodařilo načíst. Demo data se v produkci nezobrazují."
   },
   "billingSettings": {
     "eyebrow": "Fakturace",
     "title": "Předplatné",
-    "subtitle": "Aktuální plán a stav Stripe zákazníka pro tuto Clerk organizaci.",
+    "subtitle": "Aktuální plán a stav Stripe zákazníka pro tuto organizaci.",
     "customerPortal": "Zákaznický portál",
     "currentPlan": "Aktuální plán",
     "frameworks": "Frameworky",
     "integrations": "Integrace",
     "users": "Uživatelé",
     "stripeConnection": "Stripe připojení",
-    "stripeConfigured": "Fakturační klíče jsou nakonfigurované pro checkout a portál.",
+    "stripeConfigured": "Fakturační klíče jsou nakonfigurované pro platby a portál.",
     "stripeMissing": "Stripe klíče v tomto prostředí zatím nejsou nakonfigurované.",
     "customer": "Zákazník",
     "subscription": "Předplatné",
@@ -77,8 +77,8 @@
     "limitIntegrations": "Integrace: {count}",
     "limitUsers": "Uživatelé: {count}",
     "currentPlanButton": "Aktuální plán",
-    "monthlyCheckout": "Měsíční checkout",
-    "annualCheckout": "Roční checkout",
+    "monthlyCheckout": "Měsíční platba",
+    "annualCheckout": "Roční platba",
     "planNames": {
       "free": "Zdarma",
       "starter": "Starter",
@@ -96,26 +96,26 @@
       },
       "consultant": {
         "name": "Consultant",
-        "description": "Neomezené klientské workspace a white-label reporting."
+        "description": "Neomezené klientské pracovní prostory a white-label reporting."
       }
     }
   },
   "frameworkWizard": {
     "error": "Vyhodnocení se nepodařilo uložit.",
-    "resultTitle": "Gap assessment hotový",
-    "resultBody": "Výsledek je uložený do stavů kontrol a dashboard se přepočítal.",
+    "resultTitle": "Vyhodnocení gapů dokončeno",
+    "resultBody": "Výsledek byl uložen do stavů kontrol a dashboard se přepočítal.",
     "totalControls": "Kontroly",
     "openGaps": "Otevřené mezery",
     "status": "Stav",
-    "scoreStatus": "Baseline",
+    "scoreStatus": "Výchozí stav",
     "controls": "Otevřít kontroly",
     "editAnswers": "Upravit odpovědi",
-    "intro": "Odpovědi nastaví počáteční stavy kontrol a připraví gap report.",
+    "intro": "Odpovědi nastaví počáteční stavy kontrol a připraví report gapů.",
     "step": "Krok {step}",
     "questionRange": "Otázky {from}-{to}",
     "answered": "Zodpovězeno {answered} z {total}",
     "back": "Zpět",
-    "submit": "Vyhodnotit",
+    "submit": "Spustit vyhodnocení",
     "next": "Pokračovat",
     "answers": {
       "yes": "Ano",
@@ -123,22 +123,251 @@
       "no": "Ne",
       "na": "N/A"
     },
-    "questions": {}
+    "questions": {
+      "mfa": {
+        "text": "Je MFA povinná pro všechny uživatelské účty?",
+        "help": "Zahrňte hlavní identitu, administrátory a vzdálený přístup."
+      },
+      "privileged_access": {
+        "text": "Kontrolujete pravidelně privilegované účty?",
+        "help": "Alespoň kvartálně nebo při změně rolí."
+      },
+      "guest_access": {
+        "text": "Řídíte a odebíráte externí a hostovské účty?",
+        "help": "Neaktivní hosté mají být detekováni a odebráni."
+      },
+      "training": {
+        "text": "Absolvují zaměstnanci pravidelné bezpečnostní školení?",
+        "help": "Vstupní školení, roční opakování a doložitelné záznamy."
+      },
+      "incident_plan": {
+        "text": "Máte schválený plán reakce na incidenty?",
+        "help": "Zahrňte role, eskalaci, komunikaci a následné vyhodnocení."
+      },
+      "incident_reporting": {
+        "text": "Umíte sledovat a splnit 72hodinové lhůty pro oznámení?",
+        "help": "GDPR a NIS2 mají přísné lhůty pro hlášení incidentů."
+      },
+      "encryption": {
+        "text": "Jsou citlivá data šifrovaná v klidu?",
+        "help": "Databáze, úložiště, notebooky a zálohy."
+      },
+      "patching": {
+        "text": "Máte řízený proces patch managementu?",
+        "help": "Sledujte kritické zranitelnosti, termíny a výjimky."
+      },
+      "backups": {
+        "text": "Testujete obnovu ze záloh?",
+        "help": "Vytváření záloh nestačí; obnova se musí pravidelně ověřovat."
+      },
+      "logging": {
+        "text": "Sbíráte bezpečnostní logy a upozornění?",
+        "help": "Pokryjte cloud, identitu, endpointy a kritické aplikace."
+      },
+      "suppliers": {
+        "text": "Hodnotíte bezpečnost dodavatelů a smluvní požadavky?",
+        "help": "NIS2 i ISO 27001 vyžadují kontroly dodavatelského řetězce."
+      },
+      "asset_inventory": {
+        "text": "Vedete aktuální inventář aktiv a systémů?",
+        "help": "Zahrňte SaaS, cloud, endpointy, aplikace a odpovědné osoby."
+      },
+      "business_continuity": {
+        "text": "Máte zdokumentovaný plán kontinuity provozu?",
+        "help": "Zahrňte odpovědné osoby, cíle obnovy a závislosti."
+      },
+      "secure_baseline": {
+        "text": "Používáte bezpečné konfigurační baseline pro systémy?",
+        "help": "Například hardening nastavení pro M365, AWS nebo endpointy."
+      },
+      "network_segmentation": {
+        "text": "Jsou kritické systémy oddělené od zbytku sítě?",
+        "help": "Segmentace omezuje dopad kompromitace."
+      },
+      "change_management": {
+        "text": "Jsou změny kritických systémů schvalované a dohledatelné?",
+        "help": "Zahrňte změny konfigurace, infrastruktury a aplikací."
+      },
+      "penetration_test": {
+        "text": "Provádíte alespoň jednou ročně penetrační test nebo bezpečnostní audit?",
+        "help": "Zaměřte se na systémy dostupné z internetu a kritické procesy."
+      },
+      "endpoint_protection": {
+        "text": "Jsou endpointy chráněné EDR/AV a centrálně spravované?",
+        "help": "Pokryjte firemní notebooky, servery a mobilní zařízení."
+      },
+      "ai_inventory": {
+        "text": "Vedete inventář používaných AI systémů?",
+        "help": "Zaznamenejte účel, dodavatele, odpovědnou osobu, data a kategorii rizika."
+      },
+      "ai_literacy": {
+        "text": "Absolvují zaměstnanci pracující s AI školení AI gramotnosti?",
+        "help": "Článek 4 se široce vztahuje na nasazovatele i poskytovatele."
+      },
+      "prohibited_practices": {
+        "text": "Ověřili jste, že AI nepoužívá zakázané praktiky?",
+        "help": "Například sociální skórování nebo rozpoznávání emocí na pracovišti."
+      },
+      "high_risk_classification": {
+        "text": "Klasifikujete, zda AI spadá do vysoce rizikových kategorií?",
+        "help": "HR, vzdělávání, úvěry, biometrie a kritická infrastruktura."
+      },
+      "provider_verification": {
+        "text": "Ověřujete compliance poskytovatelů vysoce rizikové AI?",
+        "help": "CE označení, EU prohlášení o shodě a návod k použití."
+      },
+      "human_oversight": {
+        "text": "Je u AI rozhodování definovaný lidský dohled?",
+        "help": "Odpovědná osoba musí umět rozhodnutí posoudit, přerušit nebo zvrátit."
+      },
+      "ai_logs": {
+        "text": "Uchováváte logy použití vysoce rizikové AI alespoň 6 měsíců?",
+        "help": "Zahrňte automatické logy i ruční záznamy o použití."
+      },
+      "individual_notice": {
+        "text": "Informujete dotčené osoby o rozhodování s podporou AI?",
+        "help": "Zejména u HR, rozhodování o zákaznících a veřejných služeb."
+      },
+      "content_labeling": {
+        "text": "Označujete AI generovaný obsah tam, kde je to vyžadováno?",
+        "help": "Chatboti, syntetický obsah a deepfake výstupy."
+      },
+      "data_governance": {
+        "text": "Máte pravidla pro vstupní data, osobní údaje a citlivé informace v AI?",
+        "help": "Propojte AI governance s GDPR a klasifikací dat."
+      },
+      "incident_monitoring": {
+        "text": "Umíte detekovat a řešit incidenty nebo škodlivé výstupy AI?",
+        "help": "Zahrňte eskalaci, nápravná opatření a auditní stopu."
+      },
+      "supplier_contracts": {
+        "text": "Mají dodavatelé AI smluvní požadavky na bezpečnost a compliance?",
+        "help": "Zdokumentujte role, data, odpovědnosti a ukončení smlouvy."
+      },
+      "ropa": {
+        "text": "Vedete záznamy o činnostech zpracování osobních údajů?",
+        "help": "ROPA podle článku 30 GDPR."
+      },
+      "privacy_notice": {
+        "text": "Je vaše oznámení o ochraně osobních údajů aktuální a srozumitelné?",
+        "help": "Popište účely, právní základy, příjemce a práva subjektů údajů."
+      },
+      "dsr": {
+        "text": "Máte proces pro žádosti subjektů údajů?",
+        "help": "Přístup, výmaz, oprava, přenositelnost a námitka."
+      },
+      "retention": {
+        "text": "Máte retenční plán a pravidla mazání dat?",
+        "help": "Osobní údaje nemají být uchovávány déle, než je nutné."
+      },
+      "dpia": {
+        "text": "Provádíte DPIA u rizikového zpracování?",
+        "help": "Například monitoring, profilování nebo rozsáhlé zpracování citlivých údajů."
+      },
+      "processors": {
+        "text": "Mají zpracovatelé uzavřené DPA a bezpečnostní požadavky?",
+        "help": "Dodavatelé zpracovávající osobní údaje potřebují smluvní kontroly."
+      },
+      "classification": {
+        "text": "Klasifikujete osobní a citlivá data v systémech?",
+        "help": "Pomáhá to řídit přístupy, šifrování a retenční pravidla."
+      },
+      "physical_access": {
+        "text": "Jsou kanceláře a citlivé prostory fyzicky chráněné?",
+        "help": "Přístupy, návštěvy a záznamy o fyzických médiích."
+      },
+      "media_disposal": {
+        "text": "Likvidujete média a zařízení bezpečně?",
+        "help": "Mazání disků, skartace a záznamy o likvidaci."
+      },
+      "crypto_policy": {
+        "text": "Máte politiku kryptografie a správy klíčů?",
+        "help": "Šifrování, rotace klíčů a odpovědnosti."
+      },
+      "code_review": {
+        "text": "Vyžadujete code review a ochranu hlavní větve?",
+        "help": "Týká se vývojových týmů a kritických repozitářů."
+      },
+      "secrets": {
+        "text": "Řídíte secrets a detekujete jejich úniky v kódu?",
+        "help": "Secret scanning, rotace tokenů a princip nejnižších oprávnění."
+      },
+      "dependency_alerts": {
+        "text": "Sledujete zranitelnosti závislostí?",
+        "help": "Dependency alerts, SBOM nebo pravidelné skeny zranitelností."
+      },
+      "cloud_audit": {
+        "text": "Máte cloudové auditní logy a základní bezpečnostní kontroly?",
+        "help": "CloudTrail, MFA root účtu, šifrování S3 nebo ekvivalenty."
+      },
+      "change_management_iso": {
+        "text": "Je change management auditovatelný?",
+        "help": "Schvalování, testování, rollback a odpovědná osoba za změnu."
+      },
+      "isms_governance": {
+        "text": "Máte definovaný rozsah ISMS, SoA a plán ošetření rizik?",
+        "help": "Certifikační audit bude očekávat rozsah, Statement of Applicability a vazbu rizik na kontroly."
+      },
+      "isms_review": {
+        "text": "Probíhají interní audity a přezkum vedením?",
+        "help": "ISO 27001 vyžaduje doložitelný cyklus interních auditů, náprav a přezkumu vedením."
+      },
+      "document_control": {
+        "text": "Řídíte dokumentaci a schvalujete výjimky?",
+        "help": "Politiky, postupy, výjimky a záznamy potřebují odpovědnou osobu, verzi a přezkum."
+      },
+      "remote_and_mobile": {
+        "text": "Jsou mobilní zařízení a práce na dálku bezpečnostně řízené?",
+        "help": "Zahrňte MDM, šifrování, vzdálené mazání, VPN a pravidla práce z domova."
+      },
+      "materiality": {
+        "text": "Máte dokončenou dvojí materialitu a schválené ESG priority?",
+        "help": "CSRD vyžaduje posouzení dopadů firmy i finančního dopadu ESG témat na firmu."
+      },
+      "emissions": {
+        "text": "Měříte emise Scope 1, Scope 2 a relevantní Scope 3?",
+        "help": "Každé číslo potřebuje jasný zdroj dat, metodu a odpovědnou osobu."
+      },
+      "resource_use": {
+        "text": "Sledujete energii, vodu, odpady a environmentální incidenty?",
+        "help": "Základní environmentální data musí být auditovatelná a pravidelně aktualizovaná."
+      },
+      "environmental_risk": {
+        "text": "Posuzujete klimatická rizika a dopady na biodiverzitu?",
+        "help": "Pokud téma není relevantní, uložte zdůvodnění v posouzení materiality."
+      },
+      "workforce": {
+        "text": "Máte data o pracovní síle, BOZP, školení a diverzitě?",
+        "help": "Sociální metriky musí respektovat místní pracovní právo a limity ochrany soukromí."
+      },
+      "supply_chain": {
+        "text": "Hodnotíte ESG rizika v dodavatelském řetězci?",
+        "help": "Dodavatelské dotazníky a due diligence pomáhají odpovídat velkým zákazníkům."
+      },
+      "governance": {
+        "text": "Máte pravidla obchodního jednání a protikorupční školení?",
+        "help": "Governance pokrývá etiku, střety zájmů, korupci a schvalování."
+      },
+      "report_approval": {
+        "text": "Je ESG report schválený s auditovatelnou datovou stopou?",
+        "help": "Před exportem musí být jasné, kdo data dodal, ověřil a schválil."
+      }
+    }
   },
   "dashboard": {
     "greeting": "Dobré ráno",
     "summary": {
       "openFindings": "otevřených nálezů",
-      "failedControls": "kontrol selhalo"
+      "failedControls": "nesplněných kontrol"
     },
-    "aiActWizardCta": "Spustit AI Act wizard",
+    "aiActWizardCta": "Spustit průvodce EU AI Act",
     "scoreLabel": "Skóre",
     "general": "Obecné",
     "metrics": {
       "scoreTitle": "Compliance skóre",
       "scoreBody": "Průměr frameworků a stavů kontrol.",
       "activeFrameworks": "Aktivní frameworky",
-      "failedControls": "Selhané kontroly",
+      "failedControls": "Nesplněné kontroly",
       "lastChange": "Poslední změna"
     },
     "frameworks": {
@@ -155,8 +384,8 @@
     },
     "nukib": {
       "badge": "🇨🇿 NÚKIB",
-      "exclusive": "Exclusive",
-      "title": "NÚKIB feed",
+      "exclusive": "Sledováno",
+      "title": "Feed NÚKIB",
       "openSource": "Otevřít zdroj",
       "markRead": "Označit přečtené"
     },
@@ -191,14 +420,14 @@
   },
   "evidence": {
     "eyebrow": "Evidence",
-    "title": "Evidence vault",
-    "subtitle": "Úložiště manuálních uploadů a automatických snapshotů napojených na kontroly.",
+    "title": "Archiv evidence",
+    "subtitle": "Úložiště ručně nahraných a automaticky vytvořených záznamů napojených na kontroly.",
     "noDate": "bez data",
     "filters": {
       "title": "Filtry",
       "framework": "Framework",
       "allFrameworks": "Všechny",
-      "status": "Status",
+      "status": "Stav",
       "allStatuses": "Všechny",
       "expiry": "Expirace",
       "anyExpiry": "Vše",
@@ -245,21 +474,21 @@
     "index": {
       "eyebrow": "Frameworky",
       "title": "Regulace a standardy",
-      "subtitle": "Vyberte framework, spusťte assessment a sledujte stav namapovaných kontrol.",
-      "enrolledTitle": "Zapsané frameworky",
+      "subtitle": "Vyberte framework, spusťte vyhodnocení a sledujte stav namapovaných kontrol.",
+      "enrolledTitle": "Aktivní frameworky",
       "enrolledSubtitle": "Frameworky aktuálně aktivní v této organizaci.",
       "availableTitle": "Dostupné k zapnutí",
-      "availableSubtitle": "Knihovní frameworky jsou možnosti nastavení, ne aktivní tenant scope.",
-      "emptyEnrolled": "Zatím není zapsaný žádný framework.",
+      "availableSubtitle": "Knihovní frameworky jsou možnosti nastavení, ne aktivní rozsah organizace.",
+      "emptyEnrolled": "Zatím není aktivní žádný framework.",
       "scoreLabel": "Skóre",
       "statusLabel": "Stav",
       "open": "Otevřít",
-      "assessment": "Assessment",
+      "assessment": "Vyhodnocení",
       "setup": "Nastavit"
     },
     "detail": {
       "breadcrumb": "Dashboard / Frameworky",
-      "runAssessment": "Spustit assessment",
+      "runAssessment": "Spustit vyhodnocení",
       "scoreLabel": "Skóre",
       "statusTitle": "Stav frameworku",
       "controlsMetric": "Kontroly",
@@ -273,7 +502,7 @@
       "isoPackageBody": "ZIP export obsahuje Statement of Applicability, splněné kontroly, dostupné důkazy, aktivní politiky a odkazy na certifikační orgány.",
       "downloadZip": "Stáhnout ZIP",
       "certificationLinksTitle": "Certifikační odkazy",
-      "csrdQuestionnaireTitle": "Šablona dotazníku pro supply-chain",
+      "csrdQuestionnaireTitle": "Šablona dotazníku pro dodavatelský řetězec",
       "csrdQuestionnaireBody": "Výchozí sada otázek pro dodavatele a enterprise zákazníky.",
       "controlsTitle": "Kontroly a povinnosti",
       "noReference": "Bez reference",
@@ -287,14 +516,14 @@
       "microsoft365": "MFA, Conditional Access, hosté, privilegované role a sensitivity labels.",
       "github": "Branch protection, secret scanning, 2FA enforcement a dependency alerts.",
       "aws": "CloudTrail, S3 šifrování, IAM MFA, root MFA a VPC Flow Logs.",
-      "google_workspace": "Workspace audit logy, sdílení Drive a administrátorské účty."
+      "google_workspace": "Audit logy Workspace, sdílení Drive a administrátorské účty."
     },
     "index": {
       "eyebrow": "Integrace",
       "title": "Automatické testy",
       "subtitle": "Připojené služby dodávají důkazy a aktualizují stavy kontrol.",
       "tests": "Testy",
-      "lastSync": "Poslední sync",
+      "lastSync": "Poslední synchronizace",
       "results24h": "Výsledky za 24h",
       "comingSoon": "Připravuje se",
       "manage": "Spravovat",
@@ -307,12 +536,12 @@
       "statusTitle": "Stav",
       "statusBody": "OAuth tok ani ukládání tokenů pro tohoto poskytovatele zatím nejsou aktivní.",
       "plannedChecksTitle": "Plánované kontroly",
-      "plannedChecksBody": "Kontroly zatím nejsou zapojené do registru runnerů.",
+      "plannedChecksBody": "Kontroly zatím nejsou zapojené do historie automatických běhů.",
       "dependencyTitle": "Závislost",
       "dependencyPhase": "Fáze 2+",
-      "dependencyBody": "Adaptér přidejte až po ověření aktuální sady poskytovatelů.",
+      "dependencyBody": "Konektor přidejte až po ověření aktuální sady poskytovatelů.",
       "scopeTitle": "Rozsah",
-      "scopeItemStatus": "Plánováno. Produkční runner zatím není zapnutý.",
+      "scopeItemStatus": "Plánováno. Produkční kontroly zatím nejsou zapnuté.",
       "googleWorkspace": {
         "description": "Google Workspace audit logy, sdílení Drive a kontrola administrátorských účtů jsou naplánované po ověření Microsoft 365, GitHub a AWS integrací.",
         "checks": [
@@ -325,16 +554,16 @@
     "providerPages": {
       "common": {
         "status": "Stav",
-        "lastSync": "Poslední sync",
+        "lastSync": "Poslední synchronizace",
         "lastErrorEmpty": "Bez poslední chyby",
         "automatedTests": "Automatické testy",
         "runResults": "Výsledky běhů",
-        "runResultsEmpty": "Výsledky se zobrazí po prvním běhu runneru.",
+        "runResultsEmpty": "Výsledky se zobrazí po prvním automatickém běhu.",
         "testSuite": "Test suite"
       },
       "aws": {
         "title": "AWS integrace",
-        "subtitle": "Cross-account read-only role kontroluje CloudTrail, S3 šifrování, IAM MFA, root MFA a VPC Flow Logs.",
+        "subtitle": "Role jen pro čtení napříč účty kontroluje CloudTrail, šifrování S3, IAM MFA, MFA root účtu a VPC Flow Logs.",
         "accountMissing": "bez AWS účtu",
         "testsBody": "Mapované na audit logy, šifrování, MFA a monitoring sítě.",
         "connectRole": "Připojit roli",
@@ -342,7 +571,7 @@
       },
       "github": {
         "title": "GitHub integrace",
-        "subtitle": "Read-only GitHub App kontroluje 2FA, branch protection, secret scanning, dependency alerts a code scanning.",
+        "subtitle": "GitHub App jen pro čtení kontroluje 2FA, branch protection, secret scanning, dependency alerts a code scanning.",
         "editInstall": "Upravit instalaci",
         "installApp": "Instalovat GitHub App",
         "installMissing": "bez instalace",
@@ -364,7 +593,7 @@
     "noDate": "nenastaveno",
     "eyebrow": "Řízení incidentů",
     "title": "Incidenty",
-    "subtitle": "NIS2 a GDPR incident log s 72h countdownem, regulatorními checklisty a exporty oznámení.",
+    "subtitle": "Log incidentů pro NIS2 a GDPR se sledováním 72hodinové lhůty, regulatorními checklisty a exporty oznámení.",
     "demo": {
       "title": "Podezřelý přístup administrátora",
       "description": "Demo incident pokrývající neoprávněný přístup do SaaS administrace a možné vystavení osobních údajů."
@@ -382,9 +611,9 @@
     },
     "countdown": {
       "notStarted": "GDPR Art. 33 není spuštěn",
-      "reported": "{authority} reportováno {date}",
-      "overdue": "Po termínu · deadline {date}",
-      "remaining": "{hours}h zbývá · deadline {date}"
+      "reported": "Oznámeno na {authority} {date}",
+      "overdue": "Po termínu · lhůta {date}",
+      "remaining": "Zbývá {hours} h · lhůta {date}"
     },
     "severities": {
       "low": "nízká",
@@ -430,7 +659,7 @@
       "title": "Regulatorní checklist",
       "nis2Required": "Vyžaduje posouzení a oznámení podle dopadu.",
       "nis2NotMarked": "Neoznačeno jako kritický systém.",
-      "gdprActive": "72h countdown je aktivní.",
+      "gdprActive": "Sledování 72hodinové lhůty je aktivní.",
       "gdprNotMarked": "Neoznačeno jako osobní údaje.",
       "markCybersecurity": "Označit {authority}",
       "markDataProtection": "Označit {authority}"
@@ -448,7 +677,7 @@
       "highTitle": "Vysoká rizika",
       "highBody": "Skóre 12 a více.",
       "averageTitle": "Průměrné skóre",
-      "averageBody": "Likelihood × impact."
+      "averageBody": "Pravděpodobnost × dopad."
     },
     "form": {
       "title": "Nové riziko",
@@ -491,25 +720,25 @@
         "title": "Chybějící MFA u klíčových účtů",
         "description": "MFA není vynucené pro všechny cloudové a administrátorské účty.",
         "category": "identity",
-        "owner": "IT owner"
+        "owner": "IT vlastník"
       },
       {
         "title": "Neověřená obnova ze záloh",
         "description": "Zálohy nejsou pravidelně testované a obnova nemusí splnit RTO.",
         "category": "backup",
-        "owner": "Operations"
+        "owner": "Provoz"
       },
       {
         "title": "Nedostatečně řízený dodavatel",
-        "description": "Kritický SaaS dodavatel nemá bezpečnostní assessment ani DPA.",
+        "description": "Kritický SaaS dodavatel nemá bezpečnostní hodnocení ani DPA.",
         "category": "vendor",
-        "owner": "Procurement"
+        "owner": "Nákup"
       },
       {
-        "title": "Nepřipravené incident response řízení",
-        "description": "Incident response role nejsou nacvičené a hlášení může překročit 72h.",
+        "title": "Nepřipravené řízení incidentů",
+        "description": "Role pro reakci na incidenty nejsou nacvičené a hlášení může překročit 72 hodin.",
         "category": "incident",
-        "owner": "Security owner"
+        "owner": "Vlastník bezpečnosti"
       },
       {
         "title": "Neřízená retence osobních údajů",
@@ -521,10 +750,10 @@
         "title": "Slabá správa koncových zařízení",
         "description": "Notebooky nemají jednotnou správu šifrování, EDR a patchingu.",
         "category": "endpoint",
-        "owner": "IT owner"
+        "owner": "IT vlastník"
       },
       {
-        "title": "Nepravidelné access reviews",
+        "title": "Nepravidelné přístupové revize",
         "description": "Přístupová práva bývalých zaměstnanců a dodavatelů nejsou revidovaná.",
         "category": "access",
         "owner": "HR + IT"
@@ -533,13 +762,13 @@
         "title": "Nekontrolované použití AI nástrojů",
         "description": "Zaměstnanci používají AI nástroje bez pravidel pro citlivá data.",
         "category": "ai",
-        "owner": "AI owner"
+        "owner": "Vlastník AI"
       },
       {
         "title": "Nedostatečná auditní stopa",
         "description": "Auditní logy nejsou centralizované nebo nemají dostatečnou retenci.",
         "category": "logging",
-        "owner": "IT owner"
+        "owner": "IT vlastník"
       },
       {
         "title": "Chybějící evidence školení",
@@ -601,7 +830,7 @@
     "modules": {
       "accessReviews": {
         "title": "Přístupové revize",
-        "description": "Kvartální workflow keep/revoke/modify pro uživatele Microsoft 365 a GitHubu."
+        "description": "Kvartální workflow pro ponechání, odebrání nebo úpravu přístupu uživatelů Microsoft 365 a GitHubu."
       },
       "roleAssignments": {
         "title": "Role a oprávnění",
@@ -698,11 +927,11 @@
       "eyebrow": "Kontroly",
       "title": "Knihovna kontrol",
       "subtitle": "Sdílené kontroly propojují frameworky, manuální evidenci a automatické testy.",
-      "activeTitle": "Kontroly ve scope",
-      "activeSubtitle": "Kontroly namapované na frameworky zapsané touto organizací.",
+      "activeTitle": "Kontroly v rozsahu",
+      "activeSubtitle": "Kontroly namapované na frameworky aktivní v této organizaci.",
       "libraryTitle": "Dostupná knihovna kontrol",
-      "librarySubtitle": "Referenční kontroly dostupné přes zápis frameworků.",
-      "emptyActive": "Ve scope zatím nejsou žádné kontroly, protože není zapsaný žádný framework.",
+      "librarySubtitle": "Referenční kontroly dostupné po aktivaci frameworku.",
+      "emptyActive": "V rozsahu zatím nejsou žádné kontroly, protože není aktivní žádný framework.",
       "frameworksLabel": "Frameworky",
       "statusLabel": "Stav",
       "automated": "Automatizovaná",
@@ -711,9 +940,9 @@
     },
     "detail": {
       "statusTitle": "Stav kontroly",
-      "statusLabel": "Status",
+      "statusLabel": "Stav",
       "notes": "Poznámky",
-      "saveStatus": "Uložit status",
+      "saveStatus": "Uložit stav",
       "uploadTitle": "Nahrát evidenci",
       "file": "Soubor",
       "source": "Zdroj",
@@ -729,8 +958,8 @@
       "downloadFile": "Stáhnout soubor",
       "noEvidence": "Zatím není nahraná žádná evidence.",
       "historyTitle": "Historie změn",
-      "noHistory": "Historie vznikne po první změně statusu nebo uploadu.",
-      "activityStatusChanged": "Status změněn na {status}",
+      "noHistory": "Historie vznikne po první změně stavu nebo nahrání souboru.",
+      "activityStatusChanged": "Stav změněn na {status}",
       "activityEvidenceUploaded": "Evidence nahrána: {evidence}"
     },
     "statuses": {
@@ -749,11 +978,11 @@
       "supplier": "Dodavatelé",
       "physical": "Fyzická bezpečnost",
       "business_continuity": "Kontinuita provozu",
-      "ai_governance": "Governance AI",
-      "governance": "Governance",
+      "ai_governance": "Správa AI",
+      "governance": "Řízení",
       "esg_environment": "ESG prostředí",
       "esg_social": "ESG sociální oblast",
-      "esg_governance": "ESG governance"
+      "esg_governance": "ESG řízení"
     }
   },
   "auditLogPage": {
@@ -761,7 +990,7 @@
     "noMetadata": "bez metadat",
     "eyebrow": "Audit",
     "title": "Log aktivit",
-    "subtitle": "Neměnná historie compliance akcí pro aktivní Clerk organizaci.",
+    "subtitle": "Neměnná historie compliance akcí pro aktivní organizaci.",
     "exportCsv": "CSV export",
     "filters": {
       "title": "Filtry",
@@ -782,7 +1011,7 @@
       "empty": "Žádné auditní záznamy neodpovídají aktuálním filtrům."
     },
     "actions": {
-      "control_status_changed": "Status kontroly změněn",
+      "control_status_changed": "Stav kontroly změněn",
       "evidence_uploaded": "Evidence nahrána",
       "policy_generated": "Dokument vygenerován",
       "integration_connected": "Integrace připojena",
@@ -807,10 +1036,10 @@
     "averageScore": "Průměrné skóre",
     "frameworksMetric": "Frameworky",
     "priorityControlsMetric": "Prioritní kontroly",
-    "trustCenterColour": "Trust Center barva",
-    "frameworkScores": "Framework skóre",
-    "regulatorEmpty": "regulator n/a",
-    "logoUrl": "Logo URL",
+    "trustCenterColour": "Barva Trust Center",
+    "frameworkScores": "Skóre frameworků",
+    "regulatorEmpty": "regulátor neuveden",
+    "logoUrl": "URL loga",
     "accentColour": "Akcentní barva",
     "saveBranding": "Uložit branding",
     "priorityControlsTitle": "Prioritní kontroly klienta",
@@ -834,18 +1063,18 @@
       "supplier": "Dodavatelé",
       "physical": "Fyzická bezpečnost",
       "business_continuity": "Kontinuita provozu",
-      "ai_governance": "Governance AI",
-      "governance": "Governance",
+      "ai_governance": "Správa AI",
+      "governance": "Řízení",
       "esg_environment": "ESG prostředí",
       "esg_social": "ESG sociální oblast",
-      "esg_governance": "ESG governance"
+      "esg_governance": "ESG řízení"
     }
   },
   "accessReviews": {
     "noDate": "nenastaveno",
     "eyebrow": "Přístupové revize",
     "title": "Přístupové revize",
-    "subtitle": "Načtení uživatelů z Entra ID a GitHubu, rozhodnutí ponechat/odebrat/upravit a CSV evidence pro ISO 27001 A.9.2.3.",
+    "subtitle": "Načtěte uživatele z Entra ID a GitHubu, zaznamenejte rozhodnutí ponechat, odebrat nebo upravit a exportujte CSV evidenci pro ISO 27001 A.9.2.3.",
     "exportCsv": "Export CSV",
     "metrics": {
       "activeTitle": "Aktivní revize",
@@ -917,7 +1146,7 @@
     "enableFrameworkDetail": "Povolit detail frameworků",
     "showPercentageScores": "Zobrazovat procentuální skóre",
     "visibleFrameworks": "Viditelné frameworky",
-    "visibleFrameworksEmpty": "Zatím nejsou dostupné žádné zapsané frameworky.",
+    "visibleFrameworksEmpty": "Zatím nejsou dostupné žádné aktivní frameworky.",
     "publicPageUnavailable": "Před otevřením veřejné stránky nastavte veřejný slug.",
     "regulatorEmpty": "regulator n/a",
     "scoreLabel": "skóre",
@@ -938,7 +1167,7 @@
   "marketing": {
     "nav": {
       "platform": "Platforma",
-      "regulations": "EU Předpisy",
+      "regulations": "EU předpisy",
       "blog": "Blog",
       "earlyAccess": "Předběžný přístup",
       "about": "O nás",
@@ -959,15 +1188,15 @@
       "integrations": "Integrace",
       "trustCenter": "Trust Center",
       "security": "Bezpečnost",
-      "status": "Status",
+      "status": "Stav",
       "about": "O nás",
       "pricing": "Ceník",
       "regulations": "Předpisy",
       "contact": "Kontakt",
-      "operator": "Splnit.eu — OSVČ Olomouc",
+      "operator": "Splnit.eu — OSVČ, Olomouc",
       "location": "Olomouc, Česká republika",
-      "copyright": "© 2026 Splnit.eu · OSVČ Olomouc",
-      "privacy": "Privacy",
+      "copyright": "© 2026 Splnit.eu · OSVČ, Olomouc",
+      "privacy": "Soukromí",
       "terms": "Podmínky"
     },
     "stickyCta": "Design partner",
@@ -980,7 +1209,7 @@
     "earlyAccess": {
       "tag": "Předběžný přístup",
       "title": "Hledáme prvních 10 design partnerů.",
-      "body": "Splnit.eu je v předběžném přístupu. Jde o fondátorem vedenou platformu postavenou v Olomouci pro firmy, které chtějí ovlivnit produkt před veřejným spuštěním.",
+      "body": "Splnit.eu je v předběžném přístupu. Jde o platformu vedenou zakladatelem, postavenou v Olomouci pro firmy, které chtějí ovlivnit produkt před veřejným spuštěním.",
       "primaryCta": "Přihlásit se jako design partner",
       "secondaryCta": "Kdo za tím stojí",
       "filledLabel": "Zakládající skupina otevřená",
@@ -1016,18 +1245,18 @@
     },
     "about": {
       "tag": "O nás",
-      "photoPlaceholder": "Foto zakladatele před spuštěním",
+      "photoPlaceholder": "Foto zakladatele",
       "title": "Kdo stojí za Splnit.eu.",
-      "body": "Splnit.eu je zaměřená, fondátorem vedená platforma postavená seniorním IT inženýrem s hlubokou znalostí evropských compliance frameworků.",
+      "body": "Splnit.eu je zaměřená platforma vedená zakladatelem, postavená seniorním IT inženýrem s hlubokou znalostí evropských compliance frameworků.",
       "primaryCta": "Stát se design partnerem",
       "realTodayTitle": "Co je pravda dnes",
       "notYetTitle": "Co zatím netvrdíme",
       "whyTag": "Proč",
       "whyTitle": "Compliance postavená vývojářem, respektující lokální legislativu.",
-      "whyP1": "Velké globální compliance platformy často pokrývají obecné rámce dobře, ale SMB týmy v EU potřebují také lokální transpozice, jasné citace a praktický onboarding.",
+      "whyP1": "Velké globální compliance platformy často dobře pokrývají obecné rámce, ale evropské MSP potřebují také lokální transpozice, jasné citace a praktický onboarding.",
       "whyP2": "Splnit.eu začíná menší: automatické kontroly pro systémy, které firmy už používají, dokumenty připravené k právní kontrole a přímá práce se zakladatelem u prvních design partnerů.",
       "realToday": {
-        "solo": "Splnit.eu je fondátorem vedený produkt v předběžném přístupu postavený v Olomouci.",
+        "solo": "Splnit.eu je produkt v předběžném přístupu vedený zakladatelem a postavený v Olomouci.",
         "focus": "Produkt se zaměřuje na EU compliance automation pro NIS2, GDPR a ISO 27001.",
         "legalReview": "DPA a finální právní dokumenty jsou připravené k právní kontrole před produkčním spuštěním.",
         "noFakeProof": "Veřejné reference a metriky nejsou uvedené, dokud nebudou ověřené."
@@ -1036,30 +1265,30 @@
         "legalAdvice": "Nejde o právní poradenství, auditorské stanovisko ani certifikaci.",
         "enterprise": "Splnit.eu zatím není enterprise vendor s 24/7 SLA a penalizacemi.",
         "certification": "ISO 27001 nebo SOC 2 certifikace Splnit.eu samotného není veřejně deklarovaná.",
-        "entity": "Finální OSVČ identifikační údaje musí být doplněné před produkčním spuštěním."
+        "entity": "Identifikační údaje provozovatele budou uvedené na právních stránkách před uzavřením jakékoliv smlouvy."
       }
     }
   },
   "home": {
     "badge": "Compliance EU pro české firmy",
-    "titleLine1": "Compliance plynulá ve vaší jurisdikci.",
+    "titleLine1": "Compliance srozumitelná ve vaší jurisdikci.",
     "titleLine2": "",
-    "mobileLead": "NIS2, EU AI Act, GDPR a ISO 27001 nativně, s citacemi předpisů, které váš auditor očekává.",
-    "lead": "NIS2, EU AI Act, GDPR a ISO 27001 nativně, s citacemi předpisů, které váš auditor očekává. Postaveno pro evropské SMB v italštině, češtině a angličtině.",
+    "mobileLead": "NIS2, EU AI Act, GDPR a ISO 27001 s citacemi předpisů, které váš auditor očekává.",
+    "lead": "NIS2, EU AI Act, GDPR a ISO 27001 s citacemi předpisů, které váš auditor očekává. Postaveno pro evropské MSP v italštině, češtině a angličtině.",
     "primaryCta": "Stát se design partnerem",
     "secondaryCta": "Zobrazit demo",
-    "trustLine": "Předběžný přístup · Přímý kontakt se zakladatelem · Produkční stack Vercel + Neon",
+    "trustLine": "Předběžný přístup · Přímý kontakt se zakladatelem · Infrastruktura Vercel + Neon",
     "partnerTag": "Otevřená zakládající skupina",
     "partnerFilled": "10 míst pro design partnery",
     "partnerFree": "12 měsíců Business plánu zdarma",
     "partnerOnboarding": "Tři týdny onboardingu se zakladatelem",
     "stepsTag": "Jak to funguje",
-    "stepsTitle": "Nastavte jednou. Funguje navždy.",
-    "stepsBody": "Tři kroky od prvního propojení systému k použitelnému evidence packu.",
+    "stepsTitle": "Nastavte jednou. Průběžně sledujte.",
+    "stepsBody": "Tři kroky od prvního propojení systému k použitelnému balíčku evidence.",
     "featuresTag": "Klíčové funkce",
-    "featuresTitle": "Compliance vytvořené pro moderní týmy.",
+    "featuresTitle": "Compliance pro IT a compliance týmy.",
     "featuresBody": "Propojte lokální i globální infrastrukturu. Mapujeme kontroly automaticky na české i mezinárodní standardy.",
-    "offerTitle": "Founding customer offer pro prvních 10 firem.",
+    "offerTitle": "Nabídka pro prvních 10 firem.",
     "offerBody": "Splnit.eu je v předběžném přístupu. První design partneři získají Business plán na 12 měsíců zdarma a tři týdny řízeného onboardingu přímo se zakladatelem.",
     "offerCta": "Zobrazit předběžný přístup",
     "referencePlaceholder": "Reference zákazníků budou publikovány s výslovným souhlasem po dokončení onboardingu design partnerů.",
@@ -1082,13 +1311,13 @@
       "monitoringTitle": "Kontinuální monitoring",
       "monitoringBody": "Zachyťte výpadky konfigurace ve vašem Microsoft 365 nebo AWS okamžitě.",
       "documentsTitle": "Automatické dokumenty",
-      "documentsBody": "Generujte pracovní dokumenty a evidence packy, které můžete předat právníkovi, auditorovi nebo konzultantovi k finální kontrole."
+      "documentsBody": "Generujte pracovní dokumenty a balíčky evidence, které můžete předat právníkovi, auditorovi nebo konzultantovi k finální kontrole."
     },
     "trustBadges": {
       "early": "Předběžný přístup",
       "dpa": "DPA k právní kontrole",
       "residency": "Vercel hosting · Neon Postgres",
-      "onboarding": "Founder-led onboarding"
+      "onboarding": "Onboarding se zakladatelem"
     }
   },
   "leadCapture": {
@@ -1123,8 +1352,8 @@
       "saving": "Ušetřete 2 měsíce",
       "featured": "Nejoblíbenější",
       "currency": "Kč",
-      "monthlySuffix": "/ měsíc",
-      "annualSuffix": "/ měsíc ročně",
+      "monthlySuffix": "/měsíc",
+      "annualSuffix": "/měsíc při roční fakturaci",
       "free": {
         "name": "Zdarma",
         "description": "Vyzkoušejte platformu bez závazků.",
@@ -1139,13 +1368,13 @@
       },
       "starter": {
         "name": "Starter",
-        "description": "Pro firmy, které berou soulad vážně.",
+        "description": "Pro firmy, které začínají se strukturovanou compliance.",
         "cta": "Stát se design partnerem",
         "features": [
           "2 předpisy (NIS2 + 1 další)",
           "3 integrace",
           "Automatické kontroly pro Microsoft 365, AWS a GitHub",
-          "Evidence vault",
+          "Archiv evidence",
           "Šablony dokumentů",
           "Upozornění na termíny",
           "5 uživatelů",
@@ -1154,15 +1383,15 @@
       },
       "business": {
         "name": "Business",
-        "description": "Kompletní platforma pro celý tým.",
+        "description": "Pro týmy, které řídí compliance napříč frameworky.",
         "cta": "Kontaktovat obchod",
         "features": [
           "5 předpisů",
           "10 integrací",
           "Trust Center",
-          "Vendor risk modul",
-          "Access reviews",
-          "Incident log",
+          "Modul rizik dodavatelů",
+          "Přístupové revize",
+          "Log incidentů",
           "25 uživatelů",
           "Prioritní podpora"
         ]
@@ -1201,13 +1430,13 @@
         "automatedChecks": "Automatické kontroly",
         "automatedEvidence": "Automatický sběr důkazů",
         "failureAlerts": "Upozornění na selhání",
-        "scheduler": "Scheduler",
+        "scheduler": "Plánovač",
         "policyTemplates": "Vzory politik",
         "pdfGeneration": "Generování PDF",
         "trainingTemplates": "Šablony školení",
         "auditorExport": "Export pro auditora",
         "publicPage": "Veřejná stránka",
-        "ndaGate": "Workflow žádosti o přístup",
+        "ndaGate": "Workflow žádostí o přístup k dokumentům",
         "subdomain": "Vlastní subdoména",
         "customDomain": "Vlastní doména",
         "userCount": "Počet uživatelů",
@@ -1303,7 +1532,7 @@
       },
       {
         "date": "Srpen 2026",
-        "title": "High-risk AI systémy musí být v souladu"
+      "title": "Vysoce rizikové AI systémy musí být v souladu"
       },
       {
         "date": "Srpen 2027",
@@ -1352,7 +1581,7 @@
       "employeeCount": "Počet zaměstnanců",
       "country": "Země",
       "primaryJurisdiction": "Primární jurisdikce",
-      "locale": "Locale",
+      "locale": "Jazyk",
       "continue": "Pokračovat"
     },
     "buttons": {
@@ -1409,18 +1638,18 @@
     "jurisdictions": {
       "CZ": "Česká republika",
       "IT": "Itálie",
-      "EU": "EU / English"
+      "EU": "EU / angličtina"
     },
     "locales": {
       "cs-CZ": "Čeština",
-      "en-EU": "English EU",
-      "it-IT": "Italiano"
+      "en-EU": "Angličtina (EU)",
+      "it-IT": "Italština"
     }
   },
   "organisationSettings": {
     "eyebrow": "Nastavení",
     "title": "Organizace",
-    "description": "Základní identita organizace, kategorizace a vazba na Clerk workspace.",
+    "description": "Základní identita organizace, kategorizace a vazba na Clerk organizaci.",
     "status": {
       "editable": "Upravitelné",
       "demoReadonly": "Demo jen pro čtení"
@@ -1432,7 +1661,7 @@
       "sector": "Sektor",
       "country": "Země",
       "primaryJurisdiction": "Primární jurisdikce",
-      "locale": "Locale",
+      "locale": "Jazyk",
       "save": "Uložit změny"
     },
     "nis2": {
@@ -1445,9 +1674,9 @@
       }
     },
     "workspace": {
-      "title": "Vazby workspace",
+      "title": "Vazby organizace",
       "clerkOrg": "Clerk org",
-      "plan": "Plan",
+      "plan": "Plán",
       "jurisdiction": "Jurisdikce",
       "onboarding": "Onboarding",
       "toolInventory": "Inventář nástrojů",
@@ -1456,11 +1685,11 @@
     }
   },
   "questionnairePage": {
-    "eyebrow": "Questionnaire AI",
+    "eyebrow": "AI dotazníky",
     "title": "Bezpečnostní dotazníky",
     "subtitle": "Automaticky navrhujte odpovědi na zákaznické dotazníky podle splněných kontrol, evidence a aktivních politik ve Splnit.eu.",
     "disclaimer": "Vygenerované odpovědi jsou pracovní návrhy pro právní a compliance kontrolu. Nejde o právní radu, certifikaci ani garanci souladu.",
-    "disabledNotice": "Questionnaire AI vyžaduje Clerk, DATABASE_URL, QUESTIONNAIRE_AI_ENABLED=true a nastaveného AI providera.",
+    "disabledNotice": "AI dotazníky vyžadují Clerk, DATABASE_URL, QUESTIONNAIRE_AI_ENABLED=true a nastaveného poskytovatele AI.",
     "fallbacks": {
       "demoOrganisation": "Demo organizace",
       "organisation": "Organizace"
@@ -1475,12 +1704,12 @@
     },
     "history": {
       "title": "Uložené výstupy",
-      "subtitle": "Nedávno vygenerované dotazníky a gap reporty uložené v pracovním prostoru.",
+      "subtitle": "Nedávno vygenerované odpovědi na dotazníky a reporty gapů uložené pro tuto organizaci.",
       "empty": "Zatím nejsou uložené žádné generované výstupy.",
       "notAvailable": "bez data",
       "kinds": {
         "questionnaireAnswers": "Odpovědi na dotazník",
-        "gapAnalysis": "Gap report"
+        "gapAnalysis": "Report gapů"
       }
     },
     "workbench": {
@@ -1491,13 +1720,13 @@
       "rateLimitTitle": "Limit použití",
       "rateLimitBody": "Starter: 5/měsíc. Business a Consultant: bez limitu.",
       "remaining": "Zbývá",
-      "reset": "reset",
+      "reset": "obnovení",
       "notAvailable": "n/a",
       "resultsTitle": "Vygenerované odpovědi",
       "resultMeta": "{count} otázek · {model}",
       "noResultSubtitle": "Odpovědi se zobrazí po vygenerování.",
-      "emptyBody": "Vygenerované odpovědi budou založené na splněných kontrolách, evidenci a aktivních politikách v pracovním prostoru {organisation}.",
-      "artifact": "Uložený artefakt",
+      "emptyBody": "Vygenerované odpovědi budou založené na splněných kontrolách, evidenci a aktivních politikách organizace {organisation}.",
+      "artifact": "Uložený výstup",
       "evidence": "Evidence",
       "legal": "Právní citace",
       "policies": "Politiky",
@@ -1513,15 +1742,15 @@
     "actionErrors": {
       "authRequired": "Přihlášení a aktivní organizace jsou povinné.",
       "invalidInput": "Vložte text dotazníku nebo nahrajte textový soubor.",
-      "missingConfig": "Questionnaire AI není povolené nebo provider není nastavený.",
+      "missingConfig": "AI dotazníky nejsou povolené nebo poskytovatel není nastavený.",
       "noQuestions": "Nepodařilo se najít otázky v dotazníku.",
       "rateLimit": "Měsíční limit {limit} dotazníků je vyčerpaný.",
       "generationFailed": "Generování odpovědí se nepodařilo.",
       "organisationFallback": "Organizace"
     },
     "unsupported": {
-      "summary": "Pro tento pracovní prostor zatím není dostupný žádný podpůrný compliance kontext.",
-      "answer": "Z aktuálních dat pracovního prostoru Splnit.eu není dostupná žádná doložitelná odpověď.",
+      "summary": "Pro tuto organizaci zatím není dostupný žádný podpůrný compliance kontext.",
+      "answer": "Z aktuálních dat organizace ve Splnit.eu není dostupná žádná doložitelná odpověď.",
       "notes": "Před externím použitím doplňte splněné kontroly, evidenci, aktivní politiky nebo zkontrolované právní citace."
     }
   }
