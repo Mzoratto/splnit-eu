@@ -736,6 +736,7 @@ Prepared materials:
 - `docs/outreach/italy-contact-verification-shortlist.md` narrows the next pass to six Tier 1 companies: Cubbit, Cleafy, Netalia, DigitalPA, Cyber Guru / LibraCyber, and ReeVo. The next blocker is one verified role owner and hook per company, not more broad sourcing.
 - `docs/outreach/italy-tier-1-contact-pass.md` records owner-candidate rows and exact hooks for the six Tier 1 companies. Cubbit, Cleafy and DigitalPA are the first three send-prep draft candidates; Netalia and Cyber Guru / LibraCyber are second-wave; ReeVo stays blocked until a durable partner/channel owner is verified.
 - `docs/outreach/italy-first-touch-drafts-tier-1.md` drafts the first three manual first-touch emails for Cubbit, Cleafy and DigitalPA. These are not sent and still require verified recipient route plus real OSVČ/IČO sender details before use.
+- `docs/outreach/italy-tier-1-send-prep.md` records current public sending routes for Cubbit, Cleafy and DigitalPA. Cubbit and DigitalPA have usable generic public routes; Cleafy needs either a verified LinkedIn route or its official contact form. No tracker row is marked sent.
 
 ### 5.5 First Design Partner Onboarding
 
