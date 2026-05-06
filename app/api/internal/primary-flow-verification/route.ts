@@ -693,7 +693,7 @@ async function verifyItalianSurfaces(context: SmokeContext) {
     detail
       ? getFrameworkDisplayRegulator(detail.framework, locale, copy.regulators)
       : null,
-    "Direttiva UE / autorità nazionali",
+    "ACN — Agenzia per la Cybersicurezza Nazionale",
   );
 
   return {
