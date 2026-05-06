@@ -14,6 +14,7 @@
 
 - `app-readiness-audit.md` - authenticated app route readiness matrix and immediate fix queue.
 - `primary-flow-verification.md` - local database primary-flow verification record.
+- `production-db-audit.md` - production database wiring audit and current env blocker.
 - `legal-review.md` - counsel handoff checklist.
 - `subprocessors.md` - subprocessor register draft.
 - `retention-policy.md` - retention schedule draft.

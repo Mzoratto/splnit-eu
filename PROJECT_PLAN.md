@@ -38,7 +38,7 @@ Hard constraints:
 
 - Core app hardening: verify each primary app page against real data, empty states, permissions, and locale behavior.
 - Knowledge layer hardening: confirm reviewed vs draft citation gates across all customer-facing outputs.
-- Production database parity: imports/migrations were applied where a usable `DATABASE_URL` existed, but production DB state must be verified before relying on it.
+- Production database parity: imports/migrations were applied where a usable local `DATABASE_URL` existed. Production DB audit is blocked because Vercel Production currently has `DATABASE_URL` present but empty.
 - Legal/counsel review: public legal pages and DPA/subprocessor/retention annexes remain engineering drafts until reviewed.
 - Italian outreach: first-three and second-wave packets are prepared in archive, but sending is paused until product/readiness blockers are cleared and real sender details are inserted.
 
@@ -47,6 +47,7 @@ Hard constraints:
 - Real operator details are still placeholders in some internal outreach/legal workflows: founder name, OSVČ identity, IČO, ARES link, phone/LinkedIn if used.
 - Czech mapping promotion is blocked on human reviewer decisions.
 - Italian mapping promotion is blocked on human/advisor review for sensitive or non-auto-approved rows.
+- Production DB audit is blocked until Vercel Production has a real hosted Postgres/Neon `DATABASE_URL`; the current local URL points to `localhost/splnit_eu_dev` and must not be copied to production.
 - Any customer-facing legal or auditor-ready material is blocked until legal/reviewer status is explicit.
 
 ## Deprioritized Until Core App Stability
@@ -66,6 +67,7 @@ These are useful later, but not next:
 - `docs/README.md` - documentation index and archive policy.
 - `docs/app-readiness-audit.md` - authenticated app route readiness matrix and immediate fix queue.
 - `docs/primary-flow-verification.md` - local database primary-flow verification record.
+- `docs/production-db-audit.md` - production DB/env audit and current blocker.
 - `docs/architecture/` - architecture decisions that still affect implementation.
 - `docs/legal-review.md`, `docs/subprocessors.md`, `docs/retention-policy.md`, `docs/data-processing-map.md`, `docs/offboarding-runbook.md`, `docs/audit-log-export-sop.md` - counsel/support handoff drafts.
 - `docs/legal-reviews/` - mapping/template review evidence and reviewer work queues.
@@ -89,14 +91,15 @@ Do these before any new features:
 1. **App readiness audit:** created in `docs/app-readiness-audit.md`; keep it updated as gaps close.
 2. **Primary flow verification:** local data-layer smoke passes and is documented in `docs/primary-flow-verification.md`; authenticated browser persistence remains blocked on Clerk test credentials.
 3. **Citation safety audit:** smoke checks pass locally; document production-target results during the production DB audit.
-4. **Production DB audit:** verify production `DATABASE_URL`, migration state, source document counts, and review queue counts.
-5. **Legal identity closeout:** replace placeholders only when real OSVČ/IČO/ARES details are available and reviewed.
-6. **Only then decide outreach:** send first three manual Italian messages or pause outreach based on product readiness.
+4. **Production env repair:** configure real Vercel Production values for `DATABASE_URL`, Clerk, encryption, Stripe, and OpenAI. Do not reuse the current local localhost DB URL.
+5. **Production DB audit:** after env repair, verify migration state, source document counts, review queue counts, and citation smoke checks against the production DB.
+6. **Legal identity closeout:** replace placeholders only when real OSVČ/IČO/ARES details are available and reviewed.
+7. **Only then decide outreach:** send first three manual Italian messages or pause outreach based on product readiness.
 
 ## Definition Of Ready For New Feature Work
 
 - `npm run typecheck`, `npm run lint`, and `npm run build` pass on main.
 - App readiness matrix has no critical unknowns for the primary workflow.
-- Production DB state is known and documented.
+- Production DB state is known and documented after real production env values are configured.
 - Citation gates are verified.
 - Current blocker list is shorter than the next feature's risk surface.
