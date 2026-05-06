@@ -38,7 +38,7 @@ Hard constraints:
 
 - Core app hardening: verify each primary app page against real data, empty states, permissions, and locale behavior.
 - Knowledge layer hardening: confirm reviewed vs draft citation gates across all customer-facing outputs.
-- Production database parity: imports/migrations were applied where a usable local `DATABASE_URL` existed. Live production readiness reports required env groups configured, but production DB table/count audit still needs a safe production connection path because Vercel sensitive env values are non-readable locally.
+- Production database parity: imports/migrations were applied where a usable local `DATABASE_URL` existed. Live production readiness reports required env groups configured, but a temporary production audit route proved `DATABASE_URL` points at `127.0.0.1:5432`; production needs a real hosted Postgres/Neon URL before migrations or smokes can pass.
 - Legal/counsel review: public legal pages and DPA/subprocessor/retention annexes remain engineering drafts until reviewed.
 - Italian outreach: first-three and second-wave packets are prepared in archive, but sending is paused until product/readiness blockers are cleared and real sender details are inserted.
 
@@ -47,7 +47,7 @@ Hard constraints:
 - Real operator details are still placeholders in some internal outreach/legal workflows: founder name, OSVČ identity, IČO, ARES link, phone/LinkedIn if used.
 - Czech mapping promotion is blocked on human reviewer decisions.
 - Italian mapping promotion is blocked on human/advisor review for sensitive or non-auto-approved rows.
-- Production DB table/count audit is blocked until either the production Neon/Postgres connection string is supplied directly for local audit commands or a temporary token-protected production audit route is added. The current local URL points to `localhost/splnit_eu_dev` and must not be copied to production.
+- Production DB table/count audit is blocked until the production `DATABASE_URL` is replaced with a real hosted Postgres/Neon URL. Marketplace Neon provisioning is blocked on owner acceptance of Neon/Vercel terms.
 - Any customer-facing legal or auditor-ready material is blocked until legal/reviewer status is explicit.
 
 ## Deprioritized Until Core App Stability
@@ -91,7 +91,7 @@ Do these before any new features:
 1. **App readiness audit:** created in `docs/app-readiness-audit.md`; keep it updated as gaps close.
 2. **Primary flow verification:** local data-layer smoke passes and is documented in `docs/primary-flow-verification.md`; authenticated browser persistence remains blocked on Clerk test credentials.
 3. **Citation safety audit:** smoke checks pass locally; document production-target results during the production DB audit.
-4. **Production DB audit path:** choose either a direct production Neon/Postgres connection string for local audit commands or a temporary token-protected production audit route.
+4. **Production DB repair:** accept/provision a hosted Neon/Postgres production database and replace the current localhost `DATABASE_URL`.
 5. **Production DB audit:** verify migration state, source document counts, review queue counts, and citation smoke checks against the production DB.
 6. **Legal identity closeout:** replace placeholders only when real OSVČ/IČO/ARES details are available and reviewed.
 7. **Only then decide outreach:** send first three manual Italian messages or pause outreach based on product readiness.

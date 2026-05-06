@@ -40,7 +40,24 @@ recommended: 2 / 10 configured
 
 The previous local CLI result that showed sensitive variables as empty was misleading. Vercel sensitive environment variables are intentionally non-readable after creation, so `vercel env pull` and local `vercel env run` are not reliable ways to inspect their values. Use the live server-side readiness endpoint for presence checks, and never print actual values.
 
-Production database table/count audit is still pending because local scripts cannot read the sensitive production `DATABASE_URL` from Vercel.
+Production database table/count audit was attempted with a temporary token-protected production route, then the route and token were removed. Cleanup deployment: `dpl_7vLqkeZQddoY3v6NPgZ2RteFesHz`.
+
+The route proved that production `DATABASE_URL` currently points to `127.0.0.1:5432`, not a hosted Postgres/Neon database:
+
+```text
+Error: connect ECONNREFUSED 127.0.0.1:5432
+```
+
+Because the production function cannot connect to Postgres, production migrations and citation smoke checks could not run.
+
+A Vercel Marketplace Neon resource provisioning attempt for Frankfurt (`fra1`) was blocked by marketplace terms acceptance. Those legal/billing terms must be accepted by the owner before provisioning can continue.
+
+Cleanup verification:
+
+```text
+GET https://splnit.eu/api/internal/production-db-audit -> 404
+PRODUCTION_AUDIT_TOKEN present in Vercel Production -> false
+```
 
 ## Verification Commands
 
@@ -89,10 +106,11 @@ These checks remain pending until a production DB connection can be used by loca
 
 Do not copy the current local `DATABASE_URL`; it points to `localhost/splnit_eu_dev` and is not a production database target.
 
-To finish the production DB audit, use one of these paths:
+To finish the production DB audit, first replace the production `DATABASE_URL` with a real hosted Postgres/Neon URL. Use one of these paths:
 
-1. Get the production Neon/Postgres connection string directly from the database provider and run the audit commands locally with that value loaded only for the command.
-2. Add a temporary, token-protected internal audit route that runs read-only count queries inside Vercel production, then remove it after the audit.
+1. Accept the Neon Marketplace terms in Vercel, provision/connect a Neon resource in `fra1`, then migrate/seed/audit that database.
+2. Get the production Neon/Postgres connection string directly from the database provider and run the audit commands locally with that value loaded only for the command.
+3. Re-add a temporary, token-protected internal audit route that runs read-only count queries inside Vercel production, then remove it after the audit.
 
 After a production DB connection path exists:
 
