@@ -14,7 +14,7 @@
 
 - `app-readiness-audit.md` - authenticated app route readiness matrix and immediate fix queue.
 - `primary-flow-verification.md` - local database primary-flow verification record.
-- `production-db-audit.md` - production database wiring audit and current env blocker.
+- `production-db-audit.md` - production database wiring and verification record.
 - `legal-review.md` - counsel handoff checklist.
 - `subprocessors.md` - subprocessor register draft.
 - `retention-policy.md` - retention schedule draft.
@@ -31,6 +31,7 @@
 
 - `outreach/README.md` - current outreach status.
 - `outreach/italy-target-tracker.csv` - active 50-target tracker. No rows are sent.
+- `outreach/italy-first-three-send-packet.md` - active first-three manual outreach packet.
 
 ### Weekly Reviews
 

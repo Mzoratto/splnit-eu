@@ -33,28 +33,28 @@ Hard constraints:
 - Draft/review gates exist for citation-sensitive outputs; blacklisted or low-confidence mappings are not supposed to promote automatically.
 - Public Italian NIS2 scoping tool is live at `https://splnit.eu/it/strumenti/nis2-scope`.
 - Italian outreach research has a 50-row tracker, but no emails have been sent.
+- Production Neon is live, migrated, seeded, imported, and citation-smoke verified.
+- Primary app readiness is closed for the outreach decision: production runtime verification passed against live Clerk, Clerk custom domain, production Neon, Vercel Blob, Italian primary labels, evidence, policies, and NIS2 gap report output.
 
 ### In Progress
 
-- Core app hardening: verify each primary app page against real data, empty states, permissions, and locale behavior.
-- Knowledge layer hardening: confirm reviewed vs draft citation gates across all customer-facing outputs.
-- Production database parity: imports/migrations were applied where a usable local `DATABASE_URL` existed. Live production readiness reports required env groups configured, but a temporary production audit route proved `DATABASE_URL` points at `127.0.0.1:5432`; production needs a real hosted Postgres/Neon URL before migrations or smokes can pass.
+- Core app hardening: secondary surfaces still need polish, especially misleading demo fallbacks, billing localization, Trust Center admin slug behavior, and broader action-level authorization coverage.
+- Knowledge layer hardening: Italian policy templates remain draft and intentionally fall back to reviewed EU English output until legal/template review promotes them.
 - Legal/counsel review: public legal pages and DPA/subprocessor/retention annexes remain engineering drafts until reviewed.
-- Italian outreach: first-three and second-wave packets are prepared in archive, but sending is paused until product/readiness blockers are cleared and real sender details are inserted.
+- Italian outreach: first-three packet is revived under `docs/outreach/`; sending is now blocked by sender identity/manual route choice, not product readiness.
 
 ### Blocked
 
 - Real operator details are still placeholders in some internal outreach/legal workflows: founder name, OSVČ identity, IČO, ARES link, phone/LinkedIn if used.
 - Czech mapping promotion is blocked on human reviewer decisions.
 - Italian mapping promotion is blocked on human/advisor review for sensitive or non-auto-approved rows.
-- Production DB table/count audit is blocked until the production `DATABASE_URL` is replaced with a real hosted Postgres/Neon URL. Marketplace Neon provisioning is blocked on owner acceptance of Neon/Vercel terms.
 - Any customer-facing legal or auditor-ready material is blocked until legal/reviewer status is explicit.
 
 ## Deprioritized Until Core App Stability
 
 These are useful later, but not next:
 
-- Broad Italian cold outreach beyond the first manual test messages.
+- Broad Italian cold outreach beyond the first three manual test messages.
 - Design-partner onboarding playbooks and templates.
 - Expanding the agent-review pipeline beyond the currently validated scope.
 - Custom RAG/vector search for customer-facing AI.
@@ -72,6 +72,7 @@ These are useful later, but not next:
 - `docs/legal-review.md`, `docs/subprocessors.md`, `docs/retention-policy.md`, `docs/data-processing-map.md`, `docs/offboarding-runbook.md`, `docs/audit-log-export-sop.md` - counsel/support handoff drafts.
 - `docs/legal-reviews/` - mapping/template review evidence and reviewer work queues.
 - `docs/outreach/italy-target-tracker.csv` - the only active outreach data table.
+- `docs/outreach/italy-first-three-send-packet.md` - active first-three manual outreach packet.
 - `docs/weekly-reviews/` - weekly operating reviews.
 - `docs/archive/` - historical plans, working notes, and premature playbooks.
 
@@ -88,13 +89,11 @@ Tracked root files are generally valid for a Next.js/Vercel app:
 
 Do these before any new features:
 
-1. **App readiness audit:** created in `docs/app-readiness-audit.md`; keep it updated as gaps close.
-2. **Primary flow verification:** local data-layer smoke passes and is documented in `docs/primary-flow-verification.md`; authenticated browser persistence remains blocked on Clerk test credentials.
-3. **Citation safety audit:** smoke checks pass locally; document production-target results during the production DB audit.
-4. **Production DB repair:** accept/provision a hosted Neon/Postgres production database and replace the current localhost `DATABASE_URL`.
-5. **Production DB audit:** verify migration state, source document counts, review queue counts, and citation smoke checks against the production DB.
-6. **Legal identity closeout:** replace placeholders only when real OSVČ/IČO/ARES details are available and reviewed.
-7. **Only then decide outreach:** send first three manual Italian messages or pause outreach based on product readiness.
+1. **Legal identity closeout:** replace placeholders only when real OSVČ/IČO/ARES details are available and reviewed.
+2. **First-three outreach decision:** send Cubbit, Cleafy, and DigitalPA manually once sender details and exact routes are confirmed, or explicitly pause.
+3. **Track outreach state:** update `docs/outreach/italy-target-tracker.csv` only after each message is actually sent.
+4. **Secondary app hardening:** continue from `docs/app-readiness-audit.md` without blocking the first outreach decision.
+5. **Legal/template review:** keep Italian policy-template promotion and mapping review in the legal-review queue.
 
 ## Definition Of Ready For New Feature Work
 
