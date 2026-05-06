@@ -68,7 +68,7 @@ export async function updateIncidentStatus(input: {
   const db = getDb();
   const resolvedAt = input.status === "resolved" ? new Date() : null;
 
-  await db
+  const [updated] = await db
     .update(incidents)
     .set({
       resolvedAt,
@@ -79,7 +79,12 @@ export async function updateIncidentStatus(input: {
         eq(incidents.clerkOrgId, input.clerkOrgId),
         eq(incidents.id, input.incidentId),
       ),
-    );
+    )
+    .returning({ id: incidents.id });
+
+  if (!updated) {
+    throw new Error("Incident not found.");
+  }
 }
 
 export async function markIncidentReported(input: {
@@ -90,7 +95,7 @@ export async function markIncidentReported(input: {
   const db = getDb();
   const reportedAt = new Date();
 
-  await db
+  const [updated] = await db
     .update(incidents)
     .set(
       input.track === "cybersecurity"
@@ -108,5 +113,10 @@ export async function markIncidentReported(input: {
         eq(incidents.clerkOrgId, input.clerkOrgId),
         eq(incidents.id, input.incidentId),
       ),
-    );
+    )
+    .returning({ id: incidents.id });
+
+  if (!updated) {
+    throw new Error("Incident not found.");
+  }
 }

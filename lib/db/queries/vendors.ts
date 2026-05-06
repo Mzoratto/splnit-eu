@@ -85,6 +85,21 @@ export async function saveVendorAssessment(input: {
   vendorId: string;
 }) {
   const db = getDb();
+  const vendorRows = await db
+    .select({ id: vendors.id })
+    .from(vendors)
+    .where(
+      and(
+        eq(vendors.clerkOrgId, input.clerkOrgId),
+        eq(vendors.id, input.vendorId),
+      ),
+    )
+    .limit(1);
+
+  if (!vendorRows[0]) {
+    throw new Error("Vendor not found.");
+  }
+
   const score = scoreVendorAnswers(input.answers);
   const riskTier = getVendorRiskTier(score);
   const assessedAt = new Date();
@@ -128,6 +143,21 @@ export async function createVendorQuestionnaire(input: {
   vendorId: string;
 }) {
   const db = getDb();
+  const vendorRows = await db
+    .select({ id: vendors.id })
+    .from(vendors)
+    .where(
+      and(
+        eq(vendors.clerkOrgId, input.clerkOrgId),
+        eq(vendors.id, input.vendorId),
+      ),
+    )
+    .limit(1);
+
+  if (!vendorRows[0]) {
+    throw new Error("Vendor not found.");
+  }
+
   const [assessment] = await db
     .insert(vendorAssessments)
     .values({

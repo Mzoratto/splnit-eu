@@ -105,7 +105,7 @@ export async function updateAccessReviewItemDecision(input: {
 }) {
   const db = getDb();
 
-  await db
+  const [updated] = await db
     .update(accessReviewItems)
     .set({
       decidedAt: new Date(),
@@ -118,7 +118,12 @@ export async function updateAccessReviewItemDecision(input: {
         eq(accessReviewItems.id, input.itemId),
         eq(accessReviewItems.reviewId, input.reviewId),
       ),
-    );
+    )
+    .returning({ id: accessReviewItems.id });
+
+  if (!updated) {
+    throw new Error("Access review item not found.");
+  }
 
   return refreshAccessReviewCounts({
     clerkOrgId: input.clerkOrgId,
@@ -130,8 +135,23 @@ export async function completeAccessReview(input: {
   clerkOrgId: string;
   reviewId: string;
 }) {
-  const stats = await refreshAccessReviewCounts(input);
   const db = getDb();
+  const [review] = await db
+    .select({ id: accessReviews.id })
+    .from(accessReviews)
+    .where(
+      and(
+        eq(accessReviews.clerkOrgId, input.clerkOrgId),
+        eq(accessReviews.id, input.reviewId),
+      ),
+    )
+    .limit(1);
+
+  if (!review) {
+    throw new Error("Access review not found.");
+  }
+
+  const stats = await refreshAccessReviewCounts(input);
 
   await db
     .update(accessReviews)
