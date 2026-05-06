@@ -1,5 +1,6 @@
 import { and, eq } from "drizzle-orm";
 import { loadEnvConfig } from "@next/env";
+import { pathToFileURL } from "node:url";
 import { CONTROL_LIBRARY } from "../lib/controls/library";
 import { getDb } from "../lib/db";
 import {
@@ -480,7 +481,16 @@ async function seedEvidenceTemplates(
   return count;
 }
 
-async function main() {
+export type SeedSummary = {
+  controls: number;
+  evidenceTemplates: number;
+  frameworks: number;
+  frameworkControls: number;
+  integrationTests: number;
+  sourceDocuments: number;
+};
+
+export async function seedDatabase(): Promise<SeedSummary> {
   const frameworkIds = await seedFrameworks();
   const controlIds = await seedControls();
   const mappingCount = await seedFrameworkControls(frameworkIds, controlIds);
@@ -494,12 +504,31 @@ async function main() {
     db.select().from(controls),
   ]);
 
+  return {
+    controls: controlRows.length,
+    evidenceTemplates: evidenceTemplateCount,
+    frameworks: frameworkRows.length,
+    frameworkControls: mappingCount,
+    integrationTests: integrationTestCount,
+    sourceDocuments: sourceDocumentCount,
+  };
+}
+
+async function main() {
+  const summary = await seedDatabase();
+
   console.log(
-    `Seeded ${frameworkRows.length} frameworks, ${controlRows.length} controls, ${mappingCount} framework-control mappings, ${sourceDocumentCount} source documents, ${evidenceTemplateCount} evidence templates, ${integrationTestCount} integration tests.`,
+    `Seeded ${summary.frameworks} frameworks, ${summary.controls} controls, ${summary.frameworkControls} framework-control mappings, ${summary.sourceDocuments} source documents, ${summary.evidenceTemplates} evidence templates, ${summary.integrationTests} integration tests.`,
   );
 }
 
-main().catch((error) => {
-  console.error(error);
-  process.exit(1);
-});
+const scriptPath = process.argv[1];
+const isDirectRun =
+  Boolean(scriptPath) && import.meta.url === pathToFileURL(scriptPath).href;
+
+if (isDirectRun) {
+  main().catch((error) => {
+    console.error(error);
+    process.exit(1);
+  });
+}
