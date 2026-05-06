@@ -741,6 +741,7 @@ Prepared materials:
 - `docs/outreach/italy-tier-1-short-form-variants.md` provides shortened contact-form and LinkedIn-note variants for Cubbit, Cleafy and DigitalPA so generic routes do not receive overlong cold emails.
 - `docs/outreach/italy-discovery-call-playbook.md` defines the 30-minute discovery call agenda, qualification rules, outcome codes, post-call note template, follow-up email, and guardrails for the first Italian replies.
 - `docs/outreach/italy-response-tracking-and-follow-up.md` defines tracker status transitions, daily review routine, one-follow-up rule, reply triage, call-booking response, and weekly outreach reporting.
+- `docs/outreach/italy-first-three-send-packet.md` converts Cubbit, Cleafy and DigitalPA into the first owner-send packet with verified public route choices and tracker update instructions. The tracker rows are prepared but still `not_sent`.
 
 ### 5.5 First Design Partner Onboarding
 
