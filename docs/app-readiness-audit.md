@@ -2,13 +2,51 @@
 
 Last updated: 2026-05-06
 
-Purpose: identify the authenticated app gaps that must be closed before new product features or broader outreach. This is a static route/code audit, not a browser or production database verification run.
+Purpose: identify the authenticated app gaps that must be closed before new product features or broader outreach. This started as a static route/code audit and now records the production verification results that close or defer each readiness item.
 
 ## Current Conclusion
 
 Primary workflow readiness is closed for the current outreach decision. A temporary token-gated Vercel production verification route passed on 2026-05-06 against production Neon, live Clerk, the Clerk custom domain, and Vercel Blob, then cleaned up its temporary user, organization, rows, and blobs. Live Clerk Organizations were enabled during this pass with a five-member default limit.
 
 No critical unknowns remain for `dashboard -> controls -> frameworks -> evidence -> policies -> gap report`. Remaining gaps are secondary-surface hardening or product-shaping work, except the separately tracked legal identity closeout and Italian policy-template legal review.
+
+## Latest Production Verification
+
+Production alias `https://splnit.eu` was verified on 2026-05-06 after DNS propagation for Clerk custom domains. The committed app state was deployed to production as `dpl_2rFBHsXEwR9VkBCoHQ2axmqs74Wt`; temporary verification-route deployments `dpl_HVJHFxVoSUAxrJtyNuoq3MyTJUcx` and `dpl_4Q2zgonQsfb5EynVeXMHo77yrUeW` were used only to run checks inside Vercel with production runtime secrets.
+
+Production health/readiness checks passed:
+
+- `/api/health`: `ok=true`, `databaseConfigured=true`
+- `/api/readiness`: `ok=true`, required checks `7/7` configured, recommended checks `2/10` configured
+
+Citation checks passed through the temporary token-gated route:
+
+```json
+{
+  "automatedEvidenceRows": 0,
+  "invalidAutomatedEvidenceRows": 0,
+  "missingReviewedLinks": 0,
+  "ok": true,
+  "promotedDraftRows": 0
+}
+```
+
+Authenticated production browser verification passed against `https://splnit.eu` with zero browser console errors:
+
+```json
+{
+  "baseUrl": "https://splnit.eu",
+  "browserConsoleErrors": 0,
+  "ok": true,
+  "evidenceRows": 1,
+  "frameworkSlugs": ["gdpr", "nis2"],
+  "generatedArtifacts": 1,
+  "policies": 2,
+  "statusRows": 25
+}
+```
+
+The temporary route created and cleaned up a Clerk user, Clerk organization, production database rows, generated artifacts, and evidence blobs. The route files are not committed, and the temporary `READINESS_VERIFICATION_TOKEN` production env var was removed after the pass.
 
 ## Scope
 
@@ -68,14 +106,13 @@ Readiness statuses:
 
 ## Immediate Fix Queue
 
-1. **Primary-flow verification follow-up.** Browser-level UX regression coverage remains useful, but the production runtime verification has cleared the critical outreach readiness unknown.
-2. **Secondary-surface hardening.** Continue with provider-configured integration runtime smokes, questionnaire provider runtime/evidence-save checks, and audit export pagination/limit checks.
+1. **Secondary-surface hardening.** Continue with provider-configured integration runtime smokes, questionnaire provider runtime/evidence-save checks, and audit export pagination/limit checks.
+2. **Outreach decision prep.** Treat the primary workflow as verified for outreach planning, while keeping Italian policy-template promotion and legal identity closeout out of demo claims until completed.
 
 ## Verification Needed Next
 
-- `npm run typecheck`
-- `npm run lint`
-- `npm run build`
-- Browser check at desktop and 375px mobile for the primary flow.
-- Database check against production target: migrations, organisations, frameworks, controls, source documents, review queue, generated artifacts.
-- Citation safety checks: `npm run smoke:draft-extraction-sources`, `npm run smoke:reviewed-article-links`, `npm run smoke:automated-evidence-citations`.
+- Provider-configured integration runtime smokes for Microsoft 365, GitHub, and AWS when production credentials are available.
+- Questionnaire provider runtime generation and evidence-save smoke.
+- Audit export pagination/limit verification.
+- Legal review and promotion decision for Italian policy templates.
+- Legal identity/public legal-page closeout when the real operator details are supplied.

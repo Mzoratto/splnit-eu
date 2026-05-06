@@ -28,6 +28,12 @@ policy and NIS2 gap report PDFs, verified Italian primary domain labels, and
 deleted its temporary rows, blobs, Clerk user, and Clerk organization. The route
 was removed immediately after the pass.
 
+The latest production-alias pass used:
+
+- clean committed deployment before the route: `dpl_2rFBHsXEwR9VkBCoHQ2axmqs74Wt`
+- temporary verification-route deployments: `dpl_HVJHFxVoSUAxrJtyNuoq3MyTJUcx`, `dpl_4Q2zgonQsfb5EynVeXMHo77yrUeW`
+- base URL: `https://splnit.eu`
+
 Clerk dashboard showed Organizations configured, but the Backend API still
 reported `enabled: false`. The test instance was corrected through Clerk's
 Backend API by setting only `organizationSettings.enabled=true`, then the smoke
@@ -120,6 +126,40 @@ Observed result on 2026-05-06:
   "statusRows": 25
 }
 ```
+
+Observed production-alias result on 2026-05-06:
+
+```json
+{
+  "baseUrl": "https://splnit.eu",
+  "browserConsoleErrors": 0,
+  "ok": true,
+  "evidenceRows": 1,
+  "frameworkSlugs": ["gdpr", "nis2"],
+  "generatedArtifacts": 1,
+  "policies": 2,
+  "statusRows": 25
+}
+```
+
+Production runtime citation check result:
+
+```json
+{
+  "automatedEvidenceRows": 0,
+  "invalidAutomatedEvidenceRows": 0,
+  "missingReviewedLinks": 0,
+  "ok": true,
+  "promotedDraftRows": 0
+}
+```
+
+The production-alias browser pass used a short-lived Clerk sign-in token created
+inside the token-gated Vercel route because the generic Clerk second-factor test
+code was rejected by the production custom-domain sign-in flow. This kept Clerk
+credentials and production secrets inside Vercel runtime while still exercising
+the real production alias, Clerk custom domain, production Neon, and Blob-backed
+downloads.
 
 Post-run cleanup check:
 
