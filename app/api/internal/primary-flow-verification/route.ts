@@ -86,6 +86,7 @@ type StepResult = {
   detail?: unknown;
   durationMs: number;
   error?: string;
+  errorDetail?: unknown;
   finishedAt: string;
   name: StepName;
   ok: boolean;
@@ -200,11 +201,12 @@ async function runStep<T>(
     return detail;
   } catch (error) {
     const finishedAt = new Date();
-    const message = error instanceof Error ? error.message : "Unknown error";
+    const { detail, message } = serializeError(error);
 
     steps.push({
       durationMs: finishedAt.getTime() - startedAt.getTime(),
       error: message,
+      errorDetail: detail,
       finishedAt: finishedAt.toISOString(),
       name,
       ok: false,
@@ -214,6 +216,40 @@ async function runStep<T>(
 
     throw error;
   }
+}
+
+function serializeError(error: unknown) {
+  const message = error instanceof Error ? error.message : "Unknown error";
+
+  if (!error || typeof error !== "object") {
+    return { detail: undefined, message };
+  }
+
+  const record = error as Record<string, unknown>;
+  const clerkErrors = Array.isArray(record.errors)
+    ? record.errors.map((item) => {
+        if (!item || typeof item !== "object") {
+          return item;
+        }
+
+        const clerkError = item as Record<string, unknown>;
+
+        return {
+          code: clerkError.code,
+          longMessage: clerkError.longMessage,
+          message: clerkError.message,
+          meta: clerkError.meta,
+        };
+      })
+    : undefined;
+
+  return {
+    detail: {
+      clerkErrors,
+      status: record.status,
+    },
+    message,
+  };
 }
 
 function addYears(date: Date, years: number) {
