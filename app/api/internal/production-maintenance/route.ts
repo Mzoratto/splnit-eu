@@ -125,7 +125,7 @@ async function runMigrations() {
       id: number;
     }>(`
       SELECT id, hash, created_at::text AS created_at
-      FROM "__drizzle_migrations"
+      FROM "drizzle"."__drizzle_migrations"
       ORDER BY created_at DESC
       LIMIT 1
     `);
