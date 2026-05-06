@@ -4,6 +4,12 @@ Last updated: 2026-05-06
 
 Purpose: identify the authenticated app gaps that must be closed before new product features or broader outreach. This is a static route/code audit, not a browser or production database verification run.
 
+## Current Conclusion
+
+Primary workflow readiness is closed for the current outreach decision. A temporary token-gated Vercel production verification route passed on 2026-05-06 against production Neon, live Clerk, the Clerk custom domain, and Vercel Blob, then cleaned up its temporary user, organization, rows, and blobs. Live Clerk Organizations were enabled during this pass with a five-member default limit.
+
+No critical unknowns remain for `dashboard -> controls -> frameworks -> evidence -> policies -> gap report`. Remaining gaps are secondary-surface hardening or product-shaping work, except the separately tracked legal identity closeout and Italian policy-template legal review.
+
 ## Scope
 
 Audited authenticated routes under `app/(app)` and shared app shell behavior. Public marketing pages, API route internals, and external vendor-assessment links are out of scope for this pass except where they affect the primary customer workflow.
@@ -21,23 +27,23 @@ Readiness statuses:
 2. **Demo fallback is common.** Several routes render demo/static data when Clerk or `DATABASE_URL` is unavailable. This is useful for local development but must be obvious in production checks.
 3. **Locale is uneven outside the primary flow.** Primary controls/framework/evidence surfaces now use tenant locale or tenant-aware fallbacks for UI and domain labels. Billing still has hardcoded English copy and CZK formatting for all locales.
 4. **Mutations are generally disabled without real data.** Many pages set `canMutate=false` when using demo data. This is good, but action-level authorization still needs a separate smoke pass.
-5. **Primary flow depends on production DB parity.** Onboarding, framework enrollment, controls, evidence, policies, reports, and Trust Center all require known production migration/seed state before outreach.
+5. **Primary flow production parity is verified.** Onboarding-equivalent tenant setup, framework enrollment, controls, evidence, policies, report generation, Italian domain labels, Blob persistence/downloadability, and cleanup passed against production runtime secrets and production Neon.
 
 ## Primary Workflow Matrix
 
 | Area | Routes | Status | Data Source | Empty/Demo State | Locale | Auth/Permissions | Gaps To Close |
 |---|---|---:|---|---|---|---|---|
 | App shell | `/(app)/layout` | partial | Clerk org + organisation query | Demo org name if Clerk disabled | Tenant locale when DB available | Central Clerk redirect when configured | Confirm production never runs with Clerk disabled; Trust Center header link currently points to `/trust/demo` rather than the org slug. |
-| Onboarding | `/onboarding` | partial | `getOnboardingState`, framework/tool libraries | Defaults to CZ/NIS2 when no state | Uses wizard initial locale from org/default | Layout handles auth | Verify wizard saves country, jurisdiction, locale, frameworks, and tools end-to-end against production schema. |
+| Onboarding | `/onboarding` | partial | `getOnboardingState`, framework/tool libraries | Defaults to CZ/NIS2 when no state | Uses wizard initial locale from org/default | Layout handles auth | Production runtime verification covered equivalent persisted IT tenant setup; browser UX can still be polished separately. |
 | Framework index | `/frameworks` | demo-risk | Static `FRAMEWORK_LIBRARY` | Always renders all frameworks | Uses tenant locale when DB/auth is available | Layout handles auth | Does not reflect tenant enrolled frameworks or plan limits. |
 | Framework setup | `/frameworks/[frameworkSlug]/setup` | partial | Needs separate runtime review | Unknown from this pass | Expected localized copy | Layout handles auth | Audit setup actions and persistence before relying on it for onboarding. |
 | Framework detail/report | `/frameworks/[frameworkSlug]` | partial | `getFrameworkDetail`; falls back to library mappings | Fallback controls when no DB/detail | Mostly localized framework copy | Layout handles auth | Fallback exposes control-level mappings even without enrolled org data; report generation blocked by `BLOB_READ_WRITE_TOKEN` and org framework row. |
 | Controls index | `/controls` | demo-risk | Static `CONTROL_LIBRARY` | Always renders library controls | Uses tenant locale with locale-keyed control labels | Layout handles auth | Not org-scoped; not status-aware. |
 | Control detail | `/controls/[controlId]` | partial | `getControlDetailByKey`; falls back to static control | Forms disabled without DB detail | Uses tenant locale with locale-keyed control labels | Layout handles auth; actions need separate review | Evidence upload blocked without Blob token; verify action-level org checks. |
-| Evidence vault | `/evidence` | partial | `listEvidenceVault` | Empty list when no DB/session/error | Tenant/request locale with localized control/framework labels | Layout handles auth | Empty state is functional but needs browser check; export/download auth should be smoke-tested. |
+| Evidence vault | `/evidence` | partial | `listEvidenceVault` | Empty list when no DB/session/error | Tenant/request locale with localized control/framework labels | Layout handles auth | Production runtime verification covered evidence persistence, Italian labels, and private Blob downloadability. |
 | Policies index | `/policies` | partial | `listPoliciesForOrg`, resolved templates/source docs | Templates render even with no generated policies | Uses jurisdiction context | Layout handles auth | Italian policy templates are still `draft`; IT tenants intentionally resolve customer-usable families to reviewed EU English fallback until legal review promotes them. Generation blocked by Blob token. |
 | Policy detail | `/policies/[type]` | partial | Resolved template + org policies | Template renders with no generated versions | Uses jurisdiction context | Layout handles auth | Italian policy templates are still `draft`; detail uses reviewed EU English fallback for IT until legal review promotion. Verify source document fallback behavior before customer demos. |
-| Gap/report output | `/frameworks/[frameworkSlug]`, policy APIs | partial | Generated artifact/blob routes | Buttons disabled without env/org rows | Mixed | Layout/API auth must be checked | Need one end-to-end PDF/report smoke test with real org data. |
+| Gap/report output | `/frameworks/[frameworkSlug]`, policy APIs | partial | Generated artifact/blob routes | Buttons disabled without env/org rows | Mixed | Layout/API auth must be checked | Production runtime verification generated and downloaded policy and NIS2 gap report PDFs with real org data. |
 
 ## Secondary App Surface Matrix
 
@@ -67,7 +73,7 @@ Readiness statuses:
 3. **Fix app shell Trust Center link.** Header should link to the current organisation's Trust Center slug when available, not `/trust/demo`.
 4. **Make framework/controls pages org-aware.** Index pages should distinguish available library content from enrolled tenant scope and control status.
 5. **Run action-level authorization smoke tests.** Prioritize control status update, evidence upload/download, policy generation/download, vendor assessment, incident reports, access review decisions, audit export.
-6. **Run one primary-flow browser smoke test with a real local org.** Onboarding -> framework setup -> control status -> evidence upload -> policy generation -> report/trust output.
+6. **Primary-flow verification follow-up.** Browser-level UX regression coverage remains useful, but the production runtime verification has cleared the critical outreach readiness unknown.
 
 ## Verification Needed Next
 

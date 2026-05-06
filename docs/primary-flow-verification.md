@@ -20,6 +20,14 @@ The authenticated browser primary flow passed on 2026-05-06 against production
 Neon with the supplied Clerk test keys. Production migrations, seed, legal-source
 imports, citation smokes, and the authenticated primary flow are all clear.
 
+A temporary token-gated production Vercel verification route also passed on
+2026-05-06 using live production runtime secrets. It verified the Clerk custom
+domain, enabled live Clerk Organizations, created a temporary live Clerk
+user/organization, exercised production Neon and Blob-backed evidence, generated
+policy and NIS2 gap report PDFs, verified Italian primary domain labels, and
+deleted its temporary rows, blobs, Clerk user, and Clerk organization. The route
+was removed immediately after the pass.
+
 Clerk dashboard showed Organizations configured, but the Backend API still
 reported `enabled: false`. The test instance was corrected through Clerk's
 Backend API by setting only `organizationSettings.enabled=true`, then the smoke
