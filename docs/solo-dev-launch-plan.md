@@ -738,6 +738,7 @@ Prepared materials:
 - `docs/outreach/italy-first-touch-drafts-tier-1.md` drafts the first three manual first-touch emails for Cubbit, Cleafy and DigitalPA. These are not sent and still require verified recipient route plus real OSVČ/IČO sender details before use.
 - `docs/outreach/italy-tier-1-send-prep.md` records current public sending routes for Cubbit, Cleafy and DigitalPA. Cubbit and DigitalPA have usable generic public routes; Cleafy needs either a verified LinkedIn route or its official contact form. No tracker row is marked sent.
 - `docs/outreach/italy-tier-1-short-form-variants.md` provides shortened contact-form and LinkedIn-note variants for Cubbit, Cleafy and DigitalPA so generic routes do not receive overlong cold emails.
+- `docs/outreach/italy-discovery-call-playbook.md` defines the 30-minute discovery call agenda, qualification rules, outcome codes, post-call note template, follow-up email, and guardrails for the first Italian replies.
 
 ### 5.5 First Design Partner Onboarding
 
