@@ -180,6 +180,7 @@ async function runStep<T>(
   const startedAt = new Date();
 
   try {
+    console.info(`primary-flow-verification:${name}:started`);
     const detail = await callback();
     const finishedAt = new Date();
     const step = {
@@ -192,19 +193,24 @@ async function runStep<T>(
     };
 
     steps.push(step);
+    console.info(
+      `primary-flow-verification:${name}:finished:${step.durationMs}ms`,
+    );
 
     return detail;
   } catch (error) {
     const finishedAt = new Date();
+    const message = error instanceof Error ? error.message : "Unknown error";
 
     steps.push({
       durationMs: finishedAt.getTime() - startedAt.getTime(),
-      error: error instanceof Error ? error.message : "Unknown error",
+      error: message,
       finishedAt: finishedAt.toISOString(),
       name,
       ok: false,
       startedAt: startedAt.toISOString(),
     });
+    console.error(`primary-flow-verification:${name}:failed:${message}`);
 
     throw error;
   }
@@ -248,6 +254,9 @@ async function verifyEnvironment() {
 }
 
 async function verifyClerkDomain() {
+  const controller = new AbortController();
+  const timeout = setTimeout(() => controller.abort(), 15_000);
+
   const response = await fetch(
     "https://clerk.splnit.eu/npm/@clerk/clerk-js@5/dist/clerk.browser.js",
     {
@@ -255,8 +264,9 @@ async function verifyClerkDomain() {
       headers: {
         Accept: "application/javascript,text/javascript,*/*",
       },
+      signal: controller.signal,
     },
-  );
+  ).finally(() => clearTimeout(timeout));
 
   if (!response.ok) {
     throw new Error(`Clerk custom domain returned HTTP ${response.status}.`);
