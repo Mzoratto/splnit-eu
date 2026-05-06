@@ -12,6 +12,7 @@ import {
 } from "lucide-react";
 import { generateGapReportAction } from "@/app/(app)/frameworks/[frameworkSlug]/actions";
 import { AnimatedScoreRing } from "@/components/app/animated-score-ring";
+import { DataModeNotice } from "@/components/app/data-mode-notice";
 import { PageHeader } from "@/components/app/page-header";
 import { StatusPill, type StatusPillTone } from "@/components/app/status-pill";
 import { getMessagesForLocale } from "@/i18n/messages";
@@ -21,6 +22,7 @@ import { CONTROL_LIBRARY } from "@/lib/controls/library";
 import { hasDatabaseUrl } from "@/lib/db";
 import { getFrameworkDetail } from "@/lib/db/queries/framework-assessment";
 import { getOrganisationByClerkOrgId } from "@/lib/db/queries/organisations";
+import { isLocalDemoDataEnabled } from "@/lib/demo-mode";
 import { CSRD_SUPPLY_CHAIN_QUESTIONNAIRE } from "@/lib/frameworks/csrd";
 import {
   ISO27001_ANNEX_A_MAPPINGS,
@@ -224,12 +226,29 @@ export default async function FrameworkDetailPage({
 
   const frameworkData = await loadFrameworkData(frameworkSlug);
   const locale = normalizeLocale(frameworkData?.organisationLocale) ?? requestLocale;
-  const copy = getMessagesForLocale(locale).frameworks;
+  const messages = getMessagesForLocale(locale);
+  const copy = messages.frameworks;
   const detail = frameworkData?.detail ?? null;
-  const controls = detail?.controls.length
+  const useDemoData = !frameworkData && isLocalDemoDataEnabled();
+  const dataNotice = useDemoData
+    ? {
+        body: messages.appDataNotice.demoBody,
+        title: messages.appDataNotice.demoTitle,
+      }
+    : !frameworkData
+      ? {
+          body: messages.appDataNotice.unavailableBody,
+          title: messages.appDataNotice.unavailableTitle,
+        }
+      : null;
+  const hasEnrolledFramework = Boolean(detail?.orgFramework);
+  const controls = hasEnrolledFramework && detail?.controls.length
     ? detail.controls
-    : getFallbackControls(frameworkSlug);
-  const score = detail?.orgFramework?.score ?? calculateScore(controls);
+    : useDemoData
+      ? getFallbackControls(frameworkSlug)
+      : [];
+  const score =
+    detail?.orgFramework?.score ?? (controls.length ? calculateScore(controls) : 0);
   const openControls = controls.filter((control) =>
     ["fail", "manual_review", "unknown", null].includes(control.status),
   );
@@ -264,6 +283,10 @@ export default async function FrameworkDetailPage({
           </Link>
         }
       />
+
+      {dataNotice ? (
+        <DataModeNotice body={dataNotice.body} title={dataNotice.title} />
+      ) : null}
 
       <div className="grid gap-4 lg:grid-cols-[auto_1fr_1fr]">
         <article className="card flex items-center justify-center">

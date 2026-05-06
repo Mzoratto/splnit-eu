@@ -2,14 +2,21 @@ import Link from "next/link";
 import { auth } from "@clerk/nextjs/server";
 import { getLocale } from "next-intl/server";
 import { ArrowRight, FileText, Plus, ShieldAlert } from "lucide-react";
+import { DataModeNotice } from "@/components/app/data-mode-notice";
 import { getMessagesForLocale } from "@/i18n/messages";
 import { normalizeLocale, type Locale } from "@/i18n/routing";
 import { hasDatabaseUrl } from "@/lib/db";
 import { getOrganisationByClerkOrgId } from "@/lib/db/queries/organisations";
 import { listVendorsForOrg } from "@/lib/db/queries/vendors";
+import { isLocalDemoDataEnabled } from "@/lib/demo-mode";
 import { createVendorAction } from "./actions";
 
 export const dynamic = "force-dynamic";
+type DataMode = "demo" | "live" | "unavailable";
+
+function getFallbackMode(): DataMode {
+  return isLocalDemoDataEnabled() ? "demo" : "unavailable";
+}
 
 async function loadVendors() {
   const clerkConfigured =
@@ -17,13 +24,18 @@ async function loadVendors() {
     Boolean(process.env.CLERK_SECRET_KEY);
 
   if (!clerkConfigured || !hasDatabaseUrl()) {
-    return null;
+    return {
+      mode: getFallbackMode(),
+      organisationLocale: null,
+      vendors: null,
+    };
   }
 
   const session = await auth();
 
   if (!session.orgId) {
     return {
+      mode: getFallbackMode(),
       organisationLocale: null,
       vendors: null,
     };
@@ -35,6 +47,7 @@ async function loadVendors() {
   ]);
 
   return {
+    mode: vendors ? "live" : "unavailable",
     organisationLocale: organisation?.locale ?? null,
     vendors,
   };
@@ -76,24 +89,41 @@ export default async function VendorsPage() {
   const requestLocale = normalizeLocale(await getLocale()) ?? "cs-CZ";
   const data = await loadVendors();
   const locale = normalizeLocale(data?.organisationLocale) ?? requestLocale;
-  const copy = getMessagesForLocale(locale).vendorsPage;
+  const messages = getMessagesForLocale(locale);
+  const copy = messages.vendorsPage;
   const vendors = data?.vendors ?? null;
+  const mode = data?.mode ?? "unavailable";
+  const notice =
+    mode === "demo"
+      ? {
+          body: messages.appDataNotice.demoBody,
+          title: messages.appDataNotice.demoTitle,
+        }
+      : mode === "unavailable"
+        ? {
+            body: messages.appDataNotice.unavailableBody,
+            title: messages.appDataNotice.unavailableTitle,
+          }
+        : null;
   const rows =
-    vendors ?? [
-      {
-        category: "cloud",
-        createdAt: new Date(),
-        id: "demo-cloud",
-        name: "Demo Cloud Provider",
-        nextReviewAt: new Date().toISOString().slice(0, 10),
-        riskTier: "medium",
-        status: "assessed",
-        website: "https://example.com",
-        clerkOrgId: "demo",
-        lastAssessedAt: new Date().toISOString().slice(0, 10),
-      },
-    ];
-  const canMutate = Boolean(vendors);
+    vendors ??
+    (mode === "demo"
+      ? [
+          {
+            category: "cloud",
+            clerkOrgId: "demo",
+            createdAt: new Date(),
+            id: "demo-cloud",
+            lastAssessedAt: new Date().toISOString().slice(0, 10),
+            name: "Demo Cloud Provider",
+            nextReviewAt: new Date().toISOString().slice(0, 10),
+            riskTier: "medium",
+            status: "assessed",
+            website: "https://example.com",
+          },
+        ]
+      : []);
+  const canMutate = mode === "live" && Boolean(vendors);
 
   return (
     <section className="space-y-8">
@@ -117,6 +147,8 @@ export default async function VendorsPage() {
           <FileText className="h-4 w-4" aria-hidden="true" />
         </a>
       </div>
+
+      {notice ? <DataModeNotice body={notice.body} title={notice.title} /> : null}
 
       <div className="grid gap-4 lg:grid-cols-[0.8fr_1.4fr]">
         <section className="rounded-lg border border-border bg-surface p-5">
@@ -174,41 +206,49 @@ export default async function VendorsPage() {
             <h2 className="text-lg font-semibold">{copy.catalog.title}</h2>
           </div>
           <div className="divide-y divide-border">
-            {rows.map((vendor) => (
-              <Link
-                key={vendor.id}
-                href={`/vendors/${vendor.id}`}
-                className="grid gap-4 p-5 hover:bg-surface-muted md:grid-cols-[1fr_auto]"
-              >
-                <div>
-                  <div className="flex flex-wrap items-center gap-2">
-                    <p className="font-medium">{vendor.name}</p>
-                    <span
-                      className={`rounded-md px-2 py-1 text-xs font-medium ${tierClass(
-                        vendor.riskTier,
-                      )}`}
-                    >
-                      {vendor.riskTier
-                        ? copy.riskTiers[vendor.riskTier as keyof typeof copy.riskTiers] ?? vendor.riskTier
-                        : copy.statuses.pending}
-                    </span>
+            {rows.length ? (
+              rows.map((vendor) => (
+                <Link
+                  key={vendor.id}
+                  href={`/vendors/${vendor.id}`}
+                  className="grid gap-4 p-5 hover:bg-surface-muted md:grid-cols-[1fr_auto]"
+                >
+                  <div>
+                    <div className="flex flex-wrap items-center gap-2">
+                      <p className="font-medium">{vendor.name}</p>
+                      <span
+                        className={`rounded-md px-2 py-1 text-xs font-medium ${tierClass(
+                          vendor.riskTier,
+                        )}`}
+                      >
+                        {vendor.riskTier
+                          ? copy.riskTiers[
+                              vendor.riskTier as keyof typeof copy.riskTiers
+                            ] ?? vendor.riskTier
+                          : copy.statuses.pending}
+                      </span>
+                    </div>
+                    <p className="mt-1 text-sm text-foreground/58">
+                      {vendor.category ?? copy.emptyValue} ·{" "}
+                      {copy.statuses[vendor.status as keyof typeof copy.statuses] ??
+                        vendor.status}
+                    </p>
+                    <p className="mt-1 text-sm text-foreground/58">
+                      {copy.catalog.nextReview}{" "}
+                      {formatDate(vendor.nextReviewAt, locale, copy.noDate)}
+                    </p>
                   </div>
-                  <p className="mt-1 text-sm text-foreground/58">
-                    {vendor.category ?? copy.emptyValue} ·{" "}
-                    {copy.statuses[vendor.status as keyof typeof copy.statuses] ??
-                      vendor.status}
-                  </p>
-                  <p className="mt-1 text-sm text-foreground/58">
-                    {copy.catalog.nextReview}{" "}
-                    {formatDate(vendor.nextReviewAt, locale, copy.noDate)}
-                  </p>
-                </div>
-                <span className="inline-flex items-center gap-2 text-sm font-medium">
-                  {copy.catalog.detail}
-                  <ArrowRight className="h-4 w-4" aria-hidden="true" />
-                </span>
-              </Link>
-            ))}
+                  <span className="inline-flex items-center gap-2 text-sm font-medium">
+                    {copy.catalog.detail}
+                    <ArrowRight className="h-4 w-4" aria-hidden="true" />
+                  </span>
+                </Link>
+              ))
+            ) : (
+              <p className="p-5 text-sm text-foreground/58">
+                {copy.catalog.empty}
+              </p>
+            )}
           </div>
         </section>
       </div>

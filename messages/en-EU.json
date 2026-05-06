@@ -47,6 +47,12 @@
     "signInBody": "Add NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY and CLERK_SECRET_KEY to the environment to enable sign-in.",
     "signUpBody": "Add the Clerk keys to the environment to enable registration and organisations."
   },
+  "appDataNotice": {
+    "demoTitle": "Local demo data",
+    "demoBody": "This page is showing local demo data because ENABLE_LOCAL_DEMO_DATA is enabled outside production. Do not treat it as tenant data.",
+    "unavailableTitle": "Workspace data unavailable",
+    "unavailableBody": "Live workspace data could not be loaded. Demo data is not shown in production."
+  },
   "billingSettings": {
     "eyebrow": "Billing",
     "title": "Subscription",
@@ -844,7 +850,8 @@
     "catalog": {
       "title": "Catalogue",
       "nextReview": "Next review",
-      "detail": "Detail"
+      "detail": "Detail",
+      "empty": "No vendors have been added yet."
     },
     "detail": {
       "eyebrow": "Vendor risk",
@@ -1109,6 +1116,7 @@
   },
   "trustCenterSettings": {
     "never": "never",
+    "eyebrow": "Trust Center",
     "title": "Public compliance centre",
     "subtitle": "Configure the public page, visible frameworks, and document access.",
     "openPublicPage": "Open public page",
@@ -1120,6 +1128,8 @@
     "enableFrameworkDetail": "Enable framework detail",
     "showPercentageScores": "Show percentage scores",
     "visibleFrameworks": "Visible frameworks",
+    "visibleFrameworksEmpty": "No enrolled frameworks are available yet.",
+    "publicPageUnavailable": "Set a public slug before opening the public page.",
     "regulatorEmpty": "regulator n/a",
     "scoreLabel": "score",
     "saveSettings": "Save settings",

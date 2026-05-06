@@ -1,6 +1,7 @@
 import { auth } from "@clerk/nextjs/server";
 import { getLocale } from "next-intl/server";
 import { Download, Flame, Plus, ShieldAlert } from "lucide-react";
+import { DataModeNotice } from "@/components/app/data-mode-notice";
 import { PageHeader } from "@/components/app/page-header";
 import { StatusPill, type StatusPillTone } from "@/components/app/status-pill";
 import { getMessagesForLocale } from "@/i18n/messages";
@@ -8,6 +9,7 @@ import { normalizeLocale, type Locale } from "@/i18n/routing";
 import { hasDatabaseUrl } from "@/lib/db";
 import { getOrganisationByClerkOrgId } from "@/lib/db/queries/organisations";
 import { listRiskItemsForOrg } from "@/lib/db/queries/risks";
+import { isLocalDemoDataEnabled } from "@/lib/demo-mode";
 import { getCommonSmeRisks } from "@/lib/risks/common";
 import {
   createRiskAction,
@@ -19,6 +21,7 @@ export const dynamic = "force-dynamic";
 
 type RiskItem = Awaited<ReturnType<typeof listRiskItemsForOrg>>[number];
 type RisksCopy = ReturnType<typeof getMessagesForLocale>["risks"];
+type DataMode = "demo" | "live" | "unavailable";
 
 async function loadRisks(requestLocale: Locale) {
   const clerkConfigured =
@@ -26,22 +29,35 @@ async function loadRisks(requestLocale: Locale) {
     Boolean(process.env.CLERK_SECRET_KEY);
 
   if (!clerkConfigured || !hasDatabaseUrl()) {
+    if (!isLocalDemoDataEnabled()) {
+      return getUnavailableData();
+    }
+
     return getDemoData(requestLocale);
   }
 
   const session = await auth();
 
   if (!session.orgId) {
+    if (!isLocalDemoDataEnabled()) {
+      return getUnavailableData();
+    }
+
     return getDemoData(requestLocale);
   }
 
   const [risks, organisation] = await Promise.all([
-    listRiskItemsForOrg(session.orgId).catch(() => []),
+    listRiskItemsForOrg(session.orgId).catch(() => null),
     getOrganisationByClerkOrgId(session.orgId).catch(() => null),
   ]);
 
+  if (!risks) {
+    return getUnavailableData(organisation?.locale ?? null);
+  }
+
   return {
     canMutate: true,
+    mode: "live" as const,
     organisationLocale: organisation?.locale ?? null,
     risks,
   };
@@ -49,6 +65,7 @@ async function loadRisks(requestLocale: Locale) {
 
 function getDemoData(locale: Locale): {
   canMutate: boolean;
+  mode: DataMode;
   organisationLocale: string | null;
   risks: RiskItem[];
 } {
@@ -56,6 +73,7 @@ function getDemoData(locale: Locale): {
 
   return {
     canMutate: false,
+    mode: "demo",
     organisationLocale: null,
     risks: risks.map((risk, index) => ({
       category: risk.category,
@@ -72,6 +90,20 @@ function getDemoData(locale: Locale): {
       title: risk.title,
       updatedAt: new Date(),
     })),
+  };
+}
+
+function getUnavailableData(organisationLocale: string | null = null): {
+  canMutate: boolean;
+  mode: DataMode;
+  organisationLocale: string | null;
+  risks: RiskItem[];
+} {
+  return {
+    canMutate: false,
+    mode: "unavailable",
+    organisationLocale,
+    risks: [],
   };
 }
 
@@ -238,9 +270,23 @@ function RiskMatrix({
 
 export default async function RisksPage() {
   const requestLocale = normalizeLocale(await getLocale()) ?? "cs-CZ";
-  const { canMutate, organisationLocale, risks } = await loadRisks(requestLocale);
+  const { canMutate, mode, organisationLocale, risks } =
+    await loadRisks(requestLocale);
   const locale = normalizeLocale(organisationLocale) ?? requestLocale;
-  const copy = getMessagesForLocale(locale).risks;
+  const messages = getMessagesForLocale(locale);
+  const copy = messages.risks;
+  const notice =
+    mode === "demo"
+      ? {
+          body: messages.appDataNotice.demoBody,
+          title: messages.appDataNotice.demoTitle,
+        }
+      : mode === "unavailable"
+        ? {
+            body: messages.appDataNotice.unavailableBody,
+            title: messages.appDataNotice.unavailableTitle,
+          }
+        : null;
   const highRisks = risks.filter((risk) => getScore(risk) >= 12);
   const averageScore =
     risks.length > 0
@@ -262,6 +308,8 @@ export default async function RisksPage() {
           </a>
         }
       />
+
+      {notice ? <DataModeNotice body={notice.body} title={notice.title} /> : null}
 
       <div className="grid gap-4 lg:grid-cols-3">
         <article className="metric-card">

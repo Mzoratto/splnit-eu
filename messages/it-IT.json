@@ -47,6 +47,12 @@
     "signInBody": "Aggiungi NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY e CLERK_SECRET_KEY all'ambiente per abilitare l'accesso.",
     "signUpBody": "Aggiungi le chiavi Clerk all'ambiente per abilitare registrazione e organizzazioni."
   },
+  "appDataNotice": {
+    "demoTitle": "Dati demo locali",
+    "demoBody": "Questa pagina mostra dati demo locali perché ENABLE_LOCAL_DEMO_DATA è attivo fuori produzione. Non considerarli dati tenant.",
+    "unavailableTitle": "Dati workspace non disponibili",
+    "unavailableBody": "I dati live del workspace non sono stati caricati. In produzione i dati demo non vengono mostrati."
+  },
   "billingSettings": {
     "eyebrow": "Fatturazione",
     "title": "Abbonamento",
@@ -844,7 +850,8 @@
     "catalog": {
       "title": "Catalogo",
       "nextReview": "Prossima revisione",
-      "detail": "Dettaglio"
+      "detail": "Dettaglio",
+      "empty": "Non sono ancora stati aggiunti fornitori."
     },
     "detail": {
       "eyebrow": "Rischio fornitore",
@@ -1109,6 +1116,7 @@
   },
   "trustCenterSettings": {
     "never": "mai",
+    "eyebrow": "Trust Center",
     "title": "Centro compliance pubblico",
     "subtitle": "Configura la pagina pubblica, i framework visibili e l'accesso ai documenti.",
     "openPublicPage": "Apri pagina pubblica",
@@ -1120,6 +1128,8 @@
     "enableFrameworkDetail": "Abilita dettaglio framework",
     "showPercentageScores": "Mostra punteggi percentuali",
     "visibleFrameworks": "Framework visibili",
+    "visibleFrameworksEmpty": "Non ci sono ancora framework iscritti.",
+    "publicPageUnavailable": "Imposta uno slug pubblico prima di aprire la pagina pubblica.",
     "regulatorEmpty": "regolatore n/a",
     "scoreLabel": "punteggio",
     "saveSettings": "Salva impostazioni",

@@ -47,6 +47,12 @@
     "signInBody": "Přidejte NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY a CLERK_SECRET_KEY do prostředí pro aktivaci přihlášení.",
     "signUpBody": "Přidejte Clerk klíče do prostředí pro aktivaci registrace a organizací."
   },
+  "appDataNotice": {
+    "demoTitle": "Lokální demo data",
+    "demoBody": "Tato stránka ukazuje lokální demo data, protože mimo produkci je zapnuté ENABLE_LOCAL_DEMO_DATA. Neberte je jako data tenantů.",
+    "unavailableTitle": "Data workspace nejsou dostupná",
+    "unavailableBody": "Živá data workspace se nepodařilo načíst. Demo data se v produkci nezobrazují."
+  },
   "billingSettings": {
     "eyebrow": "Fakturace",
     "title": "Předplatné",
@@ -615,7 +621,8 @@
     "catalog": {
       "title": "Katalog",
       "nextReview": "Další review",
-      "detail": "Detail"
+      "detail": "Detail",
+      "empty": "Zatím nejsou přidaní žádní dodavatelé."
     },
     "detail": {
       "eyebrow": "Vendor risk",
@@ -880,6 +887,7 @@
   },
   "trustCenterSettings": {
     "never": "nikdy",
+    "eyebrow": "Trust Center",
     "title": "Veřejné compliance centrum",
     "subtitle": "Nastavení veřejné stránky, viditelných frameworků a přístupu k dokumentům.",
     "openPublicPage": "Otevřít veřejnou stránku",
@@ -891,6 +899,8 @@
     "enableFrameworkDetail": "Povolit detail frameworků",
     "showPercentageScores": "Zobrazovat procentuální skóre",
     "visibleFrameworks": "Viditelné frameworky",
+    "visibleFrameworksEmpty": "Zatím nejsou dostupné žádné zapsané frameworky.",
+    "publicPageUnavailable": "Před otevřením veřejné stránky nastavte veřejný slug.",
     "regulatorEmpty": "regulator n/a",
     "scoreLabel": "skóre",
     "saveSettings": "Uložit nastavení",

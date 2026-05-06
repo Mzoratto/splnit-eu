@@ -9,6 +9,7 @@ import {
   FileText,
   ShieldAlert,
 } from "lucide-react";
+import { DataModeNotice } from "@/components/app/data-mode-notice";
 import { PageHeader } from "@/components/app/page-header";
 import { StatusPill, type StatusPillTone } from "@/components/app/status-pill";
 import { getMessagesForLocale } from "@/i18n/messages";
@@ -19,6 +20,7 @@ import {
   listIncidentsForOrg,
 } from "@/lib/db/queries/incidents";
 import { getOrganisationByClerkOrgId } from "@/lib/db/queries/organisations";
+import { isLocalDemoDataEnabled } from "@/lib/demo-mode";
 import { getJurisdictionContext } from "@/lib/jurisdictions/context";
 import {
   createIncidentAction,
@@ -30,6 +32,7 @@ export const dynamic = "force-dynamic";
 
 type Incident = Awaited<ReturnType<typeof listIncidentsForOrg>>[number];
 type IncidentsCopy = ReturnType<typeof getMessagesForLocale>["incidents"];
+type DataMode = "demo" | "live" | "unavailable";
 
 async function loadIncidents(
   selectedIncidentId: string | undefined,
@@ -40,19 +43,31 @@ async function loadIncidents(
     Boolean(process.env.CLERK_SECRET_KEY);
 
   if (!clerkConfigured || !hasDatabaseUrl()) {
+    if (!isLocalDemoDataEnabled()) {
+      return getUnavailableData();
+    }
+
     return getDemoData(getMessagesForLocale(requestLocale).incidents);
   }
 
   const session = await auth();
 
   if (!session.orgId) {
+    if (!isLocalDemoDataEnabled()) {
+      return getUnavailableData();
+    }
+
     return getDemoData(getMessagesForLocale(requestLocale).incidents);
   }
 
   const [incidents, organisation] = await Promise.all([
-    listIncidentsForOrg(session.orgId).catch(() => []),
+    listIncidentsForOrg(session.orgId).catch(() => null),
     getOrganisationByClerkOrgId(session.orgId).catch(() => null),
   ]);
+  if (!incidents) {
+    return getUnavailableData(organisation?.locale ?? null);
+  }
+
   const activeIncidentId = selectedIncidentId ?? incidents[0]?.id ?? null;
   const activeIncident = activeIncidentId
     ? await getIncidentForOrg({
@@ -65,6 +80,7 @@ async function loadIncidents(
     activeIncident,
     canMutate: true,
     incidents,
+    mode: "live" as const,
     organisationJurisdiction: organisation?.primaryJurisdiction ?? null,
     organisationLocale: organisation?.locale ?? null,
   };
@@ -74,6 +90,7 @@ function getDemoData(copy: IncidentsCopy): {
   activeIncident: Incident;
   canMutate: boolean;
   incidents: Incident[];
+  mode: DataMode;
   organisationJurisdiction: string | null;
   organisationLocale: string | null;
 } {
@@ -100,8 +117,27 @@ function getDemoData(copy: IncidentsCopy): {
     activeIncident: incident,
     canMutate: false,
     incidents: [incident],
+    mode: "demo",
     organisationJurisdiction: null,
     organisationLocale: null,
+  };
+}
+
+function getUnavailableData(organisationLocale: string | null = null): {
+  activeIncident: Incident | null;
+  canMutate: boolean;
+  incidents: Incident[];
+  mode: DataMode;
+  organisationJurisdiction: string | null;
+  organisationLocale: string | null;
+} {
+  return {
+    activeIncident: null,
+    canMutate: false,
+    incidents: [],
+    mode: "unavailable",
+    organisationJurisdiction: null,
+    organisationLocale,
   };
 }
 
@@ -248,12 +284,26 @@ export default async function IncidentsPage({
     activeIncident,
     canMutate,
     incidents,
+    mode,
     organisationJurisdiction,
     organisationLocale,
   } = await loadIncidents(incidentId, requestLocale);
   const locale = normalizeLocale(organisationLocale) ?? requestLocale;
   const jurisdiction = getJurisdictionContext(organisationJurisdiction, locale);
-  const copy = getMessagesForLocale(locale).incidents;
+  const messages = getMessagesForLocale(locale);
+  const copy = messages.incidents;
+  const notice =
+    mode === "demo"
+      ? {
+          body: messages.appDataNotice.demoBody,
+          title: messages.appDataNotice.demoTitle,
+        }
+      : mode === "unavailable"
+        ? {
+            body: messages.appDataNotice.unavailableBody,
+            title: messages.appDataNotice.unavailableTitle,
+          }
+        : null;
   const cybersecurityAuthority = jurisdiction.authorities.cybersecurity;
   const dataProtectionAuthority = jurisdiction.authorities.dataProtection;
   const countdown = getCountdown(
@@ -296,6 +346,8 @@ export default async function IncidentsPage({
           ) : null
         }
       />
+
+      {notice ? <DataModeNotice body={notice.body} title={notice.title} /> : null}
 
       <div className="grid gap-4 lg:grid-cols-3">
         <article className="metric-card">

@@ -8,11 +8,13 @@ import {
   Globe2,
   XCircle,
 } from "lucide-react";
+import { DataModeNotice } from "@/components/app/data-mode-notice";
 import { getMessagesForLocale } from "@/i18n/messages";
 import { normalizeLocale, type Locale } from "@/i18n/routing";
 import { hasDatabaseUrl } from "@/lib/db";
 import { getOrganisationByClerkOrgId } from "@/lib/db/queries/organisations";
 import { getTrustCenterSettings } from "@/lib/db/queries/trust-center";
+import { isLocalDemoDataEnabled } from "@/lib/demo-mode";
 import { FRAMEWORK_LIBRARY } from "@/lib/frameworks/registry";
 import {
   approveTrustCenterRequestAction,
@@ -21,6 +23,11 @@ import {
 } from "./actions";
 
 export const dynamic = "force-dynamic";
+type DataMode = "demo" | "live" | "unavailable";
+
+function getFallbackMode(): DataMode {
+  return isLocalDemoDataEnabled() ? "demo" : "unavailable";
+}
 
 async function loadSettings() {
   const clerkConfigured =
@@ -28,13 +35,21 @@ async function loadSettings() {
     Boolean(process.env.CLERK_SECRET_KEY);
 
   if (!clerkConfigured || !hasDatabaseUrl()) {
-    return { data: null, organisationLocale: null };
+    return {
+      data: null,
+      mode: getFallbackMode(),
+      organisationLocale: null,
+    };
   }
 
   const session = await auth();
 
   if (!session.orgId) {
-    return { data: null, organisationLocale: null };
+    return {
+      data: null,
+      mode: getFallbackMode(),
+      organisationLocale: null,
+    };
   }
 
   try {
@@ -45,10 +60,15 @@ async function loadSettings() {
 
     return {
       data,
+      mode: "live" as const,
       organisationLocale: organisation?.locale ?? null,
     };
   } catch {
-    return { data: null, organisationLocale: null };
+    return {
+      data: null,
+      mode: "unavailable" as const,
+      organisationLocale: null,
+    };
   }
 }
 
@@ -69,33 +89,48 @@ function formatDate(
 
 export default async function TrustCenterSettingsPage() {
   const requestLocale = normalizeLocale(await getLocale()) ?? "cs-CZ";
-  const { data, organisationLocale } = await loadSettings();
+  const { data, mode, organisationLocale } = await loadSettings();
   const locale = normalizeLocale(organisationLocale) ?? requestLocale;
-  const copy = getMessagesForLocale(locale).trustCenterSettings;
+  const messages = getMessagesForLocale(locale);
+  const copy = messages.trustCenterSettings;
+  const notice =
+    mode === "demo"
+      ? {
+          body: messages.appDataNotice.demoBody,
+          title: messages.appDataNotice.demoTitle,
+        }
+      : mode === "unavailable"
+        ? {
+            body: messages.appDataNotice.unavailableBody,
+            title: messages.appDataNotice.unavailableTitle,
+          }
+        : null;
   const trustCenter = data?.trustCenter ?? null;
   const visibleFrameworks = trustCenter?.visibleFrameworks ?? [];
   const enrolledFrameworks =
     data?.frameworks.length
       ? data.frameworks
-      : FRAMEWORK_LIBRARY.slice(0, 4).map((framework, index) => ({
-          id: framework.slug,
-          nameCs: framework.nameCs,
-          nameEn: framework.nameEn,
-          regulator: framework.regulator,
-          score: [72, 64, 81, 55][index] ?? null,
-          slug: framework.slug,
-          status: "active",
-        }));
-  const subdomain = trustCenter?.subdomain ?? "demo";
-  const publicUrl = `/trust/${subdomain}`;
-  const canMutate = Boolean(data);
+      : mode === "demo"
+        ? FRAMEWORK_LIBRARY.slice(0, 4).map((framework, index) => ({
+            id: framework.slug,
+            nameCs: framework.nameCs,
+            nameEn: framework.nameEn,
+            regulator: framework.regulator,
+            score: [72, 64, 81, 55][index] ?? null,
+            slug: framework.slug,
+            status: "active",
+          }))
+        : [];
+  const subdomain = trustCenter?.subdomain ?? (mode === "demo" ? "demo" : "");
+  const publicUrl = subdomain ? `/trust/${subdomain}` : null;
+  const canMutate = mode === "live" && Boolean(data);
 
   return (
     <section className="space-y-8">
       <div className="flex flex-col justify-between gap-4 md:flex-row md:items-end">
         <div>
           <p className="text-sm font-medium uppercase tracking-[0.14em] text-primary">
-            Trust Center
+            {copy.eyebrow}
           </p>
           <h1 className="mt-2 text-3xl font-semibold tracking-normal">
             {copy.title}
@@ -104,14 +139,22 @@ export default async function TrustCenterSettingsPage() {
             {copy.subtitle}
           </p>
         </div>
-        <Link
-          href={publicUrl}
-          className="inline-flex items-center gap-2 rounded-md border border-border px-4 py-3 text-sm font-medium hover:bg-surface-muted"
-        >
-          {copy.openPublicPage}
-          <ExternalLink className="h-4 w-4" aria-hidden="true" />
-        </Link>
+        {publicUrl ? (
+          <Link
+            href={publicUrl}
+            className="inline-flex items-center gap-2 rounded-md border border-border px-4 py-3 text-sm font-medium hover:bg-surface-muted"
+          >
+            {copy.openPublicPage}
+            <ExternalLink className="h-4 w-4" aria-hidden="true" />
+          </Link>
+        ) : (
+          <span className="inline-flex items-center gap-2 rounded-md border border-border px-4 py-3 text-sm font-medium text-foreground/50">
+            {copy.publicPageUnavailable}
+          </span>
+        )}
       </div>
+
+      {notice ? <DataModeNotice body={notice.body} title={notice.title} /> : null}
 
       <div className="grid gap-4 lg:grid-cols-[1fr_1.1fr]">
         <section className="rounded-lg border border-border bg-surface p-5">
@@ -182,32 +225,38 @@ export default async function TrustCenterSettingsPage() {
             <div>
               <p className="text-sm font-medium">{copy.visibleFrameworks}</p>
               <div className="mt-3 grid gap-2 sm:grid-cols-2">
-                {enrolledFrameworks.map((framework) => (
-                  <label
-                    key={framework.slug}
-                    className="flex items-start gap-3 rounded-md border border-border px-3 py-3 text-sm"
-                  >
-                    <input
-                      name="visibleFrameworks"
-                      type="checkbox"
-                      value={framework.slug}
-                      defaultChecked={
-                        visibleFrameworks.length === 0 ||
-                        visibleFrameworks.includes(framework.slug)
-                      }
-                      disabled={!canMutate}
-                    />
-                    <span>
-                      <span className="block font-medium">
-                        {locale === "cs-CZ" ? framework.nameCs : framework.nameEn}
+                {enrolledFrameworks.length ? (
+                  enrolledFrameworks.map((framework) => (
+                    <label
+                      key={framework.slug}
+                      className="flex items-start gap-3 rounded-md border border-border px-3 py-3 text-sm"
+                    >
+                      <input
+                        name="visibleFrameworks"
+                        type="checkbox"
+                        value={framework.slug}
+                        defaultChecked={
+                          visibleFrameworks.length === 0 ||
+                          visibleFrameworks.includes(framework.slug)
+                        }
+                        disabled={!canMutate}
+                      />
+                      <span>
+                        <span className="block font-medium">
+                          {locale === "cs-CZ" ? framework.nameCs : framework.nameEn}
+                        </span>
+                        <span className="text-xs text-foreground/56">
+                          {framework.regulator ?? copy.regulatorEmpty} ·{" "}
+                          {copy.scoreLabel} {framework.score ?? 0}%
+                        </span>
                       </span>
-                      <span className="text-xs text-foreground/56">
-                        {framework.regulator ?? copy.regulatorEmpty} · {copy.scoreLabel}{" "}
-                        {framework.score ?? 0}%
-                      </span>
-                    </span>
-                  </label>
-                ))}
+                    </label>
+                  ))
+                ) : (
+                  <p className="rounded-md border border-border px-3 py-3 text-sm text-foreground/58">
+                    {copy.visibleFrameworksEmpty}
+                  </p>
+                )}
               </div>
             </div>
             <button

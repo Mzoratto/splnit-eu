@@ -13,6 +13,7 @@ import {
   ShieldCheck,
 } from "lucide-react";
 import { AnimatedScoreRing } from "@/components/app/animated-score-ring";
+import { DataModeNotice } from "@/components/app/data-mode-notice";
 import { StatusPill, type StatusPillTone } from "@/components/app/status-pill";
 import { markRegulationUpdateReadAction } from "@/app/(app)/dashboard/actions";
 import { getMessagesForLocale } from "@/i18n/messages";
@@ -21,6 +22,7 @@ import { getControlDisplayTitle } from "@/lib/controls/localization";
 import { CONTROL_LIBRARY } from "@/lib/controls/library";
 import { hasDatabaseUrl } from "@/lib/db";
 import { getDashboardData } from "@/lib/db/queries/dashboard";
+import { isLocalDemoDataEnabled } from "@/lib/demo-mode";
 import {
   getFrameworkDisplayDescription,
   getFrameworkDisplayName,
@@ -126,7 +128,7 @@ function calculateScore(input: {
   }
 
   if (input.statusRows.length === 0) {
-    return 72;
+    return 0;
   }
 
   const passing = input.statusRows.filter((row) => row.status === "pass").length;
@@ -310,18 +312,32 @@ export default async function DashboardPage() {
   const copy = messages.dashboard;
   const frameworkCopy = messages.frameworks;
   const fallbackUpdates = getFallbackUpdates(copy);
+  const useDemoData = !data && isLocalDemoDataEnabled();
+  const dataNotice = useDemoData
+    ? {
+        body: messages.appDataNotice.demoBody,
+        title: messages.appDataNotice.demoTitle,
+      }
+    : !data
+      ? {
+          body: messages.appDataNotice.unavailableBody,
+          title: messages.appDataNotice.unavailableTitle,
+        }
+      : null;
   const rawFrameworkScores =
     data?.frameworkScores.length
       ? data.frameworkScores
-      : fallbackFrameworkScores.map((item) => {
-          return {
-            name: item.slug,
-            regulator: null,
-            score: item.score,
-            slug: item.slug,
-            status: item.status,
-          };
-        });
+      : useDemoData
+        ? fallbackFrameworkScores.map((item) => {
+            return {
+              name: item.slug,
+              regulator: null,
+              score: item.score,
+              slug: item.slug,
+              status: item.status,
+            };
+          })
+        : [];
   const frameworkScores = rawFrameworkScores.map((item) => {
     const framework = FRAMEWORK_LIBRARY.find((fw) => fw.slug === item.slug);
 
@@ -336,19 +352,25 @@ export default async function DashboardPage() {
   const priorityControls =
     data?.priorityControls.length
       ? data.priorityControls
-      : CONTROL_LIBRARY.slice(0, 5).map((control, index) => ({
-          category: control.category,
-          key: control.key,
-          status: index < 2 ? "fail" : "manual_review",
-          title: getControlDisplayTitle(control, locale),
-          titleCs: control.titleCs,
-          titleEn: control.titleEn,
-        }));
+      : useDemoData
+        ? CONTROL_LIBRARY.slice(0, 5).map((control, index) => ({
+            category: control.category,
+            key: control.key,
+            status: index < 2 ? "fail" : "manual_review",
+            title: getControlDisplayTitle(control, locale),
+            titleCs: control.titleCs,
+            titleEn: control.titleEn,
+          }))
+        : [];
   const priorityControlRows = priorityControls.map((control) => ({
     ...control,
     title: getControlDisplayTitle(control, locale),
   }));
-  const updates = data?.updates.length ? data.updates : fallbackUpdates;
+  const updates = data?.updates.length
+    ? data.updates
+    : useDemoData
+      ? fallbackUpdates
+      : [];
   const statusRows =
     data?.statusRows.length
       ? data.statusRows
@@ -372,7 +394,9 @@ export default async function DashboardPage() {
   );
   const visibleRegulatoryUpdates = regulatoryUpdates.length
     ? regulatoryUpdates
-    : fallbackUpdates;
+    : useDemoData
+      ? fallbackUpdates
+      : [];
   const deadlines = FRAMEWORK_LIBRARY.filter(
     (framework) => framework.slug === "nis2" || framework.slug === "ai-act" || framework.slug === "gdpr",
   );
@@ -395,6 +419,10 @@ export default async function DashboardPage() {
           <ArrowRight className="h-4 w-4" aria-hidden="true" strokeWidth={1.5} />
         </Link>
       </div>
+
+      {dataNotice ? (
+        <DataModeNotice body={dataNotice.body} title={dataNotice.title} />
+      ) : null}
 
       <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
         <article className="metric-card flex items-center gap-5">
@@ -441,10 +469,12 @@ export default async function DashboardPage() {
             <Clock3 className="h-4 w-4 text-primary" aria-hidden="true" strokeWidth={1.5} />
           </div>
           <p className="mt-5 font-mono text-[28px] font-medium">
-            {formatRelative(updates[0].publishedAt, locale)}
+            {updates[0] ? formatRelative(updates[0].publishedAt, locale) : "—"}
           </p>
           <p className="mt-4 text-xs text-foreground/52">
-            {updates[0].source} · {updates[0].frameworkName ?? copy.general}
+            {updates[0]
+              ? `${updates[0].source} · ${updates[0].frameworkName ?? copy.general}`
+              : copy.general}
           </p>
         </article>
       </div>
