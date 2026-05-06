@@ -5,6 +5,7 @@ import { put } from "@vercel/blob";
 import { revalidatePath } from "next/cache";
 import { z } from "zod";
 import { deleteBlobUrlsAfterFailedSave } from "@/lib/blob/cleanup";
+import { getControlDisplayTitle } from "@/lib/controls/localization";
 import type { FrameworkSlug } from "@/lib/controls/library";
 import { createGeneratedArtifact } from "@/lib/db/queries/generated-artifacts";
 import {
@@ -119,10 +120,7 @@ export async function generateGapReportAction(frameworkSlug: string) {
     controls: detail.controls.map((control) => ({
       ...control,
       description: locale === "cs-CZ" ? control.description : null,
-      title:
-        locale === "cs-CZ"
-          ? control.titleCs ?? control.title
-          : control.titleEn ?? control.title,
+      title: getControlDisplayTitle(control, locale),
     })),
     framework: {
       description: getFrameworkDisplayDescription(

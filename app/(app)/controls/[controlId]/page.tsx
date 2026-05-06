@@ -1,5 +1,4 @@
 import { auth } from "@clerk/nextjs/server";
-import { getLocale } from "next-intl/server";
 import { notFound } from "next/navigation";
 import { Download, FileUp, History, ShieldCheck, Upload } from "lucide-react";
 import {
@@ -7,10 +6,15 @@ import {
   uploadEvidenceAction,
 } from "@/app/(app)/controls/[controlId]/actions";
 import { getMessagesForLocale } from "@/i18n/messages";
-import { normalizeLocale, type Locale } from "@/i18n/routing";
+import type { Locale } from "@/i18n/routing";
+import {
+  getControlDisplayDescription,
+  getControlDisplayTitle,
+} from "@/lib/controls/localization";
 import { CONTROL_LIBRARY } from "@/lib/controls/library";
 import { hasDatabaseUrl } from "@/lib/db";
 import { getControlDetailByKey } from "@/lib/db/queries/controls";
+import { getTenantLocale } from "@/lib/i18n/tenant-locale";
 
 const statusValues = [
   "unknown",
@@ -67,24 +71,6 @@ function getCategoryLabel(category: string | null | undefined, copy: ControlsCop
   return copy.categories[category as keyof typeof copy.categories] ?? category;
 }
 
-function getControlTitle(
-  control: { titleCs: string; titleEn: string },
-  locale: Locale,
-) {
-  return locale === "cs-CZ" ? control.titleCs : control.titleEn;
-}
-
-function getControlDescription(
-  control: { descriptionCs?: string | null; titleEn: string },
-  locale: Locale,
-) {
-  if (locale === "cs-CZ") {
-    return control.descriptionCs ?? control.titleEn;
-  }
-
-  return control.titleEn;
-}
-
 function getStatusLabel(status: string, copy: ControlsCopy) {
   return copy.statuses[status as keyof typeof copy.statuses] ?? status;
 }
@@ -102,7 +88,7 @@ export default async function ControlDetailPage({
   params: Promise<{ controlId: string }>;
 }) {
   const { controlId } = await params;
-  const locale = normalizeLocale(await getLocale()) ?? "cs-CZ";
+  const locale = await getTenantLocale();
   const copy = getMessagesForLocale(locale).controlsPage;
   const seedControl = CONTROL_LIBRARY.find((item) => item.key === controlId);
 
@@ -165,10 +151,10 @@ export default async function ControlDetailPage({
           {getCategoryLabel(control.category, copy)}
         </p>
         <h1 className="mt-2 text-3xl font-semibold tracking-normal">
-          {getControlTitle(control, locale)}
+          {getControlDisplayTitle(control, locale)}
         </h1>
         <p className="mt-3 text-base leading-7 text-foreground/68">
-          {getControlDescription(control, locale)}
+          {getControlDisplayDescription(control, locale)}
         </p>
       </div>
 

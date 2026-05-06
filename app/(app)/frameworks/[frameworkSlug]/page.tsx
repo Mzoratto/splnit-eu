@@ -16,6 +16,7 @@ import { PageHeader } from "@/components/app/page-header";
 import { StatusPill, type StatusPillTone } from "@/components/app/status-pill";
 import { getMessagesForLocale } from "@/i18n/messages";
 import { normalizeLocale, type Locale } from "@/i18n/routing";
+import { getControlDisplayTitle } from "@/lib/controls/localization";
 import { CONTROL_LIBRARY } from "@/lib/controls/library";
 import { hasDatabaseUrl } from "@/lib/db";
 import { getFrameworkDetail } from "@/lib/db/queries/framework-assessment";
@@ -82,9 +83,7 @@ function getStatusTone(status: string | null): StatusPillTone {
 }
 
 function getControlTitle(control: FrameworkControl, locale: Locale) {
-  return locale === "cs-CZ"
-    ? control.titleCs ?? control.title
-    : control.titleEn ?? control.title;
+  return getControlDisplayTitle(control, locale);
 }
 
 function getControlDescription(control: FrameworkControl, locale: Locale) {

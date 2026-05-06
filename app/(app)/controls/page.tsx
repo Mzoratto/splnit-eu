@@ -1,32 +1,22 @@
 import Link from "next/link";
-import { getLocale } from "next-intl/server";
 import { ArrowRight, ShieldCheck } from "lucide-react";
 import { PageHeader } from "@/components/app/page-header";
 import { getMessagesForLocale } from "@/i18n/messages";
-import { normalizeLocale, type Locale } from "@/i18n/routing";
+import {
+  getControlDisplayDescription,
+  getControlDisplayTitle,
+} from "@/lib/controls/localization";
 import { CONTROL_LIBRARY } from "@/lib/controls/library";
-import type { ControlSeed } from "@/lib/controls/library";
+import { getTenantLocale } from "@/lib/i18n/tenant-locale";
 
 type ControlsCopy = ReturnType<typeof getMessagesForLocale>["controlsPage"];
-
-function getControlTitle(control: ControlSeed, locale: Locale) {
-  return locale === "cs-CZ" ? control.titleCs : control.titleEn;
-}
-
-function getControlDescription(control: ControlSeed, locale: Locale) {
-  if (locale === "cs-CZ") {
-    return control.descriptionCs ?? control.titleEn;
-  }
-
-  return control.titleEn;
-}
 
 function getCategoryLabel(category: string, copy: ControlsCopy) {
   return copy.categories[category as keyof typeof copy.categories] ?? category;
 }
 
 export default async function ControlsPage() {
-  const locale = normalizeLocale(await getLocale()) ?? "cs-CZ";
+  const locale = await getTenantLocale();
   const copy = getMessagesForLocale(locale).controlsPage;
 
   return (
@@ -49,7 +39,7 @@ export default async function ControlsPage() {
                   {control.key}
                 </p>
                 <h2 className="mt-1 text-lg font-medium">
-                  {getControlTitle(control, locale)}
+                  {getControlDisplayTitle(control, locale)}
                 </h2>
                 <p className="mt-1 text-xs text-foreground/52">
                   {getCategoryLabel(control.category, copy)}
@@ -62,7 +52,7 @@ export default async function ControlsPage() {
               />
             </div>
             <p className="mt-3 text-sm leading-6 text-foreground/64">
-              {getControlDescription(control, locale)}
+              {getControlDisplayDescription(control, locale)}
             </p>
             <Link
               href={`/controls/${control.key}`}

@@ -6,6 +6,13 @@ import {
 import { getMessagesForLocale } from "../i18n/messages";
 import type { Locale } from "../i18n/routing";
 import sitemap from "../app/sitemap";
+import { getControlDisplayTitle } from "../lib/controls/localization";
+import { CONTROL_LIBRARY } from "../lib/controls/library";
+import {
+  getFrameworkDisplayDescription,
+  getFrameworkDisplayRegulator,
+} from "../lib/frameworks/localization";
+import { FRAMEWORK_LIBRARY } from "../lib/frameworks/registry";
 import { FRAMEWORK_QUESTIONS } from "../lib/frameworks/questions";
 
 const requiredNamespaces = [
@@ -198,6 +205,36 @@ assert.equal(it.trustCenterSettings.saveSettings, "Salva impostazioni");
 assert.equal(it.vendorsPage.title, "Rischio fornitori");
 assert.equal(it.vendorsPage.form.create, "Crea");
 assert.notEqual(it.shell.freePlanBanner, getMessagesForLocale("cs-CZ").shell.freePlanBanner);
+const untranslatedItalianControls = CONTROL_LIBRARY.filter(
+  (control) => getControlDisplayTitle(control, "it-IT") === control.titleEn,
+);
+assert.deepEqual(
+  untranslatedItalianControls.map((control) => control.key),
+  [],
+  "it-IT should not fall back to English control titles",
+);
+const mfaControl = CONTROL_LIBRARY.find(
+  (control) => control.key === "ctrl_mfa_all_users",
+);
+assert.ok(mfaControl, "MFA control should exist");
+assert.equal(
+  getControlDisplayTitle(mfaControl, "it-IT"),
+  "MFA abilitata per tutti gli account utente",
+);
+const nis2Framework = FRAMEWORK_LIBRARY.find((framework) => framework.slug === "nis2");
+assert.ok(nis2Framework, "NIS2 framework should exist");
+assert.equal(
+  getFrameworkDisplayDescription(
+    nis2Framework,
+    "it-IT",
+    it.frameworks.descriptions,
+  ),
+  "Cybersecurity, gestione del rischio, incident reporting e responsabilità del management.",
+);
+assert.equal(
+  getFrameworkDisplayRegulator(nis2Framework, "it-IT", it.frameworks.regulators),
+  "ACN — Agenzia per la Cybersicurezza Nazionale",
+);
 
 assert.equal(getLocalizedMarketingPath("/", "it-IT"), "/it");
 assert.equal(getLocalizedMarketingPath("/about", "it-IT"), "/it/chi-siamo");

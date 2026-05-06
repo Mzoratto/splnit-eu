@@ -1,18 +1,17 @@
 import Link from "next/link";
-import { getLocale } from "next-intl/server";
 import { ArrowRight, ClipboardCheck } from "lucide-react";
 import { PageHeader } from "@/components/app/page-header";
 import { getMessagesForLocale } from "@/i18n/messages";
-import { normalizeLocale } from "@/i18n/routing";
 import {
   getFrameworkDisplayDescription,
   getFrameworkDisplayName,
   getFrameworkDisplayRegulator,
 } from "@/lib/frameworks/localization";
 import { FRAMEWORK_LIBRARY } from "@/lib/frameworks/registry";
+import { getTenantLocale } from "@/lib/i18n/tenant-locale";
 
 export default async function FrameworksPage() {
-  const locale = normalizeLocale(await getLocale()) ?? "cs-CZ";
+  const locale = await getTenantLocale();
   const copy = getMessagesForLocale(locale).frameworks;
 
   return (

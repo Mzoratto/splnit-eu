@@ -6,9 +6,11 @@ import { PageHeader } from "@/components/app/page-header";
 import { StatusPill, type StatusPillTone } from "@/components/app/status-pill";
 import { getMessagesForLocale } from "@/i18n/messages";
 import { normalizeLocale, type Locale } from "@/i18n/routing";
+import { getControlDisplayTitle } from "@/lib/controls/localization";
 import { hasDatabaseUrl } from "@/lib/db";
 import { getOrganisationByClerkOrgId } from "@/lib/db/queries/organisations";
 import { listEvidenceVault } from "@/lib/db/queries/evidence";
+import { getFrameworkDisplayName } from "@/lib/frameworks/localization";
 import { FRAMEWORK_LIBRARY } from "@/lib/frameworks/registry";
 
 type EvidenceRow = Awaited<ReturnType<typeof listEvidenceVault>>[number];
@@ -75,25 +77,36 @@ function statusLabel(status: string | null | undefined) {
 }
 
 function getControlTitle(item: EvidenceRow, locale: Locale) {
-  return locale === "cs-CZ"
-    ? item.controlTitleCs ?? item.controlTitle
-    : item.controlTitleEn ?? item.controlTitle;
+  return getControlDisplayTitle(
+    {
+      key: item.controlKey,
+      title: item.controlTitle,
+      titleCs: item.controlTitleCs,
+      titleEn: item.controlTitleEn,
+    },
+    locale,
+  );
 }
 
 function getFrameworkName(
   framework: (typeof FRAMEWORK_LIBRARY)[number],
   locale: Locale,
 ) {
-  return locale === "cs-CZ" ? framework.nameCs : framework.nameEn;
+  return getFrameworkDisplayName(framework, locale);
 }
 
 function getEvidenceFrameworkName(
   framework: EvidenceRow["frameworks"][number],
   locale: Locale,
 ) {
-  return locale === "cs-CZ"
-    ? framework.frameworkNameCs ?? framework.frameworkName
-    : framework.frameworkNameEn ?? framework.frameworkName;
+  return getFrameworkDisplayName(
+    {
+      nameCs: framework.frameworkNameCs ?? framework.frameworkName,
+      nameEn: framework.frameworkNameEn ?? framework.frameworkName,
+      slug: framework.frameworkSlug,
+    },
+    locale,
+  );
 }
 
 function formatDaysUntil(days: number, copy: EvidenceCopy) {

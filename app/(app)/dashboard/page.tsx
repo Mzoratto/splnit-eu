@@ -17,6 +17,7 @@ import { StatusPill, type StatusPillTone } from "@/components/app/status-pill";
 import { markRegulationUpdateReadAction } from "@/app/(app)/dashboard/actions";
 import { getMessagesForLocale } from "@/i18n/messages";
 import { normalizeLocale, type Locale } from "@/i18n/routing";
+import { getControlDisplayTitle } from "@/lib/controls/localization";
 import { CONTROL_LIBRARY } from "@/lib/controls/library";
 import { hasDatabaseUrl } from "@/lib/db";
 import { getDashboardData } from "@/lib/db/queries/dashboard";
@@ -309,27 +310,29 @@ export default async function DashboardPage() {
   const copy = messages.dashboard;
   const frameworkCopy = messages.frameworks;
   const fallbackUpdates = getFallbackUpdates(copy);
-  const frameworkScores =
+  const rawFrameworkScores =
     data?.frameworkScores.length
       ? data.frameworkScores
       : fallbackFrameworkScores.map((item) => {
-          const framework = FRAMEWORK_LIBRARY.find((fw) => fw.slug === item.slug);
           return {
-            name: framework
-              ? getFrameworkDisplayName(framework, locale)
-              : item.slug,
-            regulator: framework
-              ? getFrameworkDisplayRegulator(
-                  framework,
-                  locale,
-                  frameworkCopy.regulators,
-                )
-              : null,
+            name: item.slug,
+            regulator: null,
             score: item.score,
             slug: item.slug,
             status: item.status,
           };
         });
+  const frameworkScores = rawFrameworkScores.map((item) => {
+    const framework = FRAMEWORK_LIBRARY.find((fw) => fw.slug === item.slug);
+
+    return {
+      ...item,
+      name: framework ? getFrameworkDisplayName(framework, locale) : item.name,
+      regulator: framework
+        ? getFrameworkDisplayRegulator(framework, locale, frameworkCopy.regulators)
+        : item.regulator,
+    };
+  });
   const priorityControls =
     data?.priorityControls.length
       ? data.priorityControls
@@ -337,16 +340,13 @@ export default async function DashboardPage() {
           category: control.category,
           key: control.key,
           status: index < 2 ? "fail" : "manual_review",
-          title: locale === "cs-CZ" ? control.titleCs : control.titleEn,
+          title: getControlDisplayTitle(control, locale),
           titleCs: control.titleCs,
           titleEn: control.titleEn,
         }));
   const priorityControlRows = priorityControls.map((control) => ({
     ...control,
-    title:
-      locale === "cs-CZ"
-        ? control.titleCs ?? control.title
-        : control.titleEn ?? control.title,
+    title: getControlDisplayTitle(control, locale),
   }));
   const updates = data?.updates.length ? data.updates : fallbackUpdates;
   const statusRows =
