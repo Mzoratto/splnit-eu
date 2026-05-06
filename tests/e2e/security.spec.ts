@@ -14,6 +14,9 @@ test("sets baseline security headers", async ({ request }) => {
   expect(response.headers()["content-security-policy"]).toContain(
     "default-src 'self'",
   );
+  expect(response.headers()["content-security-policy"]).toContain(
+    "https://clerk.splnit.eu",
+  );
   expect(response.headers()["strict-transport-security"]).toContain(
     "max-age=63072000",
   );

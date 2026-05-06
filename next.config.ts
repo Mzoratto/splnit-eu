@@ -12,6 +12,13 @@ const scriptSources = [
   "https://js.stripe.com",
   "https://*.clerk.accounts.dev",
   "https://*.clerk.com",
+  "https://clerk.splnit.eu",
+];
+
+const clerkSources = [
+  "https://*.clerk.accounts.dev",
+  "https://*.clerk.com",
+  "https://clerk.splnit.eu",
 ];
 
 const contentSecurityPolicy = [
@@ -24,8 +31,8 @@ const contentSecurityPolicy = [
   "style-src 'self' 'unsafe-inline'",
   "img-src 'self' data: blob: https:",
   "font-src 'self' data:",
-  "connect-src 'self' https://vitals.vercel-insights.com https://*.ingest.sentry.io https://api.stripe.com https://*.clerk.accounts.dev https://*.clerk.com https://api.clerk.com https://*.posthog.com",
-  "frame-src 'self' https://js.stripe.com https://hooks.stripe.com https://*.clerk.accounts.dev https://*.clerk.com",
+  `connect-src 'self' https://vitals.vercel-insights.com https://*.ingest.sentry.io https://api.stripe.com ${clerkSources.join(" ")} https://api.clerk.com https://*.posthog.com`,
+  `frame-src 'self' https://js.stripe.com https://hooks.stripe.com ${clerkSources.join(" ")}`,
   "worker-src 'self' blob:",
   "upgrade-insecure-requests",
 ].join("; ");
