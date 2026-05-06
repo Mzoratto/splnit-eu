@@ -30,6 +30,11 @@ organization_not_enabled_in_instance
 The organizations feature is not enabled for this instance.
 ```
 
+It was retried after Organizations appeared enabled in the Clerk dashboard. The
+script was adjusted not to request organization slugs because slugs were still
+disabled in that test instance, but Clerk's Backend API still returned the same
+`organization_not_enabled_in_instance` response for the provided keys.
+
 The existing Playwright config intentionally clears Clerk variables and therefore runs app pages in no-auth demo mode.
 
 ## Repeatable Smoke
@@ -102,6 +107,7 @@ Observed result on 2026-05-06:
 blocked before browser execution
 reason: supplied Clerk test instance has Organizations disabled
 production cleanup check: 0 test organisation rows remained
+retry after dashboard change: same Clerk API response
 ```
 
 ## Commands Run

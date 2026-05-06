@@ -33,7 +33,6 @@ const secretKey = process.env.CLERK_SECRET_KEY?.trim();
 const blobToken = process.env.BLOB_READ_WRITE_TOKEN?.trim();
 const runId = `auth_primary_flow_${Date.now()}`;
 const orgName = `Splnit Auth Primary Flow ${runId}`;
-const orgSlug = `splnit-auth-primary-flow-${Date.now()}`;
 const testEmail = `splnit-auth-primary-flow+clerk_test_${Date.now()}@example.com`;
 const testPassword = `SplnitTest-${Date.now()}-Aa!`;
 const testUsername = `splnitauth${Date.now()}`;
@@ -440,7 +439,6 @@ async function main() {
     const organization = await clerk.organizations.createOrganization({
       createdBy: user.id,
       name: orgName,
-      slug: orgSlug,
     });
     clerkOrgId = organization.id;
 
