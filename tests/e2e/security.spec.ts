@@ -86,6 +86,63 @@ test("requires authentication for audit log export filters", async ({
   expectNoStore(response);
 });
 
+test("requires authentication for vendor, risk, and incident report exports", async ({
+  request,
+}) => {
+  const vendorResponse = await request.get("/api/vendors/supply-chain-report");
+  const riskResponse = await request.get("/api/risks/register-report");
+  const cybersecurityResponse = await request.get(
+    "/api/incidents/incident_test/cybersecurity-report",
+  );
+  const dataProtectionResponse = await request.get(
+    "/api/incidents/incident_test/data-protection-report",
+  );
+  const legacyNukibResponse = await request.get(
+    "/api/incidents/incident_test/nukib-report",
+  );
+  const legacyUoouResponse = await request.get(
+    "/api/incidents/incident_test/uoou-report",
+  );
+
+  for (const response of [
+    vendorResponse,
+    riskResponse,
+    cybersecurityResponse,
+    dataProtectionResponse,
+    legacyNukibResponse,
+    legacyUoouResponse,
+  ]) {
+    expect(response.status()).toBe(401);
+    expectNoStore(response);
+  }
+});
+
+test("requires authentication for questionnaire PDF and XLSX exports", async ({
+  request,
+}) => {
+  const payload = JSON.stringify({
+    answers: [],
+    artifactId: null,
+    generatedAt: "2026-05-06T00:00:00.000Z",
+    model: "test",
+    organisationName: "Example",
+    questionCount: 0,
+    summary: "Example",
+  });
+
+  const pdfResponse = await request.post("/api/questionnaires/export/pdf", {
+    multipart: { payload },
+  });
+  const xlsxResponse = await request.post("/api/questionnaires/export/xlsx", {
+    multipart: { payload },
+  });
+
+  expect(pdfResponse.status()).toBe(401);
+  expectNoStore(pdfResponse);
+  expect(xlsxResponse.status()).toBe(401);
+  expectNoStore(xlsxResponse);
+});
+
 test("requires authentication for integration OAuth callbacks", async ({
   request,
 }) => {

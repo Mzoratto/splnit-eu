@@ -13,6 +13,7 @@ import {
   orgControlStatuses,
   organisations,
   policies,
+  riskItems,
   vendorAssessments,
   vendors,
 } from "@/lib/db/schema";
@@ -37,6 +38,10 @@ import {
   updateIncidentStatus,
 } from "@/lib/db/queries/incidents";
 import { getPolicyForOrg } from "@/lib/db/queries/policies";
+import {
+  createRiskItem,
+  listRiskItemsForOrg,
+} from "@/lib/db/queries/risks";
 import {
   createVendor,
   createVendorQuestionnaire,
@@ -75,6 +80,8 @@ async function cleanup() {
   await db.delete(incidents).where(eq(incidents.clerkOrgId, orgB));
   await db.delete(policies).where(eq(policies.clerkOrgId, orgA));
   await db.delete(policies).where(eq(policies.clerkOrgId, orgB));
+  await db.delete(riskItems).where(eq(riskItems.clerkOrgId, orgA));
+  await db.delete(riskItems).where(eq(riskItems.clerkOrgId, orgB));
   await db.delete(evidence).where(eq(evidence.clerkOrgId, orgA));
   await db.delete(evidence).where(eq(evidence.clerkOrgId, orgB));
   await db.delete(orgControlStatuses).where(eq(orgControlStatuses.clerkOrgId, orgA));
@@ -232,6 +239,49 @@ async function assertVendorBoundary() {
     .where(eq(vendorAssessments.vendorId, vendor.id));
 
   assert.equal(assessmentRows.length, 0);
+}
+
+async function assertRiskBoundary() {
+  await createRiskItem({
+    category: "security",
+    clerkOrgId: orgA,
+    description: "Org boundary risk A",
+    dueDate: null,
+    impact: 4,
+    likelihood: 3,
+    owner: "Risk Owner A",
+    title: "Org boundary risk A",
+  });
+  await createRiskItem({
+    category: "security",
+    clerkOrgId: orgB,
+    description: "Org boundary risk B",
+    dueDate: null,
+    impact: 2,
+    likelihood: 2,
+    owner: "Risk Owner B",
+    title: "Org boundary risk B",
+  });
+
+  const orgARisks = await listRiskItemsForOrg(orgA);
+  const orgBRisks = await listRiskItemsForOrg(orgB);
+
+  assert.equal(
+    orgARisks.some((risk) => risk.title === "Org boundary risk A"),
+    true,
+  );
+  assert.equal(
+    orgARisks.some((risk) => risk.title === "Org boundary risk B"),
+    false,
+  );
+  assert.equal(
+    orgBRisks.some((risk) => risk.title === "Org boundary risk B"),
+    true,
+  );
+  assert.equal(
+    orgBRisks.some((risk) => risk.title === "Org boundary risk A"),
+    false,
+  );
 }
 
 async function assertIncidentBoundary() {
@@ -407,6 +457,7 @@ async function main() {
     await assertEvidenceBoundary(control.id);
     await assertPolicyBoundary();
     await assertVendorBoundary();
+    await assertRiskBoundary();
     await assertIncidentBoundary();
     await assertAccessReviewBoundary();
     await assertAuditLogBoundary();

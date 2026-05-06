@@ -83,6 +83,7 @@ export type PublicTrustCenterModel = {
   frameworks: TrustFramework[];
   heroEyebrowOverride?: string;
   heroTitleOverride?: string;
+  isDemo?: boolean;
   lastTestedAt: Date | null;
   logoUrl: string | null;
   nextTestAt: Date | null;
@@ -673,12 +674,14 @@ function getDemoTrustCenterModel(
     frameworks,
     lastTestedAt: null,
     logoUrl: null,
+    isDemo: true,
     ndaRequired: false,
     nextTestAt: null,
     organisationName: "Demo workspace",
     orgSlug,
     showFrameworkDrilldown: true,
     showFrameworkPercentages: true,
+    showLiveIndicator: false,
     trustSignals: buildTrustSignals(frameworks, null, null, locale),
     uptimePct: null,
   };

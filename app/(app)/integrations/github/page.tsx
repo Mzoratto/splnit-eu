@@ -133,6 +133,12 @@ export default async function GitHubIntegrationPage() {
         }
       />
 
+      {!installUrl ? (
+        <div className="rounded-lg border border-border bg-surface-muted px-4 py-3 text-sm leading-6 text-foreground/64">
+          {providerCopy.common.connectionUnavailable}
+        </div>
+      ) : null}
+
       <div className="grid gap-4 lg:grid-cols-3">
         <article className="card">
           <div className="flex items-center gap-2">

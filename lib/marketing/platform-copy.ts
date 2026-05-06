@@ -142,8 +142,8 @@ const copy: Record<Locale, PlatformCopy> = {
     trustCenter: {
       badges: ["NIS2 demo", "GDPR demo", "ISO 27001 demo", "EU AI Act demo"],
       body:
-        "Zákazníci a partneři vidí váš compliance status v reálném čase. Méně dotazníků. Rychlejší obchody.",
-      cta: "Spustit Trust Center →",
+        "Zákazníci a partneři vidí váš compliance status v reálném čase. Odkaz níže otevírá pouze ukázkový Trust Center.",
+      cta: "Zobrazit ukázkový Trust Center →",
       title: "Trust Center — zveřejněte svůj soulad.",
     },
     finalNote:
@@ -241,8 +241,8 @@ const copy: Record<Locale, PlatformCopy> = {
     trustCenter: {
       badges: ["NIS2 demo", "GDPR demo", "ISO 27001 demo", "EU AI Act demo"],
       body:
-        "Customers and partners can see your compliance status in real time. Fewer questionnaires. Faster deals.",
-      cta: "Launch Trust Center →",
+        "Customers and partners can see your compliance status in real time. The link below opens a sample Trust Center only.",
+      cta: "View sample Trust Center →",
       title: "Trust Center — publish your compliance posture.",
     },
     finalNote:
@@ -340,8 +340,8 @@ const copy: Record<Locale, PlatformCopy> = {
     trustCenter: {
       badges: ["Demo NIS2", "Demo GDPR", "Demo ISO 27001", "Demo EU AI Act"],
       body:
-        "Clienti e partner vedono il vostro stato compliance in tempo reale. Meno questionari. Trattative più rapide.",
-      cta: "Avvia Trust Center →",
+        "Clienti e partner vedono il vostro stato compliance in tempo reale. Il link sotto apre solo un Trust Center di esempio.",
+      cta: "Vedi Trust Center di esempio →",
       title: "Trust Center — pubblicate la vostra postura compliance.",
     },
     finalNote:

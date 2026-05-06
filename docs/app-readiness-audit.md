@@ -112,7 +112,7 @@ Readiness statuses:
 ## Verification Needed Next
 
 - Provider-configured integration runtime smokes for Microsoft 365, GitHub, and AWS when production credentials are available.
-- Questionnaire provider runtime generation and evidence-save smoke.
-- Audit export pagination/limit verification.
+- Questionnaire provider runtime generation and evidence-save smoke; current status is documented in `docs/questionnaire-flow-audit.md`.
+- Audit/vendor/risk/incident export status is documented in `docs/export-endpoint-audit.md`; remaining work is authenticated real-tenant export smokes and large audit-page verification.
 - Legal review and promotion decision for Italian policy templates.
 - Legal identity/public legal-page closeout when the real operator details are supplied.

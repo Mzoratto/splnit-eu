@@ -8,10 +8,21 @@ import {
 } from "@/lib/incidents/reporting";
 import { renderIncidentNotificationPdf } from "@/lib/pdf/incident-notification";
 
+function hasClerkConfig() {
+  return (
+    Boolean(process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY) &&
+    Boolean(process.env.CLERK_SECRET_KEY)
+  );
+}
+
 export async function handleIncidentReportRequest(input: {
   params: Promise<{ incidentId: string }>;
   track: IncidentReportTrack;
 }) {
+  if (!hasClerkConfig()) {
+    return privateJson({ error: "Unauthorized" }, { status: 401 });
+  }
+
   const session = await auth();
 
   if (!session.userId || !session.orgId) {

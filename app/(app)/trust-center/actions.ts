@@ -13,6 +13,7 @@ import {
 } from "@/lib/db/queries/trust-center";
 import { FRAMEWORK_LIBRARY } from "@/lib/frameworks/registry";
 import { sendTrustCenterAccessEmail } from "@/lib/trust-center/notifications";
+import { normalizeTrustCenterSlug } from "@/lib/trust-center/settings";
 
 const frameworkSlugs = FRAMEWORK_LIBRARY.map((framework) => framework.slug);
 
@@ -27,11 +28,17 @@ const settingsSchema = z.object({
   ndaRequired: z.boolean(),
   showFrameworkDrilldown: z.boolean(),
   showFrameworkPercentages: z.boolean(),
-  subdomain: z
-    .string()
-    .trim()
-    .toLowerCase()
-    .regex(/^[a-z0-9](?:[a-z0-9-]{1,61}[a-z0-9])?$/),
+  subdomain: z.string().transform((value, context) => {
+    try {
+      return normalizeTrustCenterSlug(value);
+    } catch (error) {
+      context.addIssue({
+        code: "custom",
+        message: error instanceof Error ? error.message : "Invalid Trust Center slug.",
+      });
+      return z.NEVER;
+    }
+  }),
   visibleFrameworks: z.array(z.enum(frameworkSlugs as [string, ...string[]])),
 });
 

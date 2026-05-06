@@ -87,13 +87,21 @@ Tracked root files are generally valid for a Next.js/Vercel app:
 
 ## Next Work Order
 
-Do these before any new features:
+Do these before any new features or broader outreach. This order is optimized for the first outreach conversations, where visible trust failures matter more than back-office completeness:
 
-1. **Legal identity closeout:** replace placeholders only when real OSVČ/IČO/ARES details are available and reviewed.
-2. **First-three outreach decision:** send Cubbit, Cleafy, and DigitalPA manually once sender details and exact routes are confirmed, or explicitly pause.
-3. **Track outreach state:** update `docs/outreach/italy-target-tracker.csv` only after each message is actually sent.
-4. **Secondary app hardening:** continue from `docs/app-readiness-audit.md` without blocking the first outreach decision.
-5. **Legal/template review:** keep Italian policy-template promotion and mapping review in the legal-review queue.
+1. **Trust Center admin verification:** verify saved slug behavior, visibility toggles, admin/public consistency, and public framework pages. Prospects will see this first; broken Trust Center behavior kills trust immediately.
+2. **Demo-vs-live clarity:** make `/trust/demo`, marketing demo links, app-shell Trust Center fallbacks, and public demo/sample states visually explicit. Nothing should look like fake proof or a real customer claim.
+3. **Integration UI polish:** make Microsoft 365, GitHub, and AWS connect/disconnect flows look complete enough for buyer conversations. Keep Google Workspace clearly marked as coming soon until implemented.
+4. **Questionnaire flow trace:** run the questionnaire journey end-to-end, document exactly where it works or breaks, and smoke provider generation plus evidence-save behavior when configured.
+5. **Audit/export endpoint smokes:** verify audit export pagination/limit behavior plus vendor/risk export endpoint authorization before demos.
+6. **Onboarding UX polish:** refine onboarding and framework setup after the trust/demo/integration/questionnaire risks are contained. This matters more for conversion than for first outreach calls.
+
+Standing blockers that still apply across the work above:
+
+- **Legal identity closeout:** replace placeholders only when real OSVČ/IČO/ARES details are available and reviewed.
+- **First-three outreach decision:** send Cubbit, Cleafy, and DigitalPA manually once sender details and exact routes are confirmed, or explicitly pause.
+- **Track outreach state:** update `docs/outreach/italy-target-tracker.csv` only after each message is actually sent.
+- **Legal/template review:** keep Italian policy-template promotion and mapping review in the legal-review queue.
 
 ## Definition Of Ready For New Feature Work
 

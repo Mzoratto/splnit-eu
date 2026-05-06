@@ -9,7 +9,7 @@ import { normalizeLocale, type Locale } from "@/i18n/routing";
 import { hasDatabaseUrl } from "@/lib/db";
 import { getOrganisationByClerkOrgId } from "@/lib/db/queries/organisations";
 import { countUnreadRelevantRegulationUpdates } from "@/lib/db/queries/regulation-updates";
-import { getTrustCenterSlugByClerkOrgId } from "@/lib/db/queries/trust-center";
+import { getPublicTrustCenterSlugByClerkOrgId } from "@/lib/db/queries/trust-center";
 import { normalizePlanKey, type PlanKey } from "@/lib/stripe/plans";
 
 export const dynamic = "force-dynamic";
@@ -42,7 +42,7 @@ export default async function ProtectedLayout({
       ] = await Promise.all([
         getOrganisationByClerkOrgId(session.orgId),
         countUnreadRelevantRegulationUpdates(session.orgId),
-        getTrustCenterSlugByClerkOrgId(session.orgId),
+        getPublicTrustCenterSlugByClerkOrgId(session.orgId),
       ]);
       organisationName = organisation?.name ?? null;
       plan = normalizePlanKey(organisation?.plan);
@@ -70,7 +70,7 @@ export default async function ProtectedLayout({
         plan={plan}
         regulationUpdateCount={regulationUpdateCount}
         trustCenterHref={
-          trustCenterSlug ? `/trust/${trustCenterSlug}` : "/trust/demo"
+          trustCenterSlug ? `/trust/${trustCenterSlug}` : "/trust-center"
         }
       >
         {children}

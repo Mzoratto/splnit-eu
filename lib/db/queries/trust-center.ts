@@ -65,12 +65,17 @@ export async function getTrustCenterSettings(clerkOrgId: string) {
   };
 }
 
-export async function getTrustCenterSlugByClerkOrgId(clerkOrgId: string) {
+export async function getPublicTrustCenterSlugByClerkOrgId(clerkOrgId: string) {
   const db = getDb();
   const rows = await db
     .select({ subdomain: trustCenters.subdomain })
     .from(trustCenters)
-    .where(eq(trustCenters.clerkOrgId, clerkOrgId))
+    .where(
+      and(
+        eq(trustCenters.clerkOrgId, clerkOrgId),
+        eq(trustCenters.isPublic, true),
+      ),
+    )
     .limit(1);
 
   return rows[0]?.subdomain?.trim() || null;

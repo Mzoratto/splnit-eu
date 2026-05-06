@@ -122,7 +122,7 @@ export default async function TrustCenterSettingsPage() {
           }))
         : [];
   const subdomain = trustCenter?.subdomain ?? (mode === "demo" ? "demo" : "");
-  const publicUrl = subdomain ? `/trust/${subdomain}` : null;
+  const publicUrl = subdomain && trustCenter?.isPublic ? `/trust/${subdomain}` : null;
   const canMutate = mode === "live" && Boolean(data);
 
   return (

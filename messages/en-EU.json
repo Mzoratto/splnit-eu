@@ -526,6 +526,8 @@
       "lastSync": "Last sync",
       "results24h": "Results over 24h",
       "comingSoon": "Coming soon",
+      "plannedCardNote": "Planned. Production checks are not enabled yet.",
+      "viewPlan": "View plan",
       "manage": "Manage",
       "connect": "Connect",
       "disconnect": "Disconnect"
@@ -559,7 +561,8 @@
         "automatedTests": "Automated tests",
         "runResults": "Run results",
         "runResultsEmpty": "Results will appear after the first automated run.",
-        "testSuite": "Test suite"
+        "testSuite": "Test suite",
+        "connectionUnavailable": "Connection actions are disabled until app credentials and an active workspace are available. The test scope below is still visible for review."
       },
       "aws": {
         "title": "AWS integration",
@@ -1147,7 +1150,7 @@
     "showPercentageScores": "Show percentage scores",
     "visibleFrameworks": "Visible frameworks",
     "visibleFrameworksEmpty": "No active frameworks are available yet.",
-    "publicPageUnavailable": "Set a public slug before opening the public page.",
+    "publicPageUnavailable": "Set a public slug and publish before opening the public page.",
     "regulatorEmpty": "regulator n/a",
     "scoreLabel": "score",
     "saveSettings": "Save settings",

@@ -100,6 +100,12 @@ export default async function TrustCenterPage({
           <p className="mt-5 max-w-3xl text-base leading-7 text-foreground/62">
             {trustCenter.descriptionOverride ?? copy.main.description}
           </p>
+          {trustCenter.isDemo ? (
+            <div className="mt-6 max-w-3xl rounded-[var(--r-lg)] border border-amber-200 bg-amber-50 p-4 text-sm text-amber-950">
+              <p className="font-semibold">{copy.demoNotice.title}</p>
+              <p className="mt-1 leading-6">{copy.demoNotice.body}</p>
+            </div>
+          ) : null}
           {trustCenter.showLiveIndicator === false ? null : (
             <LiveIndicator
               copy={copy}

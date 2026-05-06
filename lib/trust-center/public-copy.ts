@@ -73,6 +73,10 @@ export type PublicTrustCopy = {
     live: string;
     next: string;
   };
+  demoNotice: {
+    body: string;
+    title: string;
+  };
   main: {
     description: string;
     frameworksBody: string;
@@ -182,6 +186,11 @@ export const publicTrustCopy: Record<Locale, PublicTrustCopy> = {
       live: "Live",
       next: "další",
     },
+    demoNotice: {
+      body:
+        "Tato veřejná stránka používá ukázková data pro předvedení produktu. Nepopisuje skutečný stav žádné organizace.",
+      title: "Ukázkový Trust Center",
+    },
     main: {
       description:
         "Tento Trust Center ukazuje veřejný souhrn automatických kontrol, regulatorních frameworků a dokumentů. Detaily důkazů a konkrétní control IDs zůstávají chráněné a jsou dostupné pouze po schválení přístupu.",
@@ -287,6 +296,11 @@ export const publicTrustCopy: Record<Locale, PublicTrustCopy> = {
       live: "Live",
       next: "next",
     },
+    demoNotice: {
+      body:
+        "This public page uses sample data to demonstrate the product. It does not describe any organisation's live compliance status.",
+      title: "Sample Trust Center",
+    },
     main: {
       description:
         "This Trust Center shows a public summary of automated checks, regulatory frameworks, and documents. Evidence details and concrete control IDs remain protected and are available only after access approval.",
@@ -391,6 +405,11 @@ export const publicTrustCopy: Record<Locale, PublicTrustCopy> = {
       last: "ultimo",
       live: "Live",
       next: "prossimo",
+    },
+    demoNotice: {
+      body:
+        "Questa pagina pubblica usa dati di esempio per mostrare il prodotto. Non descrive lo stato compliance reale di alcuna organizzazione.",
+      title: "Trust Center di esempio",
     },
     main: {
       description:

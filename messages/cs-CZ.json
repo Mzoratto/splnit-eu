@@ -526,6 +526,8 @@
       "lastSync": "Poslední synchronizace",
       "results24h": "Výsledky za 24h",
       "comingSoon": "Připravuje se",
+      "plannedCardNote": "Plánováno. Produkční kontroly zatím nejsou zapnuté.",
+      "viewPlan": "Zobrazit plán",
       "manage": "Spravovat",
       "connect": "Připojit",
       "disconnect": "Odpojit"
@@ -559,7 +561,8 @@
         "automatedTests": "Automatické testy",
         "runResults": "Výsledky běhů",
         "runResultsEmpty": "Výsledky se zobrazí po prvním automatickém běhu.",
-        "testSuite": "Test suite"
+        "testSuite": "Test suite",
+        "connectionUnavailable": "Akce připojení jsou vypnuté, dokud nejsou dostupné aplikační přihlašovací údaje a aktivní workspace. Rozsah testů níže zůstává viditelný pro kontrolu."
       },
       "aws": {
         "title": "AWS integrace",
@@ -1147,7 +1150,7 @@
     "showPercentageScores": "Zobrazovat procentuální skóre",
     "visibleFrameworks": "Viditelné frameworky",
     "visibleFrameworksEmpty": "Zatím nejsou dostupné žádné aktivní frameworky.",
-    "publicPageUnavailable": "Před otevřením veřejné stránky nastavte veřejný slug.",
+    "publicPageUnavailable": "Před otevřením veřejné stránky nastavte veřejný slug a publikujte Trust Center.",
     "regulatorEmpty": "regulator n/a",
     "scoreLabel": "skóre",
     "saveSettings": "Uložit nastavení",

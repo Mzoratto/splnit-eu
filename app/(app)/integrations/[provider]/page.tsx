@@ -55,7 +55,7 @@ export default async function IntegrationDetailPage({
             <h2 className="text-lg font-medium">{copy.planned.statusTitle}</h2>
           </div>
           <div className="mt-4">
-            <StatusPill tone="neutral">PENDING</StatusPill>
+            <StatusPill tone="neutral">{copy.index.comingSoon}</StatusPill>
           </div>
           <p className="mt-2 text-sm text-foreground/58">
             {copy.planned.statusBody}

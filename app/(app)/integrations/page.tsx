@@ -203,7 +203,7 @@ export default async function IntegrationsPage() {
               <div className="flex items-start justify-between gap-4">
                 <div>
                   <StatusPill tone={providerStatus.tone}>
-                    {providerStatus.label}
+                    {provider.planned ? copy.index.comingSoon : providerStatus.label}
                   </StatusPill>
                   <h2 className="mt-3 text-lg font-medium">{provider.name}</h2>
                 </div>
@@ -226,6 +226,11 @@ export default async function IntegrationsPage() {
               <p className="mt-3 min-h-24 text-sm leading-6 text-foreground/64">
                 {getProviderDescription(provider.key, copy)}
               </p>
+              {provider.planned ? (
+                <p className="mt-2 rounded-md border border-border bg-surface-muted px-3 py-2 text-xs leading-5 text-foreground/62">
+                  {copy.index.plannedCardNote}
+                </p>
+              ) : null}
 
               <dl className="mt-4 grid grid-cols-2 gap-3 text-sm">
                 <div>
@@ -267,13 +272,14 @@ export default async function IntegrationsPage() {
 
               <div className="mt-5 flex flex-wrap gap-2">
                 {provider.planned ? (
-                  <button
-                    type="button"
-                    disabled
-                    className="btn btn-secondary opacity-50"
+                  <Link
+                    href={provider.href}
+                    className="btn btn-secondary"
+                    aria-label={`${copy.index.viewPlan}: ${provider.name}`}
                   >
-                    {copy.index.comingSoon}
-                  </button>
+                    {copy.index.viewPlan}
+                    <ArrowRight className="h-4 w-4" aria-hidden="true" strokeWidth={1.5} />
+                  </Link>
                 ) : (
                   <Link
                     href={provider.href}

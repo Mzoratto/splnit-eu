@@ -42,6 +42,13 @@ const requiredNamespaces = [
 ] as const;
 const locales: Locale[] = ["cs-CZ", "en-EU", "it-IT"];
 
+function formatMessage(template: string, values: Record<string, string | number>) {
+  return Object.entries(values).reduce(
+    (message, [key, value]) => message.replaceAll(`{${key}}`, String(value)),
+    template,
+  );
+}
+
 assert.equal(
   existsSync("messages/en.json"),
   false,
@@ -140,8 +147,18 @@ for (const questionId of frameworkQuestionIds) {
 }
 assert.equal(en.incidents.title, "Incidents");
 assert.equal(en.incidents.wizard.create, "Create incident");
-assert.equal(en.incidents.actions.cybersecurityPdf, "Cybersecurity authority PDF");
-assert.doesNotMatch(en.incidents.actions.cybersecurityPdf, /NÚKIB|ÚOOÚ/);
+assert.equal(
+  formatMessage(en.incidents.actions.cybersecurityPdf, {
+    authority: "Cybersecurity authority",
+  }),
+  "Cybersecurity authority PDF",
+);
+assert.doesNotMatch(
+  formatMessage(en.incidents.actions.cybersecurityPdf, {
+    authority: "Cybersecurity authority",
+  }),
+  /NÚKIB|ÚOOÚ/,
+);
 assert.doesNotMatch(en.incidents.checklist.markDataProtection, /NÚKIB|ÚOOÚ/);
 assert.equal(en.integrations.index.title, "Automated tests");
 assert.equal(en.integrations.providerPages.aws.title, "AWS integration");
@@ -206,8 +223,18 @@ for (const questionId of frameworkQuestionIds) {
 }
 assert.equal(it.incidents.title, "Incidenti");
 assert.equal(it.incidents.wizard.create, "Crea incidente");
-assert.equal(it.incidents.actions.cybersecurityPdf, "{authority} PDF");
-assert.doesNotMatch(it.incidents.actions.cybersecurityPdf, /NÚKIB|ÚOOÚ/);
+assert.equal(
+  formatMessage(it.incidents.actions.cybersecurityPdf, {
+    authority: "ACN / CSIRT Italia",
+  }),
+  "ACN / CSIRT Italia PDF",
+);
+assert.doesNotMatch(
+  formatMessage(it.incidents.actions.cybersecurityPdf, {
+    authority: "ACN / CSIRT Italia",
+  }),
+  /NÚKIB|ÚOOÚ/,
+);
 assert.doesNotMatch(it.incidents.checklist.markDataProtection, /NÚKIB|ÚOOÚ/);
 assert.equal(it.integrations.index.title, "Test automatici");
 assert.equal(it.integrations.providerPages.aws.title, "Integrazione AWS");

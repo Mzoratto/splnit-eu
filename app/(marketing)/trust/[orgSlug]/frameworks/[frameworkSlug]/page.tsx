@@ -107,6 +107,12 @@ export default async function TrustFrameworkPage({
       />
 
       <section className="mx-auto max-w-7xl px-4 py-8 sm:px-6">
+        {trustCenter.isDemo ? (
+          <div className="mb-5 rounded-[var(--r-lg)] border border-amber-200 bg-amber-50 p-4 text-sm text-amber-950">
+            <p className="font-semibold">{copy.demoNotice.title}</p>
+            <p className="mt-1 leading-6">{copy.demoNotice.body}</p>
+          </div>
+        ) : null}
         <p className="font-mono text-xs text-foreground/45">
           Trust Center / {copy.detail.breadcrumbFrameworks} / {frameworkName}
         </p>

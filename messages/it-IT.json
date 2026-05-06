@@ -526,6 +526,8 @@
       "lastSync": "Ultima sincronizzazione",
       "results24h": "Risultati in 24h",
       "comingSoon": "In preparazione",
+      "plannedCardNote": "Pianificato. I controlli di produzione non sono ancora abilitati.",
+      "viewPlan": "Vedi piano",
       "manage": "Gestisci",
       "connect": "Collega",
       "disconnect": "Scollega"
@@ -559,7 +561,8 @@
         "automatedTests": "Test automatici",
         "runResults": "Risultati esecuzioni",
         "runResultsEmpty": "I risultati appariranno dopo la prima esecuzione automatica.",
-        "testSuite": "Test suite"
+        "testSuite": "Test suite",
+        "connectionUnavailable": "Le azioni di connessione sono disabilitate finché non sono disponibili le credenziali dell’app e un workspace attivo. L’ambito dei test resta visibile per la revisione."
       },
       "aws": {
         "title": "Integrazione AWS",
@@ -1147,7 +1150,7 @@
     "showPercentageScores": "Mostra punteggi percentuali",
     "visibleFrameworks": "Framework visibili",
     "visibleFrameworksEmpty": "Non ci sono ancora framework iscritti.",
-    "publicPageUnavailable": "Imposta uno slug pubblico prima di aprire la pagina pubblica.",
+    "publicPageUnavailable": "Imposta uno slug pubblico e pubblica prima di aprire la pagina pubblica.",
     "regulatorEmpty": "regolatore n/a",
     "scoreLabel": "punteggio",
     "saveSettings": "Salva impostazioni",
