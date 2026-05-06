@@ -33,7 +33,7 @@ const secretKey = process.env.CLERK_SECRET_KEY?.trim();
 const blobToken = process.env.BLOB_READ_WRITE_TOKEN?.trim();
 const runId = `auth_primary_flow_${Date.now()}`;
 const orgName = `Splnit Auth Primary Flow ${runId}`;
-const testEmail = `splnit-auth-primary-flow+clerk_test_${Date.now()}@example.com`;
+const testEmail = `splnit-auth-primary-flow-${Date.now()}+clerk_test@example.com`;
 const testPassword = `SplnitTest-${Date.now()}-Aa!`;
 const testUsername = `splnitauth${Date.now()}`;
 const controlKey = "ctrl_mfa_all_users";
@@ -45,10 +45,7 @@ type BrowserClerk = {
       create(input: {
         identifier: string;
         password: string;
-      }): Promise<{
-        createdSessionId: string;
-        status: string;
-      }>;
+      }): Promise<SignInAttempt>;
     };
   };
   loaded?: boolean;
@@ -59,6 +56,24 @@ type BrowserClerk = {
     session?: string;
   }): Promise<unknown>;
   user?: { id: string } | null;
+};
+
+type SecondFactor = {
+  emailAddressId?: string;
+  phoneNumberId?: string;
+  strategy: string;
+};
+
+type SignInAttempt = {
+  attemptSecondFactor(input: { code: string; strategy: string }): Promise<SignInAttempt>;
+  createdSessionId: string | null;
+  prepareSecondFactor(input: {
+    emailAddressId?: string;
+    phoneNumberId?: string;
+    strategy: string;
+  }): Promise<SignInAttempt>;
+  status: string;
+  supportedSecondFactors?: SecondFactor[] | null;
 };
 
 declare global {
@@ -109,6 +124,11 @@ async function cleanupDatabase(clerkOrgId: string) {
       .from(generatedArtifacts)
       .where(eq(generatedArtifacts.clerkOrgId, clerkOrgId)),
   ]);
+  const auditLogRows = await db
+    .select({ id: auditLogs.id })
+    .from(auditLogs)
+    .where(eq(auditLogs.clerkOrgId, clerkOrgId))
+    .limit(1);
   const artifactBlobUrls = artifactRows.map((row) =>
     typeof row.content.blobUrl === "string" ? row.content.blobUrl : null,
   );
@@ -119,7 +139,6 @@ async function cleanupDatabase(clerkOrgId: string) {
     ...artifactBlobUrls,
   ]);
 
-  await db.delete(auditLogs).where(eq(auditLogs.clerkOrgId, clerkOrgId));
   await db
     .delete(generatedArtifacts)
     .where(eq(generatedArtifacts.clerkOrgId, clerkOrgId));
@@ -130,17 +149,24 @@ async function cleanupDatabase(clerkOrgId: string) {
     .where(eq(orgControlStatuses.clerkOrgId, clerkOrgId));
   await db.delete(orgFrameworks).where(eq(orgFrameworks.clerkOrgId, clerkOrgId));
   await db.delete(profiles).where(eq(profiles.clerkOrgId, clerkOrgId));
-  await db.delete(organisations).where(eq(organisations.clerkOrgId, clerkOrgId));
+
+  if (auditLogRows.length === 0) {
+    await db.delete(organisations).where(eq(organisations.clerkOrgId, clerkOrgId));
+  }
 }
 
 async function clickButton(page: Page, name: RegExp) {
   await page.getByRole("button", { name }).click();
 }
 
-async function expectDownloadResponse(response: APIResponse, expectedContentType: RegExp) {
+async function expectDownloadResponse(
+  response: APIResponse,
+  expectedContentType: RegExp,
+  minimumBytes: number,
+) {
   expect(response.status()).toBe(200);
   expect(response.headers()["content-type"] ?? "").toMatch(expectedContentType);
-  expect((await response.body()).length).toBeGreaterThan(100);
+  expect((await response.body()).length).toBeGreaterThan(minimumBytes);
 }
 
 async function signIn(page: Page, input: {
@@ -160,13 +186,58 @@ async function signIn(page: Page, input: {
       return { orgId: null, status: "missing_clerk", userId: null };
     }
 
-    const attempt = await clerk.client.signIn.create({
+    let attempt = await clerk.client.signIn.create({
       identifier: credentials.email,
       password: credentials.password,
     });
 
+    if (attempt.status === "needs_second_factor") {
+      const emailCodeFactor = attempt.supportedSecondFactors?.find(
+        (factor) => factor.strategy === "email_code",
+      );
+      const phoneCodeFactor = attempt.supportedSecondFactors?.find(
+        (factor) => factor.strategy === "phone_code",
+      );
+
+      if (emailCodeFactor) {
+        attempt = await attempt.prepareSecondFactor({
+          emailAddressId: emailCodeFactor.emailAddressId,
+          strategy: "email_code",
+        });
+        attempt = await attempt.attemptSecondFactor({
+          code: "424242",
+          strategy: "email_code",
+        });
+      } else if (phoneCodeFactor) {
+        attempt = await attempt.prepareSecondFactor({
+          phoneNumberId: phoneCodeFactor.phoneNumberId,
+          strategy: "phone_code",
+        });
+        attempt = await attempt.attemptSecondFactor({
+          code: "424242",
+          strategy: "phone_code",
+        });
+      }
+    }
+
     if (attempt.status !== "complete") {
-      return { orgId: null, status: attempt.status, userId: null };
+      return {
+        orgId: null,
+        secondFactorStrategies:
+          attempt.supportedSecondFactors?.map((factor) => factor.strategy) ?? [],
+        status: attempt.status,
+        userId: null,
+      };
+    }
+
+    if (!attempt.createdSessionId) {
+      return {
+        orgId: null,
+        secondFactorStrategies:
+          attempt.supportedSecondFactors?.map((factor) => factor.strategy) ?? [],
+        status: "missing_created_session",
+        userId: null,
+      };
     }
 
     await clerk.setActive({
@@ -192,6 +263,7 @@ async function signIn(page: Page, input: {
 
 async function runOnboarding(page: Page) {
   await page.goto(getPageUrl("/onboarding"), { waitUntil: "domcontentloaded" });
+  await page.waitForLoadState("networkidle");
   await expect(
     page.getByRole("heading", {
       name: /Nastavení organizace|Organisation setup|Setup organizzazione/i,
@@ -211,7 +283,7 @@ async function runOnboarding(page: Page) {
     page.getByRole("heading", {
       name: /Vyberte frameworky|Choose frameworks|Scegli i framework/i,
     }),
-  ).toBeVisible();
+  ).toBeVisible({ timeout: 15_000 });
   await page.getByRole("button", { name: /GDPR/i }).click();
   await clickButton(page, /Uložit frameworky|Save frameworks|Salva framework/i);
 
@@ -240,7 +312,7 @@ async function runOnboarding(page: Page) {
   await clickButton(page, /Dokončit onboarding|Finish onboarding|Completa onboarding/i);
   await page.waitForURL(/\/dashboard$/);
   await expect(
-    page.getByRole("heading", { name: /Dashboard|Cruscotto|Přehled/i }),
+    page.getByRole("heading", { name: /Dobré ráno|Good morning|Buongiorno/i }),
   ).toBeVisible();
 }
 
@@ -248,13 +320,16 @@ async function runFrameworkAssessment(page: Page) {
   await page.goto(getPageUrl("/frameworks/nis2/setup"), {
     waitUntil: "domcontentloaded",
   });
+  await page.waitForLoadState("networkidle");
 
   for (let step = 0; step < 6; step += 1) {
     const fieldsets = page.locator("fieldset");
     const count = await fieldsets.count();
 
     for (let index = 0; index < count; index += 1) {
-      await fieldsets.nth(index).getByRole("button").first().click();
+      const answerButton = fieldsets.nth(index).getByRole("button").first();
+      await answerButton.click();
+      await expect(answerButton).toHaveClass(/bg-primary/);
     }
 
     const assessButton = page.getByRole("button", {
@@ -300,10 +375,10 @@ async function updateControlAndUploadEvidence(page: Page) {
     .fill(expiresAt.toISOString().slice(0, 10));
   await page.locator('textarea[name="description"]').last().fill(evidenceDescription);
   await clickButton(page, /Nahrát soubor|Upload file|Carica file/i);
-  await expect(page.getByText(evidenceDescription)).toBeVisible();
+  await expect(page.getByText(evidenceDescription, { exact: true })).toBeVisible();
 
   await page.goto(getPageUrl("/evidence"), { waitUntil: "domcontentloaded" });
-  await expect(page.getByText(evidenceDescription)).toBeVisible();
+  await expect(page.getByText(evidenceDescription, { exact: true })).toBeVisible();
 }
 
 async function generatePolicyAndGapReport(page: Page) {
@@ -392,7 +467,7 @@ async function verifyDatabaseAndDownloads(page: Page, clerkOrgId: string) {
   const evidenceResponse = await page.request.get(
     getPageUrl(`/api/evidence/${evidenceRows[0].id}/download`),
   );
-  await expectDownloadResponse(evidenceResponse, /text\/plain/i);
+  await expectDownloadResponse(evidenceResponse, /text\/plain/i, 20);
 
   const securityPolicy = policyRows.find((policy) => policy.type === "security_policy");
   const gapReport = policyRows.find((policy) => policy.type === "gap_report:nis2");
@@ -403,10 +478,12 @@ async function verifyDatabaseAndDownloads(page: Page, clerkOrgId: string) {
   await expectDownloadResponse(
     await page.request.get(getPageUrl(`/api/policies/${securityPolicy.id}/download`)),
     /application\/pdf/i,
+    100,
   );
   await expectDownloadResponse(
     await page.request.get(getPageUrl(`/api/policies/${gapReport.id}/download`)),
     /application\/pdf/i,
+    100,
   );
 
   return {

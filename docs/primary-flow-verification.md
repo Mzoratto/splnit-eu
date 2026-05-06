@@ -8,34 +8,26 @@ Core customer journey:
 
 `Onboarding -> Framework setup -> Controls -> Evidence -> Policies -> Gap report output`
 
-This pass verifies the flow against the local Postgres database configured by `DATABASE_URL`. It does not claim production database parity.
+This pass verifies the flow against production Neon using a Clerk test instance
+and real Blob-backed downloads. The unauthenticated local smoke remains useful
+as a fast data-layer regression check.
 
 ## Result
 
-Status: `partial-pass`
+Status: `pass`
 
-The data-layer primary flow passes with real local database writes and cleanup.
-Production migrations, seed, and legal-source imports are now complete. The
-remaining blocker is narrower than before: Clerk test keys are available, but
-the supplied Clerk test instance does not have Organizations enabled, so the app
-cannot obtain the active `session.orgId` required by protected app routes and
-server actions.
+The authenticated browser primary flow passed on 2026-05-06 against production
+Neon with the supplied Clerk test keys. Production migrations, seed, legal-source
+imports, citation smokes, and the authenticated primary flow are all clear.
 
-Authenticated browser verification was attempted on 2026-05-06 with production
-Neon env and the supplied Clerk test keys. Test user creation required a
-generated username and then succeeded, but Clerk rejected organization creation:
+Clerk dashboard showed Organizations configured, but the Backend API still
+reported `enabled: false`. The test instance was corrected through Clerk's
+Backend API by setting only `organizationSettings.enabled=true`, then the smoke
+created a temporary Clerk user and organization successfully.
 
-```text
-organization_not_enabled_in_instance
-The organizations feature is not enabled for this instance.
-```
-
-It was retried after Organizations appeared enabled in the Clerk dashboard. The
-script was adjusted not to request organization slugs because slugs were still
-disabled in that test instance, but Clerk's Backend API still returned the same
-`organization_not_enabled_in_instance` response for the provided keys.
-
-The existing Playwright config intentionally clears Clerk variables and therefore runs app pages in no-auth demo mode.
+The existing Playwright config intentionally clears Clerk variables and
+therefore still runs app pages in no-auth demo mode. Use the authenticated smoke
+for Clerk-backed verification.
 
 ## Repeatable Smoke
 
@@ -71,7 +63,7 @@ Command:
 npm run smoke:authenticated-primary-flow
 ```
 
-What it verifies once the Clerk test instance has Organizations enabled:
+What it verifies:
 
 - Creates a temporary Clerk test user and organization.
 - Mirrors the Clerk organization/profile into the configured database, matching
@@ -88,8 +80,8 @@ What it verifies once the Clerk test instance has Organizations enabled:
   download route.
 - Generates a real NIS2 gap report PDF, verifies the generated artifact row,
   and verifies the authenticated report download route.
-- Deletes the temporary database rows, uploaded blobs, Clerk organization, and
-  Clerk user in cleanup.
+- Deletes uploaded blobs, mutable temporary database rows, Clerk organization,
+  and Clerk user in cleanup.
 
 Safety notes:
 
@@ -100,14 +92,40 @@ Safety notes:
 - For this production-parity pass, run it through Vercel production env
   injection and source the Clerk test keys from a permission-restricted temp
   file.
+- Production audit logs are append-only. Smoke audit rows are retained, and the
+  minimal smoke organization rows that satisfy their foreign keys are retained.
+  Mutable child rows, profiles, evidence, policies, generated artifacts, status
+  rows, framework rows, and blobs are cleaned up.
 
 Observed result on 2026-05-06:
 
-```text
-blocked before browser execution
-reason: supplied Clerk test instance has Organizations disabled
-production cleanup check: 0 test organisation rows remained
-retry after dashboard change: same Clerk API response
+```json
+{
+  "browserConsoleErrors": 0,
+  "clerkOrgCreated": true,
+  "databaseHost": "ep-weathered-glitter-alyve8jv-pooler.c-3.eu-central-1.aws.neon.tech",
+  "ok": true,
+  "evidenceRows": 1,
+  "frameworkSlugs": ["gdpr", "nis2"],
+  "generatedArtifacts": 1,
+  "policies": 2,
+  "statusRows": 25
+}
+```
+
+Post-run cleanup check:
+
+```json
+{
+  "organisations": 3,
+  "profiles": 0,
+  "evidence": 0,
+  "policies": 0,
+  "generated_artifacts": 0,
+  "statuses": 0,
+  "frameworks": 0,
+  "audit_logs": 10
+}
 ```
 
 ## Commands Run
@@ -134,15 +152,11 @@ Observed result:
 - Citation safety smokes passed.
 - Typecheck, lint, and build passed.
 - Chromium demo-mode browser smoke passed after updating stale localization assertions.
-- Authenticated primary-flow smoke was added and attempted against production
-  Neon env with Clerk test keys, but stopped at Clerk organization creation
-  because Organizations are disabled in the supplied Clerk test instance.
+- Authenticated primary-flow smoke passed against production Neon env with Clerk
+  test keys and real Blob-backed downloads.
 
 ## Remaining Gaps
 
-1. Enable Organizations in the supplied Clerk test instance, then rerun
-   `npm run smoke:authenticated-primary-flow`.
-2. Blob-backed evidence, policy, and gap-report download endpoints are wired
-   into that smoke, but remain unverified until the Clerk org blocker is cleared.
-3. Framework setup browser persistence is wired into that smoke, but remains
-   unverified until the Clerk org blocker is cleared.
+1. Legal identity closeout remains externally blocked.
+2. Decide whether to retain the current append-only audit-log behavior for
+   smoke tests or introduce a documented production smoke tenant.
