@@ -76,6 +76,7 @@ const locale = "it-IT";
 type StepName =
   | "environment"
   | "clerk-domain"
+  | "clerk-organizations"
   | "fixtures"
   | "primary-flow"
   | "italian-surfaces"
@@ -313,6 +314,30 @@ async function verifyClerkDomain() {
   return {
     contentType: response.headers.get("content-type"),
     status: response.status,
+  };
+}
+
+async function ensureClerkOrganizationsEnabled() {
+  const clerk = createClerkClient({ secretKey: getRequiredEnv("CLERK_SECRET_KEY") });
+  const before = await clerk.instance.getOrganizationSettings();
+
+  if (before.enabled) {
+    return {
+      enabledBefore: true,
+      enabledAfter: true,
+      maxAllowedMemberships: before.maxAllowedMemberships,
+    };
+  }
+
+  const after = await clerk.instance.updateOrganizationSettings({
+    enabled: true,
+    maxAllowedMemberships: 5,
+  });
+
+  return {
+    enabledBefore: before.enabled,
+    enabledAfter: after.enabled,
+    maxAllowedMemberships: after.maxAllowedMemberships,
   };
 }
 
@@ -802,6 +827,11 @@ export async function POST(request: NextRequest) {
   try {
     await runStep(steps, "environment", verifyEnvironment);
     await runStep(steps, "clerk-domain", verifyClerkDomain);
+    await runStep(
+      steps,
+      "clerk-organizations",
+      ensureClerkOrganizationsEnabled,
+    );
     context = await runStep(steps, "fixtures", createFixtures);
     const activeContext = context;
 
