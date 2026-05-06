@@ -86,7 +86,7 @@ export async function upsertProfileFromClerk(input: {
       role: input.role ?? "member",
     })
     .onConflictDoUpdate({
-      target: profiles.clerkUserId,
+      target: [profiles.clerkUserId, profiles.clerkOrgId],
       set: {
         clerkOrgId: input.clerkOrgId,
         fullName: input.fullName,

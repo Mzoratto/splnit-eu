@@ -88,6 +88,8 @@ export type PublicTrustCenterModel = {
   nextTestAt: Date | null;
   organisationName: string;
   orgSlug: string;
+  accessGranted: boolean;
+  ndaRequired: boolean;
   showFrameworkDrilldown: boolean;
   showFrameworkPercentages: boolean;
   showLiveIndicator?: boolean;
@@ -381,6 +383,7 @@ export async function getPublicTrustCenterModel(input: {
 }
 
 export async function getPublicFrameworkDetailModel(input: {
+  accessToken?: string | null;
   frameworkSlug: string;
   locale?: Locale;
   orgSlug: string;
@@ -389,6 +392,7 @@ export async function getPublicFrameworkDetailModel(input: {
   trustCenter: PublicTrustCenterModel;
 } | null> {
   const trustCenter = await getPublicTrustCenterModel({
+    accessToken: input.accessToken,
     locale: input.locale,
     orgSlug: input.orgSlug,
   });
@@ -416,6 +420,14 @@ export function getLocalizedDocuments(locale: Locale) {
   return PUBLIC_DOCUMENTS.map((document) => ({
     ...document,
     description: descriptions[document.id] ?? document.description,
+  }));
+}
+
+function getLockedDocuments(locale: Locale) {
+  return getLocalizedDocuments(locale).map((document) => ({
+    ...document,
+    href: "mailto:hello@splnit.eu?subject=Trust%20Center%20access%20request",
+    isLocked: true,
   }));
 }
 
@@ -475,29 +487,36 @@ async function loadDatabaseTrustCenter(input: {
       ),
   ]);
   const uptimePct = calculateUptime(uptimeRows[0]?.successful, uptimeRows[0]?.total);
-  const frameworks = data.frameworks.map((row) =>
-    buildTrustFramework(
-      row.framework,
-      row.score,
-      controlRows.filter((control) => control.frameworkId === row.framework.id),
-      data.lastTestedAt,
-      input.locale,
-    ),
-  );
+  const accessGranted = data.accessGranted;
+  const requiresAccess = data.ndaRequired && !accessGranted;
+  const frameworks = requiresAccess
+    ? []
+    : data.frameworks.map((row) =>
+        buildTrustFramework(
+          row.framework,
+          row.score,
+          controlRows.filter((control) => control.frameworkId === row.framework.id),
+          null,
+          input.locale,
+        ),
+      );
 
   return {
+    accessGranted,
     accentColor: data.accentColor,
-    documents: getLocalizedDocuments(input.locale),
+    documents: requiresAccess ? getLockedDocuments(input.locale) : getLocalizedDocuments(input.locale),
     frameworks,
-    lastTestedAt: data.lastTestedAt,
+    lastTestedAt: null,
     logoUrl: data.logoUrl,
-    nextTestAt: getNextTestAt(data.lastTestedAt),
+    ndaRequired: data.ndaRequired,
+    nextTestAt: null,
     organisationName: data.organisationName,
     orgSlug: data.subdomain ?? input.orgSlug,
-    showFrameworkDrilldown: data.trustCenter.showFrameworkDrilldown,
-    showFrameworkPercentages: data.trustCenter.showFrameworkPercentages,
-    trustSignals: buildTrustSignals(frameworks, data.lastTestedAt, uptimePct, input.locale),
-    uptimePct,
+    showFrameworkDrilldown: !requiresAccess && data.trustCenter.showFrameworkDrilldown,
+    showFrameworkPercentages: !requiresAccess && data.trustCenter.showFrameworkPercentages,
+    showLiveIndicator: false,
+    trustSignals: buildTrustSignals(frameworks, null, requiresAccess ? null : uptimePct, input.locale),
+    uptimePct: requiresAccess ? null : uptimePct,
   };
 }
 
@@ -510,6 +529,7 @@ function getSplnitTrustCenterModel(locale: Locale): PublicTrustCenterModel {
   const copy = splnitTrustCopy(locale);
 
   return {
+    accessGranted: true,
     accentColor: "#1d4ed8",
     contactEmails: {
       privacy: "privacy@splnit.eu",
@@ -523,6 +543,7 @@ function getSplnitTrustCenterModel(locale: Locale): PublicTrustCenterModel {
     heroTitleOverride: copy.title,
     lastTestedAt: null,
     logoUrl: null,
+    ndaRequired: false,
     nextTestAt: null,
     organisationName: "Splnit.eu",
     orgSlug: "splnit",
@@ -646,17 +667,19 @@ function getDemoTrustCenterModel(
   ];
 
   return {
+    accessGranted: true,
     accentColor: "#1d4ed8",
     documents: getLocalizedDocuments(locale),
     frameworks,
-    lastTestedAt,
+    lastTestedAt: null,
     logoUrl: null,
-    nextTestAt: getNextTestAt(lastTestedAt),
+    ndaRequired: false,
+    nextTestAt: null,
     organisationName: "Demo workspace",
     orgSlug,
     showFrameworkDrilldown: true,
     showFrameworkPercentages: true,
-    trustSignals: buildTrustSignals(frameworks, lastTestedAt, null, locale),
+    trustSignals: buildTrustSignals(frameworks, null, null, locale),
     uptimePct: null,
   };
 }
@@ -952,16 +975,6 @@ function getLastAssessedAt(rows: ControlStatusRow[], fallback: Date | null) {
 
     return latest;
   }, fallback);
-}
-
-function getNextTestAt(lastTestedAt: Date | null) {
-  if (!lastTestedAt) {
-    return null;
-  }
-
-  const next = new Date(lastTestedAt.getTime() + 60 * 60 * 1000);
-
-  return next > new Date() ? next : new Date(Date.now() + 60 * 60 * 1000);
 }
 
 function calculateUptime(successful: number | undefined, total: number | undefined) {

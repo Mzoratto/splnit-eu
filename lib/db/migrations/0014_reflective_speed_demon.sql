@@ -1,0 +1,2 @@
+ALTER TABLE "profiles" DROP CONSTRAINT "profiles_clerk_user_id_unique";--> statement-breakpoint
+ALTER TABLE "profiles" ADD CONSTRAINT "profiles_clerk_user_id_clerk_org_id_unique" UNIQUE("clerk_user_id","clerk_org_id");

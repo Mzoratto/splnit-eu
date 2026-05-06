@@ -1,4 +1,5 @@
 import { createSign } from "node:crypto";
+import { createOAuthState } from "@/lib/integrations/oauth-state";
 import type { Integration } from "@/lib/db/schema";
 import { assertGitHubConfig, type GitHubIntegrationConfig } from "./client";
 
@@ -68,7 +69,7 @@ export function getGitHubAppInstallUrl(clerkOrgId: string) {
     return null;
   }
 
-  const params = new URLSearchParams({ state: clerkOrgId });
+  const params = new URLSearchParams({ state: createOAuthState(clerkOrgId, "github") });
   return `https://github.com/apps/${process.env.GITHUB_APP_SLUG}/installations/new?${params}`;
 }
 

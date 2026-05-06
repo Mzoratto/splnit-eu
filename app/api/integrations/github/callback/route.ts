@@ -3,6 +3,7 @@ import { NextResponse } from "next/server";
 import { createAuditLog } from "@/lib/db/queries/audit-logs";
 import { upsertIntegrationConnection } from "@/lib/db/queries/integrations";
 import { getGitHubInstallation } from "@/lib/integrations/github/app";
+import { verifyOAuthState } from "@/lib/integrations/oauth-state";
 
 function hasClerkConfig() {
   return (
@@ -14,9 +15,9 @@ function hasClerkConfig() {
 export async function GET(request: Request) {
   const url = new URL(request.url);
   const installationId = url.searchParams.get("installation_id");
-  const clerkOrgId = url.searchParams.get("state");
+  const state = url.searchParams.get("state");
 
-  if (!installationId || !clerkOrgId) {
+  if (!installationId || !state) {
     return NextResponse.json(
       { error: "Missing installation_id or state." },
       { status: 400 },
@@ -33,7 +34,7 @@ export async function GET(request: Request) {
     return NextResponse.json({ error: "Unauthorized." }, { status: 401 });
   }
 
-  if (session.orgId !== clerkOrgId) {
+  if (!verifyOAuthState(state, { clerkOrgId: session.orgId, provider: "github" })) {
     return NextResponse.json(
       { error: "OAuth state does not match the active organisation." },
       { status: 403 },
@@ -43,7 +44,7 @@ export async function GET(request: Request) {
   const installation = await getGitHubInstallation(installationId);
 
   const integration = await upsertIntegrationConnection({
-    clerkOrgId,
+    clerkOrgId: session.orgId,
     config: {
       accountType: installation.account?.type ?? null,
       installationId,
@@ -53,7 +54,7 @@ export async function GET(request: Request) {
   });
   await createAuditLog({
     action: "integration.connected",
-    clerkOrgId,
+    clerkOrgId: session.orgId,
     entityId: integration.id,
     entityType: "integration",
     metadata: {

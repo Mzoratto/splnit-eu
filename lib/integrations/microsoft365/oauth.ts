@@ -1,3 +1,5 @@
+import { createOAuthState } from "@/lib/integrations/oauth-state";
+
 const TENANT_ID = "common";
 const SCOPES = [
   "User.Read.All",
@@ -14,7 +16,7 @@ export function getMicrosoft365AuthUrl(clerkOrgId: string, redirectUri: string) 
     response_type: "code",
     redirect_uri: redirectUri,
     scope: `offline_access ${SCOPES}`,
-    state: clerkOrgId,
+    state: createOAuthState(clerkOrgId, "microsoft365"),
     response_mode: "query",
   });
 

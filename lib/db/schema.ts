@@ -74,18 +74,22 @@ export const organisations = pgTable("organisations", {
   updatedAt: timestamp("updated_at", { withTimezone: true }).defaultNow(),
 });
 
-export const profiles = pgTable("profiles", {
-  id: uuid("id").primaryKey().defaultRandom(),
-  clerkUserId: text("clerk_user_id").notNull().unique(),
-  clerkOrgId: text("clerk_org_id")
-    .notNull()
-    .references(() => organisations.clerkOrgId, { onDelete: "cascade" }),
-  fullName: text("full_name"),
-  email: text("email"),
-  role: text("role").notNull().default("member"),
-  locale: text("locale").notNull().default("cs"),
-  createdAt: timestamp("created_at", { withTimezone: true }).defaultNow(),
-});
+export const profiles = pgTable(
+  "profiles",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    clerkUserId: text("clerk_user_id").notNull(),
+    clerkOrgId: text("clerk_org_id")
+      .notNull()
+      .references(() => organisations.clerkOrgId, { onDelete: "cascade" }),
+    fullName: text("full_name"),
+    email: text("email"),
+    role: text("role").notNull().default("member"),
+    locale: text("locale").notNull().default("cs"),
+    createdAt: timestamp("created_at", { withTimezone: true }).defaultNow(),
+  },
+  (table) => [unique().on(table.clerkUserId, table.clerkOrgId)],
+);
 
 export const frameworks = pgTable("frameworks", {
   id: uuid("id").primaryKey().defaultRandom(),

@@ -69,6 +69,7 @@ export default async function TrustCenterPage({
     notFound();
   }
 
+  const accessQuery = query.access ? `?access=${encodeURIComponent(query.access)}` : "";
   const frameworkCount = trustCenter.frameworks.length;
   const controlCount = trustCenter.frameworks.reduce(
     (total, item) => total + item.totalControls,
@@ -133,7 +134,7 @@ export default async function TrustCenterPage({
               copy={copy}
               key={framework.framework.slug}
               framework={framework}
-              href={`/trust/${trustCenter.orgSlug}/frameworks/${framework.framework.slug}`}
+              href={`/trust/${trustCenter.orgSlug}/frameworks/${framework.framework.slug}${accessQuery}`}
               locale={locale}
               showDrilldown={trustCenter.showFrameworkDrilldown}
               showPercentages={trustCenter.showFrameworkPercentages}

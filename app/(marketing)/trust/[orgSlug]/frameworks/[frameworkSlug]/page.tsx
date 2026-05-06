@@ -15,7 +15,6 @@ import {
   formatDateTime,
 } from "@/components/trust-center/public-trust-ui";
 import {
-  getLocalizedDocumentsForFramework,
   getPublicFrameworkDetailModel,
 } from "@/lib/trust-center/public-model";
 import {
@@ -27,6 +26,7 @@ export const dynamic = "force-dynamic";
 
 type PageProps = {
   params: Promise<{ frameworkSlug: string; orgSlug: string }>;
+  searchParams?: Promise<{ access?: string }>;
 };
 
 export async function generateMetadata({
@@ -63,14 +63,19 @@ export async function generateMetadata({
   };
 }
 
-export default async function TrustFrameworkPage({ params }: PageProps) {
-  const [{ frameworkSlug, orgSlug }, requestLocale] = await Promise.all([
+export default async function TrustFrameworkPage({
+  params,
+  searchParams,
+}: PageProps) {
+  const [{ frameworkSlug, orgSlug }, query, requestLocale] = await Promise.all([
     params,
+    searchParams,
     getLocale(),
   ]);
   const locale = normalizeTrustLocale(requestLocale);
   const copy = getPublicTrustCopy(locale);
   const data = await getPublicFrameworkDetailModel({
+    accessToken: query?.access ?? null,
     frameworkSlug,
     locale,
     orgSlug,
@@ -81,14 +86,14 @@ export default async function TrustFrameworkPage({ params }: PageProps) {
   }
 
   const { framework, trustCenter } = data;
-  const documents = getLocalizedDocumentsForFramework(
-    framework.framework.slug,
-    locale,
+  const documents = trustCenter.documents.filter((document) =>
+    document.frameworkSlugs.includes(framework.framework.slug),
   );
   const passPct = widthFor(framework.verified, framework.totalControls);
   const warnPct = widthFor(framework.inProgress, framework.totalControls);
   const frameworkName =
     locale === "cs-CZ" ? framework.framework.nameCs : framework.framework.nameEn;
+  const trustCenterBackHref = `/trust/${trustCenter.orgSlug}${query?.access ? `?access=${encodeURIComponent(query.access)}` : ""}`;
 
   return (
     <main
@@ -96,7 +101,7 @@ export default async function TrustFrameworkPage({ params }: PageProps) {
       style={{ "--accent": trustCenter.accentColor } as CSSProperties}
     >
       <TrustTopbar
-        backHref={`/trust/${trustCenter.orgSlug}`}
+        backHref={trustCenterBackHref}
         copy={copy}
         trustCenter={trustCenter}
       />
@@ -260,7 +265,7 @@ export default async function TrustFrameworkPage({ params }: PageProps) {
         orgName={trustCenter.organisationName}
       />
       <TrustFooter
-        backHref={`/trust/${trustCenter.orgSlug}`}
+        backHref={trustCenterBackHref}
         copy={copy}
         locale={locale}
         trustCenter={trustCenter}

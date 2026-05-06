@@ -1,7 +1,17 @@
 import { createHmac, timingSafeEqual } from "node:crypto";
 
 function getSigningSecret() {
-  return process.env.ENCRYPTION_KEY ?? "splnit-local-trust-center-secret";
+  const secret = process.env.ENCRYPTION_KEY;
+
+  if (secret) {
+    return secret;
+  }
+
+  if (process.env.NODE_ENV === "production") {
+    throw new Error("ENCRYPTION_KEY is required for Trust Center access tokens.");
+  }
+
+  return "splnit-local-trust-center-secret";
 }
 
 function signAccess(input: {
