@@ -1,17 +1,18 @@
 # Splnit.eu
 
-Czech compliance automation platform for NIS2, EU AI Act, GDPR, and ISO 27001.
+EU compliance automation for NIS2, GDPR, EU AI Act, ISO 27001, and related evidence workflows.
 
-This scaffold implements the first reusable platform layer from the blueprint:
+Current strategy: Italy first, English-EU second, Czech tertiary. See [PROJECT_PLAN.md](PROJECT_PLAN.md) for the canonical current state, blockers, and next work order.
 
-- Next.js 15 App Router with Clerk-ready protected routes
-- next-intl configuration with Czech and English message catalogs
-- Drizzle/Neon schema for organisations, frameworks, controls, tests, evidence, policies, vendors, risks, incidents, and Trust Center
-- Global control library with cross-framework mappings
-- AI Act references and Annex III categories from the supplied PDFs
-- Czech policy templates for `ai_policy`, `training_log`, and `record_of_use`
-- Microsoft 365 adapter for MFA, Conditional Access, privileged roles, guests, training, and sensitivity labels
-- Inngest function skeletons for test runs, evidence expiry, and regulation updates
+The app currently includes:
+
+- Next.js 15 App Router with Clerk auth boundaries.
+- next-intl marketing/app localization for Czech, English, and Italian.
+- Drizzle/Neon schema for organisations, frameworks, controls, tests, evidence, policies, vendors, risks, incidents, generated artifacts, questionnaires, and Trust Center.
+- Public marketing, legal, security/status, Trust Center, and NIS2 scoping routes.
+- Authenticated app routes for dashboard, controls, frameworks, evidence, integrations, policies, vendors, risks, incidents, questionnaires, team, clients, and settings.
+- Microsoft 365, GitHub, and AWS integration surfaces and test-run infrastructure.
+- Static knowledge/source-document scripts and mapping-review agent scripts.
 
 ## Getting Started
 
@@ -36,27 +37,34 @@ npm run build
 npm run db:generate
 ```
 
+For database-backed work, set `DATABASE_URL` in `.env.local` before running migrations, seeds, or knowledge-import scripts.
+
 ## Project Shape
 
 Core modules:
 
 - `lib/db/schema.ts` - Drizzle schema
-- `lib/controls/library.ts` - global controls and cross-mappings
-- `lib/frameworks/ai-act.ts` - AI Act article and Annex III reference data
+- `lib/controls/` - control library and categorization
+- `lib/frameworks/` - framework metadata and mappings
 - `lib/integrations/runner.ts` - org-scoped test runner
 - `lib/integrations/microsoft365/tests.ts` - Microsoft Graph checks
-- `lib/policies/templates.ts` - Czech template definitions
+- `lib/policies/` - policy/template resolution
+- `lib/agents/mapping-review/` - offline mapping-review agent pipeline
 
 Main routes:
 
-- `/` - marketing page
-- `/dashboard` - protected app shell demo
-- `/frameworks`, `/controls`, `/evidence`, `/integrations`, `/policies`
-- `/trust/demo` - public Trust Center demo
+- `/` - localized marketing page
+- `/platform`, `/predpisy`, `/blog`, `/pricing`, `/early-access`, `/about`
+- `/it/strumenti/nis2-scope` - public Italian NIS2 scoping tool
+- `/dashboard` - protected app shell
+- `/frameworks`, `/controls`, `/evidence`, `/integrations`, `/policies`, `/vendors`, `/risks`, `/incidents`, `/questionnaires`
+- `/trust/[orgSlug]` - public Trust Center
 
 ## Notes
 
 Database clients and service SDKs are initialized lazily so `next build` does not crash when production environment variables are absent.
+
+Historical plans and premature playbooks are archived under `docs/archive/`. Do not treat archived files as current priorities unless `PROJECT_PLAN.md` explicitly revives them.
 
 ## Vercel and DNS
 

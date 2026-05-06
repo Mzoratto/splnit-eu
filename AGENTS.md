@@ -10,7 +10,7 @@ Canonical operating instructions for AI coding agents in this repository. Read t
 
 ## 0. Project Reality
 
-Splnit.eu is a solo-developer EU compliance automation product for NIS2, GDPR, ISO 27001, and related workflows. The current strategy is Italy + English-EU first, Czech secondary.
+Splnit.eu is a solo-developer EU compliance automation product for NIS2, GDPR, ISO 27001, and related workflows. The current strategy is Italy first, English-EU second, Czech tertiary.
 
 Hard truth rules:
 
