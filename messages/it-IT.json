@@ -383,7 +383,7 @@
       "csrd": "Reporting ESG, doppia materialità, evidenze dati e questionari fornitori."
     },
     "nukib": {
-      "badge": "Italia",
+      "badge": "Monitor UE",
       "exclusive": "Monitorato",
       "title": "Feed normativo",
       "openSource": "Apri fonte",
@@ -1195,7 +1195,6 @@
       "contact": "Contatto",
       "operator": "Splnit.eu — OSVČ Olomouc",
       "location": "Olomouc, Repubblica Ceca",
-      "pendingEntity": "Partita identificativa e link ARES definitivi saranno aggiunti prima del lancio.",
       "copyright": "© 2026 Splnit.eu · OSVČ Olomouc",
       "privacy": "Privacy",
       "terms": "Termini"
@@ -1246,7 +1245,7 @@
     },
     "about": {
       "tag": "Chi siamo",
-      "photoPlaceholder": "Foto del founder prima del lancio",
+      "photoPlaceholder": "Foto del fondatore prima del lancio",
       "title": "Chi c'è dietro Splnit.eu.",
       "body": "Splnit.eu è una piattaforma focalizzata, guidata dal fondatore, costruita da un ingegnere IT senior con esperienza approfondita nei framework di compliance europei.",
       "primaryCta": "Diventa design partner",
@@ -1254,8 +1253,8 @@
       "notYetTitle": "Cosa non dichiariamo ancora",
       "whyTag": "Perché",
       "whyTitle": "Compliance costruita da uno sviluppatore e attenta alla legge locale.",
-      "whyP1": "Le grandi piattaforme globali coprono spesso bene i framework generici, ma le PMI europee hanno bisogno anche di recepimenti locali, citazioni chiare e onboarding pratico.",
-      "whyP2": "Splnit.eu parte più piccolo: controlli automatici sui sistemi già usati dalle aziende, documenti pronti per revisione legale e lavoro diretto col founder per i primi design partner.",
+      "whyP1": "Le grandi piattaforme di compliance globali coprono spesso bene i framework generici, ma le PMI europee hanno bisogno anche di recepimenti locali, citazioni chiare e onboarding pratico.",
+      "whyP2": "Splnit.eu parte più piccolo: controlli automatici sui sistemi già usati dalle aziende, documenti pronti per revisione legale e lavoro diretto col fondatore per i primi design partner.",
       "realToday": {
         "solo": "Splnit.eu è un prodotto in accesso anticipato guidato dal fondatore e costruito a Olomouc.",
         "focus": "Il prodotto si concentra sull'automazione compliance UE per NIS2, GDPR e ISO 27001.",
@@ -1288,7 +1287,7 @@
     "stepsBody": "Tre passaggi dal primo collegamento di sistema a un evidence pack utilizzabile.",
     "featuresTag": "Funzioni principali",
     "featuresTitle": "Compliance costruita per team moderni.",
-    "featuresBody": "Collegate infrastrutture locali e globali. I controlli vengono mappati agli standard cechi e internazionali.",
+    "featuresBody": "Collegate infrastrutture locali e globali. I controlli vengono mappati agli standard locali e internazionali.",
     "offerTitle": "Offerta founding customer per le prime 10 aziende.",
     "offerBody": "Splnit.eu è in accesso anticipato. I primi design partner ricevono il piano Business gratis per 12 mesi e tre settimane di onboarding guidato direttamente col founder.",
     "offerCta": "Vai all'accesso anticipato",

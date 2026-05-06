@@ -1,4 +1,5 @@
 import assert from "node:assert/strict";
+import { existsSync } from "node:fs";
 import {
   getLocalizedMarketingPath,
   toInternalMarketingPath,
@@ -40,6 +41,17 @@ const requiredNamespaces = [
   "vendorsPage",
 ] as const;
 const locales: Locale[] = ["cs-CZ", "en-EU", "it-IT"];
+
+assert.equal(
+  existsSync("messages/en.json"),
+  false,
+  "messages/en.json must not exist; en-EU is the English master copy",
+);
+assert.equal(
+  existsSync("messages/cs.json"),
+  false,
+  "messages/cs.json must not exist; cs-CZ is the active Czech locale",
+);
 
 for (const locale of locales) {
   const messages = getMessagesForLocale(locale);
@@ -97,12 +109,14 @@ const frameworkQuestionIds = Array.from(
   new Set(Object.values(FRAMEWORK_QUESTIONS).flat().map((question) => question.id)),
 );
 assert.equal(en.shell.upgradePlan, "Upgrade plan");
+assert.equal(en.shell.trustCenter, "Trust Center");
 assert.equal(en.appError.retry, "Try again");
 assert.equal(en.accessReviews.title, "Access reviews");
 assert.equal(en.accessReviews.form.start, "Load users");
 assert.equal(en.auditLogPage.records.title, "Records");
 assert.equal(en.billingSettings.monthSuffix, "/month");
 assert.equal(en.clientDetailPage.back, "Back to clients");
+assert.equal(en.clientDetailPage.eyebrow, "Client view");
 assert.equal(en.controlsPage.index.title, "Control library");
 assert.equal(en.controlsPage.detail.saveStatus, "Save status");
 assert.equal(en.dashboard.metrics.scoreTitle, "Compliance score");
@@ -148,6 +162,11 @@ assert.equal(en.trustCenterSettings.saveSettings, "Save settings");
 assert.equal(en.vendorsPage.title, "Vendor risk");
 assert.equal(en.vendorsPage.form.create, "Create");
 assert.notEqual(en.shell.freePlanBanner, getMessagesForLocale("cs-CZ").shell.freePlanBanner);
+assert.equal(
+  "pendingEntity" in en.marketing.footer,
+  false,
+  "marketing footer must not expose pending legal-entity placeholder copy",
+);
 
 const it = getMessagesForLocale("it-IT");
 assert.equal(it.shell.upgradePlan, "Aggiorna piano");
@@ -160,8 +179,10 @@ assert.equal(it.clientDetailPage.back, "Torna ai clienti");
 assert.equal(it.controlsPage.index.title, "Libreria controlli");
 assert.equal(it.controlsPage.detail.saveStatus, "Salva stato");
 assert.equal(it.dashboard.metrics.scoreTitle, "Punteggio compliance");
+assert.equal(it.dashboard.nukib.badge, "Monitor UE");
 assert.equal(it.dashboard.nukib.title, "Feed normativo");
 assert.doesNotMatch(it.dashboard.nukib.title, /NÚKIB|ÚOOÚ/);
+assert.doesNotMatch(it.dashboard.nukib.badge, /Italia/);
 assert.doesNotMatch(it.dashboard.demoUpdates.nukibMethodology.title, /NÚKIB|ÚOOÚ/);
 assert.equal(it.clientsPage.title, "Dashboard clienti");
 assert.equal(it.clientsPage.form.save, "Salva collegamento");
@@ -205,6 +226,24 @@ assert.equal(it.trustCenterSettings.saveSettings, "Salva impostazioni");
 assert.equal(it.vendorsPage.title, "Rischio fornitori");
 assert.equal(it.vendorsPage.form.create, "Crea");
 assert.notEqual(it.shell.freePlanBanner, getMessagesForLocale("cs-CZ").shell.freePlanBanner);
+assert.equal(
+  "pendingEntity" in it.marketing.footer,
+  false,
+  "marketing footer must not expose pending legal-entity placeholder copy",
+);
+
+const cs = getMessagesForLocale("cs-CZ");
+assert.equal(cs.marketing.about.tag, "O nás");
+assert.equal(cs.marketing.about.whyTag, "Proč");
+assert.equal(cs.auditLogPage.title, "Log aktivit");
+assert.equal(cs.trustCenterSettings.requestsTitle, "Žádosti o přístup k dokumentům");
+assert.equal(cs.frameworks.detail.breadcrumb, "Dashboard / Frameworky");
+assert.equal(
+  "pendingEntity" in cs.marketing.footer,
+  false,
+  "marketing footer must not expose pending legal-entity placeholder copy",
+);
+
 const untranslatedItalianControls = CONTROL_LIBRARY.filter(
   (control) => getControlDisplayTitle(control, "it-IT") === control.titleEn,
 );

@@ -132,7 +132,6 @@ export function Footer() {
                 {t("operator")}
               </p>
               <p>{t("location")}</p>
-              <p>{t("pendingEntity")}</p>
               <Link
                 href="mailto:hello@splnit.eu"
                 className="mt-2 inline-block font-medium text-blue-600 transition-colors hover:text-blue-700"

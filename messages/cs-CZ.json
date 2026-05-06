@@ -258,7 +258,7 @@
       "setup": "Nastavit"
     },
     "detail": {
-      "breadcrumb": "Dashboard / Předpisy",
+      "breadcrumb": "Dashboard / Frameworky",
       "runAssessment": "Spustit assessment",
       "scoreLabel": "Skóre",
       "statusTitle": "Stav frameworku",
@@ -269,11 +269,11 @@
       "downloadLatestPdf": "Stáhnout poslední PDF",
       "gapReportEmpty": "PDF se vytvoří po prvním vyhodnocení frameworku.",
       "generatePdf": "Vygenerovat PDF",
-      "isoPackageTitle": "ISO 27001 certification package",
+      "isoPackageTitle": "Balíček certifikace ISO 27001",
       "isoPackageBody": "ZIP export obsahuje Statement of Applicability, splněné kontroly, dostupné důkazy, aktivní politiky a odkazy na certifikační orgány.",
       "downloadZip": "Stáhnout ZIP",
       "certificationLinksTitle": "Certifikační odkazy",
-      "csrdQuestionnaireTitle": "Supply-chain questionnaire template",
+      "csrdQuestionnaireTitle": "Šablona dotazníku pro supply-chain",
       "csrdQuestionnaireBody": "Výchozí sada otázek pro dodavatele a enterprise zákazníky.",
       "controlsTitle": "Kontroly a povinnosti",
       "noReference": "Bez reference",
@@ -362,7 +362,7 @@
   },
   "incidents": {
     "noDate": "nenastaveno",
-    "eyebrow": "Incident management",
+    "eyebrow": "Řízení incidentů",
     "title": "Incidenty",
     "subtitle": "NIS2 a GDPR incident log s 72h countdownem, regulatorními checklisty a exporty oznámení.",
     "demo": {
@@ -376,9 +376,9 @@
     "metrics": {
       "openTitle": "Otevřené",
       "totalIncidents": "Celkem {count} incidentů v logu.",
-      "gdprNotice": "GDPR Article 33 breach notice.",
-      "severityTitle": "Severity",
-      "statusLine": "Status {status}."
+      "gdprNotice": "Oznámení porušení podle GDPR čl. 33.",
+      "severityTitle": "Závažnost",
+      "statusLine": "Stav: {status}."
     },
     "countdown": {
       "notStarted": "GDPR Art. 33 není spuštěn",
@@ -387,23 +387,23 @@
       "remaining": "{hours}h zbývá · deadline {date}"
     },
     "severities": {
-      "low": "low",
-      "medium": "medium",
-      "high": "high",
-      "critical": "critical",
-      "none": "none"
+      "low": "nízká",
+      "medium": "střední",
+      "high": "vysoká",
+      "critical": "kritická",
+      "none": "žádná"
     },
     "statuses": {
-      "open": "open",
-      "investigating": "investigating",
-      "contained": "contained",
-      "resolved": "resolved"
+      "open": "otevřený",
+      "investigating": "vyšetřuje se",
+      "contained": "omezený",
+      "resolved": "vyřešený"
     },
     "wizard": {
-      "title": "Incident wizard",
+      "title": "Průvodce incidentem",
       "classification": "1. Klasifikace",
       "name": "Název",
-      "severity": "Severity",
+      "severity": "Závažnost",
       "detectedAt": "Detekováno",
       "impact": "2. Dopad",
       "affectsPersonalData": "Incident se týká osobních údajů",
@@ -412,8 +412,8 @@
       "create": "Založit incident"
     },
     "log": {
-      "title": "Incident log",
-      "empty": "Incident log je zatím prázdný."
+      "title": "Log incidentů",
+      "empty": "Log incidentů je zatím prázdný."
     },
     "detail": {
       "titleFallback": "Detail incidentu",
@@ -438,10 +438,10 @@
   },
   "risks": {
     "noDate": "nenaplánováno",
-    "eyebrow": "Risk register",
+    "eyebrow": "Registr rizik",
     "title": "Rizika",
-    "subtitle": "ISO 27001 risk register se skóre likelihood × impact, vlastníkem, termínem a stavem mitigace.",
-    "exportPdf": "Export ISO PDF",
+    "subtitle": "Registr rizik ISO 27001 se skóre pravděpodobnost × dopad, vlastníkem, termínem a stavem mitigace.",
+    "exportPdf": "Exportovat ISO PDF",
     "metrics": {
       "totalTitle": "Rizika",
       "totalBody": "Celkem položek v registru.",
@@ -453,12 +453,12 @@
     "form": {
       "title": "Nové riziko",
       "name": "Název",
-      "likelihood": "Likelihood",
-      "impact": "Impact",
+      "likelihood": "Pravděpodobnost",
+      "impact": "Dopad",
       "category": "Kategorie",
-      "owner": "Owner",
-      "dueDate": "Due date",
-      "notes": "Mitigation notes",
+      "owner": "Vlastník",
+      "dueDate": "Termín",
+      "notes": "Poznámky k mitigaci",
       "add": "Přidat riziko"
     },
     "seed": {
@@ -467,16 +467,16 @@
       "button": "Předvyplnit registr"
     },
     "matrix": {
-      "title": "Risk matrix",
-      "ariaLabel": "Risk matrix likelihood by impact",
-      "likelihood": "likelihood",
-      "impact": "impact"
+      "title": "Matice rizik",
+      "ariaLabel": "Matice rizik podle pravděpodobnosti a dopadu",
+      "likelihood": "pravděpodobnost",
+      "impact": "dopad"
     },
     "register": {
       "title": "Registr",
-      "score": "SCORE",
-      "owner": "Owner",
-      "due": "due",
+      "score": "SKÓRE",
+      "owner": "Vlastník",
+      "due": "termín",
       "empty": "Registr je prázdný. Přidejte riziko nebo použijte předvyplnění.",
       "save": "Uložit"
     },
@@ -551,7 +551,7 @@
   },
   "clientsPage": {
     "never": "nikdy",
-    "eyebrow": "Consultant",
+    "eyebrow": "Konzultant",
     "title": "Klientský dashboard",
     "subtitle": "Spravujte klientské organizace, sledujte skóre a připravte white-label Trust Center výstupy.",
     "planLabel": "Plán",
@@ -569,8 +569,8 @@
       "save": "Uložit propojení"
     },
     "accessLevels": {
-      "view": "Read only",
-      "manage": "Manage controls",
+      "view": "Jen čtení",
+      "manage": "Správa kontrol",
       "admin": "Admin"
     },
     "list": {
@@ -578,7 +578,7 @@
       "sectorEmpty": "sektor neuveden",
       "frameworkCount": "{count} frameworků",
       "lastChanged": "poslední změna",
-      "averageScore": "avg score",
+      "averageScore": "průměrné skóre",
       "empty": "Zatím nemáte připojeného žádného klienta."
     },
     "demoClients": [
@@ -617,9 +617,9 @@
     "noDate": "nenaplánováno",
     "emptyValue": "n/a",
     "eyebrow": "Dodavatelé",
-    "title": "Vendor risk",
-    "subtitle": "Katalog dodavatelů, risk tier assessment a NIS2 supply-chain report.",
-    "exportReport": "Export NIS2 report",
+    "title": "Riziko dodavatelů",
+    "subtitle": "Katalog dodavatelů, hodnocení úrovně rizika a report dodavatelského řetězce pro NIS2.",
+    "exportReport": "Exportovat NIS2 report",
     "form": {
       "title": "Nový dodavatel",
       "name": "Název",
@@ -629,18 +629,18 @@
     },
     "catalog": {
       "title": "Katalog",
-      "nextReview": "Další review",
+      "nextReview": "Další přezkum",
       "detail": "Detail",
       "empty": "Zatím nejsou přidaní žádní dodavatelé."
     },
     "detail": {
-      "eyebrow": "Vendor risk",
+      "eyebrow": "Riziko dodavatele",
       "noWebsite": "bez webu",
-      "riskTier": "Risk tier"
+      "riskTier": "Úroveň rizika"
     },
     "assessment": {
-      "title": "12-question assessment",
-      "save": "Uložit assessment",
+      "title": "Hodnocení (12 otázek)",
+      "save": "Uložit hodnocení",
       "answers": {
         "yes": "Ano",
         "partial": "Částečně",
@@ -662,34 +662,34 @@
       }
     },
     "questionnaire": {
-      "title": "Vendor questionnaire",
+      "title": "Dotazník dodavatele",
       "email": "Email dodavatele",
       "send": "Odeslat dotazník"
     },
     "history": {
-      "title": "Historie assessmentů",
-      "empty": "Assessment zatím není vyplněný."
+      "title": "Historie hodnocení",
+      "empty": "Hodnocení zatím není vyplněné."
     },
     "riskTiers": {
-      "low": "low",
-      "medium": "medium",
-      "high": "high",
-      "critical": "critical"
+      "low": "nízké",
+      "medium": "střední",
+      "high": "vysoké",
+      "critical": "kritické"
     },
     "statuses": {
-      "pending": "pending",
-      "assessed": "assessed",
-      "questionnaire_sent": "questionnaire sent",
-      "completed": "completed",
-      "sent": "sent",
-      "submitted": "submitted"
+      "pending": "čeká",
+      "assessed": "hodnoceno",
+      "questionnaire_sent": "dotazník odeslán",
+      "completed": "dokončeno",
+      "sent": "odesláno",
+      "submitted": "odesláno"
     }
   },
   "vendorAssessmentPage": {
-    "eyebrow": "Vendor assessment",
+    "eyebrow": "Hodnocení dodavatele",
     "requestDescription": "{organisation} žádá o vyplnění supply-chain bezpečnostního dotazníku.",
     "submitted": "Dotazník byl odeslán.",
-    "submit": "Odeslat assessment"
+    "submit": "Odeslat hodnocení"
   },
   "controlsPage": {
     "noDate": "bez data",
@@ -722,7 +722,7 @@
       "uploadFile": "Nahrát soubor",
       "frameworksTitle": "Frameworky a testy",
       "mappings": "Mapování",
-      "linkedTests": "Linked tests",
+      "linkedTests": "Propojené testy",
       "noLinkedTests": "Automatické testy se připojí po integracích.",
       "evidenceTitle": "Evidence",
       "uploaded": "nahráno",
@@ -749,10 +749,10 @@
       "supplier": "Dodavatelé",
       "physical": "Fyzická bezpečnost",
       "business_continuity": "Kontinuita provozu",
-      "ai_governance": "AI governance",
+      "ai_governance": "Governance AI",
       "governance": "Governance",
-      "esg_environment": "ESG environment",
-      "esg_social": "ESG social",
+      "esg_environment": "ESG prostředí",
+      "esg_social": "ESG sociální oblast",
       "esg_governance": "ESG governance"
     }
   },
@@ -760,8 +760,8 @@
     "noDate": "bez data",
     "noMetadata": "bez metadat",
     "eyebrow": "Audit",
-    "title": "Activity log",
-    "subtitle": "Append-only historie compliance akcí pro aktivní Clerk organizaci.",
+    "title": "Log aktivit",
+    "subtitle": "Neměnná historie compliance akcí pro aktivní Clerk organizaci.",
     "exportCsv": "CSV export",
     "filters": {
       "title": "Filtry",
@@ -801,7 +801,7 @@
   "clientDetailPage": {
     "emptyValue": "n/a",
     "back": "Zpět na klienty",
-    "eyebrow": "Scoped client view",
+    "eyebrow": "Pohled na klienta",
     "sectorEmpty": "sektor neuveden",
     "access": "přístup",
     "averageScore": "Průměrné skóre",
@@ -811,7 +811,7 @@
     "frameworkScores": "Framework skóre",
     "regulatorEmpty": "regulator n/a",
     "logoUrl": "Logo URL",
-    "accentColour": "Accent colour",
+    "accentColour": "Akcentní barva",
     "saveBranding": "Uložit branding",
     "priorityControlsTitle": "Prioritní kontroly klienta",
     "demo": {
@@ -820,7 +820,7 @@
       "manufacturing": "Výroba"
     },
     "statuses": {
-      "active": "active",
+      "active": "aktivní",
       "unknown": "neznámé",
       "fail": "nesplněno",
       "manual_review": "částečně"
@@ -834,33 +834,33 @@
       "supplier": "Dodavatelé",
       "physical": "Fyzická bezpečnost",
       "business_continuity": "Kontinuita provozu",
-      "ai_governance": "AI governance",
+      "ai_governance": "Governance AI",
       "governance": "Governance",
-      "esg_environment": "ESG environment",
-      "esg_social": "ESG social",
+      "esg_environment": "ESG prostředí",
+      "esg_social": "ESG sociální oblast",
       "esg_governance": "ESG governance"
     }
   },
   "accessReviews": {
     "noDate": "nenastaveno",
-    "eyebrow": "Access reviews",
+    "eyebrow": "Přístupové revize",
     "title": "Přístupové revize",
-    "subtitle": "Pull Entra ID a GitHub uživatelů, rozhodnutí keep/revoke/modify a CSV evidence pro ISO 27001 A.9.2.3.",
+    "subtitle": "Načtení uživatelů z Entra ID a GitHubu, rozhodnutí ponechat/odebrat/upravit a CSV evidence pro ISO 27001 A.9.2.3.",
     "exportCsv": "Export CSV",
     "metrics": {
       "activeTitle": "Aktivní revize",
       "activeBody": "Posledních {count} revizí v historii.",
-      "progressTitle": "Progress",
+      "progressTitle": "Postup",
       "progressBody": "{reviewed} / {total} rozhodnutí.",
-      "providerTitle": "Provider",
-      "due": "Due"
+      "providerTitle": "Zdroj",
+      "due": "Termín"
     },
     "form": {
       "title": "Spustit revizi",
       "name": "Název",
-      "namePlaceholder": "Quarterly access review",
-      "provider": "Provider",
-      "dueDate": "Due date",
+      "namePlaceholder": "Kvartální přezkum přístupů",
+      "provider": "Zdroj",
+      "dueDate": "Termín",
       "start": "Načíst uživatele"
     },
     "history": {
@@ -868,13 +868,13 @@
       "empty": "Zatím není založená žádná přístupová revize."
     },
     "items": {
-      "titleFallback": "Review items",
+      "titleFallback": "Položky revize",
       "progress": "{reviewed}/{total} rozhodnutí",
       "selectOrCreate": "Vyberte nebo založte revizi.",
-      "complete": "Uzavřít review",
+      "complete": "Uzavřít revizi",
       "noEmail": "bez emailu",
       "decision": "Rozhodnutí",
-      "empty": "Připojte Microsoft 365 nebo GitHub a založte review."
+      "empty": "Připojte Microsoft 365 nebo GitHub a založte revizi."
     },
     "statuses": {
       "completed": "dokončeno",
@@ -891,15 +891,15 @@
       "all": "Microsoft 365 + GitHub",
       "microsoft365": "Microsoft 365",
       "github": "GitHub",
-      "none": "none"
+      "none": "žádný"
     },
     "demo": {
-      "reviewName": "Quarterly access review · Microsoft 365 + GitHub",
+      "reviewName": "Kvartální přezkum přístupů · Microsoft 365 + GitHub",
       "items": {
         "memberEnabled": "Člen · aktivní",
         "guestEnabled": "Host · aktivní",
-        "userAccess": "User",
-        "vendorUser": "Vendor User"
+        "userAccess": "Uživatel",
+        "vendorUser": "Uživatel dodavatele"
       }
     }
   },
@@ -922,13 +922,13 @@
     "regulatorEmpty": "regulator n/a",
     "scoreLabel": "skóre",
     "saveSettings": "Uložit nastavení",
-    "requestsTitle": "NDA žádosti",
+    "requestsTitle": "Žádosti o přístup k dokumentům",
     "companyEmpty": "firma neuvedena",
     "created": "vytvořeno",
     "accessExpires": "Přístup expiruje",
     "approve": "Schválit",
     "decline": "Zamítnout",
-    "requestsEmpty": "Žádné NDA žádosti zatím nejsou otevřené.",
+    "requestsEmpty": "Žádné žádosti o přístup k dokumentům zatím nejsou otevřené.",
     "requestStatuses": {
       "approved": "schváleno",
       "declined": "zamítnuto",
@@ -966,7 +966,6 @@
       "contact": "Kontakt",
       "operator": "Splnit.eu — OSVČ Olomouc",
       "location": "Olomouc, Česká republika",
-      "pendingEntity": "Finální IČO a ARES odkaz budou doplněné před spuštěním.",
       "copyright": "© 2026 Splnit.eu · OSVČ Olomouc",
       "privacy": "Privacy",
       "terms": "Podmínky"
@@ -1016,15 +1015,15 @@
       }
     },
     "about": {
-      "tag": "About",
-      "photoPlaceholder": "Founder photo before launch",
+      "tag": "O nás",
+      "photoPlaceholder": "Foto zakladatele před spuštěním",
       "title": "Kdo stojí za Splnit.eu.",
       "body": "Splnit.eu je zaměřená, fondátorem vedená platforma postavená seniorním IT inženýrem s hlubokou znalostí evropských compliance frameworků.",
       "primaryCta": "Stát se design partnerem",
       "realTodayTitle": "Co je pravda dnes",
       "notYetTitle": "Co zatím netvrdíme",
-      "whyTag": "Why",
-      "whyTitle": "Developer-built, local-law aware compliance.",
+      "whyTag": "Proč",
+      "whyTitle": "Compliance postavená vývojářem, respektující lokální legislativu.",
       "whyP1": "Velké globální compliance platformy často pokrývají obecné rámce dobře, ale SMB týmy v EU potřebují také lokální transpozice, jasné citace a praktický onboarding.",
       "whyP2": "Splnit.eu začíná menší: automatické kontroly pro systémy, které firmy už používají, dokumenty připravené k právní kontrole a přímá práce se zakladatelem u prvních design partnerů.",
       "realToday": {

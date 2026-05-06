@@ -26,7 +26,7 @@
   "shell": {
     "plan": "Plan",
     "search": "Search (⌘K)...",
-    "trustCenter": "Trust centre",
+    "trustCenter": "Trust Center",
     "notifications": "Notifications",
     "demoOrganisation": "Demo organisation",
     "organisationFallback": "Organisation",
@@ -1030,7 +1030,7 @@
   "clientDetailPage": {
     "emptyValue": "n/a",
     "back": "Back to clients",
-    "eyebrow": "Scoped client view",
+    "eyebrow": "Client view",
     "sectorEmpty": "sector not provided",
     "access": "access",
     "averageScore": "Average score",
@@ -1195,7 +1195,6 @@
       "contact": "Contact",
       "operator": "Splnit.eu — OSVČ Olomouc",
       "location": "Olomouc, Czech Republic",
-      "pendingEntity": "Final business ID and ARES link will be added before launch.",
       "copyright": "© 2026 Splnit.eu · OSVČ Olomouc",
       "privacy": "Privacy",
       "terms": "Terms"
@@ -1288,7 +1287,7 @@
     "stepsBody": "Three steps from first system connection to a usable evidence pack.",
     "featuresTag": "Key features",
     "featuresTitle": "Compliance built for modern teams.",
-    "featuresBody": "Connect local and global infrastructure. Controls are mapped to Czech and international standards.",
+    "featuresBody": "Connect local and global infrastructure. Controls are mapped to local and international standards.",
     "offerTitle": "Founding customer offer for the first 10 companies.",
     "offerBody": "Splnit.eu is in early access. The first design partners get the Business plan free for 12 months and three weeks of guided onboarding directly with the founder.",
     "offerCta": "View early access",

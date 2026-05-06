@@ -23,6 +23,7 @@ const forbiddenPatterns = [
 const globalForbiddenPatterns = [
   /Splnit Technology/i,
   /Splnit Technology\s+s\.r\.o\.\s*[—-]\s*Ostrava/i,
+  /pendingEntity/i,
   /\b200\+\s+(automatic|automated|automatick(?:é|ých|ych)?|testy|tests|kontrol|controls|controlli)/i,
   /\b247\s+(automatic|automated|automatick(?:é|ých|ych)?|testy|tests|kontrol|controls|controlli)/i,
 ] as const;
