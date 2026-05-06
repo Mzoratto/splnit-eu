@@ -72,6 +72,85 @@ GET https://splnit.eu/api/internal/production-maintenance -> 404
 MIGRATION_TOKEN present in Vercel Production -> false
 ```
 
+Production legal-source import scripts were run against the live Neon database
+on 2026-05-06. Group A ran through a temporary token-protected production
+maintenance route; the route and token were removed before Group B. Group B ran
+from the local machine with `DATABASE_URL` scoped to each command through
+Vercel production env injection, without exporting the URL into the shell
+session.
+
+Legal-source import deployments:
+
+```text
+temporary Group A route deployment: dpl_J2B8kFa5MKoLkwHFF1pRDHTUhFLL
+temporary route commit: 09b12d7
+cleanup deployment after Group A: dpl_FwMPx8bKtB8r7sbQdgKDu8zsBfHS
+cleanup revert commit: 687305b
+```
+
+Group A import results:
+
+```text
+authoritative-sources: ok, imported 32 source document definitions
+italian-nis2: ok, 44 reviewed articles, 34 linked mappings
+gdpr-eu-it: ok, 99 reviewed articles
+italian-gdpr-garante: ok, 3 reviewed guidance rows
+italian-gdpr-codice: ok, 1 reviewed law row
+post-Group-A counts: 48 source documents, 147 articles, 34 article-link mappings
+```
+
+Group A cleanup verification:
+
+```text
+POST https://splnit.eu/api/internal/production-maintenance -> 404
+MIGRATION_TOKEN present in Vercel Production -> false
+```
+
+Group B import results:
+
+```text
+nis2-eu --file /private/tmp/nis2-en.xhtml: ok, 2 draft EU NIS2 articles, 34 linked mappings
+italian-nis2-acn: ok, 13 reviewed Italian ACN guidance rows
+czech-cyber-law --law-264-pdf /private/tmp/splnit-official/Sb_2025_264_PZZ.pdf: ok, 5 draft Czech law sections, 68 linked mappings
+czech-decrees --decree-409-pdf /private/tmp/splnit-official/Sb_2025_409_PZZ.pdf --decree-410-pdf /private/tmp/splnit-official/Sb_2025_410_PZZ.pdf: ok, 37 draft Czech decree sections, 132 linked mappings
+```
+
+Final knowledge counts:
+
+```text
+frameworks: 5
+controls: 92
+framework-control mappings: 184
+articles: 204
+framework-control article mappings: 268
+source documents: 51
+evidence templates: 34
+integration tests: 16
+```
+
+Final article counts by scope:
+
+```text
+gdpr / EU / it-IT / reviewed: 99
+gdpr / IT / it-IT / reviewed: 4
+nis2 / CZ / cs-CZ / draft: 42
+nis2 / EU / en-EU / draft: 2
+nis2 / IT / it-IT / reviewed: 57
+```
+
+All citation smoke checks passed after the full import batch:
+
+```text
+npm run smoke:draft-extraction-sources: passed
+npm run smoke:reviewed-article-links: passed
+npm run smoke:automated-evidence-citations: passed
+```
+
+The citation smokes were run on `DATABASE_URL_UNPOOLED` with
+`PGOPTIONS="-c default_transaction_read_only=on"` because Neon's pooled
+connection rejects that startup parameter. This enforced read-only transactions
+for the smoke assertions.
+
 ## Verification Commands
 
 Environment listing:
@@ -107,12 +186,9 @@ vercel env ls production --format json
 
 ## Remaining Gaps
 
-These checks are outside the migration/seed/citation-smoke pass above:
-
-- Production legal-source import scripts were not rerun after provisioning the
-  fresh Neon database.
-- Article and framework-control article counts should be checked after any
-  production legal-source import pass.
+No remaining database bootstrap or legal-source import gap is known from this
+pass. Czech and EU NIS2 rows remain `draft` by design; Italian NIS2 and GDPR
+rows imported in this pass are `reviewed`.
 
 ## Source Notes
 
