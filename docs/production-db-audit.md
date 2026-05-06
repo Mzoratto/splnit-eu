@@ -14,22 +14,33 @@ Goal:
 
 ## Result
 
-Production database audit is currently blocked.
+Production runtime environment repair is complete enough for the live app.
 
-Vercel lists `DATABASE_URL` as a production environment variable, but pulling/running production env from a clean linked directory resolves it as empty. This means the variable exists as a placeholder but does not provide an actual database target to the app or to audit commands.
+The live production readiness endpoint reports all required environment groups configured:
 
-The clean production env check also found these runtime variables empty:
+- app
+- database
+- auth
+- billing
+- encryption
+- cron
+- Inngest
+- Blob
 
-- `DATABASE_URL`
-- `CLERK_SECRET_KEY`
-- `NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY`
-- `STRIPE_SECRET_KEY`
-- `OPENAI_API_KEY`
-- `ENCRYPTION_KEY`
+Check result:
 
-`BLOB_READ_WRITE_TOKEN` is set.
+```text
+GET https://splnit.eu/api/readiness
+ok: true
+required: 7 / 7 configured
+recommended: 2 / 10 configured
+```
 
-Because `DATABASE_URL` is empty, no production database connection was attempted and no production migrations, imports, or seed scripts were run.
+`OPENAI_API_KEY` was also added to Vercel Production as a sensitive environment variable.
+
+The previous local CLI result that showed sensitive variables as empty was misleading. Vercel sensitive environment variables are intentionally non-readable after creation, so `vercel env pull` and local `vercel env run` are not reliable ways to inspect their values. Use the live server-side readiness endpoint for presence checks, and never print actual values.
+
+Production database table/count audit is still pending because local scripts cannot read the sensitive production `DATABASE_URL` from Vercel.
 
 ## Verification Commands
 
@@ -52,9 +63,21 @@ rm -rf "$tmpdir"
 
 The clean temp directory matters because running from the repo root can load local `.env.local` values and mask empty production values.
 
+Runtime readiness check:
+
+```bash
+curl -sS https://splnit.eu/api/readiness
+```
+
+Environment key presence check:
+
+```bash
+vercel env ls production --format json
+```
+
 ## Not Verified Yet
 
-These checks remain pending until a real production `DATABASE_URL` is configured:
+These checks remain pending until a production DB connection can be used by local audit scripts or an internal protected production audit route:
 
 - Production migration state.
 - `pgvector` extension availability.
@@ -64,17 +87,14 @@ These checks remain pending until a real production `DATABASE_URL` is configured
 
 ## Required Fix
 
-Configure real production environment values in Vercel. Do not copy the current local `DATABASE_URL`; it points to `localhost/splnit_eu_dev` and is not a production database target.
+Do not copy the current local `DATABASE_URL`; it points to `localhost/splnit_eu_dev` and is not a production database target.
 
-Minimum required before production DB audit can continue:
+To finish the production DB audit, use one of these paths:
 
-- Real hosted Postgres/Neon `DATABASE_URL` scoped to Production.
-- Clerk production keys scoped to Production.
-- `ENCRYPTION_KEY` scoped to Production.
-- Stripe production or intentional test-mode keys scoped to Production.
-- `OPENAI_API_KEY` scoped to Production before agent/AI features run there.
+1. Get the production Neon/Postgres connection string directly from the database provider and run the audit commands locally with that value loaded only for the command.
+2. Add a temporary, token-protected internal audit route that runs read-only count queries inside Vercel production, then remove it after the audit.
 
-After fixing env values:
+After a production DB connection path exists:
 
 ```bash
 npm run db:migrate
@@ -83,4 +103,9 @@ npm run smoke:reviewed-article-links
 npm run smoke:automated-evidence-citations
 ```
 
-Run those commands with the production `DATABASE_URL` loaded intentionally, then update this audit with counts and smoke results.
+Run those commands with the production `DATABASE_URL` loaded intentionally, then update this audit with counts and smoke results. Do not run them against the local `localhost/splnit_eu_dev` database and call the result production.
+
+## Source Notes
+
+- Vercel sensitive environment variables are non-readable after creation: https://vercel.com/docs/environment-variables/sensitive-environment-variables
+- `vercel env run` can run commands with project envs, but it should not be treated as a way to reveal sensitive production values: https://vercel.com/docs/cli/env
