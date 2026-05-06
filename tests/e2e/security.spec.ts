@@ -86,6 +86,20 @@ test("requires authentication for audit log export filters", async ({
   expectNoStore(response);
 });
 
+test("requires authentication for integration OAuth callbacks", async ({
+  request,
+}) => {
+  const githubResponse = await request.get(
+    "/api/integrations/github/callback?installation_id=123&state=org_test",
+  );
+  const microsoftResponse = await request.get(
+    "/api/integrations/microsoft/callback?code=test-code&state=org_test",
+  );
+
+  expect(githubResponse.status()).toBe(401);
+  expect(microsoftResponse.status()).toBe(401);
+});
+
 test("schedules reminder jobs in Vercel cron", async () => {
   const configPath = path.join(process.cwd(), "vercel.json");
   const config = JSON.parse(await readFile(configPath, "utf8")) as {

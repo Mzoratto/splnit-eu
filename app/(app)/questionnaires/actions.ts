@@ -24,6 +24,7 @@ import {
   answerQuestionnaireWithProvider,
   hasQuestionnaireAiConfig,
 } from "@/lib/questionnaires/provider";
+import { sanitizeQuestionnaireAnswers } from "@/lib/questionnaires/citation-guard";
 import { enforceQuestionnaireRateLimit } from "@/lib/questionnaires/rate-limit";
 import type { QuestionnaireResult } from "@/lib/questionnaires/types";
 
@@ -147,7 +148,10 @@ export async function answerQuestionnaireAction(
       clerkOrgId: session.orgId,
       createdBy: session.userId,
       result: {
-        answers: generated.answers,
+        answers: sanitizeQuestionnaireAnswers({
+          answers: generated.answers,
+          context,
+        }),
         artifactId: null,
         generatedAt: new Date().toISOString(),
         model: generated.model,

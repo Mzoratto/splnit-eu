@@ -169,7 +169,7 @@ export async function updateConsultantClientBranding(input: {
 }) {
   const db = getDb();
 
-  await db
+  const [updated] = await db
     .update(consultantClients)
     .set({
       updatedAt: new Date(),
@@ -181,5 +181,10 @@ export async function updateConsultantClientBranding(input: {
         eq(consultantClients.consultantOrgId, input.consultantOrgId),
         eq(consultantClients.clientOrgId, input.clientOrgId),
       ),
-    );
+    )
+    .returning({ id: consultantClients.id });
+
+  if (!updated) {
+    throw new Error("Consultant client relationship not found.");
+  }
 }

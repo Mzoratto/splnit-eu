@@ -6,6 +6,7 @@ import {
   accessReviewItems,
   accessReviews,
   auditLogs,
+  consultantClients,
   controls,
   evidence,
   incidents,
@@ -22,6 +23,11 @@ import {
   updateAccessReviewItemDecision,
 } from "@/lib/db/queries/access-reviews";
 import { listAuditLogPage } from "@/lib/db/queries/audit-logs";
+import {
+  getConsultantClientDetail,
+  linkConsultantClient,
+  updateConsultantClientBranding,
+} from "@/lib/db/queries/consultant-clients";
 import { updateControlStatus } from "@/lib/db/queries/controls";
 import { getEvidenceForOrg } from "@/lib/db/queries/evidence";
 import {
@@ -57,6 +63,12 @@ async function cleanup() {
   await db.delete(accessReviews).where(eq(accessReviews.clerkOrgId, orgB));
   await db.delete(vendorAssessments).where(eq(vendorAssessments.clerkOrgId, orgA));
   await db.delete(vendorAssessments).where(eq(vendorAssessments.clerkOrgId, orgB));
+  await db
+    .delete(consultantClients)
+    .where(eq(consultantClients.consultantOrgId, orgA));
+  await db
+    .delete(consultantClients)
+    .where(eq(consultantClients.consultantOrgId, orgB));
   await db.delete(vendors).where(eq(vendors.clerkOrgId, orgA));
   await db.delete(vendors).where(eq(vendors.clerkOrgId, orgB));
   await db.delete(incidents).where(eq(incidents.clerkOrgId, orgA));
@@ -345,6 +357,45 @@ async function assertAuditLogBoundary() {
   assert.equal(orgBPage.rows.some((row) => row.id === existingAuditRow.id), false);
 }
 
+async function assertConsultantClientBoundary() {
+  await linkConsultantClient({
+    accessLevel: "manage",
+    clientOrgId: orgB,
+    consultantOrgId: orgA,
+    inviteEmail: "client@example.com",
+  });
+
+  const allowedDetail = await getConsultantClientDetail({
+    clientOrgId: orgB,
+    consultantOrgId: orgA,
+  });
+
+  assert.ok(allowedDetail, "Consultant client relationship should be visible.");
+  assert.equal(
+    await getConsultantClientDetail({
+      clientOrgId: orgB,
+      consultantOrgId: orgB,
+    }),
+    null,
+  );
+  await assert.rejects(
+    () =>
+      updateConsultantClientBranding({
+        accentColor: "#111111",
+        clientOrgId: orgB,
+        consultantOrgId: orgB,
+      }),
+    /Consultant client relationship not found/,
+  );
+
+  const unchangedDetail = await getConsultantClientDetail({
+    clientOrgId: orgB,
+    consultantOrgId: orgA,
+  });
+
+  assert.equal(unchangedDetail?.relationship.whiteLabelAccentColor, null);
+}
+
 async function main() {
   await cleanup();
   await seedOrganisations();
@@ -359,6 +410,7 @@ async function main() {
     await assertIncidentBoundary();
     await assertAccessReviewBoundary();
     await assertAuditLogBoundary();
+    await assertConsultantClientBoundary();
   } finally {
     await cleanup();
   }
