@@ -1,5 +1,7 @@
 import { expect, test } from "@playwright/test";
 
+test.use({ locale: "cs-CZ" });
+
 test("renders the Microsoft 365 integration test suite", async ({ page }) => {
   await page.goto("/integrations/microsoft365");
 
@@ -27,9 +29,13 @@ test("renders planned integration details without enabling OAuth", async ({
   await expect(
     page.getByRole("heading", { name: "Google Workspace" }),
   ).toBeVisible();
-  await expect(page.getByText("coming_soon")).toBeVisible();
-  await expect(page.getByText("No OAuth flow or token storage is active")).toBeVisible();
-  await expect(page.getByRole("link", { name: /Back to integrations/ })).toHaveAttribute(
+  await expect(page.getByText("PENDING")).toBeVisible();
+  await expect(
+    page.getByText(
+      "OAuth tok ani ukládání tokenů pro tohoto poskytovatele zatím nejsou aktivní.",
+    ),
+  ).toBeVisible();
+  await expect(page.getByRole("link", { name: /Zpět na integrace/ })).toHaveAttribute(
     "href",
     "/integrations",
   );

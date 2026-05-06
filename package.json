@@ -12,6 +12,7 @@
     "test:e2e": "playwright test",
     "test:e2e:ui": "playwright test --ui",
     "smoke:i18n-shell": "tsx scripts/smoke-i18n-shell.ts",
+    "smoke:primary-flow": "tsx scripts/smoke-primary-flow.ts",
     "smoke:gap-analysis-artifacts": "tsx scripts/smoke-gap-analysis-artifacts.ts",
     "smoke:generated-artifact-audit": "tsx scripts/smoke-generated-artifact-audit.ts",
     "smoke:automated-evidence-citations": "tsx scripts/smoke-automated-evidence-citations.ts",

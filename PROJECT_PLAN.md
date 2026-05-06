@@ -65,6 +65,7 @@ These are useful later, but not next:
 - `PROJECT_PLAN.md` - current plan and priority order.
 - `docs/README.md` - documentation index and archive policy.
 - `docs/app-readiness-audit.md` - authenticated app route readiness matrix and immediate fix queue.
+- `docs/primary-flow-verification.md` - local database primary-flow verification record.
 - `docs/architecture/` - architecture decisions that still affect implementation.
 - `docs/legal-review.md`, `docs/subprocessors.md`, `docs/retention-policy.md`, `docs/data-processing-map.md`, `docs/offboarding-runbook.md`, `docs/audit-log-export-sop.md` - counsel/support handoff drafts.
 - `docs/legal-reviews/` - mapping/template review evidence and reviewer work queues.
@@ -86,8 +87,8 @@ Tracked root files are generally valid for a Next.js/Vercel app:
 Do these before any new features:
 
 1. **App readiness audit:** created in `docs/app-readiness-audit.md`; keep it updated as gaps close.
-2. **Primary flow verification:** verify onboarding -> framework selection -> controls -> evidence -> policies/report outputs with local data.
-3. **Citation safety audit:** run and document smoke checks proving draft mappings cannot reach auditor-ready output.
+2. **Primary flow verification:** local data-layer smoke passes and is documented in `docs/primary-flow-verification.md`; authenticated browser persistence remains blocked on Clerk test credentials.
+3. **Citation safety audit:** smoke checks pass locally; document production-target results during the production DB audit.
 4. **Production DB audit:** verify production `DATABASE_URL`, migration state, source document counts, and review queue counts.
 5. **Legal identity closeout:** replace placeholders only when real OSVČ/IČO/ARES details are available and reviewed.
 6. **Only then decide outreach:** send first three manual Italian messages or pause outreach based on product readiness.

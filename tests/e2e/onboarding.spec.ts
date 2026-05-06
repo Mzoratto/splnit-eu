@@ -1,5 +1,7 @@
 import { expect, test } from "@playwright/test";
 
+test.use({ locale: "cs-CZ" });
+
 test("walks the onboarding wizard to the score reveal", async ({ page }) => {
   await page.goto("/onboarding");
 
