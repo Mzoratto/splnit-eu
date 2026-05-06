@@ -381,6 +381,42 @@ async function updateControlAndUploadEvidence(page: Page) {
   await expect(page.getByText(evidenceDescription, { exact: true })).toBeVisible();
 }
 
+async function verifyItalianPrimaryPages(page: Page) {
+  await page.goto(getPageUrl("/it/controls"), {
+    waitUntil: "domcontentloaded",
+  });
+  await expect(page.getByRole("heading", { name: /Libreria controlli/i })).toBeVisible();
+  await expect(
+    page.getByText("MFA abilitata per tutti gli account utente").first(),
+  ).toBeVisible();
+  await expect(page.getByText("MFA enabled for all user accounts")).toHaveCount(0);
+
+  await page.goto(getPageUrl("/it/frameworks"), {
+    waitUntil: "domcontentloaded",
+  });
+  await expect(page.getByRole("heading", { name: /Normative e standard/i })).toBeVisible();
+  await expect(
+    page.getByText(
+      "Cybersecurity, gestione del rischio, incident reporting e responsabilità del management.",
+    ),
+  ).toBeVisible();
+  await expect(
+    page.getByText(
+      "Cybersecurity, risk management, incident reporting, and management accountability.",
+    ),
+  ).toHaveCount(0);
+
+  await page.goto(getPageUrl("/it/evidence"), {
+    waitUntil: "domcontentloaded",
+  });
+  await expect(page.getByRole("heading", { name: /Archivio evidenze/i })).toBeVisible();
+  await expect(page.getByText(evidenceDescription, { exact: true })).toBeVisible();
+  await expect(
+    page.getByText("MFA abilitata per tutti gli account utente").first(),
+  ).toBeVisible();
+  await expect(page.getByText("MFA enabled for all user accounts")).toHaveCount(0);
+}
+
 async function generatePolicyAndGapReport(page: Page) {
   await page.goto(getPageUrl("/policies/security_policy"), {
     waitUntil: "domcontentloaded",
@@ -568,6 +604,7 @@ async function main() {
     await runOnboarding(page);
     await runFrameworkAssessment(page);
     await updateControlAndUploadEvidence(page);
+    await verifyItalianPrimaryPages(page);
     await generatePolicyAndGapReport(page);
     const summary = await verifyDatabaseAndDownloads(page, organization.id);
 
