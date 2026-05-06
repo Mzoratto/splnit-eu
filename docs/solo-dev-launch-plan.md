@@ -750,6 +750,7 @@ Prepared materials:
 Prepared materials:
 
 - `docs/onboarding/design-partner-onboarding-playbook.md` defines intake, Week 1-3 agendas, note templates, feedback request, and reference-permission guardrails.
+- `docs/onboarding/templates/` contains reusable `00-intake` through `04-feedback` Markdown files for each private design-partner workspace.
 
 ## Founder-Facing Reusable Materials
 

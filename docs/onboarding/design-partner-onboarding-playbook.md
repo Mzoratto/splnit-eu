@@ -29,6 +29,8 @@ Create one folder or workspace per design partner with:
 - `recordings/`
 - `exports/`
 
+Copy the Markdown files from `docs/onboarding/templates/` into the customer workspace before Week 1. Keep the templates in the repo generic; customer-specific notes belong in the private customer workspace.
+
 Do not store customer secrets, raw access tokens, or sensitive evidence in this folder unless it is inside the approved product storage path.
 
 ## Intake Questions
