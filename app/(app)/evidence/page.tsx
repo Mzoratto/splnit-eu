@@ -315,9 +315,19 @@ export default async function EvidencePage({
                 </article>
               );
             })
+          ) : rows.length === 0 ? (
+            <div className="p-5">
+              <p className="text-sm leading-6 text-foreground/64">
+                {copy.records.empty}
+              </p>
+              <Link href="/frameworks" className="btn btn-primary mt-4">
+                {copy.records.emptyAction}
+                <ArrowRight className="h-4 w-4" aria-hidden="true" strokeWidth={1.5} />
+              </Link>
+            </div>
           ) : (
             <p className="p-5 text-sm text-foreground/58">
-              {copy.records.empty}
+              {copy.records.emptyFiltered}
             </p>
           )}
         </div>

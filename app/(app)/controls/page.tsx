@@ -157,9 +157,15 @@ export default async function ControlsPage() {
             ))}
           </div>
         ) : (
-          <p className="rounded-lg border border-border bg-surface p-5 text-sm text-foreground/58">
-            {copy.index.emptyActive}
-          </p>
+          <div className="rounded-lg border border-border bg-surface p-5">
+            <p className="text-sm leading-6 text-foreground/64">
+              {copy.index.emptyActive}
+            </p>
+            <Link href="/frameworks" className="btn btn-primary mt-4">
+              {copy.index.emptyActiveAction}
+              <ArrowRight className="h-4 w-4" aria-hidden="true" strokeWidth={1.5} />
+            </Link>
+          </div>
         )}
       </section>
 

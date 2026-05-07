@@ -30,7 +30,7 @@
     "notifications": "Notifications",
     "demoOrganisation": "Demo organisation",
     "organisationFallback": "Organisation",
-    "freePlanBanner": "The free plan is active. Business features unlock after upgrade.",
+    "freePlanBanner": "Free plan: explore setup with one small workspace. Upgrade only when you need higher limits for frameworks, integrations, users, or customer-facing proof.",
     "upgradePlan": "Upgrade plan",
     "switchToLight": "Switch to light mode",
     "switchToDark": "Switch to dark mode",
@@ -98,7 +98,8 @@
         "name": "Consultant",
         "description": "Unlimited client workspaces and white-label reporting."
       }
-    }
+    },
+    "billingUnavailable": "Checkout and portal actions are disabled in this environment until Stripe billing keys are configured. Your local plan limits are still shown for planning."
   },
   "frameworkWizard": {
     "error": "The assessment could not be saved.",
@@ -444,7 +445,9 @@
     },
     "records": {
       "title": "Evidence records",
-      "empty": "No evidence records match the current filters."
+      "empty": "Evidence will appear after framework setup, integrations, uploads, or generated documents create the first control records.",
+      "emptyFiltered": "No evidence records match the current filters. Clear or adjust filters to see other records.",
+      "emptyAction": "Set up a framework"
     },
     "expiry": {
       "label": "Expiry",
@@ -479,12 +482,13 @@
       "enrolledSubtitle": "Frameworks currently active in this organisation.",
       "availableTitle": "Available to activate",
       "availableSubtitle": "Library frameworks are shown as setup options, not active organisation scope.",
-      "emptyEnrolled": "No frameworks are active yet.",
+      "emptyEnrolled": "Start by activating one framework. NIS2 is the usual first baseline for EU cybersecurity readiness.",
       "scoreLabel": "Score",
       "statusLabel": "Status",
       "open": "Open",
       "assessment": "Assessment",
-      "setup": "Set up"
+      "setup": "Set up",
+      "emptyEnrolledAction": "Start with NIS2 setup"
     },
     "detail": {
       "breadcrumb": "Dashboard / Frameworks",
@@ -934,12 +938,13 @@
       "activeSubtitle": "Controls mapped to frameworks active in this organisation.",
       "libraryTitle": "Available control library",
       "librarySubtitle": "Reference controls available when a framework is activated.",
-      "emptyActive": "No controls are in scope yet because no framework is active.",
+      "emptyActive": "Controls appear here after a framework is activated. Start with framework setup to create the first control scope.",
       "frameworksLabel": "Frameworks",
       "statusLabel": "Status",
       "automated": "Automated",
       "manual": "Manual",
-      "openControl": "Open control"
+      "openControl": "Open control",
+      "emptyActiveAction": "Choose a framework"
     },
     "detail": {
       "statusTitle": "Control status",
@@ -1600,20 +1605,24 @@
         "gdpr": "Personal data protection, records of processing activities, security, and breach notification.",
         "iso27001": "Information security management system and security control catalogue.",
         "csrd": "ESG reporting, double materiality, data evidence, and supplier questionnaires."
-      }
+      },
+      "body": "Pick the obligations you want Splnit.eu to turn into controls. You can add more later; start with the framework you would discuss first with a prospect or auditor."
     },
     "tools": {
-      "title": "AI tools and SaaS inventory"
+      "title": "AI tools and SaaS inventory",
+      "body": "Select the systems you actually use. This shapes the first integration recommendation and keeps the setup grounded in your environment."
     },
     "integration": {
       "title": "Recommended integration",
       "body": "The first automated checks cover MFA, Conditional Access, guests, and privileged roles.",
-      "open": "Open integration settings"
+      "open": "Open integration settings",
+      "optional": "This is a recommended next action, not a blocker. You can review the integration scope now and connect it after the workspace is ready."
     },
     "score": {
       "label": "Initial score",
       "title": "The first baseline is ready",
-      "body": "The score is based on selected frameworks and tool inventory. Automated tests will refine it after integrations are connected."
+      "body": "The score is based on selected frameworks and tool inventory. Automated tests will refine it after integrations are connected.",
+      "nextStep": "After finishing, start on the dashboard: review active frameworks, open controls, and the first integration step."
     },
     "sectors": {
       "technology": "Technology",

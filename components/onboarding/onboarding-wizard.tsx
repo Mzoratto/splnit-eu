@@ -400,7 +400,12 @@ export function OnboardingWizard({
         <div className="rounded-lg border border-border bg-surface p-5">
           <div className="mb-6 flex items-center gap-3">
             <ShieldCheck className="h-5 w-5 text-primary" aria-hidden="true" />
-            <h2 className="text-lg font-semibold">{t("frameworks.title")}</h2>
+            <div>
+              <h2 className="text-lg font-semibold">{t("frameworks.title")}</h2>
+              <p className="mt-1 text-sm leading-6 text-foreground/58">
+                {t("frameworks.body")}
+              </p>
+            </div>
           </div>
           <div className="grid gap-3 md:grid-cols-2">
             {frameworks.map((framework) => {
@@ -466,7 +471,12 @@ export function OnboardingWizard({
         <div className="rounded-lg border border-border bg-surface p-5">
           <div className="mb-6 flex items-center gap-3">
             <Sparkles className="h-5 w-5 text-primary" aria-hidden="true" />
-            <h2 className="text-lg font-semibold">{t("tools.title")}</h2>
+            <div>
+              <h2 className="text-lg font-semibold">{t("tools.title")}</h2>
+              <p className="mt-1 text-sm leading-6 text-foreground/58">
+                {t("tools.body")}
+              </p>
+            </div>
           </div>
           <div className="grid gap-2 md:grid-cols-4">
             {tools.map((tool) => {
@@ -528,6 +538,9 @@ export function OnboardingWizard({
             <p className="mt-2 text-sm leading-6 text-foreground/64">
               {t("integration.body")}
             </p>
+            <p className="mt-2 text-sm leading-6 text-foreground/58">
+              {t("integration.optional")}
+            </p>
             <Link
               href="/integrations/microsoft365"
               className="mt-5 inline-flex items-center gap-2 rounded-md border border-border px-4 py-3 text-sm font-medium hover:bg-surface-muted"
@@ -565,6 +578,9 @@ export function OnboardingWizard({
               <h2 className="mt-1 text-2xl font-semibold">{t("score.title")}</h2>
               <p className="mt-3 text-sm leading-6 text-foreground/64">
                 {t("score.body")}
+              </p>
+              <p className="mt-2 text-sm leading-6 text-foreground/58">
+                {t("score.nextStep")}
               </p>
             </div>
           </div>

@@ -30,7 +30,7 @@
     "notifications": "Notifiche",
     "demoOrganisation": "Organizzazione demo",
     "organisationFallback": "Organizzazione",
-    "freePlanBanner": "Il piano gratuito è attivo. Le funzioni Business si sbloccano dopo l'upgrade.",
+    "freePlanBanner": "Piano Free: esplorate la configurazione in un workspace piccolo. Fate upgrade solo quando servono limiti più alti per framework, integrazioni, utenti o prove pubbliche.",
     "upgradePlan": "Aggiorna piano",
     "switchToLight": "Passa alla modalità chiara",
     "switchToDark": "Passa alla modalità scura",
@@ -98,7 +98,8 @@
         "name": "Consultant",
         "description": "Workspace illimitati per i clienti e reportistica white-label."
       }
-    }
+    },
+    "billingUnavailable": "Checkout e portale cliente sono disabilitati in questo ambiente finché le chiavi Stripe non sono configurate. I limiti locali del piano restano visibili per pianificare."
   },
   "frameworkWizard": {
     "error": "Non è stato possibile salvare la valutazione.",
@@ -444,7 +445,9 @@
     },
     "records": {
       "title": "Registro evidenze",
-      "empty": "Nessun record di evidenza corrisponde ai filtri attuali."
+      "empty": "Le evidenze appariranno dopo setup framework, integrazioni, upload o documenti generati che creano i primi record collegati ai controlli.",
+      "emptyFiltered": "Nessun record di evidenza corrisponde ai filtri attuali. Modificate o cancellate i filtri per vedere altri record.",
+      "emptyAction": "Configura framework"
     },
     "expiry": {
       "label": "Scadenza",
@@ -479,12 +482,13 @@
       "enrolledSubtitle": "Framework attualmente attivi in questa organizzazione.",
       "availableTitle": "Disponibili per l'attivazione",
       "availableSubtitle": "I framework della libreria sono opzioni di configurazione, non fanno ancora parte dell'ambito attivo dell'organizzazione.",
-      "emptyEnrolled": "Nessun framework è ancora attivo.",
+      "emptyEnrolled": "Iniziate attivando un framework. NIS2 è di solito il primo baseline per la readiness cybersecurity in UE.",
       "scoreLabel": "Punteggio",
       "statusLabel": "Stato",
       "open": "Apri",
       "assessment": "Valutazione",
-      "setup": "Configura"
+      "setup": "Configura",
+      "emptyEnrolledAction": "Inizia con setup NIS2"
     },
     "detail": {
       "breadcrumb": "Dashboard / Framework",
@@ -934,12 +938,13 @@
       "activeSubtitle": "Controlli mappati ai framework iscritti da questa organizzazione.",
       "libraryTitle": "Libreria controlli disponibile",
       "librarySubtitle": "Controlli di riferimento disponibili tramite iscrizione ai framework.",
-      "emptyActive": "Non ci sono controlli in ambito perché non è stato attivato alcun framework.",
+      "emptyActive": "I controlli appariranno dopo l’attivazione di un framework. Iniziate dal setup del framework per creare il primo ambito controlli.",
       "frameworksLabel": "Framework",
       "statusLabel": "Stato",
       "automated": "Automatico",
       "manual": "Manuale",
-      "openControl": "Apri controllo"
+      "openControl": "Apri controllo",
+      "emptyActiveAction": "Scegli framework"
     },
     "detail": {
       "statusTitle": "Stato controllo",
@@ -1600,20 +1605,24 @@
         "gdpr": "Protezione dei dati personali, registri delle attività di trattamento, sicurezza e notifica delle violazioni.",
         "iso27001": "Sistema di gestione della sicurezza delle informazioni e catalogo dei controlli di sicurezza.",
         "csrd": "Reporting ESG, doppia materialità, evidenze sui dati e questionari fornitori."
-      }
+      },
+      "body": "Scegliete gli obblighi che Splnit.eu deve trasformare in controlli. Potrete aggiungerne altri dopo; iniziate dal framework di cui parlereste per primo con un prospect o auditor."
     },
     "tools": {
-      "title": "Strumenti AI e inventario SaaS"
+      "title": "Strumenti AI e inventario SaaS",
+      "body": "Selezionate i sistemi che usate davvero. Questo orienta la prima integrazione consigliata e mantiene il setup aderente al vostro ambiente."
     },
     "integration": {
       "title": "Integrazione consigliata",
       "body": "I primi controlli automatici coprono MFA, Conditional Access, guest e ruoli privilegiati.",
-      "open": "Apri impostazioni integrazione"
+      "open": "Apri impostazioni integrazione",
+      "optional": "È un prossimo passo consigliato, non un blocco. Potete rivedere ora l’ambito dell’integrazione e collegarla quando il workspace è pronto."
     },
     "score": {
       "label": "Punteggio iniziale",
       "title": "La prima baseline è pronta",
-      "body": "Il punteggio si basa sui framework selezionati e sull'inventario strumenti. I test automatici lo renderanno più preciso dopo il collegamento delle integrazioni."
+      "body": "Il punteggio si basa sui framework selezionati e sull'inventario strumenti. I test automatici lo renderanno più preciso dopo il collegamento delle integrazioni.",
+      "nextStep": "Dopo il completamento, iniziate dalla dashboard: rivedete framework attivi, controlli aperti e primo passo di integrazione."
     },
     "sectors": {
       "technology": "Tecnologia",

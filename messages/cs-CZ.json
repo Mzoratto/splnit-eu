@@ -30,7 +30,7 @@
     "notifications": "Oznámení",
     "demoOrganisation": "Demo organizace",
     "organisationFallback": "Organizace",
-    "freePlanBanner": "Bezplatný plán je aktivní. Business funkce se odemknou po upgradu.",
+    "freePlanBanner": "Free plán: projděte si nastavení v jednom menším workspace. Upgrade dává smysl až ve chvíli, kdy potřebujete vyšší limity pro frameworky, integrace, uživatele nebo veřejné důkazy.",
     "upgradePlan": "Upgradovat plán",
     "switchToLight": "Přepnout na světlý režim",
     "switchToDark": "Přepnout na tmavý režim",
@@ -98,7 +98,8 @@
         "name": "Consultant",
         "description": "Neomezené klientské pracovní prostory a white-label reporting."
       }
-    }
+    },
+    "billingUnavailable": "Checkout a zákaznický portál jsou v tomto prostředí vypnuté, dokud nejsou nastavené Stripe klíče. Lokální limity plánů zůstávají viditelné pro plánování."
   },
   "frameworkWizard": {
     "error": "Vyhodnocení se nepodařilo uložit.",
@@ -444,7 +445,9 @@
     },
     "records": {
       "title": "Záznamy evidence",
-      "empty": "Žádné záznamy neodpovídají aktuálním filtrům."
+      "empty": "Evidence se objeví po nastavení frameworku, integracích, nahrání souborů nebo vygenerování dokumentů, které vytvoří první záznamy ke kontrolám.",
+      "emptyFiltered": "Žádné záznamy neodpovídají aktuálním filtrům. Upravte nebo vymažte filtry a zobrazte další záznamy.",
+      "emptyAction": "Nastavit framework"
     },
     "expiry": {
       "label": "Expirace",
@@ -479,12 +482,13 @@
       "enrolledSubtitle": "Frameworky aktuálně aktivní v této organizaci.",
       "availableTitle": "Dostupné k zapnutí",
       "availableSubtitle": "Knihovní frameworky jsou možnosti nastavení, ne aktivní rozsah organizace.",
-      "emptyEnrolled": "Zatím není aktivní žádný framework.",
+      "emptyEnrolled": "Začněte aktivací jednoho frameworku. NIS2 je obvyklý první baseline pro EU cybersecurity readiness.",
       "scoreLabel": "Skóre",
       "statusLabel": "Stav",
       "open": "Otevřít",
       "assessment": "Vyhodnocení",
-      "setup": "Nastavit"
+      "setup": "Nastavit",
+      "emptyEnrolledAction": "Začít nastavením NIS2"
     },
     "detail": {
       "breadcrumb": "Dashboard / Frameworky",
@@ -934,12 +938,13 @@
       "activeSubtitle": "Kontroly namapované na frameworky aktivní v této organizaci.",
       "libraryTitle": "Dostupná knihovna kontrol",
       "librarySubtitle": "Referenční kontroly dostupné po aktivaci frameworku.",
-      "emptyActive": "V rozsahu zatím nejsou žádné kontroly, protože není aktivní žádný framework.",
+      "emptyActive": "Kontroly se zobrazí po aktivaci frameworku. Začněte nastavením frameworku, které vytvoří první rozsah kontrol.",
       "frameworksLabel": "Frameworky",
       "statusLabel": "Stav",
       "automated": "Automatizovaná",
       "manual": "Manuální",
-      "openControl": "Otevřít kontrolu"
+      "openControl": "Otevřít kontrolu",
+      "emptyActiveAction": "Vybrat framework"
     },
     "detail": {
       "statusTitle": "Stav kontroly",
@@ -1600,20 +1605,24 @@
         "gdpr": "Ochrana osobních údajů, záznamy o činnostech zpracování, bezpečnost a oznamování porušení.",
         "iso27001": "Systém řízení bezpečnosti informací a katalog bezpečnostních opatření.",
         "csrd": "ESG reporting, dvojí materialita, datová evidence a dodavatelské dotazníky."
-      }
+      },
+      "body": "Vyberte povinnosti, které má Splnit.eu převést na kontroly. Další můžete přidat později; začněte frameworkem, o kterém byste mluvili jako první se zákazníkem nebo auditorem."
     },
     "tools": {
-      "title": "AI nástroje a SaaS inventář"
+      "title": "AI nástroje a SaaS inventář",
+      "body": "Vyberte systémy, které opravdu používáte. Ovlivní to první doporučenou integraci a udrží setup navázaný na reálné prostředí."
     },
     "integration": {
       "title": "Doporučená integrace",
       "body": "První automatické kontroly pokryjí MFA, Conditional Access, hosty a privilegované role.",
-      "open": "Otevřít nastavení integrace"
+      "open": "Otevřít nastavení integrace",
+      "optional": "Tohle je doporučený další krok, ne blokace. Rozsah integrace můžete zkontrolovat teď a připojit ji až po připravení workspace."
     },
     "score": {
       "label": "Úvodní skóre",
       "title": "První baseline je připravená",
-      "body": "Skóre vychází z vybraných frameworků a inventáře nástrojů. Automatické testy ho zpřesní po připojení integrací."
+      "body": "Skóre vychází z vybraných frameworků a inventáře nástrojů. Automatické testy ho zpřesní po připojení integrací.",
+      "nextStep": "Po dokončení začněte na dashboardu: zkontrolujte aktivní frameworky, otevřené kontroly a první integrační krok."
     },
     "sectors": {
       "technology": "Technologie",

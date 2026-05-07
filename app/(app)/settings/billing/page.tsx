@@ -65,6 +65,11 @@ export default async function BillingSettingsPage() {
           <p className="mt-2 max-w-2xl text-sm leading-6 text-foreground/64">
             {copy.subtitle}
           </p>
+          {!canManageBilling ? (
+            <p className="mt-3 max-w-2xl rounded-md border border-[var(--status-warn-border)] bg-[var(--status-warn-subtle)] p-3 text-sm leading-6 text-[var(--status-warn)]">
+              {copy.billingUnavailable}
+            </p>
+          ) : null}
         </div>
         <form action={createCustomerPortalSession}>
           <button

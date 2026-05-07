@@ -18,6 +18,7 @@ type PolicyUiCopy = {
     emptyDate: string;
     emptyState: string;
     eyebrow: string;
+    generateUnavailable: string;
     intro: string;
     latestVersion: string;
     review: string;
@@ -46,8 +47,11 @@ const POLICY_UI_COPY = {
     },
     list: {
       emptyDate: "bez data",
-      emptyState: "Dokument zatím není vygenerovaný.",
+      emptyState:
+        "Zatím není vygenerovaný žádný draft. Otevřete detail politiky, zkontrolujte šablonu a první draft vygenerujte po nastavení úložiště dokumentů.",
       eyebrow: "Knihovna dokumentů",
+      generateUnavailable:
+        "Generování je vypnuté, dokud není nastavené úložiště dokumentů. Šablonu můžete zatím zkontrolovat v detailu.",
       intro:
         "Šablony se vyplní údaji organizace, uloží jako PDF a připomenou roční přezkum.",
       latestVersion: "Poslední verze",
@@ -75,8 +79,11 @@ const POLICY_UI_COPY = {
     },
     list: {
       emptyDate: "no date",
-      emptyState: "This document has not been generated yet.",
+      emptyState:
+        "No draft has been generated yet. Open the policy detail to review the template, then generate the first draft when document storage is configured.",
       eyebrow: "Policy library",
+      generateUnavailable:
+        "Generation is disabled until document storage is configured. You can still review the template detail.",
       intro:
         "Templates use your organisation profile, save as PDF, and remind you about annual review.",
       latestVersion: "Latest version",
@@ -104,8 +111,11 @@ const POLICY_UI_COPY = {
     },
     list: {
       emptyDate: "nessuna data",
-      emptyState: "Questo documento non è ancora stato generato.",
+      emptyState:
+        "Nessuna bozza è stata generata finora. Aprite il dettaglio della policy per rivedere il modello, poi generate la prima bozza quando lo storage documenti è configurato.",
       eyebrow: "Libreria documenti",
+      generateUnavailable:
+        "La generazione è disabilitata finché lo storage documenti non è configurato. Potete comunque rivedere il dettaglio del modello.",
       intro:
         "I modelli usano il profilo dell'organizzazione, vengono salvati in PDF e ricordano la revisione annuale.",
       latestVersion: "Ultima versione",

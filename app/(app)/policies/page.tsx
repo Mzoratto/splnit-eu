@@ -1,7 +1,9 @@
 import Link from "next/link";
 import { auth } from "@clerk/nextjs/server";
+import { getLocale } from "next-intl/server";
 import { ArrowRight, Download, FileText } from "lucide-react";
 import { generatePolicyAction } from "@/app/(app)/policies/actions";
+import { normalizeLocale } from "@/i18n/routing";
 import { hasDatabaseUrl } from "@/lib/db";
 import { getOrganisationByClerkOrgId } from "@/lib/db/queries/organisations";
 import { listPoliciesForOrg } from "@/lib/db/queries/policies";
@@ -13,8 +15,9 @@ import {
   getPolicyUiCopy,
 } from "@/lib/policies/ui-copy";
 
-async function loadPolicies() {
-  const defaultContext = getJurisdictionContext("CZ", "cs-CZ");
+async function loadPolicies(requestLocale: string) {
+  const defaultLocale = normalizeLocale(requestLocale) ?? "cs-CZ";
+  const defaultContext = getJurisdictionContext("CZ", defaultLocale);
   const clerkConfigured =
     Boolean(process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY) &&
     Boolean(process.env.CLERK_SECRET_KEY);
@@ -86,9 +89,11 @@ function formatDate(
 }
 
 export default async function PoliciesPage() {
+  const requestLocale = await getLocale();
   const { context, policies, sourceDocuments, templates } =
-    await loadPolicies();
+    await loadPolicies(requestLocale);
   const copy = getPolicyUiCopy(context.locale);
+  const canGeneratePolicies = Boolean(process.env.BLOB_READ_WRITE_TOKEN);
   const latestByType = new Map<string, (typeof policies)[number]>();
 
   for (const policy of policies) {
@@ -171,7 +176,7 @@ export default async function PoliciesPage() {
                 <form action={generatePolicyAction.bind(null, template.type)}>
                   <button
                     type="submit"
-                    disabled={!process.env.BLOB_READ_WRITE_TOKEN}
+                    disabled={!canGeneratePolicies}
                     className="inline-flex items-center gap-2 rounded-md bg-primary px-4 py-3 text-sm font-medium text-primary-foreground disabled:cursor-not-allowed disabled:opacity-50"
                   >
                     {copy.actions.generate}
@@ -179,6 +184,11 @@ export default async function PoliciesPage() {
                   </button>
                 </form>
               </div>
+              {!canGeneratePolicies ? (
+                <p className="mt-3 text-xs leading-5 text-foreground/52">
+                  {copy.list.generateUnavailable}
+                </p>
+              ) : null}
             </article>
           );
         })}
