@@ -19,13 +19,13 @@ Generated questionnaire answers are persisted as `generated_artifacts`. For mapp
 
 PDF/XLSX export now posts an artifact ID and the server fetches the stored artifact with `generated_artifacts.clerkOrgId === session.orgId` and `kind === questionnaire_answers` before rendering. This closes the previous page-payload ownership gap for generated questionnaire exports.
 
-Provider-backed OpenAI generation still needs a runtime smoke with real environment variables and representative tenant data. This pass verified code-level checks and deterministic smoke scripts, not a live OpenAI call.
+Provider-backed OpenAI generation has now been runtime-smoked with real environment variables and the configured model path. On 2026-05-07, `QUESTIONNAIRE_AI_ENABLED=true npx tsx scripts/smoke-questionnaire-provider.ts` completed a live OpenAI-backed questionnaire generation call and returned model `gpt-4.1-mini-2025-04-14`. This verifies the provider-backed path in local runtime; it is still not a production tenant/customer proof claim.
 
 ## Status Matrix
 
 | Area | Routes / code | Status | What works | Gaps to close |
 |---|---|---:|---|---|
-| Inbound questionnaire generation | `/questionnaires`, `app/(app)/questionnaires/actions.ts`, `lib/questionnaires/provider.ts`, `lib/questionnaires/openai.ts` | partial | Requires Clerk user+org. Reads org-scoped compliance context via `getQuestionnaireComplianceContext(clerkOrgId)`. Uses OpenAI only when `QUESTIONNAIRE_AI_ENABLED=true` and `OPENAI_API_KEY` exists. Sanitizes evidence/legal/policy refs against available context before persistence. | Provider-backed generation needs a runtime smoke with real `DATABASE_URL`, `QUESTIONNAIRE_AI_ENABLED=true`, `OPENAI_API_KEY`, and reviewed tenant context. |
+| Inbound questionnaire generation | `/questionnaires`, `app/(app)/questionnaires/actions.ts`, `lib/questionnaires/provider.ts`, `lib/questionnaires/openai.ts` | partial | Requires Clerk user+org. Reads org-scoped compliance context via `getQuestionnaireComplianceContext(clerkOrgId)`. Uses OpenAI only when `QUESTIONNAIRE_AI_ENABLED=true` and `OPENAI_API_KEY` exists. Sanitizes evidence/legal/policy refs against available context before persistence. Provider-backed local runtime smoke passed with real OpenAI credentials on 2026-05-07. | Needs a representative authenticated tenant smoke with real `DATABASE_URL`, reviewed workspace context, artifact persistence, and UI review of the generated result. |
 | No-context fallback | `lib/questionnaires/fallback.ts` | ready as conservative fallback | If a tenant has no controls/evidence/legal citations/policies, it produces `no-context` unsupported draft answers and persists them as an artifact using model `fallback:no-supported-context`. | Sales wording must not call this AI-generated proof; it is a safe fallback draft explaining missing support. |
 | Question-to-control mapping | `lib/questionnaires/control-mapping.ts` | partial | Deterministically maps questions to likely controls and carries `controlIds`/`controlKeys` into answers. Covered by smoke script. | Template-declared explicit mappings and a reviewed classifier can improve precision later. |
 | Generated answer persistence | `persistQuestionnaireResult`, `createGeneratedArtifact`, `generated_artifacts` | partial | Successful generated/fallback answers are stored as generated artifacts with kind `questionnaire_answers`, model, title, content JSON, createdBy, and audit log. History on `/questionnaires` lists generated artifact summaries. | There is no dedicated questionnaire detail/review workflow yet. |
@@ -46,13 +46,14 @@ Use:
 - “Questionnaire answer evidence is AI-generated draft evidence until a human reviews it.”
 - “Exports are scoped server-side by generated artifact ownership.”
 - “Vendor questionnaires can be created and token links can collect vendor responses; production email delivery needs a configured Resend sender and should be verified before relying on it operationally.”
+- “OpenAI-backed questionnaire generation has passed a local runtime smoke with real configured credentials and model resolution.”
 
 Do not claim yet:
 
 - “Questionnaire answers are reviewed auditor evidence.”
 - “Vendor questionnaire emails are production-deliverable” unless Resend is configured and a mailbox smoke has passed.
 - “Only approved questionnaire answers can be externally delivered” until the reviewer workflow is implemented.
-- “Provider-backed AI generation has been proven in production” until a real tenant/runtime smoke passes.
+- “Provider-backed AI generation has been proven in production.” Local runtime smoke is not production proof.
 
 ## Trackable Gaps Deferred From This Pass
 

@@ -1,0 +1,218 @@
+# Text Review Extraction Summary — splnit.eu
+
+## Key count match
+
+- en-EU.json: 1245 keys extracted
+- it-IT.json: 1245 keys extracted
+- cs-CZ.json: 1245 keys extracted
+
+## Missing key report
+
+- No missing locale keys found across en-EU, it-IT, and cs-CZ.
+
+## Placeholder report
+
+- en-EU `accessReviews.items.progress`: {reviewed}, {total}
+- en-EU `accessReviews.metrics.activeBody`: {count}
+- en-EU `accessReviews.metrics.progressBody`: {reviewed}, {total}
+- en-EU `billingSettings.annualMonthly`: {price}
+- en-EU `billingSettings.limitFrameworks`: {count}
+- en-EU `billingSettings.limitIntegrations`: {count}
+- en-EU `billingSettings.limitUsers`: {count}
+- en-EU `clientsPage.list.frameworkCount`: {count}
+- en-EU `controlsPage.detail.activityEvidenceUploaded`: {evidence}
+- en-EU `controlsPage.detail.activityStatusChanged`: {status}
+- en-EU `dashboard.deadline.days`: {days}
+- en-EU `evidence.expiry.daysOverdue`: {days}
+- en-EU `evidence.expiry.daysUntil`: {days}
+- en-EU `frameworkWizard.answered`: {answered}, {total}
+- en-EU `frameworkWizard.questionRange`: {from}, {to}
+- en-EU `frameworkWizard.step`: {step}
+- en-EU `incidents.actions.cybersecurityPdf`: {authority}
+- en-EU `incidents.actions.dataProtectionPdf`: {authority}
+- en-EU `incidents.checklist.markCybersecurity`: {authority}
+- en-EU `incidents.checklist.markDataProtection`: {authority}
+- en-EU `incidents.countdown.overdue`: {date}
+- en-EU `incidents.countdown.remaining`: {date}, {hours}
+- en-EU `incidents.countdown.reported`: {authority}, {date}
+- en-EU `incidents.metrics.statusLine`: {status}
+- en-EU `incidents.metrics.totalIncidents`: {count}
+- en-EU `questionnairePage.actionErrors.rateLimit`: {limit}
+- en-EU `questionnairePage.workbench.emptyBody`: {organisation}
+- en-EU `questionnairePage.workbench.resultMeta`: {count}, {model}
+- en-EU `regulations.detail.jsonLdDescription`: {name}
+- en-EU `regulations.detail.metadataDescription`: {name}
+- en-EU `vendorAssessmentPage.requestDescription`: {organisation}
+- it-IT `accessReviews.items.progress`: {reviewed}, {total}
+- it-IT `accessReviews.metrics.activeBody`: {count}
+- it-IT `accessReviews.metrics.progressBody`: {reviewed}, {total}
+- it-IT `billingSettings.annualMonthly`: {price}
+- it-IT `billingSettings.limitFrameworks`: {count}
+- it-IT `billingSettings.limitIntegrations`: {count}
+- it-IT `billingSettings.limitUsers`: {count}
+- it-IT `clientsPage.list.frameworkCount`: {count}
+- it-IT `controlsPage.detail.activityEvidenceUploaded`: {evidence}
+- it-IT `controlsPage.detail.activityStatusChanged`: {status}
+- it-IT `dashboard.deadline.days`: {days}
+- it-IT `evidence.expiry.daysOverdue`: {days}
+- it-IT `evidence.expiry.daysUntil`: {days}
+- it-IT `frameworkWizard.answered`: {answered}, {total}
+- it-IT `frameworkWizard.questionRange`: {from}, {to}
+- it-IT `frameworkWizard.step`: {step}
+- it-IT `incidents.actions.cybersecurityPdf`: {authority}
+- it-IT `incidents.actions.dataProtectionPdf`: {authority}
+- it-IT `incidents.checklist.markCybersecurity`: {authority}
+- it-IT `incidents.checklist.markDataProtection`: {authority}
+- it-IT `incidents.countdown.overdue`: {date}
+- it-IT `incidents.countdown.remaining`: {date}, {hours}
+- it-IT `incidents.countdown.reported`: {authority}, {date}
+- it-IT `incidents.metrics.statusLine`: {status}
+- it-IT `incidents.metrics.totalIncidents`: {count}
+- it-IT `questionnairePage.actionErrors.rateLimit`: {limit}
+- it-IT `questionnairePage.workbench.emptyBody`: {organisation}
+- it-IT `questionnairePage.workbench.resultMeta`: {count}, {model}
+- it-IT `regulations.detail.jsonLdDescription`: {name}
+- it-IT `regulations.detail.metadataDescription`: {name}
+- it-IT `vendorAssessmentPage.requestDescription`: {organisation}
+- cs-CZ `accessReviews.items.progress`: {reviewed}, {total}
+- cs-CZ `accessReviews.metrics.activeBody`: {count}
+- cs-CZ `accessReviews.metrics.progressBody`: {reviewed}, {total}
+- cs-CZ `billingSettings.annualMonthly`: {price}
+- cs-CZ `billingSettings.limitFrameworks`: {count}
+- cs-CZ `billingSettings.limitIntegrations`: {count}
+- cs-CZ `billingSettings.limitUsers`: {count}
+- cs-CZ `clientsPage.list.frameworkCount`: {count}
+- cs-CZ `controlsPage.detail.activityEvidenceUploaded`: {evidence}
+- cs-CZ `controlsPage.detail.activityStatusChanged`: {status}
+- cs-CZ `dashboard.deadline.days`: {days}
+- cs-CZ `evidence.expiry.daysOverdue`: {days}
+- cs-CZ `evidence.expiry.daysUntil`: {days}
+- cs-CZ `frameworkWizard.answered`: {answered}, {total}
+- cs-CZ `frameworkWizard.questionRange`: {from}, {to}
+- cs-CZ `frameworkWizard.step`: {step}
+- cs-CZ `incidents.actions.cybersecurityPdf`: {authority}
+- cs-CZ `incidents.actions.dataProtectionPdf`: {authority}
+- cs-CZ `incidents.checklist.markCybersecurity`: {authority}
+- cs-CZ `incidents.checklist.markDataProtection`: {authority}
+- cs-CZ `incidents.countdown.overdue`: {date}
+- cs-CZ `incidents.countdown.remaining`: {date}, {hours}
+- cs-CZ `incidents.countdown.reported`: {authority}, {date}
+- cs-CZ `incidents.metrics.statusLine`: {status}
+- cs-CZ `incidents.metrics.totalIncidents`: {count}
+- cs-CZ `questionnairePage.actionErrors.rateLimit`: {limit}
+- cs-CZ `questionnairePage.workbench.emptyBody`: {organisation}
+- cs-CZ `questionnairePage.workbench.resultMeta`: {count}, {model}
+- cs-CZ `regulations.detail.jsonLdDescription`: {name}
+- cs-CZ `regulations.detail.metadataDescription`: {name}
+- cs-CZ `vendorAssessmentPage.requestDescription`: {organisation}
+
+## Hardcoded string count
+
+- Total hardcoded strings found outside locale JSON files: 3451
+- app/(marketing)/about/page.tsx: 8
+- app/(marketing)/blog/[slug]/page.tsx: 2
+- app/(marketing)/blog/page.tsx: 1
+- app/(marketing)/cenik/page.tsx: 5
+- app/(marketing)/cookies/page.tsx: 1
+- app/(marketing)/early-access/page.tsx: 6
+- app/(marketing)/page.tsx: 8
+- app/(marketing)/platform/page.tsx: 2
+- app/(marketing)/predpisy/[slug]/page.tsx: 2
+- app/(marketing)/predpisy/page.tsx: 6
+- app/(marketing)/security/page.tsx: 61
+- app/(marketing)/status/page.tsx: 42
+- app/(marketing)/tools/nis2-scope/page.tsx: 24
+- app/(marketing)/trust/[orgSlug]/frameworks/[frameworkSlug]/page.tsx: 3
+- app/(marketing)/trust/[orgSlug]/opengraph-image.tsx: 3
+- app/(marketing)/trust/[orgSlug]/page.tsx: 3
+- lib/access-reviews/reminders.ts: 1
+- lib/controls/evidence-requirements.ts: 34
+- lib/controls/library.ts: 368
+- lib/controls/localization.ts: 94
+- lib/email/client.ts: 2
+- lib/email/templates/alerts.ts: 69
+- lib/frameworks/ai-act.ts: 55
+- lib/frameworks/categories.ts: 40
+- lib/frameworks/csrd.ts: 56
+- lib/frameworks/iso27001-annex-a.ts: 92
+- lib/frameworks/questions.ts: 114
+- lib/frameworks/registry.ts: 18
+- lib/incidents/reporting.ts: 100
+- lib/legal/legal-page-copy.ts: 298
+- lib/marketing/blog.ts: 186
+- lib/marketing/framework-detail-copy.ts: 450
+- lib/marketing/frameworks.ts: 245
+- lib/marketing/platform-copy.ts: 150
+- lib/policies/resolve-template.ts: 10
+- lib/policies/review-reminders.ts: 1
+- lib/policies/templates.ts: 481
+- lib/policies/ui-copy.ts: 36
+- lib/trust-center/access.ts: 1
+- lib/trust-center/notifications.ts: 1
+- lib/trust-center/public-copy.ts: 164
+- lib/trust-center/public-model.ts: 205
+- lib/trust-center/settings.ts: 2
+- lib/vendors/notifications.ts: 1
+
+## Scanned hardcoded sources
+
+- app/(marketing)/about/page.tsx
+- app/(marketing)/blog/[slug]/page.tsx
+- app/(marketing)/blog/page.tsx
+- app/(marketing)/cenik/page.tsx
+- app/(marketing)/cookies/page.tsx
+- app/(marketing)/dpa/page.tsx
+- app/(marketing)/early-access/page.tsx
+- app/(marketing)/page.tsx
+- app/(marketing)/platform/page.tsx
+- app/(marketing)/podminky/page.tsx
+- app/(marketing)/predpisy/[slug]/page.tsx
+- app/(marketing)/predpisy/page.tsx
+- app/(marketing)/pricing/page.tsx
+- app/(marketing)/security/page.tsx
+- app/(marketing)/soukromi/page.tsx
+- app/(marketing)/status/page.tsx
+- app/(marketing)/tools/nis2-scope/page.tsx
+- app/(marketing)/trust/[orgSlug]/frameworks/[frameworkSlug]/page.tsx
+- app/(marketing)/trust/[orgSlug]/opengraph-image.tsx
+- app/(marketing)/trust/[orgSlug]/page.tsx
+- app/(marketing)/zakaznici/page.tsx
+- lib/access-reviews/reminders.ts
+- lib/controls/evidence-requirements.ts
+- lib/controls/library.ts
+- lib/controls/localization.ts
+- lib/controls/scorer.ts
+- lib/email/client.ts
+- lib/email/templates/alerts.ts
+- lib/frameworks/ai-act.ts
+- lib/frameworks/categories.ts
+- lib/frameworks/csrd.ts
+- lib/frameworks/gap-artifacts.ts
+- lib/frameworks/gdpr.ts
+- lib/frameworks/iso27001-annex-a.ts
+- lib/frameworks/iso27001.ts
+- lib/frameworks/localization.ts
+- lib/frameworks/nis2.ts
+- lib/frameworks/questions.ts
+- lib/frameworks/registry.ts
+- lib/incidents/reporting.ts
+- lib/legal/legal-page-copy.ts
+- lib/marketing/blog.ts
+- lib/marketing/framework-detail-copy.ts
+- lib/marketing/frameworks.ts
+- lib/marketing/platform-copy.ts
+- lib/marketing/pricing.ts
+- lib/policies/resolve-template.ts
+- lib/policies/review-reminders.ts
+- lib/policies/source-documents.ts
+- lib/policies/templates.ts
+- lib/policies/ui-copy.ts
+- lib/risks/common.ts
+- lib/trust-center/access.ts
+- lib/trust-center/notifications.ts
+- lib/trust-center/public-copy.ts
+- lib/trust-center/public-model.ts
+- lib/trust-center/settings.ts
+- lib/vendors/access.ts
+- lib/vendors/notifications.ts
+- lib/vendors/questions.ts
