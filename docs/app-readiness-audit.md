@@ -1,6 +1,6 @@
 # App Readiness Audit
 
-Last updated: 2026-05-06
+Last updated: 2026-05-07
 
 Purpose: identify the authenticated app gaps that must be closed before new product features or broader outreach. This started as a static route/code audit and now records the production verification results that close or defer each readiness item.
 
@@ -101,7 +101,7 @@ Readiness statuses:
 | Client detail | `/clients/[clientOrgId]` | partial | Consultant client detail; demo only for demo IDs | Demo read-only | Localized | Plan-gated for consultant; visibility and branding mutation are org-boundary smoked | Demo clients are still secondary-surface shaping work for non-consultant/no-DB modes. |
 | Trust Center admin | `/trust-center` | partial | `getTrustCenterSettings`; local-only fallback demo frameworks | Empty/unavailable state unless `ENABLE_LOCAL_DEMO_DATA=true` outside production | Localized | Layout handles auth | Public URL no longer defaults to `/trust/demo`; ensure saved slug, visibility toggles, and framework detail flags match public route behavior. |
 | Organisation settings | `/settings/organisation` | partial | Organisation query; fallback demo org | Demo read-only | Uses stored locale | Layout handles auth | Country list includes DE even though no German marketing strategy; verify OSVČ/legal identifier labels by jurisdiction. |
-| Billing settings | `/settings/billing` | partial | Organisation + Stripe env | No demo list, buttons disabled without Stripe | Localized; EUR for EN/IT, CZK for CS | Layout handles auth | Portal/checkout actions still need production Stripe smoke test. |
+| Billing settings | `/settings/billing` | partial | Organisation + Stripe env | No demo list, buttons disabled without Stripe | Localized; EUR for EN/IT, CZK for CS | Layout handles auth | Missing-config page and local webhook entitlement smoke are verified in `docs/billing-stripe-runtime-audit.md`; real Stripe checkout/portal/test-card flow still needs Stripe test keys and authenticated org smoke. |
 | Audit log | `/settings/audit-log` | partial | `listAuditLogs` | Empty list when no DB/session/error | Localized | Layout handles auth; export query is org-scoped and smoked | Pagination/limit behavior still needs secondary-surface verification. |
 
 ## Immediate Fix Queue

@@ -12,6 +12,11 @@ test.describe("English billing", () => {
     await expect(page.getByText("Current plan", { exact: true })).toBeVisible();
     await expect(page.getByRole("heading", { name: "Free" })).toBeVisible();
     await expect(page.getByRole("heading", { name: "Stripe connection" })).toBeVisible();
+    await expect(
+      page.getByText(
+        "Checkout and portal actions are disabled in this environment until Stripe billing keys are configured.",
+      ),
+    ).toBeVisible();
     await expect(page.getByText("€1,475/month")).toBeVisible();
 
     for (const button of await page

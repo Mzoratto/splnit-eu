@@ -21,6 +21,7 @@
     "smoke:questionnaire-artifacts": "tsx scripts/smoke-questionnaire-artifacts.ts",
     "smoke:questionnaire-citations": "tsx scripts/smoke-questionnaire-citations.ts",
     "smoke:questionnaire-provider": "tsx scripts/smoke-questionnaire-provider.ts",
+    "smoke:stripe-billing": "tsx scripts/smoke-stripe-billing-runtime.ts",
     "smoke:copy-hygiene": "tsx scripts/smoke-copy-hygiene.ts",
     "smoke:authenticated-primary-flow": "tsx scripts/smoke-authenticated-primary-flow.ts",
     "smoke:trust-center-settings": "tsx scripts/smoke-trust-center-settings.ts",
