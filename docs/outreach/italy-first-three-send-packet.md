@@ -16,9 +16,9 @@ Core product readiness is no longer the blocker. The remaining blockers before s
 
 | Company | Route | Attention line | Copy source | Current action |
 |---|---|---|---|---|
-| Cubbit | `hello@cubbit.io` | Enrico Signoretti / Marco Moschettini | `docs/archive/outreach/italy-first-touch-drafts-tier-1.md` | Insert sender block, send manually, then update tracker. |
-| Cleafy | Official form: `https://www.cleafy.com/get-in-touch` | Nicolò Pastore / Carmine Giangregorio | `docs/archive/outreach/italy-tier-1-short-form-variants.md` | Insert sender block, submit form manually, then update tracker. Do not use PR-only media email. |
-| DigitalPA | `contatti@digitalpa.it` or official contact form | Andrea Puggioni / Matteo Serra | `docs/archive/outreach/italy-first-touch-drafts-tier-1.md` | Insert sender block, send manually, then update tracker. |
+| Cubbit | `hello@cubbit.io` | Enrico Signoretti / Marco Moschettini | `docs/outreach/italy-first-three-ready-copy.md` | Insert sender block, send manually, then update tracker. |
+| Cleafy | Official form: `https://www.cleafy.com/get-in-touch` | Nicolò Pastore / Carmine Giangregorio | `docs/outreach/italy-first-three-ready-copy.md` | Insert sender block, submit form manually, then update tracker. Do not use PR-only media email. |
+| DigitalPA | `contatti@digitalpa.it` or official contact form | Andrea Puggioni / Matteo Serra | `docs/outreach/italy-first-three-ready-copy.md` | Insert sender block, send manually, then update tracker. |
 
 ## Decision
 
