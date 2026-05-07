@@ -1,12 +1,12 @@
-import { anthropicQuestionnaireProvider } from "@/lib/questionnaires/claude";
+import { openAiQuestionnaireProvider } from "@/lib/questionnaires/openai";
 import type {
   QuestionnaireAiInput,
   QuestionnaireAiOutput,
   QuestionnaireAiProvider,
 } from "@/lib/questionnaires/provider-types";
 
-const QUESTIONNAIRE_AI_PROVIDERS = [anthropicQuestionnaireProvider] as const;
-const DEFAULT_QUESTIONNAIRE_AI_PROVIDER = "anthropic";
+const QUESTIONNAIRE_AI_PROVIDERS = [openAiQuestionnaireProvider] as const;
+const DEFAULT_QUESTIONNAIRE_AI_PROVIDER = "openai";
 
 export function isQuestionnaireAiEnabled() {
   return process.env.QUESTIONNAIRE_AI_ENABLED?.trim().toLowerCase() === "true";

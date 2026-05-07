@@ -396,6 +396,10 @@ export const evidence = pgTable("evidence", {
   integrationRunId: uuid("integration_run_id").references(() => integrationRuns.id),
   type: text("type").notNull(),
   source: text("source"),
+  sourceArtifactId: uuid("source_artifact_id").references(() => generatedArtifacts.id, {
+    onDelete: "set null",
+  }),
+  status: text("status").notNull().default("reviewed"),
   blobUrl: text("blob_url"),
   snapshotData: jsonb("snapshot_data").$type<Record<string, unknown>>(),
   description: text("description"),

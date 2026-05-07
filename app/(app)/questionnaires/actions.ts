@@ -4,7 +4,10 @@ import { auth } from "@clerk/nextjs/server";
 import { z } from "zod";
 import { getMessagesForLocale } from "@/i18n/messages";
 import { normalizeLocale, type Locale } from "@/i18n/routing";
-import { createGeneratedArtifact } from "@/lib/db/queries/generated-artifacts";
+import {
+  createGeneratedArtifact,
+  createQuestionnaireAnswerEvidence,
+} from "@/lib/db/queries/generated-artifacts";
 import { getQuestionnaireComplianceContext } from "@/lib/db/queries/questionnaires";
 import { getOrganisationByClerkOrgId } from "@/lib/db/queries/organisations";
 import {
@@ -24,6 +27,11 @@ import {
   answerQuestionnaireWithProvider,
   hasQuestionnaireAiConfig,
 } from "@/lib/questionnaires/provider";
+import {
+  buildQuestionnaireControlMapping,
+  getQuestionnaireAnswerConfidence,
+  type QuestionnaireControlMapping,
+} from "@/lib/questionnaires/control-mapping";
 import { sanitizeQuestionnaireAnswers } from "@/lib/questionnaires/citation-guard";
 import { enforceQuestionnaireRateLimit } from "@/lib/questionnaires/rate-limit";
 import type { QuestionnaireResult } from "@/lib/questionnaires/types";
@@ -140,18 +148,64 @@ export async function answerQuestionnaireAction(
       };
     }
 
+    const controlMapping = buildQuestionnaireControlMapping({
+      controls: context.controls,
+      questions,
+    });
+    const mappingByQuestion = new Map(
+      controlMapping.map((mapping) => [mapping.question, mapping]),
+    );
+
     const generated = await answerQuestionnaireWithProvider({
       context,
       questions,
     });
+    const sanitizedAnswers = sanitizeQuestionnaireAnswers({
+      answers: generated.answers,
+      context,
+    });
+    const controlKeysById = new Map(
+      context.controls.map((control) => [control.controlId, control.controlKey]),
+    );
+    const allowedControlIds = new Set(controlKeysById.keys());
+    const groundedAnswers = sanitizedAnswers.map((answer) => {
+      const mapping = mappingByQuestion.get(answer.question);
+      const providerControlIds = answer.controlIds.filter((controlId) =>
+        allowedControlIds.has(controlId),
+      );
+      const controlIds =
+        providerControlIds.length > 0
+          ? providerControlIds
+          : (mapping?.controlIds ?? []);
+      const controlKeys = controlIds
+        .map((controlId) => controlKeysById.get(controlId))
+        .filter((controlKey): controlKey is string => Boolean(controlKey));
+      const evidenceCount = answer.evidenceRefs.length;
+      const policyCount = answer.policyRefs.length;
+
+      return {
+        ...answer,
+        confidence: getQuestionnaireAnswerConfidence({
+          evidenceCount,
+          mappedControlCount: controlIds.length,
+          policyCount,
+        }),
+        controlIds,
+        controlKeys,
+        notes: buildQuestionnaireAnswerReviewNote({
+          evidenceCount,
+          mapping,
+          note: answer.notes,
+          policyCount,
+        }),
+      };
+    });
+
     const result = await persistQuestionnaireResult({
       clerkOrgId: session.orgId,
       createdBy: session.userId,
       result: {
-        answers: sanitizeQuestionnaireAnswers({
-          answers: generated.answers,
-          context,
-        }),
+        answers: groundedAnswers,
         artifactId: null,
         generatedAt: new Date().toISOString(),
         model: generated.model,
@@ -208,8 +262,40 @@ async function persistQuestionnaireResult(input: {
     title: buildQuestionnaireArtifactTitle(input.result),
   });
 
-  return {
+  const result = {
     ...input.result,
     artifactId: artifact.id,
   };
+
+  await createQuestionnaireAnswerEvidence({
+    answers: result.answers,
+    artifactId: artifact.id,
+    clerkOrgId: input.clerkOrgId,
+    createdBy: input.createdBy,
+  });
+
+  return result;
+}
+
+function buildQuestionnaireAnswerReviewNote(input: {
+  evidenceCount: number;
+  mapping?: QuestionnaireControlMapping;
+  note: string;
+  policyCount: number;
+}) {
+  const additions: string[] = [
+    "AI-generated draft requiring human review before auditor-facing or vendor-facing use.",
+  ];
+
+  if (!input.mapping || input.mapping.controlIds.length === 0) {
+    additions.push(
+      "No mapped control was available, so this answer has no evidence-home in the control structure.",
+    );
+  } else if (input.evidenceCount === 0 && input.policyCount === 0) {
+    additions.push(
+      "Mapped controls had no supporting evidence or policy reference in the reviewed workspace context.",
+    );
+  }
+
+  return [input.note, ...additions].filter(Boolean).join(" ");
 }

@@ -2,12 +2,17 @@ import { z } from "zod";
 
 export const QuestionnaireAnswerSchema = z.object({
   answer: z.string().min(1),
-  confidence: z.enum(["high", "medium", "low"]),
+  confidence: z.enum(["supported", "partial", "no-context", "high", "medium", "low"]),
+  controlIds: z.array(z.string()).default([]),
+  controlKeys: z.array(z.string()).default([]),
   evidenceRefs: z.array(z.string()).default([]),
   legalRefs: z.array(z.string()).default([]),
   notes: z.string().default(""),
   policyRefs: z.array(z.string()).default([]),
   question: z.string().min(1),
+  reviewStatus: z
+    .enum(["draft", "approved", "flagged"])
+    .default("draft"),
 });
 
 export const QuestionnaireResultSchema = z.object({

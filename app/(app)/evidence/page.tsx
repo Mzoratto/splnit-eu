@@ -271,6 +271,11 @@ export default async function EvidencePage({
                       <StatusPill tone={statusTone(item.status)}>
                         {statusLabel(item.status)}
                       </StatusPill>
+                      {item.evidenceStatus === "draft" ? (
+                        <span className="rounded-sm border border-amber-200 bg-amber-50 px-2 py-1 text-xs font-medium text-amber-900">
+                          AI draft · human review required
+                        </span>
+                      ) : null}
                     </div>
                     <p className="mt-2 text-sm text-foreground/58">
                       {controlTitle} · {item.type} ·{" "}

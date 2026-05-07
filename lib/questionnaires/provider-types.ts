@@ -5,7 +5,7 @@ export type QuestionnaireContext = Awaited<
   ReturnType<typeof getQuestionnaireComplianceContext>
 >;
 
-export type QuestionnaireAiProviderId = "anthropic";
+export type QuestionnaireAiProviderId = "openai";
 
 export type QuestionnaireAiInput = {
   context: QuestionnaireContext;

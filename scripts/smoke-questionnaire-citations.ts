@@ -20,11 +20,14 @@ const answers: QuestionnaireAnswer[] = [
   {
     answer: "MFA is enforced for supported users.",
     confidence: "high",
+    controlIds: [],
+    controlKeys: [],
     evidenceRefs: ["evidence-reviewed-mfa", "made-up-evidence"],
     legalRefs: ["nis2:EU:Article 21", "nis2:CZ:409-draft"],
     notes: "",
     policyRefs: ["policy-incident-response", "made-up-policy"],
     question: "Do you enforce MFA?",
+    reviewStatus: "draft",
   },
 ];
 
@@ -48,17 +51,20 @@ const [unsupportedOnly] = sanitizeQuestionnaireAnswers({
     {
       answer: "Unsupported answer.",
       confidence: "high",
+      controlIds: [],
+      controlKeys: [],
       evidenceRefs: ["made-up-evidence"],
       legalRefs: ["nis2:CZ:409-draft"],
       notes: "",
       policyRefs: ["made-up-policy"],
       question: "Unsupported?",
+      reviewStatus: "draft",
     },
   ],
   context,
 });
 
-assert.equal(unsupportedOnly.confidence, "low");
+assert.equal(unsupportedOnly.confidence, "no-context");
 
 assert.equal(hasQuestionnaireSupportContext({ ...context, controls: [] }), true);
 assert.equal(
@@ -83,7 +89,7 @@ const unsupportedFallback = buildUnsupportedQuestionnaireAnswers({
 assert.equal(unsupportedFallback.model, "fallback:no-supported-context");
 assert.equal(unsupportedFallback.summary, "No context.");
 assert.equal(unsupportedFallback.answers.length, 2);
-assert.equal(unsupportedFallback.answers[0]?.confidence, "low");
+assert.equal(unsupportedFallback.answers[0]?.confidence, "no-context");
 assert.deepEqual(unsupportedFallback.answers[0]?.legalRefs, []);
 
 console.log("Questionnaire citation guard smoke passed.");

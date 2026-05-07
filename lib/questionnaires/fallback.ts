@@ -29,12 +29,15 @@ export function buildUnsupportedQuestionnaireAnswers(input: {
   return {
     answers: input.questions.map((question) => ({
       answer: input.copy.answer,
-      confidence: "low",
+      confidence: "no-context",
+      controlIds: [],
+      controlKeys: [],
       evidenceRefs: [],
       legalRefs: [],
       notes: input.copy.notes,
       policyRefs: [],
       question,
+      reviewStatus: "draft",
     })),
     model: "fallback:no-supported-context",
     summary: input.copy.summary,

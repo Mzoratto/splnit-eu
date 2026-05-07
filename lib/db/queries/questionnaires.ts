@@ -20,6 +20,7 @@ export async function getQuestionnaireComplianceContext(clerkOrgId: string) {
     await Promise.all([
       db
         .select({
+          controlId: controls.id,
           controlKey: controls.key,
           description: controls.descriptionCs,
           isAutomated: controls.isAutomated,
@@ -31,23 +32,21 @@ export async function getQuestionnaireComplianceContext(clerkOrgId: string) {
         })
         .from(orgControlStatuses)
         .innerJoin(controls, eq(orgControlStatuses.controlId, controls.id))
-        .where(
-          and(
-            eq(orgControlStatuses.clerkOrgId, clerkOrgId),
-            inArray(orgControlStatuses.status, ["pass", "not_applicable"]),
-          ),
-        )
+        .where(eq(orgControlStatuses.clerkOrgId, clerkOrgId))
         .orderBy(desc(orgControlStatuses.updatedAt))
         .limit(150),
       db
         .select({
           collectedAt: evidence.collectedAt,
+          controlId: controls.id,
           controlKey: controls.key,
           controlTitle: controls.titleCs,
           description: evidence.description,
           evidenceId: evidence.id,
+          expiresAt: evidence.expiresAt,
           integrationRunId: evidence.integrationRunId,
           source: evidence.source,
+          status: evidence.status,
           type: evidence.type,
         })
         .from(evidence)

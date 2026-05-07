@@ -9,56 +9,57 @@ import {
   type QuestionnaireAnswer,
 } from "@/lib/questionnaires/types";
 
-const ClaudeToolInputSchema = z.object({
+const OpenAiQuestionnaireResponseSchema = z.object({
   answers: z.array(QuestionnaireAnswerSchema),
   summary: z.string().default(""),
 });
 
-type AnthropicMessageResponse = {
-  content?: {
-    input?: unknown;
-    name?: string;
-    text?: string;
-    type: string;
+type OpenAiChatCompletionResponse = {
+  choices?: {
+    message?: {
+      content?: string | null;
+      refusal?: string | null;
+    };
   }[];
   model?: string;
 };
 
-export function hasClaudeConfig() {
-  return Boolean(process.env.ANTHROPIC_API_KEY);
+export function hasOpenAiConfig() {
+  return Boolean(process.env.OPENAI_API_KEY?.trim());
 }
 
-export function getClaudeModel() {
-  return process.env.ANTHROPIC_MODEL ?? "claude-sonnet-4-20250514";
+export function getOpenAiQuestionnaireModel() {
+  return process.env.OPENAI_QUESTIONNAIRE_MODEL ?? process.env.OPENAI_MODEL ?? "gpt-4.1-mini";
 }
 
-export async function answerQuestionnaireWithClaude(input: {
+export async function answerQuestionnaireWithOpenAi(input: {
   context: QuestionnaireAiInput["context"];
   questions: QuestionnaireAiInput["questions"];
 }) {
-  if (!process.env.ANTHROPIC_API_KEY) {
-    throw new Error("ANTHROPIC_API_KEY is required for Questionnaire AI.");
+  const apiKey = process.env.OPENAI_API_KEY?.trim();
+
+  if (!apiKey) {
+    throw new Error("OPENAI_API_KEY is required for Questionnaire AI.");
   }
 
-  const model = getClaudeModel();
-  const response = await fetch("https://api.anthropic.com/v1/messages", {
+  const model = getOpenAiQuestionnaireModel();
+  const response = await fetch("https://api.openai.com/v1/chat/completions", {
     body: JSON.stringify({
-      max_tokens: 5000,
       messages: [
+        {
+          content: buildSystemPrompt(input.context),
+          role: "system",
+        },
         {
           content: buildUserPrompt(input.questions),
           role: "user",
         },
       ],
       model,
-      system: buildSystemPrompt(input.context),
-      temperature: 0,
-      tool_choice: { name: "answer_questionnaire", type: "tool" },
-      tools: [
-        {
-          description:
-            "Return security questionnaire answers grounded in the provided compliance context.",
-          input_schema: {
+      response_format: {
+        json_schema: {
+          name: "questionnaire_answers",
+          schema: {
             additionalProperties: false,
             properties: {
               answers: {
@@ -67,8 +68,16 @@ export async function answerQuestionnaireWithClaude(input: {
                   properties: {
                     answer: { type: "string" },
                     confidence: {
-                      enum: ["high", "medium", "low"],
+                      enum: ["supported", "partial", "no-context"],
                       type: "string",
+                    },
+                    controlIds: {
+                      items: { type: "string" },
+                      type: "array",
+                    },
+                    controlKeys: {
+                      items: { type: "string" },
+                      type: "array",
                     },
                     evidenceRefs: {
                       items: { type: "string" },
@@ -84,15 +93,22 @@ export async function answerQuestionnaireWithClaude(input: {
                       type: "array",
                     },
                     question: { type: "string" },
+                    reviewStatus: {
+                      enum: ["draft", "approved", "flagged"],
+                      type: "string",
+                    },
                   },
                   required: [
                     "question",
                     "answer",
                     "confidence",
+                    "controlIds",
+                    "controlKeys",
                     "evidenceRefs",
                     "legalRefs",
                     "policyRefs",
                     "notes",
+                    "reviewStatus",
                   ],
                   type: "object",
                 },
@@ -103,54 +119,45 @@ export async function answerQuestionnaireWithClaude(input: {
             required: ["answers", "summary"],
             type: "object",
           },
-          name: "answer_questionnaire",
+          strict: true,
         },
-      ],
+        type: "json_schema",
+      },
+      temperature: 0,
     }),
     headers: {
-      "anthropic-version": "2023-06-01",
+      authorization: `Bearer ${apiKey}`,
       "content-type": "application/json",
-      "x-api-key": process.env.ANTHROPIC_API_KEY,
     },
     method: "POST",
   });
 
   if (!response.ok) {
-    throw new Error(`Claude API request failed: ${response.status}`);
+    const body = await response.text();
+    throw new Error(`OpenAI questionnaire request failed: ${response.status} ${body}`);
   }
 
-  const message = (await response.json()) as AnthropicMessageResponse;
-  const toolUse = message.content?.find(
-    (block) => block.type === "tool_use" && block.name === "answer_questionnaire",
-  );
+  const payload = (await response.json()) as OpenAiChatCompletionResponse;
+  const message = payload.choices?.[0]?.message;
 
-  if (toolUse?.input) {
-    const parsed = ClaudeToolInputSchema.parse(toolUse.input);
-    return {
-      answers: sanitizeQuestionnaireAnswers({
-        answers: alignAnswers(input.questions, parsed.answers),
-        context: input.context,
-      }),
-      model: message.model ?? model,
-      summary: parsed.summary,
-    };
+  if (message?.refusal) {
+    throw new Error(`OpenAI refused questionnaire generation: ${message.refusal}`);
   }
 
-  const text = message.content?.find((block) => block.type === "text")?.text;
-
-  if (text) {
-    const parsed = ClaudeToolInputSchema.parse(JSON.parse(text));
-    return {
-      answers: sanitizeQuestionnaireAnswers({
-        answers: alignAnswers(input.questions, parsed.answers),
-        context: input.context,
-      }),
-      model: message.model ?? model,
-      summary: parsed.summary,
-    };
+  if (!message?.content) {
+    throw new Error("OpenAI response did not include questionnaire answers.");
   }
 
-  throw new Error("Claude response did not include questionnaire answers.");
+  const parsed = OpenAiQuestionnaireResponseSchema.parse(JSON.parse(message.content));
+
+  return {
+    answers: sanitizeQuestionnaireAnswers({
+      answers: alignAnswers(input.questions, parsed.answers),
+      context: input.context,
+    }),
+    model: payload.model ?? model,
+    summary: parsed.summary,
+  };
 }
 
 function buildSystemPrompt(context: QuestionnaireAiInput["context"]) {
@@ -159,13 +166,16 @@ function buildSystemPrompt(context: QuestionnaireAiInput["context"]) {
     "Use only the supplied organisation controls, evidence and policies. Do not invent certifications, tooling, dates or policy names.",
     "Use legal citations only when the exact legalCitationId is present in Reviewed legal citations. Never cite draft or missing laws.",
     "If support is missing, answer conservatively and state what evidence is missing.",
+    "Each answer must include one or more controlIds when the question maps to supplied controls. Use only controlId values present in the control context.",
+    "Use evidence summaries only; never imply raw evidence was reviewed beyond the supplied summaries.",
+    "Every answer is an AI-generated draft requiring human review. Set reviewStatus to draft. Never mark an answer approved.",
     "This is a draft for legal/compliance review, not binding legal advice. Do not state that a customer is legally certified or guaranteed compliant.",
-    "Confidence rules: high = automated evidence or direct evidence supports the answer; medium = passing manual control or active policy supports it; low = no direct support.",
+    "Confidence rules: supported = mapped controls have direct evidence or approved policy support; partial = mapped controls exist but support is incomplete, manual, expired, draft, or thin; no-context = no mapped control/evidence/policy support is available. If workspace context is thin for a mapped control, say so explicitly rather than fabricating confidence.",
     "",
     `Organisation: ${context.organisation?.name ?? "Unknown organisation"}`,
     `Plan: ${context.organisation?.plan ?? "unknown"}`,
     "",
-    "Passing controls:",
+    "Active controls:",
     JSON.stringify(context.controls, null, 2),
     "",
     "Evidence:",
@@ -186,11 +196,11 @@ function buildSystemPrompt(context: QuestionnaireAiInput["context"]) {
   ].join("\n");
 }
 
-export const anthropicQuestionnaireProvider: QuestionnaireAiProvider = {
-  answer: answerQuestionnaireWithClaude,
-  id: "anthropic",
-  isConfigured: hasClaudeConfig,
-  label: "Anthropic Claude",
+export const openAiQuestionnaireProvider: QuestionnaireAiProvider = {
+  answer: answerQuestionnaireWithOpenAi,
+  id: "openai",
+  isConfigured: hasOpenAiConfig,
+  label: "OpenAI",
 };
 
 function buildUserPrompt(questions: string[]) {
@@ -205,12 +215,17 @@ function alignAnswers(
   answers: QuestionnaireAnswer[],
 ): QuestionnaireAnswer[] {
   return questions.map((question, index) => ({
-    answer: answers[index]?.answer ?? "No supported answer available from the current compliance data.",
-    confidence: answers[index]?.confidence ?? "low",
+    answer:
+      answers[index]?.answer ??
+      "No supported answer available from the current compliance data.",
+    confidence: answers[index]?.confidence ?? "no-context",
+    controlIds: answers[index]?.controlIds ?? [],
+    controlKeys: answers[index]?.controlKeys ?? [],
     evidenceRefs: answers[index]?.evidenceRefs ?? [],
     legalRefs: answers[index]?.legalRefs ?? [],
     notes: answers[index]?.notes ?? "No direct supporting evidence was found.",
     policyRefs: answers[index]?.policyRefs ?? [],
     question,
+    reviewStatus: "draft",
   }));
 }

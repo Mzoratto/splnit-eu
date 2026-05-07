@@ -1,0 +1,3 @@
+ALTER TABLE "evidence" ADD COLUMN "source_artifact_id" uuid;--> statement-breakpoint
+ALTER TABLE "evidence" ADD COLUMN "status" text DEFAULT 'reviewed' NOT NULL;--> statement-breakpoint
+ALTER TABLE "evidence" ADD CONSTRAINT "evidence_source_artifact_id_generated_artifacts_id_fk" FOREIGN KEY ("source_artifact_id") REFERENCES "public"."generated_artifacts"("id") ON DELETE set null ON UPDATE no action;

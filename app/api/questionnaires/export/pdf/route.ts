@@ -1,5 +1,7 @@
 import { auth } from "@clerk/nextjs/server";
 import { privateJson, withPrivateNoStore } from "@/lib/http/private-response";
+import { getGeneratedArtifactForOrg } from "@/lib/db/queries/generated-artifacts";
+import { QUESTIONNAIRE_ARTIFACT_KIND } from "@/lib/questionnaires/artifacts";
 import { QuestionnaireResultSchema } from "@/lib/questionnaires/types";
 import { renderQuestionnaireAnswersPdf } from "@/lib/pdf/questionnaire-answers";
 
@@ -22,13 +24,24 @@ export async function POST(request: Request) {
   }
 
   const formData = await request.formData();
-  const payload = formData.get("payload");
+  const artifactId = formData.get("artifactId");
 
-  if (typeof payload !== "string") {
-    return privateJson({ error: "Missing export payload" }, { status: 400 });
+  if (typeof artifactId !== "string" || !artifactId) {
+    return privateJson({ error: "Missing artifact id" }, { status: 400 });
   }
 
-  const result = QuestionnaireResultSchema.parse(JSON.parse(payload));
+  const artifact = await getGeneratedArtifactForOrg({
+    artifactId,
+    clerkOrgId: session.orgId,
+    kind: QUESTIONNAIRE_ARTIFACT_KIND,
+  });
+
+  if (!artifact) {
+    return privateJson({ error: "Artifact not found" }, { status: 404 });
+  }
+
+  const content = artifact.content as { result?: unknown };
+  const result = QuestionnaireResultSchema.parse(content.result);
   const pdf = await renderQuestionnaireAnswersPdf(result);
 
   return new Response(new Uint8Array(pdf), {

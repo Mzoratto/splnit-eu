@@ -1,6 +1,6 @@
 "use client";
 
-import { useActionState, useMemo } from "react";
+import { useActionState } from "react";
 import { useLocale, useMessages } from "next-intl";
 import { Download, FileSpreadsheet, Loader2, Sparkles } from "lucide-react";
 import {
@@ -62,10 +62,6 @@ export function QuestionnaireWorkbench({
   const [state, formAction, pending] = useActionState(
     answerQuestionnaireAction,
     initialState,
-  );
-  const payload = useMemo(
-    () => (state.result ? JSON.stringify(state.result) : ""),
-    [state.result],
   );
 
   return (
@@ -158,7 +154,7 @@ export function QuestionnaireWorkbench({
           {state.result ? (
             <div className="flex flex-wrap gap-2">
               <form action="/api/questionnaires/export/pdf" method="post">
-                <input name="payload" type="hidden" value={payload} />
+                <input name="artifactId" type="hidden" value={state.result.artifactId ?? ""} />
                 <button
                   type="submit"
                   className="inline-flex items-center gap-2 rounded-md border border-border px-4 py-3 text-sm font-medium hover:bg-surface-muted"
@@ -168,7 +164,7 @@ export function QuestionnaireWorkbench({
                 </button>
               </form>
               <form action="/api/questionnaires/export/xlsx" method="post">
-                <input name="payload" type="hidden" value={payload} />
+                <input name="artifactId" type="hidden" value={state.result.artifactId ?? ""} />
                 <button
                   type="submit"
                   className="inline-flex items-center gap-2 rounded-md border border-border px-4 py-3 text-sm font-medium hover:bg-surface-muted"
@@ -204,7 +200,10 @@ export function QuestionnaireWorkbench({
                   <p className="mt-3 text-sm leading-6 text-foreground/72">
                     {answer.answer}
                   </p>
-                  <div className="mt-3 grid gap-2 text-xs text-foreground/58 md:grid-cols-3">
+                  <div className="mt-3 grid gap-2 text-xs text-foreground/58 md:grid-cols-4">
+                    <p>
+                      Controls: {answer.controlIds.join(", ") || copy.none}
+                    </p>
                     <p>
                       {copy.evidence}:{" "}
                       {answer.evidenceRefs.join(", ") || copy.none}
@@ -240,12 +239,14 @@ export function QuestionnaireWorkbench({
   );
 }
 
-function confidenceClass(confidence: "high" | "medium" | "low") {
-  if (confidence === "high") {
+function confidenceClass(
+  confidence: "supported" | "partial" | "no-context" | "high" | "medium" | "low",
+) {
+  if (confidence === "supported" || confidence === "high") {
     return "bg-emerald-50 text-emerald-800";
   }
 
-  if (confidence === "medium") {
+  if (confidence === "partial" || confidence === "medium") {
     return "bg-amber-50 text-amber-900";
   }
 

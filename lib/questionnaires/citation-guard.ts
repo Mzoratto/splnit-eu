@@ -9,7 +9,7 @@ export type QuestionnaireReferenceContext = {
 export function sanitizeQuestionnaireAnswers(input: {
   answers: QuestionnaireAnswer[];
   context: QuestionnaireReferenceContext;
-}) {
+}): QuestionnaireAnswer[] {
   const allowedEvidenceRefs = new Set(
     input.context.evidence.map((item) => item.evidenceId),
   );
@@ -41,7 +41,7 @@ export function sanitizeQuestionnaireAnswers(input: {
         evidenceRefs.length === 0 &&
         legalRefs.length === 0 &&
         policyRefs.length === 0
-          ? "low"
+          ? "no-context"
           : answer.confidence,
       evidenceRefs,
       legalRefs,
