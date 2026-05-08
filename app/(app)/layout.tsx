@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import { redirect } from "next/navigation";
 import { ClerkThemeProvider } from "@/components/app/clerk-theme-provider";
 import { auth } from "@clerk/nextjs/server";
@@ -13,6 +14,13 @@ import { getPublicTrustCenterSlugByClerkOrgId } from "@/lib/db/queries/trust-cen
 import { normalizePlanKey, type PlanKey } from "@/lib/stripe/plans";
 
 export const dynamic = "force-dynamic";
+
+export const metadata: Metadata = {
+  robots: {
+    follow: false,
+    index: false,
+  },
+};
 
 export default async function ProtectedLayout({
   children,

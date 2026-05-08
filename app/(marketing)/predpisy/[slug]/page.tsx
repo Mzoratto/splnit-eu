@@ -4,7 +4,7 @@ import { notFound } from "next/navigation";
 import { getLocale, getTranslations } from "next-intl/server";
 import { Icon } from "@/components/marketing/local-icon";
 import { MarketingShell } from "@/components/marketing/marketing-shell";
-import { SoftwareApplicationJsonLd } from "@/components/marketing/software-json-ld";
+import { WebPageJsonLd } from "@/components/marketing/structured-data";
 import { getLocalizedMarketingPath } from "@/i18n/marketing-paths";
 import { normalizeLocale } from "@/i18n/routing";
 import { localizeFrameworkDetail } from "@/lib/marketing/framework-detail-copy";
@@ -12,6 +12,7 @@ import {
   frameworkDetails,
   getFrameworkDetail,
 } from "@/lib/marketing/frameworks";
+import { createMarketingMetadata } from "@/lib/seo/metadata";
 
 export const dynamic = "force-dynamic";
 
@@ -35,13 +36,16 @@ export async function generateMetadata({
   const framework = localizeFrameworkDetail(baseFramework, locale);
   const t = await getTranslations("regulations.detail");
 
-  return {
-    title: `${framework.name} | ${t("metadataTitleSuffix")}`,
-    description: t("metadataDescription", { name: framework.name }),
-    openGraph: {
-      locale: locale.replace("-", "_"),
-    },
-  };
+  const title = `${framework.name} | ${t("metadataTitleSuffix")}`;
+  const description = t("metadataDescription", { name: framework.name });
+
+  return createMarketingMetadata({
+    description,
+    locale,
+    path: `/predpisy/${framework.slug}`,
+    title,
+    type: "article",
+  });
 }
 
 export default async function RegulationDetailPage({
@@ -62,11 +66,10 @@ export default async function RegulationDetailPage({
 
   return (
     <MarketingShell>
-      <SoftwareApplicationJsonLd
-        pageName={`Splnit.eu ${framework.name}`}
+      <WebPageJsonLd
+        name={`Splnit.eu ${framework.name}`}
         path={getLocalizedMarketingPath(`/predpisy/${framework.slug}`, locale)}
         description={t("jsonLdDescription", { name: framework.name })}
-        locale={locale}
       />
       <main>
         <section data-hero className="px-5 pb-16 pt-32">

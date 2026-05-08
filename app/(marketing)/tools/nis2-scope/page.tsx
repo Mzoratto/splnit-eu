@@ -5,6 +5,7 @@ import { Icon } from "@/components/marketing/local-icon";
 import { MarketingShell } from "@/components/marketing/marketing-shell";
 import { Nis2ScopeChecker } from "@/components/marketing/nis2-scope-checker";
 import { normalizeLocale, type Locale } from "@/i18n/routing";
+import { createMarketingMetadata } from "@/lib/seo/metadata";
 
 type PageCopy = {
   metadata: Required<Pick<Metadata, "title" | "description">> & { locale: string };
@@ -81,13 +82,12 @@ export async function generateMetadata(): Promise<Metadata> {
   const locale = normalizeLocale(await getLocale()) ?? "cs-CZ";
   const metadata = copy[locale].metadata;
 
-  return {
-    title: metadata.title,
-    description: metadata.description,
-    openGraph: {
-      locale: metadata.locale,
-    },
-  };
+  return createMarketingMetadata({
+    description: metadata.description ?? "",
+    locale,
+    path: "/tools/nis2-scope",
+    title: String(metadata.title),
+  });
 }
 
 export default async function Nis2ScopePage() {

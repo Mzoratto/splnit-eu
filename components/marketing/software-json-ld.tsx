@@ -1,3 +1,4 @@
+import { absoluteUrl } from "@/lib/seo/metadata";
 import type { Locale } from "@/i18n/routing";
 
 type SoftwareApplicationJsonLdProps = {
@@ -13,7 +14,6 @@ const localizedDefaults: Record<
     areaServed: string[];
     description: string;
     featureList: string[];
-    priceCurrency: string;
   }
 > = {
   "cs-CZ": {
@@ -27,7 +27,6 @@ const localizedDefaults: Record<
       "Trust Center",
       "Generování politik",
     ],
-    priceCurrency: "CZK",
   },
   "en-EU": {
     areaServed: ["EU"],
@@ -40,7 +39,6 @@ const localizedDefaults: Record<
       "Trust Center",
       "Policy generation",
     ],
-    priceCurrency: "EUR",
   },
   "it-IT": {
     areaServed: ["IT", "EU"],
@@ -53,7 +51,6 @@ const localizedDefaults: Record<
       "Trust Center",
       "Generazione policy",
     ],
-    priceCurrency: "EUR",
   },
 };
 
@@ -70,16 +67,10 @@ export function SoftwareApplicationJsonLd({
     name: pageName,
     applicationCategory: "ComplianceManagementSoftware",
     operatingSystem: "Web",
-    url: `https://splnit.eu${path}`,
+    url: absoluteUrl(path),
     description: description ?? defaults.description,
     areaServed: defaults.areaServed,
     featureList: defaults.featureList,
-    offers: {
-      "@type": "Offer",
-      availability: "https://schema.org/InStock",
-      price: "0",
-      priceCurrency: defaults.priceCurrency,
-    },
   };
 
   return (

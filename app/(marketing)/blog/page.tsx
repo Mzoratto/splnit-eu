@@ -3,21 +3,22 @@ import Link from "next/link";
 import { getLocale } from "next-intl/server";
 import { Icon } from "@/components/marketing/local-icon";
 import { MarketingShell } from "@/components/marketing/marketing-shell";
-import { SoftwareApplicationJsonLd } from "@/components/marketing/software-json-ld";
+import { CollectionPageJsonLd } from "@/components/marketing/structured-data";
+import { getLocalizedMarketingPath } from "@/i18n/marketing-paths";
 import { normalizeLocale } from "@/i18n/routing";
 import { getBlogPageCopy, getBlogPosts } from "@/lib/marketing/blog";
+import { createMarketingMetadata } from "@/lib/seo/metadata";
 
 export async function generateMetadata(): Promise<Metadata> {
   const locale = normalizeLocale(await getLocale()) ?? "cs-CZ";
   const copy = getBlogPageCopy(locale);
 
-  return {
-    title: copy.metadataTitle,
+  return createMarketingMetadata({
     description: copy.jsonLdDescription,
-    openGraph: {
-      locale: copy.locale,
-    },
-  };
+    locale,
+    path: "/blog",
+    title: copy.metadataTitle,
+  });
 }
 
 export default async function BlogPage() {
@@ -27,11 +28,10 @@ export default async function BlogPage() {
 
   return (
     <MarketingShell>
-      <SoftwareApplicationJsonLd
-        pageName="Splnit.eu Blog"
-        path="/blog"
+      <CollectionPageJsonLd
+        name="Splnit.eu Blog"
+        path={getLocalizedMarketingPath("/blog", locale)}
         description={copy.jsonLdDescription}
-        locale={locale}
       />
       <main>
         <section data-hero className="px-5 pb-16 pt-32">
@@ -69,7 +69,7 @@ export default async function BlogPage() {
                     {post.description}
                   </p>
                   <Link
-                    href={`/blog/${post.slug}`}
+                    href={getLocalizedMarketingPath(`/blog/${post.slug}`, locale)}
                     className="mt-7 inline-flex items-center gap-2 text-sm font-medium text-blue-600 hover:text-blue-700"
                   >
                     {copy.readArticle}

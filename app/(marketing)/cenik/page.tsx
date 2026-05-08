@@ -10,6 +10,7 @@ import {
 } from "@/components/marketing/pricing-widgets";
 import { getLocalizedMarketingPath } from "@/i18n/marketing-paths";
 import { normalizeLocale, type Locale } from "@/i18n/routing";
+import { createMarketingMetadata } from "@/lib/seo/metadata";
 
 const metadataByLocale: Record<Locale, Required<Pick<Metadata, "title" | "description">> & { locale: string }> = {
   "cs-CZ": {
@@ -39,13 +40,12 @@ export async function generateMetadata(): Promise<Metadata> {
   const locale = normalizeLocale(await getLocale()) ?? "cs-CZ";
   const metadata = metadataByLocale[locale];
 
-  return {
-    title: metadata.title,
-    description: metadata.description,
-    openGraph: {
-      locale: metadata.locale,
-    },
-  };
+  return createMarketingMetadata({
+    description: metadata.description ?? "",
+    locale,
+    path: "/cenik",
+    title: String(metadata.title),
+  });
 }
 
 export default async function PricingPage() {

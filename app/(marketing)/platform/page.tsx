@@ -6,18 +6,18 @@ import { MarketingShell } from "@/components/marketing/marketing-shell";
 import { SoftwareApplicationJsonLd } from "@/components/marketing/software-json-ld";
 import { normalizeLocale } from "@/i18n/routing";
 import { getPlatformCopy } from "@/lib/marketing/platform-copy";
+import { createMarketingMetadata } from "@/lib/seo/metadata";
 
 export async function generateMetadata(): Promise<Metadata> {
   const locale = normalizeLocale(await getLocale()) ?? "cs-CZ";
   const copy = getPlatformCopy(locale);
 
-  return {
-    title: copy.metadata.title,
+  return createMarketingMetadata({
     description: copy.metadata.description,
-    openGraph: {
-      locale: copy.metadata.locale,
-    },
-  };
+    locale,
+    path: "/platform",
+    title: copy.metadata.title,
+  });
 }
 
 export default async function PlatformPage() {

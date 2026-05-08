@@ -4,13 +4,15 @@ import { getLocale } from "next-intl/server";
 import { notFound } from "next/navigation";
 import { Icon } from "@/components/marketing/local-icon";
 import { MarketingShell } from "@/components/marketing/marketing-shell";
-import { SoftwareApplicationJsonLd } from "@/components/marketing/software-json-ld";
+import { BlogPostingJsonLd } from "@/components/marketing/structured-data";
+import { getLocalizedMarketingPath } from "@/i18n/marketing-paths";
 import { normalizeLocale } from "@/i18n/routing";
 import {
   getBlogPageCopy,
   getBlogPost,
   getBlogPosts,
 } from "@/lib/marketing/blog";
+import { createMarketingMetadata } from "@/lib/seo/metadata";
 
 export function generateStaticParams() {
   return getBlogPosts().map((post) => ({ slug: post.slug }));
@@ -27,24 +29,20 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { slug } = await params;
   const locale = normalizeLocale(await getLocale()) ?? "cs-CZ";
-  const pageCopy = getBlogPageCopy(locale);
   const post = getBlogPost(slug, locale);
 
   if (!post) {
     return {};
   }
 
-  return {
-    title: `${post.title} | Splnit.eu Blog`,
+  return createMarketingMetadata({
     description: post.description,
-    openGraph: {
-      locale: pageCopy.locale,
-      type: "article",
-      publishedTime: post.publishedAt,
-      title: post.title,
-      description: post.description,
-    },
-  };
+    locale,
+    path: `/blog/${post.slug}`,
+    publishedTime: post.publishedAt,
+    title: `${post.title} | Splnit.eu Blog`,
+    type: "article",
+  });
 }
 
 export default async function BlogPostPage({
@@ -63,11 +61,11 @@ export default async function BlogPostPage({
 
   return (
     <MarketingShell>
-      <SoftwareApplicationJsonLd
-        pageName={`Splnit.eu Blog: ${post.category}`}
-        path={`/blog/${post.slug}`}
+      <BlogPostingJsonLd
+        headline={post.title}
+        path={getLocalizedMarketingPath(`/blog/${post.slug}`, locale)}
         description={post.description}
-        locale={locale}
+        publishedAt={post.publishedAt}
       />
       <main>
         <article>

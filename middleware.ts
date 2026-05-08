@@ -1,7 +1,7 @@
 import { clerkMiddleware, createRouteMatcher } from "@clerk/nextjs/server";
 import { NextFetchEvent, NextRequest, NextResponse } from "next/server";
 import { toInternalMarketingPath } from "./i18n/marketing-paths";
-import { localeCookieName, normalizeLocale, routing } from "./i18n/routing";
+import { localeCookieName, routing } from "./i18n/routing";
 
 const protectedRoutes = [
   "/dashboard(.*)",
@@ -12,6 +12,7 @@ const protectedRoutes = [
   "/integrations(.*)",
   "/policies(.*)",
   "/vendors(.*)",
+  "/questionnaires(.*)",
   "/trust-center(.*)",
   "/incidents(.*)",
   "/risks(.*)",
@@ -31,33 +32,6 @@ const isProtectedRoute = createRouteMatcher([
 ]);
 
 const isApiRoute = createRouteMatcher(["/api(.*)", "/trpc(.*)"]);
-
-function getPreferredLocale(request: NextRequest) {
-  const cookieLocale = normalizeLocale(
-    request.cookies.get(localeCookieName)?.value,
-  );
-
-  if (cookieLocale) {
-    return cookieLocale;
-  }
-
-  const languages = request.headers
-    .get("accept-language")
-    ?.split(",")
-    .map((part) => part.split(";")[0]?.trim().toLowerCase())
-    .filter(Boolean);
-
-  for (const language of languages ?? []) {
-    const baseLanguage = language.split("-")[0];
-    const locale = normalizeLocale(language) ?? normalizeLocale(baseLanguage);
-
-    if (locale) {
-      return locale;
-    }
-  }
-
-  return routing.defaultLocale;
-}
 
 function getPrefixedLocaleRoute(request: NextRequest) {
   const { pathname } = request.nextUrl;
@@ -79,13 +53,15 @@ function getPrefixedLocaleRoute(request: NextRequest) {
 
 function applyLocale(request: NextRequest) {
   const prefixedRoute = getPrefixedLocaleRoute(request);
-  const locale = prefixedRoute?.locale ?? getPreferredLocale(request);
+  const locale = prefixedRoute?.locale ?? routing.defaultLocale;
   const headers = new Headers(request.headers);
   headers.set("X-NEXT-INTL-LOCALE", locale);
 
-  const rewriteUrl = prefixedRoute
-    ? new URL(toInternalMarketingPath(request.nextUrl.pathname), request.nextUrl)
-    : null;
+  const internalPath = toInternalMarketingPath(request.nextUrl.pathname);
+  const rewriteUrl =
+    prefixedRoute || internalPath !== request.nextUrl.pathname
+      ? new URL(internalPath, request.nextUrl)
+      : null;
 
   if (rewriteUrl) {
     rewriteUrl.search = request.nextUrl.search;

@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { getLocale } from "next-intl/server";
 import { Building2, CheckCircle2 } from "lucide-react";
@@ -12,6 +13,13 @@ import {
 import { submitVendorAssessmentAction } from "./actions";
 
 export const dynamic = "force-dynamic";
+
+export const metadata: Metadata = {
+  robots: {
+    follow: false,
+    index: false,
+  },
+};
 
 function formatMessage(template: string, values: Record<string, string>) {
   return Object.entries(values).reduce(

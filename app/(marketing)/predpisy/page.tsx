@@ -5,10 +5,11 @@ import { Icon } from "@/components/marketing/local-icon";
 import { LeadCapture } from "@/components/marketing/lead-capture";
 import { MarketingShell } from "@/components/marketing/marketing-shell";
 import { RegulationSelector } from "@/components/marketing/regulation-selector";
-import { SoftwareApplicationJsonLd } from "@/components/marketing/software-json-ld";
+import { CollectionPageJsonLd } from "@/components/marketing/structured-data";
 import { getLocalizedMarketingPath } from "@/i18n/marketing-paths";
 import { normalizeLocale, type Locale } from "@/i18n/routing";
 import { frameworkCards, timeline } from "@/lib/marketing/frameworks";
+import { createMarketingMetadata } from "@/lib/seo/metadata";
 
 const metadataByLocale: Record<
   Locale,
@@ -41,13 +42,12 @@ export async function generateMetadata(): Promise<Metadata> {
   const locale = normalizeLocale(await getLocale()) ?? "cs-CZ";
   const metadata = metadataByLocale[locale];
 
-  return {
-    description: metadata.description,
-    openGraph: {
-      locale: metadata.locale,
-    },
-    title: metadata.title,
-  };
+  return createMarketingMetadata({
+    description: metadata.description ?? "",
+    locale,
+    path: "/predpisy",
+    title: String(metadata.title),
+  });
 }
 
 export default async function RegulationsPage() {
@@ -61,11 +61,10 @@ export default async function RegulationsPage() {
 
   return (
     <MarketingShell>
-      <SoftwareApplicationJsonLd
-        pageName={t("pageName")}
+      <CollectionPageJsonLd
+        name={t("pageName")}
         path={getLocalizedMarketingPath("/predpisy", locale)}
         description={t("jsonLdDescription")}
-        locale={locale}
       />
       <main>
         <section data-hero className="px-5 pb-20 pt-32 text-center">

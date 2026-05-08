@@ -5,6 +5,7 @@ import { Icon } from "@/components/marketing/local-icon";
 import { MarketingShell } from "@/components/marketing/marketing-shell";
 import { normalizeLocale, type Locale } from "@/i18n/routing";
 import { getReadinessReport } from "@/lib/readiness";
+import { createMarketingMetadata } from "@/lib/seo/metadata";
 
 export const dynamic = "force-dynamic";
 
@@ -107,13 +108,12 @@ export async function generateMetadata(): Promise<Metadata> {
   const locale = normalizeLocale(await getLocale()) ?? "cs-CZ";
   const metadata = copy[locale].metadata;
 
-  return {
-    title: metadata.title,
-    description: metadata.description,
-    openGraph: {
-      locale: metadata.locale,
-    },
-  };
+  return createMarketingMetadata({
+    description: metadata.description ?? "",
+    locale,
+    path: "/status",
+    title: String(metadata.title),
+  });
 }
 
 export default async function StatusPage() {

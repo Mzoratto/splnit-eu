@@ -5,6 +5,7 @@ import { Icon } from "@/components/marketing/local-icon";
 import { MarketingShell } from "@/components/marketing/marketing-shell";
 import { getLocalizedMarketingPath } from "@/i18n/marketing-paths";
 import { normalizeLocale, type Locale } from "@/i18n/routing";
+import { createMarketingMetadata } from "@/lib/seo/metadata";
 
 type SecurityCopy = {
   metadata: Required<Pick<Metadata, "title" | "description">> & { locale: string };
@@ -199,13 +200,12 @@ export async function generateMetadata(): Promise<Metadata> {
   const locale = normalizeLocale(await getLocale()) ?? "cs-CZ";
   const metadata = copy[locale].metadata;
 
-  return {
-    title: metadata.title,
-    description: metadata.description,
-    openGraph: {
-      locale: metadata.locale,
-    },
-  };
+  return createMarketingMetadata({
+    description: metadata.description ?? "",
+    locale,
+    path: "/security",
+    title: String(metadata.title),
+  });
 }
 
 export default async function SecurityPage() {
