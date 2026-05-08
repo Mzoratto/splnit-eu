@@ -1,6 +1,6 @@
 # App Readiness Audit
 
-Last updated: 2026-05-07
+Last updated: 2026-05-09
 
 Purpose: identify the authenticated app gaps that must be closed before new product features or broader outreach. This started as a static route/code audit and now records the production verification results that close or defer each readiness item.
 
@@ -11,6 +11,24 @@ Primary workflow readiness is closed for the current outreach decision. A tempor
 No critical unknowns remain for `dashboard -> controls -> frameworks -> evidence -> policies -> gap report`. Remaining gaps are secondary-surface hardening or product-shaping work, except the separately tracked legal identity closeout and Italian policy-template legal review.
 
 ## Latest Production Verification
+
+SEO production deploy `db6d9c9` was verified on 2026-05-09 at `https://splnit.eu`. The Vercel production deployment was `https://splnit-5i83kjddv-marcos-projects-84c3348d.vercel.app`, aliased to `https://splnit.eu`.
+
+Verified public/SEO checks on 2026-05-09:
+
+- `/`: HTTP 200, canonical present, four hreflang alternates, no `noindex`.
+- `/it`: HTTP 200, canonical present, four hreflang alternates, no `noindex`.
+- `/nastroje/nis2-scope`: HTTP 200, canonical present, four hreflang alternates, no `noindex`; browser render passed with zero console errors.
+- `/sitemap.xml`: HTTP 200, contains `https://splnit.eu/nastroje/nis2-scope`, blog URLs, and `x-default` hreflang entries.
+- `/robots.txt`: HTTP 200, disallows `/sign-in`, `/sign-up`, `/dashboard`, `/evidence`, `/questionnaires`, and `/vendor-assessment/`.
+- `/sign-in`: HTTP 200, `noindex` present.
+- `/api/health`: HTTP 200, `ok=true`.
+
+Authenticated route smoke status on 2026-05-09:
+
+- `/evidence` redirected to `/sign-in?redirect_url=.../evidence`; Clerk sign-in rendered with zero browser console errors.
+- `/questionnaires` redirected to `/sign-in?redirect_url=.../questionnaires`; Clerk sign-in rendered with zero browser console errors.
+- This verifies protected-route enforcement and sign-in rendering only. It does **not** verify authenticated tenant rendering for `/evidence`, `/questionnaires`, or the questionnaire workbench/save flow because the browser session was signed out and no production test tenant credentials/session were available.
 
 Production alias `https://splnit.eu` was verified on 2026-05-06 after DNS propagation for Clerk custom domains. The committed app state was deployed to production as `dpl_2rFBHsXEwR9VkBCoHQ2axmqs74Wt`; temporary verification-route deployments `dpl_HVJHFxVoSUAxrJtyNuoq3MyTJUcx` and `dpl_4Q2zgonQsfb5EynVeXMHo77yrUeW` were used only to run checks inside Vercel with production runtime secrets.
 
@@ -106,11 +124,13 @@ Readiness statuses:
 
 ## Immediate Fix Queue
 
-1. **Secondary-surface hardening.** Continue with provider-configured integration runtime smokes, questionnaire provider runtime/evidence-save checks, and audit export pagination/limit checks.
-2. **Outreach decision prep.** Treat the primary workflow as verified for outreach planning, while keeping Italian policy-template promotion and legal identity closeout out of demo claims until completed.
+1. **Authenticated production tenant smoke.** Sign in with a real production test tenant and verify `/evidence`, `/questionnaires`, and the questionnaire workbench/save flow render without browser console errors. Current 2026-05-09 smoke only proves signed-out redirects and Clerk sign-in rendering.
+2. **Secondary-surface hardening.** Continue with provider-configured integration runtime smokes, questionnaire provider runtime/evidence-save checks, and audit export pagination/limit checks.
+3. **Outreach decision prep.** Treat the primary workflow as previously verified for outreach planning, while keeping authenticated questionnaire workbench, Italian policy-template promotion, and legal identity closeout out of demo claims until completed.
 
 ## Verification Needed Next
 
+- Authenticated production tenant smoke for `/evidence`, `/questionnaires`, and the questionnaire workbench/save flow. The 2026-05-09 browser pass only verified signed-out redirects to Clerk sign-in with zero console errors.
 - Provider-configured integration runtime smokes for Microsoft 365, GitHub, and AWS when production credentials are available.
 - Questionnaire provider runtime generation and evidence-save smoke; current status is documented in `docs/questionnaire-flow-audit.md`.
 - Audit/vendor/risk/incident export status is documented in `docs/export-endpoint-audit.md`; remaining work is authenticated real-tenant export smokes and large audit-page verification.
