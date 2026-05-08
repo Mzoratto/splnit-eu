@@ -3,6 +3,7 @@ import { privateJson, withPrivateNoStore } from "@/lib/http/private-response";
 import { getGeneratedArtifactForOrg } from "@/lib/db/queries/generated-artifacts";
 import { QUESTIONNAIRE_ARTIFACT_KIND } from "@/lib/questionnaires/artifacts";
 import { QuestionnaireResultSchema } from "@/lib/questionnaires/types";
+import { getQuestionnaireExportEligibility } from "@/lib/questionnaires/review-gate";
 import { renderQuestionnaireAnswersXlsx } from "@/lib/questionnaires/xlsx";
 
 function hasClerkConfig() {
@@ -42,6 +43,18 @@ export async function POST(request: Request) {
 
   const content = artifact.content as { result?: unknown };
   const result = QuestionnaireResultSchema.parse(content.result);
+  const eligibility = getQuestionnaireExportEligibility(result);
+
+  if (!eligibility.allowed) {
+    return privateJson(
+      {
+        blockedAnswers: eligibility.blockedAnswers,
+        error: eligibility.reason,
+      },
+      { status: 409 },
+    );
+  }
+
   const workbook = await renderQuestionnaireAnswersXlsx(result);
 
   return new Response(new Uint8Array(workbook), {

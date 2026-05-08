@@ -4,6 +4,7 @@ import { getGeneratedArtifactForOrg } from "@/lib/db/queries/generated-artifacts
 import { QUESTIONNAIRE_ARTIFACT_KIND } from "@/lib/questionnaires/artifacts";
 import { QuestionnaireResultSchema } from "@/lib/questionnaires/types";
 import { renderQuestionnaireAnswersPdf } from "@/lib/pdf/questionnaire-answers";
+import { getQuestionnaireExportEligibility } from "@/lib/questionnaires/review-gate";
 
 function hasClerkConfig() {
   return (
@@ -42,6 +43,18 @@ export async function POST(request: Request) {
 
   const content = artifact.content as { result?: unknown };
   const result = QuestionnaireResultSchema.parse(content.result);
+  const eligibility = getQuestionnaireExportEligibility(result);
+
+  if (!eligibility.allowed) {
+    return privateJson(
+      {
+        blockedAnswers: eligibility.blockedAnswers,
+        error: eligibility.reason,
+      },
+      { status: 409 },
+    );
+  }
+
   const pdf = await renderQuestionnaireAnswersPdf(result);
 
   return new Response(new Uint8Array(pdf), {
