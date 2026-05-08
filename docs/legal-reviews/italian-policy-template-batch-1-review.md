@@ -1,6 +1,6 @@
 # Italian Policy Template Review - Batch 1
 
-Generated: 2026-05-05T18:33:43.507Z
+Generated: 2026-05-08T22:57:50.358Z
 
 Purpose: advisor/legal review of draft Italian templates. These templates are not customer-facing until their `reviewStatus` is changed from `draft` to `reviewed` in code after explicit approval.
 

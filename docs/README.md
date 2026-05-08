@@ -25,7 +25,7 @@
 
 ### Review Evidence
 
-- `legal-reviews/` - Czech/Italian mapping and template review queues/results.
+- `legal-reviews/` - Czech/Italian mapping and template review queues/results, including `legal-reviews/italian-policy-template-readiness-audit.md` for the current Italian template promotion gate.
 
 ### Outreach
 
