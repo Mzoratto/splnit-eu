@@ -25,6 +25,7 @@ for (const requiredEnv of [
 
 for (const route of [
   "/dashboard",
+  "/evidence",
   "/integrations",
   "/integrations/microsoft365",
   "/integrations/github",

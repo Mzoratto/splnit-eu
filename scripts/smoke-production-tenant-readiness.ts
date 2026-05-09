@@ -282,6 +282,7 @@ async function main() {
     const renderedRoutes = [];
     for (const pathname of [
       "/dashboard",
+      "/evidence",
       "/integrations",
       "/integrations/microsoft365",
       "/integrations/github",
