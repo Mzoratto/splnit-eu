@@ -28,6 +28,8 @@
     "smoke:seo": "tsx scripts/smoke-seo.ts",
     "smoke:copy-hygiene": "tsx scripts/smoke-copy-hygiene.ts",
     "smoke:authenticated-primary-flow": "tsx scripts/smoke-authenticated-primary-flow.ts",
+    "smoke:production-tenant-readiness": "tsx scripts/smoke-production-tenant-readiness.ts",
+    "smoke:production-tenant-readiness-source": "tsx scripts/smoke-production-tenant-readiness-source.ts",
     "smoke:trust-center-settings": "tsx scripts/smoke-trust-center-settings.ts",
     "smoke:export-endpoints-source": "tsx scripts/smoke-export-endpoints-source.ts",
     "smoke:org-boundaries": "tsx scripts/smoke-org-boundaries.ts",
