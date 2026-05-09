@@ -1,8 +1,10 @@
 import { strict as assert } from "node:assert";
+import { existsSync, readFileSync } from "node:fs";
 import { createClerkClient } from "@clerk/nextjs/server";
 import { chromium, type Page } from "@playwright/test";
 import { eq } from "drizzle-orm";
 import { loadEnvConfig } from "@next/env";
+import { parse } from "dotenv";
 import { upsertOrganisationFromClerk, upsertProfileFromClerk } from "@/lib/clerk/sync";
 import { getDb } from "@/lib/db";
 import {
@@ -33,6 +35,22 @@ import {
 import { sendVendorQuestionnaireEmail } from "@/lib/vendors/notifications";
 
 loadEnvConfig(process.cwd());
+
+function loadLocalEnvForMissingValues() {
+  const envLocalPath = ".env.local";
+  if (!existsSync(envLocalPath)) {
+    return;
+  }
+
+  const parsed = parse(readFileSync(envLocalPath));
+  for (const [key, value] of Object.entries(parsed)) {
+    if (!process.env[key]?.trim() && value.trim()) {
+      process.env[key] = value;
+    }
+  }
+}
+
+loadLocalEnvForMissingValues();
 
 const baseUrl = process.env.AUTH_PRIMARY_FLOW_BASE_URL ?? "https://splnit.eu";
 const databaseUrl = process.env.DATABASE_URL?.trim();

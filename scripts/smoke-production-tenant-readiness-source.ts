@@ -49,12 +49,14 @@ for (const optionalEmailEnv of ["RESEND_API_KEY", "RESEND_FROM", "SMOKE_RECIPIEN
 }
 
 assert.match(source, /cleanupDatabase/, "script must clean up smoke database rows.");
+assert.match(source, /loadLocalEnvForMissingValues/, "script must load .env.local for missing shell env values.");
 assert.match(source, /deleteOrganization/, "script must delete the smoke Clerk organization.");
 assert.match(source, /deleteUser/, "script must delete the smoke Clerk user.");
 assert.match(source, /browserConsoleErrors/, "script must report browser console errors.");
 assert.match(source, /JSON\.stringify/, "script must emit machine-readable redacted JSON.");
 assert.match(prereqSource, /readyForTenantSmoke/, "prereq check must report tenant smoke readiness.");
 assert.match(prereqSource, /readyForMailboxSendAttempt/, "prereq check must report mailbox send readiness.");
+assert.match(prereqSource, /loadLocalEnvForMissingValues/, "prereq check must load .env.local for missing shell env values.");
 assert.match(prereqSource, /missingRequired/, "prereq check must report missing required env names only.");
 assert.match(prereqSource, /process\.exitCode = 1/, "prereq check must fail when tenant smoke prerequisites are missing.");
 

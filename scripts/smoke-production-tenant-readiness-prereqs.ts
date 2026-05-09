@@ -1,3 +1,25 @@
+import { loadEnvConfig } from "@next/env";
+import { existsSync, readFileSync } from "node:fs";
+import { parse } from "dotenv";
+
+loadEnvConfig(process.cwd());
+
+function loadLocalEnvForMissingValues() {
+  const envLocalPath = ".env.local";
+  if (!existsSync(envLocalPath)) {
+    return;
+  }
+
+  const parsed = parse(readFileSync(envLocalPath));
+  for (const [key, value] of Object.entries(parsed)) {
+    if (!process.env[key]?.trim() && value.trim()) {
+      process.env[key] = value;
+    }
+  }
+}
+
+loadLocalEnvForMissingValues();
+
 const requiredEnv = [
   "DATABASE_URL",
   "BLOB_READ_WRITE_TOKEN",
