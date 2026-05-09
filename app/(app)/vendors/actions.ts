@@ -10,10 +10,15 @@ import {
   createVendorQuestionnaire,
   getVendorDetail,
   saveVendorAssessment,
+  updateVendorQuestionnaireDelivery,
 } from "@/lib/db/queries/vendors";
 import { createVendorAssessmentToken } from "@/lib/vendors/access";
 import { VENDOR_ASSESSMENT_QUESTIONS } from "@/lib/vendors/questions";
 import { sendVendorQuestionnaireEmail } from "@/lib/vendors/notifications";
+import {
+  getVendorQuestionnaireDeliveryMetadata,
+  getVendorQuestionnaireDeliveryStatus,
+} from "@/lib/vendors/delivery-status";
 
 const vendorSchema = z.object({
   category: z.string().trim().max(80).optional(),
@@ -118,12 +123,29 @@ export async function sendVendorQuestionnaireAction(
   });
   const organisation = await getOrganisationByClerkOrgId(session.clerkOrgId);
 
-  await sendVendorQuestionnaireEmail({
+  const deliveryResult = await sendVendorQuestionnaireEmail({
     assessmentUrl: `${getAppUrl()}/vendor-assessment/${token}`,
     locale: organisation?.locale,
     organisationName: organisation?.name ?? "Splnit.eu",
     to: parsed.email,
     vendorName: detail.vendor.name,
+  });
+  const deliveryState = getVendorQuestionnaireDeliveryStatus(deliveryResult);
+
+  await updateVendorQuestionnaireDelivery({
+    assessmentId: assessment.id,
+    clerkOrgId: session.clerkOrgId,
+    delivery: {
+      ...getVendorQuestionnaireDeliveryMetadata({
+        result: deliveryResult,
+        to: parsed.email,
+      }),
+      tokenCreated: true,
+      vendorEmail: parsed.email,
+    },
+    status: deliveryState.assessmentStatus,
+    vendorId,
+    vendorStatus: deliveryState.vendorStatus,
   });
 
   revalidatePath("/vendors");

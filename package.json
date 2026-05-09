@@ -24,6 +24,7 @@
     "smoke:questionnaire-review-gate": "tsx scripts/smoke-questionnaire-review-gate.ts",
     "smoke:questionnaire-review-patching": "tsx scripts/smoke-questionnaire-review-patching.ts",
     "smoke:stripe-billing": "tsx scripts/smoke-stripe-billing-runtime.ts",
+    "smoke:vendor-questionnaire-delivery-status": "tsx scripts/smoke-vendor-questionnaire-delivery-status.ts",
     "smoke:seo": "tsx scripts/smoke-seo.ts",
     "smoke:copy-hygiene": "tsx scripts/smoke-copy-hygiene.ts",
     "smoke:authenticated-primary-flow": "tsx scripts/smoke-authenticated-primary-flow.ts",

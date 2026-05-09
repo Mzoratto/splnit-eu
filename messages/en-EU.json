@@ -900,7 +900,15 @@
     "questionnaire": {
       "title": "Vendor questionnaire",
       "email": "Vendor email",
-      "send": "Send questionnaire"
+      "send": "Send questionnaire",
+      "deliveryStatusLabel": "Email delivery",
+      "deliveryTo": "Recipient",
+      "deliveryUpdated": "Updated",
+      "deliveryStatuses": {
+        "sent": "sent",
+        "skipped": "skipped — token created, email not sent",
+        "failed": "failed — token created, email not sent"
+      }
     },
     "history": {
       "title": "Assessment history",
@@ -916,8 +924,12 @@
       "pending": "pending",
       "assessed": "assessed",
       "questionnaire_sent": "questionnaire sent",
+      "questionnaire_delivery_skipped": "questionnaire email skipped",
+      "questionnaire_delivery_failed": "questionnaire email failed",
       "completed": "completed",
       "sent": "sent",
+      "email_skipped": "email skipped",
+      "email_failed": "email failed",
       "submitted": "submitted"
     }
   },

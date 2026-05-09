@@ -75,6 +75,14 @@ function getAnswer(
   return typeof value === "string" ? value : "partial";
 }
 
+function getDeliveryValue(
+  answers: Record<string, unknown> | null | undefined,
+  key: string,
+) {
+  const value = answers?.[key];
+  return typeof value === "string" && value.trim() ? value : null;
+}
+
 function formatDate(
   value: Date | string | null | undefined,
   locale: Locale,
@@ -85,6 +93,18 @@ function formatDate(
   }
 
   return new Intl.DateTimeFormat(locale).format(new Date(value));
+}
+
+function deliveryStatusClass(status: string | null) {
+  if (status === "sent") {
+    return "bg-emerald-50 text-emerald-800";
+  }
+
+  if (status === "failed") {
+    return "bg-red-50 text-red-800";
+  }
+
+  return "bg-amber-50 text-amber-900";
 }
 
 export default async function VendorDetailPage({
@@ -104,6 +124,23 @@ export default async function VendorDetailPage({
   const copy = getMessagesForLocale(locale).vendorsPage;
   const { detail } = data;
   const latestAssessment = detail.assessments[0] ?? null;
+  const latestQuestionnaire =
+    detail.assessments.find((assessment) =>
+      ["sent", "email_skipped", "email_failed"].includes(assessment.status),
+    ) ?? null;
+  const latestDeliveryStatus = getDeliveryValue(
+    latestQuestionnaire?.answers,
+    "deliveryStatus",
+  );
+  const latestDeliveryMessage = getDeliveryValue(
+    latestQuestionnaire?.answers,
+    "deliveryMessage",
+  );
+  const latestDeliveryTo = getDeliveryValue(latestQuestionnaire?.answers, "deliveryTo");
+  const latestDeliveryUpdatedAt = getDeliveryValue(
+    latestQuestionnaire?.answers,
+    "deliveryUpdatedAt",
+  );
   const canMutate = detail.vendor.clerkOrgId !== "demo";
 
   return (
@@ -207,6 +244,43 @@ export default async function VendorDetailPage({
                 <Mail className="h-4 w-4" aria-hidden="true" />
               </button>
             </form>
+            {latestQuestionnaire ? (
+              <div className="mt-4 rounded-md border border-border bg-background p-3 text-sm">
+                <div className="flex flex-wrap items-center gap-2">
+                  <span className="text-foreground/58">
+                    {copy.questionnaire.deliveryStatusLabel}
+                  </span>
+                  <span
+                    className={`rounded-md px-2 py-1 text-xs font-medium ${deliveryStatusClass(
+                      latestDeliveryStatus,
+                    )}`}
+                  >
+                    {latestDeliveryStatus
+                      ? copy.questionnaire.deliveryStatuses[
+                          latestDeliveryStatus as keyof typeof copy.questionnaire.deliveryStatuses
+                        ] ?? latestDeliveryStatus
+                      : copy.statuses[
+                          latestQuestionnaire.status as keyof typeof copy.statuses
+                        ] ?? latestQuestionnaire.status}
+                  </span>
+                </div>
+                {latestDeliveryTo ? (
+                  <p className="mt-2 text-xs text-foreground/58">
+                    {copy.questionnaire.deliveryTo}: {latestDeliveryTo}
+                  </p>
+                ) : null}
+                {latestDeliveryUpdatedAt ? (
+                  <p className="mt-1 text-xs text-foreground/58">
+                    {copy.questionnaire.deliveryUpdated}: {formatDate(latestDeliveryUpdatedAt, locale, copy.noDate)}
+                  </p>
+                ) : null}
+                {latestDeliveryMessage ? (
+                  <p className="mt-2 text-xs text-amber-800">
+                    {latestDeliveryMessage}
+                  </p>
+                ) : null}
+              </div>
+            ) : null}
           </article>
 
           <article className="rounded-lg border border-border bg-surface">

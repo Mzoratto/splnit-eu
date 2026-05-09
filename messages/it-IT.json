@@ -900,7 +900,15 @@
     "questionnaire": {
       "title": "Questionario fornitore",
       "email": "Email fornitore",
-      "send": "Invia questionario"
+      "send": "Invia questionario",
+      "deliveryStatusLabel": "Consegna email",
+      "deliveryTo": "Destinatario",
+      "deliveryUpdated": "Aggiornato",
+      "deliveryStatuses": {
+        "sent": "inviato",
+        "skipped": "saltato — token creato, email non inviata",
+        "failed": "fallito — token creato, email non inviata"
+      }
     },
     "history": {
       "title": "Storico valutazioni",
@@ -916,8 +924,12 @@
       "pending": "in attesa",
       "assessed": "valutato",
       "questionnaire_sent": "questionario inviato",
+      "questionnaire_delivery_skipped": "email questionario saltata",
+      "questionnaire_delivery_failed": "email questionario fallita",
       "completed": "completato",
       "sent": "inviato",
+      "email_skipped": "email saltata",
+      "email_failed": "email fallita",
       "submitted": "inviato"
     }
   },

@@ -900,7 +900,15 @@
     "questionnaire": {
       "title": "Dotazník dodavatele",
       "email": "Email dodavatele",
-      "send": "Odeslat dotazník"
+      "send": "Odeslat dotazník",
+      "deliveryStatusLabel": "Doručení e-mailu",
+      "deliveryTo": "Příjemce",
+      "deliveryUpdated": "Aktualizováno",
+      "deliveryStatuses": {
+        "sent": "odesláno",
+        "skipped": "přeskočeno — token vytvořen, e-mail neodeslán",
+        "failed": "selhalo — token vytvořen, e-mail neodeslán"
+      }
     },
     "history": {
       "title": "Historie hodnocení",
@@ -916,8 +924,12 @@
       "pending": "čeká",
       "assessed": "hodnoceno",
       "questionnaire_sent": "dotazník odeslán",
+      "questionnaire_delivery_skipped": "e-mail dotazníku přeskočen",
+      "questionnaire_delivery_failed": "e-mail dotazníku selhal",
       "completed": "dokončeno",
       "sent": "odesláno",
+      "email_skipped": "e-mail přeskočen",
+      "email_failed": "e-mail selhal",
       "submitted": "odesláno"
     }
   },

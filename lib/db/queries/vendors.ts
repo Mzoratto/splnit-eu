@@ -181,6 +181,48 @@ export async function createVendorQuestionnaire(input: {
   return assessment;
 }
 
+export async function updateVendorQuestionnaireDelivery(input: {
+  assessmentId: string;
+  clerkOrgId: string;
+  delivery: Record<string, unknown>;
+  status: string;
+  vendorId: string;
+  vendorStatus: string;
+}) {
+  const db = getDb();
+
+  const [assessment] = await db
+    .update(vendorAssessments)
+    .set({
+      answers: input.delivery,
+      status: input.status,
+    })
+    .where(
+      and(
+        eq(vendorAssessments.id, input.assessmentId),
+        eq(vendorAssessments.clerkOrgId, input.clerkOrgId),
+        eq(vendorAssessments.vendorId, input.vendorId),
+      ),
+    )
+    .returning();
+
+  if (!assessment) {
+    throw new Error("Vendor assessment not found.");
+  }
+
+  await db
+    .update(vendors)
+    .set({ status: input.vendorStatus })
+    .where(
+      and(
+        eq(vendors.clerkOrgId, input.clerkOrgId),
+        eq(vendors.id, input.vendorId),
+      ),
+    );
+
+  return assessment;
+}
+
 export async function getVendorAssessmentByToken(token: string) {
   const assessmentId = token.split(".")[0];
 
