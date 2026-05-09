@@ -31,23 +31,38 @@ function getAppUrl() {
   return process.env.NEXT_PUBLIC_APP_URL ?? "http://localhost:3000";
 }
 
-function statusMeta(status: string | null | undefined): {
+function statusMeta(
+  status: string | null | undefined,
+  labels: ReturnType<typeof getMessagesForLocale>["integrations"]["providerPages"]["common"],
+): {
   label: string;
   tone: StatusPillTone;
 } {
   if (status === "connected") {
+    return { label: labels.statusConnected, tone: "pass" };
+  }
+
+  if (status === "pass") {
     return { label: "PASS", tone: "pass" };
   }
 
   if (status === "connecting") {
+    return { label: labels.statusConnecting, tone: "warn" };
+  }
+
+  if (status === "manual_review" || status === "warning") {
     return { label: "WARN", tone: "warn" };
   }
 
   if (status === "error") {
+    return { label: labels.statusActionNeeded, tone: "fail" };
+  }
+
+  if (status === "fail") {
     return { label: "FAIL", tone: "fail" };
   }
 
-  return { label: "N/A", tone: "neutral" };
+  return { label: labels.statusNotConnected, tone: "neutral" };
 }
 
 async function loadMicrosoft365Data() {
@@ -105,7 +120,7 @@ export default async function Microsoft365IntegrationPage() {
   const runs = detail?.runs ?? [];
   const tests = detail?.tests.length ? detail.tests : MICROSOFT365_TEST_DEFINITIONS;
   const connected = integration?.status === "connected";
-  const connectionStatus = statusMeta(integration?.status);
+  const connectionStatus = statusMeta(integration?.status, providerCopy.common);
 
   return (
     <section className="space-y-8">
@@ -222,8 +237,8 @@ export default async function Microsoft365IntegrationPage() {
                         {formatDate(run.ranAt, locale, copy.never)}
                       </p>
                     </div>
-                    <StatusPill tone={statusMeta(run.status).tone}>
-                      {statusMeta(run.status).label}
+                    <StatusPill tone={statusMeta(run.status, providerCopy.common).tone}>
+                      {statusMeta(run.status, providerCopy.common).label}
                     </StatusPill>
                   </div>
                   {run.failureReason ? (

@@ -534,7 +534,10 @@
       "viewPlan": "Vedi piano",
       "manage": "Gestisci",
       "connect": "Collega",
-      "disconnect": "Scollega"
+      "disconnect": "Scollega",
+      "statusAvailable": "Disponibile",
+      "statusConnected": "Collegato",
+      "statusConnecting": "Collegamento"
     },
     "planned": {
       "eyebrow": "Integrazione pianificata",
@@ -566,7 +569,11 @@
         "runResults": "Risultati esecuzioni",
         "runResultsEmpty": "I risultati appariranno dopo la prima esecuzione automatica.",
         "testSuite": "Test suite",
-        "connectionUnavailable": "Le azioni di connessione sono disabilitate finché non sono disponibili le credenziali dell’app e un workspace attivo. L’ambito dei test resta visibile per la revisione."
+        "connectionUnavailable": "Le azioni di connessione sono disabilitate finché non sono disponibili le credenziali dell’app e un workspace attivo. L’ambito dei test resta visibile per la revisione.",
+        "statusActionNeeded": "Richiede attenzione",
+        "statusConnected": "Collegato",
+        "statusConnecting": "Collegamento",
+        "statusNotConnected": "Non collegato"
       },
       "aws": {
         "title": "Integrazione AWS",

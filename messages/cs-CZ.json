@@ -534,7 +534,10 @@
       "viewPlan": "Zobrazit plán",
       "manage": "Spravovat",
       "connect": "Připojit",
-      "disconnect": "Odpojit"
+      "disconnect": "Odpojit",
+      "statusAvailable": "Dostupné",
+      "statusConnected": "Připojeno",
+      "statusConnecting": "Připojování"
     },
     "planned": {
       "eyebrow": "Plánovaná integrace",
@@ -566,7 +569,11 @@
         "runResults": "Výsledky běhů",
         "runResultsEmpty": "Výsledky se zobrazí po prvním automatickém běhu.",
         "testSuite": "Test suite",
-        "connectionUnavailable": "Akce připojení jsou vypnuté, dokud nejsou dostupné aplikační přihlašovací údaje a aktivní workspace. Rozsah testů níže zůstává viditelný pro kontrolu."
+        "connectionUnavailable": "Akce připojení jsou vypnuté, dokud nejsou dostupné aplikační přihlašovací údaje a aktivní workspace. Rozsah testů níže zůstává viditelný pro kontrolu.",
+        "statusActionNeeded": "Vyžaduje pozornost",
+        "statusConnected": "Připojeno",
+        "statusConnecting": "Připojování",
+        "statusNotConnected": "Nepřipojeno"
       },
       "aws": {
         "title": "AWS integrace",

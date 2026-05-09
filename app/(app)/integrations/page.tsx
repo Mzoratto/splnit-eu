@@ -105,20 +105,23 @@ function formatDate(
   }).format(new Date(value));
 }
 
-function statusMeta(status: string): { label: string; tone: StatusPillTone } {
+function statusMeta(
+  status: string,
+  copy: IntegrationsCopy,
+): { label: string; tone: StatusPillTone } {
   if (status === "connected") {
-    return { label: "PASS", tone: "pass" };
+    return { label: copy.index.statusConnected, tone: "pass" };
   }
 
   if (status === "connecting") {
-    return { label: "WARN", tone: "warn" };
+    return { label: copy.index.statusConnecting, tone: "warn" };
   }
 
   if (status === "coming_soon") {
-    return { label: "PENDING", tone: "neutral" };
+    return { label: copy.index.comingSoon, tone: "neutral" };
   }
 
-  return { label: "N/A", tone: "neutral" };
+  return { label: copy.index.statusAvailable, tone: "neutral" };
 }
 
 function getRunBreakdown(provider: string, data: HubData | null) {
@@ -191,7 +194,7 @@ export default async function IntegrationsPage() {
           const rawStatus =
             integration?.status ?? (provider.planned ? "coming_soon" : "available");
           const connected = rawStatus === "connected";
-          const providerStatus = statusMeta(rawStatus);
+          const providerStatus = statusMeta(rawStatus, copy);
           const breakdown = getRunBreakdown(provider.key, data);
           const testCount = getTestCount(provider.key, provider.testCount, data);
 
@@ -203,7 +206,7 @@ export default async function IntegrationsPage() {
               <div className="flex items-start justify-between gap-4">
                 <div>
                   <StatusPill tone={providerStatus.tone}>
-                    {provider.planned ? copy.index.comingSoon : providerStatus.label}
+                    {providerStatus.label}
                   </StatusPill>
                   <h2 className="mt-3 text-lg font-medium">{provider.name}</h2>
                 </div>

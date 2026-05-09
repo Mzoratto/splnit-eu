@@ -534,7 +534,10 @@
       "viewPlan": "View plan",
       "manage": "Manage",
       "connect": "Connect",
-      "disconnect": "Disconnect"
+      "disconnect": "Disconnect",
+      "statusAvailable": "Available",
+      "statusConnected": "Connected",
+      "statusConnecting": "Connecting"
     },
     "planned": {
       "eyebrow": "Planned integration",
@@ -566,7 +569,11 @@
         "runResults": "Run results",
         "runResultsEmpty": "Results will appear after the first automated run.",
         "testSuite": "Test suite",
-        "connectionUnavailable": "Connection actions are disabled until app credentials and an active workspace are available. The test scope below is still visible for review."
+        "connectionUnavailable": "Connection actions are disabled until app credentials and an active workspace are available. The test scope below is still visible for review.",
+        "statusActionNeeded": "Action needed",
+        "statusConnected": "Connected",
+        "statusConnecting": "Connecting",
+        "statusNotConnected": "Not connected"
       },
       "aws": {
         "title": "AWS integration",

@@ -31,23 +31,38 @@ function formatDate(
   }).format(new Date(value));
 }
 
-function statusMeta(status: string | null | undefined): {
+function statusMeta(
+  status: string | null | undefined,
+  labels: ReturnType<typeof getMessagesForLocale>["integrations"]["providerPages"]["common"],
+): {
   label: string;
   tone: StatusPillTone;
 } {
-  if (status === "connected" || status === "pass") {
+  if (status === "connected") {
+    return { label: labels.statusConnected, tone: "pass" };
+  }
+
+  if (status === "pass") {
     return { label: "PASS", tone: "pass" };
   }
 
-  if (status === "connecting" || status === "manual_review" || status === "warning") {
+  if (status === "connecting") {
+    return { label: labels.statusConnecting, tone: "warn" };
+  }
+
+  if (status === "manual_review" || status === "warning") {
     return { label: "WARN", tone: "warn" };
   }
 
-  if (status === "error" || status === "fail") {
+  if (status === "error") {
+    return { label: labels.statusActionNeeded, tone: "fail" };
+  }
+
+  if (status === "fail") {
     return { label: "FAIL", tone: "fail" };
   }
 
-  return { label: "N/A", tone: "neutral" };
+  return { label: labels.statusNotConnected, tone: "neutral" };
 }
 
 async function loadGitHubData() {
@@ -106,7 +121,7 @@ export default async function GitHubIntegrationPage() {
   const runs = detail?.runs ?? [];
   const tests = detail?.tests.length ? detail.tests : GITHUB_TEST_DEFINITIONS;
   const connected = integration?.status === "connected";
-  const connectionStatus = statusMeta(integration?.status);
+  const connectionStatus = statusMeta(integration?.status, providerCopy.common);
   const config = (integration?.config ?? {}) as {
     accountType?: string | null;
     owner?: string | null;
@@ -232,8 +247,8 @@ export default async function GitHubIntegrationPage() {
                         {formatDate(run.ranAt, locale, copy.never)}
                       </p>
                     </div>
-                    <StatusPill tone={statusMeta(run.status).tone}>
-                      {statusMeta(run.status).label}
+                    <StatusPill tone={statusMeta(run.status, providerCopy.common).tone}>
+                      {statusMeta(run.status, providerCopy.common).label}
                     </StatusPill>
                   </div>
                   {run.failureReason ? (
