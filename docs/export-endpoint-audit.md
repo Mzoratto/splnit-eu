@@ -1,6 +1,6 @@
 # Export Endpoint Audit
 
-Last updated: 2026-05-07
+Last updated: 2026-05-09
 
 Purpose: record the honest current status of audit, vendor, risk, and incident export/report endpoints before first outreach conversations. This is an investigation note, not a claim of full export-suite production readiness.
 
@@ -22,7 +22,7 @@ Unauthenticated auth-smoke coverage now exists for audit log, vendor report, ris
 
 Source trace shows org scoping is present: audit, vendor, risk, and incident report queries use `session.orgId` / `clerkOrgId` filters. Existing DB-level org-boundary smoke now covers audit-log filtering, vendor ownership, risk item isolation, and incident ownership.
 
-Audit export handles large result sets by explicit page limits and cursor headers, not by silently truncating. It defaults to 1000 rows, rejects `limit` values outside `1..5000`, queries `limit + 1`, returns at most `limit` rows, and sets `X-Audit-Log-Truncated: true` plus `X-Audit-Log-Next-Cursor` when more rows are available. What remains unproven here is a real authenticated HTTP export smoke against a seeded tenant with more than one page of audit rows.
+Audit export handles large result sets by explicit page limits and cursor headers, not by silently truncating. It defaults to 1000 rows, rejects `limit` values outside `1..5000`, queries `limit + 1`, returns at most `limit` rows, and sets `X-Audit-Log-Truncated: true` plus `X-Audit-Log-Next-Cursor` when more rows are available. `npm run smoke:export-endpoints-source` now guards those source-level invariants plus private no-store/auth/org-scope patterns for audit, vendor, and risk report exports. What remains unproven here is a real authenticated HTTP export smoke against a seeded tenant with more than one page of audit rows.
 
 Incident notification outputs are not pure stubs: jurisdiction-specific profiles exist for CZ, EU fallback, and IT, with separate cybersecurity and data-protection tracks. The Italian ACN/CSIRT and Garante outputs have a dedicated smoke that renders non-empty PDFs. However, these PDFs are draft notification templates/checklists, not live authority submissions and not legal-reviewed final filings.
 
@@ -31,7 +31,7 @@ Incident notification outputs are not pure stubs: jurisdiction-specific profiles
 | Area | Routes / code | Status | What works | Gaps to close |
 |---|---|---:|---|---|
 | Audit log CSV export | `/api/audit-log/export`, `lib/db/queries/audit-logs.ts` | partial | Requires Clerk user+org; returns private no-store CSV; filters rows by `auditLogs.clerkOrgId = session.orgId`; supports `from`, `to`, `action`, `entityType`, `limit`, and `cursor`; rejects invalid dates/ranges/limits/cursors. | Needs authenticated real-tenant HTTP smoke with seeded >1000 rows to prove end-to-end cursor pagination under production-like data volume. |
-| Audit pagination / limits | `listAuditLogPage`, export route headers | mostly ready by source | Default limit is 1000; max is 5000; route rejects `limit > 5000` instead of silently clamping; query fetches `limit + 1`; response exposes `X-Audit-Log-Truncated` and `X-Audit-Log-Next-Cursor`. | Large-result behavior is source-verified and query-shaped, but not runtime-proven here with a large real tenant dataset. |
+| Audit pagination / limits | `listAuditLogPage`, export route headers, `scripts/smoke-export-endpoints-source.ts` | mostly ready by source | Default limit is 1000; max is 5000; route rejects `limit > 5000` instead of silently clamping; query fetches `limit + 1`; response exposes `X-Audit-Log-Truncated` and `X-Audit-Log-Next-Cursor`; source smoke now checks these invariants. | Large-result behavior is source-verified and query-shaped, but not runtime-proven here with a large real tenant dataset. |
 | Vendor report export | `/api/vendors/supply-chain-report` | partial | Unauthenticated access now returns private 401 in local/test mode. Authenticated route fetches `listVendorsForOrg(session.orgId)` and renders a PDF with org-scoped vendor rows. | There is no `/api/vendors/export` route. No authenticated browser/API smoke with a real Clerk session was run in this pass. PDF has no pagination/cursor semantics; it renders all rows returned by `listVendorsForOrg`. |
 | Vendor report data scope | `listVendorsForOrg`, `scripts/smoke-org-boundaries.ts` | mostly ready by source/smoke | Vendor list query filters by `vendors.clerkOrgId`. Existing org-boundary smoke covers vendor detail, questionnaire, and assessment ownership failures across orgs. | Add a report-level authenticated smoke that creates vendors in two orgs and asserts only the active org appears in the generated report. |
 | Risk report export | `/api/risks/register-report` | partial | Unauthenticated access now returns private 401 in local/test mode. Authenticated route requires an organisation row, fetches `listRiskItemsForOrg(session.orgId)`, and renders a PDF. | There is no `/api/risks/export` route. No authenticated HTTP smoke with a real Clerk session was run in this pass. Risk list is capped at 200 rows with no report pagination/export continuation. |
