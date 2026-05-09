@@ -5,12 +5,19 @@ const packageJson = JSON.parse(readFileSync("package.json", "utf8")) as {
   scripts?: Record<string, string>;
 };
 const scriptPath = "scripts/smoke-production-tenant-readiness.ts";
+const prereqScriptPath = "scripts/smoke-production-tenant-readiness-prereqs.ts";
 const source = readFileSync(scriptPath, "utf8");
+const prereqSource = readFileSync(prereqScriptPath, "utf8");
 
 assert.equal(
   packageJson.scripts?.["smoke:production-tenant-readiness"],
   `tsx ${scriptPath}`,
   "package.json must expose the production tenant readiness smoke command.",
+);
+assert.equal(
+  packageJson.scripts?.["smoke:production-tenant-readiness-prereqs"],
+  `tsx ${prereqScriptPath}`,
+  "package.json must expose the production tenant readiness prerequisite check.",
 );
 
 for (const requiredEnv of [
@@ -46,5 +53,9 @@ assert.match(source, /deleteOrganization/, "script must delete the smoke Clerk o
 assert.match(source, /deleteUser/, "script must delete the smoke Clerk user.");
 assert.match(source, /browserConsoleErrors/, "script must report browser console errors.");
 assert.match(source, /JSON\.stringify/, "script must emit machine-readable redacted JSON.");
+assert.match(prereqSource, /readyForTenantSmoke/, "prereq check must report tenant smoke readiness.");
+assert.match(prereqSource, /readyForMailboxSendAttempt/, "prereq check must report mailbox send readiness.");
+assert.match(prereqSource, /missingRequired/, "prereq check must report missing required env names only.");
+assert.match(prereqSource, /process\.exitCode = 1/, "prereq check must fail when tenant smoke prerequisites are missing.");
 
 console.log("production tenant readiness smoke source guard passed");
