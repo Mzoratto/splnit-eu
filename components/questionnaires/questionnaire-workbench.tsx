@@ -5,6 +5,7 @@ import { useLocale, useMessages } from "next-intl";
 import { Download, FileSpreadsheet, Loader2, Sparkles } from "lucide-react";
 import {
   answerQuestionnaireAction,
+  reviewQuestionnaireAnswerAction,
   type QuestionnaireActionState,
 } from "@/app/(app)/questionnaires/actions";
 import { normalizeLocale } from "@/i18n/routing";
@@ -35,6 +36,12 @@ type QuestionnaireWorkbenchCopy = {
   legal: string;
   policies: string;
   none: string;
+  reviewerAnswerLabel: string;
+  reviewNotesLabel: string;
+  approve: string;
+  flagForRework: string;
+  saveDraftEdit: string;
+  exportBlocked: string;
 };
 
 type QuestionnaireMessages = {
@@ -63,6 +70,8 @@ export function QuestionnaireWorkbench({
     answerQuestionnaireAction,
     initialState,
   );
+  const exportReady =
+    state.result?.answers.every((answer) => answer.reviewStatus === "approved") ?? false;
 
   return (
     <div className="grid gap-4 xl:grid-cols-[0.85fr_1.35fr]">
@@ -150,6 +159,9 @@ export function QuestionnaireWorkbench({
                 {copy.artifact}: {state.result.artifactId}
               </p>
             ) : null}
+            {state.result && !exportReady ? (
+              <p className="mt-2 text-xs text-amber-700">{copy.exportBlocked}</p>
+            ) : null}
           </div>
           {state.result ? (
             <div className="flex flex-wrap gap-2">
@@ -157,7 +169,8 @@ export function QuestionnaireWorkbench({
                 <input name="artifactId" type="hidden" value={state.result.artifactId ?? ""} />
                 <button
                   type="submit"
-                  className="inline-flex items-center gap-2 rounded-md border border-border px-4 py-3 text-sm font-medium hover:bg-surface-muted"
+                  disabled={!exportReady}
+                  className="inline-flex items-center gap-2 rounded-md border border-border px-4 py-3 text-sm font-medium hover:bg-surface-muted disabled:cursor-not-allowed disabled:opacity-50"
                 >
                   PDF
                   <Download className="h-4 w-4" aria-hidden="true" />
@@ -167,7 +180,8 @@ export function QuestionnaireWorkbench({
                 <input name="artifactId" type="hidden" value={state.result.artifactId ?? ""} />
                 <button
                   type="submit"
-                  className="inline-flex items-center gap-2 rounded-md border border-border px-4 py-3 text-sm font-medium hover:bg-surface-muted"
+                  disabled={!exportReady}
+                  className="inline-flex items-center gap-2 rounded-md border border-border px-4 py-3 text-sm font-medium hover:bg-surface-muted disabled:cursor-not-allowed disabled:opacity-50"
                 >
                   XLSX
                   <FileSpreadsheet className="h-4 w-4" aria-hidden="true" />
@@ -196,6 +210,13 @@ export function QuestionnaireWorkbench({
                     >
                       {answer.confidence}
                     </span>
+                    <span
+                      className={`rounded-md px-2 py-1 text-xs font-medium ${reviewStatusClass(
+                        answer.reviewStatus,
+                      )}`}
+                    >
+                      {answer.reviewStatus}
+                    </span>
                   </div>
                   <p className="mt-3 text-sm leading-6 text-foreground/72">
                     {answer.answer}
@@ -220,6 +241,56 @@ export function QuestionnaireWorkbench({
                       {answer.notes}
                     </p>
                   ) : null}
+                  {state.result?.artifactId ? (
+                    <form action={reviewQuestionnaireAnswerAction} className="mt-4 space-y-3 rounded-md border border-border bg-surface-muted p-3">
+                      <input name="artifactId" type="hidden" value={state.result.artifactId} />
+                      <input name="answerIndex" type="hidden" value={index} />
+                      <label className="grid gap-1 text-xs font-medium text-foreground/70">
+                        {copy.reviewerAnswerLabel}
+                        <textarea
+                          name="answer"
+                          rows={4}
+                          defaultValue={answer.answer}
+                          className="resize-y rounded-md border border-border bg-background px-3 py-2 text-sm font-normal leading-6 text-foreground"
+                        />
+                      </label>
+                      <label className="grid gap-1 text-xs font-medium text-foreground/70">
+                        {copy.reviewNotesLabel}
+                        <textarea
+                          name="notes"
+                          rows={3}
+                          defaultValue={answer.notes}
+                          className="resize-y rounded-md border border-border bg-background px-3 py-2 text-sm font-normal leading-6 text-foreground"
+                        />
+                      </label>
+                      <div className="flex flex-wrap gap-2">
+                        <button
+                          type="submit"
+                          name="reviewStatus"
+                          value="approved"
+                          className="rounded-md bg-emerald-700 px-3 py-2 text-xs font-medium text-white hover:bg-emerald-800"
+                        >
+                          {copy.approve}
+                        </button>
+                        <button
+                          type="submit"
+                          name="reviewStatus"
+                          value="flagged"
+                          className="rounded-md bg-amber-600 px-3 py-2 text-xs font-medium text-white hover:bg-amber-700"
+                        >
+                          {copy.flagForRework}
+                        </button>
+                        <button
+                          type="submit"
+                          name="reviewStatus"
+                          value="draft"
+                          className="rounded-md border border-border px-3 py-2 text-xs font-medium hover:bg-background"
+                        >
+                          {copy.saveDraftEdit}
+                        </button>
+                      </div>
+                    </form>
+                  ) : null}
                 </article>
               ))}
             </div>
@@ -237,6 +308,18 @@ export function QuestionnaireWorkbench({
       </section>
     </div>
   );
+}
+
+function reviewStatusClass(status: "draft" | "approved" | "flagged") {
+  if (status === "approved") {
+    return "bg-emerald-50 text-emerald-800";
+  }
+
+  if (status === "flagged") {
+    return "bg-amber-50 text-amber-900";
+  }
+
+  return "bg-surface-muted text-foreground/64";
 }
 
 function confidenceClass(

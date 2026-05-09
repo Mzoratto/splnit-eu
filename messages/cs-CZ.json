@@ -1741,6 +1741,12 @@
       "legal": "Právní citace",
       "policies": "Politiky",
       "none": "žádné",
+      "reviewerAnswerLabel": "Text odpovědi po kontrole",
+      "reviewNotesLabel": "Poznámky ke kontrole / zdroje",
+      "approve": "Schválit",
+      "flagForRework": "Označit k přepracování",
+      "saveDraftEdit": "Uložit úpravu jako návrh",
+      "exportBlocked": "Export do PDF/XLSX je vypnutý, dokud nejsou schválené všechny odpovědi.",
       "sampleQuestions": [
         "Vyžadujete MFA pro všechny uživatele?",
         "Máte politiku reakce na incidenty a proces hlášení porušení?",

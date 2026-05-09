@@ -1741,6 +1741,12 @@
       "legal": "Legal citations",
       "policies": "Policies",
       "none": "none",
+      "reviewerAnswerLabel": "Reviewer answer text",
+      "reviewNotesLabel": "Review notes / source attribution",
+      "approve": "Approve",
+      "flagForRework": "Flag for rework",
+      "saveDraftEdit": "Save draft edit",
+      "exportBlocked": "PDF/XLSX export is disabled until every answer is approved.",
       "sampleQuestions": [
         "Do you enforce MFA for all users?",
         "Do you have an incident response policy and breach notification process?",

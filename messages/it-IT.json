@@ -1741,6 +1741,12 @@
       "legal": "Citazioni normative",
       "policies": "Policy",
       "none": "nessuna",
+      "reviewerAnswerLabel": "Testo risposta revisionato",
+      "reviewNotesLabel": "Note di revisione / fonti usate",
+      "approve": "Approva",
+      "flagForRework": "Segnala per rielaborazione",
+      "saveDraftEdit": "Salva modifica come bozza",
+      "exportBlocked": "L'export PDF/XLSX è disattivato finché tutte le risposte non sono approvate.",
       "sampleQuestions": [
         "Richiedete MFA per tutti gli utenti?",
         "Avete una policy di risposta agli incidenti e un processo di notifica violazioni?",

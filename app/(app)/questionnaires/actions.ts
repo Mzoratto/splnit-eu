@@ -1,12 +1,15 @@
 "use server";
 
 import { auth } from "@clerk/nextjs/server";
+import { revalidatePath } from "next/cache";
 import { z } from "zod";
 import { getMessagesForLocale } from "@/i18n/messages";
 import { normalizeLocale, type Locale } from "@/i18n/routing";
 import {
   createGeneratedArtifact,
   createQuestionnaireAnswerEvidence,
+  getGeneratedArtifactForOrg,
+  updateGeneratedArtifactContentForOrg,
 } from "@/lib/db/queries/generated-artifacts";
 import { getQuestionnaireComplianceContext } from "@/lib/db/queries/questionnaires";
 import { getOrganisationByClerkOrgId } from "@/lib/db/queries/organisations";
@@ -33,8 +36,9 @@ import {
   type QuestionnaireControlMapping,
 } from "@/lib/questionnaires/control-mapping";
 import { sanitizeQuestionnaireAnswers } from "@/lib/questionnaires/citation-guard";
+import { applyQuestionnaireAnswerReview } from "@/lib/questionnaires/review";
 import { enforceQuestionnaireRateLimit } from "@/lib/questionnaires/rate-limit";
-import type { QuestionnaireResult } from "@/lib/questionnaires/types";
+import { QuestionnaireResultSchema, type QuestionnaireResult } from "@/lib/questionnaires/types";
 
 export type QuestionnaireActionState = {
   error: string | null;
@@ -48,6 +52,14 @@ export type QuestionnaireActionState = {
 
 const questionnaireSchema = z.object({
   questionnaire: z.string().trim().min(10).max(40_000),
+});
+
+const reviewAnswerSchema = z.object({
+  answer: z.string().trim().min(1).max(20_000).optional(),
+  answerIndex: z.coerce.number().int().min(0),
+  artifactId: z.string().uuid(),
+  notes: z.string().max(4_000).optional(),
+  reviewStatus: z.enum(["draft", "approved", "flagged"]),
 });
 
 const initialQuestionnaireState: QuestionnaireActionState = {
@@ -230,6 +242,58 @@ export async function answerQuestionnaireAction(
       rateLimit,
     };
   }
+}
+
+export async function reviewQuestionnaireAnswerAction(formData: FormData) {
+  const session = await auth();
+
+  if (!session.userId || !session.orgId) {
+    throw new Error("Authentication and an active organisation are required.");
+  }
+
+  const parsed = reviewAnswerSchema.safeParse({
+    answer: formData.get("answer"),
+    answerIndex: formData.get("answerIndex"),
+    artifactId: formData.get("artifactId"),
+    notes: formData.get("notes"),
+    reviewStatus: formData.get("reviewStatus"),
+  });
+
+  if (!parsed.success) {
+    throw new Error("Invalid questionnaire review input.");
+  }
+
+  const artifact = await getGeneratedArtifactForOrg({
+    artifactId: parsed.data.artifactId,
+    clerkOrgId: session.orgId,
+    kind: QUESTIONNAIRE_ARTIFACT_KIND,
+  });
+
+  if (!artifact) {
+    throw new Error("Questionnaire artifact was not found for this organisation.");
+  }
+
+  const content = artifact.content as { result?: unknown };
+  const result = QuestionnaireResultSchema.parse(content.result);
+  const updatedResult = applyQuestionnaireAnswerReview(result, {
+    answer: parsed.data.answer,
+    answerIndex: parsed.data.answerIndex,
+    notes: parsed.data.notes,
+    reviewStatus: parsed.data.reviewStatus,
+  });
+
+  const updated = await updateGeneratedArtifactContentForOrg({
+    artifactId: parsed.data.artifactId,
+    clerkOrgId: session.orgId,
+    content: buildQuestionnaireArtifactContent(updatedResult),
+    kind: QUESTIONNAIRE_ARTIFACT_KIND,
+  });
+
+  if (!updated) {
+    throw new Error("Questionnaire artifact review update failed.");
+  }
+
+  revalidatePath("/questionnaires");
 }
 
 async function getQuestionnaireInput(formData: FormData) {

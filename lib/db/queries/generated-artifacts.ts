@@ -81,6 +81,31 @@ export async function getGeneratedArtifactForOrg(input: {
   return rows[0] ?? null;
 }
 
+export async function updateGeneratedArtifactContentForOrg(input: {
+  artifactId: string;
+  clerkOrgId: string;
+  content: Record<string, unknown>;
+  kind?: GeneratedArtifactKind;
+}) {
+  const db = getDb();
+  const filters = [
+    eq(generatedArtifacts.id, input.artifactId),
+    eq(generatedArtifacts.clerkOrgId, input.clerkOrgId),
+  ];
+
+  if (input.kind) {
+    filters.push(eq(generatedArtifacts.kind, input.kind));
+  }
+
+  const rows = await db
+    .update(generatedArtifacts)
+    .set({ content: input.content })
+    .where(and(...filters))
+    .returning({ id: generatedArtifacts.id });
+
+  return rows[0] ?? null;
+}
+
 export async function createQuestionnaireAnswerEvidence(input: {
   answers: {
     answer: string;
