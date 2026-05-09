@@ -656,6 +656,28 @@ function getSplnitDocuments(locale: Locale): PublicTrustDocument[] {
   ];
 }
 
+function getDemoHeroEyebrow(locale: Locale) {
+  switch (locale) {
+    case "en-EU":
+      return "SAMPLE TRUST CENTER · DEMO DATA";
+    case "it-IT":
+      return "TRUST CENTER DI ESEMPIO · DATI DEMO";
+    default:
+      return "UKÁZKOVÝ TRUST CENTER · DEMO DATA";
+  }
+}
+
+function getDemoHeroTitle(locale: Locale) {
+  switch (locale) {
+    case "en-EU":
+      return "Demo workspace shows a sample public Trust Center, not live compliance proof.";
+    case "it-IT":
+      return "Demo workspace mostra un Trust Center pubblico di esempio, non una prova compliance reale.";
+    default:
+      return "Demo workspace ukazuje veřejný Trust Center s ukázkovými daty, ne skutečný důkaz souladu.";
+  }
+}
+
 function getDemoTrustCenterModel(
   orgSlug: string,
   locale: Locale,
@@ -674,6 +696,8 @@ function getDemoTrustCenterModel(
     frameworks,
     lastTestedAt: null,
     logoUrl: null,
+    heroEyebrowOverride: getDemoHeroEyebrow(locale),
+    heroTitleOverride: getDemoHeroTitle(locale),
     isDemo: true,
     ndaRequired: false,
     nextTestAt: null,

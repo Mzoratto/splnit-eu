@@ -17,7 +17,9 @@ test("does not silently render demo data when workspace data is unavailable", as
   for (const appPage of pages) {
     await page.goto(appPage.path);
 
-    await expect(page.getByText("Organisation data unavailable")).toBeVisible();
+    await expect(
+      page.getByText(/Organisation data unavailable|Data organizace nejsou dostupná/),
+    ).toBeVisible();
     await expect(page.getByText(appPage.forbidden)).toHaveCount(0);
   }
 
@@ -30,16 +32,20 @@ test("public demo Trust Center is explicitly labeled as sample data", async ({
 }) => {
   await page.goto("/trust/demo");
 
-  await expect(page.getByText("Sample Trust Center")).toBeVisible();
+  await expect(page.getByText(/Sample Trust Center|Ukázkový Trust Center/)).toBeVisible();
+  await expect(page.getByText("splnit.eu/trust/demo")).toBeVisible();
+  await expect(page.getByText(/VERIFIED CONTINUOUSLY|PRŮBĚŽNĚ OVĚŘOVÁNO/)).toHaveCount(0);
   await expect(page.getByText("Live", { exact: true })).toHaveCount(0);
   await expect(
     page.getByText(
-      "This public page uses sample data to demonstrate the product. It does not describe any organisation's live compliance status.",
+      /This public page uses sample data|Tato veřejná stránka používá ukázková data/,
     ),
   ).toBeVisible();
 
   await page.goto("/trust/demo/frameworks/nis2");
-  await expect(page.getByText("Sample Trust Center")).toBeVisible();
+  await expect(page.getByText(/Sample Trust Center|Ukázkový Trust Center/)).toBeVisible();
+  await expect(page.getByText("splnit.eu/trust/demo")).toBeVisible();
+  await expect(page.getByText(/VERIFIED CONTINUOUSLY|PRŮBĚŽNĚ OVĚŘOVÁNO/)).toHaveCount(0);
 });
 
 test("marketing demo Trust Center link is named as a sample", async ({
@@ -47,7 +53,10 @@ test("marketing demo Trust Center link is named as a sample", async ({
 }) => {
   await page.goto("/platform");
 
+  await expect(page.getByText("splnit.eu/trust/demo")).toBeVisible();
   await expect(
-    page.getByRole("link", { name: "View sample Trust Center →" }),
+    page.getByRole("link", {
+      name: /View sample Trust Center →|Zobrazit ukázkový Trust Center →/,
+    }),
   ).toHaveAttribute("href", "/trust/demo");
 });

@@ -67,7 +67,7 @@ export function TrustTopbar({
               {trustCenter.organisationName}
             </p>
             <p className="truncate font-mono text-[11px] text-foreground/50">
-              trust.splnit.eu/{trustCenter.orgSlug}
+              splnit.eu/trust/{trustCenter.orgSlug}
             </p>
           </div>
         </Link>

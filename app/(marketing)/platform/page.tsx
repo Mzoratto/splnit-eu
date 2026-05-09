@@ -233,7 +233,7 @@ export default async function PlatformPage() {
                 {copy.trustCenter.body}
               </p>
               <div className="mono mt-6 w-fit rounded-full border border-blue-100 bg-white px-4 py-2 text-xs text-blue-700">
-                trust.splnit.eu/demo
+                splnit.eu/trust/demo
               </div>
               <div className="mt-6 flex flex-wrap gap-2">
                 {copy.trustCenter.badges.map((badge) => (
