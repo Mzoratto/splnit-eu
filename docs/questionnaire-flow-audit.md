@@ -58,7 +58,7 @@ Do not claim yet:
 ## Trackable Gaps Deferred From This Pass
 
 1. **Authenticated questionnaire review smoke.** Reviewer controls and export gating are implemented in source and covered by focused smokes, but they still need a representative authenticated production tenant smoke with real workspace context.
-2. **Production authenticated vendor delivery smoke.** Delivery statuses are modeled and shown in the vendor detail UI, but the production tenant UI has not been authenticated-smoked because no signed-in production tenant browser session is available in this environment.
+2. **Production authenticated vendor delivery smoke.** Delivery statuses are modeled and shown in the vendor detail UI, but the production tenant UI has not been authenticated-smoked. A later local attempt confirmed required Clerk/DB/Blob env presence for an auth smoke, but the smoke command itself was denied by the local tool approval layer and did not run.
 3. **Richer policy excerpt and legal citation grounding.** The generation prompt receives control status, evidence context, policy context, and reviewed citation context, but reviewed policy excerpts and detailed citation attribution are not fully wired as a reviewer-facing source panel. Defer richer source attribution.
 4. **Production Resend mailbox smoke.** Production env metadata currently does not show `RESEND_API_KEY` or `RESEND_FROM`, so no mailbox smoke can be run safely yet. Configure the sender, send to a controlled mailbox, verify email arrival, open `/vendor-assessment/[token]`, submit the assessment, and confirm vendor risk/status plus delivery-status accuracy.
 5. **Vendor assessment token expiry/revocation.** Vendor assessment tokens do not yet include expiry or revocation. Defer token hardening.
