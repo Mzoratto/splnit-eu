@@ -324,7 +324,7 @@ async function main() {
     console.log(JSON.stringify({
       baseUrl,
       browserConsoleErrors: browserConsoleErrors.length,
-      databaseHost: parsedDatabaseUrl.hostname,
+      databaseHostClass: "non_local",
       emailAttempted: vendor.emailAttempted,
       mailboxProof: vendor.emailAttempted ? "send_attempted_check_controlled_mailbox" : "blocked_missing_resend_or_recipient_env",
       ok: true,

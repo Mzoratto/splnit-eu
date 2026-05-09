@@ -54,6 +54,10 @@ assert.match(source, /deleteOrganization/, "script must delete the smoke Clerk o
 assert.match(source, /deleteUser/, "script must delete the smoke Clerk user.");
 assert.match(source, /browserConsoleErrors/, "script must report browser console errors.");
 assert.match(source, /JSON\.stringify/, "script must emit machine-readable redacted JSON.");
+assert.match(source, /databaseHostClass/, "script must classify database host without printing the hostname.");
+assert.doesNotMatch(source, /databaseHost: parsedDatabaseUrl\.hostname/, "script must not print the database hostname.");
+assert.match(prereqSource, /databaseHostClass/, "prereq check must classify database host without printing the hostname.");
+assert.doesNotMatch(prereqSource, /databaseHost: parsed\.hostname/, "prereq check must not print the database hostname.");
 assert.match(prereqSource, /readyForTenantSmoke/, "prereq check must report tenant smoke readiness.");
 assert.match(prereqSource, /readyForMailboxSendAttempt/, "prereq check must report mailbox send readiness.");
 assert.match(prereqSource, /loadLocalEnvForMissingValues/, "prereq check must load .env.local for missing shell env values.");

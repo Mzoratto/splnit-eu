@@ -37,15 +37,15 @@ function envStatus(name: string) {
 function databaseHostStatus() {
   const value = process.env.DATABASE_URL?.trim();
   if (!value) {
-    return { databaseHost: null, databaseIsLocal: null };
+    return { databaseHostClass: null, databaseIsLocal: null };
   }
 
   try {
     const parsed = new URL(value);
     const databaseIsLocal = ["localhost", "127.0.0.1", "::1"].includes(parsed.hostname);
-    return { databaseHost: parsed.hostname, databaseIsLocal };
+    return { databaseHostClass: databaseIsLocal ? "local" : "non_local", databaseIsLocal };
   } catch {
-    return { databaseHost: "invalid_url", databaseIsLocal: null };
+    return { databaseHostClass: "invalid_url", databaseIsLocal: null };
   }
 }
 
@@ -58,7 +58,7 @@ const readyForTenantSmoke = missingRequired.length === 0 && database.databaseIsL
 const readyForMailboxSendAttempt = readyForTenantSmoke && missingMailbox.length === 0;
 
 console.log(JSON.stringify({
-  databaseHost: database.databaseHost,
+  databaseHostClass: database.databaseHostClass,
   databaseIsLocal: database.databaseIsLocal,
   missingMailbox,
   missingRequired,
