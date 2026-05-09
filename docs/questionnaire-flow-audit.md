@@ -1,6 +1,6 @@
 # Questionnaire Flow Audit
 
-Last updated: 2026-05-07
+Last updated: 2026-05-09
 
 Purpose: record the honest current status of questionnaire-related flows before first outreach conversations. This is an investigation note, not a claim of full production readiness.
 
@@ -30,9 +30,9 @@ Provider-backed OpenAI generation has now been runtime-smoked with real environm
 | Question-to-control mapping | `lib/questionnaires/control-mapping.ts` | partial | Deterministically maps questions to likely controls and carries `controlIds`/`controlKeys` into answers. Covered by smoke script. | Template-declared explicit mappings and a reviewed classifier can improve precision later. |
 | Generated answer persistence | `persistQuestionnaireResult`, `createGeneratedArtifact`, `generated_artifacts` | partial | Successful generated/fallback answers are stored as generated artifacts with kind `questionnaire_answers`, model, title, content JSON, createdBy, and audit log. History on `/questionnaires` lists generated artifact summaries. | There is no dedicated questionnaire detail/review workflow yet. |
 | Evidence-save to controls | `createQuestionnaireAnswerEvidence`, `evidence` table, evidence page | partial | Mapped answers create draft evidence rows linked to the generated artifact and control. Evidence page labels AI draft rows as requiring human review. | Reviewer workflow is not implemented. Draft answer evidence must not be used as reviewed evidence until approved by a human. |
-| Vendor questionnaire creation | `/vendors/[vendorId]`, `sendVendorQuestionnaireAction`, `createVendorQuestionnaire` | partial | For an authenticated org user and org-owned vendor, creates a `vendor_assessments` row and token link flow. | If email sending is skipped or fails after row creation, the product still needs clearer delivery-state surfacing. |
+| Vendor questionnaire creation | `/vendors/[vendorId]`, `sendVendorQuestionnaireAction`, `createVendorQuestionnaire` | partial | For an authenticated org user and org-owned vendor, creates a `vendor_assessments` row and token link flow. Delivery outcomes are now persisted as `sent`, `email_skipped`, or `email_failed` with delivery metadata for the latest questionnaire attempt. | Needs authenticated production tenant smoke to prove the delivery-status panel inside a real workspace. |
 | Vendor questionnaire token page | `/vendor-assessment/[token]`, `lib/vendors/access.ts` | partial | Token is HMAC-signed from assessmentId, clerkOrgId, and vendorId. Valid tokens load the external questionnaire without Clerk auth. Submission updates the matching `vendor_assessments` row, score, status, and vendor risk metadata. | Tokens do not include expiry/revocation. External submission does not create reviewed evidence/control artifacts. |
-| Email deliverability | `lib/vendors/notifications.ts`, `lib/email/client.ts` | blocked/unproven | Uses real Resend API when `RESEND_API_KEY` and `RESEND_FROM` are configured. Uses localized alert templates. | Current environment has not completed a production mailbox smoke. Send helper can skip when not configured; skipped/failed state needs clearer UI treatment. |
+| Email deliverability | `lib/vendors/notifications.ts`, `lib/email/client.ts`, `lib/vendors/delivery-status.ts` | blocked/unproven | Uses real Resend API when `RESEND_API_KEY` and `RESEND_FROM` are configured. Uses localized alert templates. Skipped and failed send attempts are surfaced in the vendor detail UI instead of disappearing after row creation. | Current environment has not completed a production mailbox smoke. Do not claim production email deliverability until a controlled mailbox test passes. |
 | PDF/XLSX export | `/api/questionnaires/export/pdf`, `/api/questionnaires/export/xlsx` | hardened for artifact ownership | Requires authenticated Clerk user+org and server-fetches the generated artifact by ID scoped to `session.orgId`. | Formal export should eventually include the reviewer gate so only approved answers can be exported externally. |
 
 ## Sales-Safe Wording
@@ -45,7 +45,7 @@ Use:
 - “Mapped generated answers create draft evidence rows so the workspace has an internal review trail.”
 - “Questionnaire answer evidence is AI-generated draft evidence until a human reviews it.”
 - “Exports are scoped server-side by generated artifact ownership.”
-- “Vendor questionnaires can be created and token links can collect vendor responses; production email delivery needs a configured Resend sender and should be verified before relying on it operationally.”
+- “Vendor questionnaires can be created and token links can collect vendor responses; skipped or failed email delivery is now visible in the vendor detail workflow, but production email delivery still needs a configured Resend sender and should be verified before relying on it operationally.”
 - “OpenAI-backed questionnaire generation has passed a local runtime smoke with real configured credentials and model resolution.”
 
 Do not claim yet:
@@ -58,7 +58,7 @@ Do not claim yet:
 ## Trackable Gaps Deferred From This Pass
 
 1. **Reviewer workflow.** Approve/edit/flag UI for draft questionnaire answers is not implemented. The `reviewStatus: "draft"` foundation exists, but reviewer actions and approval enforcement are follow-up work.
-2. **Vendor questionnaire delivery status.** UI does not clearly surface skipped or failed Resend delivery after vendor assessment creation. Defer delivery-state modeling and UI surfacing.
+2. **Production authenticated vendor delivery smoke.** Delivery statuses are modeled and shown in the vendor detail UI, but the production tenant UI has not been authenticated-smoked because no signed-in production tenant browser session is available in this environment.
 3. **Richer policy excerpt and legal citation grounding.** The generation prompt receives control status, evidence context, policy context, and reviewed citation context, but reviewed policy excerpts and detailed citation attribution are not fully wired as a reviewer-facing source panel. Defer richer source attribution.
 4. **Production Resend mailbox smoke.** No external email has been sent from this environment. Defer until Resend sender configuration and a controlled mailbox are available.
 5. **Vendor assessment token expiry/revocation.** Vendor assessment tokens do not yet include expiry or revocation. Defer token hardening.
