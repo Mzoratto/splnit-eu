@@ -26,9 +26,19 @@ for (const requiredEnv of [
   "BLOB_READ_WRITE_TOKEN",
   "NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY",
   "CLERK_SECRET_KEY",
+  "SMOKE_USER_EMAIL",
+  "SMOKE_USER_PASSWORD",
 ]) {
   assert.match(source, new RegExp(requiredEnv), `script must check ${requiredEnv}.`);
 }
+
+assert.doesNotMatch(
+  source,
+  /users\.createUser\(/,
+  "production tenant smoke must use a pre-existing verified smoke user, not create an unverified throwaway user.",
+);
+assert.doesNotMatch(source, /deleteUser\(/, "production tenant smoke must not delete the dedicated smoke user.");
+assert.match(source, /users\.getUserList/, "production tenant smoke must resolve the dedicated smoke user from Clerk.");
 
 for (const route of [
   "/dashboard",
@@ -51,7 +61,6 @@ for (const optionalEmailEnv of ["RESEND_API_KEY", "RESEND_FROM", "SMOKE_RECIPIEN
 assert.match(source, /cleanupDatabase/, "script must clean up smoke database rows.");
 assert.match(source, /loadLocalEnvForMissingValues/, "script must load .env.local for missing shell env values.");
 assert.match(source, /deleteOrganization/, "script must delete the smoke Clerk organization.");
-assert.match(source, /deleteUser/, "script must delete the smoke Clerk user.");
 assert.match(source, /browserConsoleErrors/, "script must report browser console errors.");
 assert.match(source, /JSON\.stringify/, "script must emit machine-readable redacted JSON.");
 assert.match(source, /databaseHostClass/, "script must classify database host without printing the hostname.");

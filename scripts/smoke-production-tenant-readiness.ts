@@ -57,14 +57,13 @@ const databaseUrl = process.env.DATABASE_URL?.trim();
 const blobToken = process.env.BLOB_READ_WRITE_TOKEN?.trim();
 const publishableKey = process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY?.trim();
 const secretKey = process.env.CLERK_SECRET_KEY?.trim();
+const smokeUserEmail = process.env.SMOKE_USER_EMAIL?.trim();
+const smokeUserPassword = process.env.SMOKE_USER_PASSWORD?.trim();
 const smokeRecipientEmail = process.env.SMOKE_RECIPIENT_EMAIL?.trim();
 const resendApiKey = process.env.RESEND_API_KEY?.trim();
 const resendFrom = process.env.RESEND_FROM?.trim();
 const runId = `prod_tenant_readiness_${Date.now()}`;
 const orgName = `Splnit Production Readiness Smoke ${runId}`;
-const testEmail = `splnit-${runId}@example.com`;
-const testPassword = `SplnitSmoke-${Date.now()}-Aa!`;
-const testUsername = `splnitsmoke${Date.now()}`.slice(0, 32);
 const trustSlug = `smoke-${Date.now()}`;
 
 type ProductionSmokeBrowserClerk = {
@@ -73,17 +72,23 @@ type ProductionSmokeBrowserClerk = {
       create(input: { identifier: string; password: string }): Promise<{
         createdSessionId: string | null;
         status: string;
+        supportedSecondFactors?: Array<{ strategy: string }> | null;
       }>;
     };
   };
   loaded?: boolean;
+  organization?: { id?: string } | null;
+  session?: { lastActiveOrganizationId?: string | null } | null;
   setActive(input: { organization?: string; session?: string }): Promise<unknown>;
+  user?: { id?: string } | null;
 };
 
 assert.ok(databaseUrl, "DATABASE_URL is required.");
 assert.ok(blobToken, "BLOB_READ_WRITE_TOKEN is required.");
 assert.ok(publishableKey, "NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY is required.");
 assert.ok(secretKey, "CLERK_SECRET_KEY is required.");
+assert.ok(smokeUserEmail, "SMOKE_USER_EMAIL is required.");
+assert.ok(smokeUserPassword, "SMOKE_USER_PASSWORD is required.");
 
 const parsedDatabaseUrl = new URL(databaseUrl);
 if (["localhost", "127.0.0.1", "::1"].includes(parsedDatabaseUrl.hostname)) {
@@ -124,22 +129,45 @@ async function signIn(page: Page, input: {
   const result = await page.evaluate(async (credentials) => {
     const clerk = (window as unknown as { Clerk?: ProductionSmokeBrowserClerk }).Clerk;
     if (!clerk) {
-      return { orgId: null, status: "missing_clerk", userId: null };
+      return { orgId: null, status: "missing_clerk", supportedSecondFactors: [], userId: null };
     }
     const attempt = await clerk.client.signIn.create({
       identifier: credentials.email,
       password: credentials.password,
     });
+    const supportedSecondFactors = (attempt.supportedSecondFactors ?? []).map((factor) => factor.strategy);
     if (!attempt.createdSessionId) {
-      return { orgId: null, status: attempt.status, userId: null };
+      return { orgId: null, status: attempt.status, supportedSecondFactors, userId: null };
     }
-    await clerk.setActive({ session: attempt.createdSessionId });
-    await clerk.setActive({ organization: credentials.organizationId });
-    return { orgId: credentials.organizationId, status: attempt.status, userId: "created" };
+    await clerk.setActive({
+      organization: credentials.organizationId,
+      session: attempt.createdSessionId,
+    });
+    const activeOrgId = clerk.organization?.id ?? null;
+    return {
+      orgId: activeOrgId,
+      status: attempt.status,
+      supportedSecondFactors,
+      userId: clerk.user?.id ?? null,
+    };
   }, input);
 
-  assert.equal(result.status, "complete", `Clerk sign-in did not complete: ${result.status}`);
+  assert.equal(
+    result.status,
+    "complete",
+    `Clerk sign-in did not complete: ${result.status}; supported second factors: ${result.supportedSecondFactors.join(",") || "none"}`,
+  );
   assert.equal(result.orgId, input.organizationId, "Clerk active org did not match smoke org.");
+  await page.waitForFunction(
+    (organizationId) => {
+      const clerk = (window as unknown as { Clerk?: ProductionSmokeBrowserClerk }).Clerk;
+      return (
+        clerk?.organization?.id === organizationId ||
+        clerk?.session?.lastActiveOrganizationId === organizationId
+      );
+    },
+    input.organizationId,
+  );
 }
 
 async function expectPageRendered(page: Page, pathname: string, options?: { testingToken?: string }) {
@@ -236,40 +264,38 @@ async function seedTrustCenter(clerkOrgId: string) {
   return { requestId: request.request.id, trustSlug, trustAccessUrl: approval.accessUrl };
 }
 
+async function getSmokeUserId(clerk: ReturnType<typeof createClerkClient>) {
+  assert.ok(smokeUserEmail, "SMOKE_USER_EMAIL is required.");
+  const users = await clerk.users.getUserList({ emailAddress: [smokeUserEmail], limit: 1 });
+  const user = users.data[0];
+  assert.ok(user, "SMOKE_USER_EMAIL must point to an existing verified Clerk production user.");
+  return user.id;
+}
+
 async function main() {
   const clerk = createClerkClient({ secretKey });
-  let clerkUserId: string | null = null;
   let clerkOrgId: string | null = null;
   let browser: Awaited<ReturnType<typeof chromium.launch>> | null = null;
 
   try {
-    const user = await clerk.users.createUser({
-      emailAddress: [testEmail],
-      firstName: "Production",
-      lastName: "Smoke",
-      password: testPassword,
-      skipLegalChecks: true,
-      skipPasswordChecks: true,
-      username: testUsername,
-    });
-    clerkUserId = user.id;
+    const smokeUserId = await getSmokeUserId(clerk);
     const organization = await clerk.organizations.createOrganization({
-      createdBy: user.id,
+      createdBy: smokeUserId,
       name: orgName,
     });
     clerkOrgId = organization.id;
     await clerk.organizations.createOrganizationMembership({
       organizationId: organization.id,
       role: "org:admin",
-      userId: user.id,
+      userId: smokeUserId,
     }).catch(() => null);
 
     await cleanupDatabase(organization.id).catch(() => null);
     await upsertOrganisationFromClerk({ clerkOrgId: organization.id, name: orgName, plan: "free" });
     await upsertProfileFromClerk({
       clerkOrgId: organization.id,
-      clerkUserId: user.id,
-      email: testEmail,
+      clerkUserId: smokeUserId,
+      email: smokeUserEmail,
       fullName: "Production Smoke",
       role: "org:admin",
     });
@@ -291,9 +317,9 @@ async function main() {
     page.on("pageerror", (error) => pageErrors.push(error.message));
 
     await signIn(page, {
-      email: testEmail,
+      email: smokeUserEmail!,
       organizationId: organization.id,
-      password: testPassword,
+      password: smokeUserPassword!,
       testingToken: testingToken.token,
     });
 
@@ -343,9 +369,6 @@ async function main() {
         console.error("Database cleanup failed:", error);
       });
       await clerk.organizations.deleteOrganization(clerkOrgId).catch(() => null);
-    }
-    if (clerkUserId) {
-      await clerk.users.deleteUser(clerkUserId).catch(() => null);
     }
   }
 }

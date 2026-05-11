@@ -25,6 +25,8 @@ const requiredEnv = [
   "BLOB_READ_WRITE_TOKEN",
   "NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY",
   "CLERK_SECRET_KEY",
+  "SMOKE_USER_EMAIL",
+  "SMOKE_USER_PASSWORD",
 ] as const;
 
 const optionalMailboxEnv = ["RESEND_API_KEY", "RESEND_FROM", "SMOKE_RECIPIENT_EMAIL"] as const;
