@@ -6,6 +6,7 @@ import {
   KeyRound,
   ServerCog,
   ShieldAlert,
+  XCircle,
 } from "lucide-react";
 import { PageHeader } from "@/components/app/page-header";
 import { StatusPill, type StatusPillTone } from "@/components/app/status-pill";
@@ -21,6 +22,7 @@ import {
   getAwsRegion,
 } from "@/lib/integrations/aws/client";
 import { AWS_TEST_DEFINITIONS } from "@/lib/integrations/aws/test-definitions";
+import { disconnectIntegrationAction } from "../actions";
 import { connectAwsIntegrationAction } from "./actions";
 
 function formatDate(
@@ -137,6 +139,16 @@ export default async function AwsIntegrationPage() {
         eyebrow="AWS SecurityAudit"
         title={providerCopy.aws.title}
         subtitle={providerCopy.aws.subtitle}
+        actions={
+          connected ? (
+            <form action={disconnectIntegrationAction.bind(null, "aws")}>
+              <button type="submit" className="btn btn-danger">
+                {providerCopy.common.disconnect}
+                <XCircle className="h-4 w-4" aria-hidden="true" strokeWidth={1.5} />
+              </button>
+            </form>
+          ) : null
+        }
       />
 
       {!canMutate ? (
@@ -234,7 +246,7 @@ export default async function AwsIntegrationPage() {
               disabled={!canMutate}
               className="btn btn-primary disabled:cursor-not-allowed disabled:opacity-50"
             >
-              {providerCopy.aws.validateSave}
+              {connected ? providerCopy.aws.updateRole : providerCopy.aws.connectRoleAction}
               <CheckCircle2 className="h-4 w-4" aria-hidden="true" strokeWidth={1.5} />
             </button>
           </form>

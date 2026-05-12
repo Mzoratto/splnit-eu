@@ -44,16 +44,13 @@ test("renders the integrations hub with clear available and coming-soon states",
   const googleCard = page.locator("article", {
     has: page.getByRole("heading", { name: "Google Workspace" }),
   });
-  await expect(googleCard.getByText("Připravuje se")).toBeVisible();
+  await expect(googleCard.getByText("Připravuje se").first()).toBeVisible();
   await expect(
     googleCard.getByText("Produkční kontroly zatím nejsou zapnuté."),
   ).toBeVisible();
-  await expect(
-    googleCard.getByRole("link", { name: /Zobrazit plán/ }),
-  ).toHaveAttribute("href", "/integrations/google-workspace");
-  await expect(
-    googleCard.getByRole("button", { name: "Připravuje se" }),
-  ).toHaveCount(0);
+  await expect(googleCard.getByText("Připravuje se").last()).toBeVisible();
+  await expect(googleCard.getByRole("link")).toHaveCount(0);
+  await expect(googleCard.getByRole("button")).toHaveCount(0);
 });
 
 test("renders GitHub and AWS integration surfaces without dead connection states", async ({
@@ -71,7 +68,7 @@ test("renders GitHub and AWS integration surfaces without dead connection states
   await expect(page.getByRole("heading", { name: "AWS integrace" })).toBeVisible();
   await expect(page.getByText("Akce připojení jsou vypnuté", { exact: false })).toBeVisible();
   await expect(page.getByText("Nepřipojeno")).toBeVisible();
-  await expect(page.getByRole("button", { name: "Validovat a uložit" })).toBeDisabled();
+  await expect(page.getByRole("button", { name: "Připojit AWS roli" })).toBeDisabled();
   await expect(page.getByText("CloudFormation")).toBeVisible();
 });
 

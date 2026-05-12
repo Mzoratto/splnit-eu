@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { auth } from "@clerk/nextjs/server";
 import { getLocale } from "next-intl/server";
-import { ArrowRight, CheckCircle2, Clock3, Plug, ShieldAlert } from "lucide-react";
+import { ArrowRight, CheckCircle2, Clock3, Plug, ShieldAlert, XCircle } from "lucide-react";
 import { PageHeader } from "@/components/app/page-header";
 import { StatusPill, type StatusPillTone } from "@/components/app/status-pill";
 import { getMessagesForLocale } from "@/i18n/messages";
@@ -11,6 +11,7 @@ import { getIntegrationDetail } from "@/lib/db/queries/integrations";
 import { getOrganisationByClerkOrgId } from "@/lib/db/queries/organisations";
 import { getMicrosoft365AuthUrl } from "@/lib/integrations/microsoft365/oauth";
 import { MICROSOFT365_TEST_DEFINITIONS } from "@/lib/integrations/microsoft365/test-definitions";
+import { disconnectIntegrationAction } from "../actions";
 
 function formatDate(
   value: Date | string | null | undefined,
@@ -129,21 +130,31 @@ export default async function Microsoft365IntegrationPage() {
         title={providerCopy.microsoft365.title}
         subtitle={providerCopy.microsoft365.subtitle}
         actions={
-          authUrl ? (
-            <Link href={authUrl} className="btn btn-primary">
-              {connected ? providerCopy.microsoft365.reconnect : providerCopy.microsoft365.connect}
-              <ArrowRight className="h-4 w-4" aria-hidden="true" strokeWidth={1.5} />
-            </Link>
-          ) : (
-            <button
-              type="button"
-              disabled
-              className="btn btn-primary opacity-50"
-            >
-              {providerCopy.microsoft365.connect}
-              <ArrowRight className="h-4 w-4" aria-hidden="true" strokeWidth={1.5} />
-            </button>
-          )
+          <div className="flex flex-wrap gap-2">
+            {authUrl ? (
+              <Link href={authUrl} className="btn btn-primary">
+                {connected ? providerCopy.microsoft365.reconnect : providerCopy.microsoft365.connect}
+                <ArrowRight className="h-4 w-4" aria-hidden="true" strokeWidth={1.5} />
+              </Link>
+            ) : (
+              <button
+                type="button"
+                disabled
+                className="btn btn-primary cursor-not-allowed opacity-50"
+              >
+                {providerCopy.microsoft365.connect}
+                <ArrowRight className="h-4 w-4" aria-hidden="true" strokeWidth={1.5} />
+              </button>
+            )}
+            {connected ? (
+              <form action={disconnectIntegrationAction.bind(null, "microsoft365")}>
+                <button type="submit" className="btn btn-danger">
+                  {providerCopy.common.disconnect}
+                  <XCircle className="h-4 w-4" aria-hidden="true" strokeWidth={1.5} />
+                </button>
+              </form>
+            ) : null}
+          </div>
         }
       />
 

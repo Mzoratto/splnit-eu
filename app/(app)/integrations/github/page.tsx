@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { auth } from "@clerk/nextjs/server";
 import { getLocale } from "next-intl/server";
-import { ArrowRight, CheckCircle2, GitBranch, ShieldAlert } from "lucide-react";
+import { ArrowRight, CheckCircle2, GitBranch, ShieldAlert, XCircle } from "lucide-react";
 import { PageHeader } from "@/components/app/page-header";
 import { StatusPill, type StatusPillTone } from "@/components/app/status-pill";
 import { getMessagesForLocale } from "@/i18n/messages";
@@ -15,6 +15,7 @@ import {
   listGitHubInstallationRepositories,
 } from "@/lib/integrations/github/app";
 import { GITHUB_TEST_DEFINITIONS } from "@/lib/integrations/github/test-definitions";
+import { disconnectIntegrationAction } from "../actions";
 
 function formatDate(
   value: Date | string | null | undefined,
@@ -134,17 +135,27 @@ export default async function GitHubIntegrationPage() {
         title={providerCopy.github.title}
         subtitle={providerCopy.github.subtitle}
         actions={
-          installUrl ? (
-            <Link href={installUrl} className="btn btn-primary">
-              {connected ? providerCopy.github.editInstall : providerCopy.github.installApp}
-              <ArrowRight className="h-4 w-4" aria-hidden="true" strokeWidth={1.5} />
-            </Link>
-          ) : (
-            <button type="button" disabled className="btn btn-primary opacity-50">
-              {providerCopy.github.installApp}
-              <ArrowRight className="h-4 w-4" aria-hidden="true" strokeWidth={1.5} />
-            </button>
-          )
+          <div className="flex flex-wrap gap-2">
+            {installUrl ? (
+              <Link href={installUrl} className="btn btn-primary">
+                {connected ? providerCopy.github.editInstall : providerCopy.github.installApp}
+                <ArrowRight className="h-4 w-4" aria-hidden="true" strokeWidth={1.5} />
+              </Link>
+            ) : (
+              <button type="button" disabled className="btn btn-primary cursor-not-allowed opacity-50">
+                {providerCopy.github.installApp}
+                <ArrowRight className="h-4 w-4" aria-hidden="true" strokeWidth={1.5} />
+              </button>
+            )}
+            {connected ? (
+              <form action={disconnectIntegrationAction.bind(null, "github")}>
+                <button type="submit" className="btn btn-danger">
+                  {providerCopy.common.disconnect}
+                  <XCircle className="h-4 w-4" aria-hidden="true" strokeWidth={1.5} />
+                </button>
+              </form>
+            ) : null}
+          </div>
         }
       />
 
@@ -174,7 +185,7 @@ export default async function GitHubIntegrationPage() {
             </StatusPill>
           </div>
           <p className="mt-2 text-sm text-foreground/58">
-            {config.owner ?? providerCopy.github.installMissing} · {config.accountType ?? "unknown"}
+            {config.owner ?? providerCopy.github.installMissing} · {config.accountType ?? providerCopy.github.accountTypeMissing}
           </p>
         </article>
         <article className="card">
@@ -216,7 +227,7 @@ export default async function GitHubIntegrationPage() {
                   <div>
                     <p className="font-mono text-sm font-medium">{repo.full_name}</p>
                     <p className="mt-1 text-xs text-foreground/58">
-                      default: {repo.default_branch ?? "n/a"}
+                      {providerCopy.github.defaultBranch}: {repo.default_branch ?? providerCopy.github.defaultBranchMissing}
                     </p>
                   </div>
                   <span className="rounded-sm bg-surface-muted px-2 py-1 text-xs text-foreground/64">

@@ -573,22 +573,27 @@
         "statusActionNeeded": "Action needed",
         "statusConnected": "Connected",
         "statusConnecting": "Connecting",
-        "statusNotConnected": "Not connected"
+        "statusNotConnected": "Not connected",
+        "disconnect": "Disconnect"
       },
       "aws": {
         "title": "AWS integration",
         "subtitle": "A cross-account read-only role checks CloudTrail, S3 encryption, IAM MFA, root MFA, and VPC Flow Logs.",
         "accountMissing": "no AWS account",
         "testsBody": "Mapped to audit logs, encryption, MFA, and network monitoring.",
-        "connectRole": "Connect role",
-        "validateSave": "Validate and save"
+        "connectRole": "Connect AWS role",
+        "connectRoleAction": "Connect AWS role",
+        "updateRole": "Update AWS role"
       },
       "github": {
         "title": "GitHub integration",
         "subtitle": "A read-only GitHub App checks 2FA, branch protection, secret scanning, dependency alerts, and code scanning.",
         "editInstall": "Edit installation",
         "installApp": "Install GitHub App",
-        "installMissing": "no installation",
+        "installMissing": "No GitHub installation",
+        "accountTypeMissing": "Account type not available",
+        "defaultBranch": "Default branch",
+        "defaultBranchMissing": "Not reported",
         "repositories": "Repositories",
         "repositoriesEmpty": "Repositories will appear after the GitHub App is installed.",
         "testsBody": "Mapped to MFA, code review, secrets, and dependency controls."

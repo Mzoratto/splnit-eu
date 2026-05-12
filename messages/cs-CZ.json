@@ -573,22 +573,27 @@
         "statusActionNeeded": "Vyžaduje pozornost",
         "statusConnected": "Připojeno",
         "statusConnecting": "Připojování",
-        "statusNotConnected": "Nepřipojeno"
+        "statusNotConnected": "Nepřipojeno",
+        "disconnect": "Odpojit"
       },
       "aws": {
         "title": "AWS integrace",
         "subtitle": "Role jen pro čtení napříč účty kontroluje CloudTrail, šifrování S3, IAM MFA, MFA root účtu a VPC Flow Logs.",
         "accountMissing": "bez AWS účtu",
         "testsBody": "Mapované na audit logy, šifrování, MFA a monitoring sítě.",
-        "connectRole": "Připojit roli",
-        "validateSave": "Validovat a uložit"
+        "connectRole": "Připojit AWS roli",
+        "connectRoleAction": "Připojit AWS roli",
+        "updateRole": "Aktualizovat AWS roli"
       },
       "github": {
         "title": "GitHub integrace",
         "subtitle": "GitHub App jen pro čtení kontroluje 2FA, branch protection, secret scanning, dependency alerts a code scanning.",
         "editInstall": "Upravit instalaci",
         "installApp": "Instalovat GitHub App",
-        "installMissing": "bez instalace",
+        "installMissing": "Bez GitHub instalace",
+        "accountTypeMissing": "Typ účtu není dostupný",
+        "defaultBranch": "Výchozí větev",
+        "defaultBranchMissing": "Není k dispozici",
         "repositories": "Repozitáře",
         "repositoriesEmpty": "Repozitáře se zobrazí po instalaci GitHub App.",
         "testsBody": "Mapované na MFA, code review, secrets a dependency kontroly."

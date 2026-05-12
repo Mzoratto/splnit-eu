@@ -275,14 +275,13 @@ export default async function IntegrationsPage() {
 
               <div className="mt-5 flex flex-wrap gap-2">
                 {provider.planned ? (
-                  <Link
-                    href={provider.href}
-                    className="btn btn-secondary"
-                    aria-label={`${copy.index.viewPlan}: ${provider.name}`}
+                  <span
+                    className="btn btn-secondary cursor-not-allowed opacity-60"
+                    aria-disabled="true"
                   >
-                    {copy.index.viewPlan}
-                    <ArrowRight className="h-4 w-4" aria-hidden="true" strokeWidth={1.5} />
-                  </Link>
+                    {copy.index.comingSoon}
+                    <CircleDashed className="h-4 w-4" aria-hidden="true" strokeWidth={1.5} />
+                  </span>
                 ) : (
                   <Link
                     href={provider.href}
