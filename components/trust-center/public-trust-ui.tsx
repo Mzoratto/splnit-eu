@@ -342,9 +342,7 @@ export function TrustFooter({
     <footer className="border-t border-border bg-surface">
       <div className="mx-auto flex max-w-7xl flex-col gap-4 px-4 py-6 sm:px-6 lg:flex-row lg:items-center lg:justify-between">
         <p className="font-mono text-xs text-foreground/50">
-          {copy.footer.lastVerified}{" "}
-          {formatDateTime(trustCenter.lastTestedAt, locale)} · {copy.footer.nextTest}{" "}
-          {formatTimeUntil(trustCenter.nextTestAt, copy)}
+          {copy.footer.lastVerified} {formatDateTime(trustCenter.lastTestedAt, locale)}
         </p>
         <div className="flex flex-wrap items-center gap-4 text-sm text-foreground/58">
           {backHref ? <Link href={backHref}>{copy.footer.back}</Link> : null}
@@ -491,31 +489,7 @@ export function formatDateTime(
 
   return new Intl.DateTimeFormat(trustLocaleCodes[locale] ?? "cs-CZ", {
     dateStyle: "medium",
-    timeStyle: "short",
   }).format(new Date(value));
-}
-
-function formatTimeUntil(
-  value: Date | string | null | undefined,
-  copy: PublicTrustCopy,
-) {
-  if (!value) {
-    return copy.time.na;
-  }
-
-  const diffMinutes = Math.max(
-    0,
-    Math.round((new Date(value).getTime() - Date.now()) / 60000),
-  );
-
-  if (diffMinutes < 60) {
-    return copy.time.inMinutes(diffMinutes);
-  }
-
-  const hours = Math.floor(diffMinutes / 60);
-  const minutes = diffMinutes % 60;
-
-  return copy.time.inHours(hours, minutes);
 }
 
 export const primaryButtonClass =
