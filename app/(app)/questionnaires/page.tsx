@@ -5,13 +5,18 @@ import { QuestionnaireWorkbench } from "@/components/questionnaires/questionnair
 import { getMessagesForLocale } from "@/i18n/messages";
 import { normalizeLocale } from "@/i18n/routing";
 import { hasDatabaseUrl } from "@/lib/db";
-import { listGeneratedArtifactSummaries } from "@/lib/db/queries/generated-artifacts";
+import {
+  getGeneratedArtifactForOrg,
+  listGeneratedArtifactSummaries,
+} from "@/lib/db/queries/generated-artifacts";
 import { getQuestionnaireComplianceContext } from "@/lib/db/queries/questionnaires";
+import { QUESTIONNAIRE_ARTIFACT_KIND } from "@/lib/questionnaires/artifacts";
 import { hasQuestionnaireAiConfig } from "@/lib/questionnaires/provider";
+import { QuestionnaireResultSchema, type QuestionnaireResult } from "@/lib/questionnaires/types";
 
 export const dynamic = "force-dynamic";
 
-async function loadQuestionnairePageData() {
+async function loadQuestionnairePageData(artifactId?: string) {
   const clerkConfigured =
     Boolean(process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY) &&
     Boolean(process.env.CLERK_SECRET_KEY);
@@ -22,6 +27,7 @@ async function loadQuestionnairePageData() {
       controlCount: 14,
       evidenceCount: 9,
       generatedArtifacts: [],
+      initialResult: null,
       isDemo: true,
       organisationLocale: null,
       organisationName: null,
@@ -37,6 +43,7 @@ async function loadQuestionnairePageData() {
       controlCount: 0,
       evidenceCount: 0,
       generatedArtifacts: [],
+      initialResult: null,
       isDemo: false,
       organisationLocale: null,
       organisationName: null,
@@ -47,20 +54,55 @@ async function loadQuestionnairePageData() {
   const context = await getQuestionnaireComplianceContext(session.orgId).catch(
     () => null,
   );
-  const generatedArtifacts = await listGeneratedArtifactSummaries({
-    clerkOrgId: session.orgId,
-    limit: 8,
-  }).catch(() => []);
+  const [generatedArtifacts, initialResult] = await Promise.all([
+    listGeneratedArtifactSummaries({
+      clerkOrgId: session.orgId,
+      limit: 8,
+    }).catch(() => []),
+    loadQuestionnaireArtifactForReview({ artifactId, clerkOrgId: session.orgId }),
+  ]);
 
   return {
     canGenerate: Boolean(context && hasQuestionnaireAiConfig()),
     controlCount: context?.controls.length ?? 0,
     evidenceCount: context?.evidence.length ?? 0,
     generatedArtifacts,
+    initialResult,
     isDemo: false,
     organisationLocale: context?.organisation?.locale ?? null,
     organisationName: context?.organisation?.name ?? null,
     policyCount: context?.policies.length ?? 0,
+  };
+}
+
+async function loadQuestionnaireArtifactForReview(input: {
+  artifactId?: string;
+  clerkOrgId: string;
+}): Promise<QuestionnaireResult | null> {
+  if (!input.artifactId) {
+    return null;
+  }
+
+  const artifact = await getGeneratedArtifactForOrg({
+    artifactId: input.artifactId,
+    clerkOrgId: input.clerkOrgId,
+    kind: QUESTIONNAIRE_ARTIFACT_KIND,
+  }).catch(() => null);
+
+  if (!artifact) {
+    return null;
+  }
+
+  const content = artifact.content as { result?: unknown };
+  const parsed = QuestionnaireResultSchema.safeParse(content.result);
+
+  if (!parsed.success) {
+    return null;
+  }
+
+  return {
+    ...parsed.data,
+    artifactId: artifact.id,
   };
 }
 
@@ -75,9 +117,14 @@ function formatArtifactDate(value: Date | null, locale: string) {
   }).format(value);
 }
 
-export default async function QuestionnairesPage() {
+export default async function QuestionnairesPage({
+  searchParams,
+}: {
+  searchParams?: Promise<{ artifactId?: string }>;
+}) {
   const requestLocale = normalizeLocale(await getLocale()) ?? "cs-CZ";
-  const data = await loadQuestionnairePageData();
+  const params = await searchParams;
+  const data = await loadQuestionnairePageData(params?.artifactId);
   const locale = normalizeLocale(data.organisationLocale) ?? requestLocale;
   const copy = getMessagesForLocale(locale).questionnairePage;
   const organisationName =
@@ -147,7 +194,9 @@ export default async function QuestionnairesPage() {
       ) : null}
 
       <QuestionnaireWorkbench
+        key={data.initialResult?.artifactId ?? "new-questionnaire"}
         canGenerate={data.canGenerate}
+        initialResult={data.initialResult}
         organisationName={organisationName}
       />
 

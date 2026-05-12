@@ -8,13 +8,14 @@ import { parse } from "dotenv";
 import { upsertOrganisationFromClerk, upsertProfileFromClerk } from "@/lib/clerk/sync";
 import { getDb } from "@/lib/db";
 import {
+  evidence,
+  generatedArtifacts,
   orgFrameworks,
   profiles,
   trustCenterRequests,
   trustCenters,
   vendorAssessments,
   vendors,
-  organisations,
 } from "@/lib/db/schema";
 import {
   createVendor,
@@ -33,6 +34,16 @@ import {
   type VendorQuestionnaireDeliveryResult,
 } from "@/lib/vendors/delivery-status";
 import { sendVendorQuestionnaireEmail } from "@/lib/vendors/notifications";
+import {
+  buildQuestionnaireArtifactContent,
+  buildQuestionnaireArtifactTitle,
+  QUESTIONNAIRE_ARTIFACT_KIND,
+} from "@/lib/questionnaires/artifacts";
+import { QuestionnaireResultSchema, type QuestionnaireResult } from "@/lib/questionnaires/types";
+import {
+  createGeneratedArtifact,
+  getGeneratedArtifactForOrg,
+} from "@/lib/db/queries/generated-artifacts";
 
 loadEnvConfig(process.cwd());
 
@@ -111,9 +122,10 @@ async function cleanupDatabase(clerkOrgId: string) {
   await db.delete(trustCenters).where(eq(trustCenters.clerkOrgId, clerkOrgId));
   await db.delete(vendorAssessments).where(eq(vendorAssessments.clerkOrgId, clerkOrgId));
   await db.delete(vendors).where(eq(vendors.clerkOrgId, clerkOrgId));
+  await db.delete(evidence).where(eq(evidence.clerkOrgId, clerkOrgId));
+  await db.delete(generatedArtifacts).where(eq(generatedArtifacts.clerkOrgId, clerkOrgId));
   await db.delete(orgFrameworks).where(eq(orgFrameworks.clerkOrgId, clerkOrgId));
   await db.delete(profiles).where(eq(profiles.clerkOrgId, clerkOrgId));
-  await db.delete(organisations).where(eq(organisations.clerkOrgId, clerkOrgId));
 }
 
 async function signIn(page: Page, input: {
@@ -239,6 +251,77 @@ async function seedVendorQuestionnaire(clerkOrgId: string) {
   };
 }
 
+async function seedQuestionnaireArtifact(input: { clerkOrgId: string; createdBy: string }) {
+  const result: QuestionnaireResult = {
+    answers: [
+      {
+        answer: "Production smoke draft answer before reviewer approval.",
+        confidence: "partial",
+        controlIds: [],
+        controlKeys: [],
+        evidenceRefs: [],
+        legalRefs: [],
+        notes: "Seeded generated questionnaire artifact for authenticated production smoke review.",
+        policyRefs: [],
+        question: "Do you enforce MFA for all administrative users?",
+        reviewStatus: "draft",
+      },
+    ],
+    artifactId: null,
+    generatedAt: new Date().toISOString(),
+    model: "production-smoke-fixture",
+    organisationName: orgName,
+    questionCount: 1,
+    summary: "Production smoke fixture generated questionnaire answer awaiting review.",
+  };
+  const artifact = await createGeneratedArtifact({
+    clerkOrgId: input.clerkOrgId,
+    content: buildQuestionnaireArtifactContent(result),
+    createdBy: input.createdBy,
+    kind: QUESTIONNAIRE_ARTIFACT_KIND,
+    model: result.model,
+    source: "production_smoke_fixture",
+    title: buildQuestionnaireArtifactTitle(result),
+  });
+
+  return { artifactId: artifact.id, question: result.answers[0]!.question };
+}
+
+async function getQuestionnaireReviewStatus(input: { artifactId: string; clerkOrgId: string }) {
+  const artifact = await getGeneratedArtifactForOrg({
+    artifactId: input.artifactId,
+    clerkOrgId: input.clerkOrgId,
+    kind: QUESTIONNAIRE_ARTIFACT_KIND,
+  });
+  assert.ok(artifact, "Questionnaire artifact should exist after review.");
+  const content = artifact.content as { result?: unknown };
+  const result = QuestionnaireResultSchema.parse(content.result);
+
+  return result.answers[0] ?? null;
+}
+
+async function expectQuestionnaireReviewPersisted(input: { artifactId: string; clerkOrgId: string }) {
+  const startedAt = Date.now();
+  let lastStatus: string | null = null;
+
+  while (Date.now() - startedAt < 10_000) {
+    const answer = await getQuestionnaireReviewStatus(input);
+    lastStatus = answer?.reviewStatus ?? null;
+
+    if (
+      answer?.reviewStatus === "approved" &&
+      answer.answer.includes("Production smoke reviewer-approved answer") &&
+      answer.notes.includes("Production smoke approved")
+    ) {
+      return answer;
+    }
+
+    await new Promise((resolve) => setTimeout(resolve, 500));
+  }
+
+  throw new Error(`Questionnaire review did not persist; last status: ${lastStatus ?? "missing"}.`);
+}
+
 async function seedTrustCenter(clerkOrgId: string) {
   await upsertTrustCenterSettings({
     clerkOrgId,
@@ -301,6 +384,10 @@ async function main() {
     });
 
     const vendor = await seedVendorQuestionnaire(organization.id);
+    const questionnaire = await seedQuestionnaireArtifact({
+      clerkOrgId: organization.id,
+      createdBy: smokeUserId,
+    });
     const trust = await seedTrustCenter(organization.id);
     const testingToken = await clerk.testingTokens.createTestingToken();
 
@@ -339,6 +426,31 @@ async function main() {
       renderedRoutes.push(await expectPageRendered(page, pathname, { testingToken: testingToken.token }));
     }
 
+    const questionnairePath = `/questionnaires?artifactId=${questionnaire.artifactId}`;
+    const questionnaireResponse = await page.goto(pageUrl(questionnairePath, testingToken.token), {
+      waitUntil: "domcontentloaded",
+    });
+    assert.equal(questionnaireResponse?.status(), 200, "seeded questionnaire artifact review URL should render.");
+    await page.getByText(questionnaire.question).waitFor({ state: "visible" });
+    await page.getByText("draft").first().waitFor({ state: "visible" });
+    await page.locator('textarea[name="answer"]').first().fill(
+      `Production smoke reviewer-approved answer ${runId}`,
+    );
+    await page.locator('textarea[name="notes"]').first().fill(
+      `Production smoke approved and persisted ${runId}`,
+    );
+    await page.locator('button[name="reviewStatus"][value="approved"]').first().click();
+    await expectQuestionnaireReviewPersisted({
+      artifactId: questionnaire.artifactId,
+      clerkOrgId: organization.id,
+    });
+    const reviewedQuestionnaireResponse = await page.goto(pageUrl(questionnairePath, testingToken.token), {
+      waitUntil: "domcontentloaded",
+    });
+    assert.equal(reviewedQuestionnaireResponse?.status(), 200, "reviewed questionnaire artifact URL should rerender.");
+    await page.getByText("approved").first().waitFor({ state: "visible" });
+    await page.getByText("Production smoke reviewer-approved answer").waitFor({ state: "visible" });
+
     const publicTrustResponse = await page.goto(trust.trustAccessUrl, { waitUntil: "domcontentloaded" });
     assert.equal(publicTrustResponse?.status(), 200, "approved Trust Center access URL should render.");
     const vendorTokenResponse = await page.goto(vendor.assessmentUrl, { waitUntil: "domcontentloaded" });
@@ -355,6 +467,9 @@ async function main() {
       mailboxProof: vendor.emailAttempted ? "send_attempted_check_controlled_mailbox" : "blocked_missing_resend_or_recipient_env",
       ok: true,
       pageErrors: pageErrors.length,
+      questionnaireArtifactLoaded: true,
+      questionnaireReviewPersisted: true,
+      questionnaireReviewStatus: "approved",
       renderedRoutes: renderedRoutes.map((route) => route.pathname),
       trustCenterRequestApproved: Boolean(trust.requestId),
       vendorAssessmentTokenRendered: true,

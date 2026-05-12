@@ -63,6 +63,11 @@ assert.match(source, /loadLocalEnvForMissingValues/, "script must load .env.loca
 assert.match(source, /deleteOrganization/, "script must delete the smoke Clerk organization.");
 assert.match(source, /browserConsoleErrors/, "script must report browser console errors.");
 assert.match(source, /JSON\.stringify/, "script must emit machine-readable redacted JSON.");
+assert.match(source, /seedQuestionnaireArtifact/, "script must seed a generated questionnaire artifact for review.");
+assert.match(source, /artifactId=\$\{questionnaire\.artifactId\}/, "script must open the authenticated questionnaire review URL for the seeded artifact.");
+assert.match(source, /button\[name=\"reviewStatus\"\]\[value=\"approved\"\]/, "script must exercise the questionnaire approval action.");
+assert.match(source, /expectQuestionnaireReviewPersisted/, "script must verify reviewed questionnaire persistence by reading the saved artifact.");
+assert.match(source, /questionnaireReviewPersisted/, "script must report questionnaire review persistence in redacted JSON.");
 assert.match(source, /databaseHostClass/, "script must classify database host without printing the hostname.");
 assert.doesNotMatch(source, /databaseHost: parsedDatabaseUrl\.hostname/, "script must not print the database hostname.");
 assert.match(prereqSource, /databaseHostClass/, "prereq check must classify database host without printing the hostname.");

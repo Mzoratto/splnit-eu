@@ -59,16 +59,18 @@ function interpolate(template: string, values: Record<string, string | number>) 
 
 export function QuestionnaireWorkbench({
   canGenerate,
+  initialResult = null,
   organisationName,
 }: {
   canGenerate: boolean;
+  initialResult?: QuestionnaireActionState["result"];
   organisationName: string;
 }) {
   const locale = normalizeLocale(useLocale()) ?? "cs-CZ";
   const copy = (useMessages() as QuestionnaireMessages).questionnairePage.workbench;
   const [state, formAction, pending] = useActionState(
     answerQuestionnaireAction,
-    initialState,
+    { ...initialState, result: initialResult },
   );
   const exportReady =
     state.result?.answers.every((answer) => answer.reviewStatus === "approved") ?? false;
