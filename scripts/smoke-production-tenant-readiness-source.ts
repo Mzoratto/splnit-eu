@@ -28,6 +28,7 @@ for (const requiredEnv of [
   "CLERK_SECRET_KEY",
   "SMOKE_USER_EMAIL",
   "SMOKE_USER_PASSWORD",
+  "SMOKE_LIVE_OPENAI_QUESTIONNAIRE",
 ]) {
   assert.match(source, new RegExp(requiredEnv), `script must check ${requiredEnv}.`);
 }
@@ -62,12 +63,23 @@ assert.match(source, /cleanupDatabase/, "script must clean up smoke database row
 assert.match(source, /loadLocalEnvForMissingValues/, "script must load .env.local for missing shell env values.");
 assert.match(source, /deleteOrganization/, "script must delete the smoke Clerk organization.");
 assert.match(source, /browserConsoleErrors/, "script must report browser console errors.");
+assert.match(source, /assert\.deepEqual\(browserConsoleErrors, \[\]/, "script must fail on browser console errors.");
 assert.match(source, /JSON\.stringify/, "script must emit machine-readable redacted JSON.");
-assert.match(source, /seedQuestionnaireArtifact/, "script must seed a generated questionnaire artifact for review.");
-assert.match(source, /artifactId=\$\{questionnaire\.artifactId\}/, "script must open the authenticated questionnaire review URL for the seeded artifact.");
+assert.match(source, /seedQuestionnaireSupportContext/, "script must seed questionnaire support context without seeding the generated artifact.");
+assert.match(source, /questionnaireGeneratedLive/, "script must report live questionnaire generation proof.");
+assert.match(source, /questionnaire_ai/, "script must require a live questionnaire_ai generated artifact.");
+assert.match(source, /fallback:no-supported-context/, "script must reject no-context fallback as live OpenAI proof.");
+assert.match(source, /textarea\[name=\"questionnaire\"\]/, "script must trigger questionnaire generation through the production form.");
+assert.match(source, /artifactId=\$\{questionnaire\.artifactId\}/, "script must open the authenticated questionnaire review URL for the generated artifact.");
 assert.match(source, /button\[name=\"reviewStatus\"\]\[value=\"approved\"\]/, "script must exercise the questionnaire approval action.");
 assert.match(source, /expectQuestionnaireReviewPersisted/, "script must verify reviewed questionnaire persistence by reading the saved artifact.");
 assert.match(source, /questionnaireReviewPersisted/, "script must report questionnaire review persistence in redacted JSON.");
+assert.match(source, /expectVendorAssessmentSubmitted/, "script must verify submitted vendor assessment persistence.");
+assert.match(source, /vendorSubmitPersisted/, "script must report vendor submit persistence in redacted JSON.");
+assert.match(source, /vendorStatusPropagated/, "script must report vendor status propagation in redacted JSON.");
+assert.match(source, /submitted=1/, "script must assert the vendor assessment submitted redirect.");
+assert.match(source, /select\[name=\"\$\{questionId\}\"\]/, "script must fill vendor assessment token selects.");
+assert.match(source, /button\[type=\"submit\"\]/, "script must submit the vendor assessment token form.");
 assert.match(source, /databaseHostClass/, "script must classify database host without printing the hostname.");
 assert.doesNotMatch(source, /databaseHost: parsedDatabaseUrl\.hostname/, "script must not print the database hostname.");
 assert.match(prereqSource, /databaseHostClass/, "prereq check must classify database host without printing the hostname.");
