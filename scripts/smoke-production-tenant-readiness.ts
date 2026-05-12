@@ -449,7 +449,12 @@ async function main() {
     });
     assert.equal(reviewedQuestionnaireResponse?.status(), 200, "reviewed questionnaire artifact URL should rerender.");
     await page.getByText("approved").first().waitFor({ state: "visible" });
-    await page.getByText("Production smoke reviewer-approved answer").waitFor({ state: "visible" });
+    const persistedAnswerValue = await page.locator('textarea[name="answer"]').first().inputValue();
+    assert.match(
+      persistedAnswerValue,
+      /Production smoke reviewer-approved answer/,
+      "reviewed questionnaire answer should be visible after reload.",
+    );
 
     const publicTrustResponse = await page.goto(trust.trustAccessUrl, { waitUntil: "domcontentloaded" });
     assert.equal(publicTrustResponse?.status(), 200, "approved Trust Center access URL should render.");
