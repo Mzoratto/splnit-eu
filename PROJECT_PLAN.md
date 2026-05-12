@@ -36,10 +36,13 @@ Hard constraints:
 - Production Neon is live, migrated, seeded, imported, and citation-smoke verified.
 - Primary app readiness is closed for the outreach decision: production runtime verification passed against live Clerk, Clerk custom domain, production Neon, Vercel Blob, Italian primary labels, evidence, policies, and NIS2 gap report output.
 - Trust Center admin/public verification and demo-vs-live clarity passes are complete for the current outreach decision: public Trust Center proof stays category-level, demo surfaces are explicit, app-shell Trust Center fallbacks no longer route prospects to `/trust/demo`, and public pages avoid exact test timestamps or next-run schedules.
+- Integration UI polish is complete for the current outreach decision: Microsoft 365, GitHub, and AWS connect/disconnect flows are buyer-ready, and Google Workspace is clearly non-interactive "coming soon".
+- Questionnaire production trace is complete for the current smoke path: live OpenAI questionnaire generation passed production smoke with `SMOKE_LIVE_OPENAI_QUESTIONNAIRE=true`, the generated artifact loaded and persisted reviewed state, and the model/config proof boundary is documented.
+- Vendor token submission and status propagation are production-smoked: the token link rendered, the vendor submitted answers, submission persisted, and originating vendor status propagated to assessed for the smoke path. Vendor-submitted answers still do not create reviewed evidence/control artifacts.
 
 ### In Progress
 
-- Core app hardening: secondary surfaces still need polish, especially integration connect/disconnect UX, questionnaire runtime/review proof, export/report smokes, onboarding polish, and broader action-level authorization coverage.
+- Core app hardening: secondary surfaces still need polish, especially export/report smokes, onboarding polish, and broader action-level authorization coverage.
 - Knowledge layer hardening: Italian policy templates remain draft and intentionally fall back to reviewed EU English output until legal/template review promotes them.
 - Legal/counsel review: public legal pages and DPA/subprocessor/retention annexes remain engineering drafts until reviewed.
 - Italian outreach: first-three packet is revived under `docs/outreach/`; sending is now blocked by sender identity/manual route choice, not product readiness.
@@ -90,10 +93,11 @@ Tracked root files are generally valid for a Next.js/Vercel app:
 
 Do these before any new features or broader outreach. This order is optimized for the first outreach conversations, where visible trust failures matter more than back-office completeness:
 
-1. **Integration UI polish:** make Microsoft 365, GitHub, and AWS connect/disconnect flows look complete enough for buyer conversations. Keep Google Workspace clearly marked as coming soon until implemented.
-2. **Questionnaire flow trace:** run the questionnaire journey end-to-end, document exactly where it works or breaks, and smoke provider generation plus evidence-save behavior when configured.
-3. **Audit/export endpoint smokes:** verify audit export pagination/limit behavior plus vendor/risk export endpoint authorization before demos.
-4. **Onboarding UX polish:** refine onboarding and framework setup after the trust/demo/integration/questionnaire risks are contained. This matters more for conversion than for first outreach calls.
+1. **Audit/export endpoint smokes:** verify audit-log export pagination/limit behavior, org scoping, and stable output shape; verify buyer-visible vendor/risk/workspace export endpoints require auth and return only org-owned data before demos.
+2. **Onboarding UX polish:** refine onboarding and framework setup after export/report risk is contained. This matters more for conversion than for first outreach calls.
+3. **First-three outreach send:** send Cubbit, Cleafy, and DigitalPA manually once sender identity and exact send routes are confirmed. This is blocked on sender identity/manual route choice, not product readiness.
+4. **Legal/operator identity closeout:** replace placeholders only when real OSVČ/IČO/ARES/operator details are available and reviewed. Public legal/customer-facing claims remain blocked until this is explicit.
+5. **Vendor-submitted evidence feature:** future, not the current sprint. If built later, vendor answers should become vendor-supplied draft evidence with explicit control mapping and human review before any auditor-facing claim.
 
 Standing blockers that still apply across the work above:
 
