@@ -111,7 +111,6 @@ export default async function TrustCenterPage({
               copy={copy}
               lastTestedAt={trustCenter.lastTestedAt}
               locale={locale}
-              nextTestAt={trustCenter.nextTestAt}
             />
           )}
           <HeroActions copy={copy} orgName={trustCenter.organisationName} />

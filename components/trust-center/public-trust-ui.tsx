@@ -441,12 +441,10 @@ export function LiveIndicator({
   copy,
   lastTestedAt,
   locale,
-  nextTestAt,
 }: {
   copy: PublicTrustCopy;
   lastTestedAt: Date | null;
   locale: Locale;
-  nextTestAt: Date | null;
 }) {
   return (
     <div className="mt-6 inline-flex flex-wrap items-center gap-3 rounded-[var(--r-lg)] border border-[var(--status-pass-border)] bg-[var(--status-pass-subtle)] px-4 py-3">
@@ -455,8 +453,7 @@ export function LiveIndicator({
         {copy.liveIndicator.live}
       </span>
       <span className="font-mono text-xs text-foreground/58">
-        {copy.liveIndicator.last} {formatDateTime(lastTestedAt, locale)} ·{" "}
-        {copy.liveIndicator.next} {formatDateTime(nextTestAt, locale)}
+        {copy.liveIndicator.last} {formatDateTime(lastTestedAt, locale)}
       </span>
     </div>
   );

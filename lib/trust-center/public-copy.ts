@@ -127,7 +127,7 @@ export const publicTrustCopy: Record<Locale, PublicTrustCopy> = {
     detail: {
       aboutEyebrow: "REGULATION CONTEXT",
       aboutTitle: "O tomto předpisu",
-      autoTested: "Automaticky testováno každou hodinu",
+      autoTested: "Automatické kontroly evidencí nakonfigurovány",
       breadcrumbFrameworks: "Frameworky",
       categoriesDescription:
         "Zobrazení je záměrně agregované. Veřejný detail ukazuje stav kategorií, ne jednotlivé kontrolní identifikátory nebo důkazní soubory.",
@@ -238,7 +238,7 @@ export const publicTrustCopy: Record<Locale, PublicTrustCopy> = {
     detail: {
       aboutEyebrow: "REGULATION CONTEXT",
       aboutTitle: "About this regulation",
-      autoTested: "Auto-tested every hour",
+      autoTested: "Automated evidence checks configured",
       breadcrumbFrameworks: "Frameworks",
       categoriesDescription:
         "This view is intentionally aggregated. The public detail shows category status, not individual control identifiers or evidence files.",
@@ -348,7 +348,7 @@ export const publicTrustCopy: Record<Locale, PublicTrustCopy> = {
     detail: {
       aboutEyebrow: "REGULATION CONTEXT",
       aboutTitle: "Informazioni sulla normativa",
-      autoTested: "Test automatico ogni ora",
+      autoTested: "Controlli automatici delle evidenze configurati",
       breadcrumbFrameworks: "Framework",
       categoriesDescription:
         "Questa vista è volutamente aggregata. Il dettaglio pubblico mostra lo stato delle categorie, non singoli identificativi di controllo o file di evidenza.",
