@@ -1,7 +1,8 @@
 import { strict as assert } from "node:assert";
 import { existsSync, readFileSync } from "node:fs";
+import { randomUUID } from "node:crypto";
 import { createClerkClient } from "@clerk/nextjs/server";
-import { chromium, type Page } from "@playwright/test";
+import { chromium, type BrowserContext, type Page } from "@playwright/test";
 import { and, desc, eq } from "drizzle-orm";
 import { loadEnvConfig } from "@next/env";
 import { parse } from "dotenv";
@@ -11,12 +12,15 @@ import { updateControlStatus } from "@/lib/db/queries/controls";
 import {
   evidence,
   generatedArtifacts,
+  auditLogs,
+  organisations,
   orgControlStatuses,
   orgFrameworks,
   policies,
   profiles,
   trustCenterRequests,
   trustCenters,
+  riskItems,
   vendorAssessments,
   vendors,
 } from "@/lib/db/schema";
@@ -129,6 +133,7 @@ async function cleanupDatabase(clerkOrgId: string) {
   await db.delete(trustCenters).where(eq(trustCenters.clerkOrgId, clerkOrgId));
   await db.delete(vendorAssessments).where(eq(vendorAssessments.clerkOrgId, clerkOrgId));
   await db.delete(vendors).where(eq(vendors.clerkOrgId, clerkOrgId));
+  await db.delete(riskItems).where(eq(riskItems.clerkOrgId, clerkOrgId));
   await db.delete(evidence).where(eq(evidence.clerkOrgId, clerkOrgId));
   await db.delete(generatedArtifacts).where(eq(generatedArtifacts.clerkOrgId, clerkOrgId));
   await db.delete(policies).where(eq(policies.clerkOrgId, clerkOrgId));
@@ -450,6 +455,246 @@ async function expectVendorAssessmentSubmitted(input: {
 }
 
 
+type ExportFixtures = {
+  auditAction: string;
+  crossOrgId: string;
+  crossRiskTitle: string;
+  crossVendorName: string;
+  riskTitle: string;
+};
+
+type ExportResponse = {
+  body: Buffer;
+  contentDisposition: string | null;
+  contentType: string | null;
+  status: number;
+};
+
+async function seedExportFixtures(input: { clerkOrgId: string; clerkUserId: string }): Promise<ExportFixtures> {
+  const db = getDb();
+  const auditAction = `production_export_smoke_${runId}`;
+  const crossOrgId = `org_export_cross_${runId}`;
+  const crossVendorName = `Forbidden Cross Org Vendor ${runId}`;
+  const crossRiskTitle = `Forbidden Cross Org Risk ${runId}`;
+  const riskTitle = `Smoke Export Risk ${runId}`;
+  const now = Date.now();
+
+  await db.insert(organisations).values({
+    clerkOrgId: crossOrgId,
+    name: `Forbidden Cross Org ${runId}`,
+    plan: "free",
+  }).onConflictDoNothing();
+
+  await db.insert(auditLogs).values([
+    {
+      action: auditAction,
+      clerkOrgId: input.clerkOrgId,
+      clerkUserId: input.clerkUserId,
+      createdAt: new Date(now - 1_000),
+      entityId: randomUUID(),
+      entityType: "export_smoke",
+      metadata: { marker: `current-a-${runId}` },
+    },
+    {
+      action: auditAction,
+      clerkOrgId: input.clerkOrgId,
+      clerkUserId: input.clerkUserId,
+      createdAt: new Date(now - 2_000),
+      entityId: randomUUID(),
+      entityType: "export_smoke",
+      metadata: { marker: `current-b-${runId}` },
+    },
+    {
+      action: auditAction,
+      clerkOrgId: input.clerkOrgId,
+      clerkUserId: input.clerkUserId,
+      createdAt: new Date(now - 3_000),
+      entityId: randomUUID(),
+      entityType: "export_smoke",
+      metadata: { marker: `current-c-${runId}` },
+    },
+    {
+      action: auditAction,
+      clerkOrgId: crossOrgId,
+      clerkUserId: input.clerkUserId,
+      createdAt: new Date(now - 500),
+      entityId: randomUUID(),
+      entityType: "export_smoke",
+      metadata: { marker: `forbidden-cross-${runId}` },
+    },
+  ]);
+
+  await db.insert(vendors).values({
+    category: "smoke",
+    clerkOrgId: crossOrgId,
+    name: crossVendorName,
+    riskTier: "critical",
+    status: "assessed",
+    website: "https://forbidden.example.com",
+  });
+
+  await db.insert(riskItems).values([
+    {
+      category: "access-control",
+      clerkOrgId: input.clerkOrgId,
+      description: `Production export smoke current org risk ${runId}`,
+      impact: 3,
+      likelihood: 2,
+      owner: "Production Smoke",
+      riskScore: 6,
+      status: "open",
+      title: riskTitle,
+    },
+    {
+      category: "forbidden-cross-org",
+      clerkOrgId: crossOrgId,
+      description: `Production export smoke forbidden cross org risk ${runId}`,
+      impact: 5,
+      likelihood: 5,
+      owner: "Forbidden Cross Org",
+      riskScore: 25,
+      status: "open",
+      title: crossRiskTitle,
+    },
+  ]);
+
+  return { auditAction, crossOrgId, crossRiskTitle, crossVendorName, riskTitle };
+}
+
+async function expectUnauthenticatedExportRejected(pathname: string) {
+  const response = await fetch(new URL(pathname, baseUrl), { redirect: "manual" });
+  assert.equal(response.status, 401, `${pathname} should reject unauthenticated requests.`);
+  assert.match(
+    response.headers.get("cache-control") ?? "",
+    /private|no-store/,
+    `${pathname} should return private no-store headers for unauthenticated requests.`,
+  );
+}
+
+async function fetchAuthenticatedExport(context: BrowserContext, pathname: string): Promise<ExportResponse> {
+  const response = await context.request.get(new URL(pathname, baseUrl).toString());
+  return {
+    body: Buffer.from(await response.body()),
+    contentDisposition: response.headers()["content-disposition"] ?? null,
+    contentType: response.headers()["content-type"] ?? null,
+    status: response.status(),
+  };
+}
+
+function parseCsvRows(csv: string) {
+  return csv.trim().split("\n").filter(Boolean);
+}
+
+async function expectAuditExportRuntimeProven(context: BrowserContext, input: {
+  action: string;
+  clerkOrgId: string;
+  crossOrgId: string;
+}) {
+  await expectUnauthenticatedExportRejected("/api/audit-log/export?limit=1");
+  const overLimit = await fetchAuthenticatedExport(context, "/api/audit-log/export?limit=5001");
+  assert.equal(overLimit.status, 400, "audit export should reject over-limit requests.");
+  assert.match(overLimit.contentType ?? "", /application\/json/, "over-limit audit response should be JSON.");
+
+  const firstPage = await fetchAuthenticatedExport(
+    context,
+    `/api/audit-log/export?action=${encodeURIComponent(input.action)}&limit=2`,
+  );
+  assert.equal(firstPage.status, 200, "first audit export page should succeed.");
+  assert.match(firstPage.contentType ?? "", /text\/csv/, "audit export should return CSV.");
+  assert.match(firstPage.contentDisposition ?? "", /audit-log-\d{4}-\d{2}-\d{2}\.csv/, "audit export filename should be stable.");
+  const firstCsv = firstPage.body.toString("utf8");
+  const firstRows = parseCsvRows(firstCsv);
+  assert.equal(
+    firstRows[0],
+    "created_at,clerk_org_id,clerk_user_id,action,entity_type,entity_id,metadata",
+    "audit export CSV header should be stable.",
+  );
+  assert.equal(firstRows.length, 3, "audit export first page should contain header plus two rows.");
+  assert.ok(firstCsv.includes(input.clerkOrgId), "audit export should include current org rows.");
+  assert.ok(!firstCsv.includes(input.crossOrgId), "audit export must exclude cross-org audit rows.");
+  const firstEntityIds = firstRows.slice(1).map((row) => row.split(",")[5]);
+
+  const response = await context.request.get(new URL(`/api/audit-log/export?action=${encodeURIComponent(input.action)}&limit=2`, baseUrl).toString());
+  const next = response.headers()["x-audit-log-next-cursor"];
+  assert.equal(response.headers()["x-audit-log-truncated"], "true", "audit first page should report truncation.");
+  assert.ok(next, "audit first page should provide a next cursor.");
+  const secondResponse = await context.request.get(new URL(`/api/audit-log/export?action=${encodeURIComponent(input.action)}&limit=2&cursor=${encodeURIComponent(next)}`, baseUrl).toString());
+  assert.equal(secondResponse.status(), 200, "audit export second page should succeed.");
+  assert.equal(secondResponse.headers()["x-audit-log-truncated"], "false", "audit second page should not be truncated for three seeded rows.");
+  const secondCsv = (await secondResponse.text()).trim();
+  assert.ok(secondCsv.includes(input.clerkOrgId), "audit second page should include the remaining current org row.");
+  assert.ok(!secondCsv.includes(input.crossOrgId), "audit second page must exclude cross-org audit rows.");
+  const secondRows = parseCsvRows(secondCsv);
+  const secondEntityIds = secondRows.slice(1).map((row) => row.split(",")[5]);
+  assert.equal(new Set([...firstEntityIds, ...secondEntityIds]).size, 3, "audit cursor pages should not duplicate seeded rows.");
+
+  return {
+    auditExportAuthRejected: true,
+    auditExportCrossTenantIsolated: true,
+    auditExportNextCursorPresent: Boolean(next),
+    auditExportOverLimitRejected: true,
+    auditExportPageOneRows: firstRows.length - 1,
+    auditExportPageTwoRows: secondRows.length - 1,
+    auditExportShapeStable: true,
+    auditExportTruncated: response.headers()["x-audit-log-truncated"] === "true",
+  };
+}
+
+async function expectPdfReportRuntimeProven(context: BrowserContext, input: {
+  pathname: string;
+  filenamePattern: RegExp;
+  label: string;
+}) {
+  await expectUnauthenticatedExportRejected(input.pathname);
+  const response = await fetchAuthenticatedExport(context, input.pathname);
+  assert.equal(response.status, 200, `${input.label} should download for authenticated org.`);
+  assert.match(response.contentType ?? "", /application\/pdf/, `${input.label} should return PDF.`);
+  assert.match(response.contentDisposition ?? "", input.filenamePattern, `${input.label} filename should be stable.`);
+  assert.ok(response.body.byteLength > 1_000, `${input.label} PDF should not be empty.`);
+  assert.equal(response.body.subarray(0, 4).toString("utf8"), "%PDF", `${input.label} should be a PDF file.`);
+  return true;
+}
+
+async function expectWorkspaceArchiveRuntimeProven(context: BrowserContext, input: {
+  crossRiskTitle: string;
+  crossVendorName: string;
+  riskTitle: string;
+}) {
+  await expectUnauthenticatedExportRejected("/api/exports/workspace/archive");
+  const response = await fetchAuthenticatedExport(context, "/api/exports/workspace/archive");
+  assert.equal(response.status, 200, "workspace archive should download for authenticated org.");
+  assert.match(response.contentType ?? "", /application\/zip/, "workspace archive should return ZIP.");
+  assert.match(response.contentDisposition ?? "", /workspace-export-\d{4}-\d{2}-\d{2}\.zip/, "workspace archive filename should be stable.");
+  assert.ok(response.body.byteLength > 500, "workspace archive should not be empty.");
+
+  const JSZip = (await import("jszip")).default;
+  const zip = await JSZip.loadAsync(response.body);
+  for (const entry of ["workspace-export.json", "evidence-metadata.csv", "export-manifest.json"]) {
+    assert.ok(zip.file(entry), `workspace archive should include ${entry}.`);
+  }
+  const workspaceJson = await zip.file("workspace-export.json")!.async("string");
+  const manifestJson = await zip.file("export-manifest.json")!.async("string");
+  const workspaceExport = JSON.parse(workspaceJson) as {
+    redactions?: unknown;
+    risks?: Array<{ title?: string }>;
+    vendors?: { items?: Array<{ name?: string }> };
+  };
+  assert.ok(workspaceJson.includes(input.riskTitle), "workspace archive should include current org risk data.");
+  assert.ok(!workspaceJson.includes(input.crossRiskTitle), "workspace archive must exclude cross-org risk data.");
+  assert.ok(!workspaceJson.includes(input.crossVendorName), "workspace archive must exclude cross-org vendor data.");
+  assert.ok(!workspaceJson.includes("Forbidden Cross Org"), "workspace archive must exclude cross-org organisation data.");
+  assert.ok(!workspaceJson.includes("BLOB_READ_WRITE_TOKEN"), "workspace archive must not leak private env names or values.");
+  assert.ok(!workspaceJson.includes("OPENAI_API_KEY"), "workspace archive must not leak provider secret names or values.");
+  assert.ok(Array.isArray(workspaceExport.risks), "workspace archive JSON should expose a stable risks array.");
+  assert.ok(Array.isArray(workspaceExport.vendors?.items), "workspace archive JSON should expose a stable vendors.items array.");
+  assert.ok(workspaceExport.redactions, "workspace archive should describe redactions.");
+  assert.ok(manifestJson.includes("archiveVersion"), "workspace archive manifest should include archiveVersion.");
+
+  return true;
+}
+
+
+
 async function seedTrustCenter(clerkOrgId: string) {
   await upsertTrustCenterSettings({
     clerkOrgId,
@@ -512,6 +757,10 @@ async function main() {
     });
 
     const vendor = await seedVendorQuestionnaire(organization.id);
+    const exportFixtures = await seedExportFixtures({
+      clerkOrgId: organization.id,
+      clerkUserId: smokeUserId,
+    });
     await seedQuestionnaireSupportContext({
       clerkOrgId: organization.id,
       createdBy: smokeUserId,
@@ -622,6 +871,27 @@ async function main() {
       expectedAnswers: submittedVendorAnswers,
       vendorId: vendor.vendorId,
     });
+
+    const auditExport = await expectAuditExportRuntimeProven(context, {
+      action: exportFixtures.auditAction,
+      clerkOrgId: organization.id,
+      crossOrgId: exportFixtures.crossOrgId,
+    });
+    const vendorReportDownloaded = await expectPdfReportRuntimeProven(context, {
+      filenamePattern: /nis2-supply-chain-report\.pdf/,
+      label: "vendor supply-chain report",
+      pathname: "/api/vendors/supply-chain-report",
+    });
+    const riskReportDownloaded = await expectPdfReportRuntimeProven(context, {
+      filenamePattern: /risk-register\.pdf/,
+      label: "risk register report",
+      pathname: "/api/risks/register-report",
+    });
+    const workspaceArchiveDownloaded = await expectWorkspaceArchiveRuntimeProven(context, {
+      crossRiskTitle: exportFixtures.crossRiskTitle,
+      crossVendorName: exportFixtures.crossVendorName,
+      riskTitle: exportFixtures.riskTitle,
+    });
     assert.deepEqual(browserConsoleErrors, [], "browser console errors should be empty.");
     assert.deepEqual(pageErrors, [], "browser page errors should be empty.");
 
@@ -633,6 +903,14 @@ async function main() {
       databaseHostClass: "non_local",
       emailAttempted: vendor.emailAttempted,
       mailboxProof: vendor.emailAttempted ? "send_attempted_check_controlled_mailbox" : "blocked_missing_resend_or_recipient_env",
+      auditExportAuthRejected: auditExport.auditExportAuthRejected,
+      auditExportCrossTenantIsolated: auditExport.auditExportCrossTenantIsolated,
+      auditExportNextCursorPresent: auditExport.auditExportNextCursorPresent,
+      auditExportOverLimitRejected: auditExport.auditExportOverLimitRejected,
+      auditExportPageOneRows: auditExport.auditExportPageOneRows,
+      auditExportPageTwoRows: auditExport.auditExportPageTwoRows,
+      auditExportShapeStable: auditExport.auditExportShapeStable,
+      auditExportTruncated: auditExport.auditExportTruncated,
       ok: true,
       pageErrors: pageErrors.length,
       questionnaireArtifactLoaded: true,
@@ -643,7 +921,16 @@ async function main() {
       questionnaireReviewPersisted: true,
       questionnaireReviewStatus: "approved",
       renderedRoutes: renderedRoutes.map((route) => route.pathname),
+      riskReportAuthRejected: true,
+      riskReportDownloaded,
+      riskReportShapeStable: true,
       trustCenterRequestApproved: Boolean(trust.requestId),
+      vendorReportAuthRejected: true,
+      vendorReportDownloaded,
+      vendorReportShapeStable: true,
+      workspaceArchiveAuthRejected: true,
+      workspaceArchiveDownloaded,
+      workspaceArchiveNoCrossTenantLeakage: workspaceArchiveDownloaded,
       vendorAssessmentStatus: vendorSubmit.assessmentStatus,
       vendorAssessmentTokenRendered: true,
       vendorDeliveryStatus: vendor.deliveryStatus,
@@ -662,6 +949,7 @@ async function main() {
       });
       await clerk.organizations.deleteOrganization(clerkOrgId).catch(() => null);
     }
+    await getDb().delete(organisations).where(eq(organisations.clerkOrgId, `org_export_cross_${runId}`)).catch(() => null);
   }
 }
 

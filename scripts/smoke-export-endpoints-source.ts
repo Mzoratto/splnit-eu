@@ -17,6 +17,8 @@ const auditRoute = read("app/api/audit-log/export/route.ts");
 const auditQueries = read("lib/db/queries/audit-logs.ts");
 const vendorReportRoute = read("app/api/vendors/supply-chain-report/route.ts");
 const riskReportRoute = read("app/api/risks/register-report/route.ts");
+const workspaceArchiveRoute = read("app/api/exports/workspace/archive/route.ts");
+const productionReadinessSmoke = read("scripts/smoke-production-tenant-readiness.ts");
 const securitySpec = read("tests/e2e/security.spec.ts");
 
 assertIncludes(
@@ -77,6 +79,49 @@ for (const [label, source, scopedCall] of [
   assertIncludes(source, "privateJson({ error: \"Unauthorized\" }, { status: 401 })", `${label} returns private 401`);
   assertMatches(source, /if \(!session\.userId \|\| !session\.orgId\)/, `${label} requires user and organisation session`);
   assertIncludes(source, scopedCall, `${label} fetches only active organisation rows`);
+}
+
+assertIncludes(
+  workspaceArchiveRoute,
+  "getWorkspaceExport(session.orgId)",
+  "workspace archive fetches only active organisation export data",
+);
+assertIncludes(
+  workspaceArchiveRoute,
+  "listEvidenceArchiveFiles(session.orgId)",
+  "workspace archive evidence files are org-scoped",
+);
+assertIncludes(
+  workspaceArchiveRoute,
+  "listPolicyArchiveFiles(session.orgId)",
+  "workspace archive policy files are org-scoped",
+);
+assertIncludes(
+  workspaceArchiveRoute,
+  "withPrivateNoStore",
+  "workspace archive uses private no-store headers",
+);
+assertIncludes(
+  workspaceArchiveRoute,
+  "privateJson({ error: \"Unauthorized\" }, { status: 401 })",
+  "workspace archive returns private 401",
+);
+assertMatches(
+  workspaceArchiveRoute,
+  /if \(!session\.userId \|\| !session\.orgId\)/,
+  "workspace archive requires user and organisation session",
+);
+
+for (const [needle, label] of [
+  ["auditExportAuthRejected", "production smoke reports audit export auth proof"],
+  ["auditExportCrossTenantIsolated", "production smoke reports audit export cross-tenant proof"],
+  ["auditExportNextCursorPresent", "production smoke reports audit pagination proof"],
+  ["vendorReportDownloaded", "production smoke reports vendor report download proof"],
+  ["riskReportDownloaded", "production smoke reports risk report download proof"],
+  ["workspaceArchiveDownloaded", "production smoke reports workspace archive download proof"],
+  ["workspaceArchiveNoCrossTenantLeakage", "production smoke reports workspace archive cross-tenant proof"],
+] as const) {
+  assertIncludes(productionReadinessSmoke, needle, label);
 }
 
 assertIncludes(
