@@ -104,14 +104,14 @@
   "frameworkWizard": {
     "error": "Non è stato possibile salvare la valutazione.",
     "resultTitle": "Analisi dei gap completata",
-    "resultBody": "Il risultato è stato salvato negli stati dei controlli e la dashboard è stata ricalcolata.",
+    "resultBody": "Il risultato è stato salvato negli stati dei controlli. Ora aprite i controlli mappati, rivedete i gap aperti e allegate evidenze dove disponibili.",
     "totalControls": "Controlli",
     "openGaps": "Gap aperti",
     "status": "Stato",
     "scoreStatus": "Baseline",
-    "controls": "Apri controlli",
-    "editAnswers": "Modifica risposte",
-    "intro": "Le risposte impostano gli stati iniziali dei controlli e preparano un gap report.",
+    "controls": "Rivedi controlli mappati",
+    "editAnswers": "Modifica risposte di setup",
+    "intro": "Rispondete alle domande di setup per creare la prima baseline dei controlli. Usate “Parziale” quando il lavoro esiste ma non è ancora documentato o testato.",
     "step": "Passaggio {step}",
     "questionRange": "Domande {from}-{to}",
     "answered": "Risposte {answered} di {total}",
@@ -353,7 +353,9 @@
         "text": "Il report ESG è approvato con una traccia dati auditabile?",
         "help": "Prima dell’export deve essere chiaro chi ha fornito, verificato e approvato i dati."
       }
-    }
+    },
+    "eyebrow": "Setup framework",
+    "titleTemplate": "Valutazione iniziale {framework}"
   },
   "dashboard": {
     "greeting": "Buongiorno",
@@ -469,7 +471,7 @@
     },
     "regulators": {
       "nis2": "ACN — Agenzia per la Cybersicurezza Nazionale",
-      "ai-act": "Autorità nazionali italiane da confermare",
+      "ai-act": "EU AI Office / autorità nazionali competenti",
       "gdpr": "Garante per la protezione dei dati personali",
       "iso27001": "ISO",
       "csrd": "Autorità ESG nazionale"
@@ -1522,7 +1524,7 @@
         "description": "Obblighi di cybersecurity per organizzazioni medie e grandi."
       },
       "eu-ai-act": {
-        "regulator": "Autorità nazionali italiane da confermare",
+        "regulator": "EU AI Office / autorità nazionali competenti",
         "deadline": "Agosto 2026",
         "description": "Obblighi per organizzazioni che usano sistemi AI."
       },
@@ -1593,7 +1595,7 @@
   "onboarding": {
     "eyebrow": "Onboarding",
     "title": "Configurazione organizzazione",
-    "description": "In cinque passaggi impostate profilo di base, framework, strumenti e prima integrazione consigliata.",
+    "description": "Cinque passaggi preparano un workspace compliance Italy-first: profilo organizzazione, ambito NIS2 o ISO 27001, inventario strumenti e prima integrazione pratica.",
     "saveStepError": "Non è stato possibile salvare il passaggio.",
     "finishError": "Non è stato possibile completare l'onboarding.",
     "steps": {
@@ -1630,23 +1632,26 @@
         "iso27001": "Sistema di gestione della sicurezza delle informazioni e catalogo dei controlli di sicurezza.",
         "csrd": "Reporting ESG, doppia materialità, evidenze sui dati e questionari fornitori."
       },
-      "body": "Scegliete gli obblighi che Splnit.eu deve trasformare in controlli. Potrete aggiungerne altri dopo; iniziate dal framework di cui parlereste per primo con un prospect o auditor."
+      "body": "Scegliete gli obblighi che Splnit.eu deve trasformare in controlli. Per un prospect italiano, iniziate da NIS2 per la readiness cybersecurity o da ISO 27001 se l’obiettivo immediato è preparare la certificazione.",
+      "nextAction": "Prossimo passo: salvate la baseline selezionata, poi indicate i sistemi che usate davvero."
     },
     "tools": {
       "title": "Strumenti AI e inventario SaaS",
-      "body": "Selezionate i sistemi che usate davvero. Questo orienta la prima integrazione consigliata e mantiene il setup aderente al vostro ambiente."
+      "body": "Selezionate i sistemi che usate oggi. Così il setup resta aderente al vostro ambiente ed evita dati demo o fixture.",
+      "nextAction": "Prossimo passo: Splnit.eu suggerisce la prima integrazione in base agli strumenti selezionati."
     },
     "integration": {
       "title": "Integrazione consigliata",
-      "body": "I primi controlli automatici coprono MFA, Conditional Access, guest e ruoli privilegiati.",
+      "body": "Per molti percorsi NIS2 e ISO 27001, Microsoft 365 è la prima fonte utile di evidenze: MFA, Conditional Access, ospiti e ruoli privilegiati.",
       "open": "Apri impostazioni integrazione",
-      "optional": "È un prossimo passo consigliato, non un blocco. Potete rivedere ora l’ambito dell’integrazione e collegarla quando il workspace è pronto."
+      "optional": "È un prossimo passo consigliato, non un blocco. Rivedete ora l’ambito; collegate l’integrazione quando il responsabile del workspace è pronto.",
+      "nextAction": "Prossimo passo: rivedete il punteggio baseline iniziale e completate l’onboarding."
     },
     "score": {
       "label": "Punteggio iniziale",
       "title": "La prima baseline è pronta",
-      "body": "Il punteggio si basa sui framework selezionati e sull'inventario strumenti. I test automatici lo renderanno più preciso dopo il collegamento delle integrazioni.",
-      "nextStep": "Dopo il completamento, iniziate dalla dashboard: rivedete framework attivi, controlli aperti e primo passo di integrazione."
+      "body": "Il punteggio è una baseline iniziale basata sui framework selezionati e sull’inventario strumenti. Non è una dichiarazione di conformità; integrazioni collegate ed evidenze revisionate lo rafforzano.",
+      "nextStep": "Dopo il completamento, iniziate dalla dashboard: rivedete framework attivi, controlli aperti e integrazione consigliata."
     },
     "sectors": {
       "technology": "Tecnologia",

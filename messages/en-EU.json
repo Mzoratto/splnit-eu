@@ -104,14 +104,14 @@
   "frameworkWizard": {
     "error": "The assessment could not be saved.",
     "resultTitle": "Gap assessment complete",
-    "resultBody": "The result was saved to control statuses and the dashboard was recalculated.",
+    "resultBody": "The result was saved to control statuses. Next, open the mapped controls, review open gaps, and attach evidence where proof is available.",
     "totalControls": "Controls",
     "openGaps": "Open gaps",
     "status": "Status",
     "scoreStatus": "Baseline",
-    "controls": "Open controls",
-    "editAnswers": "Edit answers",
-    "intro": "Answers set the initial control statuses and prepare a gap report.",
+    "controls": "Review mapped controls",
+    "editAnswers": "Adjust setup answers",
+    "intro": "Answer the setup questions to create the first control baseline. Use “Partial” when work exists but is not yet documented or tested.",
     "step": "Step {step}",
     "questionRange": "Questions {from}-{to}",
     "answered": "Answered {answered} of {total}",
@@ -353,7 +353,9 @@
         "text": "Is the ESG report approved with an auditable data trail?",
         "help": "Before export, it must be clear who supplied, verified, and approved the data."
       }
-    }
+    },
+    "eyebrow": "Framework setup",
+    "titleTemplate": "{framework} setup assessment"
   },
   "dashboard": {
     "greeting": "Good morning",
@@ -1593,7 +1595,7 @@
   "onboarding": {
     "eyebrow": "Onboarding",
     "title": "Organisation setup",
-    "description": "Five steps set the basic profile, frameworks, tools, and first recommended integration.",
+    "description": "Five steps prepare an Italy-first compliance workspace: organisation profile, NIS2 or ISO 27001 scope, tool inventory, and the first practical integration.",
     "saveStepError": "The step could not be saved.",
     "finishError": "Onboarding could not be completed.",
     "steps": {
@@ -1630,23 +1632,26 @@
         "iso27001": "Information security management system and security control catalogue.",
         "csrd": "ESG reporting, double materiality, data evidence, and supplier questionnaires."
       },
-      "body": "Pick the obligations you want Splnit.eu to turn into controls. You can add more later; start with the framework you would discuss first with a prospect or auditor."
+      "body": "Pick the obligations Splnit.eu should turn into controls. For an Italian prospect, start with NIS2 for cybersecurity readiness or ISO 27001 if certification preparation is the immediate goal.",
+      "nextAction": "Next: save the selected baseline, then list the systems you actually use."
     },
     "tools": {
       "title": "AI tools and SaaS inventory",
-      "body": "Select the systems you actually use. This shapes the first integration recommendation and keeps the setup grounded in your environment."
+      "body": "Select the systems you actually use today. This keeps the setup grounded in your environment and avoids demo or fixture data.",
+      "nextAction": "Next: Splnit.eu recommends the first integration from the selected tools."
     },
     "integration": {
       "title": "Recommended integration",
-      "body": "The first automated checks cover MFA, Conditional Access, guests, and privileged roles.",
+      "body": "For many NIS2 and ISO 27001 starts, Microsoft 365 is the first useful evidence source: MFA, Conditional Access, guests, and privileged roles.",
       "open": "Open integration settings",
-      "optional": "This is a recommended next action, not a blocker. You can review the integration scope now and connect it after the workspace is ready."
+      "optional": "This is a recommended next action, not a blocker. Review the scope now; connect it when the workspace owner is ready.",
+      "nextAction": "Next: review the initial baseline score and finish onboarding."
     },
     "score": {
       "label": "Initial score",
       "title": "The first baseline is ready",
-      "body": "The score is based on selected frameworks and tool inventory. Automated tests will refine it after integrations are connected.",
-      "nextStep": "After finishing, start on the dashboard: review active frameworks, open controls, and the first integration step."
+      "body": "The score is an initial baseline from selected frameworks and tool inventory. It is not a compliance claim; connected integrations and reviewed evidence make it stronger.",
+      "nextStep": "After finishing, start on the dashboard: review active frameworks, open controls, and the recommended integration step."
     },
     "sectors": {
       "technology": "Technology",

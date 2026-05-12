@@ -6,6 +6,7 @@ import { useMemo, useState, useTransition } from "react";
 import { ArrowLeft, ArrowRight, Check, Gauge } from "lucide-react";
 import { assessFrameworkAction } from "@/app/(app)/frameworks/[frameworkSlug]/actions";
 import { normalizeLocale } from "@/i18n/routing";
+import { getFrameworkDisplayName } from "@/lib/frameworks/localization";
 import type { FrameworkAnswer, FrameworkQuestion } from "@/lib/frameworks/questions";
 import type { FrameworkSeed } from "@/lib/frameworks/registry";
 
@@ -21,9 +22,11 @@ type FrameworkWizardCopy = {
   back: string;
   controls: string;
   editAnswers: string;
+  eyebrow: string;
   error: string;
   intro: string;
   next: string;
+  titleTemplate: string;
   openGaps: string;
   questions: Record<string, { help?: string; text: string }>;
   questionRange: string;
@@ -120,6 +123,7 @@ export function FrameworkAssessmentWizard({
   const [pending, startTransition] = useTransition();
   const questionGroups = useMemo(() => chunkQuestions(questions), [questions]);
   const activeQuestions = questionGroups[step] ?? [];
+  const frameworkName = getFrameworkDisplayName(framework, locale);
   const answeredCount = Object.keys(answers).length;
   const allAnswered = answeredCount === questions.length;
   const isLastStep = step === questionGroups.length - 1;
@@ -173,7 +177,7 @@ export function FrameworkAssessmentWizard({
       <section className="space-y-6">
         <div className="max-w-3xl">
           <p className="text-sm font-medium uppercase tracking-[0.14em] text-primary">
-            {locale === "cs-CZ" ? framework.nameCs : framework.nameEn}
+            {frameworkName}
           </p>
           <h1 className="mt-2 text-3xl font-semibold tracking-normal">
             {copy.resultTitle}
@@ -235,10 +239,10 @@ export function FrameworkAssessmentWizard({
     <section className="space-y-6">
       <div className="max-w-3xl">
         <p className="text-sm font-medium uppercase tracking-[0.14em] text-primary">
-          Framework wizard
+          {copy.eyebrow}
         </p>
         <h1 className="mt-2 text-3xl font-semibold tracking-normal">
-          {locale === "cs-CZ" ? framework.nameCs : framework.nameEn} assessment
+          {interpolate(copy.titleTemplate, { framework: frameworkName })}
         </h1>
         <p className="mt-3 text-sm leading-6 text-foreground/64">
           {copy.intro}
@@ -341,7 +345,7 @@ export function FrameworkAssessmentWizard({
           ))}
         </div>
 
-        <div className="mt-6 flex justify-between gap-3">
+        <div className="mt-6 flex flex-col-reverse gap-3 sm:flex-row sm:justify-between">
           <button
             type="button"
             disabled={step === 0}

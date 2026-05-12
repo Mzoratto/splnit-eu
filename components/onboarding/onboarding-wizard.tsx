@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import { useEffect, useMemo, useReducer, useState, useTransition } from "react";
 import {
   ArrowRight,
@@ -18,6 +18,8 @@ import {
   saveFrameworkStep,
   saveToolsStep,
 } from "@/app/(app)/onboarding/actions";
+import { normalizeLocale } from "@/i18n/routing";
+import { getFrameworkDisplayName } from "@/lib/frameworks/localization";
 import type { FrameworkSeed } from "@/lib/frameworks/registry";
 import type { ToolInventoryItem } from "@/lib/onboarding/tools";
 
@@ -171,6 +173,7 @@ export function OnboardingWizard({
 }) {
   const t = useTranslations("onboarding");
   const frameworkT = useTranslations("frameworks");
+  const locale = normalizeLocale(useLocale()) ?? "en-EU";
   const [pending, startTransition] = useTransition();
   const [error, setError] = useState<string | null>(null);
   const [state, dispatch] = useReducer(reducer, {
@@ -230,7 +233,7 @@ export function OnboardingWizard({
                 key={key}
                 type="button"
                 onClick={() => dispatch({ type: "step", step: index + 1 })}
-                className={`flex min-h-12 items-center justify-center rounded-md border px-3 text-sm ${
+                className={`flex min-h-12 items-center justify-center rounded-md border px-3 text-center text-sm ${
                   active
                     ? "border-primary bg-primary text-primary-foreground"
                     : complete
@@ -405,6 +408,9 @@ export function OnboardingWizard({
               <p className="mt-1 text-sm leading-6 text-foreground/58">
                 {t("frameworks.body")}
               </p>
+              <p className="mt-2 text-xs font-medium uppercase tracking-[0.12em] text-primary">
+                {t("frameworks.nextAction")}
+              </p>
             </div>
           </div>
           <div className="grid gap-3 md:grid-cols-2">
@@ -424,7 +430,7 @@ export function OnboardingWizard({
                 >
                   <div className="flex items-start justify-between gap-3">
                     <div>
-                      <p className="font-medium">{framework.nameCs}</p>
+                      <p className="font-medium">{getFrameworkDisplayName(framework, locale)}</p>
                       <p className="mt-1 text-xs text-foreground/58">
                         {frameworkT(`regulators.${framework.slug}`)}
                       </p>
@@ -438,7 +444,7 @@ export function OnboardingWizard({
               );
             })}
           </div>
-          <div className="mt-6 flex justify-between gap-3">
+          <div className="mt-6 flex flex-col-reverse gap-3 sm:flex-row sm:justify-between">
             <button
               type="button"
               onClick={() => dispatch({ type: "step", step: 1 })}
@@ -476,6 +482,9 @@ export function OnboardingWizard({
               <p className="mt-1 text-sm leading-6 text-foreground/58">
                 {t("tools.body")}
               </p>
+              <p className="mt-2 text-xs font-medium uppercase tracking-[0.12em] text-primary">
+                {t("tools.nextAction")}
+              </p>
             </div>
           </div>
           <div className="grid gap-2 md:grid-cols-4">
@@ -501,7 +510,7 @@ export function OnboardingWizard({
               );
             })}
           </div>
-          <div className="mt-6 flex justify-between gap-3">
+          <div className="mt-6 flex flex-col-reverse gap-3 sm:flex-row sm:justify-between">
             <button
               type="button"
               onClick={() => dispatch({ type: "step", step: 2 })}
@@ -531,7 +540,12 @@ export function OnboardingWizard({
         <div className="rounded-lg border border-border bg-surface p-5">
           <div className="mb-6 flex items-center gap-3">
             <Plug className="h-5 w-5 text-primary" aria-hidden="true" />
-            <h2 className="text-lg font-semibold">{t("integration.title")}</h2>
+            <div>
+              <h2 className="text-lg font-semibold">{t("integration.title")}</h2>
+              <p className="mt-1 text-sm leading-6 text-foreground/58">
+                {t("integration.nextAction")}
+              </p>
+            </div>
           </div>
           <div className="rounded-lg border border-border bg-background p-5">
             <p className="text-lg font-semibold">Microsoft 365</p>
@@ -549,7 +563,7 @@ export function OnboardingWizard({
               <ArrowRight className="h-4 w-4" aria-hidden="true" />
             </Link>
           </div>
-          <div className="mt-6 flex justify-between gap-3">
+          <div className="mt-6 flex flex-col-reverse gap-3 sm:flex-row sm:justify-between">
             <button
               type="button"
               onClick={() => dispatch({ type: "step", step: 3 })}
@@ -584,7 +598,7 @@ export function OnboardingWizard({
               </p>
             </div>
           </div>
-          <div className="mt-6 flex justify-between gap-3">
+          <div className="mt-6 flex flex-col-reverse gap-3 sm:flex-row sm:justify-between">
             <button
               type="button"
               onClick={() => dispatch({ type: "step", step: 4 })}

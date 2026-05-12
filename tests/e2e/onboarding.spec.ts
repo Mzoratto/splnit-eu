@@ -34,7 +34,7 @@ test("walks the onboarding wizard to the score reveal", async ({ page }) => {
     page.getByRole("heading", { name: "První baseline je připravená" }),
   ).toBeVisible();
   await expect(
-    page.getByText("Po dokončení začněte na dashboardu: zkontrolujte aktivní frameworky, otevřené kontroly a první integrační krok."),
+    page.getByText("Po dokončení začněte na dashboardu: zkontrolujte aktivní frameworky, otevřené kontroly a doporučenou integraci."),
   ).toBeVisible();
   await expect(page.getByText("60%")).toBeVisible();
 });

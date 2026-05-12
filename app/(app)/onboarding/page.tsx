@@ -26,13 +26,13 @@ export default async function OnboardingPage() {
     <OnboardingWizard
       frameworks={FRAMEWORK_LIBRARY}
       initialCompany={{
-        country: onboardingState?.organisation?.country ?? "CZ",
+        country: onboardingState?.organisation?.country ?? "IT",
         employeeCount: onboardingState?.organisation?.employeeCount ?? "10-49",
         ico: onboardingState?.organisation?.ico ?? "",
-        locale: onboardingState?.organisation?.locale ?? "cs-CZ",
+        locale: onboardingState?.organisation?.locale ?? "it-IT",
         name: onboardingState?.organisation?.name ?? "",
         primaryJurisdiction:
-          onboardingState?.organisation?.primaryJurisdiction ?? "CZ",
+          onboardingState?.organisation?.primaryJurisdiction ?? "IT",
         sector: onboardingState?.organisation?.sector ?? "technology",
       }}
       initialFrameworks={onboardingState?.selectedFrameworks ?? ["nis2"]}

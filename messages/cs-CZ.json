@@ -104,14 +104,14 @@
   "frameworkWizard": {
     "error": "Vyhodnocení se nepodařilo uložit.",
     "resultTitle": "Vyhodnocení gapů dokončeno",
-    "resultBody": "Výsledek byl uložen do stavů kontrol a dashboard se přepočítal.",
+    "resultBody": "Výsledek byl uložen do stavů kontrol. Teď otevřete namapované kontroly, projděte otevřené mezery a doplňte dostupné důkazy.",
     "totalControls": "Kontroly",
     "openGaps": "Otevřené mezery",
     "status": "Stav",
     "scoreStatus": "Výchozí stav",
-    "controls": "Otevřít kontroly",
-    "editAnswers": "Upravit odpovědi",
-    "intro": "Odpovědi nastaví počáteční stavy kontrol a připraví report gapů.",
+    "controls": "Zkontrolovat namapované kontroly",
+    "editAnswers": "Upravit odpovědi nastavení",
+    "intro": "Odpovědi vytvoří první baseline kontrol. Volbu „Částečně“ použijte, když práce existuje, ale ještě není doložená nebo otestovaná.",
     "step": "Krok {step}",
     "questionRange": "Otázky {from}-{to}",
     "answered": "Zodpovězeno {answered} z {total}",
@@ -353,7 +353,9 @@
         "text": "Je ESG report schválený s auditovatelnou datovou stopou?",
         "help": "Před exportem musí být jasné, kdo data dodal, ověřil a schválil."
       }
-    }
+    },
+    "eyebrow": "Nastavení frameworku",
+    "titleTemplate": "Úvodní vyhodnocení {framework}"
   },
   "dashboard": {
     "greeting": "Dobré ráno",
@@ -469,7 +471,7 @@
     },
     "regulators": {
       "nis2": "NÚKIB",
-      "ai-act": "EU / národní orgány (bude potvrzeno)",
+      "ai-act": "EU AI Office / příslušné národní orgány",
       "gdpr": "ÚOOÚ",
       "iso27001": "ISO",
       "csrd": "Národní ESG dohled"
@@ -1522,7 +1524,7 @@
         "description": "Kybernetická bezpečnost pro střední a velké firmy."
       },
       "eu-ai-act": {
-        "regulator": "EU / národní orgány (bude potvrzeno)",
+        "regulator": "EU AI Office / příslušné národní orgány",
         "deadline": "Srpen 2026",
         "description": "Povinnosti pro nasazovatele AI systémů."
       },
@@ -1593,7 +1595,7 @@
   "onboarding": {
     "eyebrow": "Onboarding",
     "title": "Nastavení organizace",
-    "description": "Pět kroků nastaví základní profil, frameworky, nástroje a první doporučenou integraci.",
+    "description": "Pět kroků připraví compliance workspace: profil organizace, rozsah NIS2 nebo ISO 27001, inventář nástrojů a první praktickou integraci.",
     "saveStepError": "Uložení kroku se nepodařilo.",
     "finishError": "Dokončení onboardingu se nepodařilo.",
     "steps": {
@@ -1630,23 +1632,26 @@
         "iso27001": "Systém řízení bezpečnosti informací a katalog bezpečnostních opatření.",
         "csrd": "ESG reporting, dvojí materialita, datová evidence a dodavatelské dotazníky."
       },
-      "body": "Vyberte povinnosti, které má Splnit.eu převést na kontroly. Další můžete přidat později; začněte frameworkem, o kterém byste mluvili jako první se zákazníkem nebo auditorem."
+      "body": "Vyberte povinnosti, které má Splnit.eu převést na kontroly. Pro italského zájemce začněte NIS2 pro cybersecurity readiness nebo ISO 27001, pokud je cílem příprava na certifikaci.",
+      "nextAction": "Další krok: uložte vybranou baseline a potom označte systémy, které opravdu používáte."
     },
     "tools": {
       "title": "AI nástroje a SaaS inventář",
-      "body": "Vyberte systémy, které opravdu používáte. Ovlivní to první doporučenou integraci a udrží setup navázaný na reálné prostředí."
+      "body": "Vyberte systémy, které dnes opravdu používáte. Setup tak zůstane navázaný na reálné prostředí a nebude působit jako demo nebo fixture data.",
+      "nextAction": "Další krok: Splnit.eu doporučí první integraci podle vybraných nástrojů."
     },
     "integration": {
       "title": "Doporučená integrace",
-      "body": "První automatické kontroly pokryjí MFA, Conditional Access, hosty a privilegované role.",
+      "body": "Pro mnoho NIS2 a ISO 27001 začátků je Microsoft 365 první užitečný zdroj důkazů: MFA, Conditional Access, hosté a privilegované role.",
       "open": "Otevřít nastavení integrace",
-      "optional": "Tohle je doporučený další krok, ne blokace. Rozsah integrace můžete zkontrolovat teď a připojit ji až po připravení workspace."
+      "optional": "Tohle je doporučený další krok, ne blokace. Rozsah zkontrolujte teď; integraci připojte, až bude vlastník workspace připravený.",
+      "nextAction": "Další krok: zkontrolujte úvodní baseline skóre a dokončete onboarding."
     },
     "score": {
       "label": "Úvodní skóre",
       "title": "První baseline je připravená",
-      "body": "Skóre vychází z vybraných frameworků a inventáře nástrojů. Automatické testy ho zpřesní po připojení integrací.",
-      "nextStep": "Po dokončení začněte na dashboardu: zkontrolujte aktivní frameworky, otevřené kontroly a první integrační krok."
+      "body": "Skóre je úvodní baseline podle vybraných frameworků a inventáře nástrojů. Není to tvrzení o souladu; připojené integrace a zkontrolované důkazy ho zpřesní.",
+      "nextStep": "Po dokončení začněte na dashboardu: zkontrolujte aktivní frameworky, otevřené kontroly a doporučenou integraci."
     },
     "sectors": {
       "technology": "Technologie",
