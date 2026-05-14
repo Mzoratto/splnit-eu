@@ -26,7 +26,7 @@ Covered:
 Not covered without a separate vendor-dashboard step:
 
 - Stripe invoices, payments, disputes, and statutory billing records;
-- Clerk, Vercel, Neon, Inngest, Resend, Loops, Sentry, Upstash, PostHog, Anthropic, and backup/log retention outside the application database;
+- Clerk, Vercel, Neon, Inngest, Resend, Loops, Sentry, Upstash, PostHog, OpenAI, and backup/log retention outside the application database;
 - legal hold, disputes, security investigations, or accounting retention.
 
 ## Intake
@@ -100,7 +100,7 @@ These require dashboard or vendor-side confirmation:
 - Sentry: confirm issue/event retention and PII scrubbing.
 - Upstash: confirm Redis key TTLs and region retention.
 - PostHog: confirm analytics retention or disable production use.
-- Anthropic: confirm prompt/data retention settings and opt-in treatment.
+- OpenAI: confirm prompt/data retention, training/use-of-inputs settings, subprocessors/transfer mechanism, and customer opt-in/human-review treatment.
 
 ## Launch Follow-Ups
 
