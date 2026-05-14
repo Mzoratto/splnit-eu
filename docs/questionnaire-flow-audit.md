@@ -51,6 +51,7 @@ Use:
 - “Exports are scoped server-side by generated artifact ownership.”
 - “Vendor questionnaires can be created from an authenticated production tenant, production Resend can deliver vendor assessment emails to the controlled `smoke@splnit.eu` mailbox from `Splnit <noreply@splnit.eu>`, delivered assessment links render, token submissions persist, and the originating vendor status propagates to assessed for the smoke path.”
 - “OpenAI-backed questionnaire generation has passed a production smoke with real configured credentials and model resolution.”
+- “Before customer use, the AI drafting path should be presented as an opt-in assistant: questionnaire questions and relevant workspace context may be sent to OpenAI, outputs are drafts, and a human must approve or edit answers before external use.”
 
 Do not claim yet:
 
