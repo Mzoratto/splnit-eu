@@ -59,7 +59,7 @@ Public page update order after approval:
 
 | Area | Current evidence/status | Required owner/counsel decision | Public-page impact |
 | --- | --- | --- | --- |
-| Operator identity | Public legal copy describes the operator as a Czech sole trader/OSVČ but still says final name, IČO, ARES link, and address must be completed before production launch. Internal closeout packet exists in `docs/operator-identity-dpo-closeout.md`. | Confirm exact legal name, IČO, ARES URL, registered address, VAT status if applicable, privacy/support contact, and contracting identity. | Replace draft operator-completion wording in `/soukromi`, `/dpa`, and `/podminky`. |
+| Operator identity | ARES search for `Marco Zoratto` returned one economic subject; `docs/operator-identity-dpo-closeout.md` now records ARES-verified name, IČO, ARES URL, seat, registration status, and VAT-source status. Public legal copy still contains draft operator-completion language until owner/counsel accepts the exact wording. | Accept the ARES-verified operator facts for public/contract use; confirm whether the exact public seat should be displayed; approve VAT/DIČ wording, privacy/support contact, and contracting identity. | Replace draft operator-completion wording in `/soukromi`, `/dpa`, and `/podminky`. |
 | DPO / privacy contact | `docs/legal-review.md` still requires a DPO decision; `docs/operator-identity-dpo-closeout.md` now lists the DPO options and copy impact. | Decide whether a DPO is required, voluntarily appointed, or not appointed; confirm contact wording. | Add final DPO/contact wording to privacy and DPA pages. |
 | Production subprocessors | `docs/subprocessors.md` has concrete evidence links and production facts, but enabled vendors remain `owner check`, `owner + counsel check`, or `counsel check`, not `approved`. | Approve or replace evidence for Vercel/Blob, Neon, Clerk, Stripe, Resend, Inngest, and OpenAI; confirm transfer mechanisms and subprocessor-change notice handling. | Publish a short customer-readable active subprocessor list; do not copy internal env names, branch IDs, or security details. |
 | Neon backups/PITR | Neon production branch/region/history retention are confirmed, but interpretation of `history_retention_seconds=86400` and separate backup commitments remains open. | Confirm PITR/backup retention, backup/storage location, restore commitment, and deletion/backups effect. | Finalize retention and DPA backup wording. |
@@ -118,7 +118,8 @@ Recommended handoff bundle:
 
 Before editing public legal pages:
 
-- [ ] Confirm operator identity and insert exact Czech OSVČ details.
+- [x] ARES verified operator identity fields and `docs/operator-identity-dpo-closeout.md` records them.
+- [ ] Owner/counsel accepted ARES-verified OSVČ details for public/contract use.
 - [ ] Confirm DPO/privacy contact decision.
 - [ ] Move required production vendor rows in `docs/subprocessors.md` to approved, or document why a row remains conditional/not production.
 - [ ] Confirm OpenAI DPA/data-retention/training settings and customer opt-in/human-review wording.

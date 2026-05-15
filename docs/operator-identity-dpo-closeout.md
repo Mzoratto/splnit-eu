@@ -6,12 +6,25 @@ Status: owner/counsel decision packet. This file is the next P0 blocker before c
 
 ## Current Finding
 
-The repository does not contain the final OSVČ/operator identity needed for public legal terms. Current public legal copy intentionally uses draft wording such as final name, IČO, ARES link, and address must be completed before production launch.
+ARES public search for `Marco Zoratto` returned one economic subject on 2026-05-15. The public legal pages have not been updated yet; they still intentionally use draft wording such as final name, IČO, ARES link, and address must be completed before production launch.
+
+Verified ARES facts:
+
+- source: ARES public API search and detail endpoint;
+- ARES UI URL: https://ares.gov.cz/ekonomicke-subjekty?ico=23821370;
+- ARES detail API: https://ares.gov.cz/ekonomicke-subjekty-v-be/rest/ekonomicke-subjekty/23821370;
+- legal operator name / obchodní jméno: Marco Zoratto;
+- IČO: 23821370;
+- seat / sídlo: č.p. 424, 78347 Hněvotín, Česká republika;
+- region/district from ARES: Olomoucký kraj / Olomouc;
+- date of creation / datum vzniku: 2025-10-09;
+- ARES update date / datum aktualizace: 2026-01-10;
+- registration states: ROS active, RES active, RŽP active;
+- VAT source state in ARES: DPH `NEEXISTUJICI` and SK DPH `NEEXISTUJICI`; counsel/owner should translate this into final VAT/DIČ public wording.
 
 Known from existing public copy and docs:
 
 - operator form: Czech sole trader / OSVČ;
-- locality used in footer copy: Olomouc;
 - current public contact used across legal/support/trust copy: `hello@splnit.eu`;
 - public legal copy source to update later: `lib/legal/legal-page-copy.ts`;
 - routes impacted later: `/soukromi`, `/cookies`, `/dpa`, `/podminky`;
@@ -25,11 +38,11 @@ Fill this table with exact approved values before public legal pages are edited.
 
 | Field | Required value | Current status | Notes |
 | --- | --- | --- | --- |
-| Legal operator name | `[LEGAL_OPERATOR_NAME]` | missing | Exact OSVČ name as registered/used for contracting. |
-| IČO | `[ICO_NUMBER]` | missing | Czech business ID. Verify formatting for public Czech copy. |
-| ARES URL | `[ARES_URL]` | missing | Link to public ARES record. |
-| Registered address / seat | `[REGISTERED_ADDRESS]` | missing | Confirm whether full address should appear publicly and in contracts. |
-| VAT status / DIČ | `[VAT_STATUS_OR_DIC]` | missing | State VAT payer / non-payer status and DIČ if applicable. |
+| Legal operator name | Marco Zoratto | ARES verified; owner/counsel acceptance pending | Exact ARES `obchodniJmeno`. |
+| IČO | 23821370 | ARES verified; owner/counsel acceptance pending | Czech business ID from ARES. |
+| ARES URL | https://ares.gov.cz/ekonomicke-subjekty?ico=23821370 | ARES verified; owner/counsel acceptance pending | Public ARES UI URL returned HTTP 200. |
+| Registered address / seat | č.p. 424, 78347 Hněvotín, Česká republika | ARES verified; owner/counsel acceptance pending | Confirm whether this exact public address should appear in all legal/contract pages. |
+| VAT status / DIČ | ARES shows DPH `NEEXISTUJICI` and SK DPH `NEEXISTUJICI` | ARES checked; counsel wording pending | Owner/counsel should decide final public wording such as non-VAT payer / no DIČ if applicable. |
 | Primary privacy contact | `hello@splnit.eu` or `[PRIVACY_CONTACT]` | provisional | Confirm mailbox is monitored and acceptable for data-subject/DPA/security questions. |
 | Primary support/contact email | `hello@splnit.eu` or `[SUPPORT_CONTACT]` | provisional | Confirm same mailbox or separate support/security address. |
 | Contracting language | Czech first; English-EU mirror; Italian localized layer | proposed | Confirm whether Czech is the governing/source language. |
@@ -50,7 +63,7 @@ Recommended default only if counsel agrees: no DPO appointed; privacy, DPA, subp
 
 ## Czech Public Copy Replacement Targets
 
-After owner/counsel provides the approved values, update Czech copy first in `lib/legal/legal-page-copy.ts`.
+After owner/counsel accepts the ARES-verified values and provides the remaining decisions, update Czech copy first in `lib/legal/legal-page-copy.ts`.
 
 ### `/soukromi` Privacy Policy
 
@@ -129,9 +142,10 @@ When the owner provides IČO or ARES URL:
 
 ## Before Public Legal Page Edit
 
-- [ ] Owner provided legal name.
-- [ ] Owner provided IČO.
-- [ ] Owner provided ARES URL or confirmed ARES record.
+- [x] ARES search verified legal name: Marco Zoratto.
+- [x] ARES search verified IČO: 23821370.
+- [x] ARES UI/API URL captured: https://ares.gov.cz/ekonomicke-subjekty?ico=23821370.
+- [ ] Owner/counsel accepted ARES-verified facts for public/contract use.
 - [ ] Owner/counsel approved registered address/seat display.
 - [ ] Owner/counsel approved VAT/DIČ wording.
 - [ ] Owner/counsel approved privacy/support/security contact mailbox.
