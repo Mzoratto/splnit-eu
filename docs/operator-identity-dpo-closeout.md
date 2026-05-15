@@ -47,7 +47,7 @@ Fill this table with exact approved values before public legal pages are edited.
 | Primary support/contact email | `hello@splnit.eu` | owner accepted; counsel/public-copy acceptance pending | Same mailbox is accepted for now for support/security/legal contact. |
 | Contracting language | Czech first; English-EU mirror; Italian localized layer | proposed | Confirm whether Czech is the governing/source language. |
 | Governing law / courts | likely Czech law/courts, exact clause pending | owner asked for explanation; counsel wording pending | Also affects `/podminky`; see Terms Scope Explanation below. |
-| Customer scope | likely B2B-only SaaS, exact exclusion/consumer wording pending | owner asked for explanation; counsel wording pending | Confirm if terms are B2B-only and whether consumer rules must be addressed. |
+| Customer scope | B2B-only: companies, entrepreneurs, and organisations | owner accepted; counsel/public-copy wording pending | Public terms should exclude consumers/private household use unless counsel requires different wording or fallback consumer notices. |
 
 ## DPO Decision Required
 
@@ -71,7 +71,7 @@ This is what the B2B/Czech-law question means.
 
 You need the terms to say who is allowed to buy/use Splnit.eu.
 
-Most likely position for Splnit.eu, if counsel agrees:
+Owner decision as of 2026-05-15: Splnit.eu is for business customers only: companies, entrepreneurs, and organisations. It is not intended for consumers using the service for private household purposes. Counsel should approve the exact Czech exclusion/eligibility wording before `/podminky` is finalized.
 
 ```text
 Splnit.eu is intended for business customers, entrepreneurs, companies, and organisations, not for consumers using the service for private household purposes.
@@ -189,7 +189,7 @@ When the owner provides IČO or ARES URL:
 - [ ] Owner/counsel approved VAT/DIČ wording.
 - [x] Owner approved `hello@splnit.eu` as privacy/support/security contact, subject to counsel/public-copy wording.
 - [ ] Counsel confirmed DPO option; currently under Czech-law legal review.
-- [ ] Counsel confirmed governing law/jurisdiction and B2B/consumer scope.
+- [ ] Counsel confirmed governing law/jurisdiction and exact B2B consumer-exclusion wording.
 - [ ] Update Czech public legal copy first.
 - [ ] Mirror into English-EU and Italian without stronger claims.
 - [ ] Run copy hygiene, lint, typecheck, and browser-check Czech legal routes.
