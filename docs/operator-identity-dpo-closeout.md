@@ -38,18 +38,20 @@ Fill this table with exact approved values before public legal pages are edited.
 
 | Field | Required value | Current status | Notes |
 | --- | --- | --- | --- |
-| Legal operator name | Marco Zoratto | ARES verified; owner/counsel acceptance pending | Exact ARES `obchodniJmeno`. |
-| IČO | 23821370 | ARES verified; owner/counsel acceptance pending | Czech business ID from ARES. |
-| ARES URL | https://ares.gov.cz/ekonomicke-subjekty?ico=23821370 | ARES verified; owner/counsel acceptance pending | Public ARES UI URL returned HTTP 200. |
-| Registered address / seat | č.p. 424, 78347 Hněvotín, Česká republika | ARES verified; owner/counsel acceptance pending | Confirm whether this exact public address should appear in all legal/contract pages. |
-| VAT status / DIČ | ARES shows DPH `NEEXISTUJICI` and SK DPH `NEEXISTUJICI` | ARES checked; counsel wording pending | Owner/counsel should decide final public wording such as non-VAT payer / no DIČ if applicable. |
-| Primary privacy contact | `hello@splnit.eu` or `[PRIVACY_CONTACT]` | provisional | Confirm mailbox is monitored and acceptable for data-subject/DPA/security questions. |
-| Primary support/contact email | `hello@splnit.eu` or `[SUPPORT_CONTACT]` | provisional | Confirm same mailbox or separate support/security address. |
+| Legal operator name | Marco Zoratto | owner accepted ARES value; counsel/public-copy acceptance pending | Exact ARES `obchodniJmeno`. |
+| IČO | 23821370 | owner accepted ARES value; counsel/public-copy acceptance pending | Czech business ID from ARES. |
+| ARES URL | https://ares.gov.cz/ekonomicke-subjekty?ico=23821370 | owner accepted ARES value; counsel/public-copy acceptance pending | Public ARES UI URL returned HTTP 200. |
+| Registered address / seat | č.p. 424, 78347 Hněvotín, Česká republika | owner accepted ARES value; counsel/public-copy acceptance pending | Use this exact public ARES seat unless counsel recommends a different display format. |
+| VAT status / DIČ | ARES shows DPH `NEEXISTUJICI` and SK DPH `NEEXISTUJICI` | ARES checked; owner unsure; counsel wording pending | This is the Czech VAT-registration question: whether public/contract copy should say non-VAT payer / not registered for VAT, omit VAT wording, or include another approved DIČ/VAT statement. |
+| Primary privacy contact | `hello@splnit.eu` | owner accepted; counsel/public-copy acceptance pending | Confirm mailbox is monitored and acceptable for data-subject/DPA/security questions. |
+| Primary support/contact email | `hello@splnit.eu` | owner accepted; counsel/public-copy acceptance pending | Same mailbox is accepted for now for support/security/legal contact. |
 | Contracting language | Czech first; English-EU mirror; Italian localized layer | proposed | Confirm whether Czech is the governing/source language. |
-| Governing law / courts | `[CZECH_GOVERNING_LAW_AND_COURTS]` | missing | Also affects `/podminky`. |
-| Customer scope | `[B2B_ONLY_OR_CONSUMER_SCOPE]` | missing | Confirm if terms are B2B-only and whether consumer rules must be addressed. |
+| Governing law / courts | likely Czech law/courts, exact clause pending | owner asked for explanation; counsel wording pending | Also affects `/podminky`; see Terms Scope Explanation below. |
+| Customer scope | likely B2B-only SaaS, exact exclusion/consumer wording pending | owner asked for explanation; counsel wording pending | Confirm if terms are B2B-only and whether consumer rules must be addressed. |
 
 ## DPO Decision Required
+
+Owner status as of 2026-05-15: DPO status remains under legal review for Czech-law compliance. Do not publish a final no-DPO or appointed-DPO statement until counsel confirms the position.
 
 The current legal review asks whether a DPO is required or voluntarily appointed. Owner/counsel must choose exactly one option.
 
@@ -60,6 +62,44 @@ The current legal review asks whether a DPO is required or voluntarily appointed
 | Mandatory DPO appointed | DPO is legally required and appointed. | Counsel confirms Article 37 or Czech-specific requirement applies. | Add DPO identity/contact and any required details. |
 
 Recommended default only if counsel agrees: no DPO appointed; privacy, DPA, subprocessor, objections, and security questions go to a monitored `hello@splnit.eu` or dedicated privacy/security mailbox.
+
+## Terms Scope Explanation
+
+This is what the B2B/Czech-law question means.
+
+### Customer scope
+
+You need the terms to say who is allowed to buy/use Splnit.eu.
+
+Most likely position for Splnit.eu, if counsel agrees:
+
+```text
+Splnit.eu is intended for business customers, entrepreneurs, companies, and organisations, not for consumers using the service for private household purposes.
+```
+
+Why this matters:
+
+- B2B-only terms can be simpler and can avoid consumer-specific cancellation/withdrawal rules.
+- If consumers can buy or subscribe, Czech/EU consumer protection rules may require extra notices, withdrawal/cancellation wording, and payment disclosures.
+- If the app has self-serve checkout, pricing pages, or onboarding that does not block consumers, counsel should decide whether B2B-only wording is enough or whether consumer terms are needed.
+
+### Governing law and courts
+
+This decides which law applies to the contract and where disputes are handled.
+
+Likely Czech-first position, if counsel agrees:
+
+```text
+The contract is governed by Czech law. Disputes are handled by the competent courts of the Czech Republic, unless mandatory law says otherwise.
+```
+
+Why this matters:
+
+- It keeps the Czech OSVČ/operator position consistent with the public legal pages.
+- It gives a default dispute forum for customer contracts.
+- For EU customers, mandatory local/customer-protection rules may still override parts of the clause, especially if consumers are allowed.
+
+Counsel should provide the exact Czech wording before `/podminky` is finalized.
 
 ## Czech Public Copy Replacement Targets
 
@@ -145,11 +185,10 @@ When the owner provides IČO or ARES URL:
 - [x] ARES search verified legal name: Marco Zoratto.
 - [x] ARES search verified IČO: 23821370.
 - [x] ARES UI/API URL captured: https://ares.gov.cz/ekonomicke-subjekty?ico=23821370.
-- [ ] Owner/counsel accepted ARES-verified facts for public/contract use.
-- [ ] Owner/counsel approved registered address/seat display.
+- [x] Owner accepted ARES-verified operator identity/address for public/contract use, subject to counsel/public-copy wording.
 - [ ] Owner/counsel approved VAT/DIČ wording.
-- [ ] Owner/counsel approved privacy/support/security contact mailbox.
-- [ ] Counsel confirmed DPO option.
+- [x] Owner approved `hello@splnit.eu` as privacy/support/security contact, subject to counsel/public-copy wording.
+- [ ] Counsel confirmed DPO option; currently under Czech-law legal review.
 - [ ] Counsel confirmed governing law/jurisdiction and B2B/consumer scope.
 - [ ] Update Czech public legal copy first.
 - [ ] Mirror into English-EU and Italian without stronger claims.

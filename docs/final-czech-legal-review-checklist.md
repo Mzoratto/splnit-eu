@@ -59,8 +59,8 @@ Public page update order after approval:
 
 | Area | Current evidence/status | Required owner/counsel decision | Public-page impact |
 | --- | --- | --- | --- |
-| Operator identity | ARES search for `Marco Zoratto` returned one economic subject; `docs/operator-identity-dpo-closeout.md` now records ARES-verified name, IČO, ARES URL, seat, registration status, and VAT-source status. Public legal copy still contains draft operator-completion language until owner/counsel accepts the exact wording. | Accept the ARES-verified operator facts for public/contract use; confirm whether the exact public seat should be displayed; approve VAT/DIČ wording, privacy/support contact, and contracting identity. | Replace draft operator-completion wording in `/soukromi`, `/dpa`, and `/podminky`. |
-| DPO / privacy contact | `docs/legal-review.md` still requires a DPO decision; `docs/operator-identity-dpo-closeout.md` now lists the DPO options and copy impact. | Decide whether a DPO is required, voluntarily appointed, or not appointed; confirm contact wording. | Add final DPO/contact wording to privacy and DPA pages. |
+| Operator identity | ARES search for `Marco Zoratto` returned one economic subject; `docs/operator-identity-dpo-closeout.md` records ARES-verified name, IČO, ARES URL, seat, registration status, and VAT-source status. Owner accepted the ARES-verified operator identity/address for public/contract use, subject to counsel/public-copy wording. | Counsel should approve exact legal-page wording and VAT/DIČ treatment. | Replace draft operator-completion wording in `/soukromi`, `/dpa`, and `/podminky`. |
+| DPO / privacy contact | DPO status remains under Czech-law legal review. Owner accepted `hello@splnit.eu` as the privacy/support/security contact, subject to counsel/public-copy wording. | Decide whether a DPO is required, voluntarily appointed, or not appointed; confirm final contact wording. | Add final DPO/contact wording to privacy and DPA pages. |
 | Production subprocessors | `docs/subprocessors.md` has concrete evidence links and production facts, but enabled vendors remain `owner check`, `owner + counsel check`, or `counsel check`, not `approved`. | Approve or replace evidence for Vercel/Blob, Neon, Clerk, Stripe, Resend, Inngest, and OpenAI; confirm transfer mechanisms and subprocessor-change notice handling. | Publish a short customer-readable active subprocessor list; do not copy internal env names, branch IDs, or security details. |
 | Neon backups/PITR | Neon production branch/region/history retention are confirmed, but interpretation of `history_retention_seconds=86400` and separate backup commitments remains open. | Confirm PITR/backup retention, backup/storage location, restore commitment, and deletion/backups effect. | Finalize retention and DPA backup wording. |
 | Vercel logs/analytics/Speed Insights retention | Live consent-gated Web Analytics and Speed Insights collection endpoints returned HTTP 200, but account-level runtime log/analytics/speed retention/export settings still need confirmation. | Confirm Vercel runtime log retention, analytics retention/export windows, Speed Insights retention/export windows, and whether public cookie wording fully matches the enabled setup. | Update `/cookies`, `/soukromi`, and subprocessor wording for optional analytics. |
@@ -119,13 +119,15 @@ Recommended handoff bundle:
 Before editing public legal pages:
 
 - [x] ARES verified operator identity fields and `docs/operator-identity-dpo-closeout.md` records them.
-- [ ] Owner/counsel accepted ARES-verified OSVČ details for public/contract use.
-- [ ] Confirm DPO/privacy contact decision.
+- [x] Owner accepted ARES-verified OSVČ identity/address for public/contract use, subject to counsel/public-copy wording.
+- [x] Owner accepted `hello@splnit.eu` as privacy/support/security contact, subject to counsel/public-copy wording.
+- [ ] Confirm VAT/DIČ wording.
+- [ ] Confirm DPO/privacy contact decision; DPO status is under Czech-law legal review.
+- [ ] Confirm Terms commercial positions: liability, refunds, cancellation, SLA/support, governing law, jurisdiction, B2B/consumer scope.
 - [ ] Move required production vendor rows in `docs/subprocessors.md` to approved, or document why a row remains conditional/not production.
 - [ ] Confirm OpenAI DPA/data-retention/training settings and customer opt-in/human-review wording.
 - [ ] Confirm Vercel, Neon, Inngest, Clerk, Stripe, and Resend retention/account settings.
 - [ ] Confirm special-category uploaded evidence policy.
-- [ ] Confirm Terms commercial positions: liability, refunds, cancellation, SLA/support, governing law, jurisdiction, B2B/consumer scope.
 - [ ] Confirm incident notification/support commitments.
 - [ ] Update Czech public legal copy first.
 - [ ] Mirror approved meaning into English-EU and Italian without adding stronger claims.
