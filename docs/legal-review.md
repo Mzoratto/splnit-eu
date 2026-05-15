@@ -20,11 +20,13 @@ This is an engineering legal-readiness checklist, not legal advice. Counsel must
 - Expanded `/podminky` with stronger service disclaimers, account responsibility, acceptable use, billing, confidentiality, data protection, and termination notes.
 - Added `docs/subprocessors.md`, `docs/retention-policy.md`, and `docs/data-processing-map.md` as counsel handoff annexes.
 - Added `docs/offboarding-runbook.md` for customer export, deletion sequencing, and residual vendor-retention checks.
+- Added `docs/operator-identity-dpo-closeout.md` as the P0 owner/counsel decision packet for final OSVČ/operator identity and DPO/privacy-contact wording.
 - Added `docs/final-czech-legal-review-checklist.md` as the Czech-first publication gate before public legal page updates.
 - Gated optional PostHog feature-flag analytics behind accepted cookie consent and removed the unsupported fixed-region claim from pricing FAQ copy.
 
 ## Counsel Handoff Annexes
 
+- `docs/operator-identity-dpo-closeout.md` - owner/counsel decision packet for final OSVČ/operator identity, privacy contact, DPO status, and Czech-first public copy replacement targets.
 - `docs/subprocessors.md` - vendor/subprocessor register with approval criteria and unresolved production-location/transfer items.
 - `docs/retention-policy.md` - proposed data retention schedule, current code enforcement, and deletion/export gaps.
 - `docs/data-processing-map.md` - working processing map for purposes, roles, data categories, recipients, retention criteria, and open decisions.

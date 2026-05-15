@@ -26,6 +26,7 @@ Public legal copy source, intentionally not edited in this pass:
 Counsel handoff/supporting docs:
 
 - `docs/legal-review.md`
+- `docs/operator-identity-dpo-closeout.md`
 - `docs/subprocessors.md`
 - `docs/retention-policy.md`
 - `docs/data-processing-map.md`
@@ -58,8 +59,8 @@ Public page update order after approval:
 
 | Area | Current evidence/status | Required owner/counsel decision | Public-page impact |
 | --- | --- | --- | --- |
-| Operator identity | Public legal copy describes the operator as a Czech sole trader/OSVČ but still says final name, IČO, ARES link, and address must be completed before production launch. | Confirm exact legal name, IČO, ARES URL, registered address, VAT status if applicable, privacy/support contact, and contracting identity. | Replace draft operator-completion wording in `/soukromi`, `/dpa`, and `/podminky`. |
-| DPO / privacy contact | `docs/legal-review.md` still requires a DPO decision. | Decide whether a DPO is required, voluntarily appointed, or not appointed; confirm contact wording. | Add final DPO/contact wording to privacy and DPA pages. |
+| Operator identity | Public legal copy describes the operator as a Czech sole trader/OSVČ but still says final name, IČO, ARES link, and address must be completed before production launch. Internal closeout packet exists in `docs/operator-identity-dpo-closeout.md`. | Confirm exact legal name, IČO, ARES URL, registered address, VAT status if applicable, privacy/support contact, and contracting identity. | Replace draft operator-completion wording in `/soukromi`, `/dpa`, and `/podminky`. |
+| DPO / privacy contact | `docs/legal-review.md` still requires a DPO decision; `docs/operator-identity-dpo-closeout.md` now lists the DPO options and copy impact. | Decide whether a DPO is required, voluntarily appointed, or not appointed; confirm contact wording. | Add final DPO/contact wording to privacy and DPA pages. |
 | Production subprocessors | `docs/subprocessors.md` has concrete evidence links and production facts, but enabled vendors remain `owner check`, `owner + counsel check`, or `counsel check`, not `approved`. | Approve or replace evidence for Vercel/Blob, Neon, Clerk, Stripe, Resend, Inngest, and OpenAI; confirm transfer mechanisms and subprocessor-change notice handling. | Publish a short customer-readable active subprocessor list; do not copy internal env names, branch IDs, or security details. |
 | Neon backups/PITR | Neon production branch/region/history retention are confirmed, but interpretation of `history_retention_seconds=86400` and separate backup commitments remains open. | Confirm PITR/backup retention, backup/storage location, restore commitment, and deletion/backups effect. | Finalize retention and DPA backup wording. |
 | Vercel logs/analytics/Speed Insights retention | Live consent-gated Web Analytics and Speed Insights collection endpoints returned HTTP 200, but account-level runtime log/analytics/speed retention/export settings still need confirmation. | Confirm Vercel runtime log retention, analytics retention/export windows, Speed Insights retention/export windows, and whether public cookie wording fully matches the enabled setup. | Update `/cookies`, `/soukromi`, and subprocessor wording for optional analytics. |
@@ -104,13 +105,14 @@ Recommended handoff bundle:
 
 1. `lib/legal/legal-page-copy.ts` - current public legal draft copy for Czech/English/Italian.
 2. `docs/legal-review.md` - original counsel handoff checklist.
-3. `docs/final-czech-legal-review-checklist.md` - final Czech-first publication gate and P0/P1 blockers.
-4. `docs/subprocessors.md` - production vendor facts, evidence links, and remaining DPA/retention gaps.
-5. `docs/data-processing-map.md` - working processing map / Article 30 input.
-6. `docs/retention-policy.md` - proposed retention schedule and open retention decisions.
-7. `docs/offboarding-runbook.md` - export/deletion and residual vendor-retention runbook.
-8. `docs/audit-log-export-sop.md` - audit export support procedure.
-9. `docs/ops/questionnaire-ai.md` and `docs/questionnaire-flow-audit.md` - OpenAI questionnaire proof boundary and AI review policy.
+3. `docs/operator-identity-dpo-closeout.md` - exact owner/counsel decision packet for OSVČ identity, privacy contact, and DPO status.
+4. `docs/final-czech-legal-review-checklist.md` - final Czech-first publication gate and P0/P1 blockers.
+5. `docs/subprocessors.md` - production vendor facts, evidence links, and remaining DPA/retention gaps.
+6. `docs/data-processing-map.md` - working processing map / Article 30 input.
+7. `docs/retention-policy.md` - proposed retention schedule and open retention decisions.
+8. `docs/offboarding-runbook.md` - export/deletion and residual vendor-retention runbook.
+9. `docs/audit-log-export-sop.md` - audit export support procedure.
+10. `docs/ops/questionnaire-ai.md` and `docs/questionnaire-flow-audit.md` - OpenAI questionnaire proof boundary and AI review policy.
 
 ## Final Pre-Publication Checklist
 
