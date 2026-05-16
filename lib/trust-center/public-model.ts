@@ -10,202 +10,41 @@ import {
 import {
   CATEGORY_META,
   normalizeControlCategory,
-  type CategoryStatus,
   type PublicControlCategory,
 } from "@/lib/frameworks/categories";
 import { FRAMEWORK_LIBRARY, type FrameworkSeed } from "@/lib/frameworks/registry";
 import type { Locale } from "@/i18n/routing";
-
-export type PublicTrustDocument = {
-  description: string;
-  frameworkSlugs: string[];
-  href: string;
-  id: string;
-  isLocked: boolean;
-  title: string;
-};
-
-export type TrustSignal = {
-  icon: "server" | "shield" | "badge" | "radar" | "activity";
-  label: string;
-  value: string;
-};
-
-export type TrustFrameworkCategory = {
-  category: PublicControlCategory;
-  description: string;
-  icon: string;
-  inProgress: number;
-  name: string;
-  notApplicable: number;
-  status: CategoryStatus;
-  total: number;
-  verified: number;
-};
-
-export type PublicFrameworkRecord = {
-  descriptionCs?: string | null;
-  id?: string;
-  mandatoryDeadline?: Date | string | null;
-  nameCs: string;
-  nameEn: string;
-  regulator?: string | null;
-  slug: string;
-  version?: string | null;
-};
-
-export type TrustFramework = {
-  categories: TrustFrameworkCategory[];
-  effectiveDate: string;
-  framework: PublicFrameworkRecord;
-  inProgress: number;
-  lastAssessedAt: Date | null;
-  law: string;
-  maxPenalty: string;
-  notApplicable: number;
-  regulator: string;
-  score: number | null;
-  statusLabel: "VERIFIED" | "IN PROGRESS" | "MONITORED";
-  statusTone: "pass" | "warn" | "neutral";
-  totalControls: number;
-  verified: number;
-};
-
-export type PublicTrustCenterModel = {
-  accentColor: string;
-  contactEmails?: {
-    privacy?: string;
-    security?: string;
-    vendor?: string;
-  };
-  descriptionOverride?: string;
-  documents: PublicTrustDocument[];
-  frameworks: TrustFramework[];
-  heroEyebrowOverride?: string;
-  heroTitleOverride?: string;
-  isDemo?: boolean;
-  lastTestedAt: Date | null;
-  logoUrl: string | null;
-  nextTestAt: Date | null;
-  organisationName: string;
-  orgSlug: string;
-  accessGranted: boolean;
-  ndaRequired: boolean;
-  showFrameworkDrilldown: boolean;
-  showFrameworkPercentages: boolean;
-  showLiveIndicator?: boolean;
-  trustSignals: TrustSignal[];
-  uptimePct: number | null;
-};
+import {
+  getLocalizedDocuments,
+  getLockedDocuments,
+  getSplnitDocuments,
+} from "@/lib/trust-center/public-documents";
+import type {
+  PublicFrameworkRecord,
+  PublicTrustCenterModel,
+  TrustFramework,
+  TrustFrameworkCategory,
+  TrustSignal,
+} from "@/lib/trust-center/public-types";
+export {
+  getDocumentsForFramework,
+  getLocalizedDocuments,
+  getLocalizedDocumentsForFramework,
+} from "@/lib/trust-center/public-documents";
+export type {
+  PublicFrameworkRecord,
+  PublicTrustCenterModel,
+  PublicTrustDocument,
+  TrustFramework,
+  TrustFrameworkCategory,
+  TrustSignal,
+} from "@/lib/trust-center/public-types";
 
 type ControlStatusRow = {
   category: string | null;
   frameworkId: string;
   lastTestedAt: Date | null;
   status: string | null;
-};
-
-const PUBLIC_DOCUMENTS: PublicTrustDocument[] = [
-  {
-    description: "Sdílí se pouze tehdy, pokud je pro organizaci k dispozici.",
-    frameworkSlugs: ["iso27001", "nis2"],
-    href: "mailto:hello@splnit.eu?subject=Request%20SOC%202%20report",
-    id: "soc2",
-    isLocked: true,
-    title: "SOC 2 report",
-  },
-  {
-    description: "Sdílí se pouze tehdy, pokud je pro organizaci k dispozici.",
-    frameworkSlugs: ["iso27001"],
-    href: "mailto:hello@splnit.eu?subject=Request%20ISO%2027001%20SoA",
-    id: "iso-soa",
-    isLocked: true,
-    title: "ISO 27001 SoA",
-  },
-  {
-    description: "Sdílí se pouze tehdy, pokud je pro organizaci k dispozici.",
-    frameworkSlugs: ["nis2", "iso27001"],
-    href: "mailto:hello@splnit.eu?subject=Request%20penetration%20test%20summary",
-    id: "pentest",
-    isLocked: true,
-    title: "Pen test summary",
-  },
-  {
-    description: "Veřejné informace o zpracování osobních údajů.",
-    frameworkSlugs: ["gdpr"],
-    href: "/soukromi",
-    id: "privacy-policy",
-    isLocked: false,
-    title: "Privacy Policy",
-  },
-  {
-    description: "Vzor smlouvy o zpracování osobních údajů.",
-    frameworkSlugs: ["gdpr"],
-    href: "/dpa",
-    id: "dpa",
-    isLocked: false,
-    title: "DPA template",
-  },
-  {
-    description: "Aktuální seznam hlavních subdodavatelů.",
-    frameworkSlugs: ["gdpr", "nis2", "iso27001"],
-    href: "/soukromi#subprocessors",
-    id: "subprocessors",
-    isLocked: false,
-    title: "Sub-processor list",
-  },
-  {
-    description: "Přehled bezpečnostní architektury a provozních opatření.",
-    frameworkSlugs: ["nis2", "iso27001"],
-    href: "mailto:hello@splnit.eu?subject=Security%20Whitepaper",
-    id: "whitepaper",
-    isLocked: false,
-    title: "Security Whitepaper",
-  },
-  {
-    description: "Dostupnost služby, reakční časy a provozní odpovědnosti.",
-    frameworkSlugs: ["nis2", "iso27001"],
-    href: "mailto:hello@splnit.eu?subject=SLA",
-    id: "sla",
-    isLocked: false,
-    title: "SLA",
-  },
-];
-
-const DOCUMENT_DESCRIPTIONS: Record<
-  Locale,
-  Record<PublicTrustDocument["id"], string>
-> = {
-  "cs-CZ": {
-    dpa: "Vzor smlouvy o zpracování osobních údajů.",
-    "iso-soa": "Sdílí se pouze tehdy, pokud je pro organizaci k dispozici.",
-    pentest: "Sdílí se pouze tehdy, pokud je pro organizaci k dispozici.",
-    "privacy-policy": "Veřejné informace o zpracování osobních údajů.",
-    sla: "Dostupnost služby, reakční časy a provozní odpovědnosti.",
-    soc2: "Sdílí se pouze tehdy, pokud je pro organizaci k dispozici.",
-    subprocessors: "Aktuální seznam hlavních subdodavatelů.",
-    whitepaper: "Přehled bezpečnostní architektury a provozních opatření.",
-  },
-  "en-EU": {
-    dpa: "Template data processing agreement.",
-    "iso-soa": "Shared only if it is available for this organisation.",
-    pentest: "Shared only if it is available for this organisation.",
-    "privacy-policy": "Public information about personal data processing.",
-    sla: "Service availability, response times, and operating responsibilities.",
-    soc2: "Shared only if it is available for this organisation.",
-    subprocessors: "Current list of main sub-processors.",
-    whitepaper: "Overview of security architecture and operating measures.",
-  },
-  "it-IT": {
-    dpa: "Modello di accordo per il trattamento dei dati.",
-    "iso-soa": "Condiviso solo se disponibile per questa organizzazione.",
-    pentest: "Condiviso solo se disponibile per questa organizzazione.",
-    "privacy-policy": "Informazioni pubbliche sul trattamento dei dati personali.",
-    sla: "Disponibilità del servizio, tempi di risposta e responsabilità operative.",
-    soc2: "Condiviso solo se disponibile per questa organizzazione.",
-    subprocessors: "Elenco aggiornato dei principali sub-responsabili.",
-    whitepaper: "Panoramica di architettura di sicurezza e misure operative.",
-  },
 };
 
 const CATEGORY_META_IT: Record<
@@ -409,38 +248,6 @@ export async function getPublicFrameworkDetailModel(input: {
   return framework ? { framework, trustCenter } : null;
 }
 
-export function getDocumentsForFramework(frameworkSlug: string) {
-  return PUBLIC_DOCUMENTS.filter((document) =>
-    document.frameworkSlugs.includes(frameworkSlug),
-  );
-}
-
-export function getLocalizedDocuments(locale: Locale) {
-  const descriptions = DOCUMENT_DESCRIPTIONS[locale] ?? DOCUMENT_DESCRIPTIONS["cs-CZ"];
-
-  return PUBLIC_DOCUMENTS.map((document) => ({
-    ...document,
-    description: descriptions[document.id] ?? document.description,
-  }));
-}
-
-function getLockedDocuments(locale: Locale) {
-  return getLocalizedDocuments(locale).map((document) => ({
-    ...document,
-    href: "mailto:hello@splnit.eu?subject=Trust%20Center%20access%20request",
-    isLocked: true,
-  }));
-}
-
-export function getLocalizedDocumentsForFramework(
-  frameworkSlug: string,
-  locale: Locale,
-) {
-  return getLocalizedDocuments(locale).filter((document) =>
-    document.frameworkSlugs.includes(frameworkSlug),
-  );
-}
-
 async function loadDatabaseTrustCenter(input: {
   accessToken?: string | null;
   locale: Locale;
@@ -607,53 +414,6 @@ function buildSplnitFramework(
     locale,
     verified: 0,
   });
-}
-
-function getSplnitDocuments(locale: Locale): PublicTrustDocument[] {
-  const copy = splnitDocumentCopy(locale);
-
-  return [
-    {
-      description: copy.securityWhitepaperDescription,
-      frameworkSlugs: ["nis2", "iso27001", "gdpr"],
-      href: "/security",
-      id: "splnit-security-whitepaper",
-      isLocked: false,
-      title: copy.securityWhitepaper,
-    },
-    {
-      description: copy.dpaDescription,
-      frameworkSlugs: ["gdpr"],
-      href: "/dpa",
-      id: "splnit-dpa",
-      isLocked: false,
-      title: copy.dpa,
-    },
-    {
-      description: copy.subprocessorsDescription,
-      frameworkSlugs: ["gdpr", "nis2", "iso27001"],
-      href: "/dpa#subprocessors",
-      id: "splnit-subprocessors",
-      isLocked: false,
-      title: copy.subprocessors,
-    },
-    {
-      description: copy.privacyDescription,
-      frameworkSlugs: ["gdpr"],
-      href: "/soukromi",
-      id: "splnit-privacy",
-      isLocked: false,
-      title: copy.privacy,
-    },
-    {
-      description: copy.termsDescription,
-      frameworkSlugs: ["nis2", "iso27001"],
-      href: "/podminky",
-      id: "splnit-terms",
-      isLocked: false,
-      title: copy.terms,
-    },
-  ];
 }
 
 function getDemoHeroEyebrow(locale: Locale) {
@@ -1128,56 +888,5 @@ function splnitTrustCopy(locale: Locale) {
     title:
       "Splnit.eu publikuje vlastní Trust Center pro bezpečnostní postoj, subdodavatele a právní dokumenty.",
     uptime: "Status page propojena",
-  };
-}
-
-function splnitDocumentCopy(locale: Locale) {
-  if (locale === "en-EU") {
-    return {
-      dpa: "DPA",
-      dpaDescription: "Public data processing terms and processor commitments.",
-      privacy: "Privacy Policy",
-      privacyDescription: "Public information about Splnit.eu personal data processing.",
-      securityWhitepaper: "Security Whitepaper",
-      securityWhitepaperDescription:
-        "Current early-access security posture, hosting, access, and incident-response summary.",
-      subprocessors: "Sub-processor list",
-      subprocessorsDescription:
-        "Main sub-processors and processing context maintained in the public DPA page.",
-      terms: "Terms of Service",
-      termsDescription: "Public service terms for Splnit.eu.",
-    };
-  }
-
-  if (locale === "it-IT") {
-    return {
-      dpa: "DPA",
-      dpaDescription: "Termini pubblici di trattamento dati e impegni del responsabile.",
-      privacy: "Privacy Policy",
-      privacyDescription: "Informazioni pubbliche sul trattamento dei dati personali da parte di Splnit.eu.",
-      securityWhitepaper: "Security Whitepaper",
-      securityWhitepaperDescription:
-        "Sintesi aggiornata di sicurezza early-access, hosting, accessi e risposta agli incidenti.",
-      subprocessors: "Lista sub-responsabili",
-      subprocessorsDescription:
-        "Principali sub-responsabili e contesto di trattamento mantenuti nella pagina DPA pubblica.",
-      terms: "Termini di servizio",
-      termsDescription: "Termini pubblici del servizio Splnit.eu.",
-    };
-  }
-
-  return {
-    dpa: "DPA",
-    dpaDescription: "Veřejné podmínky zpracování dat a závazky zpracovatele.",
-    privacy: "Privacy Policy",
-    privacyDescription: "Veřejné informace o zpracování osobních údajů ve Splnit.eu.",
-    securityWhitepaper: "Security Whitepaper",
-    securityWhitepaperDescription:
-      "Aktuální early-access přehled bezpečnosti, hostingu, přístupů a incident response.",
-    subprocessors: "Seznam subdodavatelů",
-    subprocessorsDescription:
-      "Hlavní subdodavatelé a kontext zpracování udržovaný na veřejné DPA stránce.",
-    terms: "Podmínky služby",
-    termsDescription: "Veřejné podmínky služby Splnit.eu.",
   };
 }
