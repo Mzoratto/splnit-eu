@@ -1,8 +1,6 @@
 #!/usr/bin/env node
 import { existsSync, readFileSync } from "node:fs";
-import { homedir } from "node:os";
-import { join, resolve } from "node:path";
-import { spawnSync } from "node:child_process";
+import { resolve } from "node:path";
 import { parse } from "dotenv";
 
 const projectDir = process.cwd();
@@ -20,6 +18,11 @@ if (existsSync(envPath)) {
 }
 
 const recipient = process.env.SMOKE_RECIPIENT_EMAIL?.trim();
+const tenantId = process.env.MICROSOFT_GRAPH_TENANT_ID?.trim();
+const clientId = process.env.MICROSOFT_GRAPH_CLIENT_ID?.trim();
+const clientSecret = process.env.MICROSOFT_GRAPH_CLIENT_SECRET?.trim();
+const mailboxUser = process.env.MICROSOFT_GRAPH_MAILBOX_USER_ID?.trim()
+  ?? process.env.MICROSOFT_GRAPH_MAILBOX_USER?.trim();
 const pageSize = Number.parseInt(process.env.MAILBOX_RECEIPT_PAGE_SIZE ?? "50", 10);
 const expectedSubjects = [
   "Vendor security questionnaire",
@@ -42,109 +45,182 @@ function output(payload) {
   }, null, 2));
 }
 
-function commandExists(command) {
-  const result = spawnSync("sh", ["-lc", `command -v ${command}`], {
-    encoding: "utf8",
-    stdio: ["ignore", "pipe", "pipe"],
-  });
-  return result.status === 0 && result.stdout.trim().length > 0;
+function normalizeGraphMessage(message) {
+  const toRecipients = Array.isArray(message.toRecipients) ? message.toRecipients : [];
+  const ccRecipients = Array.isArray(message.ccRecipients) ? message.ccRecipients : [];
+  const recipients = [...toRecipients, ...ccRecipients]
+    .map((entry) => entry?.emailAddress?.address ?? entry?.emailAddress?.name ?? "")
+    .filter(Boolean);
+
+  return {
+    date: String(message.receivedDateTime ?? message.sentDateTime ?? ""),
+    from: String(message.from?.emailAddress?.address ?? message.sender?.emailAddress?.address ?? ""),
+    id: message.id ?? null,
+    internetMessageId: message.internetMessageId ?? null,
+    subject: String(message.subject ?? ""),
+    to: recipients,
+    webLink: message.webLink ?? null,
+  };
 }
 
-function normalizeEnvelope(envelope) {
-  const subject = String(envelope.subject ?? envelope.Subject ?? "");
-  const from = JSON.stringify(envelope.from ?? envelope.sender ?? envelope.From ?? "");
-  const to = JSON.stringify(envelope.to ?? envelope.recipients ?? envelope.To ?? "");
-  const date = String(envelope.date ?? envelope.Date ?? envelope.internalDate ?? "");
-  const id = envelope.id ?? envelope.uid ?? envelope.messageId ?? envelope["message-id"] ?? null;
-  return { date, from, id, subject, to };
-}
-
-function envelopeMatches(envelope) {
-  const normalized = normalizeEnvelope(envelope);
-  const haystack = `${normalized.subject}\n${normalized.from}\n${normalized.to}`.toLowerCase();
+function messageMatches(message) {
+  const normalized = normalizeGraphMessage(message);
+  const haystack = `${normalized.subject}\n${normalized.from}\n${normalized.to.join("\n")}`.toLowerCase();
   const recipientMatches = recipient ? haystack.includes(recipient.toLowerCase()) : true;
   const subjectMatches = expectedSubjects.some((subject) => haystack.includes(subject.toLowerCase()));
   return subjectMatches && recipientMatches;
 }
 
-if (!recipient) {
-  output({
-    ok: false,
-    mailboxReceiptVerified: false,
-    reason: "missing_smoke_recipient_email",
-    missing: ["SMOKE_RECIPIENT_EMAIL"],
-    expectedSubjects,
-  });
-  process.exit(1);
+function graphErrorDetails(status, text) {
+  try {
+    const parsed = JSON.parse(text);
+    return {
+      status,
+      code: parsed?.error?.code ?? null,
+      message: parsed?.error?.message ?? text.slice(0, 1000),
+    };
+  } catch {
+    return { status, message: text.slice(0, 1000) };
+  }
 }
 
-if (!commandExists("himalaya") || !existsSync(join(homedir(), ".config/himalaya/config.toml"))) {
+const missing = [];
+if (!recipient) missing.push("SMOKE_RECIPIENT_EMAIL");
+if (!tenantId) missing.push("MICROSOFT_GRAPH_TENANT_ID");
+if (!clientId) missing.push("MICROSOFT_GRAPH_CLIENT_ID");
+if (!clientSecret) missing.push("MICROSOFT_GRAPH_CLIENT_SECRET");
+if (!mailboxUser) missing.push("MICROSOFT_GRAPH_MAILBOX_USER_ID");
+
+if (missing.length > 0) {
   output({
     ok: false,
     mailboxReceiptVerified: false,
-    reason: "mailbox_reader_not_configured",
+    reason: "microsoft_graph_not_configured",
+    missing,
     recipient: redactEmail(recipient),
+    mailboxUser: redactEmail(mailboxUser),
     required: [
-      "Install/configure himalaya for the controlled mailbox, or run this script on a machine where himalaya can read that mailbox.",
-      "The mailbox reader must have IMAP access to SMOKE_RECIPIENT_EMAIL.",
+      "Configure a Microsoft Entra app with Microsoft Graph Mail.Read access to the real mailbox that receives SMOKE_RECIPIENT_EMAIL alias mail.",
+      "Set MICROSOFT_GRAPH_TENANT_ID, MICROSOFT_GRAPH_CLIENT_ID, MICROSOFT_GRAPH_CLIENT_SECRET, and MICROSOFT_GRAPH_MAILBOX_USER_ID.",
+      "MICROSOFT_GRAPH_MAILBOX_USER_ID should be the real licensed mailbox, for example marco@splnit.eu, not an alias like smoke@splnit.eu.",
     ],
     expectedSubjects,
   });
   process.exit(1);
 }
 
-const list = spawnSync("himalaya", [
-  "envelope",
-  "list",
-  "--page-size",
-  String(Number.isFinite(pageSize) && pageSize > 0 ? pageSize : 50),
-  "--output",
-  "json",
-], {
-  encoding: "utf8",
-  stdio: ["ignore", "pipe", "pipe"],
+const tokenResponse = await fetch(`https://login.microsoftonline.com/${encodeURIComponent(tenantId)}/oauth2/v2.0/token`, {
+  method: "POST",
+  headers: { "content-type": "application/x-www-form-urlencoded" },
+  body: new URLSearchParams({
+    client_id: clientId,
+    client_secret: clientSecret,
+    grant_type: "client_credentials",
+    scope: "https://graph.microsoft.com/.default",
+  }),
 });
 
-if (list.status !== 0) {
+const tokenBody = await tokenResponse.text();
+if (!tokenResponse.ok) {
   output({
     ok: false,
     mailboxReceiptVerified: false,
-    reason: "mailbox_reader_failed",
+    reason: "microsoft_graph_token_failed",
     recipient: redactEmail(recipient),
-    stderr: list.stderr.trim().slice(0, 1000),
+    mailboxUser: redactEmail(mailboxUser),
+    graphError: graphErrorDetails(tokenResponse.status, tokenBody),
     expectedSubjects,
   });
   process.exit(1);
 }
 
-let envelopes;
+let accessToken;
 try {
-  envelopes = JSON.parse(list.stdout);
+  accessToken = JSON.parse(tokenBody).access_token;
 } catch (error) {
   output({
     ok: false,
     mailboxReceiptVerified: false,
-    reason: "mailbox_reader_output_not_json",
+    reason: "microsoft_graph_token_output_not_json",
     recipient: redactEmail(recipient),
+    mailboxUser: redactEmail(mailboxUser),
     error: error instanceof Error ? error.message : "JSON parse failed",
     expectedSubjects,
   });
   process.exit(1);
 }
 
-const envelopeList = Array.isArray(envelopes) ? envelopes : Object.values(envelopes).flat().filter((value) => typeof value === "object" && value !== null);
-const matches = envelopeList.filter(envelopeMatches).map(normalizeEnvelope);
+if (!accessToken) {
+  output({
+    ok: false,
+    mailboxReceiptVerified: false,
+    reason: "microsoft_graph_token_missing_access_token",
+    recipient: redactEmail(recipient),
+    mailboxUser: redactEmail(mailboxUser),
+    expectedSubjects,
+  });
+  process.exit(1);
+}
+
+const top = String(Number.isFinite(pageSize) && pageSize > 0 ? Math.min(pageSize, 100) : 50);
+const select = "id,subject,from,sender,toRecipients,ccRecipients,receivedDateTime,sentDateTime,internetMessageId,webLink";
+const messagesUrl = new URL(`https://graph.microsoft.com/v1.0/users/${encodeURIComponent(mailboxUser)}/mailFolders/inbox/messages`);
+messagesUrl.searchParams.set("$top", top);
+messagesUrl.searchParams.set("$orderby", "receivedDateTime desc");
+messagesUrl.searchParams.set("$select", select);
+
+const messagesResponse = await fetch(messagesUrl, {
+  headers: {
+    authorization: `Bearer ${accessToken}`,
+    accept: "application/json",
+  },
+});
+
+const messagesBody = await messagesResponse.text();
+if (!messagesResponse.ok) {
+  output({
+    ok: false,
+    mailboxReceiptVerified: false,
+    reason: "microsoft_graph_messages_failed",
+    recipient: redactEmail(recipient),
+    mailboxUser: redactEmail(mailboxUser),
+    graphError: graphErrorDetails(messagesResponse.status, messagesBody),
+    expectedSubjects,
+  });
+  process.exit(1);
+}
+
+let messages;
+try {
+  messages = JSON.parse(messagesBody).value;
+} catch (error) {
+  output({
+    ok: false,
+    mailboxReceiptVerified: false,
+    reason: "microsoft_graph_messages_output_not_json",
+    recipient: redactEmail(recipient),
+    mailboxUser: redactEmail(mailboxUser),
+    error: error instanceof Error ? error.message : "JSON parse failed",
+    expectedSubjects,
+  });
+  process.exit(1);
+}
+
+const messageList = Array.isArray(messages) ? messages : [];
+const matches = messageList.filter(messageMatches).map(normalizeGraphMessage);
 
 output({
   ok: matches.length > 0,
   mailboxReceiptVerified: matches.length > 0,
   reason: matches.length > 0 ? "controlled_mailbox_received_smoke_email" : "controlled_mailbox_no_matching_receipt_found",
   recipient: redactEmail(recipient),
-  checkedEnvelopeCount: envelopeList.length,
+  mailboxUser: redactEmail(mailboxUser),
+  checkedMessageCount: messageList.length,
   expectedSubjects,
   matches: matches.slice(0, 5).map((match) => ({
     date: match.date,
     id: match.id,
+    internetMessageId: match.internetMessageId,
     subject: match.subject,
   })),
 });

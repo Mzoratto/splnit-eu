@@ -5,8 +5,12 @@ const source = readFileSync("scripts/verify-controlled-mailbox-receipt.mjs", "ut
 
 for (const requiredText of [
   "mailboxReceiptVerified",
-  "mailbox_reader_not_configured",
-  "himalaya",
+  "microsoft_graph_not_configured",
+  "MICROSOFT_GRAPH_TENANT_ID",
+  "MICROSOFT_GRAPH_CLIENT_ID",
+  "MICROSOFT_GRAPH_CLIENT_SECRET",
+  "MICROSOFT_GRAPH_MAILBOX_USER_ID",
+  "https://graph.microsoft.com/v1.0/users/",
   "SMOKE_RECIPIENT_EMAIL",
   "Vendor security questionnaire",
   "Bezpečnostní dotazník dodavatele",
