@@ -137,7 +137,6 @@ async function cleanupDatabase(clerkOrgId: string) {
   await db.delete(evidence).where(eq(evidence.clerkOrgId, clerkOrgId));
   await db.delete(generatedArtifacts).where(eq(generatedArtifacts.clerkOrgId, clerkOrgId));
   await db.delete(policies).where(eq(policies.clerkOrgId, clerkOrgId));
-  await db.delete(auditLogs).where(eq(auditLogs.clerkOrgId, clerkOrgId));
   await db.delete(orgControlStatuses).where(eq(orgControlStatuses.clerkOrgId, clerkOrgId));
   await db.delete(orgFrameworks).where(eq(orgFrameworks.clerkOrgId, clerkOrgId));
   await db.delete(profiles).where(eq(profiles.clerkOrgId, clerkOrgId));
