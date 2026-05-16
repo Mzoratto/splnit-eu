@@ -32,6 +32,8 @@
     "smoke:production-tenant-readiness-prereqs": "tsx scripts/smoke-production-tenant-readiness-prereqs.ts",
     "smoke:production-tenant-readiness-source": "tsx scripts/smoke-production-tenant-readiness-source.ts",
     "cleanup:historical-smoke-orgs": "node scripts/cleanup-historical-smoke-organisations.mjs",
+    "verify:controlled-mailbox-receipt": "node scripts/verify-controlled-mailbox-receipt.mjs",
+    "verify:controlled-mailbox-receipt-source": "tsx scripts/verify-controlled-mailbox-receipt-source.ts",
     "smoke:trust-center-settings": "tsx scripts/smoke-trust-center-settings.ts",
     "smoke:trust-center-public-disclosure": "tsx scripts/smoke-trust-center-public-disclosure.ts",
     "smoke:public-module-seams": "tsx scripts/smoke-public-module-seams.ts",
