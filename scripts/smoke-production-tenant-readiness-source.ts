@@ -60,6 +60,14 @@ for (const optionalEmailEnv of ["RESEND_API_KEY", "RESEND_FROM", "SMOKE_RECIPIEN
 }
 
 assert.match(source, /cleanupDatabase/, "script must clean up smoke database rows.");
+for (const cleanupField of [
+  "cleanupDatabaseCompleted",
+  "cleanupSmokeOrgDeleted",
+  "cleanupCrossOrgDeleted",
+  "cleanupAuditLogsRetained",
+]) {
+  assert.match(source, new RegExp(cleanupField), `script must report ${cleanupField} in redacted JSON.`);
+}
 assert.match(source, /loadLocalEnvForMissingValues/, "script must load .env.local for missing shell env values.");
 assert.match(source, /deleteOrganization/, "script must delete the smoke Clerk organization.");
 assert.match(source, /browserConsoleErrors/, "script must report browser console errors.");

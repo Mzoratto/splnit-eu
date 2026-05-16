@@ -113,6 +113,13 @@
       "when": 1778137222541,
       "tag": "0015_redundant_wiccan",
       "breakpoints": true
+    },
+    {
+      "idx": 16,
+      "version": "7",
+      "when": 1778969959980,
+      "tag": "0016_retain_audit_logs_on_org_cleanup",
+      "breakpoints": true
     }
   ]
 }

@@ -3,7 +3,7 @@ import { existsSync, readFileSync } from "node:fs";
 import { randomUUID } from "node:crypto";
 import { createClerkClient } from "@clerk/nextjs/server";
 import { chromium, type BrowserContext, type Page } from "@playwright/test";
-import { and, desc, eq } from "drizzle-orm";
+import { and, desc, eq, sql } from "drizzle-orm";
 import { loadEnvConfig } from "@next/env";
 import { parse } from "dotenv";
 import { upsertOrganisationFromClerk, upsertProfileFromClerk } from "@/lib/clerk/sync";
@@ -127,8 +127,32 @@ function pageUrl(pathname: string, testingToken?: string) {
   return url.toString();
 }
 
-async function cleanupDatabase(clerkOrgId: string) {
+type CleanupDatabaseResult = {
+  cleanupAuditLogsRetained: boolean;
+  cleanupOrgDeleted: boolean;
+};
+
+async function countOrganisationRows(clerkOrgId: string) {
   const db = getDb();
+  const [result] = await db
+    .select({ value: sql<number>`count(*)::int` })
+    .from(organisations)
+    .where(eq(organisations.clerkOrgId, clerkOrgId));
+  return result?.value ?? 0;
+}
+
+async function countAuditLogRows(clerkOrgId: string) {
+  const db = getDb();
+  const [result] = await db
+    .select({ value: sql<number>`count(*)::int` })
+    .from(auditLogs)
+    .where(eq(auditLogs.clerkOrgId, clerkOrgId));
+  return result?.value ?? 0;
+}
+
+async function cleanupDatabase(clerkOrgId: string): Promise<CleanupDatabaseResult> {
+  const db = getDb();
+  const auditLogRowsBefore = await countAuditLogRows(clerkOrgId);
   await db.delete(trustCenterRequests).where(eq(trustCenterRequests.clerkOrgId, clerkOrgId));
   await db.delete(trustCenters).where(eq(trustCenters.clerkOrgId, clerkOrgId));
   await db.delete(vendorAssessments).where(eq(vendorAssessments.clerkOrgId, clerkOrgId));
@@ -141,6 +165,16 @@ async function cleanupDatabase(clerkOrgId: string) {
   await db.delete(orgFrameworks).where(eq(orgFrameworks.clerkOrgId, clerkOrgId));
   await db.delete(profiles).where(eq(profiles.clerkOrgId, clerkOrgId));
   await db.delete(organisations).where(eq(organisations.clerkOrgId, clerkOrgId));
+
+  const [organisationRowsAfter, auditLogRowsAfter] = await Promise.all([
+    countOrganisationRows(clerkOrgId),
+    countAuditLogRows(clerkOrgId),
+  ]);
+
+  return {
+    cleanupAuditLogsRetained: auditLogRowsAfter === auditLogRowsBefore,
+    cleanupOrgDeleted: organisationRowsAfter === 0,
+  };
 }
 
 async function signIn(page: Page, input: {
@@ -733,6 +767,11 @@ async function main() {
   const clerk = createClerkClient({ secretKey });
   let clerkOrgId: string | null = null;
   let browser: Awaited<ReturnType<typeof chromium.launch>> | null = null;
+  let smokeResult: Record<string, unknown> | null = null;
+  let cleanupSmokeOrgDeleted = false;
+  let cleanupCrossOrgDeleted = false;
+  let cleanupSmokeAuditLogsRetained = false;
+  let cleanupCrossAuditLogsRetained = false;
 
   try {
     const smokeUserId = await getSmokeUserId(clerk);
@@ -898,7 +937,7 @@ async function main() {
 
     await context.close();
 
-    console.log(JSON.stringify({
+    smokeResult = {
       baseUrl,
       browserConsoleErrors: browserConsoleErrors.length,
       databaseHostClass: "non_local",
@@ -939,21 +978,36 @@ async function main() {
       vendorStatus: vendorSubmit.vendorStatus,
       vendorStatusPropagated: vendorSubmit.vendorStatus === "assessed",
       vendorSubmitPersisted: vendorSubmit.assessmentStatus === "submitted",
-    }, null, 2));
+    };
   } finally {
     if (browser) {
       await browser.close();
     }
     if (clerkOrgId) {
-      await cleanupDatabase(clerkOrgId).catch((error: unknown) => {
+      const cleanupResult = await cleanupDatabase(clerkOrgId).catch((error: unknown) => {
         console.error("Database cleanup failed:", error);
+        return null;
       });
+      cleanupSmokeOrgDeleted = cleanupResult?.cleanupOrgDeleted ?? false;
+      cleanupSmokeAuditLogsRetained = cleanupResult?.cleanupAuditLogsRetained ?? false;
       await clerk.organizations.deleteOrganization(clerkOrgId).catch(() => null);
     }
-    await cleanupDatabase(`org_export_cross_${runId}`).catch((error: unknown) => {
+    const crossCleanupResult = await cleanupDatabase(`org_export_cross_${runId}`).catch((error: unknown) => {
       console.error("Cross-tenant smoke cleanup failed:", error);
+      return null;
     });
+    cleanupCrossOrgDeleted = crossCleanupResult?.cleanupOrgDeleted ?? false;
+    cleanupCrossAuditLogsRetained = crossCleanupResult?.cleanupAuditLogsRetained ?? false;
   }
+
+  assert.ok(smokeResult, "smoke result should be available before reporting cleanup status.");
+  console.log(JSON.stringify({
+    ...smokeResult,
+    cleanupDatabaseCompleted: cleanupSmokeOrgDeleted && cleanupCrossOrgDeleted && cleanupSmokeAuditLogsRetained && cleanupCrossAuditLogsRetained,
+    cleanupSmokeOrgDeleted,
+    cleanupCrossOrgDeleted,
+    cleanupAuditLogsRetained: cleanupSmokeAuditLogsRetained && cleanupCrossAuditLogsRetained,
+  }, null, 2));
 }
 
 main().catch((error: unknown) => {
