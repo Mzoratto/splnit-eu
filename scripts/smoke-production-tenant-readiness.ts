@@ -137,9 +137,11 @@ async function cleanupDatabase(clerkOrgId: string) {
   await db.delete(evidence).where(eq(evidence.clerkOrgId, clerkOrgId));
   await db.delete(generatedArtifacts).where(eq(generatedArtifacts.clerkOrgId, clerkOrgId));
   await db.delete(policies).where(eq(policies.clerkOrgId, clerkOrgId));
+  await db.delete(auditLogs).where(eq(auditLogs.clerkOrgId, clerkOrgId));
   await db.delete(orgControlStatuses).where(eq(orgControlStatuses.clerkOrgId, clerkOrgId));
   await db.delete(orgFrameworks).where(eq(orgFrameworks.clerkOrgId, clerkOrgId));
   await db.delete(profiles).where(eq(profiles.clerkOrgId, clerkOrgId));
+  await db.delete(organisations).where(eq(organisations.clerkOrgId, clerkOrgId));
 }
 
 async function signIn(page: Page, input: {
@@ -949,7 +951,9 @@ async function main() {
       });
       await clerk.organizations.deleteOrganization(clerkOrgId).catch(() => null);
     }
-    await getDb().delete(organisations).where(eq(organisations.clerkOrgId, `org_export_cross_${runId}`)).catch(() => null);
+    await cleanupDatabase(`org_export_cross_${runId}`).catch((error: unknown) => {
+      console.error("Cross-tenant smoke cleanup failed:", error);
+    });
   }
 }
 
