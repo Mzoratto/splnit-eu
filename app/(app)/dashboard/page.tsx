@@ -127,12 +127,16 @@ function calculateScore(input: {
     );
   }
 
-  if (input.statusRows.length === 0) {
+  const relevantRows = input.statusRows.filter(
+    (row) => row.status !== "not_applicable" && row.status !== "out_of_scope",
+  );
+
+  if (relevantRows.length === 0) {
     return 0;
   }
 
-  const passing = input.statusRows.filter((row) => row.status === "pass").length;
-  return Math.round((passing / input.statusRows.length) * 100);
+  const passing = relevantRows.filter((row) => row.status === "pass").length;
+  return Math.round((passing / relevantRows.length) * 100);
 }
 
 function statusTone(status: string | null | undefined, score?: number | null): StatusPillTone {
@@ -187,6 +191,8 @@ function controlStatusLabel(status: string) {
   const labels: Record<string, string> = {
     fail: "FAIL",
     manual_review: "WARN",
+    not_applicable: "N/A",
+    out_of_scope: "OUT OF SCOPE",
     pass: "PASS",
     unknown: "PENDING",
     warning: "WARN",
@@ -355,7 +361,10 @@ export default async function DashboardPage() {
       : useDemoData
         ? CONTROL_LIBRARY.slice(0, 5).map((control, index) => ({
             category: control.category,
+            intakeRationale: null,
+            isIntakePriority: index < 2,
             key: control.key,
+            scopeStatus: "applicable" as const,
             status: index < 2 ? "fail" : "manual_review",
             title: getControlDisplayTitle(control, locale),
             titleCs: control.titleCs,
@@ -375,6 +384,12 @@ export default async function DashboardPage() {
     data?.statusRows.length
       ? data.statusRows
       : priorityControls.map((control) => ({ status: control.status }));
+  const intakeScopeSummary = data?.intakeScopeSummary ?? null;
+  const hasIntakeScope = Boolean(
+    intakeScopeSummary &&
+      (intakeScopeSummary.applicableControlKeys.length > 0 ||
+        intakeScopeSummary.outOfScopeControlKeys.length > 0),
+  );
   const score = calculateScore({
     frameworkScores,
     statusRows,
@@ -422,6 +437,49 @@ export default async function DashboardPage() {
 
       {dataNotice ? (
         <DataModeNotice body={dataNotice.body} title={dataNotice.title} />
+      ) : null}
+
+      {hasIntakeScope && intakeScopeSummary ? (
+        <section className="card">
+          <div className="flex flex-col justify-between gap-4 md:flex-row md:items-start">
+            <div>
+              <h2 className="text-lg font-medium">{copy.intakeScope.title}</h2>
+              <p className="mt-1 max-w-3xl text-sm leading-6 text-foreground/58">
+                {copy.intakeScope.subtitle}
+              </p>
+            </div>
+            <Link href="/controls?scope=priority" className="btn btn-secondary">
+              {copy.intakeScope.viewControls}
+              <ArrowRight className="h-4 w-4" aria-hidden="true" strokeWidth={1.5} />
+            </Link>
+          </div>
+          <div className="mt-5 grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
+            <div className="rounded-md border border-border bg-background p-3">
+              <p className="text-xs text-foreground/52">{copy.intakeScope.applicable}</p>
+              <p className="mt-2 font-mono text-2xl font-medium">
+                {intakeScopeSummary.applicableControlKeys.length}
+              </p>
+            </div>
+            <div className="rounded-md border border-border bg-background p-3">
+              <p className="text-xs text-foreground/52">{copy.intakeScope.priority}</p>
+              <p className="mt-2 font-mono text-2xl font-medium text-status-fail">
+                {intakeScopeSummary.priorityControlKeys.length}
+              </p>
+            </div>
+            <div className="rounded-md border border-border bg-background p-3">
+              <p className="text-xs text-foreground/52">{copy.intakeScope.manualReview}</p>
+              <p className="mt-2 font-mono text-2xl font-medium text-status-warn">
+                {intakeScopeSummary.manualReviewControlKeys.length}
+              </p>
+            </div>
+            <div className="rounded-md border border-border bg-background p-3">
+              <p className="text-xs text-foreground/52">{copy.intakeScope.outOfScope}</p>
+              <p className="mt-2 font-mono text-2xl font-medium">
+                {intakeScopeSummary.outOfScopeControlKeys.length}
+              </p>
+            </div>
+          </div>
+        </section>
       ) : null}
 
       <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
@@ -622,7 +680,14 @@ export default async function DashboardPage() {
                     strokeWidth={1.5}
                   />
                   <div className="min-w-0">
-                    <p className="truncate text-sm font-medium">{control.title}</p>
+                    <div className="flex flex-wrap items-center gap-2">
+                      <p className="truncate text-sm font-medium">{control.title}</p>
+                      {control.isIntakePriority ? (
+                        <span className="rounded-sm bg-status-fail/10 px-2 py-0.5 text-[11px] font-medium text-status-fail">
+                          {copy.intakeScope.priority}
+                        </span>
+                      ) : null}
+                    </div>
                     <p className="mt-1 font-mono text-xs text-foreground/52">
                       {control.key} · {controlStatusLabel(control.status)}
                     </p>

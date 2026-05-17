@@ -419,6 +419,16 @@
         "title": "Example GDPR guidance",
         "summary": "Sample guidance item for processing records and security measures."
       }
+    },
+    "intakeScope": {
+      "title": "15-minute intake scope",
+      "subtitle": "Deterministic readiness scope from onboarding answers. Internal guidance only, not a legal classification.",
+      "applicable": "Applicable controls",
+      "priority": "Priority gaps",
+      "manualReview": "Manual review",
+      "outOfScope": "Out of scope",
+      "openControls": "Open scoped controls",
+      "viewControls": "Review controls"
     }
   },
   "evidence": {
@@ -970,7 +980,16 @@
       "automated": "Automated",
       "manual": "Manual",
       "openControl": "Open control",
-      "emptyActiveAction": "Choose a framework"
+      "emptyActiveAction": "Choose a framework",
+      "scopeFiltersTitle": "Scope filters",
+      "allScope": "All controls",
+      "priorityScope": "Priority gaps",
+      "gapScope": "Open gaps",
+      "outOfScope": "Out of scope",
+      "scopeLabel": "Intake scope",
+      "priorityLabel": "Priority gap",
+      "rationaleLabel": "Intake rationale",
+      "emptyFiltered": "No controls match this scope filter."
     },
     "detail": {
       "statusTitle": "Control status",
@@ -1001,7 +1020,8 @@
       "pass": "Passed",
       "fail": "Not passed",
       "manual_review": "Partial",
-      "not_applicable": "N/A"
+      "not_applicable": "N/A",
+      "out_of_scope": "Out of scope"
     },
     "categories": {
       "access_control": "Access control",

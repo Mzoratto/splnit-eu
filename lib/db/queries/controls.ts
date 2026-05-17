@@ -8,8 +8,17 @@ import {
   frameworks,
   orgControlStatuses,
   orgFrameworks,
+  orgIntakeProfiles,
   tests,
 } from "@/lib/db/schema";
+
+type IntakeScopeSummary = {
+  applicableControlKeys: string[];
+  notApplicableControlKeys: string[];
+  outOfScopeControlKeys: string[];
+  priorityControlKeys: string[];
+  rationales: Record<string, string>;
+};
 
 export async function listOrgControlStatusesForFramework(
   clerkOrgId: string,
@@ -41,37 +50,45 @@ export async function listOrgControlStatusesForFramework(
 
 export async function listOrgControlsForIndex(clerkOrgId: string) {
   const db = getDb();
-  const rows = await db
-    .select({
-      category: controls.category,
-      controlId: controls.id,
-      descriptionCs: controls.descriptionCs,
-      frameworkNameCs: frameworks.nameCs,
-      frameworkNameEn: frameworks.nameEn,
-      frameworkSlug: frameworks.slug,
-      isAutomated: controls.isAutomated,
-      key: controls.key,
-      status: orgControlStatuses.status,
-      titleCs: controls.titleCs,
-      titleEn: controls.titleEn,
-      updatedAt: orgControlStatuses.updatedAt,
-    })
-    .from(orgFrameworks)
-    .innerJoin(
-      frameworkControls,
-      eq(orgFrameworks.frameworkId, frameworkControls.frameworkId),
-    )
-    .innerJoin(controls, eq(frameworkControls.controlId, controls.id))
-    .innerJoin(frameworks, eq(frameworkControls.frameworkId, frameworks.id))
-    .leftJoin(
-      orgControlStatuses,
-      and(
-        eq(orgControlStatuses.clerkOrgId, clerkOrgId),
-        eq(orgControlStatuses.controlId, controls.id),
-      ),
-    )
-    .where(eq(orgFrameworks.clerkOrgId, clerkOrgId))
-    .orderBy(controls.key);
+  const [rows, intakeRows] = await Promise.all([
+    db
+      .select({
+        category: controls.category,
+        controlId: controls.id,
+        descriptionCs: controls.descriptionCs,
+        frameworkNameCs: frameworks.nameCs,
+        frameworkNameEn: frameworks.nameEn,
+        frameworkSlug: frameworks.slug,
+        isAutomated: controls.isAutomated,
+        key: controls.key,
+        status: orgControlStatuses.status,
+        titleCs: controls.titleCs,
+        titleEn: controls.titleEn,
+        updatedAt: orgControlStatuses.updatedAt,
+      })
+      .from(orgFrameworks)
+      .innerJoin(
+        frameworkControls,
+        eq(orgFrameworks.frameworkId, frameworkControls.frameworkId),
+      )
+      .innerJoin(controls, eq(frameworkControls.controlId, controls.id))
+      .innerJoin(frameworks, eq(frameworkControls.frameworkId, frameworks.id))
+      .leftJoin(
+        orgControlStatuses,
+        and(
+          eq(orgControlStatuses.clerkOrgId, clerkOrgId),
+          eq(orgControlStatuses.controlId, controls.id),
+        ),
+      )
+      .where(eq(orgFrameworks.clerkOrgId, clerkOrgId))
+      .orderBy(controls.key),
+    db
+      .select({ derivedScope: orgIntakeProfiles.derivedScope })
+      .from(orgIntakeProfiles)
+      .where(eq(orgIntakeProfiles.clerkOrgId, clerkOrgId))
+      .limit(1),
+  ]);
+  const intakeScope = buildIntakeScopeSummary(intakeRows[0]?.derivedScope ?? null);
 
   const controlMap = new Map<
     string,
@@ -83,8 +100,11 @@ export async function listOrgControlsForIndex(clerkOrgId: string) {
         nameEn: string;
         slug: string;
       }[];
+      intakeRationale: string | null;
+      isIntakePriority: boolean;
       isAutomated: boolean;
       key: string;
+      scopeStatus: "applicable" | "not_applicable" | "out_of_scope" | null;
       status: string | null;
       titleCs: string;
       titleEn: string;
@@ -117,8 +137,17 @@ export async function listOrgControlsForIndex(clerkOrgId: string) {
           slug: row.frameworkSlug,
         },
       ],
+      intakeRationale: intakeScope.rationales[row.key] ?? null,
+      isIntakePriority: intakeScope.priorityControlKeys.includes(row.key),
       isAutomated: row.isAutomated,
       key: row.key,
+      scopeStatus: intakeScope.applicableControlKeys.includes(row.key)
+        ? "applicable"
+        : intakeScope.notApplicableControlKeys.includes(row.key)
+          ? "not_applicable"
+          : intakeScope.outOfScopeControlKeys.includes(row.key)
+            ? "out_of_scope"
+            : null,
       status: row.status,
       titleCs: row.titleCs,
       titleEn: row.titleEn,
@@ -127,6 +156,52 @@ export async function listOrgControlsForIndex(clerkOrgId: string) {
   }
 
   return [...controlMap.values()];
+}
+
+function buildIntakeScopeSummary(derivedScope: unknown): IntakeScopeSummary {
+  if (!derivedScope || typeof derivedScope !== "object") {
+    return emptyIntakeScopeSummary();
+  }
+
+  const scope = derivedScope as {
+    applicableControlKeys?: unknown;
+    notApplicableControlKeys?: unknown;
+    outOfScopeControlKeys?: unknown;
+    priorityControlKeys?: unknown;
+    rationales?: unknown;
+  };
+
+  return {
+    applicableControlKeys: stringArray(scope.applicableControlKeys),
+    notApplicableControlKeys: stringArray(scope.notApplicableControlKeys),
+    outOfScopeControlKeys: stringArray(scope.outOfScopeControlKeys),
+    priorityControlKeys: stringArray(scope.priorityControlKeys),
+    rationales: stringRecord(scope.rationales),
+  };
+}
+
+function emptyIntakeScopeSummary(): IntakeScopeSummary {
+  return {
+    applicableControlKeys: [],
+    notApplicableControlKeys: [],
+    outOfScopeControlKeys: [],
+    priorityControlKeys: [],
+    rationales: {},
+  };
+}
+
+function stringArray(value: unknown) {
+  return Array.isArray(value) ? value.filter((item): item is string => typeof item === "string") : [];
+}
+
+function stringRecord(value: unknown) {
+  if (!value || typeof value !== "object" || Array.isArray(value)) {
+    return {} as Record<string, string>;
+  }
+
+  return Object.fromEntries(
+    Object.entries(value).filter((entry): entry is [string, string] => typeof entry[1] === "string"),
+  );
 }
 
 export async function getControlDetailByKey(input: {

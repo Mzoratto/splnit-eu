@@ -419,6 +419,16 @@
         "title": "Esempio di guida GDPR",
         "summary": "Esempio di indicazione per registri dei trattamenti e misure di sicurezza."
       }
+    },
+    "intakeScope": {
+      "title": "Ambito intake 15 minuti",
+      "subtitle": "Ambito readiness deterministico dalle risposte di onboarding. Solo guida interna, non classificazione legale.",
+      "applicable": "Controlli applicabili",
+      "priority": "Gap prioritari",
+      "manualReview": "Revisione manuale",
+      "outOfScope": "Fuori ambito",
+      "openControls": "Controlli scoped aperti",
+      "viewControls": "Rivedi controlli"
     }
   },
   "evidence": {
@@ -970,7 +980,16 @@
       "automated": "Automatico",
       "manual": "Manuale",
       "openControl": "Apri controllo",
-      "emptyActiveAction": "Scegli framework"
+      "emptyActiveAction": "Scegli framework",
+      "scopeFiltersTitle": "Filtri ambito",
+      "allScope": "Tutti i controlli",
+      "priorityScope": "Gap prioritari",
+      "gapScope": "Gap aperti",
+      "outOfScope": "Fuori ambito",
+      "scopeLabel": "Ambito intake",
+      "priorityLabel": "Gap prioritario",
+      "rationaleLabel": "Razionale intake",
+      "emptyFiltered": "Nessun controllo corrisponde a questo filtro ambito."
     },
     "detail": {
       "statusTitle": "Stato controllo",
@@ -1001,7 +1020,8 @@
       "pass": "Superato",
       "fail": "Non superato",
       "manual_review": "Parziale",
-      "not_applicable": "N/A"
+      "not_applicable": "N/A",
+      "out_of_scope": "Fuori ambito"
     },
     "categories": {
       "access_control": "Controllo accessi",
