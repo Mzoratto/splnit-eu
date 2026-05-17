@@ -1,7 +1,9 @@
 import { and, eq, inArray } from "drizzle-orm";
 import { getDb } from "@/lib/db";
 import {
+  controls,
   frameworks,
+  orgControlStatuses,
   orgIntakeProfiles,
   organisations,
   type OrgIntakeAnswers,
@@ -82,6 +84,133 @@ export async function markOnboardingIntakeCompleted(clerkOrgId: string) {
     .update(orgIntakeProfiles)
     .set({ completedAt: now, updatedAt: now })
     .where(eq(orgIntakeProfiles.clerkOrgId, clerkOrgId));
+}
+
+type SeedableStatus = "unknown" | "manual_review" | "fail" | "not_applicable" | "out_of_scope";
+
+type IntakeScopeControlSeed = {
+  controlKey: string;
+  recommendedInitialStatus?: SeedableStatus;
+};
+
+export async function seedInitialControlStatusesFromIntakeScope(clerkOrgId: string) {
+  const db = getDb();
+  const intakeProfileRows = await db
+    .select({ derivedScope: orgIntakeProfiles.derivedScope })
+    .from(orgIntakeProfiles)
+    .where(eq(orgIntakeProfiles.clerkOrgId, clerkOrgId))
+    .limit(1);
+  const derivedScope = intakeProfileRows[0]?.derivedScope;
+
+  if (!derivedScope) {
+    return { inserted: 0 };
+  }
+
+  const statusByControlKey = buildSeedStatusByControlKey(derivedScope);
+  const controlKeys = [...statusByControlKey.keys()];
+
+  if (controlKeys.length === 0) {
+    return { inserted: 0 };
+  }
+
+  const controlRows = await db
+    .select({ id: controls.id, key: controls.key })
+    .from(controls)
+    .where(inArray(controls.key, controlKeys));
+
+  if (controlRows.length === 0) {
+    return { inserted: 0 };
+  }
+
+  const now = new Date();
+  const insertedRows = await db
+    .insert(orgControlStatuses)
+    .values(
+      controlRows.map((control) => {
+        const seed = statusByControlKey.get(control.key);
+
+        return {
+          clerkOrgId,
+          controlId: control.id,
+          notes: buildIntakeScopeNote(seed?.rationale),
+          status: seed?.status ?? "unknown",
+          updatedAt: now,
+        };
+      }),
+    )
+    .onConflictDoNothing({
+      target: [orgControlStatuses.clerkOrgId, orgControlStatuses.controlId],
+    })
+    .returning({ id: orgControlStatuses.id });
+
+  return { inserted: insertedRows.length };
+}
+
+function buildSeedStatusByControlKey(derivedScope: OrgIntakeDerivedScope) {
+  const statusByControlKey = new Map<
+    string,
+    { rationale?: string; status: SeedableStatus }
+  >();
+  const rationales = derivedScope.rationales ?? {};
+
+  for (const control of getIntakeScopeControls(derivedScope)) {
+    if (!control.controlKey) {
+      continue;
+    }
+
+    statusByControlKey.set(control.controlKey, {
+      rationale: rationales[control.controlKey],
+      status: normalizeSeedableStatus(control.recommendedInitialStatus) ?? "unknown",
+    });
+  }
+
+  for (const controlKey of derivedScope.notApplicableControlKeys ?? []) {
+    statusByControlKey.set(controlKey, {
+      rationale: rationales[controlKey],
+      status: "not_applicable",
+    });
+  }
+
+  for (const controlKey of derivedScope.outOfScopeControlKeys ?? []) {
+    statusByControlKey.set(controlKey, {
+      rationale: rationales[controlKey],
+      status: "out_of_scope",
+    });
+  }
+
+  return statusByControlKey;
+}
+
+function getIntakeScopeControls(derivedScope: OrgIntakeDerivedScope): IntakeScopeControlSeed[] {
+  if (!Array.isArray(derivedScope.controls)) {
+    return [];
+  }
+
+  return derivedScope.controls.filter((control): control is IntakeScopeControlSeed => {
+    if (!control || typeof control !== "object") {
+      return false;
+    }
+
+    return typeof (control as IntakeScopeControlSeed).controlKey === "string";
+  });
+}
+
+function normalizeSeedableStatus(status: unknown): SeedableStatus | null {
+  if (
+    status === "unknown" ||
+    status === "manual_review" ||
+    status === "fail" ||
+    status === "not_applicable" ||
+    status === "out_of_scope"
+  ) {
+    return status;
+  }
+
+  return null;
+}
+
+function buildIntakeScopeNote(rationale?: string) {
+  return rationale ? `Intake scope: ${rationale}` : "Intake scope: derived from onboarding answers.";
 }
 
 export async function saveOnboardingCompany(input: {
@@ -193,6 +322,8 @@ export async function completeOnboarding(input: {
   if (orgFrameworkRows.length === 0) {
     return;
   }
+
+  await seedInitialControlStatusesFromIntakeScope(input.clerkOrgId);
 
   await db
     .update(orgFrameworks)
