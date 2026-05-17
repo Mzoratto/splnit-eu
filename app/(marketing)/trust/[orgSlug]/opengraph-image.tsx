@@ -18,11 +18,6 @@ export default async function Image({
   const trustCenter =
     (await getPublicTrustCenterModel({ orgSlug })) ??
     (await getPublicTrustCenterModel({ orgSlug: "demo" }));
-  const frameworkCount = trustCenter?.frameworks.length ?? 0;
-  const controlCount =
-    trustCenter?.frameworks.reduce((total, item) => total + item.totalControls, 0) ??
-    0;
-
   return new ImageResponse(
     (
       <div
@@ -52,13 +47,13 @@ export default async function Image({
             {trustCenter?.organisationName ?? "Trust Center"}
           </div>
           <div style={{ color: "#71717a", fontSize: 30 }}>
-            Verified continuously · public security posture
+            Aggregated readiness · public security posture
           </div>
         </div>
         <div style={{ display: "flex", gap: 24 }}>
-          <Metric label="Frameworks" value={String(frameworkCount)} />
-          <Metric label="Controls" value={String(controlCount)} />
-          <Metric label="Documents" value={String(trustCenter?.documents.length ?? 0)} />
+          <Metric label="Frameworks" value="Aggregated" />
+          <Metric label="Controls" value="By category" />
+          <Metric label="Documents" value="On request" />
         </div>
       </div>
     ),

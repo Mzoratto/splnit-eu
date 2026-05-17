@@ -2,8 +2,8 @@ import { normalizeLocale, type Locale } from "@/i18n/routing";
 
 export type PublicTrustCopy = {
   categoryCounts: {
-    notApplicable: (total: number) => string;
-    verified: (verified: number, total: number) => string;
+    availableEvidence: string;
+    notApplicable: string;
   };
   contacts: {
     disclosureDescription: string;
@@ -25,7 +25,7 @@ export type PublicTrustCopy = {
     categoriesEmpty: string;
     categoriesEyebrow: string;
     categoriesTitle: string;
-    controlsInScope: (count: number) => string;
+    controlsInScope: () => string;
     ctaDescription: string;
     ctaTitle: string;
     disclosureBody: string;
@@ -49,8 +49,8 @@ export type PublicTrustCopy = {
   footer: {
     back: string;
     home: string;
-    lastVerified: string;
-    nextTest: string;
+    lastReviewed: string;
+    reviewWindow: string;
     privacy: string;
     status: string;
     terms: string;
@@ -83,12 +83,11 @@ export type PublicTrustCopy = {
     frameworksEyebrow: string;
     frameworksTitle: string;
     heroEyebrow: string;
-    heroTitle: (orgName: string, controls: number, frameworks: number) => string;
+    heroTitle: (orgName: string) => string;
     metadataDescription: (orgName: string) => string;
   };
   time: {
-    inHours: (hours: number, minutes: number) => string;
-    inMinutes: (minutes: number) => string;
+    later: string;
     na: string;
   };
   topbar: {
@@ -107,8 +106,8 @@ export const trustLocaleCodes: Record<Locale, string> = {
 export const publicTrustCopy: Record<Locale, PublicTrustCopy> = {
   "cs-CZ": {
     categoryCounts: {
-      notApplicable: (total) => `${total} není relevantní`,
-      verified: (verified, total) => `${verified} / ${total} ověřeno`,
+      availableEvidence: "dostupná interní evidence",
+      notApplicable: "mimo rozsah",
     },
     contacts: {
       disclosureDescription:
@@ -135,7 +134,7 @@ export const publicTrustCopy: Record<Locale, PublicTrustCopy> = {
         "Pro tento framework zatím nejsou veřejné kategorie v rozsahu.",
       categoriesEyebrow: "CONTROL CATEGORIES",
       categoriesTitle: "Kategorie kontrol",
-      controlsInScope: (count) => `${count} kontrol v rozsahu`,
+      controlsInScope: () => "Kontroly jsou veřejně shrnuté po kategoriích",
       ctaDescription:
         "Požádejte o dokumenty, nebo pošlete bezpečnostní otázku týmu.",
       ctaTitle: "Potřebujete více informací nebo přístup k dokumentům?",
@@ -162,8 +161,8 @@ export const publicTrustCopy: Record<Locale, PublicTrustCopy> = {
     footer: {
       back: "← Zpět do Trust Center",
       home: "Splnit.eu home",
-      lastVerified: "Naposledy ověřeno",
-      nextTest: "další test",
+      lastReviewed: "Poslední interní evidence",
+      reviewWindow: "další interní kontrola",
       privacy: "Soukromí",
       status: "status page",
       terms: "Podmínky",
@@ -174,7 +173,7 @@ export const publicTrustCopy: Record<Locale, PublicTrustCopy> = {
       lastAssessed: "Poslední hodnocení:",
       notApplicable: "není relevantní",
       regulatorPrefix: "Český regulátor",
-      verified: "ověřeno",
+      verified: "dostupná evidence",
       viewDetails: "Zobrazit detail frameworku",
     },
     heroActions: {
@@ -195,19 +194,17 @@ export const publicTrustCopy: Record<Locale, PublicTrustCopy> = {
       description:
         "Tento Trust Center ukazuje veřejný souhrn automatických kontrol, regulatorních frameworků a dokumentů. Detaily důkazů a konkrétní control IDs zůstávají chráněné a jsou dostupné pouze po schválení přístupu.",
       frameworksBody:
-        "Skóre je agregované z kontrol v rozsahu. Veřejná stránka zobrazuje souhrny kategorií, ne jednotlivé testy nebo názvy důkazů.",
+        "Stav je agregovaný z interní evidence v rozsahu. Veřejná stránka zobrazuje souhrny kategorií, ne jednotlivé testy nebo názvy důkazů.",
       frameworksEyebrow: "FRAMEWORKS",
-      frameworksTitle: "Stav EU předpisů",
-      heroEyebrow: "TRUST CENTER · PRŮBĚŽNĚ OVĚŘOVÁNO",
-      heroTitle: (orgName, controls, frameworks) =>
-        `${orgName} průběžně testuje ${controls} bezpečnostních kontrol napříč ${frameworks} EU předpisy.`,
+      frameworksTitle: "Stav readiness frameworků",
+      heroEyebrow: "TRUST CENTER · INTERNÍ EVIDENCE",
+      heroTitle: (orgName) =>
+        `${orgName} veřejně sdílí agregovaný přehled bezpečnostní readiness a dostupné interní evidence.`,
       metadataDescription: (orgName) =>
-        `${orgName} průběžně ověřuje bezpečnostní kontroly, dokumenty a stav souladu s EU předpisy.`,
+        `${orgName} sdílí veřejný souhrn bezpečnostní readiness, dokumentů a dostupné interní evidence.`,
     },
     time: {
-      inHours: (hours, minutes) =>
-        minutes > 0 ? `za ${hours}h ${minutes}m` : `za ${hours}h`,
-      inMinutes: (minutes) => `za ${minutes} min`,
+      later: "později",
       na: "n/a",
     },
     topbar: {
@@ -218,8 +215,8 @@ export const publicTrustCopy: Record<Locale, PublicTrustCopy> = {
   },
   "en-EU": {
     categoryCounts: {
-      notApplicable: (total) => `${total} not applicable`,
-      verified: (verified, total) => `${verified} / ${total} verified`,
+      availableEvidence: "available internal evidence",
+      notApplicable: "out of scope",
     },
     contacts: {
       disclosureDescription:
@@ -245,7 +242,7 @@ export const publicTrustCopy: Record<Locale, PublicTrustCopy> = {
       categoriesEmpty: "No public categories are currently in scope for this framework.",
       categoriesEyebrow: "CONTROL CATEGORIES",
       categoriesTitle: "Control categories",
-      controlsInScope: (count) => `${count} controls in scope`,
+      controlsInScope: () => "Controls are publicly summarized by category",
       ctaDescription:
         "Request documents or send a security question to the team.",
       ctaTitle: "Need more information or document access?",
@@ -272,8 +269,8 @@ export const publicTrustCopy: Record<Locale, PublicTrustCopy> = {
     footer: {
       back: "← Back to Trust Center",
       home: "Splnit.eu home",
-      lastVerified: "Last verified",
-      nextTest: "next test",
+      lastReviewed: "Latest internal evidence",
+      reviewWindow: "next internal review",
       privacy: "Privacy",
       status: "status page",
       terms: "Terms",
@@ -284,7 +281,7 @@ export const publicTrustCopy: Record<Locale, PublicTrustCopy> = {
       lastAssessed: "Last assessed:",
       notApplicable: "not applicable",
       regulatorPrefix: "Czech regulator",
-      verified: "verified",
+      verified: "available evidence",
       viewDetails: "View framework details",
     },
     heroActions: {
@@ -305,19 +302,17 @@ export const publicTrustCopy: Record<Locale, PublicTrustCopy> = {
       description:
         "This Trust Center shows a public summary of automated checks, regulatory frameworks, and documents. Evidence details and concrete control IDs remain protected and are available only after access approval.",
       frameworksBody:
-        "The score is aggregated from in-scope controls. The public page shows category summaries, not individual tests or evidence filenames.",
+        "Status is aggregated from in-scope internal evidence. The public page shows category summaries, not individual tests or evidence filenames.",
       frameworksEyebrow: "FRAMEWORKS",
-      frameworksTitle: "EU regulation status",
-      heroEyebrow: "TRUST CENTER · VERIFIED CONTINUOUSLY",
-      heroTitle: (orgName, controls, frameworks) =>
-        `${orgName} continuously tests ${controls} security controls across ${frameworks} EU frameworks.`,
+      frameworksTitle: "Readiness framework status",
+      heroEyebrow: "TRUST CENTER · INTERNAL EVIDENCE",
+      heroTitle: (orgName) =>
+        `${orgName} shares an aggregated public view of security readiness and available internal evidence.`,
       metadataDescription: (orgName) =>
-        `${orgName} continuously verifies security controls, documents, and EU compliance status.`,
+        `${orgName} shares a public summary of security readiness, documents, and available internal evidence.`,
     },
     time: {
-      inHours: (hours, minutes) =>
-        minutes > 0 ? `in ${hours}h ${minutes}m` : `in ${hours}h`,
-      inMinutes: (minutes) => `in ${minutes} min`,
+      later: "later",
       na: "n/a",
     },
     topbar: {
@@ -328,8 +323,8 @@ export const publicTrustCopy: Record<Locale, PublicTrustCopy> = {
   },
   "it-IT": {
     categoryCounts: {
-      notApplicable: (total) => `${total} non applicabili`,
-      verified: (verified, total) => `${verified} / ${total} verificati`,
+      availableEvidence: "evidenza interna disponibile",
+      notApplicable: "fuori ambito",
     },
     contacts: {
       disclosureDescription:
@@ -355,7 +350,7 @@ export const publicTrustCopy: Record<Locale, PublicTrustCopy> = {
       categoriesEmpty: "Nessuna categoria pubblica è attualmente in scope per questo framework.",
       categoriesEyebrow: "CONTROL CATEGORIES",
       categoriesTitle: "Categorie di controllo",
-      controlsInScope: (count) => `${count} controlli in scope`,
+      controlsInScope: () => "I controlli sono riepilogati pubblicamente per categoria",
       ctaDescription:
         "Richiedete i documenti o inviate una domanda di sicurezza al team.",
       ctaTitle: "Servono più informazioni o accesso ai documenti?",
@@ -382,8 +377,8 @@ export const publicTrustCopy: Record<Locale, PublicTrustCopy> = {
     footer: {
       back: "← Torna al Trust Center",
       home: "Home Splnit.eu",
-      lastVerified: "Ultima verifica",
-      nextTest: "prossimo test",
+      lastReviewed: "Ultima evidenza interna",
+      reviewWindow: "prossima revisione interna",
       privacy: "Privacy",
       status: "status page",
       terms: "Terms",
@@ -394,7 +389,7 @@ export const publicTrustCopy: Record<Locale, PublicTrustCopy> = {
       lastAssessed: "Ultima valutazione:",
       notApplicable: "non applicabile",
       regulatorPrefix: "Autorità competente",
-      verified: "verificati",
+      verified: "evidenza disponibile",
       viewDetails: "Vedi dettagli framework",
     },
     heroActions: {
@@ -415,19 +410,17 @@ export const publicTrustCopy: Record<Locale, PublicTrustCopy> = {
       description:
         "Questo Trust Center mostra un riepilogo pubblico di controlli automatici, framework regolatori e documenti. I dettagli delle evidenze e i control ID concreti restano protetti e sono disponibili solo dopo approvazione dell'accesso.",
       frameworksBody:
-        "Il punteggio è aggregato dai controlli in scope. La pagina pubblica mostra riepiloghi per categoria, non singoli test o nomi di file di evidenza.",
+        "Lo stato è aggregato dall’evidenza interna in scope. La pagina pubblica mostra riepiloghi per categoria, non singoli test o nomi di file di evidenza.",
       frameworksEyebrow: "FRAMEWORKS",
-      frameworksTitle: "Stato normative UE",
-      heroEyebrow: "TRUST CENTER · VERIFIED CONTINUOUSLY",
-      heroTitle: (orgName, controls, frameworks) =>
-        `${orgName} testa continuamente ${controls} controlli di sicurezza su ${frameworks} framework UE.`,
+      frameworksTitle: "Stato readiness dei framework",
+      heroEyebrow: "TRUST CENTER · EVIDENZA INTERNA",
+      heroTitle: (orgName) =>
+        `${orgName} condivide una vista pubblica aggregata della readiness di sicurezza e dell’evidenza interna disponibile.`,
       metadataDescription: (orgName) =>
-        `${orgName} verifica continuamente controlli di sicurezza, documenti e stato compliance UE.`,
+        `${orgName} condivide un riepilogo pubblico di readiness di sicurezza, documenti ed evidenza interna disponibile.`,
     },
     time: {
-      inHours: (hours, minutes) =>
-        minutes > 0 ? `tra ${hours}h ${minutes}m` : `tra ${hours}h`,
-      inMinutes: (minutes) => `tra ${minutes} min`,
+      later: "più tardi",
       na: "n/a",
     },
     topbar: {

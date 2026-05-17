@@ -168,22 +168,19 @@ export function FrameworkCard({
           </div>
           <p className="mt-3 flex flex-wrap items-center gap-x-4 gap-y-1 font-mono text-xs text-foreground/58">
             <span>
-              <Dot className="bg-[var(--status-pass)]" /> {framework.verified}{" "}
-              {copy.frameworkCard.verified}
+              <Dot className="bg-[var(--status-pass)]" /> {copy.frameworkCard.verified}
             </span>
             <span>
-              <Dot className="bg-[var(--status-warn)]" /> {framework.inProgress}{" "}
-              {copy.frameworkCard.inProgress}
+              <Dot className="bg-[var(--status-warn)]" /> {copy.frameworkCard.inProgress}
             </span>
             <span>
-              <Dot className="bg-foreground/28" /> {framework.notApplicable}{" "}
-              {copy.frameworkCard.notApplicable}
+              <Dot className="bg-foreground/28" /> {copy.frameworkCard.notApplicable}
             </span>
           </p>
         </div>
         {showPercentages ? (
-          <p className="font-mono text-[22px] font-semibold text-foreground">
-            {framework.score ?? "-"}%
+          <p className="font-mono text-[13px] font-semibold uppercase tracking-[0.12em] text-foreground/58">
+            {copy.categoryCounts.availableEvidence}
           </p>
         ) : null}
       </div>
@@ -342,7 +339,7 @@ export function TrustFooter({
     <footer className="border-t border-border bg-surface">
       <div className="mx-auto flex max-w-7xl flex-col gap-4 px-4 py-6 sm:px-6 lg:flex-row lg:items-center lg:justify-between">
         <p className="font-mono text-xs text-foreground/50">
-          {copy.footer.lastVerified} {formatDateTime(trustCenter.lastTestedAt, locale)}
+          {copy.footer.lastReviewed} {formatDateTime(trustCenter.lastTestedAt, locale)} · {copy.footer.reviewWindow} {copy.time.later}
         </p>
         <div className="flex flex-wrap items-center gap-4 text-sm text-foreground/58">
           {backHref ? <Link href={backHref}>{copy.footer.back}</Link> : null}
@@ -401,10 +398,10 @@ export function CategoryRow({
       </p>
       <StatusPill tone={tone}>
         {category.status === "pass"
-          ? "VERIFIED"
+          ? copy.categoryCounts.availableEvidence
           : category.status === "warn"
-            ? "IN PROGRESS"
-            : "N/A"}
+            ? copy.frameworkCard.inProgress
+            : copy.categoryCounts.notApplicable}
       </StatusPill>
     </div>
   );
@@ -565,10 +562,10 @@ function formatCategoryCounts(
   copy: PublicTrustCopy,
 ) {
   if (category.notApplicable === category.total) {
-    return copy.categoryCounts.notApplicable(category.total);
+    return copy.categoryCounts.notApplicable;
   }
 
-  return copy.categoryCounts.verified(category.verified, category.total);
+  return copy.categoryCounts.availableEvidence;
 }
 
 const signalIconMap: Record<TrustSignal["icon"], LucideIcon> = {

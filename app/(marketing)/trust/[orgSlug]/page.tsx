@@ -70,11 +70,6 @@ export default async function TrustCenterPage({
   }
 
   const accessQuery = query.access ? `?access=${encodeURIComponent(query.access)}` : "";
-  const frameworkCount = trustCenter.frameworks.length;
-  const controlCount = trustCenter.frameworks.reduce(
-    (total, item) => total + item.totalControls,
-    0,
-  );
 
   return (
     <main
@@ -91,11 +86,7 @@ export default async function TrustCenterPage({
           </p>
           <h1 className="mt-5 max-w-4xl text-[32px] font-medium leading-tight tracking-normal text-foreground sm:text-[40px]">
             {trustCenter.heroTitleOverride ??
-              copy.main.heroTitle(
-                trustCenter.organisationName,
-                controlCount,
-                frameworkCount,
-              )}
+              copy.main.heroTitle(trustCenter.organisationName)}
           </h1>
           <p className="mt-5 max-w-3xl text-base leading-7 text-foreground/62">
             {trustCenter.descriptionOverride ?? copy.main.description}

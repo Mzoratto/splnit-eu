@@ -55,7 +55,7 @@ export async function generateMetadata({
       : data.framework.framework.nameEn;
 
   return {
-    description: `${data.trustCenter.organisationName} compliance status for ${frameworkName} (${data.framework.regulator}). Last verified ${formatDateTime(data.framework.lastAssessedAt, locale)}.`,
+    description: `${data.trustCenter.organisationName} readiness summary for ${frameworkName} (${data.framework.regulator}). Latest public evidence date ${formatDateTime(data.framework.lastAssessedAt, locale)}.`,
     openGraph: {
       images: [`/api/og/trust/${orgSlug}/${frameworkSlug}`],
     },
@@ -153,19 +153,19 @@ export default async function TrustFrameworkPage({
               </div>
               <p className="mt-3 flex flex-wrap items-center gap-x-4 gap-y-1 font-mono text-xs text-foreground/58">
                 <span>
-                  {framework.verified} {copy.frameworkCard.verified}
+                  {copy.frameworkCard.verified}
                 </span>
                 <span>
-                  {framework.inProgress} {copy.frameworkCard.inProgress}
+                  {copy.frameworkCard.inProgress}
                 </span>
                 <span>
-                  {framework.notApplicable} {copy.frameworkCard.notApplicable}
+                  {copy.frameworkCard.notApplicable}
                 </span>
               </p>
             </div>
             {trustCenter.showFrameworkPercentages ? (
-              <p className="font-mono text-4xl font-semibold">
-                {framework.score ?? "-"}%
+              <p className="font-mono text-sm font-semibold uppercase tracking-[0.12em] text-foreground/58">
+                {copy.categoryCounts.availableEvidence}
               </p>
             ) : null}
           </div>
@@ -176,7 +176,7 @@ export default async function TrustFrameworkPage({
               {formatDateTime(framework.lastAssessedAt, locale)}
             </span>
             <span>{copy.detail.autoTested}</span>
-            <span>{copy.detail.controlsInScope(framework.totalControls)}</span>
+            <span>{copy.detail.controlsInScope()}</span>
           </div>
         </article>
       </section>
