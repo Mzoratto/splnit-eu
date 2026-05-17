@@ -1,12 +1,19 @@
 import Link from "next/link";
 import { auth } from "@clerk/nextjs/server";
 import { notFound } from "next/navigation";
-import { ArrowLeft, Download, FileText } from "lucide-react";
-import { generatePolicyAction } from "@/app/(app)/policies/actions";
+import { ArrowLeft, Download } from "lucide-react";
+import { PolicyEditor } from "@/components/policies/policy-editor";
 import { hasDatabaseUrl } from "@/lib/db";
 import { getOrganisationByClerkOrgId } from "@/lib/db/queries/organisations";
-import { listPoliciesForOrg } from "@/lib/db/queries/policies";
+import {
+  getLatestPolicyDraftForOrg,
+  listPoliciesForOrg,
+} from "@/lib/db/queries/policies";
 import { getJurisdictionContext } from "@/lib/jurisdictions/context";
+import {
+  buildInitialPolicyDraftContent,
+  parsePolicyDraftContent,
+} from "@/lib/policies/policy-drafts";
 import { resolvePolicyTemplate } from "@/lib/policies/resolve-template";
 import { resolvePolicySourceDocument } from "@/lib/policies/source-documents";
 import {
@@ -22,19 +29,43 @@ function isPolicyTemplateType(type: string): type is PolicyTemplateType {
   return POLICY_TEMPLATE_TYPES.includes(type as PolicyTemplateType);
 }
 
+function addYears(date: Date, years: number) {
+  const nextDate = new Date(date);
+  nextDate.setUTCFullYear(nextDate.getUTCFullYear() + years);
+  return nextDate;
+}
+
+function formatIsoDate(date: Date) {
+  return date.toISOString().slice(0, 10);
+}
+
 async function loadPolicyDetail(type: PolicyTemplateType) {
   const defaultContext = getJurisdictionContext("CZ", "cs-CZ");
   const clerkConfigured =
     Boolean(process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY) &&
     Boolean(process.env.CLERK_SECRET_KEY);
+  const fallbackOrganisation = {
+    ico: null,
+    name: "Demo organisation",
+    primaryJurisdiction: "CZ",
+  };
 
   if (!clerkConfigured || !hasDatabaseUrl()) {
     const template = resolvePolicyTemplate(type, null);
+    const sourceDocument = await resolvePolicySourceDocument(template);
+    const generatedAt = new Date();
 
     return {
       context: defaultContext,
+      draft: buildInitialPolicyDraftContent({
+        generatedAt,
+        organisation: fallbackOrganisation,
+        reviewDate: formatIsoDate(addYears(generatedAt, 1)),
+        sourceDocument,
+        template,
+      }),
       policies: [],
-      sourceDocument: await resolvePolicySourceDocument(template),
+      sourceDocument,
       template,
     };
   }
@@ -43,21 +74,40 @@ async function loadPolicyDetail(type: PolicyTemplateType) {
 
   if (!session.orgId) {
     const template = resolvePolicyTemplate(type, null);
+    const sourceDocument = await resolvePolicySourceDocument(template);
+    const generatedAt = new Date();
 
     return {
       context: defaultContext,
+      draft: buildInitialPolicyDraftContent({
+        generatedAt,
+        organisation: fallbackOrganisation,
+        reviewDate: formatIsoDate(addYears(generatedAt, 1)),
+        sourceDocument,
+        template,
+      }),
       policies: [],
-      sourceDocument: await resolvePolicySourceDocument(template),
+      sourceDocument,
       template,
     };
   }
 
   try {
-    const [organisation, policies] = await Promise.all([
+    const [organisation, policies, storedDraft] = await Promise.all([
       getOrganisationByClerkOrgId(session.orgId),
       listPoliciesForOrg(session.orgId),
+      getLatestPolicyDraftForOrg({ clerkOrgId: session.orgId, type }),
     ]);
     const template = resolvePolicyTemplate(type, organisation);
+    const sourceDocument = await resolvePolicySourceDocument(template);
+    const generatedAt = new Date();
+    const initialDraft = buildInitialPolicyDraftContent({
+      generatedAt,
+      organisation: organisation ?? fallbackOrganisation,
+      reviewDate: formatIsoDate(addYears(generatedAt, 1)),
+      sourceDocument,
+      template,
+    });
 
     return {
       context: organisation
@@ -66,17 +116,29 @@ async function loadPolicyDetail(type: PolicyTemplateType) {
             organisation.locale,
           )
         : defaultContext,
-      policies: policies.filter((policy) => policy.type === type),
-      sourceDocument: await resolvePolicySourceDocument(template),
+      draft: parsePolicyDraftContent(storedDraft?.content) ?? initialDraft,
+      policies: policies.filter(
+        (policy) => policy.type === type && Boolean(policy.blobUrl),
+      ),
+      sourceDocument,
       template,
     };
   } catch {
     const template = resolvePolicyTemplate(type, null);
+    const sourceDocument = await resolvePolicySourceDocument(template);
+    const generatedAt = new Date();
 
     return {
       context: defaultContext,
+      draft: buildInitialPolicyDraftContent({
+        generatedAt,
+        organisation: fallbackOrganisation,
+        reviewDate: formatIsoDate(addYears(generatedAt, 1)),
+        sourceDocument,
+        template,
+      }),
       policies: [],
-      sourceDocument: await resolvePolicySourceDocument(template),
+      sourceDocument,
       template,
     };
   }
@@ -105,7 +167,7 @@ export default async function PolicyDetailPage({
     notFound();
   }
 
-  const { context, policies, sourceDocument, template } =
+  const { context, draft, policies, sourceDocument, template } =
     await loadPolicyDetail(type);
   const copy = getPolicyUiCopy(context.locale);
 
@@ -126,59 +188,22 @@ export default async function PolicyDetailPage({
             {copy.detail.source}: {sourceDocument.citation}
           </p>
         </div>
-        <div className="flex flex-wrap gap-3">
-          <Link
-            href="/policies"
-            className="inline-flex items-center gap-2 rounded-md border border-border px-4 py-3 text-sm font-medium hover:bg-surface-muted"
-          >
-            <ArrowLeft className="h-4 w-4" aria-hidden="true" />
-            {copy.actions.library}
-          </Link>
-          <form action={generatePolicyAction.bind(null, template.type)}>
-            <button
-              type="submit"
-              disabled={!process.env.BLOB_READ_WRITE_TOKEN}
-              className="inline-flex items-center gap-2 rounded-md bg-primary px-4 py-3 text-sm font-medium text-primary-foreground disabled:cursor-not-allowed disabled:opacity-50"
-            >
-              {copy.actions.generatePdf}
-              <FileText className="h-4 w-4" aria-hidden="true" />
-            </button>
-          </form>
-        </div>
+        <Link
+          href="/policies"
+          className="inline-flex items-center gap-2 rounded-md border border-border px-4 py-3 text-sm font-medium hover:bg-surface-muted"
+        >
+          <ArrowLeft className="h-4 w-4" aria-hidden="true" />
+          {copy.actions.library}
+        </Link>
       </div>
 
       <div className="grid gap-4 lg:grid-cols-[1.4fr_1fr]">
-        <section className="rounded-lg border border-border bg-surface">
-          <div className="border-b border-border p-5">
-            <h2 className="text-lg font-semibold">
-              {copy.detail.documentSections}
-            </h2>
-          </div>
-          <div className="divide-y divide-border">
-            {template.sections.map((section) => (
-              <article key={section.title} className="p-5">
-                <h3 className="font-medium">{section.title}</h3>
-                {section.body ? (
-                  <p className="mt-2 text-sm leading-6 text-foreground/64">
-                    {section.body}
-                  </p>
-                ) : null}
-                {section.fields ? (
-                  <div className="mt-3 flex flex-wrap gap-2">
-                    {section.fields.map((field) => (
-                      <span
-                        key={field}
-                        className="rounded-md bg-surface-muted px-2 py-1 text-xs text-foreground/64"
-                      >
-                        {field}
-                      </span>
-                    ))}
-                  </div>
-                ) : null}
-              </article>
-            ))}
-          </div>
-        </section>
+        <PolicyEditor
+          canGenerate={Boolean(process.env.BLOB_READ_WRITE_TOKEN)}
+          copy={copy.editor}
+          draft={draft}
+          type={template.type as PolicyTemplateType}
+        />
 
         <section className="rounded-lg border border-border bg-surface">
           <div className="border-b border-border p-5">

@@ -1,4 +1,4 @@
-import { and, desc, eq, inArray } from "drizzle-orm";
+import { and, desc, eq, inArray, isNull } from "drizzle-orm";
 import { getDb } from "@/lib/db";
 import {
   controls,
@@ -7,6 +7,7 @@ import {
   policyControls,
   profiles,
 } from "@/lib/db/schema";
+import type { PolicyDraftContent } from "@/lib/policies/policy-drafts";
 
 export type PolicyArchiveFile = {
   blobUrl: string;
@@ -44,6 +45,78 @@ export async function getPolicyForOrg(input: {
     .limit(1);
 
   return rows[0] ?? null;
+}
+
+export async function getLatestPolicyDraftForOrg(input: {
+  clerkOrgId: string;
+  type: string;
+}) {
+  const db = getDb();
+  const rows = await db
+    .select()
+    .from(policies)
+    .where(
+      and(
+        eq(policies.clerkOrgId, input.clerkOrgId),
+        eq(policies.type, input.type),
+        eq(policies.status, "draft"),
+        isNull(policies.blobUrl),
+      ),
+    )
+    .orderBy(desc(policies.createdAt))
+    .limit(1);
+
+  return rows[0] ?? null;
+}
+
+export async function upsertPolicyDraft(input: {
+  clerkOrgId: string;
+  content: PolicyDraftContent;
+  title: string;
+  type: string;
+}) {
+  const db = getDb();
+  const existingDraft = await getLatestPolicyDraftForOrg({
+    clerkOrgId: input.clerkOrgId,
+    type: input.type,
+  });
+
+  if (existingDraft) {
+    const updatedRows = await db
+      .update(policies)
+      .set({
+        content: input.content,
+        expiresAt: input.content.reviewDate,
+        reviewedAt: null,
+        status: "draft",
+        titleCs: input.title,
+      })
+      .where(
+        and(
+          eq(policies.clerkOrgId, input.clerkOrgId),
+          eq(policies.id, existingDraft.id),
+        ),
+      )
+      .returning({ id: policies.id });
+
+    return updatedRows[0]?.id ?? existingDraft.id;
+  }
+
+  const insertedRows = await db
+    .insert(policies)
+    .values({
+      blobUrl: null,
+      clerkOrgId: input.clerkOrgId,
+      content: input.content,
+      expiresAt: input.content.reviewDate,
+      reviewedAt: null,
+      status: "draft",
+      titleCs: input.title,
+      type: input.type,
+    })
+    .returning({ id: policies.id });
+
+  return insertedRows[0]?.id ?? null;
 }
 
 export async function listPolicyArchiveFiles(

@@ -14,6 +14,22 @@ type PolicyUiCopy = {
     generatedVersions: string;
     source: string;
   };
+  editor: {
+    bodyLabel: string;
+    fieldsHelp: string;
+    fieldsLabel: string;
+    generateHelp: string;
+    generatePdf: string;
+    legalIdentifier: string;
+    organisation: string;
+    reviewDate: string;
+    saveDraft: string;
+    sectionTitleLabel: string;
+    sourceCitation: string;
+    statusDraft: string;
+    title: string;
+    titleLabel: string;
+  };
   list: {
     emptyDate: string;
     emptyState: string;
@@ -44,6 +60,23 @@ const POLICY_UI_COPY = {
       emptyVersions: "Zatím není vygenerovaná žádná verze.",
       generatedVersions: "Vygenerované verze",
       source: "Zdroj",
+    },
+    editor: {
+      bodyLabel: "Text sekce",
+      fieldsHelp: "Každé pole na samostatný řádek. Prázdné řádky se ignorují.",
+      fieldsLabel: "Kontrolní pole",
+      generateHelp:
+        "Generování PDF je vypnuté, dokud není nastavené soukromé úložiště dokumentů.",
+      generatePdf: "Vygenerovat PDF z draftu",
+      legalIdentifier: "Právní identifikátor",
+      organisation: "Organizace",
+      reviewDate: "Datum příštího přezkumu",
+      saveDraft: "Uložit draft",
+      sectionTitleLabel: "Nadpis sekce",
+      sourceCitation: "Citace zdroje",
+      statusDraft: "Editovatelný draft",
+      title: "Zkontrolovat a upravit draft",
+      titleLabel: "Název dokumentu",
     },
     list: {
       emptyDate: "bez data",
@@ -77,6 +110,23 @@ const POLICY_UI_COPY = {
       generatedVersions: "Generated versions",
       source: "Source",
     },
+    editor: {
+      bodyLabel: "Section text",
+      fieldsHelp: "Use one field per line. Empty lines are ignored.",
+      fieldsLabel: "Review fields",
+      generateHelp:
+        "PDF generation is disabled until private document storage is configured.",
+      generatePdf: "Generate PDF from draft",
+      legalIdentifier: "Legal identifier",
+      organisation: "Organisation",
+      reviewDate: "Next review date",
+      saveDraft: "Save draft",
+      sectionTitleLabel: "Section title",
+      sourceCitation: "Source citation",
+      statusDraft: "Editable draft",
+      title: "Review and edit draft",
+      titleLabel: "Document title",
+    },
     list: {
       emptyDate: "no date",
       emptyState:
@@ -108,6 +158,23 @@ const POLICY_UI_COPY = {
       emptyVersions: "Nessuna versione generata finora.",
       generatedVersions: "Versioni generate",
       source: "Fonte",
+    },
+    editor: {
+      bodyLabel: "Testo della sezione",
+      fieldsHelp: "Usate una voce per riga. Le righe vuote vengono ignorate.",
+      fieldsLabel: "Campi di verifica",
+      generateHelp:
+        "La generazione PDF è disabilitata finché lo storage privato dei documenti non è configurato.",
+      generatePdf: "Genera PDF dalla bozza",
+      legalIdentifier: "Identificativo legale",
+      organisation: "Organizzazione",
+      reviewDate: "Data prossima revisione",
+      saveDraft: "Salva bozza",
+      sectionTitleLabel: "Titolo sezione",
+      sourceCitation: "Citazione fonte",
+      statusDraft: "Bozza modificabile",
+      title: "Rivedi e modifica la bozza",
+      titleLabel: "Titolo documento",
     },
     list: {
       emptyDate: "nessuna data",

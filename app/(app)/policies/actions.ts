@@ -7,8 +7,19 @@ import { z } from "zod";
 import { deleteBlobUrlsAfterFailedSave } from "@/lib/blob/cleanup";
 import { createAuditLog } from "@/lib/db/queries/audit-logs";
 import { getOrganisationByClerkOrgId } from "@/lib/db/queries/organisations";
-import { insertGeneratedPolicy } from "@/lib/db/queries/policies";
+import {
+  getLatestPolicyDraftForOrg,
+  insertGeneratedPolicy,
+  upsertPolicyDraft,
+} from "@/lib/db/queries/policies";
 import { renderPolicyPdf } from "@/lib/pdf/policy-document";
+import {
+  buildInitialPolicyDraftContent,
+  buildPolicyTemplateFromDraft,
+  parsePolicyDraftContent,
+  parsePolicyDraftFormData,
+  type PolicyDraftContent,
+} from "@/lib/policies/policy-drafts";
 import { resolvePolicyTemplate } from "@/lib/policies/resolve-template";
 import { resolvePolicySourceDocument } from "@/lib/policies/source-documents";
 import { POLICY_TEMPLATE_TYPES } from "@/lib/policies/templates";
@@ -38,7 +49,81 @@ async function getActiveSession() {
   };
 }
 
-export async function generatePolicyAction(type: string) {
+async function resolveCurrentPolicyDraft(input: {
+  clerkOrgId: string;
+  formData?: FormData;
+  type: (typeof POLICY_TEMPLATE_TYPES)[number];
+}) {
+  const organisation = await getOrganisationByClerkOrgId(input.clerkOrgId);
+
+  if (!organisation) {
+    throw new Error("Organisation profile is required to prepare policy drafts.");
+  }
+
+  const template = resolvePolicyTemplate(input.type, organisation);
+  const sourceDocument = await resolvePolicySourceDocument(template);
+  const existingDraft = await getLatestPolicyDraftForOrg({
+    clerkOrgId: input.clerkOrgId,
+    type: input.type,
+  });
+  const generatedAt = new Date();
+  const initialDraft = buildInitialPolicyDraftContent({
+    generatedAt,
+    organisation,
+    reviewDate: formatDate(addYears(generatedAt, 1)),
+    sourceDocument,
+    template,
+  });
+  const storedDraft = parsePolicyDraftContent(existingDraft?.content) ?? initialDraft;
+  const draft = input.formData?.has("title")
+    ? parsePolicyDraftFormData({ currentDraft: storedDraft, formData: input.formData })
+    : storedDraft;
+
+  return {
+    draft,
+    organisation,
+    sourceDocument,
+    template,
+  };
+}
+
+export async function savePolicyDraftAction(type: string, formData: FormData) {
+  const parsedType = policyTypeSchema.parse(type);
+  const session = await getActiveSession();
+  const { draft, template } = await resolveCurrentPolicyDraft({
+    clerkOrgId: session.clerkOrgId,
+    formData,
+    type: parsedType,
+  });
+
+  const policyId = await upsertPolicyDraft({
+    clerkOrgId: session.clerkOrgId,
+    content: draft,
+    title: draft.title,
+    type: template.type,
+  });
+
+  if (policyId) {
+    await createAuditLog({
+      action: "policy.draft_saved",
+      clerkOrgId: session.clerkOrgId,
+      clerkUserId: session.userId,
+      entityId: policyId,
+      entityType: "policy",
+      metadata: {
+        reviewDate: draft.reviewDate,
+        title: draft.title,
+        type: template.type,
+      },
+    });
+  }
+
+  revalidatePath("/policies");
+  revalidatePath("/settings/audit-log");
+  revalidatePath(`/policies/${template.type}`);
+}
+
+export async function generatePolicyAction(type: string, formData?: FormData) {
   const parsedType = policyTypeSchema.parse(type);
 
   if (!process.env.BLOB_READ_WRITE_TOKEN) {
@@ -46,25 +131,23 @@ export async function generatePolicyAction(type: string) {
   }
 
   const session = await getActiveSession();
-  const organisation = await getOrganisationByClerkOrgId(session.clerkOrgId);
-
-  if (!organisation) {
-    throw new Error("Organisation profile is required to generate policies.");
-  }
-
-  const template = resolvePolicyTemplate(parsedType, organisation);
-  const sourceDocument = await resolvePolicySourceDocument(template);
+  const { draft, organisation, sourceDocument, template } =
+    await resolveCurrentPolicyDraft({
+      clerkOrgId: session.clerkOrgId,
+      formData,
+      type: parsedType,
+    });
+  const templateFromDraft = buildPolicyTemplateFromDraft({ draft, template });
   const generatedAt = new Date();
-  const reviewDate = formatDate(addYears(generatedAt, 1));
   const pdf = await renderPolicyPdf({
     generatedAt,
     organisation: {
       ico: organisation.ico,
       name: organisation.name,
     },
-    reviewDate,
+    reviewDate: draft.reviewDate,
     sourceDocument,
-    template,
+    template: templateFromDraft,
   });
   const blob = await put(
     `policies/${session.clerkOrgId}/${parsedType}-${generatedAt.getTime()}.pdf`,
@@ -75,24 +158,32 @@ export async function generatePolicyAction(type: string) {
     },
   );
 
+  const draftContent: PolicyDraftContent = {
+    ...draft,
+    generatedAt: generatedAt.toISOString(),
+  };
   const policyId = await insertGeneratedPolicy({
     blobUrl: blob.url,
     clerkOrgId: session.clerkOrgId,
     content: {
-      generatedAt: generatedAt.toISOString(),
-      reviewDate,
-      sections: template.sections,
+      ...draftContent,
       sourceDocument,
     },
     controlKeys: template.controlKeys,
-    expiresAt: reviewDate,
-    title: template.titleCs,
+    expiresAt: draft.reviewDate,
+    title: draft.title,
     type: template.type,
   }).catch((error: unknown) =>
     deleteBlobUrlsAfterFailedSave([blob.url], error),
   );
 
   if (policyId) {
+    await upsertPolicyDraft({
+      clerkOrgId: session.clerkOrgId,
+      content: draftContent,
+      title: draft.title,
+      type: template.type,
+    });
     await createAuditLog({
       action: "policy.generated",
       clerkOrgId: session.clerkOrgId,
@@ -100,8 +191,8 @@ export async function generatePolicyAction(type: string) {
       entityId: policyId,
       entityType: "policy",
       metadata: {
-        expiresAt: reviewDate,
-        title: template.titleCs,
+        expiresAt: draft.reviewDate,
+        title: draft.title,
         type: template.type,
       },
     });

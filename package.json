@@ -19,6 +19,7 @@
     "smoke:generated-artifact-audit": "tsx scripts/smoke-generated-artifact-audit.ts",
     "smoke:automated-evidence-citations": "tsx scripts/smoke-automated-evidence-citations.ts",
     "smoke:integration-evidence-policy": "tsx scripts/smoke-integration-evidence-policy.ts",
+    "smoke:policy-drafts": "tsx scripts/smoke-policy-drafts.ts",
     "smoke:incident-notifications": "tsx scripts/smoke-incident-notifications.ts",
     "smoke:questionnaire-artifacts": "tsx scripts/smoke-questionnaire-artifacts.ts",
     "smoke:questionnaire-citations": "tsx scripts/smoke-questionnaire-citations.ts",
