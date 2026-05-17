@@ -424,9 +424,9 @@
       "title": "15-minute intake scope",
       "subtitle": "Deterministic readiness scope from onboarding answers. Internal guidance only, not a legal classification.",
       "applicable": "Applicable controls",
-      "priority": "Priority gaps",
+      "priority": "Priority gaps based on your intake",
       "manualReview": "Manual review",
-      "outOfScope": "Out of scope",
+      "outOfScope": "Out of scope / not applicable",
       "openControls": "Open scoped controls",
       "viewControls": "Review controls"
     }
@@ -983,12 +983,12 @@
       "emptyActiveAction": "Choose a framework",
       "scopeFiltersTitle": "Scope filters",
       "allScope": "All controls",
-      "priorityScope": "Priority gaps",
+      "priorityScope": "Priority gaps based on your intake",
       "gapScope": "Open gaps",
-      "outOfScope": "Out of scope",
+      "outOfScope": "Out of scope / not applicable",
       "scopeLabel": "Intake scope",
-      "priorityLabel": "Priority gap",
-      "rationaleLabel": "Intake rationale",
+      "priorityLabel": "Priority gap based on your intake",
+      "rationaleLabel": "Reason from intake",
       "emptyFiltered": "No controls match this scope filter."
     },
     "detail": {

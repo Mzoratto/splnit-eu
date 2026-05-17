@@ -122,7 +122,9 @@ function filterControlsByScope(controls: OrgControl[], scopeFilter: ScopeFilter)
   }
 
   if (scopeFilter === "out-of-scope") {
-    return controls.filter((control) => control.scopeStatus === "out_of_scope");
+    return controls.filter(
+      (control) => control.scopeStatus === "out_of_scope" || control.scopeStatus === "not_applicable",
+    );
   }
 
   return controls;

@@ -424,9 +424,9 @@
       "title": "Rozsah z 15minutového vstupu",
       "subtitle": "Deterministický readiness rozsah z odpovědí v onboardingu. Pouze interní vodítko, ne právní klasifikace.",
       "applicable": "Aplikovatelné kontroly",
-      "priority": "Prioritní mezery",
+      "priority": "Prioritní mezery podle vašeho vstupu",
       "manualReview": "Manuální revize",
-      "outOfScope": "Mimo rozsah",
+      "outOfScope": "Mimo rozsah / nerelevantní",
       "openControls": "Otevřené scoped kontroly",
       "viewControls": "Zkontrolovat kontroly"
     }
@@ -983,12 +983,12 @@
       "emptyActiveAction": "Vybrat framework",
       "scopeFiltersTitle": "Filtry rozsahu",
       "allScope": "Všechny kontroly",
-      "priorityScope": "Prioritní mezery",
+      "priorityScope": "Prioritní mezery podle vašeho vstupu",
       "gapScope": "Otevřené mezery",
-      "outOfScope": "Mimo rozsah",
+      "outOfScope": "Mimo rozsah / nerelevantní",
       "scopeLabel": "Rozsah vstupu",
-      "priorityLabel": "Prioritní mezera",
-      "rationaleLabel": "Odůvodnění vstupu",
+      "priorityLabel": "Prioritní mezera podle vašeho vstupu",
+      "rationaleLabel": "Důvod ze vstupu",
       "emptyFiltered": "Tomuto filtru rozsahu neodpovídají žádné kontroly."
     },
     "detail": {

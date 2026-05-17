@@ -424,9 +424,9 @@
       "title": "Ambito intake 15 minuti",
       "subtitle": "Ambito readiness deterministico dalle risposte di onboarding. Solo guida interna, non classificazione legale.",
       "applicable": "Controlli applicabili",
-      "priority": "Gap prioritari",
+      "priority": "Gap prioritari basati sul vostro intake",
       "manualReview": "Revisione manuale",
-      "outOfScope": "Fuori ambito",
+      "outOfScope": "Fuori ambito / non applicabile",
       "openControls": "Controlli scoped aperti",
       "viewControls": "Rivedi controlli"
     }
@@ -983,12 +983,12 @@
       "emptyActiveAction": "Scegli framework",
       "scopeFiltersTitle": "Filtri ambito",
       "allScope": "Tutti i controlli",
-      "priorityScope": "Gap prioritari",
+      "priorityScope": "Gap prioritari basati sul vostro intake",
       "gapScope": "Gap aperti",
-      "outOfScope": "Fuori ambito",
+      "outOfScope": "Fuori ambito / non applicabile",
       "scopeLabel": "Ambito intake",
-      "priorityLabel": "Gap prioritario",
-      "rationaleLabel": "Razionale intake",
+      "priorityLabel": "Gap prioritario basato sul vostro intake",
+      "rationaleLabel": "Motivo dall'intake",
       "emptyFiltered": "Nessun controllo corrisponde a questo filtro ambito."
     },
     "detail": {

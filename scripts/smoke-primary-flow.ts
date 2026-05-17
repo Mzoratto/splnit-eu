@@ -2,6 +2,7 @@ import assert from "node:assert/strict";
 import { loadEnvConfig } from "@next/env";
 import { and, eq, inArray } from "drizzle-orm";
 import { getMessagesForLocale } from "@/i18n/messages";
+import type { FrameworkSlug } from "@/lib/controls/library";
 import { getDb } from "@/lib/db";
 import {
   evidence,
@@ -22,6 +23,8 @@ import { listGeneratedArtifactSummaries } from "@/lib/db/queries/generated-artif
 import {
   completeOnboarding,
   getOnboardingState,
+  markOnboardingIntakeCompleted,
+  saveOnboardingIntakeProfile,
   saveOnboardingCompany,
   saveOnboardingFrameworks,
   saveOnboardingTools,
@@ -31,11 +34,13 @@ import {
   insertGeneratedPolicy,
   listPoliciesForOrg,
 } from "@/lib/db/queries/policies";
-import { getControlDetailByKey, updateControlStatus } from "@/lib/db/queries/controls";
+import { getControlDetailByKey, listOrgControlsForIndex, updateControlStatus } from "@/lib/db/queries/controls";
 import {
   buildGapAnalysisArtifactContent,
   GAP_ANALYSIS_ARTIFACT_KIND,
 } from "@/lib/frameworks/gap-artifacts";
+import { INTAKE_PROFILE_VERSION } from "@/lib/onboarding/intake-questions";
+import { deriveIntakeScope, type IntakeAnswers } from "@/lib/onboarding/intake-scope";
 import {
   getQuestionsForFramework,
   type FrameworkAnswer,
@@ -58,21 +63,36 @@ const databaseUrl = process.env.DATABASE_URL?.trim();
 assert.ok(databaseUrl, "DATABASE_URL is required for primary flow smoke test.");
 
 const clerkOrgId = `smoke_primary_flow_${Date.now()}`;
+const legacyClerkOrgId = `${clerkOrgId}_legacy_no_intake`;
 const clerkUserId = "smoke_primary_flow_user";
-const frameworkSlugs = ["nis2", "gdpr"];
+const frameworkSlugs: FrameworkSlug[] = ["nis2", "gdpr"];
 const controlKey = "ctrl_mfa_all_users";
+const intakeAnswers: IntakeAnswers = {
+  businessModel: "saas",
+  employeeBand: "50_249",
+  handlesPersonalData: "customers_and_employees",
+  handlesSensitiveData: true,
+  hasCriticalOperations: true,
+  hasProductionSoftware: true,
+  hasPublicApp: true,
+  sector: "technology",
+  usesAiSystems: "internal_productivity",
+  usesCloudHosting: true,
+  usesHighRiskAi: false,
+  usesThirdPartyProcessors: "many",
+};
 
 async function cleanup() {
   const db = getDb();
 
-  await db.delete(generatedArtifacts).where(eq(generatedArtifacts.clerkOrgId, clerkOrgId));
-  await db.delete(policies).where(eq(policies.clerkOrgId, clerkOrgId));
-  await db.delete(evidence).where(eq(evidence.clerkOrgId, clerkOrgId));
+  await db.delete(generatedArtifacts).where(inArray(generatedArtifacts.clerkOrgId, [clerkOrgId, legacyClerkOrgId]));
+  await db.delete(policies).where(inArray(policies.clerkOrgId, [clerkOrgId, legacyClerkOrgId]));
+  await db.delete(evidence).where(inArray(evidence.clerkOrgId, [clerkOrgId, legacyClerkOrgId]));
   await db
     .delete(orgControlStatuses)
-    .where(eq(orgControlStatuses.clerkOrgId, clerkOrgId));
-  await db.delete(orgFrameworks).where(eq(orgFrameworks.clerkOrgId, clerkOrgId));
-  await db.delete(organisations).where(eq(organisations.clerkOrgId, clerkOrgId));
+    .where(inArray(orgControlStatuses.clerkOrgId, [clerkOrgId, legacyClerkOrgId]));
+  await db.delete(orgFrameworks).where(inArray(orgFrameworks.clerkOrgId, [clerkOrgId, legacyClerkOrgId]));
+  await db.delete(organisations).where(inArray(organisations.clerkOrgId, [clerkOrgId, legacyClerkOrgId]));
 }
 
 function addYears(date: Date, years: number) {
@@ -136,6 +156,18 @@ async function main() {
       clerkOrgId,
       toolKeys: ["chatgpt", "microsoft-copilot", "github-copilot"],
     });
+    const derivedScope = deriveIntakeScope({
+      answers: intakeAnswers,
+      selectedFrameworks: frameworkSlugs,
+      selectedTools: ["chatgpt", "microsoft-copilot", "github-copilot"],
+    });
+    await saveOnboardingIntakeProfile({
+      answers: intakeAnswers,
+      clerkOrgId,
+      derivedScope,
+      version: INTAKE_PROFILE_VERSION,
+    });
+    await markOnboardingIntakeCompleted(clerkOrgId);
     await completeOnboarding({ clerkOrgId, initialScore: 74 });
 
     const onboarding = await getOnboardingState(clerkOrgId);
@@ -144,6 +176,13 @@ async function main() {
     assert.equal(onboarding.organisation?.locale, "it-IT");
     assert.ok(onboarding.organisation?.onboardingCompletedAt);
     assert.deepEqual(onboarding.selectedFrameworks.sort(), frameworkSlugs.sort());
+    assert.ok(onboarding.intakeProfile?.completedAt, "intake profile should be marked complete.");
+    assert.ok(
+      onboarding.intakeProfile?.derivedScope &&
+        Array.isArray(onboarding.intakeProfile.derivedScope.priorityControlKeys) &&
+        onboarding.intakeProfile.derivedScope.priorityControlKeys.length > 0,
+      "intake profile should persist derived priority gaps.",
+    );
 
     const assessment = await assessFramework({
       answers: buildNis2Answers(),
@@ -314,8 +353,43 @@ async function main() {
     assert.equal(dashboard.organisationLocale, "it-IT");
     assert.equal(dashboard.organisationJurisdiction, "IT");
     assert.ok(
+      dashboard.intakeScopeSummary.priorityControlKeys.length > 0,
+      "Dashboard should expose priority gaps based on intake.",
+    );
+    assert.ok(
+      dashboard.priorityControls.some((control) => control.isIntakePriority),
+      "Dashboard priority controls should identify intake priorities.",
+    );
+    assert.ok(
       dashboard.frameworkScores.some((framework) => framework.slug === "nis2"),
       "Dashboard should show enrolled NIS2 framework.",
+    );
+
+    const controlsIndex = await listOrgControlsForIndex(clerkOrgId);
+    assert.ok(
+      controlsIndex.some((control) => control.isIntakePriority && control.intakeRationale),
+      "Controls index should expose owner-private intake priority rationale.",
+    );
+
+    await saveOnboardingCompany({
+      clerkOrgId: legacyClerkOrgId,
+      country: "IT",
+      employeeCount: "10-49",
+      ico: "IT-SMOKE-LEGACY",
+      locale: "it-IT",
+      name: "Legacy No Intake S.r.l.",
+      primaryJurisdiction: "IT",
+      sector: "technology",
+    });
+    await saveOnboardingFrameworks({ clerkOrgId: legacyClerkOrgId, frameworkSlugs: ["gdpr"] });
+    await completeOnboarding({ clerkOrgId: legacyClerkOrgId, initialScore: 60 });
+    const legacyDashboard = await getDashboardData(legacyClerkOrgId);
+    assert.equal(legacyDashboard.intakeScopeSummary.priorityControlKeys.length, 0);
+    const legacyControlsIndex = await listOrgControlsForIndex(legacyClerkOrgId);
+    assert.ok(legacyControlsIndex.length > 0, "Legacy org controls should load without intake profile.");
+    assert.ok(
+      legacyControlsIndex.every((control) => !control.isIntakePriority && !control.intakeRationale),
+      "Legacy org controls should not fabricate intake priority rationale.",
     );
 
     const activeFrameworkRows = await db

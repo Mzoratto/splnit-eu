@@ -475,7 +475,7 @@ export default async function DashboardPage() {
             <div className="rounded-md border border-border bg-background p-3">
               <p className="text-xs text-foreground/52">{copy.intakeScope.outOfScope}</p>
               <p className="mt-2 font-mono text-2xl font-medium">
-                {intakeScopeSummary.outOfScopeControlKeys.length}
+                {intakeScopeSummary.outOfScopeControlKeys.length + intakeScopeSummary.notApplicableControlKeys.length}
               </p>
             </div>
           </div>
