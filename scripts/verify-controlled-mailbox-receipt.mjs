@@ -162,6 +162,41 @@ if (!accessToken) {
   process.exit(1);
 }
 
+function decodeJwtPayload(token) {
+  try {
+    const payload = token.split(".")[1];
+    return JSON.parse(Buffer.from(payload.replace(/-/g, "+").replace(/_/g, "/"), "base64url").toString("utf8"));
+  } catch {
+    return null;
+  }
+}
+
+const tokenClaims = decodeJwtPayload(accessToken);
+const tokenRoles = Array.isArray(tokenClaims?.roles) ? tokenClaims.roles : [];
+if (!tokenRoles.includes("Mail.Read")) {
+  output({
+    ok: false,
+    mailboxReceiptVerified: false,
+    reason: "microsoft_graph_mail_read_application_permission_missing",
+    recipient: redactEmail(recipient),
+    mailboxUser: redactEmail(mailboxUser),
+    required: [
+      "In the app registration API permissions, add Microsoft Graph → Application permissions → Mail.Read.",
+      "Click Grant admin consent for the splnit tenant after adding the Application permission.",
+      "Delegated Mail.Read is not enough for this verifier because it uses client credentials.",
+    ],
+    token: {
+      audience: tokenClaims?.aud ?? null,
+      tenantId: tokenClaims?.tid ?? null,
+      appId: tokenClaims?.appid ?? tokenClaims?.azp ?? null,
+      roles: tokenRoles,
+      scopes: tokenClaims?.scp ?? null,
+    },
+    expectedSubjects,
+  });
+  process.exit(1);
+}
+
 const top = String(Number.isFinite(pageSize) && pageSize > 0 ? Math.min(pageSize, 100) : 50);
 const select = "id,subject,from,sender,toRecipients,ccRecipients,receivedDateTime,sentDateTime,internetMessageId,webLink";
 const messagesUrl = new URL(`https://graph.microsoft.com/v1.0/users/${encodeURIComponent(mailboxUser)}/mailFolders/inbox/messages`);
