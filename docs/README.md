@@ -26,6 +26,8 @@
 ### Review Evidence
 
 - `legal-reviews/` - Czech/Italian mapping and template review queues/results, including `legal-reviews/italian-policy-template-readiness-audit.md` for the current Italian template promotion gate.
+- `reviews/intake-prioritization-human-review.md` - approved production-readiness review for the deterministic intake prioritization MVP.
+- `reviews/public-regulatory-copy-readiness.md` - public regulatory/platform copy honesty review and claim-boundary record.
 
 ### Outreach
 

@@ -1,14 +1,16 @@
 # App Readiness Audit
 
-Last updated: 2026-05-11
+Last updated: 2026-05-17
 
 Purpose: identify the authenticated app gaps that must be closed before new product features or broader outreach. This started as a static route/code audit and now records the production verification results that close or defer each readiness item.
 
 ## Current Conclusion
 
-Primary workflow readiness is closed for the current outreach decision. A temporary token-gated Vercel production verification route passed on 2026-05-06 against production Neon, live Clerk, the Clerk custom domain, and Vercel Blob, then cleaned up its temporary user, organization, rows, and blobs. Live Clerk Organizations were enabled during this pass with a five-member default limit.
+Primary workflow readiness is closed for the current outreach decision. A temporary token-gated Vercel production verification route passed on 2026-05-06 against production Neon, live Clerk, the Clerk custom domain, and Vercel Blob, then cleaned up its temporary user, organization, rows, and blobs. Live Clerk Organizations were enabled during this pass with a five-member default limit. Intake prioritization is also approved for the current deterministic MVP path after the 2026-05-17 production smoke verified live UI write/read behavior, dashboard priority gaps, controls scope filtering, production `org_intake_profiles` persistence, and cleanup.
 
-No critical unknowns remain for `dashboard -> controls -> frameworks -> evidence -> policies -> gap report`. Remaining gaps are secondary-surface hardening or product-shaping work, except the separately tracked legal identity closeout and Italian policy-template legal review.
+No critical unknowns remain for `dashboard -> controls -> frameworks -> evidence -> policies -> gap report` or the current deterministic intake prioritization path. Remaining gaps are secondary-surface hardening or product-shaping work, except the separately tracked legal identity/public legal-page closeout and Italian policy-template legal review.
+
+Public regulatory/resource and platform copy was hardened on 2026-05-17 to keep public claims indicative and review-oriented. The committed local state `b159333` passed `npm run smoke:copy-hygiene`, `npm run typecheck`, `npm run lint`, and `npm run build`; deployment was not part of that pass.
 
 ## Latest Production Verification
 
@@ -136,16 +138,17 @@ Readiness statuses:
 
 ## Immediate Fix Queue
 
-1. **Production smoke evidence captured.** `npm run smoke:production-tenant-readiness` now covers the authenticated secondary-route set, public Trust Center access URL, vendor assessment token rendering, production Resend send, controlled mailbox arrival, and cleanup, once the smoke is run against the same Neon branch used by Vercel Production.
+1. **Production smoke evidence captured.** `npm run smoke:production-tenant-readiness` now covers the authenticated secondary-route set, public Trust Center access URL, vendor assessment token rendering, production Resend send, controlled mailbox arrival, and cleanup, once the smoke is run against the same Neon branch used by Vercel Production. `npm run smoke:production-intake-profile` separately proves the intake profile write/read and dashboard/controls prioritization path against production.
 2. **Token submission completion.** Token generation/rendering and email link delivery are proven. If this becomes a buyer claim, add one more controlled submit-and-status smoke that opens `/vendor-assessment/[token]`, submits the assessment, and confirms vendor risk/status plus delivery-status propagation.
-3. **Secondary-surface hardening.** Continue with provider-configured integration runtime smokes, questionnaire provider runtime/evidence-save checks, and audit export pagination/limit checks.
-4. **Outreach decision prep.** Treat the primary workflow and the covered authenticated secondary smoke as verified for outreach planning, while keeping Italian policy-template promotion and legal identity closeout out of demo claims until completed.
+3. **Secondary-surface hardening.** Continue with provider-configured integration runtime smokes, Stripe test-mode checkout/portal smoke, questionnaire evidence-save checks, and audit export pagination/limit checks.
+4. **Outreach decision prep.** Treat the primary workflow, deterministic intake prioritization, and the covered authenticated secondary smoke as verified for outreach planning, while keeping Italian policy-template promotion and legal identity/public legal-page closeout out of demo claims until completed.
 
 ## Verification Needed Next
 
 - Optional submit-and-status smoke for `/vendor-assessment/[token]` if Splnit wants to claim external vendor submission completion, not just token generation/rendering and email link delivery.
 - Provider-configured integration runtime smokes for Microsoft 365, GitHub, and AWS when production credentials are available.
-- Questionnaire provider runtime generation and evidence-save smoke; current status is documented in `docs/questionnaire-flow-audit.md`.
+- Questionnaire evidence-save smoke; current provider-backed production generation/review status is documented in `docs/questionnaire-flow-audit.md`.
 - Audit/vendor/risk/incident export status is documented in `docs/export-endpoint-audit.md`; remaining work is authenticated real-tenant export smokes and large audit-page verification.
+- Stripe checkout/customer-portal test-mode end-to-end smoke; current status is documented in `docs/billing-stripe-runtime-audit.md`.
 - Legal review and promotion decision for Italian policy templates.
 - Legal identity/public legal-page closeout when the real operator details are supplied.

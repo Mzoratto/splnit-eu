@@ -1,6 +1,6 @@
 # Splnit.eu Project Plan
 
-Last updated: 2026-05-12
+Last updated: 2026-05-17
 
 This is the single source of truth for current project direction. Older phase plans, outreach worksheets, and onboarding playbooks are archived under `docs/archive/` and should not drive work unless this file explicitly revives them.
 
@@ -39,17 +39,20 @@ Hard constraints:
 - Integration UI polish is complete for the current outreach decision: Microsoft 365, GitHub, and AWS connect/disconnect flows are buyer-ready, and Google Workspace is clearly non-interactive "coming soon".
 - Questionnaire production trace is complete for the current smoke path: live OpenAI questionnaire generation passed production smoke with `SMOKE_LIVE_OPENAI_QUESTIONNAIRE=true`, the generated artifact loaded and persisted reviewed state, and the model/config proof boundary is documented.
 - Vendor token submission and status propagation are production-smoked: the token link rendered, the vendor submitted answers, submission persisted, and originating vendor status propagated to assessed for the smoke path. Vendor-submitted answers still do not create reviewed evidence/control artifacts.
+- Intake prioritization is approved for the current deterministic MVP path. The production smoke wrote intake through the live UI, verified dashboard priority gaps and controls index scope behavior, read back production DB persistence, and cleaned up the temporary smoke org/data. Production migrations now match the repo through `0017_wakeful_thunderbolt`; `org_intake_profiles` exists in production.
+- Public regulatory/resource and platform copy has been hardened for the current honesty gate: pages now use indicative/review framing, avoid legal-classification and compliance-guarantee claims, avoid fixed setup-time claims, and avoid real-time compliance-status wording. `npm run smoke:copy-hygiene`, `npm run typecheck`, `npm run lint`, and `npm run build` passed after the changes. This repository state is committed as `b159333`; deployment is a separate step.
 
 ### In Progress
 
-- Core app hardening: secondary surfaces still need polish, especially export/report smokes, onboarding polish, and broader action-level authorization coverage.
+- Core app hardening: secondary surfaces still need polish, especially export/report smokes, onboarding polish, provider-configured integration smokes, Stripe test-mode billing smoke, and broader action-level authorization coverage.
 - Knowledge layer hardening: Italian policy templates remain draft and intentionally fall back to reviewed EU English output until legal/template review promotes them.
 - Legal/counsel review: public legal pages and DPA/subprocessor/retention annexes remain engineering drafts until reviewed.
 - Italian outreach: first-three packet is revived under `docs/outreach/`; sending is now blocked by sender identity/manual route choice, not product readiness.
+- Policy-to-Evidence Loop: next product phase should be defined before coding. Intake work should not expand further unless the approved review finds a regression or production blocker.
 
 ### Blocked
 
-- Real operator details are still placeholders in some internal outreach/legal workflows: founder name, OSVČ identity, IČO, ARES link, phone/LinkedIn if used.
+- Public legal/counsel closeout remains blocked on exact approved legal-page wording for OSVČ/operator identity, DPO/contact wording, DPA/subprocessor/retention terms, and related customer-facing legal materials.
 - Czech mapping promotion is blocked on human reviewer decisions.
 - Italian mapping promotion is blocked on human/advisor review for sensitive or non-auto-approved rows.
 - Any customer-facing legal or auditor-ready material is blocked until legal/reviewer status is explicit.
@@ -70,6 +73,8 @@ These are useful later, but not next:
 - `PROJECT_PLAN.md` - current plan and priority order.
 - `docs/README.md` - documentation index and archive policy.
 - `docs/app-readiness-audit.md` - authenticated app route readiness matrix and immediate fix queue.
+- `docs/reviews/intake-prioritization-human-review.md` - approved intake prioritization production-readiness record.
+- `docs/reviews/public-regulatory-copy-readiness.md` - public regulatory/platform copy honesty and claim-boundary record.
 - `docs/primary-flow-verification.md` - local database primary-flow verification record.
 - `docs/production-db-audit.md` - production DB/env audit and current blocker.
 - `docs/architecture/` - architecture decisions that still affect implementation.
@@ -93,11 +98,12 @@ Tracked root files are generally valid for a Next.js/Vercel app:
 
 Do these before any new features or broader outreach. This order is optimized for the first outreach conversations, where visible trust failures matter more than back-office completeness:
 
-1. **Audit/export endpoint smokes:** verify audit-log export pagination/limit behavior, org scoping, and stable output shape; verify buyer-visible vendor/risk/workspace export endpoints require auth and return only org-owned data before demos.
-2. **Onboarding UX polish:** refine onboarding and framework setup after export/report risk is contained. This matters more for conversion than for first outreach calls.
-3. **First-three outreach send:** send Cubbit, Cleafy, and DigitalPA manually once sender identity and exact send routes are confirmed. This is blocked on sender identity/manual route choice, not product readiness.
-4. **Legal/operator identity closeout:** replace placeholders only when real OSVČ/IČO/ARES/operator details are available and reviewed. Public legal/customer-facing claims remain blocked until this is explicit.
-5. **Vendor-submitted evidence feature:** future, not the current sprint. If built later, vendor answers should become vendor-supplied draft evidence with explicit control mapping and human review before any auditor-facing claim.
+1. **Define the Policy-to-Evidence Loop:** choose one buyer-useful policy/control gap flow, define the recommended action, evidence collection state, honest proof/status wording, and explicit v1 non-goals before coding.
+2. **Audit/export endpoint smokes:** verify audit-log export pagination/limit behavior, org scoping, and stable output shape; verify buyer-visible vendor/risk/workspace export endpoints require auth and return only org-owned data before demos.
+3. **Onboarding UX polish:** refine onboarding and framework setup after export/report risk is contained. This matters more for conversion than for first outreach calls.
+4. **First-three outreach send:** send Cubbit, Cleafy, and DigitalPA manually once sender identity and exact send routes are confirmed. This is blocked on sender identity/manual route choice, not product readiness.
+5. **Legal/operator identity closeout:** publish final legal/customer-facing wording only when OSVČ/IČO/ARES/operator, DPO/contact, DPA/subprocessor, and retention terms are approved.
+6. **Vendor-submitted evidence feature:** future, not the current sprint. If built later, vendor answers should become vendor-supplied draft evidence with explicit control mapping and human review before any auditor-facing claim.
 
 Standing blockers that still apply across the work above:
 
