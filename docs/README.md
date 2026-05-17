@@ -4,6 +4,10 @@
 
 ## Active Docs
 
+### Plans
+
+- `plans/policy-to-evidence-loop-v1.md` - draft spec and implementation plan for the next Policy-to-Evidence Loop slice.
+
 ### Architecture
 
 - `architecture/jurisdiction.md` - jurisdiction-aware schema and product decisions.

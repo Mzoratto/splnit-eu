@@ -168,9 +168,9 @@ After this review passes and production migration readiness is verified, move to
 
 Minimum Policy-to-Evidence Loop definition before coding:
 
-- [ ] Select one buyer-useful policy/control gap flow.
-- [ ] Define recommended policy/evidence action.
-- [ ] Define evidence collection state.
-- [ ] Define honest proof/status wording.
-- [ ] Define explicit v1 non-goals.
-- [ ] Write implementation plan before coding.
+- [x] Select one buyer-useful policy/control gap flow: `ctrl_mfa_all_users` MFA evidence action.
+- [x] Define recommended policy/evidence action.
+- [x] Define evidence collection state.
+- [x] Define honest proof/status wording.
+- [x] Define explicit v1 non-goals.
+- [x] Write implementation plan before coding: `docs/plans/policy-to-evidence-loop-v1.md`.

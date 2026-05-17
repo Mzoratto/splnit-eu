@@ -48,7 +48,7 @@ Hard constraints:
 - Knowledge layer hardening: Italian policy templates remain draft and intentionally fall back to reviewed EU English output until legal/template review promotes them.
 - Legal/counsel review: public legal pages and DPA/subprocessor/retention annexes remain engineering drafts until reviewed.
 - Italian outreach: first-three packet is revived under `docs/outreach/`; sending is now blocked by sender identity/manual route choice, not product readiness.
-- Policy-to-Evidence Loop: next product phase should be defined before coding. Intake work should not expand further unless the approved review finds a regression or production blocker.
+- Policy-to-Evidence Loop: v1 is defined in `docs/plans/policy-to-evidence-loop-v1.md` and should be reviewed before coding. Intake work should not expand further unless the approved review finds a regression or production blocker.
 
 ### Blocked
 
@@ -73,6 +73,7 @@ These are useful later, but not next:
 - `PROJECT_PLAN.md` - current plan and priority order.
 - `docs/README.md` - documentation index and archive policy.
 - `docs/app-readiness-audit.md` - authenticated app route readiness matrix and immediate fix queue.
+- `docs/plans/policy-to-evidence-loop-v1.md` - draft spec and implementation plan for the next Policy-to-Evidence Loop slice.
 - `docs/reviews/intake-prioritization-human-review.md` - approved intake prioritization production-readiness record.
 - `docs/reviews/public-regulatory-copy-readiness.md` - public regulatory/platform copy honesty and claim-boundary record.
 - `docs/primary-flow-verification.md` - local database primary-flow verification record.
@@ -98,7 +99,7 @@ Tracked root files are generally valid for a Next.js/Vercel app:
 
 Do these before any new features or broader outreach. This order is optimized for the first outreach conversations, where visible trust failures matter more than back-office completeness:
 
-1. **Define the Policy-to-Evidence Loop:** choose one buyer-useful policy/control gap flow, define the recommended action, evidence collection state, honest proof/status wording, and explicit v1 non-goals before coding.
+1. **Review the Policy-to-Evidence Loop v1 spec:** `docs/plans/policy-to-evidence-loop-v1.md` chooses the `ctrl_mfa_all_users` slice, defines recommended action, evidence collection state, honest proof/status wording, and explicit v1 non-goals. Review before coding.
 2. **Audit/export endpoint smokes:** verify audit-log export pagination/limit behavior, org scoping, and stable output shape; verify buyer-visible vendor/risk/workspace export endpoints require auth and return only org-owned data before demos.
 3. **Onboarding UX polish:** refine onboarding and framework setup after export/report risk is contained. This matters more for conversion than for first outreach calls.
 4. **First-three outreach send:** send Cubbit, Cleafy, and DigitalPA manually once sender identity and exact send routes are confirmed. This is blocked on sender identity/manual route choice, not product readiness.
