@@ -37,7 +37,7 @@ const legalPageCopy: Record<LegalPageKey, Record<Locale, LegalPageCopy>> = {
           body: [
             "Vercel Web Analytics a Speed Insights používáme pro agregované měření návštěvnosti, rychlosti načítání a Core Web Vitals pouze po souhlasu v cookie banneru.",
             "Tyto údaje nepoužíváme k prodeji reklamního profilu ani k předávání reklamním sítím.",
-            "Pokud v konkrétním prostředí zapneme další analytické nebo produktové nástroje, například PostHog, musí zůstat vázané na odpovídající souhlas nebo jiný platný právní základ a musí být doplněny do tohoto přehledu.",
+            "Pokud v konkrétním prostředí zapneme další analytické nebo produktové nástroje, například PostHog, musí zůstat vázané na odpovídající souhlas nebo jiný platný právní základ a zahrneme je do tohoto přehledu.",
           ],
         },
         {
@@ -137,7 +137,7 @@ const legalPageCopy: Record<LegalPageKey, Record<Locale, LegalPageCopy>> = {
         {
           title: "Role",
           body: [
-            "U zákaznických dat vystupuje provozovatel Splnit.eu jako OSVČ zpravidla jako zpracovatel a zákazník jako správce. U obchodní komunikace a provozních metrik vystupujeme jako správce. Finální jméno, IČO, ARES odkaz a adresa provozovatele musí být doplněné před produkčním spuštěním.",
+            "U zákaznických dat vystupuje provozovatel Splnit.eu (Marco Zoratto, IČO 23821370, č.p. 424, 78347 Hněvotín, Česká republika, zapsaný v živnostenském rejstříku; ARES: https://ares.gov.cz/ekonomicke-subjekty?ico=23821370) zpravidla jako zpracovatel a zákazník jako správce. U obchodní komunikace a provozních metrik vystupujeme jako správce.",
             "Zákazník určuje účel a prostředky zpracování zákaznických dat v aplikaci. Splnit.eu zpracovává tato data za účelem poskytování služby, bezpečnosti, podpory, údržby, zákonných povinností a dalších dokumentovaných pokynů zákazníka.",
           ],
         },
@@ -201,7 +201,7 @@ const legalPageCopy: Record<LegalPageKey, Record<Locale, LegalPageCopy>> = {
         {
           title: "Roles",
           body: [
-            "For customer data, the Splnit.eu operator, acting as a Czech sole trader, usually acts as processor and the customer as controller. For business communication and operational metrics, we act as controller. The final operator name, business ID, ARES link, and address must be completed before production launch.",
+            "For customer data, the Splnit.eu operator (Marco Zoratto, Czech sole trader, business ID 23821370, č.p. 424, 78347 Hněvotín, Czech Republic, registered in the Czech trade register; ARES: https://ares.gov.cz/ekonomicke-subjekty?ico=23821370) usually acts as processor and the customer as controller. For business communication and operational metrics, we act as controller.",
             "The customer determines the purposes and means of processing customer data in the app. Splnit.eu processes that data to provide the service, security, support, maintenance, legal compliance, and other documented customer instructions.",
           ],
         },
@@ -265,7 +265,7 @@ const legalPageCopy: Record<LegalPageKey, Record<Locale, LegalPageCopy>> = {
         {
           title: "Ruoli",
           body: [
-            "Per i dati dei clienti, l'operatore di Splnit.eu, come lavoratore autonomo nella Repubblica Ceca, di norma agisce come responsabile del trattamento e il cliente come titolare. Per comunicazioni commerciali e metriche operative agiamo come titolari. Nome finale dell'operatore, identificativo d'impresa, link ARES e indirizzo devono essere completati prima del lancio in produzione.",
+            "Per i dati dei clienti, l'operatore di Splnit.eu (Marco Zoratto, lavoratore autonomo nella Repubblica Ceca, identificativo d’impresa 23821370, č.p. 424, 78347 Hněvotín, Repubblica Ceca, iscritto nel registro delle attività imprenditoriali ceco; ARES: https://ares.gov.cz/ekonomicke-subjekty?ico=23821370) di norma agisce come responsabile del trattamento e il cliente come titolare. Per comunicazioni commerciali e metriche operative agiamo come titolari.",
             "Il cliente determina finalità e mezzi del trattamento dei dati cliente nell'app. Splnit.eu tratta questi dati per fornire il servizio, sicurezza, supporto, manutenzione, adempimenti legali e altre istruzioni documentate del cliente.",
           ],
         },
@@ -321,7 +321,7 @@ const legalPageCopy: Record<LegalPageKey, Record<Locale, LegalPageCopy>> = {
     "cs-CZ": {
       title: "Zásady ochrany soukromí",
       intro:
-        "Tyto zásady popisují, jak provozovatel Splnit.eu jako OSVČ zpracovává osobní údaje návštěvníků webu, uživatelů aplikace, obchodních kontaktů a osob, jejichž údaje zákazník do služby vloží. Finální identifikační údaje provozovatele musí být doplněné před produkčním spuštěním.",
+        "Tyto zásady popisují, jak provozovatel Splnit.eu (Marco Zoratto, IČO 23821370, č.p. 424, 78347 Hněvotín, Česká republika, zapsaný v živnostenském rejstříku; ARES: https://ares.gov.cz/ekonomicke-subjekty?ico=23821370) zpracovává osobní údaje návštěvníků webu, uživatelů aplikace, obchodních kontaktů a osob, jejichž údaje zákazník do služby vloží.",
       metadata: {
         title: "Zásady ochrany soukromí | Splnit.eu",
         description:
@@ -331,7 +331,7 @@ const legalPageCopy: Record<LegalPageKey, Record<Locale, LegalPageCopy>> = {
         {
           title: "Správce údajů",
           body: [
-            "Správcem pro web, obchodní komunikaci, účet zákazníka, fakturaci a provozní bezpečnost je provozovatel Splnit.eu jako OSVČ, Česká republika. Jméno, IČO, ARES odkaz a adresa budou doplněné před produkčním spuštěním. Pro dotazy k ochraně osobních údajů nás kontaktujte na hello@splnit.eu.",
+            "Správcem pro web, obchodní komunikaci, účet zákazníka, fakturaci a provozní bezpečnost je Marco Zoratto, IČO 23821370, č.p. 424, 78347 Hněvotín, Česká republika, zapsaný v živnostenském rejstříku; ARES: https://ares.gov.cz/ekonomicke-subjekty?ico=23821370. Pro dotazy k ochraně osobních údajů nás kontaktujte na hello@splnit.eu.",
             "U osobních údajů, které zákazník vkládá do aplikace jako evidence, dokumenty, dodavatelské dotazníky nebo auditní záznamy, vystupuje zákazník zpravidla jako správce a Splnit.eu jako zpracovatel podle DPA.",
             "Pověřenec pro ochranu osobních údajů není ke dni zveřejnění jmenován. Pokud se tato skutečnost změní, kontaktní údaj zde doplníme.",
           ],
@@ -396,7 +396,7 @@ const legalPageCopy: Record<LegalPageKey, Record<Locale, LegalPageCopy>> = {
     "en-EU": {
       title: "Privacy Policy",
       intro:
-        "This policy explains how the Splnit.eu operator, as a Czech sole trader, processes personal data of website visitors, app users, business contacts, and people whose data customers place in the service. Final operator identification must be completed before production launch.",
+        "This policy explains how the Splnit.eu operator (Marco Zoratto, Czech sole trader, business ID 23821370, č.p. 424, 78347 Hněvotín, Czech Republic, registered in the Czech trade register; ARES: https://ares.gov.cz/ekonomicke-subjekty?ico=23821370) processes personal data of website visitors, app users, business contacts, and people whose data customers place in the service.",
       metadata: {
         title: "Privacy Policy | Splnit.eu",
         description:
@@ -406,7 +406,7 @@ const legalPageCopy: Record<LegalPageKey, Record<Locale, LegalPageCopy>> = {
         {
           title: "Controller",
           body: [
-            "The controller for the website, business communication, customer account, billing, and operational security is the Splnit.eu operator as a Czech sole trader. The name, business ID, ARES link, and address will be completed before production launch. For privacy questions, contact hello@splnit.eu.",
+            "The controller for the website, business communication, customer account, billing, and operational security is Marco Zoratto, Czech sole trader, business ID 23821370, č.p. 424, 78347 Hněvotín, Czech Republic, registered in the Czech trade register; ARES: https://ares.gov.cz/ekonomicke-subjekty?ico=23821370. For privacy questions, contact hello@splnit.eu.",
             "For personal data customers place in the app as evidence, documents, vendor questionnaires, or audit records, the customer usually acts as controller and Splnit.eu as processor under the DPA.",
             "A data protection officer has not been appointed as of publication. If that changes, the contact details will be added here.",
           ],
@@ -471,7 +471,7 @@ const legalPageCopy: Record<LegalPageKey, Record<Locale, LegalPageCopy>> = {
     "it-IT": {
       title: "Privacy Policy",
       intro:
-        "Questa informativa spiega come l'operatore di Splnit.eu, come lavoratore autonomo nella Repubblica Ceca, tratta i dati personali di visitatori del sito, utenti dell'app, contatti commerciali e persone i cui dati sono inseriti dai clienti nel servizio. L'identificazione finale dell'operatore deve essere completata prima del lancio in produzione.",
+        "Questa informativa spiega come l'operatore di Splnit.eu (Marco Zoratto, lavoratore autonomo nella Repubblica Ceca, identificativo d’impresa 23821370, č.p. 424, 78347 Hněvotín, Repubblica Ceca, iscritto nel registro delle attività imprenditoriali ceco; ARES: https://ares.gov.cz/ekonomicke-subjekty?ico=23821370) tratta i dati personali di visitatori del sito, utenti dell'app, contatti commerciali e persone i cui dati sono inseriti dai clienti nel servizio.",
       metadata: {
         title: "Privacy Policy | Splnit.eu",
         description:
@@ -481,7 +481,7 @@ const legalPageCopy: Record<LegalPageKey, Record<Locale, LegalPageCopy>> = {
         {
           title: "Titolare",
           body: [
-            "Il titolare per sito web, comunicazioni commerciali, account cliente, fatturazione e sicurezza operativa è l'operatore di Splnit.eu come lavoratore autonomo nella Repubblica Ceca. Nome, identificativo d'impresa, link ARES e indirizzo saranno completati prima del lancio in produzione. Per domande privacy: hello@splnit.eu.",
+            "Il titolare per sito web, comunicazioni commerciali, account cliente, fatturazione e sicurezza operativa è Marco Zoratto, lavoratore autonomo nella Repubblica Ceca, identificativo d’impresa 23821370, č.p. 424, 78347 Hněvotín, Repubblica Ceca, iscritto nel registro delle attività imprenditoriali ceco; ARES: https://ares.gov.cz/ekonomicke-subjekty?ico=23821370. Per domande privacy: hello@splnit.eu.",
             "Per i dati personali che i clienti inseriscono nell'app come evidenze, documenti, questionari fornitori o registri audit, il cliente di norma agisce come titolare e Splnit.eu come responsabile secondo il DPA.",
             "Alla data di pubblicazione non è stato nominato un Responsabile della protezione dei dati (DPO/RPD). Se questo cambierà, il contatto sarà aggiunto qui.",
           ],
@@ -548,7 +548,7 @@ const legalPageCopy: Record<LegalPageKey, Record<Locale, LegalPageCopy>> = {
     "cs-CZ": {
       title: "Podmínky používání",
       intro:
-        "Tyto podmínky upravují přístup ke službě Splnit.eu a používání aplikace pro compliance automatizaci. Před produkčním spuštěním musí být zkontrolovány advokátem a doplněny o finální identifikační údaje provozovatele.",
+        "Tyto podmínky upravují přístup ke službě Splnit.eu a používání aplikace pro compliance automatizaci. Jde o standardní veřejné podmínky pro B2B zákazníky; individuálně sjednané písemné podmínky mají přednost.",
       metadata: {
         title: "Podmínky používání | Splnit.eu",
         description: "Základní podmínky používání služby Splnit.eu.",
@@ -557,7 +557,7 @@ const legalPageCopy: Record<LegalPageKey, Record<Locale, LegalPageCopy>> = {
         {
           title: "Smluvní strany",
           body: [
-            "Službu Splnit.eu provozuje OSVČ v České republice. Finální jméno, IČO, ARES odkaz a adresa provozovatele musí být doplněné před produkčním spuštěním a před použitím těchto podmínek vůči zákazníkům.",
+            "Službu Splnit.eu provozuje Marco Zoratto, IČO 23821370, č.p. 424, 78347 Hněvotín, Česká republika, zapsaný v živnostenském rejstříku; ARES: https://ares.gov.cz/ekonomicke-subjekty?ico=23821370.",
             "Zákazníkem je osoba nebo organizace, která si vytvoří účet, objedná placený plán nebo službu používá pro vlastní compliance účel.",
           ],
         },
@@ -615,7 +615,7 @@ const legalPageCopy: Record<LegalPageKey, Record<Locale, LegalPageCopy>> = {
           body: [
             "Služba pomáhá řídit povinnosti, ale konečná odpovědnost za splnění právních a regulatorních požadavků zůstává na zákazníkovi.",
             "Zákazník může službu přestat používat podle sjednaného plánu. Po ukončení může být přístup k účtu omezen a data budou řešena podle DPA, zásad ochrany soukromí a zákonných povinností.",
-            "Konkrétní omezení odpovědnosti musí být před spuštěním doplněno do finální smluvní dokumentace advokátem.",
+            "Omezení odpovědnosti, pokud je sjednáno, se řídí příslušným objednávkovým formulářem, plánem, individuální smlouvou nebo kogentními pravidly použitelného práva.",
           ],
         },
       ],
@@ -623,7 +623,7 @@ const legalPageCopy: Record<LegalPageKey, Record<Locale, LegalPageCopy>> = {
     "en-EU": {
       title: "Terms of Use",
       intro:
-        "These terms govern access to Splnit.eu and use of the compliance automation app. Before production launch they must be reviewed by a lawyer and completed with final operator identification.",
+        "These terms govern access to Splnit.eu and use of the compliance automation app. They are standard public terms for B2B customers; individually agreed written terms take priority.",
       metadata: {
         title: "Terms of Use | Splnit.eu",
         description: "Basic terms for using the Splnit.eu service.",
@@ -632,7 +632,7 @@ const legalPageCopy: Record<LegalPageKey, Record<Locale, LegalPageCopy>> = {
         {
           title: "Parties",
           body: [
-            "Splnit.eu is operated by a sole trader in the Czech Republic. The final name, business ID, ARES link, and address must be completed before production launch and before using these terms with customers.",
+            "Splnit.eu is operated by Marco Zoratto, Czech sole trader, business ID 23821370, č.p. 424, 78347 Hněvotín, Czech Republic, registered in the Czech trade register; ARES: https://ares.gov.cz/ekonomicke-subjekty?ico=23821370.",
             "The customer is the person or organisation that creates an account, orders a paid plan, or uses the service for its own compliance purpose.",
           ],
         },
@@ -690,7 +690,7 @@ const legalPageCopy: Record<LegalPageKey, Record<Locale, LegalPageCopy>> = {
           body: [
             "The service helps manage obligations, but final responsibility for meeting legal and regulatory requirements remains with the customer.",
             "The customer may stop using the service according to the agreed plan. After termination, account access may be restricted and data will be handled under the DPA, Privacy Policy, and legal obligations.",
-            "Specific liability limitations must be added to the final contract documentation by a lawyer before launch.",
+            "Liability limitations, where agreed, are governed by the applicable order form, plan, individual agreement, or mandatory rules of applicable law.",
           ],
         },
       ],
@@ -698,7 +698,7 @@ const legalPageCopy: Record<LegalPageKey, Record<Locale, LegalPageCopy>> = {
     "it-IT": {
       title: "Termini di utilizzo",
       intro:
-        "Questi termini regolano l'accesso a Splnit.eu e l'uso dell'app di automazione compliance. Prima del lancio in produzione devono essere revisionati da un legale e completati con l'identificazione finale dell'operatore.",
+        "Questi termini regolano l'accesso a Splnit.eu e l'uso dell'app di automazione compliance. Sono termini pubblici standard per clienti B2B; eventuali condizioni scritte concordate individualmente prevalgono.",
       metadata: {
         title: "Termini di utilizzo | Splnit.eu",
         description: "Termini di base per l'uso del servizio Splnit.eu.",
@@ -707,7 +707,7 @@ const legalPageCopy: Record<LegalPageKey, Record<Locale, LegalPageCopy>> = {
         {
           title: "Parti",
           body: [
-            "Splnit.eu è gestito da un lavoratore autonomo nella Repubblica Ceca. Nome finale, identificativo d'impresa, link ARES e indirizzo devono essere completati prima del lancio in produzione e prima di usare questi termini con clienti.",
+            "Splnit.eu è gestito da Marco Zoratto, lavoratore autonomo nella Repubblica Ceca, identificativo d’impresa 23821370, č.p. 424, 78347 Hněvotín, Repubblica Ceca, iscritto nel registro delle attività imprenditoriali ceco; ARES: https://ares.gov.cz/ekonomicke-subjekty?ico=23821370.",
             "Il cliente è la persona o organizzazione che crea un account, ordina un piano a pagamento o usa il servizio per le proprie finalità di compliance.",
           ],
         },
@@ -765,7 +765,7 @@ const legalPageCopy: Record<LegalPageKey, Record<Locale, LegalPageCopy>> = {
           body: [
             "Il servizio aiuta a gestire obblighi, ma la responsabilità finale per il rispetto dei requisiti legali e regolatori resta al cliente.",
             "Il cliente può smettere di usare il servizio secondo il piano concordato. Dopo la cessazione, l'accesso all'account può essere limitato e i dati saranno gestiti secondo DPA, Privacy Policy e obblighi legali.",
-            "Le limitazioni specifiche di responsabilità devono essere aggiunte alla documentazione contrattuale finale da un legale prima del lancio.",
+            "Le limitazioni di responsabilità, se concordate, sono regolate dal modulo d’ordine, dal piano, dall’accordo individuale applicabile o dalle norme inderogabili del diritto applicabile.",
           ],
         },
       ],

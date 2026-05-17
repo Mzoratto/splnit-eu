@@ -126,7 +126,7 @@ const REGULATION_META: Record<
       regulator: "ISO",
     },
     nis2: {
-      effectiveDate: "Říjen 2024",
+      effectiveDate: "Listopad 2025",
       law: "Zákon č. 264/2025 Sb.",
       maxPenalty: "Až €10M nebo 2% obratu",
       regulator: "NÚKIB",
@@ -158,7 +158,7 @@ const REGULATION_META: Record<
       regulator: "ISO",
     },
     nis2: {
-      effectiveDate: "October 2024",
+      effectiveDate: "November 2025",
       law: "Act No. 264/2025 Coll.",
       maxPenalty: "Up to €10M or 2% of turnover",
       regulator: "NÚKIB",
@@ -179,9 +179,9 @@ const REGULATION_META: Record<
     },
     gdpr: {
       effectiveDate: "Maggio 2018",
-      law: "GDPR + legge n. 110/2019 Coll.",
+      law: "GDPR + Codice Privacy italiano (D.Lgs. 196/2003)",
       maxPenalty: "Fino a €20M o 4% del fatturato",
-      regulator: "ÚOOÚ",
+      regulator: "Garante per la protezione dei dati personali",
     },
     iso27001: {
       effectiveDate: "Ottobre 2022",
@@ -191,9 +191,9 @@ const REGULATION_META: Record<
     },
     nis2: {
       effectiveDate: "Ottobre 2024",
-      law: "Legge n. 264/2025 Coll.",
+      law: "D.Lgs. 138/2024",
       maxPenalty: "Fino a €10M o 2% del fatturato",
-      regulator: "NÚKIB",
+      regulator: "ACN / CSIRT Italia",
     },
   },
 };

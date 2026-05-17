@@ -42,6 +42,13 @@ const marketingForbiddenPatterns = [
   /OSVČ údaje budou doplněné/i,
 ] as const;
 
+const publicLegalForbiddenPatterns = [
+  /before production launch/i,
+  /must be completed/i,
+  /deve essere completat/i,
+  /musí být dopln/i,
+] as const;
+
 const checkedFiles = [
   "messages/en-EU.json",
   "messages/it-IT.json",
@@ -64,6 +71,8 @@ const marketingCheckedFiles = [
   "components/footer.tsx",
   "components/locale-switcher.tsx",
 ];
+
+const publicLegalCheckedFiles = ["lib/legal/legal-page-copy.ts"];
 
 function listSourceFiles(directory: string): string[] {
   return readdirSync(directory).flatMap((entry) => {
@@ -112,6 +121,18 @@ for (const file of marketingCheckedFiles) {
 
     if (match) {
       failures.push(`${file}: marketing copy guard matched ${pattern}`);
+    }
+  }
+}
+
+for (const file of publicLegalCheckedFiles) {
+  const content = readFileSync(file, "utf8");
+
+  for (const pattern of publicLegalForbiddenPatterns) {
+    const match = content.match(pattern);
+
+    if (match) {
+      failures.push(`${file}: public legal copy guard matched ${pattern}`);
     }
   }
 }

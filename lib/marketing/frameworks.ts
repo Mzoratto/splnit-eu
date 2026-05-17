@@ -39,7 +39,7 @@ export const frameworkCards: FrameworkCard[] = [
     name: "NIS2",
     icon: "solar:server-square-linear",
     regulator: "NÚKIB",
-    deadline: "Říjen 2024",
+    deadline: "Listopad 2025",
     status: "available",
     description: "Kybernetická bezpečnost pro střední a velké firmy.",
   },
