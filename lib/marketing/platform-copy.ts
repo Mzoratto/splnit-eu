@@ -69,14 +69,14 @@ const copy: Record<Locale, PlatformCopy> = {
     pageName: "Splnit.eu Platforma",
     hero: {
       body:
-        "Připojte Microsoft 365, GitHub nebo AWS jednou. Splnit.eu testuje vaše bezpečnostní kontroly nepřetržitě a generuje auditní záznamy automaticky.",
+        "Připojte Microsoft 365, GitHub nebo AWS podle dostupné integrace. Splnit.eu pomáhá průběžně kontrolovat bezpečnostní nastavení a ukládat auditní záznamy.",
       cta: "Rezervovat demo",
       tag: "Developer First",
       title: "Automatické kontroly pro systémy, které už používáte.",
     },
     steps: [
       {
-        body: "Microsoft 365, GitHub, AWS nebo Google Workspace. Nastavení za 5 minut.",
+        body: "Microsoft 365, GitHub, AWS nebo Google Workspace podle dostupnosti a oprávnění.",
         icon: "solar:plug-linear",
         title: "Připojte nástroje",
       },
@@ -88,7 +88,7 @@ const copy: Record<Locale, PlatformCopy> = {
       },
       {
         body:
-          "Dashboard, upozornění na selhání a dokumentace pro auditora — vše na jednom místě.",
+          "Dashboard, upozornění na selhání a dokumentace ke kontrole — vše na jednom místě.",
         icon: "solar:document-check-linear",
         title: "Dostanete výsledky",
       },
@@ -112,7 +112,7 @@ const copy: Record<Locale, PlatformCopy> = {
     },
     crossMapping: {
       body:
-        "MFA kontrola pro všechny uživatele splňuje NIS2 čl. 21(2)(j), ISO 27001 A.9.4.2 a GDPR čl. 32(1)(b) najednou. Přidání každého dalšího předpisu znamená doplnit mapování, ne začínat z prázdné tabulky.",
+        "Jedna MFA kontrola pro všechny uživatele může podporovat NIS2 čl. 21(2)(j), ISO 27001 A.9.4.2 a GDPR čl. 32(1)(b), pokud odpovídá vašemu rozsahu a důkazům. Přidání každého dalšího předpisu znamená doplnit mapování, ne začínat z prázdné tabulky.",
       references: ["NIS2 čl. 21(2)(j)", "ISO 27001 A.9.4.2", "GDPR čl. 32(1)(b)"],
       stats: ["Jedna evidence", "Více předpisů", "Průběžné kontroly"],
       tag: "Křížové mapování",
@@ -142,9 +142,9 @@ const copy: Record<Locale, PlatformCopy> = {
     trustCenter: {
       badges: ["NIS2 demo", "GDPR demo", "ISO 27001 demo", "EU AI Act demo"],
       body:
-        "Zákazníci a partneři vidí váš compliance status v reálném čase. Odkaz níže otevírá pouze ukázkový Trust Center.",
+        "Zákazníci a partneři mohou vidět vámi publikovaný přehled stavu kontrol. Odkaz níže otevírá pouze ukázkový Trust Center.",
       cta: "Zobrazit ukázkový Trust Center →",
-      title: "Trust Center — zveřejněte svůj soulad.",
+      title: "Trust Center — zveřejněte přehled své kontrolní posture.",
     },
     finalNote:
       "Bezpečnostní a právní dokumentace se doplňuje podle reálného stavu před produkčním spuštěním.",
@@ -168,14 +168,14 @@ const copy: Record<Locale, PlatformCopy> = {
     pageName: "Splnit.eu Platform",
     hero: {
       body:
-        "Connect Microsoft 365, GitHub, or AWS once. Splnit.eu continuously tests your security controls and generates audit records automatically.",
+        "Connect Microsoft 365, GitHub, or AWS where the integration is available. Splnit.eu helps check security settings over time and store audit records.",
       cta: "Book a demo",
       tag: "Developer First",
       title: "Automated checks for the systems you already use.",
     },
     steps: [
       {
-        body: "Microsoft 365, GitHub, AWS, or Google Workspace. Setup in 5 minutes.",
+        body: "Microsoft 365, GitHub, AWS, or Google Workspace, depending on available integrations and permissions.",
         icon: "solar:plug-linear",
         title: "Connect tools",
       },
@@ -187,7 +187,7 @@ const copy: Record<Locale, PlatformCopy> = {
       },
       {
         body:
-          "Dashboard, failure alerts, and auditor documentation in one place.",
+          "Dashboard, failure alerts, and review documentation in one place.",
         icon: "solar:document-check-linear",
         title: "Get results",
       },
@@ -241,9 +241,9 @@ const copy: Record<Locale, PlatformCopy> = {
     trustCenter: {
       badges: ["NIS2 demo", "GDPR demo", "ISO 27001 demo", "EU AI Act demo"],
       body:
-        "Customers and partners can see your compliance status in real time. The link below opens a sample Trust Center only.",
+        "Customers and partners can see the control-status summary you choose to publish. The link below opens a sample Trust Center only.",
       cta: "View sample Trust Center →",
-      title: "Trust Center — publish your compliance posture.",
+      title: "Trust Center — publish a control-posture summary.",
     },
     finalNote:
       "Security and legal documentation is completed according to the real production setup before launch.",
@@ -267,14 +267,14 @@ const copy: Record<Locale, PlatformCopy> = {
     pageName: "Splnit.eu Piattaforma",
     hero: {
       body:
-        "Collegate una volta Microsoft 365, GitHub o AWS. Splnit.eu testa i controlli di sicurezza e genera evidenze di audit automaticamente, con riferimenti normativi aggiunti solo quando verificati.",
+        "Collegate Microsoft 365, GitHub o AWS quando l’integrazione è disponibile. Splnit.eu aiuta a controllare le impostazioni di sicurezza nel tempo e a conservare evidenze di audit, con riferimenti normativi aggiunti solo quando verificati.",
       cta: "Prenota demo",
       tag: "Developer First",
       title: "Controlli automatici per i sistemi che usate già.",
     },
     steps: [
       {
-        body: "Microsoft 365, GitHub, AWS o Google Workspace. Setup in 5 minuti.",
+        body: "Microsoft 365, GitHub, AWS o Google Workspace, in base alle integrazioni e ai permessi disponibili.",
         icon: "solar:plug-linear",
         title: "Collegate gli strumenti",
       },
@@ -286,7 +286,7 @@ const copy: Record<Locale, PlatformCopy> = {
       },
       {
         body:
-          "Dashboard, alert sui fallimenti e documentazione per auditor in un unico posto.",
+          "Dashboard, alert sui fallimenti e documentazione per revisione in un unico posto.",
         icon: "solar:document-check-linear",
         title: "Ricevete i risultati",
       },
@@ -340,9 +340,9 @@ const copy: Record<Locale, PlatformCopy> = {
     trustCenter: {
       badges: ["Demo NIS2", "Demo GDPR", "Demo ISO 27001", "Demo EU AI Act"],
       body:
-        "Clienti e partner vedono il vostro stato compliance in tempo reale. Il link sotto apre solo un Trust Center di esempio.",
+        "Clienti e partner possono vedere il riepilogo dello stato controlli che scegliete di pubblicare. Il link sotto apre solo un Trust Center di esempio.",
       cta: "Vedi Trust Center di esempio →",
-      title: "Trust Center — pubblicate la vostra postura compliance.",
+      title: "Trust Center — pubblicate un riepilogo della postura controlli.",
     },
     finalNote:
       "La documentazione sicurezza e legale viene completata in base al reale setup di produzione prima del lancio.",

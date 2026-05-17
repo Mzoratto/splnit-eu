@@ -63,6 +63,16 @@ const publicLegalForbiddenPatterns = [
   /musí být dopln/i,
 ] as const;
 
+const publicRegulatoryResourceForbiddenPatterns = [
+  /Which EU regulations apply to you|Které EU předpisy se vás týkají|Quali normative UE vi riguardano/i,
+  /Who must comply|Kdo to musí splnit|Chi deve conformarsi/i,
+  /Download all for free|Stáhnout vše zdarma|Scarica tutto gratis/i,
+  /compliance status in real time|compliance status v reálném čase|stato compliance in tempo reale/i,
+  /Setup in 5 minutes|Nastavení za 5 minut|Setup in 5 minuti/i,
+  /MFA kontrola[^.]*splňuje[^.]*NIS2|one MFA control[^.]*satisfies[^.]*NIS2|Un controllo MFA[^.]*soddisfa[^.]*NIS2/i,
+  /auditor documentation in one place|dokumentace pro auditora|documentazione per auditor/i,
+] as const;
+
 const checkedFiles = [
   "messages/en-EU.json",
   "messages/it-IT.json",
@@ -97,6 +107,14 @@ const productPricingCheckedFiles = [
 ];
 
 const publicLegalCheckedFiles = ["lib/legal/legal-page-copy.ts"];
+
+const publicRegulatoryResourceCheckedFiles = [
+  "messages/cs-CZ.json",
+  "messages/en-EU.json",
+  "messages/it-IT.json",
+  ...listSourceFiles("app/(marketing)"),
+  ...listSourceFiles("lib/marketing"),
+];
 
 function listSourceFiles(directory: string): string[] {
   return readdirSync(directory).flatMap((entry) => {
@@ -169,6 +187,18 @@ for (const file of publicLegalCheckedFiles) {
 
     if (match) {
       failures.push(`${file}: public legal copy guard matched ${pattern}`);
+    }
+  }
+}
+
+for (const file of publicRegulatoryResourceCheckedFiles) {
+  const content = readFileSync(file, "utf8");
+
+  for (const pattern of publicRegulatoryResourceForbiddenPatterns) {
+    const match = content.match(pattern);
+
+    if (match) {
+      failures.push(`${file}: public regulatory resource guard matched ${pattern}`);
     }
   }
 }

@@ -17,24 +17,24 @@ const metadataByLocale: Record<
 > = {
   "cs-CZ": {
     description:
-      "Průvodce EU předpisy pro české firmy: NIS2, EU AI Act, GDPR, ISO 27001, CSRD a DORA s termíny, pokutami a kroky k souladu.",
+      "Srozumitelný přehled EU předpisů pro české firmy: NIS2, EU AI Act, GDPR, ISO 27001, CSRD a DORA s termíny, riziky a praktickými kroky.",
     locale: "cs_CZ",
     title:
-      "EU Předpisy | NIS2, EU AI Act, GDPR, ISO 27001 - přehled povinností pro česká MSP",
+      "EU Předpisy | NIS2, EU AI Act, GDPR, ISO 27001 - orientační přehled pro MSP",
   },
   "en-EU": {
     description:
-      "Plain-language guide to EU regulations for SMBs: NIS2, EU AI Act, GDPR, ISO 27001, CSRD, and DORA with deadlines, sanctions, and practical compliance steps.",
+      "Plain-language overview of EU regulations for SMBs: NIS2, EU AI Act, GDPR, ISO 27001, CSRD, and DORA with deadlines, risk context, and practical next steps.",
     locale: "en_EU",
     title:
-      "EU Regulations | NIS2, EU AI Act, GDPR, ISO 27001 - SMB compliance guide",
+      "EU Regulations | NIS2, EU AI Act, GDPR, ISO 27001 - SMB readiness overview",
   },
   "it-IT": {
     description:
-      "Guida in linguaggio semplice alle normative UE per PMI: NIS2, EU AI Act, GDPR, ISO 27001, CSRD e DORA con scadenze, sanzioni e passi pratici.",
+      "Panoramica in linguaggio semplice delle normative UE per PMI: NIS2, EU AI Act, GDPR, ISO 27001, CSRD e DORA con scadenze, contesto di rischio e passi pratici.",
     locale: "it_IT",
     title:
-      "Normative UE | NIS2, EU AI Act, GDPR, ISO 27001 - guida compliance per PMI",
+      "Normative UE | NIS2, EU AI Act, GDPR, ISO 27001 - panoramica readiness per PMI",
   },
 };
 
