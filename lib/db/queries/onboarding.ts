@@ -2,7 +2,10 @@ import { and, eq, inArray } from "drizzle-orm";
 import { getDb } from "@/lib/db";
 import {
   frameworks,
+  orgIntakeProfiles,
   organisations,
+  type OrgIntakeAnswers,
+  type OrgIntakeDerivedScope,
   orgFrameworks,
 } from "@/lib/db/schema";
 
@@ -18,11 +21,67 @@ export async function getOnboardingState(clerkOrgId: string) {
     .from(orgFrameworks)
     .innerJoin(frameworks, eq(orgFrameworks.frameworkId, frameworks.id))
     .where(eq(orgFrameworks.clerkOrgId, clerkOrgId));
+  const intakeProfileRows = await db
+    .select()
+    .from(orgIntakeProfiles)
+    .where(eq(orgIntakeProfiles.clerkOrgId, clerkOrgId))
+    .limit(1);
 
   return {
+    intakeProfile: intakeProfileRows[0] ?? null,
     organisation: organisationRows[0] ?? null,
     selectedFrameworks: frameworkRows.map((row) => row.slug),
   };
+}
+
+export async function getOnboardingIntakeProfile(clerkOrgId: string) {
+  const db = getDb();
+  const rows = await db
+    .select()
+    .from(orgIntakeProfiles)
+    .where(eq(orgIntakeProfiles.clerkOrgId, clerkOrgId))
+    .limit(1);
+
+  return rows[0] ?? null;
+}
+
+export async function saveOnboardingIntakeProfile(input: {
+  answers: OrgIntakeAnswers;
+  clerkOrgId: string;
+  derivedScope: OrgIntakeDerivedScope;
+  version?: number;
+}) {
+  const db = getDb();
+  const now = new Date();
+
+  await db
+    .insert(orgIntakeProfiles)
+    .values({
+      answers: input.answers,
+      clerkOrgId: input.clerkOrgId,
+      derivedScope: input.derivedScope,
+      updatedAt: now,
+      version: input.version ?? 1,
+    })
+    .onConflictDoUpdate({
+      target: orgIntakeProfiles.clerkOrgId,
+      set: {
+        answers: input.answers,
+        derivedScope: input.derivedScope,
+        updatedAt: now,
+        version: input.version ?? 1,
+      },
+    });
+}
+
+export async function markOnboardingIntakeCompleted(clerkOrgId: string) {
+  const db = getDb();
+  const now = new Date();
+
+  await db
+    .update(orgIntakeProfiles)
+    .set({ completedAt: now, updatedAt: now })
+    .where(eq(orgIntakeProfiles.clerkOrgId, clerkOrgId));
 }
 
 export async function saveOnboardingCompany(input: {

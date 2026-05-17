@@ -74,6 +74,33 @@ export const organisations = pgTable("organisations", {
   updatedAt: timestamp("updated_at", { withTimezone: true }).defaultNow(),
 });
 
+export type OrgIntakeAnswers = Record<string, unknown>;
+
+export type OrgIntakeDerivedScope = {
+  applicableControlKeys?: string[];
+  outOfScopeControlKeys?: string[];
+  notApplicableControlKeys?: string[];
+  rationales?: Record<string, string>;
+  [key: string]: unknown;
+};
+
+export const orgIntakeProfiles = pgTable("org_intake_profiles", {
+  id: uuid("id").primaryKey().defaultRandom(),
+  clerkOrgId: text("clerk_org_id")
+    .notNull()
+    .unique()
+    .references(() => organisations.clerkOrgId, { onDelete: "cascade" }),
+  version: integer("version").notNull().default(1),
+  answers: jsonb("answers").$type<OrgIntakeAnswers>().notNull().default({}),
+  derivedScope: jsonb("derived_scope")
+    .$type<OrgIntakeDerivedScope>()
+    .notNull()
+    .default({}),
+  completedAt: timestamp("completed_at", { withTimezone: true }),
+  createdAt: timestamp("created_at", { withTimezone: true }).defaultNow(),
+  updatedAt: timestamp("updated_at", { withTimezone: true }).defaultNow(),
+});
+
 export const profiles = pgTable(
   "profiles",
   {

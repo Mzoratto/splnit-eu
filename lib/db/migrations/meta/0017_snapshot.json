@@ -1,6 +1,6 @@
 {
-  "id": "b37f22d7-fc8b-4b73-a607-7f9f8030249c",
-  "prevId": "412301b9-015d-434e-8467-497fa2bbdce6",
+  "id": "4c754c2e-5a40-49f9-b0bc-184c86af3ab8",
+  "prevId": "b37f22d7-fc8b-4b73-a607-7f9f8030249c",
   "version": "7",
   "dialect": "postgresql",
   "tables": {
@@ -2342,6 +2342,95 @@
           "columns": [
             "clerk_org_id",
             "framework_id"
+          ]
+        }
+      },
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.org_intake_profiles": {
+      "name": "org_intake_profiles",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "clerk_org_id": {
+          "name": "clerk_org_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "version": {
+          "name": "version",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "default": 1
+        },
+        "answers": {
+          "name": "answers",
+          "type": "jsonb",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'{}'::jsonb"
+        },
+        "derived_scope": {
+          "name": "derived_scope",
+          "type": "jsonb",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'{}'::jsonb"
+        },
+        "completed_at": {
+          "name": "completed_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": false,
+          "default": "now()"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": false,
+          "default": "now()"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "org_intake_profiles_clerk_org_id_organisations_clerk_org_id_fk": {
+          "name": "org_intake_profiles_clerk_org_id_organisations_clerk_org_id_fk",
+          "tableFrom": "org_intake_profiles",
+          "tableTo": "organisations",
+          "columnsFrom": [
+            "clerk_org_id"
+          ],
+          "columnsTo": [
+            "clerk_org_id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {
+        "org_intake_profiles_clerk_org_id_unique": {
+          "name": "org_intake_profiles_clerk_org_id_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "clerk_org_id"
           ]
         }
       },
