@@ -5,6 +5,22 @@ import { hasDatabaseUrl } from "@/lib/db";
 import { getOnboardingState } from "@/lib/db/queries/onboarding";
 import { FRAMEWORK_LIBRARY } from "@/lib/frameworks/registry";
 import { TOOL_INVENTORY_LIBRARY } from "@/lib/onboarding/tools";
+import type { IntakeAnswers } from "@/lib/onboarding/intake-scope";
+
+const defaultIntakeAnswers: IntakeAnswers = {
+  businessModel: "saas",
+  employeeBand: "10_49",
+  handlesPersonalData: "customers_and_employees",
+  handlesSensitiveData: false,
+  hasCriticalOperations: false,
+  hasProductionSoftware: true,
+  hasPublicApp: true,
+  sector: "technology",
+  usesAiSystems: "internal_productivity",
+  usesCloudHosting: true,
+  usesHighRiskAi: false,
+  usesThirdPartyProcessors: "few",
+};
 
 export const dynamic = "force-dynamic";
 
@@ -36,6 +52,10 @@ export default async function OnboardingPage() {
         sector: onboardingState?.organisation?.sector ?? "technology",
       }}
       initialFrameworks={onboardingState?.selectedFrameworks ?? ["nis2"]}
+      initialIntakeAnswers={{
+        ...defaultIntakeAnswers,
+        ...(onboardingState?.intakeProfile?.answers as Partial<IntakeAnswers> | undefined),
+      }}
       initialTools={onboardingState?.organisation?.toolInventory ?? []}
       tools={TOOL_INVENTORY_LIBRARY}
     />

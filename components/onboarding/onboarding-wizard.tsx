@@ -7,6 +7,7 @@ import {
   ArrowRight,
   Building2,
   Check,
+  ClipboardList,
   Gauge,
   Plug,
   ShieldCheck,
@@ -16,11 +17,14 @@ import {
   completeOnboardingStep,
   saveCompanyStep,
   saveFrameworkStep,
+  saveIntakeStep,
   saveToolsStep,
 } from "@/app/(app)/onboarding/actions";
 import { normalizeLocale } from "@/i18n/routing";
 import { getFrameworkDisplayName } from "@/lib/frameworks/localization";
 import type { FrameworkSeed } from "@/lib/frameworks/registry";
+import { INTAKE_QUESTIONS, type IntakeQuestionKey } from "@/lib/onboarding/intake-questions";
+import { deriveIntakeScope, type IntakeAnswers } from "@/lib/onboarding/intake-scope";
 import type { ToolInventoryItem } from "@/lib/onboarding/tools";
 
 type CompanyState = {
@@ -33,8 +37,11 @@ type CompanyState = {
   sector: string;
 };
 
+type IntakeState = IntakeAnswers;
+
 type WizardState = {
   company: CompanyState;
+  intake: IntakeState;
   selectedFrameworks: string[];
   selectedTools: string[];
   step: number;
@@ -43,6 +50,7 @@ type WizardState = {
 type WizardAction =
   | { type: "company"; field: keyof CompanyState; value: string }
   | { type: "framework"; slug: string }
+  | { type: "intake"; field: keyof IntakeState; value: IntakeState[keyof IntakeState] }
   | { type: "tool"; key: string }
   | { type: "step"; step: number };
 
@@ -71,7 +79,7 @@ const countries = [
 ] as const;
 const jurisdictions = ["CZ", "IT", "EU"] as const;
 const locales = ["cs-CZ", "en-EU", "it-IT"] as const;
-const stepKeys = ["company", "frameworks", "tools", "integration", "score"];
+const stepKeys = ["company", "frameworks", "tools", "intake", "integration", "score"];
 
 function reducer(state: WizardState, action: WizardAction): WizardState {
   switch (action.type) {
@@ -90,6 +98,15 @@ function reducer(state: WizardState, action: WizardAction): WizardState {
         selectedFrameworks: state.selectedFrameworks.includes(action.slug)
           ? state.selectedFrameworks.filter((slug) => slug !== action.slug)
           : [...state.selectedFrameworks, action.slug],
+      };
+
+    case "intake":
+      return {
+        ...state,
+        intake: {
+          ...state.intake,
+          [action.field]: action.value,
+        },
       };
 
     case "tool":
@@ -162,12 +179,14 @@ export function OnboardingWizard({
   frameworks,
   initialCompany,
   initialFrameworks,
+  initialIntakeAnswers,
   initialTools,
   tools,
 }: {
   frameworks: FrameworkSeed[];
   initialCompany: CompanyState;
   initialFrameworks: string[];
+  initialIntakeAnswers: IntakeAnswers;
   initialTools: string[];
   tools: ToolInventoryItem[];
 }) {
@@ -178,11 +197,21 @@ export function OnboardingWizard({
   const [error, setError] = useState<string | null>(null);
   const [state, dispatch] = useReducer(reducer, {
     company: initialCompany,
+    intake: initialIntakeAnswers,
     selectedFrameworks: initialFrameworks,
     selectedTools: initialTools,
     step: 1,
   });
   const score = useMemo(() => calculateInitialScore(state), [state]);
+  const derivedScope = useMemo(
+    () =>
+      deriveIntakeScope({
+        answers: state.intake,
+        selectedFrameworks: state.selectedFrameworks as Parameters<typeof deriveIntakeScope>[0]["selectedFrameworks"],
+        selectedTools: state.selectedTools,
+      }),
+    [state.intake, state.selectedFrameworks, state.selectedTools],
+  );
 
   function runStep(action: () => Promise<void>, nextStep: number) {
     setError(null);
@@ -222,7 +251,7 @@ export function OnboardingWizard({
         </p>
       </div>
 
-      <div className="grid gap-2 md:grid-cols-5">
+      <div className="grid gap-2 md:grid-cols-6">
         {stepKeys.map(
           (key, index) => {
             const active = state.step === index + 1;
@@ -539,6 +568,121 @@ export function OnboardingWizard({
       {state.step === 4 ? (
         <div className="rounded-lg border border-border bg-surface p-5">
           <div className="mb-6 flex items-center gap-3">
+            <ClipboardList className="h-5 w-5 text-primary" aria-hidden="true" />
+            <div>
+              <h2 className="text-lg font-semibold">{t("intake.title")}</h2>
+              <p className="mt-1 text-sm leading-6 text-foreground/58">
+                {t("intake.body")}
+              </p>
+              <p className="mt-2 text-xs font-medium uppercase tracking-[0.12em] text-primary">
+                {t("intake.nextAction")}
+              </p>
+            </div>
+          </div>
+          <div className="grid gap-4 lg:grid-cols-[1fr_18rem]">
+            <div className="space-y-3">
+              {INTAKE_QUESTIONS.map((question) => (
+                <label key={question.key} className="grid gap-2 rounded-md border border-border bg-background p-3 text-sm">
+                  <span className="font-medium">{question.label}</span>
+                  <span className="text-xs leading-5 text-foreground/58">{question.helpText}</span>
+                  {question.type === "boolean" ? (
+                    <select
+                      value={String(state.intake[question.key])}
+                      onChange={(event) =>
+                        dispatch({
+                          type: "intake",
+                          field: question.key,
+                          value: event.target.value === "true",
+                        })
+                      }
+                      className="rounded-md border border-border bg-surface px-3 py-2"
+                    >
+                      <option value="true">{t("intake.yes")}</option>
+                      <option value="false">{t("intake.no")}</option>
+                    </select>
+                  ) : (
+                    <select
+                      value={String(state.intake[question.key])}
+                      onChange={(event) =>
+                        dispatch({
+                          type: "intake",
+                          field: question.key as IntakeQuestionKey,
+                          value: event.target.value as IntakeState[keyof IntakeState],
+                        })
+                      }
+                      className="rounded-md border border-border bg-surface px-3 py-2"
+                    >
+                      {question.options?.map((option) => (
+                        <option key={option.value} value={option.value}>
+                          {option.label}
+                        </option>
+                      ))}
+                    </select>
+                  )}
+                </label>
+              ))}
+            </div>
+            <aside className="h-fit rounded-lg border border-border bg-background p-4">
+              <p className="text-sm font-semibold">{t("intake.previewTitle")}</p>
+              <dl className="mt-4 grid gap-3 text-sm">
+                <div className="flex items-center justify-between gap-3">
+                  <dt className="text-foreground/58">{t("intake.applicableControls")}</dt>
+                  <dd className="font-mono font-semibold text-primary">
+                    {derivedScope.applicableControlKeys.length}
+                  </dd>
+                </div>
+                <div className="flex items-center justify-between gap-3">
+                  <dt className="text-foreground/58">{t("intake.priorityControls")}</dt>
+                  <dd className="font-mono font-semibold text-primary">
+                    {derivedScope.priorityControlKeys.length}
+                  </dd>
+                </div>
+                <div className="flex items-center justify-between gap-3">
+                  <dt className="text-foreground/58">{t("intake.manualReviewControls")}</dt>
+                  <dd className="font-mono font-semibold text-primary">
+                    {derivedScope.manualReviewControlKeys.length}
+                  </dd>
+                </div>
+              </dl>
+              <p className="mt-4 text-xs leading-5 text-foreground/58">
+                {t("intake.previewDisclaimer")}
+              </p>
+            </aside>
+          </div>
+          <div className="mt-6 flex flex-col-reverse gap-3 sm:flex-row sm:justify-between">
+            <button
+              type="button"
+              onClick={() => dispatch({ type: "step", step: 3 })}
+              className="rounded-md border border-border px-4 py-3 text-sm"
+            >
+              {t("buttons.back")}
+            </button>
+            <button
+              type="button"
+              disabled={pending || state.selectedFrameworks.length === 0}
+              onClick={() =>
+                runStep(
+                  () =>
+                    saveIntakeStep({
+                      answers: state.intake,
+                      selectedFrameworks: state.selectedFrameworks,
+                      selectedTools: state.selectedTools,
+                    }),
+                  5,
+                )
+              }
+              className="inline-flex items-center gap-2 rounded-md bg-primary px-4 py-3 text-sm font-medium text-primary-foreground disabled:cursor-not-allowed disabled:opacity-50"
+            >
+              {t("buttons.saveIntake")}
+              <ArrowRight className="h-4 w-4" aria-hidden="true" />
+            </button>
+          </div>
+        </div>
+      ) : null}
+
+      {state.step === 5 ? (
+        <div className="rounded-lg border border-border bg-surface p-5">
+          <div className="mb-6 flex items-center gap-3">
             <Plug className="h-5 w-5 text-primary" aria-hidden="true" />
             <div>
               <h2 className="text-lg font-semibold">{t("integration.title")}</h2>
@@ -566,14 +710,14 @@ export function OnboardingWizard({
           <div className="mt-6 flex flex-col-reverse gap-3 sm:flex-row sm:justify-between">
             <button
               type="button"
-              onClick={() => dispatch({ type: "step", step: 3 })}
+              onClick={() => dispatch({ type: "step", step: 4 })}
               className="rounded-md border border-border px-4 py-3 text-sm"
             >
               {t("buttons.back")}
             </button>
             <button
               type="button"
-              onClick={() => dispatch({ type: "step", step: 5 })}
+              onClick={() => dispatch({ type: "step", step: 6 })}
               className="inline-flex items-center gap-2 rounded-md bg-primary px-4 py-3 text-sm font-medium text-primary-foreground"
             >
               {t("buttons.showScore")}
@@ -583,7 +727,7 @@ export function OnboardingWizard({
         </div>
       ) : null}
 
-      {state.step === 5 ? (
+      {state.step === 6 ? (
         <div className="rounded-lg border border-border bg-surface p-5">
           <div className="grid gap-6 md:grid-cols-[auto_1fr] md:items-center">
             <ScoreReveal score={score} />
@@ -601,7 +745,7 @@ export function OnboardingWizard({
           <div className="mt-6 flex flex-col-reverse gap-3 sm:flex-row sm:justify-between">
             <button
               type="button"
-              onClick={() => dispatch({ type: "step", step: 4 })}
+              onClick={() => dispatch({ type: "step", step: 5 })}
               className="rounded-md border border-border px-4 py-3 text-sm"
             >
               {t("buttons.back")}

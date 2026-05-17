@@ -1595,7 +1595,7 @@
   "onboarding": {
     "eyebrow": "Onboarding",
     "title": "Nastavení organizace",
-    "description": "Pět kroků připraví compliance workspace: profil organizace, rozsah NIS2 nebo ISO 27001, inventář nástrojů a první praktickou integraci.",
+    "description": "Šest kroků připraví compliance workspace: profil organizace, baseline frameworků, inventář nástrojů, deterministický rozsah intake a první praktickou integraci.",
     "saveStepError": "Uložení kroku se nepodařilo.",
     "finishError": "Dokončení onboardingu se nepodařilo.",
     "steps": {
@@ -1603,7 +1603,8 @@
       "frameworks": "Frameworky",
       "tools": "Nástroje",
       "integration": "Integrace",
-      "score": "Skóre"
+      "score": "Skóre",
+      "intake": "Rozsah"
     },
     "company": {
       "title": "Údaje o firmě",
@@ -1621,7 +1622,8 @@
       "saveFrameworks": "Uložit frameworky",
       "saveTools": "Uložit nástroje",
       "showScore": "Zobrazit skóre",
-      "finish": "Dokončit onboarding"
+      "finish": "Dokončit onboarding",
+      "saveIntake": "Uložit rozsah"
     },
     "frameworks": {
       "title": "Vyberte frameworky",
@@ -1683,6 +1685,18 @@
       "cs-CZ": "Čeština",
       "en-EU": "Angličtina (EU)",
       "it-IT": "Italština"
+    },
+    "intake": {
+      "title": "15minutový intake rozsahu",
+      "body": "Odpovězte na deterministické otázky rozsahu, aby Splnit.eu mohlo prioritizovat úvodní baseline kontrol bez právních tvrzení o souladu.",
+      "nextAction": "Další krok: uložte odvozený rozsah a potom zkontrolujte doporučenou první integraci.",
+      "yes": "Ano",
+      "no": "Ne",
+      "previewTitle": "Náhled odvozeného rozsahu",
+      "applicableControls": "Aplikovatelné kontroly",
+      "priorityControls": "Prioritní kontroly",
+      "manualReviewControls": "Ruční kontrola",
+      "previewDisclaimer": "Jde o interní rozsah připravenosti, ne o právní klasifikaci ani garanci souladu."
     }
   },
   "organisationSettings": {
