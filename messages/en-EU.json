@@ -982,7 +982,7 @@
       "openControl": "Open control",
       "emptyActiveAction": "Choose a framework",
       "scopeFiltersTitle": "Scope filters",
-      "allScope": "All controls",
+      "allScope": "In-scope controls",
       "priorityScope": "Priority gaps based on your intake",
       "gapScope": "Open gaps",
       "outOfScope": "Out of scope / not applicable",

@@ -18,7 +18,7 @@ import { getOrganisationByClerkOrgId } from "@/lib/db/queries/organisations";
 
 type ControlsCopy = ReturnType<typeof getMessagesForLocale>["controlsPage"];
 type OrgControl = Awaited<ReturnType<typeof listOrgControlsForIndex>>[number];
-type ScopeFilter = "all" | "priority" | "gaps" | "out-of-scope";
+type ScopeFilter = "in-scope" | "priority" | "gaps" | "out-of-scope";
 
 async function loadControlsIndexData() {
   const clerkConfigured =
@@ -104,7 +104,7 @@ function normalizeScopeFilter(value: string | string[] | undefined): ScopeFilter
     return raw;
   }
 
-  return "all";
+  return "in-scope";
 }
 
 function filterControlsByScope(controls: OrgControl[], scopeFilter: ScopeFilter) {
@@ -127,7 +127,9 @@ function filterControlsByScope(controls: OrgControl[], scopeFilter: ScopeFilter)
     );
   }
 
-  return controls;
+  return controls.filter(
+    (control) => control.scopeStatus !== "out_of_scope" && control.scopeStatus !== "not_applicable",
+  );
 }
 
 export default async function ControlsPage({
@@ -144,7 +146,7 @@ export default async function ControlsPage({
   const scopeFilter = normalizeScopeFilter(resolvedSearchParams.scope);
   const filteredControls = filterControlsByScope(controls, scopeFilter);
   const scopeFilters: { href: string; label: string; value: ScopeFilter }[] = [
-    { href: "/controls", label: copy.index.allScope, value: "all" },
+    { href: "/controls", label: copy.index.allScope, value: "in-scope" },
     { href: "/controls?scope=priority", label: copy.index.priorityScope, value: "priority" },
     { href: "/controls?scope=gaps", label: copy.index.gapScope, value: "gaps" },
     { href: "/controls?scope=out-of-scope", label: copy.index.outOfScope, value: "out-of-scope" },

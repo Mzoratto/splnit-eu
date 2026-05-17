@@ -1,0 +1,35 @@
+name: Production migration drift
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  check-production-migration-drift:
+    runs-on: ubuntu-latest
+    env:
+      CI: true
+      NEXT_TELEMETRY_DISABLED: 1
+      PRODUCTION_DATABASE_URL_UNPOOLED: ${{ secrets.PRODUCTION_DATABASE_URL_UNPOOLED }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Check production migration drift
+        if: env.PRODUCTION_DATABASE_URL_UNPOOLED != ''
+        run: npm run check:production-migration-drift
+
+      - name: Skip production migration drift check
+        if: env.PRODUCTION_DATABASE_URL_UNPOOLED == ''
+        run: echo "PRODUCTION_DATABASE_URL_UNPOOLED is not configured; skipping read-only production migration drift check."
