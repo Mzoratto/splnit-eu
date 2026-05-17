@@ -325,7 +325,10 @@ function deriveNotApplicableControlKeys(
   ];
 
   for (const key of aiControlKeys) {
-    if (applicableControlKeys.includes(key)) {
+    if (
+      applicableControlKeys.includes(key) ||
+      !isMappedToSelectedFramework(key, selectedFrameworks)
+    ) {
       continue;
     }
 

@@ -19,6 +19,16 @@ test("walks the onboarding wizard to the score reveal", async ({ page }) => {
   await page.getByRole("button", { name: "Nástroje" }).click();
   await page.getByRole("button", { name: /ChatGPT/ }).click();
   await page.getByRole("button", { name: /Microsoft Copilot/ }).click();
+  await page.getByRole("button", { name: "Rozsah" }).click();
+
+  await expect(
+    page.getByRole("heading", { name: "15minutový intake rozsahu" }),
+  ).toBeVisible();
+  await expect(
+    page.getByText("Který obchodní model organizaci nejlépe vystihuje?"),
+  ).toBeVisible();
+  await expect(page.getByText("Kontroly v interním rozsahu readiness")).toBeVisible();
+
   await page.getByRole("button", { name: "Integrace" }).click();
 
   await expect(

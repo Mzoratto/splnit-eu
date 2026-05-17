@@ -1713,10 +1713,96 @@
       "yes": "Ano",
       "no": "Ne",
       "previewTitle": "Náhled odvozeného rozsahu",
-      "applicableControls": "Aplikovatelné kontroly",
+      "applicableControls": "Kontroly v interním rozsahu readiness",
       "priorityControls": "Prioritní kontroly",
       "manualReviewControls": "Ruční kontrola",
-      "previewDisclaimer": "Jde o interní rozsah připravenosti, ne o právní klasifikaci ani garanci souladu."
+      "previewDisclaimer": "Jde o interní rozsah připravenosti, ne o právní klasifikaci ani garanci souladu.",
+      "questions": {
+        "businessModel": {
+          "label": "Který obchodní model organizaci nejlépe vystihuje?",
+          "helpText": "Používá se jen pro rozsah readiness; nejde o právní klasifikaci."
+        },
+        "sector": {
+          "label": "Který sektor je nejbližší?",
+          "helpText": "Konzervativní sektorový signál pro prioritizaci kontrol."
+        },
+        "employeeBand": {
+          "label": "Kolik lidí v organizaci pracuje?",
+          "helpText": "Stačí široké pásmo; přesný počet není potřeba."
+        },
+        "handlesPersonalData": {
+          "label": "Jaké osobní údaje organizace zpracovává?",
+          "helpText": "Ovlivňuje GDPR readiness úkoly a priority privacy evidence."
+        },
+        "handlesSensitiveData": {
+          "label": "Zpracovává citlivá, zdravotní, finanční nebo vysoce riziková data?",
+          "helpText": "Odpověď ano přidá konzervativní úkoly pro privacy a šifrování."
+        },
+        "usesCloudHosting": {
+          "label": "Používá cloud hosting nebo object storage pro firemní systémy?",
+          "helpText": "Cloud přidává kontroly logování, šifrování a root účtů."
+        },
+        "hasPublicApp": {
+          "label": "Provozuje veřejnou aplikaci, portál, API nebo zákaznický systém?",
+          "helpText": "Veřejná expozice přidává priority pro zranitelnosti a testování."
+        },
+        "hasProductionSoftware": {
+          "label": "Vyvíjí nebo nasazuje produkční software?",
+          "helpText": "Dodávka softwaru přidává kontroly code review, závislostí a změn."
+        },
+        "hasCriticalOperations": {
+          "label": "Narušil by výpadek významně zákazníky, pacienty nebo výrobu?",
+          "helpText": "Kritické operace přidávají priority kontinuity, obnovy a segmentace."
+        },
+        "usesThirdPartyProcessors": {
+          "label": "Jak moc závisí na externích zpracovatelích nebo kritických dodavatelích?",
+          "helpText": "Závislost na dodavatelích řídí supplier review a smluvní kontroly."
+        },
+        "usesAiSystems": {
+          "label": "Jak jsou používány AI systémy?",
+          "helpText": "AI odpovědi určují governance úkoly; AI nerozhoduje právní aplikovatelnost."
+        },
+        "usesHighRiskAi": {
+          "label": "Může některé AI použití ovlivnit lidi ve zdraví, zaměstnání, úvěru, vzdělání nebo přístupu ke službám?",
+          "helpText": "Odpověď ano přidá ruční review pro možné vysoce rizikové AI použití."
+        }
+      },
+      "options": {
+        "businessModel": {
+          "professional_services": "Profesionální služby",
+          "saas": "SaaS nebo online produkt",
+          "physical_operations": "Fyzické operace",
+          "regulated_service": "Regulovaná nebo základní služba"
+        },
+        "sector": {
+          "professional_services": "Profesionální služby",
+          "technology": "Technologie / software",
+          "manufacturing": "Výroba",
+          "healthcare": "Zdravotnictví / citlivá péče",
+          "other": "Jiná SME"
+        },
+        "employeeBand": {
+          "1_9": "1-9",
+          "10_49": "10-49",
+          "50_249": "50-249",
+          "250_plus": "250+"
+        },
+        "handlesPersonalData": {
+          "none": "Žádné osobní údaje mimo obchodní kontakty",
+          "employees_only": "Jen zaměstnanci / kontraktoři",
+          "customers_and_employees": "Zákazníci a zaměstnanci"
+        },
+        "usesThirdPartyProcessors": {
+          "none": "Žádní významní zpracovatelé",
+          "few": "Několik zpracovatelů / dodavatelů",
+          "many": "Mnoho zpracovatelů nebo kritických dodavatelů"
+        },
+        "usesAiSystems": {
+          "none": "Žádné AI systémy",
+          "internal_productivity": "Jen interní produktivní AI",
+          "customer_or_patient_facing": "AI pro zákazníky, pacienty nebo podporu rozhodování"
+        }
+      }
     }
   },
   "organisationSettings": {

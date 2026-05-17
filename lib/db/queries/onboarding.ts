@@ -1,4 +1,5 @@
 import { and, eq, inArray } from "drizzle-orm";
+import { CONTROL_LIBRARY, type FrameworkSlug } from "@/lib/controls/library";
 import { getDb } from "@/lib/db";
 import {
   controls,
@@ -107,7 +108,10 @@ export async function seedInitialControlStatusesFromIntakeScope(clerkOrgId: stri
   }
 
   const statusByControlKey = buildSeedStatusByControlKey(derivedScope);
-  const controlKeys = [...statusByControlKey.keys()];
+  const selectedFrameworks = await getPersistedFrameworkSlugs(clerkOrgId);
+  const controlKeys = Array.from(statusByControlKey.keys()).filter((controlKey) =>
+    isMappedToSelectedFramework(controlKey, selectedFrameworks),
+  );
 
   if (controlKeys.length === 0) {
     return { inserted: 0 };
@@ -144,6 +148,36 @@ export async function seedInitialControlStatusesFromIntakeScope(clerkOrgId: stri
     .returning({ id: orgControlStatuses.id });
 
   return { inserted: insertedRows.length };
+}
+
+async function getPersistedFrameworkSlugs(clerkOrgId: string): Promise<FrameworkSlug[]> {
+  const db = getDb();
+  const rows = await db
+    .select({ slug: frameworks.slug })
+    .from(orgFrameworks)
+    .innerJoin(frameworks, eq(orgFrameworks.frameworkId, frameworks.id))
+    .where(eq(orgFrameworks.clerkOrgId, clerkOrgId));
+
+  return rows
+    .map((row) => row.slug)
+    .filter((slug): slug is FrameworkSlug => isFrameworkSlug(slug));
+}
+
+function isFrameworkSlug(value: string): value is FrameworkSlug {
+  return ["nis2", "ai-act", "gdpr", "iso27001", "csrd"].includes(value);
+}
+
+function isMappedToSelectedFramework(controlKey: string, selectedFrameworks: readonly FrameworkSlug[]) {
+  if (selectedFrameworks.length === 0) {
+    return false;
+  }
+
+  const control = CONTROL_LIBRARY.find((entry) => entry.key === controlKey);
+  if (!control) {
+    return false;
+  }
+
+  return control.frameworkMappings.some((mapping) => selectedFrameworks.includes(mapping.frameworkSlug));
 }
 
 function buildSeedStatusByControlKey(derivedScope: OrgIntakeDerivedScope) {

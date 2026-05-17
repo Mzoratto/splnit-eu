@@ -75,10 +75,10 @@ assertIncludes(
   ],
   "tiny professional-services SME",
 );
-assertIncludes(
+assertExcludes(
   tinyScope.notApplicableControlKeys,
   ["ctrl_ai_high_risk_provider_verification", "ctrl_ai_human_oversight"],
-  "tiny professional-services SME",
+  "tiny professional-services SME without AI Act selected",
 );
 assertExcludes(
   tinyScope.priorityControlKeys,

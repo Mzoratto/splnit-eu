@@ -1,6 +1,7 @@
 import assert from "node:assert/strict";
 import { loadEnvConfig } from "@next/env";
 import { and, eq, inArray } from "drizzle-orm";
+import { CONTROL_LIBRARY, type FrameworkSlug } from "@/lib/controls/library";
 import { getDb } from "@/lib/db";
 import {
   controls,
@@ -16,6 +17,7 @@ import {
   saveOnboardingIntakeProfile,
   saveOnboardingTools,
 } from "@/lib/db/queries/onboarding";
+import { getDashboardData } from "@/lib/db/queries/dashboard";
 import { INTAKE_PROFILE_VERSION } from "@/lib/onboarding/intake-questions";
 import { deriveIntakeScope, type IntakeAnswers } from "@/lib/onboarding/intake-scope";
 
@@ -24,7 +26,7 @@ loadEnvConfig(process.cwd());
 assert.ok(process.env.DATABASE_URL?.trim(), "DATABASE_URL is required for onboarding status seeding smoke.");
 
 const clerkOrgId = `smoke_onboarding_status_seed_${Date.now()}`;
-const frameworkSlugs = ["nis2", "gdpr", "iso27001"];
+const frameworkSlugs = ["nis2", "gdpr", "iso27001"] satisfies FrameworkSlug[];
 const answers: IntakeAnswers = {
   businessModel: "saas",
   employeeBand: "10_49",
@@ -75,6 +77,11 @@ async function getStatusesByKey(keys: readonly string[]) {
   return new Map(rows.map((row) => [row.key, row]));
 }
 
+function isMappedToFrameworks(controlKey: string, selectedFrameworks: readonly FrameworkSlug[]) {
+  const control = CONTROL_LIBRARY.find((entry) => entry.key === controlKey);
+  return control?.frameworkMappings.some((mapping) => selectedFrameworks.includes(mapping.frameworkSlug)) ?? false;
+}
+
 async function main() {
   await cleanup();
 
@@ -94,7 +101,7 @@ async function main() {
 
     const derivedScope = deriveIntakeScope({
       answers,
-      selectedFrameworks: ["nis2", "gdpr", "iso27001"],
+      selectedFrameworks: ["nis2", "gdpr", "iso27001", "ai-act"],
       selectedTools: ["github-copilot", "hubspot"],
     });
     assert.ok(derivedScope.applicableControlKeys.includes("ctrl_mfa_all_users"));
@@ -108,10 +115,15 @@ async function main() {
       version: INTAKE_PROFILE_VERSION,
     });
 
+    const selectedOutOfScopeControlKey = derivedScope.outOfScopeControlKeys.find((controlKey) =>
+      isMappedToFrameworks(controlKey, frameworkSlugs),
+    );
+    assert.ok(selectedOutOfScopeControlKey, "expected one out-of-scope control mapped to selected frameworks");
+
     const controlIds = await getControlIdsByKey([
       "ctrl_mfa_all_users",
       "ctrl_cloudtrail_enabled",
-      derivedScope.outOfScopeControlKeys[0] as string,
+      selectedOutOfScopeControlKey,
     ]);
     const mfaControlId = controlIds.get("ctrl_mfa_all_users");
     assert.ok(mfaControlId, "MFA control should exist in seeded controls.");
@@ -130,21 +142,50 @@ async function main() {
     const expectedKeys = [
       "ctrl_mfa_all_users",
       "ctrl_cloudtrail_enabled",
-      derivedScope.outOfScopeControlKeys[0] as string,
+      "ctrl_ai_system_inventory",
+      selectedOutOfScopeControlKey,
     ];
     const statuses = await getStatusesByKey(expectedKeys);
 
     assert.equal(statuses.get("ctrl_mfa_all_users")?.status, "pass", "manual pass should be preserved");
     assert.equal(statuses.get("ctrl_cloudtrail_enabled")?.status, "fail", "applicable fail control should be seeded");
+    assert.equal(
+      statuses.get("ctrl_ai_system_inventory"),
+      undefined,
+      "controls outside the org's persisted frameworks must not be seeded from a stale or client-supplied scope",
+    );
     assert.match(
       statuses.get("ctrl_cloudtrail_enabled")?.notes ?? "",
       /Intake scope:/,
       "seeded applicable controls should carry intake rationale notes",
     );
     assert.equal(
-      statuses.get(derivedScope.outOfScopeControlKeys[0] as string)?.status,
+      statuses.get(selectedOutOfScopeControlKey)?.status,
       "out_of_scope",
       "scoped-out controls should be recorded",
+    );
+
+    const dashboardData = await getDashboardData(clerkOrgId);
+    const dashboardPriorityKeys = dashboardData.priorityControls
+      .filter((control) => control.isIntakePriority)
+      .map((control) => control.key);
+    assert.ok(
+      derivedScope.priorityControlKeys.length > 5,
+      "smoke profile should have enough priority controls to catch pre-sort query truncation",
+    );
+    assert.deepEqual(
+      new Set(dashboardPriorityKeys),
+      new Set(
+        derivedScope.priorityControlKeys.filter(
+          (controlKey) => controlKey !== "ctrl_mfa_all_users" && isMappedToFrameworks(controlKey, frameworkSlugs),
+        ),
+      ),
+      "dashboard priority query should include every open intake priority before the UI slices visible rows",
+    );
+    assert.deepEqual(
+      dashboardData.priorityControls.slice(0, Math.min(3, dashboardData.priorityControls.length)).map((control) => control.isIntakePriority),
+      dashboardData.priorityControls.length === 0 ? [] : Array(Math.min(3, dashboardData.priorityControls.length)).fill(true),
+      "dashboard priority controls should sort intake priorities first",
     );
 
     const seededRows = await getDb()

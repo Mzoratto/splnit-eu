@@ -98,8 +98,7 @@ export async function getDashboardData(clerkOrgId: string) {
               "unknown",
             ]),
           ),
-        )
-        .limit(5),
+        ),
       db
         .select({ status: orgControlStatuses.status })
         .from(orgControlStatuses)

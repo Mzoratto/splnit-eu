@@ -1713,10 +1713,96 @@
       "yes": "Sì",
       "no": "No",
       "previewTitle": "Anteprima ambito derivato",
-      "applicableControls": "Controlli applicabili",
+      "applicableControls": "Controlli nel perimetro readiness",
       "priorityControls": "Controlli prioritari",
       "manualReviewControls": "Revisione manuale",
-      "previewDisclaimer": "È un ambito interno di readiness, non una classificazione legale né una garanzia di conformità."
+      "previewDisclaimer": "È un ambito interno di readiness, non una classificazione legale né una garanzia di conformità.",
+      "questions": {
+        "businessModel": {
+          "label": "Quale modello di business descrive meglio l’organizzazione?",
+          "helpText": "Usato solo per definire l’ambito di readiness; non è una classificazione legale."
+        },
+        "sector": {
+          "label": "Qual è il settore più vicino?",
+          "helpText": "Segnale di settore conservativo per prioritizzare i controlli."
+        },
+        "employeeBand": {
+          "label": "Quante persone lavorano nell’organizzazione?",
+          "helpText": "Serve solo una fascia ampia; non serve il numero esatto."
+        },
+        "handlesPersonalData": {
+          "label": "Quali dati personali tratta l’organizzazione?",
+          "helpText": "Influenza le attività GDPR readiness e le priorità di evidenza privacy."
+        },
+        "handlesSensitiveData": {
+          "label": "Tratta dati sensibili, sanitari, finanziari o ad alto rischio?",
+          "helpText": "Una risposta sì aggiunge attività conservative di revisione privacy e cifratura."
+        },
+        "usesCloudHosting": {
+          "label": "Usa hosting cloud o object storage per sistemi aziendali?",
+          "helpText": "L’uso del cloud aggiunge controlli su logging, cifratura e account root."
+        },
+        "hasPublicApp": {
+          "label": "Gestisce app, portali, API o sistemi customer-facing pubblici?",
+          "helpText": "L’esposizione pubblica aggiunge priorità su vulnerabilità e test."
+        },
+        "hasProductionSoftware": {
+          "label": "Sviluppa o distribuisce software di produzione?",
+          "helpText": "La delivery software aggiunge controlli su code review, dipendenze e change management."
+        },
+        "hasCriticalOperations": {
+          "label": "Un downtime interromperebbe materialmente clienti, pazienti o produzione?",
+          "helpText": "Operazioni critiche aggiungono priorità su continuità, recovery e segmentazione."
+        },
+        "usesThirdPartyProcessors": {
+          "label": "Quanto dipende da responsabili esterni o fornitori critici?",
+          "helpText": "La dipendenza da fornitori guida revisioni supplier e controlli contrattuali."
+        },
+        "usesAiSystems": {
+          "label": "Come vengono usati i sistemi AI?",
+          "helpText": "Le risposte AI definiscono attività di governance; l’AI non decide l’applicabilità legale."
+        },
+        "usesHighRiskAi": {
+          "label": "Un uso AI potrebbe incidere su persone in salute, lavoro, credito, istruzione o accesso a servizi?",
+          "helpText": "Una risposta sì aggiunge attività di revisione manuale per possibile uso AI ad alto rischio."
+        }
+      },
+      "options": {
+        "businessModel": {
+          "professional_services": "Servizi professionali",
+          "saas": "SaaS o prodotto online",
+          "physical_operations": "Operazioni fisiche",
+          "regulated_service": "Servizio regolato o essenziale"
+        },
+        "sector": {
+          "professional_services": "Servizi professionali",
+          "technology": "Tecnologia / software",
+          "manufacturing": "Manifattura",
+          "healthcare": "Sanità / assistenza sensibile",
+          "other": "Altra PMI"
+        },
+        "employeeBand": {
+          "1_9": "1-9",
+          "10_49": "10-49",
+          "50_249": "50-249",
+          "250_plus": "250+"
+        },
+        "handlesPersonalData": {
+          "none": "Nessun dato personale oltre ai contatti business",
+          "employees_only": "Solo dipendenti / collaboratori",
+          "customers_and_employees": "Clienti e dipendenti"
+        },
+        "usesThirdPartyProcessors": {
+          "none": "Nessun responsabile materiale",
+          "few": "Alcuni responsabili / fornitori",
+          "many": "Molti responsabili o fornitori critici"
+        },
+        "usesAiSystems": {
+          "none": "Nessun sistema AI",
+          "internal_productivity": "Solo AI interna di produttività",
+          "customer_or_patient_facing": "AI verso clienti, pazienti o supporto decisionale"
+        }
+      }
     }
   },
   "organisationSettings": {

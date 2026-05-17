@@ -583,8 +583,8 @@ export function OnboardingWizard({
             <div className="space-y-3">
               {INTAKE_QUESTIONS.map((question) => (
                 <label key={question.key} className="grid gap-2 rounded-md border border-border bg-background p-3 text-sm">
-                  <span className="font-medium">{question.label}</span>
-                  <span className="text-xs leading-5 text-foreground/58">{question.helpText}</span>
+                  <span className="font-medium">{t(`intake.questions.${question.key}.label`)}</span>
+                  <span className="text-xs leading-5 text-foreground/58">{t(`intake.questions.${question.key}.helpText`)}</span>
                   {question.type === "boolean" ? (
                     <select
                       value={String(state.intake[question.key])}
@@ -614,7 +614,7 @@ export function OnboardingWizard({
                     >
                       {question.options?.map((option) => (
                         <option key={option.value} value={option.value}>
-                          {option.label}
+                          {t(`intake.options.${question.key}.${option.value}`)}
                         </option>
                       ))}
                     </select>
