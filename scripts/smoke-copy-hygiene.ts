@@ -42,6 +42,20 @@ const marketingForbiddenPatterns = [
   /OSVČ údaje budou doplněné/i,
 ] as const;
 
+const productPricingForbiddenPatterns = [
+  /\bMost popular\b|\bNejoblíbenější\b|\bPiù scelto\b/i,
+  /setup takes 5 minutes|Nastavení trvá 5 minut|configurazione richiede 5 minuti/i,
+  /takes 15 minutes|zabere 15 minut|richiede 15 minuti/i,
+  /in 2 minutes|within 2 minutes|za 2 minuty|do 2 minut|in 2 minuti|entro 2 minuti/i,
+  /Immediate results|Výsledky okamžitě|Risultati immediati/i,
+  /No hidden fees|Bez skrytých poplatků|Nessun costo nascosto/i,
+  /Cancel anytime|Zrušení kdykoliv|Cancellazione quando volete/i,
+  /Unlimited clients|Neomezený počet klientů|Clienti illimitati/i,
+  /partner badge|partnerský odznak|badge partner/i,
+  /catch .* immediately|Zachyťte .* okamžitě|Intercettate .* subito/i,
+  /audit documentation prepared for your auditor|auditní dokumentace připravená pro auditora|documentazione audit pronta per l'auditor/i,
+] as const;
+
 const publicLegalForbiddenPatterns = [
   /before production launch/i,
   /must be completed/i,
@@ -70,6 +84,16 @@ const marketingCheckedFiles = [
   "components/nav.tsx",
   "components/footer.tsx",
   "components/locale-switcher.tsx",
+];
+
+const productPricingCheckedFiles = [
+  "messages/cs-CZ.json",
+  "messages/en-EU.json",
+  "messages/it-IT.json",
+  ...listSourceFiles("app/(marketing)"),
+  "components/marketing/software-json-ld.tsx",
+  "components/footer.tsx",
+  "components/nav.tsx",
 ];
 
 const publicLegalCheckedFiles = ["lib/legal/legal-page-copy.ts"];
@@ -121,6 +145,18 @@ for (const file of marketingCheckedFiles) {
 
     if (match) {
       failures.push(`${file}: marketing copy guard matched ${pattern}`);
+    }
+  }
+}
+
+for (const file of productPricingCheckedFiles) {
+  const content = readFileSync(file, "utf8");
+
+  for (const pattern of productPricingForbiddenPatterns) {
+    const match = content.match(pattern);
+
+    if (match) {
+      failures.push(`${file}: product/pricing copy guard matched ${pattern}`);
     }
   }
 }

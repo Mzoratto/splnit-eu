@@ -1300,7 +1300,7 @@
     "about": {
       "tag": "Chi siamo",
       "title": "Chi c'è dietro Splnit.eu.",
-      "body": "Splnit.eu è un prodotto mirato, guidato dal fondatore, costruito da un ingegnere IT senior con esperienza approfondita nei framework di compliance europei.",
+      "body": "Splnit.eu è un prodotto mirato, guidato dal fondatore, costruito da un ingegnere IT senior con esperienza pratica nei workflow di compliance europei.",
       "primaryCta": "Diventate design partner",
       "realTodayTitle": "Cosa è vero oggi",
       "notYetTitle": "Cosa non dichiariamo ancora",
@@ -1311,7 +1311,7 @@
       "realToday": {
         "solo": "Splnit.eu è un prodotto in accesso anticipato guidato dal fondatore e costruito a Olomouc.",
         "focus": "Il prodotto si concentra sull'automazione compliance UE per NIS2, GDPR e ISO 27001.",
-        "legalReview": "DPA e documenti legali finali sono pronti per revisione legale prima del lancio in produzione.",
+        "legalReview": "DPA e documenti legali finali sono preparati come bozze operative per revisione legale prima dell’affidamento in produzione a pagamento.",
         "noFakeProof": "Referenze pubbliche e metriche non vengono mostrate finché non sono verificate."
       },
       "notYet": {
@@ -1323,10 +1323,10 @@
     }
   },
   "home": {
-    "badge": "Compliance EU per le PMI italiane",
-    "titleLine1": "Compliance chiara nella vostra giurisdizione.",
+    "badge": "Readiness per la compliance UE delle PMI italiane",
+    "titleLine1": "Rendete più chiaro il lavoro di compliance nella vostra giurisdizione.",
     "titleLine2": "",
-    "lead": "NIS2, EU AI Act, GDPR e ISO 27001 con citazioni normative pronte per il vostro revisore. Costruita per le PMI europee in italiano, ceco e inglese.",
+    "lead": "Workflow per NIS2, EU AI Act, GDPR e ISO 27001 con citazioni normative per revisione. Costruita per le PMI europee in italiano, ceco e inglese.",
     "primaryCta": "Diventate design partner",
     "secondaryCta": "Guardate la demo",
     "trustLine": "Accesso anticipato · Contatto diretto con il fondatore · Infrastruttura Vercel + Neon",
@@ -1335,7 +1335,7 @@
     "partnerFree": "12 mesi Business gratuito",
     "partnerOnboarding": "Onboarding di tre settimane diretto col fondatore",
     "stepsTag": "Come funziona",
-    "stepsTitle": "Configurate una volta, poi resta aggiornato.",
+    "stepsTitle": "Iniziate dalla configurazione di base e migliorate nel tempo.",
     "stepsBody": "Tre passaggi dal primo collegamento di sistema a un evidence pack utilizzabile.",
     "featuresTag": "Funzioni principali",
     "featuresTitle": "Compliance costruita per team IT e compliance.",
@@ -1351,17 +1351,17 @@
     "docsCta": "Vedi la documentazione",
     "steps": {
       "connectTitle": "Collegate gli strumenti",
-      "connectBody": "Collegate Microsoft 365, GitHub o AWS. La configurazione richiede 5 minuti.",
-      "testsTitle": "I controlli girano automaticamente",
-      "testsBody": "I controlli automatici monitorano i sistemi collegati e salvano i risultati come evidenze di audit.",
+      "connectBody": "Collegate Microsoft 365, GitHub o AWS. Il tempo di configurazione dipende dai sistemi e dai permessi scelti.",
+      "testsTitle": "I controlli possono girare sui sistemi collegati",
+      "testsBody": "I controlli configurati monitorano i sistemi collegati e salvano i risultati come evidenza interna da revisionare.",
       "resultsTitle": "Ricevete i risultati",
-      "resultsBody": "Dashboard, avvisi sui fallimenti e documentazione audit pronta per l'auditor."
+      "resultsBody": "Dashboard, avvisi sui fallimenti e documentazione audit di lavoro da revisionare con consulente o revisore."
     },
     "features": {
       "residencyTitle": "Infrastruttura di produzione documentata",
       "residencyBody": "La produzione usa Vercel per hosting e Neon Postgres per il database. Sub-responsabili e contesto di trattamento sono indicati nella panoramica DPA.",
-      "monitoringTitle": "Monitoraggio continuo",
-      "monitoringBody": "Intercettate subito deviazioni di configurazione in Microsoft 365 o AWS.",
+      "monitoringTitle": "Monitoraggio configurazione",
+      "monitoringBody": "Fate emergere deviazioni di configurazione nei sistemi collegati, così il team può revisionarle.",
       "documentsTitle": "Documenti automatici",
       "documentsBody": "Generate documenti di lavoro e pacchetti di evidenze da inviare a legale, revisore o consulente per la revisione finale."
     },
@@ -1375,18 +1375,18 @@
   "leadCapture": {
     "tag": "Panoramica personalizzata",
     "title": "Quali normative UE vi riguardano?",
-    "subtitle": "Ricevete una panoramica personalizzata degli obblighi in 2 minuti.",
+    "subtitle": "Ricevete una breve panoramica personalizzata degli obblighi dopo l’invio del modulo.",
     "cta": "Ricevete la panoramica",
-    "success": "Inviato. La panoramica arriverà entro 2 minuti.",
+    "success": "Inviato. La panoramica arriverà a breve.",
     "placeholder": "lavoro@azienda.it",
-    "footnote": "Senza carta di credito · Risultati immediati · Disiscrizione quando volete"
+    "footnote": "Senza carta di credito · Anteprima risultati · Disiscrizione quando volete"
   },
   "pricing": {
     "title": "Prezzi trasparenti. Nessuna sorpresa.",
-    "subtitle": "Meno di un'ora di consulenza al mese.",
-    "footnote": "Configurazione progettata per regioni UE · Nessun costo nascosto · Cancellazione quando volete",
+    "subtitle": "Prezzi early-access per team che iniziano un lavoro strutturato di readiness.",
+    "footnote": "Configurazione progettata per regioni UE · Termini early-access · Cambi piano su richiesta",
     "partnerTitle": "Siete consulenti o MSP?",
-    "partnerBody": "Clienti illimitati, opzione white-label, badge partner.",
+    "partnerBody": "Workspace clienti, opzione white-label e listing partner dopo approvazione.",
     "partnerPrice": "€299 / mese",
     "partnerCta": "Scoprite di più →",
     "comparisonTag": "Confronto funzioni",
@@ -1401,8 +1401,8 @@
       "monthly": "Mensile",
       "annual": "Annuale",
       "billingToggle": "Cambia fatturazione",
-      "saving": "Risparmiate 2 mesi",
-      "featured": "Più scelto",
+      "saving": "Opzione annuale",
+      "featured": "In evidenza",
       "currency": "€",
       "monthlySuffix": "/ mese",
       "annualSuffix": "/mese con fatturazione annuale",
@@ -1501,12 +1501,12 @@
       }
     },
     "faqs": {
-      "cancelQuestion": "Posso cancellare quando voglio?",
-      "cancelAnswer": "Sì. Nessun vincolo annuale sul piano mensile. Per i piani annuali rimborsiamo la parte proporzionale.",
+      "cancelQuestion": "Posso modificare o interrompere un piano mensile?",
+      "cancelAnswer": "I piani mensili possono essere modificati su richiesta. Le modifiche ai piani annuali e gli eventuali rimborsi seguono i termini early-access concordati.",
       "dataQuestion": "I miei dati sono conservati nell'UE?",
       "dataAnswer": "La configurazione di produzione è progettata per regioni UE. Luoghi di trattamento precisi ed eventuali trasferimenti fuori UE/SEE saranno confermati nel DPA e nella lista sub-responsabili.",
       "setupQuestion": "Servono competenze tecniche per configurarlo?",
-      "setupAnswer": "No. Il wizard di configurazione richiede 15 minuti senza reparto IT.",
+      "setupAnswer": "Il wizard di configurazione è guidato. I tempi dipendono dai vostri sistemi, permessi e fonti di evidenza.",
       "legalQuestion": "Splnit.eu è consulenza legale?",
       "legalAnswer": "No. La piattaforma aiuta a prepararsi alla revisione legale; non sostituisce un avvocato qualificato.",
       "discountQuestion": "Offrite sconti per non profit o startup?",

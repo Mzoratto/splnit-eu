@@ -1300,7 +1300,7 @@
     "about": {
       "tag": "O nás",
       "title": "Kdo stojí za Splnit.eu.",
-      "body": "Splnit.eu je zaměřená platforma vedená zakladatelem, postavená seniorním IT inženýrem s hlubokou znalostí evropských compliance frameworků.",
+      "body": "Splnit.eu je zaměřená platforma vedená zakladatelem, postavená seniorním IT inženýrem s praktickou zkušeností s evropskými compliance workflow.",
       "primaryCta": "Stát se design partnerem",
       "realTodayTitle": "Co je pravda dnes",
       "notYetTitle": "Co zatím netvrdíme",
@@ -1311,7 +1311,7 @@
       "realToday": {
         "solo": "Splnit.eu je produkt v předběžném přístupu vedený zakladatelem a postavený v Olomouci.",
         "focus": "Produkt se zaměřuje na EU compliance automation pro NIS2, GDPR a ISO 27001.",
-        "legalReview": "DPA a finální právní dokumenty jsou připravené k právní kontrole před produkčním spuštěním.",
+        "legalReview": "DPA a finální právní dokumenty jsou připravené jako pracovní návrhy pro právní kontrolu před placeným produkčním spoléháním.",
         "noFakeProof": "Veřejné reference a metriky nejsou uvedené, dokud nebudou ověřené."
       },
       "notYet": {
@@ -1323,10 +1323,10 @@
     }
   },
   "home": {
-    "badge": "Compliance EU pro české firmy",
-    "titleLine1": "Compliance srozumitelná ve vaší jurisdikci.",
+    "badge": "Readiness k EU compliance pro české firmy",
+    "titleLine1": "Zpřehledněte compliance práci ve své jurisdikci.",
     "titleLine2": "",
-    "lead": "NIS2, EU AI Act, GDPR a ISO 27001 s citacemi předpisů, které váš auditor očekává. Postaveno pro evropské MSP v italštině, češtině a angličtině.",
+    "lead": "Workflow pro NIS2, EU AI Act, GDPR a ISO 27001 s citacemi předpisů pro kontrolu. Postaveno pro evropské MSP v italštině, češtině a angličtině.",
     "primaryCta": "Stát se design partnerem",
     "secondaryCta": "Zobrazit demo",
     "trustLine": "Předběžný přístup · Přímý kontakt se zakladatelem · Infrastruktura Vercel + Neon",
@@ -1335,7 +1335,7 @@
     "partnerFree": "12 měsíců Business plánu zdarma",
     "partnerOnboarding": "Tři týdny onboardingu se zakladatelem",
     "stepsTag": "Jak to funguje",
-    "stepsTitle": "Nastavte jednou. Průběžně sledujte.",
+    "stepsTitle": "Začněte základním nastavením a postupně zlepšujte.",
     "stepsBody": "Tři kroky od prvního propojení systému k použitelnému balíčku evidence.",
     "featuresTag": "Klíčové funkce",
     "featuresTitle": "Compliance pro IT a compliance týmy.",
@@ -1351,17 +1351,17 @@
     "docsCta": "Zobrazit dokumentaci",
     "steps": {
       "connectTitle": "Připojte nástroje",
-      "connectBody": "Propojte Microsoft 365, GitHub nebo AWS. Nastavení trvá 5 minut.",
-      "testsTitle": "Testy běží automaticky",
-      "testsBody": "Automatické kontroly sledují připojené systémy a ukládají výsledky jako auditní důkazy.",
+      "connectBody": "Propojte Microsoft 365, GitHub nebo AWS. Délka nastavení závisí na zvolených systémech a oprávněních.",
+      "testsTitle": "Kontroly mohou běžet nad propojenými systémy",
+      "testsBody": "Nakonfigurované kontroly sledují připojené systémy a ukládají výsledky jako interní evidenci ke kontrole.",
       "resultsTitle": "Dostanete výsledky",
-      "resultsBody": "Dashboard, upozornění na selhání a auditní dokumentace připravená pro auditora."
+      "resultsBody": "Dashboard, upozornění na selhání a pracovní auditní dokumentace ke kontrole s poradcem nebo auditorem."
     },
     "features": {
       "residencyTitle": "Produkční stack zdokumentovaný",
       "residencyBody": "Produkční provoz používá Vercel pro hosting a Neon Postgres pro databázi. Subdodavatelé a zpracování jsou uvedené v DPA přehledu.",
-      "monitoringTitle": "Kontinuální monitoring",
-      "monitoringBody": "Zachyťte konfigurační odchylky v Microsoft 365 nebo AWS okamžitě.",
+      "monitoringTitle": "Monitoring konfigurace",
+      "monitoringBody": "Zviditelněte konfigurační odchylky v propojených systémech, aby je tým mohl zkontrolovat.",
       "documentsTitle": "Automatické dokumenty",
       "documentsBody": "Generujte pracovní dokumenty a balíčky evidence, které můžete předat právníkovi, auditorovi nebo konzultantovi k finální kontrole."
     },
@@ -1375,18 +1375,18 @@
   "leadCapture": {
     "tag": "Personalizovaný přehled",
     "title": "Které EU předpisy se vás týkají?",
-    "subtitle": "Získejte personalizovaný přehled povinností za 2 minuty.",
+    "subtitle": "Získejte krátký personalizovaný přehled povinností po odeslání formuláře.",
     "cta": "Získat přehled",
-    "success": "Odesláno. Přehled vám přijde do 2 minut.",
+    "success": "Odesláno. Přehled vám přijde brzy.",
     "placeholder": "pracovni@firma.cz",
-    "footnote": "Žádná kreditní karta · Výsledky okamžitě · Odhlášení kdykoliv"
+    "footnote": "Žádná kreditní karta · Náhled výsledků · Odhlášení kdykoliv"
   },
   "pricing": {
     "title": "Transparentní ceny. Žádná překvapení.",
-    "subtitle": "Méně než jedna hodina konzultanta měsíčně.",
-    "footnote": "Produkční nastavení je navržené pro EU regiony · Bez skrytých poplatků · Zrušení kdykoliv",
+    "subtitle": "Early-access ceny pro týmy začínající se strukturovanou readiness prací.",
+    "footnote": "Produkční nastavení je navržené pro EU regiony · Early-access podmínky · Změny plánu na vyžádání",
     "partnerTitle": "Jste poradce nebo MSP?",
-    "partnerBody": "Neomezený počet klientů, white-label možnost, partnerský odznak.",
+    "partnerBody": "Klientské workspaces, white-label možnost a partnerský listing po schválení.",
     "partnerPrice": "€299 / měsíc",
     "partnerCta": "Zjistit více →",
     "comparisonTag": "Srovnání funkcí",
@@ -1401,8 +1401,8 @@
       "monthly": "Měsíčně",
       "annual": "Ročně",
       "billingToggle": "Přepnout fakturaci",
-      "saving": "Ušetřete 2 měsíce",
-      "featured": "Nejoblíbenější",
+      "saving": "Roční varianta",
+      "featured": "Zvýrazněné",
       "currency": "€",
       "monthlySuffix": "/měsíc",
       "annualSuffix": "/měsíc při roční fakturaci",
@@ -1501,12 +1501,12 @@
       }
     },
     "faqs": {
-      "cancelQuestion": "Mohu zrušit předplatné kdykoliv?",
-      "cancelAnswer": "Ano. Žádné roční závazky u měsíčního tarifu. U ročního tarifu vrátíme poměrnou část.",
+      "cancelQuestion": "Mohu změnit nebo ukončit měsíční plán?",
+      "cancelAnswer": "Měsíční plány lze měnit na vyžádání. Změny ročních plánů a případné vratky se řeší podle dohodnutých early-access podmínek.",
       "dataQuestion": "Jsou moje data uložena v EU?",
       "dataAnswer": "Produkční konfigurace je navržená pro EU regiony. Přesné lokace zpracování a případné mechanismy předání mimo EU/EHP potvrzujeme v DPA a subdodavatelském přehledu.",
       "setupQuestion": "Potřebuji technické znalosti k nastavení?",
-      "setupAnswer": "Ne. Průvodce nastavením zabere 15 minut bez IT oddělení.",
+      "setupAnswer": "Průvodce nastavením je vedený krok za krokem. Délka závisí na vašich systémech, oprávněních a zdrojích evidence.",
       "legalQuestion": "Je Splnit.eu právní poradenství?",
       "legalAnswer": "Ne. Platforma vám pomáhá připravit se na právní přezkum — nenahrazuje kvalifikovaného právníka.",
       "discountQuestion": "Nabízíte slevu pro neziskové organizace nebo startupy?",

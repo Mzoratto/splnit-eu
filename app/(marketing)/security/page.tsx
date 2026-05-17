@@ -63,7 +63,7 @@ const copy: Record<Locale, SecurityCopy> = {
       },
       {
         body:
-          "DPA, privacy texty a smluvní závazky jsou veřejně dostupné jako pracovní baseline a před produkčním zákaznickým použitím prochází právní kontrolou.",
+          "DPA, privacy texty a smluvní závazky jsou veřejně dostupné jako pracovní baseline a pro placené produkční spoléhání zůstávají pod právní kontrolou.",
         title: "Právní kontrola dokumentů",
       },
       {
@@ -119,7 +119,7 @@ const copy: Record<Locale, SecurityCopy> = {
       },
       {
         body:
-          "DPA, privacy copy, and contractual commitments are public as a working baseline and remain subject to legal review before production customer use.",
+          "DPA, privacy copy, and contractual commitments are public as a working baseline and remain subject to legal review before paid production reliance.",
         title: "Legal document review",
       },
       {
@@ -175,7 +175,7 @@ const copy: Record<Locale, SecurityCopy> = {
       },
       {
         body:
-          "DPA, privacy e impegni contrattuali sono pubblici come baseline operativa e restano soggetti a revisione legale prima dell'uso con clienti in produzione.",
+          "DPA, privacy e impegni contrattuali sono pubblici come baseline operativa e restano soggetti a revisione legale prima dell’affidamento in produzione a pagamento.",
         title: "Revisione documenti legali",
       },
       {

@@ -1300,7 +1300,7 @@
     "about": {
       "tag": "About",
       "title": "Who's behind Splnit.eu.",
-      "body": "Splnit.eu is a focused, founder-led platform built by a senior IT engineer with deep experience in European compliance frameworks.",
+      "body": "Splnit.eu is a focused, founder-led platform built by a senior IT engineer with hands-on experience in European compliance workflows.",
       "primaryCta": "Become a design partner",
       "realTodayTitle": "What's true today",
       "notYetTitle": "What we do not claim yet",
@@ -1311,7 +1311,7 @@
       "realToday": {
         "solo": "Splnit.eu is a founder-led early access product built in Olomouc.",
         "focus": "The product focuses on EU compliance automation for NIS2, GDPR, and ISO 27001.",
-        "legalReview": "The DPA and final legal documents are ready for legal review before production launch.",
+        "legalReview": "The DPA and final legal documents are prepared as working drafts for counsel review before paid production reliance.",
         "noFakeProof": "Public references and metrics are not shown until they are verified."
       },
       "notYet": {
@@ -1323,10 +1323,10 @@
     }
   },
   "home": {
-    "badge": "EU compliance for European SMBs",
-    "titleLine1": "Compliance clear in your jurisdiction.",
+    "badge": "EU compliance readiness for European SMBs",
+    "titleLine1": "Make compliance work clearer in your jurisdiction.",
     "titleLine2": "",
-    "lead": "NIS2, EU AI Act, GDPR, and ISO 27001 with the regulatory citations your local auditor expects. Built for European SMBs in Italian, Czech, and English.",
+    "lead": "NIS2, EU AI Act, GDPR, and ISO 27001 workflows with regulatory citations for review. Built for European SMBs in Italian, Czech, and English.",
     "primaryCta": "Become a design partner",
     "secondaryCta": "View demo",
     "trustLine": "Early access · Direct founder contact · Vercel + Neon infrastructure",
@@ -1335,7 +1335,7 @@
     "partnerFree": "12 months Business plan free",
     "partnerOnboarding": "Three weeks of founder-led onboarding",
     "stepsTag": "How it works",
-    "stepsTitle": "Set it once. Keep it running.",
+    "stepsTitle": "Start with the core setup, then keep improving.",
     "stepsBody": "Three steps from first system connection to a usable evidence pack.",
     "featuresTag": "Key features",
     "featuresTitle": "Compliance built for IT and compliance teams.",
@@ -1351,17 +1351,17 @@
     "docsCta": "View documentation",
     "steps": {
       "connectTitle": "Connect tools",
-      "connectBody": "Connect Microsoft 365, GitHub, or AWS. Setup takes 5 minutes.",
-      "testsTitle": "Checks run automatically",
-      "testsBody": "Automated checks monitor connected systems and save results as audit evidence.",
+      "connectBody": "Connect Microsoft 365, GitHub, or AWS. Setup time depends on the systems and permissions you choose.",
+      "testsTitle": "Checks can run on connected systems",
+      "testsBody": "Configured checks monitor connected systems and save results as internal evidence for review.",
       "resultsTitle": "Get results",
-      "resultsBody": "Dashboard, failure alerts, and audit documentation prepared for your auditor."
+      "resultsBody": "Dashboard, failure alerts, and working audit documentation for review with your advisor or auditor."
     },
     "features": {
       "residencyTitle": "Production stack documented",
       "residencyBody": "Production uses Vercel for hosting and Neon Postgres for the database. Sub-processors and processing context are listed in the DPA overview.",
-      "monitoringTitle": "Continuous monitoring",
-      "monitoringBody": "Catch configuration drift in Microsoft 365 or AWS immediately.",
+      "monitoringTitle": "Configuration monitoring",
+      "monitoringBody": "Surface configuration drift in connected systems so the team can review it.",
       "documentsTitle": "Automated documents",
       "documentsBody": "Generate working documents and evidence packs that can go to a lawyer, auditor, or consultant for final review."
     },
@@ -1375,18 +1375,18 @@
   "leadCapture": {
     "tag": "Personalised overview",
     "title": "Which EU regulations apply to you?",
-    "subtitle": "Get a personalised obligations overview in 2 minutes.",
+    "subtitle": "Get a short personalised obligations overview after submitting the form.",
     "cta": "Get overview",
-    "success": "Sent. Your overview will arrive within 2 minutes.",
+    "success": "Sent. Your overview will arrive shortly.",
     "placeholder": "work@company.eu",
-    "footnote": "No credit card · Immediate results · Unsubscribe anytime"
+    "footnote": "No credit card · Preview results · Unsubscribe anytime"
   },
   "pricing": {
     "title": "Transparent pricing. No surprises.",
-    "subtitle": "Less than one consultant hour per month.",
-    "footnote": "All plans include EU data storage · No hidden fees · Cancel anytime",
+    "subtitle": "Early-access pricing for teams starting structured readiness work.",
+    "footnote": "Production setup is designed for EU regions · Early-access terms · Plan changes by request",
     "partnerTitle": "Are you a consultant or MSP?",
-    "partnerBody": "Unlimited clients, white-label option, partner badge.",
+    "partnerBody": "Client workspaces, white-label option, and partner listing after approval.",
     "partnerPrice": "€299 / month",
     "partnerCta": "Learn more →",
     "comparisonTag": "Feature comparison",
@@ -1401,8 +1401,8 @@
       "monthly": "Monthly",
       "annual": "Annual",
       "billingToggle": "Toggle billing",
-      "saving": "Save 2 months",
-      "featured": "Most popular",
+      "saving": "Annual option",
+      "featured": "Highlighted",
       "currency": "€",
       "monthlySuffix": "/month",
       "annualSuffix": "/month, billed annually",
@@ -1501,12 +1501,12 @@
       }
     },
     "faqs": {
-      "cancelQuestion": "Can I cancel anytime?",
-      "cancelAnswer": "Yes. There are no annual commitments on the monthly plan. For annual plans, we refund the proportional part.",
+      "cancelQuestion": "Can I change or stop a monthly plan?",
+      "cancelAnswer": "Monthly plans can be changed by request. Annual plan changes and any refunds are handled under the agreed early-access terms.",
       "dataQuestion": "Is my data stored in the EU?",
       "dataAnswer": "The production setup is designed for EU regions. Exact processing locations and any transfer mechanisms outside the EU/EEA are confirmed in the DPA and sub-processor list.",
       "setupQuestion": "Do I need technical knowledge to set it up?",
-      "setupAnswer": "No. The setup wizard takes 15 minutes without an IT department.",
+      "setupAnswer": "The setup wizard is guided. Timing depends on your systems, permissions, and evidence sources.",
       "legalQuestion": "Is Splnit.eu legal advice?",
       "legalAnswer": "No. The platform helps you prepare for legal review; it does not replace a qualified lawyer.",
       "discountQuestion": "Do you offer discounts for non-profits or startups?",
