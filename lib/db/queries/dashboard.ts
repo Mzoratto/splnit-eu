@@ -1,5 +1,6 @@
 import { and, eq, inArray, sql } from "drizzle-orm";
 import { getDb } from "@/lib/db";
+import { applyIntakeScopeToDashboardPriorityControls } from "@/lib/dashboard/priority-controls";
 import {
   controls,
   frameworks,
@@ -113,20 +114,10 @@ export async function getDashboardData(clerkOrgId: string) {
     ]);
   const derivedScope = intakeRows[0]?.derivedScope ?? null;
   const scopeSummary = buildIntakeScopeSummary(derivedScope);
-  const scopedPriorityControls = priorityControls
-    .map((control) => ({
-      ...control,
-      intakeRationale: scopeSummary.rationales[control.key] ?? null,
-      isIntakePriority: scopeSummary.priorityControlKeys.includes(control.key),
-      scopeStatus: scopeSummary.applicableControlKeys.includes(control.key)
-        ? "applicable" as const
-        : scopeSummary.notApplicableControlKeys.includes(control.key)
-          ? "not_applicable" as const
-          : scopeSummary.outOfScopeControlKeys.includes(control.key)
-            ? "out_of_scope" as const
-            : null,
-    }))
-    .sort((a, b) => Number(b.isIntakePriority) - Number(a.isIntakePriority));
+  const scopedPriorityControls = applyIntakeScopeToDashboardPriorityControls(
+    priorityControls,
+    scopeSummary,
+  );
 
   return {
     frameworkScores,

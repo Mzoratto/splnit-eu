@@ -12,6 +12,8 @@ No critical unknowns remain for `dashboard -> controls -> frameworks -> evidence
 
 Public regulatory/resource and platform copy was hardened on 2026-05-17 to keep public claims indicative and review-oriented. The committed local state `b159333` passed `npm run smoke:copy-hygiene`, `npm run typecheck`, `npm run lint`, and `npm run build`; deployment was not part of that pass.
 
+Policy-to-Evidence Loop v1 Tasks 1-4 were implemented locally on 2026-05-18 for `ctrl_mfa_all_users`: deterministic recommendation/status helpers, control detail recommendation card, dashboard default filtering for intake not-applicable/out-of-scope controls, and copy hygiene coverage. Local smoke/type/lint checks passed; protected-route browser verification and production smoke remain pending. See `docs/reviews/policy-to-evidence-loop-v1.md`.
+
 ## Latest Production Verification
 
 SEO production deploy `db6d9c9` was verified on 2026-05-09 at `https://splnit.eu`. The Vercel production deployment was `https://splnit-5i83kjddv-marcos-projects-84c3348d.vercel.app`, aliased to `https://splnit.eu`.

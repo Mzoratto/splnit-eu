@@ -73,6 +73,17 @@ const publicRegulatoryResourceForbiddenPatterns = [
   /auditor documentation in one place|dokumentace pro auditora|documentazione per auditor/i,
 ] as const;
 
+const policyEvidenceForbiddenPatterns = [
+  /\bcompliant\b/i,
+  /\bNIS2 compliant\b/i,
+  /\bGDPR compliant\b/i,
+  /\bauditor-ready\b/i,
+  /\bcertified\b/i,
+  /\blegal proof\b/i,
+  /\bsatisfies Article\b/i,
+  /\breal-time compliance status\b/i,
+] as const;
+
 const checkedFiles = [
   "messages/en-EU.json",
   "messages/it-IT.json",
@@ -114,6 +125,12 @@ const publicRegulatoryResourceCheckedFiles = [
   "messages/it-IT.json",
   ...listSourceFiles("app/(marketing)"),
   ...listSourceFiles("lib/marketing"),
+];
+
+const policyEvidenceCheckedFiles = [
+  ...listSourceFiles("app/(app)/controls"),
+  ...listSourceFiles("components/policy-evidence"),
+  ...listSourceFiles("lib/policy-evidence"),
 ];
 
 function listSourceFiles(directory: string): string[] {
@@ -199,6 +216,18 @@ for (const file of publicRegulatoryResourceCheckedFiles) {
 
     if (match) {
       failures.push(`${file}: public regulatory resource guard matched ${pattern}`);
+    }
+  }
+}
+
+for (const file of policyEvidenceCheckedFiles) {
+  const content = readFileSync(file, "utf8");
+
+  for (const pattern of policyEvidenceForbiddenPatterns) {
+    const match = content.match(pattern);
+
+    if (match) {
+      failures.push(`${file}: policy-to-evidence copy guard matched ${pattern}`);
     }
   }
 }

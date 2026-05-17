@@ -31,6 +31,7 @@
     "smoke:vendor-questionnaire-delivery-status": "tsx scripts/smoke-vendor-questionnaire-delivery-status.ts",
     "smoke:seo": "tsx scripts/smoke-seo.ts",
     "smoke:copy-hygiene": "tsx scripts/smoke-copy-hygiene.ts",
+    "smoke:policy-evidence-loop": "tsx scripts/smoke-policy-evidence-loop.ts",
     "smoke:authenticated-primary-flow": "tsx scripts/smoke-authenticated-primary-flow.ts",
     "smoke:production-tenant-readiness": "tsx scripts/smoke-production-tenant-readiness.ts",
     "smoke:production-tenant-readiness-prereqs": "tsx scripts/smoke-production-tenant-readiness-prereqs.ts",

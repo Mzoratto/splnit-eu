@@ -5,6 +5,7 @@ import {
   updateControlStatusAction,
   uploadEvidenceAction,
 } from "@/app/(app)/controls/[controlId]/actions";
+import { RecommendedActionCard } from "@/components/policy-evidence/recommended-action-card";
 import { getMessagesForLocale } from "@/i18n/messages";
 import type { Locale } from "@/i18n/routing";
 import {
@@ -15,6 +16,8 @@ import { CONTROL_LIBRARY } from "@/lib/controls/library";
 import { hasDatabaseUrl } from "@/lib/db";
 import { getControlDetailByKey } from "@/lib/db/queries/controls";
 import { getTenantLocale } from "@/lib/i18n/tenant-locale";
+import { getPolicyEvidenceRecommendation } from "@/lib/policy-evidence/recommendations";
+import { derivePolicyEvidenceProofStatus } from "@/lib/policy-evidence/status";
 
 const statusValues = [
   "unknown",
@@ -119,6 +122,13 @@ export default async function ControlDetailPage({
     }));
   const evidenceRows = detail?.evidence ?? [];
   const testRows = detail?.tests ?? [];
+  const policyEvidenceRecommendation = getPolicyEvidenceRecommendation(control.key);
+  const policyEvidenceProofStatus = policyEvidenceRecommendation
+    ? derivePolicyEvidenceProofStatus({
+        controlStatus: currentStatus,
+        evidence: evidenceRows,
+      })
+    : null;
   const canMutate = Boolean(detail);
   const canUpload = canMutate && Boolean(process.env.BLOB_READ_WRITE_TOKEN);
   const activityRows = [
@@ -158,8 +168,15 @@ export default async function ControlDetailPage({
         </p>
       </div>
 
+      {policyEvidenceRecommendation && policyEvidenceProofStatus ? (
+        <RecommendedActionCard
+          proofStatus={policyEvidenceProofStatus}
+          recommendation={policyEvidenceRecommendation}
+        />
+      ) : null}
+
       <div className="grid gap-4 lg:grid-cols-[1fr_1fr]">
-        <section className="rounded-lg border border-border bg-surface p-5">
+        <section id="status-review" className="rounded-lg border border-border bg-surface p-5">
           <div className="flex items-center gap-2">
             <ShieldCheck className="h-5 w-5 text-primary" aria-hidden="true" />
             <h2 className="text-lg font-semibold">{copy.detail.statusTitle}</h2>
@@ -204,7 +221,7 @@ export default async function ControlDetailPage({
           </form>
         </section>
 
-        <section className="rounded-lg border border-border bg-surface p-5">
+        <section id="evidence-upload" className="rounded-lg border border-border bg-surface p-5">
           <div className="flex items-center gap-2">
             <FileUp className="h-5 w-5 text-primary" aria-hidden="true" />
             <h2 className="text-lg font-semibold">{copy.detail.uploadTitle}</h2>
