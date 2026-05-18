@@ -243,6 +243,99 @@ const posts: Record<Locale, BlogPost[]> = {
         },
       ],
     },
+
+    {
+      slug: "dodavatelsky-risk-checklist",
+      title: "Vendor risk checklist: co chtít od klíčových dodavatelů",
+      description:
+        "Praktický seznam důkazů pro dodavatele, kteří zpracovávají data, provozují kritickou službu nebo vstupují do zákaznického auditu.",
+      category: "NIS2",
+      publishedAt: "2026-05-03",
+      readTime: "3 min",
+      author: "Marco Zoratto",
+      authorRole: "zakladatel Splnit.eu",
+      regulationHref: "/predpisy/nis2",
+      ctaTitle: "Převést dodavatele na pravidelné kontroly",
+      ctaBody: "Splnit.eu pomáhá vést dodavatele, jejich rizika, smluvní podklady a bezpečnostní důkazy jako opakovatelný proces místo jednorázového dotazníku.",
+      ctaButton: "Otevřít NIS2 přehled",
+      ctaHref: "/predpisy/nis2",
+      summary:
+        "Dodavatelský risk management není jen tabulka kontaktů. Pokud dodavatel pracuje s daty, identitami nebo provozem, potřebujete vědět, co dodává, jaké má riziko a kdy naposledy doložil bezpečnostní stav.",
+      sections: [
+        {
+          heading: "Které dodavatele řešit jako první",
+          body: [
+            "Začněte dodavateli, kteří mají přístup k osobním údajům, produkčním systémům, identitám, logům nebo službám důležitým pro provoz zákazníků. U malých týmů je lepší mít deset dobře zmapovaných kritických dodavatelů než padesát neaktuálních záznamů.",
+            "U každého dodavatele určete vlastníka ve firmě, typ přístupu, data nebo službu, kterou ovlivňuje, a dopad výpadku nebo incidentu.",
+          ],
+          bullets: [
+            "cloud, hosting, identity provider a monitoring",
+            "CRM, support, účetnictví a marketingové nástroje",
+            "externí vývoj, IT správa a bezpečnostní služby",
+            "dodavatelé, které pravidelně zmiňujete v tendrech nebo DPA",
+          ],
+        },
+        {
+          heading: "Jaké důkazy chtít",
+          body: [
+            "Ne každý dodavatel musí posílat stejný balík dokumentů. U nízkého rizika může stačit bezpečnostní stránka a DPA. U vyššího rizika chtějte certifikace, popis incident response, subdodavatele, umístění dat a kontakty pro bezpečnostní incident.",
+            "Důležité je uchovat nejen dokument, ale i datum kontroly, výsledek, výjimky a další termín revize. Bez toho vendor review rychle zestárne.",
+          ],
+        },
+        {
+          heading: "Jak to napojit na NIS2 a GDPR",
+          body: [
+            "NIS2 tlačí na řízení rizik v dodavatelském řetězci, GDPR na zpracovatele a přenosy dat. Praktická evidence by proto měla umět ukázat obojí: provozní riziko dodavatele i právní vztah ke zpracování osobních údajů.",
+          ],
+        },
+      ],
+    },
+    {
+      slug: "incident-response-cviceni",
+      title: "Incident response cvičení: jak ověřit, že plán funguje",
+      description:
+        "Jak připravit krátké tabletop cvičení pro bezpečnostní incident, jaké role zapojit a které důkazy po cvičení uložit.",
+      category: "GDPR",
+      publishedAt: "2026-05-04",
+      readTime: "3 min",
+      author: "Marco Zoratto",
+      authorRole: "zakladatel Splnit.eu",
+      regulationHref: "/predpisy/gdpr",
+      ctaTitle: "Převést incident response na ověřitelný proces",
+      ctaBody: "Splnit.eu pomáhá držet role, scénáře, rozhodnutí, důkazy a následná opatření pohromadě, aby plán nebyl jen dokument v šuplíku.",
+      ctaButton: "Otevřít GDPR přehled",
+      ctaHref: "/predpisy/gdpr",
+      summary:
+        "Incident response plán má hodnotu až ve chvíli, kdy ho tým umí použít. Krátké cvičení ukáže, jestli lidé vědí, kdo rozhoduje, kde jsou kontakty a jak se dokumentuje dopad na data nebo služby.",
+      sections: [
+        {
+          heading: "Vyberte realistický scénář",
+          body: [
+            "Nepotřebujete dramatické cvičení na celý den. Vyberte scénář, který odpovídá vašemu provozu: kompromitovaný administrátorský účet, únik dat z helpdesku, ransomware na sdíleném úložišti nebo výpadek kritického SaaS dodavatele.",
+            "Cílem není nachytat tým, ale najít mezery v kontaktech, rolích, rozhodování a důkazech. Cvičení musí skončit konkrétními úkoly, ne jen pocitem, že se něco probralo.",
+          ],
+          bullets: [
+            "kdo incident vede a kdo komunikuje se zákazníkem",
+            "kde jsou technické logy a kdo k nim má přístup",
+            "kdo rozhoduje o oznámení regulatorovi nebo zákazníkovi",
+            "jak se ukládají rozhodnutí, časová osa a následná opatření",
+          ],
+        },
+        {
+          heading: "Co během cvičení zapisovat",
+          body: [
+            "Veďte jednoduchou časovou osu: kdy byl incident zjištěn, kdo byl eskalován, jaké informace chyběly a jaké rozhodnutí padlo. U osobních údajů zaznamenejte, jak tým posuzoval oznamovací povinnost a riziko pro subjekty údajů.",
+            "Po cvičení uložte zápis, seznam akčních bodů, vlastníky a termín další kontroly. Tohle jsou důkazy, že plán nejen existuje, ale byl testován.",
+          ],
+        },
+        {
+          heading: "Jak poznat dobrý výsledek",
+          body: [
+            "Dobrý výsledek není nulový počet zjištění. Naopak: bezpečné cvičení má odhalit slabá místa dřív než skutečný incident. Důležité je, aby každá mezera měla vlastníka, termín a navazující kontrolu.",
+          ],
+        },
+      ],
+    },
     {
       slug: "gdpr-checklist-pro-audit",
       title: "GDPR checklist pro auditovatelnou firmu",
@@ -422,6 +515,99 @@ const posts: Record<Locale, BlogPost[]> = {
         },
       ],
     },
+
+    {
+      slug: "dodavatelsky-risk-checklist",
+      title: "Vendor risk checklist: what to ask critical suppliers",
+      description:
+        "A practical evidence list for suppliers that process data, operate important services, or appear in customer security reviews.",
+      category: "NIS2",
+      publishedAt: "2026-05-03",
+      readTime: "3 min",
+      author: "Marco Zoratto",
+      authorRole: "founder of Splnit.eu",
+      regulationHref: "/predpisy/nis2",
+      ctaTitle: "Turn supplier reviews into recurring controls",
+      ctaBody: "Splnit.eu helps track suppliers, risks, contracts, and security evidence as a recurring process instead of a one-off questionnaire.",
+      ctaButton: "Open the NIS2 overview",
+      ctaHref: "/predpisy/nis2",
+      summary:
+        "Supplier risk management is more than a contact spreadsheet. If a vendor touches data, identities, or operations, you need to know what they provide, how risky they are, and when their security posture was last checked.",
+      sections: [
+        {
+          heading: "Which suppliers to review first",
+          body: [
+            "Start with suppliers that access personal data, production systems, identities, logs, or services that matter to customers. For small teams, ten well-reviewed critical suppliers are more useful than fifty stale records.",
+            "For each supplier, record the internal owner, access type, data or service affected, and the impact of outage or incident.",
+          ],
+          bullets: [
+            "cloud, hosting, identity provider, and monitoring",
+            "CRM, support, accounting, and marketing tools",
+            "external development, IT administration, and security services",
+            "suppliers you mention in tenders, DPAs, or customer questionnaires",
+          ],
+        },
+        {
+          heading: "What evidence to request",
+          body: [
+            "Not every supplier needs the same evidence pack. For lower risk, a security page and DPA may be enough. For higher risk, ask for certifications, incident response details, subprocessors, data location, and a security contact.",
+            "Store not only the document but also the review date, outcome, exceptions, and next review date. Without that, vendor reviews go stale quickly.",
+          ],
+        },
+        {
+          heading: "How it connects to NIS2 and GDPR",
+          body: [
+            "NIS2 pushes supply-chain risk management; GDPR pushes processor and transfer accountability. A practical register should show both: the operational risk of the supplier and the legal relationship around personal data.",
+          ],
+        },
+      ],
+    },
+    {
+      slug: "incident-response-cviceni",
+      title: "Incident response tabletop: how to prove the plan works",
+      description:
+        "How to run a short incident exercise, which roles to involve, and what evidence to keep afterwards.",
+      category: "GDPR",
+      publishedAt: "2026-05-04",
+      readTime: "3 min",
+      author: "Marco Zoratto",
+      authorRole: "founder of Splnit.eu",
+      regulationHref: "/predpisy/gdpr",
+      ctaTitle: "Turn incident response into a tested process",
+      ctaBody: "Splnit.eu keeps roles, scenarios, decisions, evidence, and follow-up actions together so the plan is not just a document in a folder.",
+      ctaButton: "Open the GDPR overview",
+      ctaHref: "/predpisy/gdpr",
+      summary:
+        "An incident response plan is useful only when the team can use it. A short tabletop shows whether people know who decides, where contacts live, and how to document the impact on data or services.",
+      sections: [
+        {
+          heading: "Choose a realistic scenario",
+          body: [
+            "You do not need a full-day crisis simulation. Choose a scenario that matches your operations: a compromised admin account, data leak from support tooling, ransomware on shared storage, or outage of a critical SaaS supplier.",
+            "The goal is not to catch people out. It is to find gaps in contacts, roles, decisions, and evidence. The exercise should end with concrete actions, not only a feeling that the topic was discussed.",
+          ],
+          bullets: [
+            "who leads the incident and who talks to customers",
+            "where technical logs are and who can access them",
+            "who decides whether to notify an authority or customer",
+            "how decisions, timeline, and follow-up actions are stored",
+          ],
+        },
+        {
+          heading: "What to record during the exercise",
+          body: [
+            "Keep a simple timeline: when the incident was detected, who was escalated, which information was missing, and which decisions were made. For personal data, record how the team assessed notification duty and risk to data subjects.",
+            "Afterwards, store the notes, action items, owners, and next review date. This is evidence that the plan exists and has been tested.",
+          ],
+        },
+        {
+          heading: "What a good result looks like",
+          body: [
+            "A good exercise does not mean zero findings. It should reveal weak spots before a real incident does. The important part is that every gap has an owner, a deadline, and a follow-up control.",
+          ],
+        },
+      ],
+    },
   ],
   "it-IT": [
     {
@@ -551,6 +737,99 @@ const posts: Record<Locale, BlogPost[]> = {
           heading: "Incidenti e 72 ore",
           body: [
             "In un incidente sui dati personali il tempo conta. Servono log, decisione sull'obbligo di notifica, lista dei dati coinvolti e un modello di comunicazione pronto per l'autorità privacy.",
+          ],
+        },
+      ],
+    },
+
+    {
+      slug: "dodavatelsky-risk-checklist",
+      title: "Checklist vendor risk: cosa chiedere ai fornitori critici",
+      description:
+        "Una lista pratica di evidenze per fornitori che trattano dati, gestiscono servizi importanti o compaiono nelle verifiche sicurezza dei clienti.",
+      category: "NIS2",
+      publishedAt: "2026-05-03",
+      readTime: "3 min",
+      author: "Marco Zoratto",
+      authorRole: "fondatore di Splnit.eu",
+      regulationHref: "/predpisy/nis2",
+      ctaTitle: "Trasforma le review fornitori in controlli ricorrenti",
+      ctaBody: "Splnit.eu aiuta a tracciare fornitori, rischi, contratti ed evidenze sicurezza come processo ricorrente invece di un questionario una tantum.",
+      ctaButton: "Apri la panoramica NIS2",
+      ctaHref: "/predpisy/nis2",
+      summary:
+        "La gestione del rischio fornitori non è una semplice lista contatti. Se un vendor tocca dati, identità o operazioni, dovete sapere cosa fornisce, quanto è rischioso e quando è stata verificata l'ultima volta la sua postura sicurezza.",
+      sections: [
+        {
+          heading: "Quali fornitori verificare per primi",
+          body: [
+            "Partite dai fornitori che accedono a dati personali, sistemi produttivi, identità, log o servizi rilevanti per i clienti. Per team piccoli, dieci fornitori critici ben verificati valgono più di cinquanta record non aggiornati.",
+            "Per ogni fornitore registrate owner interno, tipo di accesso, dati o servizio impattato e impatto di un downtime o incidente.",
+          ],
+          bullets: [
+            "cloud, hosting, identity provider e monitoring",
+            "CRM, supporto, contabilità e strumenti marketing",
+            "sviluppo esterno, amministrazione IT e servizi sicurezza",
+            "fornitori citati in tender, DPA o questionari clienti",
+          ],
+        },
+        {
+          heading: "Quali evidenze richiedere",
+          body: [
+            "Non tutti i fornitori devono inviare lo stesso pacchetto. Per rischio basso possono bastare pagina sicurezza e DPA. Per rischio più alto chiedete certificazioni, dettagli incident response, sub-responsabili, localizzazione dati e contatto sicurezza.",
+            "Conservate non solo il documento, ma anche data della review, esito, eccezioni e prossima scadenza. Senza questo, le review vendor diventano obsolete rapidamente.",
+          ],
+        },
+        {
+          heading: "Collegamento con NIS2 e GDPR",
+          body: [
+            "NIS2 spinge sulla gestione del rischio nella supply chain; GDPR su responsabili e trasferimenti. Un registro pratico dovrebbe mostrare entrambi: rischio operativo del fornitore e relazione giuridica sui dati personali.",
+          ],
+        },
+      ],
+    },
+    {
+      slug: "incident-response-cviceni",
+      title: "Esercitazione incident response: provare che il piano funziona",
+      description:
+        "Come fare una breve tabletop exercise, quali ruoli coinvolgere e quali evidenze conservare dopo l'esercitazione.",
+      category: "GDPR",
+      publishedAt: "2026-05-04",
+      readTime: "3 min",
+      author: "Marco Zoratto",
+      authorRole: "fondatore di Splnit.eu",
+      regulationHref: "/predpisy/gdpr",
+      ctaTitle: "Trasforma incident response in processo verificato",
+      ctaBody: "Splnit.eu tiene insieme ruoli, scenari, decisioni, evidenze e azioni successive, così il piano non resta solo un documento in una cartella.",
+      ctaButton: "Apri la panoramica GDPR",
+      ctaHref: "/predpisy/gdpr",
+      summary:
+        "Un piano di incident response vale quando il team sa usarlo. Una breve esercitazione mostra se le persone sanno chi decide, dove sono i contatti e come documentare l'impatto su dati o servizi.",
+      sections: [
+        {
+          heading: "Scegliete uno scenario realistico",
+          body: [
+            "Non serve una simulazione di crisi di un'intera giornata. Scegliete uno scenario coerente con le operazioni: account admin compromesso, fuga dati da support tool, ransomware su storage condiviso o downtime di un SaaS critico.",
+            "L'obiettivo non è mettere in difficoltà il team. È trovare gap in contatti, ruoli, decisioni ed evidenze. L'esercitazione deve chiudersi con azioni concrete, non solo con la sensazione di aver discusso il tema.",
+          ],
+          bullets: [
+            "chi guida l'incidente e chi comunica con i clienti",
+            "dove sono i log tecnici e chi può accedervi",
+            "chi decide se notificare autorità o clienti",
+            "come vengono salvati decisioni, timeline e azioni successive",
+          ],
+        },
+        {
+          heading: "Cosa registrare durante l'esercitazione",
+          body: [
+            "Mantenete una timeline semplice: quando è stato rilevato l'incidente, chi è stato coinvolto, quali informazioni mancavano e quali decisioni sono state prese. Per dati personali, registrate come il team ha valutato obbligo di notifica e rischio per gli interessati.",
+            "Dopo, salvate note, action item, owner e prossima data di review. Queste sono evidenze che il piano esiste ed è stato testato.",
+          ],
+        },
+        {
+          heading: "Come appare un buon risultato",
+          body: [
+            "Un buon esercizio non significa zero finding. Deve far emergere punti deboli prima di un incidente reale. La parte importante è che ogni gap abbia owner, scadenza e controllo successivo.",
           ],
         },
       ],
