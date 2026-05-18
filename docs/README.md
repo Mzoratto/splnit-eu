@@ -17,6 +17,7 @@
 ### Legal And Operational Drafts
 
 - `app-readiness-audit.md` - authenticated app route readiness matrix and immediate fix queue.
+- `business-entitlement-matrix.md` - Business-plan truth source for sales, onboarding, production proof, and claim boundaries.
 - `primary-flow-verification.md` - local database primary-flow verification record.
 - `production-db-audit.md` - production database wiring and verification record.
 - `legal-review.md` - counsel handoff checklist.
