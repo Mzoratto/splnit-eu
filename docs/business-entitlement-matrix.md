@@ -36,12 +36,20 @@ Business runtime limits/features:
 
 Public marketing source: `messages/*`, especially pricing card/comparison copy.
 
-Current risky public wording:
+Previously risky public wording was softened on 2026-05-18 in `messages/*` and `lib/marketing/pricing.ts`:
 
-- "5 regulations" should be read/sold as "up to 5 frameworks/regulatory workstreams".
-- "10 integrations" should be read/sold as "up to 10 connected sources as available / selected live integrations".
-- "Access reviews" should be read/sold as "access review workspace" unless provider-backed data is verified.
-- "Priority support" should be read/sold as "priority founder/email support during early access" unless a separate support term exists.
+- Business card now says "Up to 5 framework workstreams" instead of "5 regulations" in English, with equivalent Italian/Czech softening.
+- Business card now says "Selected integrations, up to 10 sources" instead of "10 integrations" in English, with equivalent Italian/Czech softening.
+- Business card now says "Access review workspace" instead of the broader "Access reviews" in English, with equivalent Italian/Czech softening.
+- Business card now says "Priority founder/email support" instead of the broader "Priority support" in English, with equivalent Italian/Czech softening.
+- Pricing comparison now marks Azure and Google Workspace as `soon` for Business instead of checked/live.
+
+Still apply these sales boundaries:
+
+- "Up to 5 framework workstreams" does not mean all five have equal automation depth.
+- "Selected integrations, up to 10 sources" does not mean 10 live providers are available today.
+- "Access review workspace" still needs provider-backed verification for a specific customer environment.
+- "Priority founder/email support" does not imply a formal SLA unless separately agreed.
 
 ## Entitlement matrix
 
@@ -149,7 +157,7 @@ Before saying a Business tenant is production-ready, run or record:
 
 ## Current next actions
 
-- Soften public pricing wording from "5 regulations" and "10 integrations" if public copy should avoid overclaiming live breadth.
+- Keep public pricing wording aligned with this matrix; do not reintroduce unqualified "5 regulations", "10 integrations", or checked Azure/Google Workspace claims until implementation/proof changes.
 - Add targeted production smoke coverage for `/team/access-reviews`, `/incidents`, `/policies`, policy download, incident report download, and provider-backed integration execution when those are buyer-critical.
 - Add explicit seat-limit and role-permission verification before describing Business seats/roles as automated enforcement.
 - Keep custom domain and SSO/SAML as optional/non-default until a documented setup path exists.
