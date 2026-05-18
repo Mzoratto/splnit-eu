@@ -170,6 +170,7 @@ export default async function PolicyDetailPage({
   const { context, draft, policies, sourceDocument, template } =
     await loadPolicyDetail(type);
   const copy = getPolicyUiCopy(context.locale);
+  const isLocaleFallback = template.locale !== context.locale;
 
   return (
     <section className="space-y-8">
@@ -184,6 +185,12 @@ export default async function PolicyDetailPage({
           <p className="mt-3 text-base leading-7 text-foreground/68">
             {template.description}
           </p>
+          {isLocaleFallback ? (
+            <div className="mt-4 rounded-md border border-amber-200 bg-amber-50 p-4 text-sm text-amber-950">
+              <p className="font-medium">{copy.list.fallbackBadge}</p>
+              <p className="mt-1 leading-6">{copy.list.fallbackNotice}</p>
+            </div>
+          ) : null}
           <p className="mt-2 text-sm leading-6 text-foreground/58">
             {copy.detail.source}: {sourceDocument.citation}
           </p>
@@ -199,9 +206,12 @@ export default async function PolicyDetailPage({
 
       <div className="grid gap-4 lg:grid-cols-[1.4fr_1fr]">
         <PolicyEditor
-          canGenerate={Boolean(process.env.BLOB_READ_WRITE_TOKEN)}
+          canGenerate={Boolean(process.env.BLOB_READ_WRITE_TOKEN) && !isLocaleFallback}
           copy={copy.editor}
           draft={draft}
+          generateUnavailableReason={
+            isLocaleFallback ? copy.editor.localeFallbackHelp : undefined
+          }
           type={template.type as PolicyTemplateType}
         />
 

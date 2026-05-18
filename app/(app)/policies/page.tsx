@@ -120,6 +120,8 @@ export default async function PoliciesPage() {
         {templates.map((template) => {
           const latestPolicy = latestByType.get(template.type);
           const sourceDocument = sourceDocuments.get(template.sourceDocument);
+          const isLocaleFallback = template.locale !== context.locale;
+          const canGenerateTemplate = canGeneratePolicies && !isLocaleFallback;
 
           return (
             <article
@@ -137,6 +139,12 @@ export default async function PoliciesPage() {
                 </div>
                 <FileText className="h-5 w-5 text-primary" aria-hidden="true" />
               </div>
+              {isLocaleFallback ? (
+                <div className="mt-3 rounded-md border border-amber-200 bg-amber-50 p-3 text-sm text-amber-950">
+                  <p className="font-medium">{copy.list.fallbackBadge}</p>
+                  <p className="mt-1 leading-6">{copy.list.fallbackNotice}</p>
+                </div>
+              ) : null}
               <p className="mt-3 text-sm leading-6 text-foreground/64">
                 {template.description}
               </p>
@@ -176,7 +184,7 @@ export default async function PoliciesPage() {
                 <form action={generatePolicyAction.bind(null, template.type)}>
                   <button
                     type="submit"
-                    disabled={!canGeneratePolicies}
+                    disabled={!canGenerateTemplate}
                     className="inline-flex items-center gap-2 rounded-md bg-primary px-4 py-3 text-sm font-medium text-primary-foreground disabled:cursor-not-allowed disabled:opacity-50"
                   >
                     {copy.actions.generate}
@@ -184,9 +192,11 @@ export default async function PoliciesPage() {
                   </button>
                 </form>
               </div>
-              {!canGeneratePolicies ? (
+              {!canGenerateTemplate ? (
                 <p className="mt-3 text-xs leading-5 text-foreground/52">
-                  {copy.list.generateUnavailable}
+                  {isLocaleFallback
+                    ? copy.list.fallbackNotice
+                    : copy.list.generateUnavailable}
                 </p>
               ) : null}
             </article>

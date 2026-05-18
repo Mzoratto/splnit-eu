@@ -115,6 +115,21 @@ for (const family of POLICY_TEMPLATE_TYPES) {
   );
 }
 
+for (const family of POLICY_TEMPLATE_TYPES) {
+  const template = resolvePolicyTemplate(family, itTenant);
+
+  assert.equal(
+    template.locale,
+    "en-EU",
+    `Italian tenant should receive reviewed English fallback content for ${family} until Italian templates are reviewed`,
+  );
+  assert.notEqual(
+    template.reviewStatus,
+    "draft",
+    `Italian tenant fallback content should not be draft for ${family}`,
+  );
+}
+
 const italianDraftTemplates = listDraftPolicyTemplatesForReview({
   jurisdiction: "IT",
   locale: "it-IT",

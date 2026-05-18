@@ -27,11 +27,13 @@ export function PolicyEditor({
   canGenerate,
   copy,
   draft,
+  generateUnavailableReason,
   type,
 }: {
   canGenerate: boolean;
   copy: PolicyEditorCopy;
   draft: PolicyDraftContent;
+  generateUnavailableReason?: string;
   type: PolicyTemplateType;
 }) {
   return (
@@ -67,7 +69,9 @@ export function PolicyEditor({
           </div>
         </div>
         {!canGenerate ? (
-          <p className="mt-3 text-sm text-foreground/58">{copy.generateHelp}</p>
+          <p className="mt-3 text-sm text-foreground/58">
+            {generateUnavailableReason ?? copy.generateHelp}
+          </p>
         ) : null}
       </div>
 

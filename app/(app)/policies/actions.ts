@@ -137,6 +137,13 @@ export async function generatePolicyAction(type: string, formData?: FormData) {
       formData,
       type: parsedType,
     });
+
+  if (template.locale !== organisation.locale) {
+    throw new Error(
+      "Reviewed policy template is not available for this organisation locale.",
+    );
+  }
+
   const templateFromDraft = buildPolicyTemplateFromDraft({ draft, template });
   const generatedAt = new Date();
   const pdf = await renderPolicyPdf({

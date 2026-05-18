@@ -20,6 +20,7 @@ type PolicyUiCopy = {
     fieldsLabel: string;
     generateHelp: string;
     generatePdf: string;
+    localeFallbackHelp: string;
     legalIdentifier: string;
     organisation: string;
     reviewDate: string;
@@ -34,6 +35,8 @@ type PolicyUiCopy = {
     emptyDate: string;
     emptyState: string;
     eyebrow: string;
+    fallbackBadge: string;
+    fallbackNotice: string;
     generateUnavailable: string;
     intro: string;
     latestVersion: string;
@@ -68,6 +71,8 @@ const POLICY_UI_COPY = {
       generateHelp:
         "Generování PDF je vypnuté, dokud není nastavené soukromé úložiště dokumentů.",
       generatePdf: "Vygenerovat PDF z draftu",
+      localeFallbackHelp:
+        "Pro tento jazyk zatím není k dispozici ověřená šablona. Šablonu můžete zkontrolovat v detailu, ale PDF generování je vypnuté, dokud nebude ověřená lokální verze připravená.",
       legalIdentifier: "Právní identifikátor",
       organisation: "Organizace",
       reviewDate: "Datum příštího přezkumu",
@@ -83,6 +88,9 @@ const POLICY_UI_COPY = {
       emptyState:
         "Zatím není vygenerovaný žádný draft. Otevřete detail politiky, zkontrolujte šablonu a první draft vygenerujte po nastavení úložiště dokumentů.",
       eyebrow: "Knihovna dokumentů",
+      fallbackBadge: "Šablona v angličtině",
+      fallbackNotice:
+        "Ověřená lokální šablona zatím není k dispozici. Tato položka používá ověřenou anglickou EU šablonu pouze k review; generování PDF je vypnuté, dokud nebude lokální verze ověřená.",
       generateUnavailable:
         "Generování je vypnuté, dokud není nastavené úložiště dokumentů. Šablonu můžete zatím zkontrolovat v detailu.",
       intro:
@@ -117,6 +125,8 @@ const POLICY_UI_COPY = {
       generateHelp:
         "PDF generation is disabled until private document storage is configured.",
       generatePdf: "Generate PDF from draft",
+      localeFallbackHelp:
+        "A reviewed template is not available for this language yet. You can review the template detail, but PDF generation is disabled until the local version is reviewed.",
       legalIdentifier: "Legal identifier",
       organisation: "Organisation",
       reviewDate: "Next review date",
@@ -132,6 +142,9 @@ const POLICY_UI_COPY = {
       emptyState:
         "No draft has been generated yet. Open the policy detail to review the template, then generate the first draft when document storage is configured.",
       eyebrow: "Policy library",
+      fallbackBadge: "English template",
+      fallbackNotice:
+        "A reviewed local-language template is not available yet. This item uses the reviewed EU English template for review only; PDF generation is disabled until the local version is reviewed.",
       generateUnavailable:
         "Generation is disabled until document storage is configured. You can still review the template detail.",
       intro:
@@ -166,6 +179,8 @@ const POLICY_UI_COPY = {
       generateHelp:
         "La generazione PDF è disabilitata finché lo storage privato dei documenti non è configurato.",
       generatePdf: "Genera PDF dalla bozza",
+      localeFallbackHelp:
+        "Per questa lingua non è ancora disponibile un modello verificato. Potete rivedere il dettaglio del modello, ma la generazione PDF è disabilitata finché la versione locale non è verificata.",
       legalIdentifier: "Identificativo legale",
       organisation: "Organizzazione",
       reviewDate: "Data prossima revisione",
@@ -181,6 +196,9 @@ const POLICY_UI_COPY = {
       emptyState:
         "Nessuna bozza è stata generata finora. Aprite il dettaglio della policy per rivedere il modello, poi generate la prima bozza quando lo storage documenti è configurato.",
       eyebrow: "Libreria documenti",
+      fallbackBadge: "Modello in inglese",
+      fallbackNotice:
+        "Non è ancora disponibile un modello verificato in italiano. Questa voce usa il modello EU in inglese solo per revisione; la generazione PDF è disabilitata finché la versione italiana non è verificata.",
       generateUnavailable:
         "La generazione è disabilitata finché lo storage documenti non è configurato. Potete comunque rivedere il dettaglio del modello.",
       intro:
@@ -195,6 +213,7 @@ const POLICY_UI_COPY = {
     },
   },
 } as const satisfies Record<SupportedLocale, PolicyUiCopy>;
+
 
 export function getPolicyUiCopy(locale: SupportedLocale): PolicyUiCopy {
   return POLICY_UI_COPY[locale];
