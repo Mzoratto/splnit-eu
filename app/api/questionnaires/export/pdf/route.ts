@@ -1,4 +1,6 @@
 import { auth } from "@clerk/nextjs/server";
+import { getLocale } from "next-intl/server";
+import { normalizeLocale } from "@/i18n/routing";
 import { privateJson, withPrivateNoStore } from "@/lib/http/private-response";
 import { getGeneratedArtifactForOrg } from "@/lib/db/queries/generated-artifacts";
 import { QUESTIONNAIRE_ARTIFACT_KIND } from "@/lib/questionnaires/artifacts";
@@ -55,7 +57,8 @@ export async function POST(request: Request) {
     );
   }
 
-  const pdf = await renderQuestionnaireAnswersPdf(result);
+  const locale = normalizeLocale(await getLocale()) ?? "cs-CZ";
+  const pdf = await renderQuestionnaireAnswersPdf(result, locale);
 
   return new Response(new Uint8Array(pdf), {
     headers: withPrivateNoStore({

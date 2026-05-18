@@ -113,7 +113,7 @@ export const publicTrustCopy: Record<Locale, PublicTrustCopy> = {
       disclosureDescription:
         "Bezpečnostní nálezy a zranitelnosti posílejte přes odpovědný disclosure kanál.",
       disclosureMeta: "PGP klíč na vyžádání · první odpověď do 24 hodin",
-      disclosureTitle: "Responsible disclosure",
+      disclosureTitle: "Odpovědné hlášení zranitelností",
       privacyDescription:
         "Dotazy k ochraně osobních údajů, DPA a subdodavatelům posílejte na privacy kanál.",
       privacyMeta: "DPA a privacy dotazy · odpověď obvykle do 2 pracovních dnů",
@@ -124,7 +124,7 @@ export const publicTrustCopy: Record<Locale, PublicTrustCopy> = {
       vendorTitle: "Hodnocení rizik dodavatele",
     },
     detail: {
-      aboutEyebrow: "REGULATION CONTEXT",
+      aboutEyebrow: "REGULATORNÍ KONTEXT",
       aboutTitle: "O tomto předpisu",
       autoTested: "Automatické kontroly evidencí nakonfigurovány",
       breadcrumbFrameworks: "Frameworky",
@@ -132,7 +132,7 @@ export const publicTrustCopy: Record<Locale, PublicTrustCopy> = {
         "Zobrazení je záměrně agregované. Veřejný detail ukazuje stav kategorií, ne jednotlivé kontrolní identifikátory nebo důkazní soubory.",
       categoriesEmpty:
         "Pro tento framework zatím nejsou veřejné kategorie v rozsahu.",
-      categoriesEyebrow: "CONTROL CATEGORIES",
+      categoriesEyebrow: "KATEGORIE KONTROL",
       categoriesTitle: "Kategorie kontrol",
       controlsInScope: () => "Kontroly jsou veřejně shrnuté po kategoriích",
       ctaDescription:
@@ -148,23 +148,23 @@ export const publicTrustCopy: Record<Locale, PublicTrustCopy> = {
       infoRegulator: "Regulátor",
       lastAssessed: "Poslední hodnocení",
       relatedDocumentsTitle: "Související dokumenty",
-      statusEyebrow: "FRAMEWORK STATUS",
+      statusEyebrow: "STAV FRAMEWORKU",
     },
     documents: {
       description:
         "Uzamčené položky jsou dostupné na žádost. Veřejné dokumenty lze zobrazit přímo bez dodatečného přístupu.",
-      eyebrow: "DOCUMENTS",
+      eyebrow: "DOKUMENTY",
       request: "Požádat",
       title: "Dokumenty",
       view: "Zobrazit",
     },
     footer: {
       back: "← Zpět do Trust Center",
-      home: "Splnit.eu home",
+      home: "Domů Splnit.eu",
       lastReviewed: "Poslední interní evidence",
       reviewWindow: "další interní kontrola",
       privacy: "Soukromí",
-      status: "status page",
+      status: "stavová stránka",
       terms: "Podmínky",
     },
     frameworkCard: {
@@ -341,14 +341,14 @@ export const publicTrustCopy: Record<Locale, PublicTrustCopy> = {
       vendorTitle: "Vendor risk assessment",
     },
     detail: {
-      aboutEyebrow: "REGULATION CONTEXT",
+      aboutEyebrow: "CONTESTO NORMATIVO",
       aboutTitle: "Informazioni sulla normativa",
       autoTested: "Controlli automatici delle evidenze configurati",
       breadcrumbFrameworks: "Framework",
       categoriesDescription:
         "Questa vista è volutamente aggregata. Il dettaglio pubblico mostra lo stato delle categorie, non singoli identificativi di controllo o file di evidenza.",
       categoriesEmpty: "Nessuna categoria pubblica è attualmente in scope per questo framework.",
-      categoriesEyebrow: "CONTROL CATEGORIES",
+      categoriesEyebrow: "CATEGORIE DI CONTROLLO",
       categoriesTitle: "Categorie di controllo",
       controlsInScope: () => "I controlli sono riepilogati pubblicamente per categoria",
       ctaDescription:
@@ -364,12 +364,12 @@ export const publicTrustCopy: Record<Locale, PublicTrustCopy> = {
       infoRegulator: "Regolatore",
       lastAssessed: "Ultima valutazione",
       relatedDocumentsTitle: "Documenti correlati",
-      statusEyebrow: "FRAMEWORK STATUS",
+      statusEyebrow: "STATO DEL FRAMEWORK",
     },
     documents: {
       description:
         "Gli elementi bloccati sono disponibili su richiesta. I documenti pubblici possono essere visualizzati direttamente senza accesso aggiuntivo.",
-      eyebrow: "DOCUMENTS",
+      eyebrow: "DOCUMENTI",
       request: "Richiedi",
       title: "Documenti",
       view: "Visualizza",
@@ -380,8 +380,8 @@ export const publicTrustCopy: Record<Locale, PublicTrustCopy> = {
       lastReviewed: "Ultima evidenza interna",
       reviewWindow: "prossima revisione interna",
       privacy: "Privacy",
-      status: "status page",
-      terms: "Terms",
+      status: "pagina di stato",
+      terms: "Termini",
     },
     frameworkCard: {
       auto: "Auto",

@@ -206,6 +206,7 @@ export async function answerQuestionnaireAction(
         controlKeys,
         notes: buildQuestionnaireAnswerReviewNote({
           evidenceCount,
+          locale,
           mapping,
           note: answer.notes,
           policyCount,
@@ -341,24 +342,47 @@ async function persistQuestionnaireResult(input: {
   return result;
 }
 
+const QUESTIONNAIRE_REVIEW_NOTE_COPY = {
+  "cs-CZ": {
+    draft:
+      "AI návrh vyžadující lidskou kontrolu před použitím vůči auditorům nebo dodavatelům.",
+    missingControl:
+      "Nebyla dostupná žádná namapovaná kontrola, takže tato odpověď nemá v kontrolní struktuře domov pro evidenci.",
+    missingSupport:
+      "Namapované kontroly neměly v kontrolovaném pracovním prostoru podpůrnou evidenci ani odkaz na politiku.",
+  },
+  "en-EU": {
+    draft:
+      "AI-generated draft requiring human review before auditor-facing or vendor-facing use.",
+    missingControl:
+      "No mapped control was available, so this answer has no evidence-home in the control structure.",
+    missingSupport:
+      "Mapped controls had no supporting evidence or policy reference in the reviewed workspace context.",
+  },
+  "it-IT": {
+    draft:
+      "Bozza generata da AI che richiede revisione umana prima dell'uso verso auditor o fornitori.",
+    missingControl:
+      "Nessun controllo mappato era disponibile, quindi questa risposta non ha una sede evidenze nella struttura dei controlli.",
+    missingSupport:
+      "I controlli mappati non avevano evidenze di supporto o riferimenti a policy nel contesto dello spazio di lavoro revisionato.",
+  },
+} as const satisfies Record<Locale, Record<string, string>>;
+
 function buildQuestionnaireAnswerReviewNote(input: {
   evidenceCount: number;
+  locale: Locale;
   mapping?: QuestionnaireControlMapping;
   note: string;
   policyCount: number;
 }) {
-  const additions: string[] = [
-    "AI-generated draft requiring human review before auditor-facing or vendor-facing use.",
-  ];
+  const copy = QUESTIONNAIRE_REVIEW_NOTE_COPY[input.locale];
+  const additions: string[] = [copy.draft];
 
   if (!input.mapping || input.mapping.controlIds.length === 0) {
-    additions.push(
-      "No mapped control was available, so this answer has no evidence-home in the control structure.",
-    );
+    additions.push(copy.missingControl);
   } else if (input.evidenceCount === 0 && input.policyCount === 0) {
-    additions.push(
-      "Mapped controls had no supporting evidence or policy reference in the reviewed workspace context.",
-    );
+    additions.push(copy.missingSupport);
   }
 
   return [input.note, ...additions].filter(Boolean).join(" ");

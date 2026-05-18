@@ -14,7 +14,7 @@
     "controls": "Controlli",
     "evidence": "Evidenze",
     "integrations": "Integrazioni",
-    "policies": "Policy",
+    "policies": "Politiche",
     "vendors": "Fornitori",
     "questionnaires": "Questionari",
     "incidents": "Incidenti",
@@ -30,7 +30,7 @@
     "notifications": "Notifiche",
     "demoOrganisation": "Organizzazione demo",
     "organisationFallback": "Organizzazione",
-    "freePlanBanner": "Piano Free: esplorate la configurazione in un workspace piccolo. Fate upgrade solo quando servono limiti più alti per framework, integrazioni, utenti o prove pubbliche.",
+    "freePlanBanner": "Piano Free: esplorate la configurazione in un piccolo spazio di lavoro. Fate l’upgrade solo quando servono limiti più alti per framework, integrazioni, utenti o prove pubbliche.",
     "upgradePlan": "Aggiorna piano",
     "switchToLight": "Passa alla modalità chiara",
     "switchToDark": "Passa alla modalità scura",
@@ -96,7 +96,7 @@
       },
       "consultant": {
         "name": "Consultant",
-        "description": "Workspace illimitati per i clienti e reportistica white-label."
+        "description": "Spazi di lavoro cliente illimitati e reportistica white-label."
       }
     },
     "billingUnavailable": "Checkout e portale cliente sono disabilitati in questo ambiente finché le chiavi Stripe non sono configurate. I limiti locali del piano restano visibili per pianificare."
@@ -108,10 +108,10 @@
     "totalControls": "Controlli",
     "openGaps": "Gap aperti",
     "status": "Stato",
-    "scoreStatus": "Baseline",
+    "scoreStatus": "Base iniziale",
     "controls": "Rivedi controlli mappati",
-    "editAnswers": "Modifica risposte di setup",
-    "intro": "Rispondete alle domande di setup per creare la prima baseline dei controlli. Usate “Parziale” quando il lavoro esiste ma non è ancora documentato o testato.",
+    "editAnswers": "Modifica risposte di configurazione",
+    "intro": "Rispondete alle domande di configurazione per creare la prima base iniziale dei controlli. Usate “Parziale” quando il lavoro esiste ma non è ancora documentato o testato.",
     "step": "Passaggio {step}",
     "questionRange": "Domande {from}-{to}",
     "answered": "Risposte {answered} di {total}",
@@ -178,7 +178,7 @@
         "help": "Includi responsabili, obiettivi di ripristino e dipendenze."
       },
       "secure_baseline": {
-        "text": "Usate baseline sicure per la configurazione dei sistemi?",
+        "text": "Usate configurazioni sicure di riferimento per i sistemi?",
         "help": "Per esempio impostazioni hardened per M365, AWS o endpoint."
       },
       "network_segmentation": {
@@ -206,7 +206,7 @@
         "help": "L’articolo 4 si applica ampiamente a deployer e provider."
       },
       "prohibited_practices": {
-        "text": "Avete verificato che l’AI non usi pratiche vietate?",
+        "text": "Avete verificato che l’AI non venga usata per pratiche vietate?",
         "help": "Per esempio social scoring o riconoscimento delle emozioni sul lavoro."
       },
       "high_risk_classification": {
@@ -214,7 +214,7 @@
         "help": "HR, istruzione, credito, biometria e infrastrutture critiche."
       },
       "provider_verification": {
-        "text": "Verificate la compliance dei provider di AI ad alto rischio?",
+        "text": "Verificate la conformità dei fornitori di sistemi AI ad alto rischio?",
         "help": "Marcatura CE, dichiarazione UE di conformità e istruzioni d’uso."
       },
       "human_oversight": {
@@ -298,7 +298,7 @@
         "help": "Dependency alert, SBOM o vulnerability scan regolari."
       },
       "cloud_audit": {
-        "text": "Avete log di audit cloud e controlli di sicurezza baseline?",
+        "text": "Avete log di audit cloud e controlli di sicurezza di riferimento?",
         "help": "CloudTrail, MFA sull'account root, cifratura S3 o controlli equivalenti."
       },
       "change_management_iso": {
@@ -315,7 +315,7 @@
       },
       "document_control": {
         "text": "Controllate la documentazione e approvate le eccezioni?",
-        "help": "Policy, procedure, eccezioni e record devono avere responsabile, versione e revisione."
+        "help": "Politiche, procedure, eccezioni e record devono avere responsabile, versione e revisione."
       },
       "remote_and_mobile": {
         "text": "Dispositivi mobili e lavoro da remoto sono gestiti in sicurezza?",
@@ -354,7 +354,7 @@
         "help": "Prima dell’export deve essere chiaro chi ha fornito, verificato e approvato i dati."
       }
     },
-    "eyebrow": "Setup framework",
+    "eyebrow": "Configurazione framework",
     "titleTemplate": "Valutazione iniziale {framework}"
   },
   "dashboard": {
@@ -370,7 +370,7 @@
       "scoreTitle": "Punteggio compliance",
       "scoreBody": "Media dei punteggi framework e degli stati dei controlli.",
       "activeFrameworks": "Framework attivi",
-      "failedControls": "Controlli falliti",
+      "failedControls": "Controlli non superati",
       "lastChange": "Ultima modifica"
     },
     "frameworks": {
@@ -422,12 +422,12 @@
     },
     "intakeScope": {
       "title": "Ambito intake 15 minuti",
-      "subtitle": "Ambito readiness deterministico dalle risposte di onboarding. Solo guida interna, non classificazione legale.",
+      "subtitle": "Ambito di preparazione deterministico dalle risposte di onboarding. Solo guida interna, non classificazione legale.",
       "applicable": "Controlli applicabili",
       "priority": "Gap prioritari basati sul vostro intake",
       "manualReview": "Revisione manuale",
       "outOfScope": "Fuori ambito / non applicabile",
-      "openControls": "Controlli scoped aperti",
+      "openControls": "Controlli aperti nell’ambito",
       "viewControls": "Rivedi controlli"
     }
   },
@@ -457,9 +457,10 @@
     },
     "records": {
       "title": "Registro evidenze",
-      "empty": "Le evidenze appariranno dopo setup framework, integrazioni, upload o documenti generati che creano i primi record collegati ai controlli.",
+      "empty": "Le evidenze appariranno dopo la configurazione del framework, le integrazioni, i caricamenti o i documenti generati che creano i primi record collegati ai controlli.",
       "emptyFiltered": "Nessun record di evidenza corrisponde ai filtri attuali. Modificate o cancellate i filtri per vedere altri record.",
-      "emptyAction": "Configura framework"
+      "emptyAction": "Configura framework",
+      "aiDraftHumanReview": "Bozza AI · revisione umana richiesta"
     },
     "expiry": {
       "label": "Scadenza",
@@ -494,13 +495,13 @@
       "enrolledSubtitle": "Framework attualmente attivi in questa organizzazione.",
       "availableTitle": "Disponibili per l'attivazione",
       "availableSubtitle": "I framework della libreria sono opzioni di configurazione, non fanno ancora parte dell'ambito attivo dell'organizzazione.",
-      "emptyEnrolled": "Iniziate attivando un framework. NIS2 è di solito il primo baseline per la readiness cybersecurity in UE.",
+      "emptyEnrolled": "Iniziate attivando un framework. NIS2 è di solito la prima base per la preparazione alla cybersecurity in UE.",
       "scoreLabel": "Punteggio",
       "statusLabel": "Stato",
       "open": "Apri",
       "assessment": "Valutazione",
       "setup": "Configura",
-      "emptyEnrolledAction": "Inizia con setup NIS2"
+      "emptyEnrolledAction": "Inizia dalla configurazione NIS2"
     },
     "detail": {
       "breadcrumb": "Dashboard / Framework",
@@ -515,7 +516,7 @@
       "gapReportEmpty": "Il PDF verrà creato dopo la prima valutazione del framework.",
       "generatePdf": "Genera PDF",
       "isoPackageTitle": "Pacchetto certificazione ISO 27001",
-      "isoPackageBody": "L'export ZIP include Statement of Applicability, controlli completati, evidenze disponibili, policy attive e link agli organismi di certificazione.",
+      "isoPackageBody": "L'export ZIP include Statement of Applicability, controlli completati, evidenze disponibili, politiche attive e link agli organismi di certificazione.",
       "downloadZip": "Scarica ZIP",
       "certificationLinksTitle": "Link certificazione",
       "csrdQuestionnaireTitle": "Modello di questionario per la supply chain",
@@ -532,7 +533,7 @@
       "microsoft365": "MFA, Conditional Access, ospiti, ruoli privilegiati e sensitivity labels.",
       "github": "Branch protection, secret scanning, enforcement 2FA e dependency alerts.",
       "aws": "CloudTrail, crittografia S3, IAM MFA, root MFA e VPC Flow Logs.",
-      "google_workspace": "Audit log Workspace, condivisione Drive e account amministratore."
+      "google_workspace": "Log di audit Workspace, condivisione Drive e account amministratore."
     },
     "index": {
       "eyebrow": "Integrazioni",
@@ -549,7 +550,7 @@
       "disconnect": "Scollega",
       "statusAvailable": "Disponibile",
       "statusConnected": "Collegato",
-      "statusConnecting": "Collegamento"
+      "statusConnecting": "Collegamento in corso"
     },
     "planned": {
       "eyebrow": "Integrazione pianificata",
@@ -564,11 +565,11 @@
       "scopeTitle": "Ambito",
       "scopeItemStatus": "Pianificato. L'esecuzione in produzione non è ancora abilitata.",
       "googleWorkspace": {
-        "description": "Audit log Google Workspace, condivisione Drive e controlli sugli account amministratore sono pianificati dopo la validazione delle integrazioni Microsoft 365, GitHub e AWS.",
+        "description": "Log di audit Google Workspace, condivisione Drive e controlli sugli account amministratore sono pianificati dopo la validazione delle integrazioni Microsoft 365, GitHub e AWS.",
         "checks": [
           "MFA admin e revisione degli account privilegiati",
           "Condivisione esterna in Google Drive",
-          "Retention degli audit log Workspace"
+          "Retention dei log di audit Workspace"
         ]
       }
     },
@@ -580,11 +581,11 @@
         "automatedTests": "Test automatici",
         "runResults": "Risultati esecuzioni",
         "runResultsEmpty": "I risultati appariranno dopo la prima esecuzione automatica.",
-        "testSuite": "Test suite",
-        "connectionUnavailable": "Le azioni di connessione sono disabilitate finché non sono disponibili le credenziali dell’app e un workspace attivo. L’ambito dei test resta visibile per la revisione.",
+        "testSuite": "Suite di test",
+        "connectionUnavailable": "Le azioni di connessione sono disabilitate finché non sono disponibili le credenziali dell’app e uno spazio di lavoro attivo. L’ambito dei test resta visibile per la revisione.",
         "statusActionNeeded": "Richiede attenzione",
         "statusConnected": "Collegato",
-        "statusConnecting": "Collegamento",
+        "statusConnecting": "Collegamento in corso",
         "statusNotConnected": "Non collegato",
         "disconnect": "Scollega"
       },
@@ -635,16 +636,16 @@
     },
     "metrics": {
       "openTitle": "Aperti",
-      "totalIncidents": "{count} incidenti totali nel log.",
+      "totalIncidents": "{count} incidenti totali nel registro.",
       "gdprNotice": "Notifica violazione GDPR Articolo 33.",
       "severityTitle": "Gravità",
       "statusLine": "Stato {status}."
     },
     "countdown": {
-      "notStarted": "GDPR Art. 33 non applicabile",
+      "notStarted": "GDPR Art. 33 non attivato",
       "reported": "Notificato a {authority} {date}",
       "overdue": "Scaduto · scadenza {date}",
-      "remaining": "{hours}h rimanenti · scadenza {date}"
+      "remaining": "{hours}h rimanenti · scadenza il {date}"
     },
     "severities": {
       "low": "bassa",
@@ -899,7 +900,7 @@
       "riskTier": "Livello di rischio"
     },
     "assessment": {
-      "title": "Assessment in 12 domande",
+      "title": "Valutazione in 12 domande",
       "save": "Salva valutazione",
       "answers": {
         "yes": "Sì",
@@ -931,7 +932,7 @@
       "deliveryStatuses": {
         "sent": "inviato",
         "skipped": "saltato — token creato, email non inviata",
-        "failed": "fallito — token creato, email non inviata"
+        "failed": "non riuscito — token creato, email non inviata"
       }
     },
     "history": {
@@ -971,10 +972,10 @@
       "title": "Libreria controlli",
       "subtitle": "Controlli condivisi collegano normative, evidenze manuali e test automatici.",
       "activeTitle": "Controlli in ambito",
-      "activeSubtitle": "Controlli mappati ai framework iscritti da questa organizzazione.",
+      "activeSubtitle": "Controlli mappati ai framework attivi in questa organizzazione.",
       "libraryTitle": "Libreria controlli disponibile",
-      "librarySubtitle": "Controlli di riferimento disponibili tramite iscrizione ai framework.",
-      "emptyActive": "I controlli appariranno dopo l’attivazione di un framework. Iniziate dal setup del framework per creare il primo ambito controlli.",
+      "librarySubtitle": "Controlli di riferimento disponibili quando viene attivato un framework.",
+      "emptyActive": "I controlli appariranno dopo l’attivazione di un framework. Iniziate dalla configurazione del framework per creare il primo ambito controlli.",
       "frameworksLabel": "Framework",
       "statusLabel": "Stato",
       "automated": "Automatico",
@@ -1044,7 +1045,7 @@
     "noMetadata": "senza metadati",
     "eyebrow": "Audit",
     "title": "Log attività",
-    "subtitle": "Storico non modificabile delle azioni compliance per l'organizzazione Clerk attiva.",
+    "subtitle": "Storico non modificabile delle azioni di compliance per l’organizzazione attiva.",
     "exportCsv": "Esporta CSV",
     "filters": {
       "title": "Filtri",
@@ -1062,7 +1063,7 @@
       "entity": "Entità",
       "user": "Utente",
       "metadata": "Metadati",
-      "empty": "Nessun record audit corrisponde ai filtri attuali."
+      "empty": "Nessun record di audit corrisponde ai filtri attuali."
     },
     "actions": {
       "control_status_changed": "Stato controllo modificato",
@@ -1126,7 +1127,7 @@
   },
   "accessReviews": {
     "noDate": "non impostato",
-    "eyebrow": "Revisione accessi",
+    "eyebrow": "Revisioni accessi",
     "title": "Revisioni accessi",
     "subtitle": "Importa utenti da Entra ID e GitHub, registra decisioni di mantenimento, revoca o modifica ed esporta evidenze CSV per ISO 27001 A.9.2.3.",
     "exportCsv": "Esporta CSV",
@@ -1141,7 +1142,7 @@
     "form": {
       "title": "Avvia revisione",
       "name": "Nome",
-      "namePlaceholder": "Revisione accessi trimestrale",
+      "namePlaceholder": "Revisioni accessi trimestrale",
       "provider": "Origine",
       "dueDate": "Scadenza",
       "start": "Carica utenti"
@@ -1177,7 +1178,7 @@
       "none": "nessuno"
     },
     "demo": {
-      "reviewName": "Revisione accessi trimestrale · Microsoft 365 + GitHub",
+      "reviewName": "Revisioni accessi trimestrale · Microsoft 365 + GitHub",
       "items": {
         "memberEnabled": "Membro · attivo",
         "guestEnabled": "Ospite · attivo",
@@ -1200,7 +1201,7 @@
     "enableFrameworkDetail": "Abilita dettaglio framework",
     "showPercentageScores": "Mostra punteggi percentuali",
     "visibleFrameworks": "Framework visibili",
-    "visibleFrameworksEmpty": "Non ci sono ancora framework iscritti.",
+    "visibleFrameworksEmpty": "Non ci sono ancora framework attivi.",
     "publicPageUnavailable": "Imposta uno slug pubblico e pubblica prima di aprire la pagina pubblica.",
     "regulatorEmpty": "regolatore n/a",
     "scoreLabel": "punteggio",
@@ -1271,14 +1272,14 @@
       "emptyProof": "Non mostriamo ancora referenze pubbliche. Quando esisteranno, saranno pubblicate solo con il consenso del cliente.",
       "benefitsTitle": "Cosa ricevete",
       "asksTitle": "Cosa chiedo",
-      "onboardingTag": "Onboarding",
+      "onboardingTag": "Configurazione iniziale",
       "onboardingTitle": "Tre settimane su un progetto reale.",
       "onboardingBody": "L'obiettivo non è un account demo. L'obiettivo è usare Splnit.eu su un problema reale NIS2 o GDPR e capire cosa manca ancora al prodotto.",
       "benefits": {
         "businessFree": "12 mesi gratis sul piano Business",
-        "guidedOnboarding": "3 settimane di onboarding guidato direttamente con il fondatore",
         "sectorFeatures": "Funzionalità prioritarie in base al vostro settore",
-        "directContact": "Contatto diretto senza coda ticket"
+        "directContact": "Contatto diretto senza coda ticket",
+        "guidedOnboarding": "3 settimane di onboarding guidato direttamente con il fondatore"
       },
       "asks": {
         "realUse": "Uso reale su un vostro progetto NIS2 o GDPR",
@@ -1323,7 +1324,7 @@
     }
   },
   "home": {
-    "badge": "Readiness per la compliance UE delle PMI italiane",
+    "badge": "Preparazione alla compliance UE per le PMI italiane",
     "titleLine1": "Rendete più chiaro il lavoro di compliance nella vostra giurisdizione.",
     "titleLine2": "",
     "lead": "Workflow per NIS2, EU AI Act, GDPR e ISO 27001 con citazioni normative per revisione. Costruita per le PMI europee in italiano, ceco e inglese.",
@@ -1333,10 +1334,9 @@
     "partnerTag": "Gruppo iniziale aperto",
     "partnerFilled": "10 posti disponibili per design partner",
     "partnerFree": "12 mesi Business gratuito",
-    "partnerOnboarding": "Onboarding di tre settimane diretto col fondatore",
     "stepsTag": "Come funziona",
     "stepsTitle": "Iniziate dalla configurazione di base e migliorate nel tempo.",
-    "stepsBody": "Tre passaggi dal primo collegamento di sistema a un evidence pack utilizzabile.",
+    "stepsBody": "Tre passaggi dal primo collegamento di sistema a un pacchetto di evidenze utilizzabile.",
     "featuresTag": "Funzioni principali",
     "featuresTitle": "Compliance costruita per team IT e compliance.",
     "featuresBody": "Collegate infrastrutture locali e globali. I controlli vengono mappati agli standard locali e internazionali.",
@@ -1346,7 +1346,7 @@
     "referencePlaceholder": "Le referenze dei clienti saranno pubblicate con consenso esplicito man mano che i design partner completano l'onboarding.",
     "referenceCount": "Referenze solo con consenso",
     "referenceNote": "Pubblicate dopo l'onboarding",
-    "finalTitle": "Preparate le prime evidenze per audit.",
+    "finalTitle": "Preparate le prime evidenze per la revisione.",
     "finalBody": "Diventate design partner e aiutate a costruire il prodotto su un progetto reale NIS2 o GDPR.",
     "docsCta": "Vedi la documentazione",
     "steps": {
@@ -1355,7 +1355,7 @@
       "testsTitle": "I controlli possono girare sui sistemi collegati",
       "testsBody": "I controlli configurati monitorano i sistemi collegati e salvano i risultati come evidenza interna da revisionare.",
       "resultsTitle": "Ricevete i risultati",
-      "resultsBody": "Dashboard, avvisi sui fallimenti e documentazione audit di lavoro da revisionare con consulente o revisore."
+      "resultsBody": "Cruscotto, avvisi sugli errori e documentazione di lavoro per la revisione con consulente o revisore."
     },
     "features": {
       "residencyTitle": "Infrastruttura di produzione documentata",
@@ -1369,8 +1369,9 @@
       "early": "Accesso anticipato",
       "dpa": "DPA pronto per revisione legale",
       "residency": "Vercel hosting · Neon Postgres",
-      "onboarding": "Onboarding con il fondatore"
-    }
+      "onboarding": "Configurazione iniziale con il fondatore"
+    },
+    "partnerOnboarding": "Configurazione iniziale di tre settimane diretto col fondatore"
   },
   "leadCapture": {
     "tag": "Panoramica indicativa",
@@ -1383,17 +1384,17 @@
   },
   "pricing": {
     "title": "Prezzi trasparenti. Nessuna sorpresa.",
-    "subtitle": "Prezzi early-access per team che iniziano un lavoro strutturato di readiness.",
-    "footnote": "Configurazione progettata per regioni UE · Termini early-access · Cambi piano su richiesta",
+    "subtitle": "Prezzi in accesso anticipato per team che iniziano un lavoro strutturato di preparazione.",
+    "footnote": "Configurazione progettata per regioni UE · Termini di accesso anticipato · Cambi piano su richiesta",
     "partnerTitle": "Siete consulenti o MSP?",
-    "partnerBody": "Workspace clienti, opzione white-label e listing partner dopo approvazione.",
+    "partnerBody": "Spazi di lavoro cliente, opzione white-label e scheda partner dopo approvazione.",
     "partnerPrice": "€299 / mese",
     "partnerCta": "Scoprite di più →",
     "comparisonTag": "Confronto funzioni",
     "comparisonTitle": "Scegliete in base alla profondità di automazione.",
     "faqTag": "FAQ",
     "faqTitle": "Domande frequenti",
-    "finalTitle": "Iniziate oggi a prepararvi alla compliance.",
+    "finalTitle": "Iniziate oggi a preparare il lavoro di compliance.",
     "finalBody": "L'accesso anticipato è aperto ai primi design partner che vogliono usare Splnit.eu su un progetto reale NIS2 o GDPR.",
     "primaryCta": "Diventate design partner",
     "secondaryCta": "Vedi la documentazione",
@@ -1413,7 +1414,7 @@
         "features": [
           "1 normativa",
           "Controlli manuali",
-          "3 modelli documento",
+          "3 modelli di documento",
           "1 utente",
           "Supporto community"
         ]
@@ -1428,7 +1429,7 @@
           "Controlli automatici per Microsoft 365, AWS e GitHub",
           "Archivio evidenze",
           "Modelli documento",
-          "Avvisi scadenze",
+          "Avvisi sulle scadenze",
           "5 utenti",
           "Supporto email"
         ]
@@ -1442,10 +1443,10 @@
           "Integrazioni selezionate, fino a 10 fonti",
           "Trust Center",
           "Modulo rischio fornitori",
-          "Workspace revisioni accessi",
+          "Spazio di lavoro per revisioni accessi",
           "Registro incidenti",
           "25 utenti",
-          "Supporto prioritario founder/email"
+          "Supporto prioritario dal fondatore via email"
         ]
       }
     },
@@ -1502,9 +1503,9 @@
     },
     "faqs": {
       "cancelQuestion": "Posso modificare o interrompere un piano mensile?",
-      "cancelAnswer": "I piani mensili possono essere modificati su richiesta. Le modifiche ai piani annuali e gli eventuali rimborsi seguono i termini early-access concordati.",
+      "cancelAnswer": "I piani mensili possono essere modificati su richiesta. Le modifiche ai piani annuali e gli eventuali rimborsi seguono i termini di accesso anticipato concordati.",
       "dataQuestion": "I miei dati sono conservati nell'UE?",
-      "dataAnswer": "La configurazione di produzione è progettata per regioni UE. Luoghi di trattamento precisi ed eventuali trasferimenti fuori UE/SEE saranno confermati nel DPA e nella lista sub-responsabili.",
+      "dataAnswer": "La configurazione di produzione è progettata per regioni UE. I luoghi di trattamento precisi ed eventuali trasferimenti fuori UE/SEE saranno confermati nel DPA e nella lista dei sub-responsabili.",
       "setupQuestion": "Servono competenze tecniche per configurarlo?",
       "setupAnswer": "Il wizard di configurazione è guidato. I tempi dipendono dai vostri sistemi, permessi e fonti di evidenza.",
       "legalQuestion": "Splnit.eu è consulenza legale?",
@@ -1610,16 +1611,16 @@
       "helpsTitle": "Trasforma obblighi in controlli, evidenze e scadenze.",
       "platformCta": "Scoprite la piattaforma",
       "relatedTag": "Normative correlate",
-      "relatedTitle": "Se stai lavorando su {name}, probabilmente si sovrappongono anche queste aree.",
+      "relatedTitle": "Se state lavorando su {name}, probabilmente anche queste aree si sovrappongono.",
       "relatedArticlesTag": "Articoli correlati",
       "relatedArticlesTitle": "Guida pratica su questo tema.",
       "resourcesTitle": "Scarica risorse"
     }
   },
   "onboarding": {
-    "eyebrow": "Onboarding",
+    "eyebrow": "Configurazione iniziale",
     "title": "Configurazione organizzazione",
-    "description": "Sei passaggi preparano un workspace compliance Italy-first: profilo organizzazione, baseline framework, inventario strumenti, ambito intake deterministico e prima integrazione pratica.",
+    "description": "Sei passaggi preparano uno spazio di lavoro di compliance orientato all’Italia: profilo dell’organizzazione, base iniziale dei framework, inventario degli strumenti, ambito deterministico dell’intake e prima integrazione pratica.",
     "saveStepError": "Non è stato possibile salvare il passaggio.",
     "finishError": "Non è stato possibile completare l'onboarding.",
     "steps": {
@@ -1658,26 +1659,26 @@
         "iso27001": "Sistema di gestione della sicurezza delle informazioni e catalogo dei controlli di sicurezza.",
         "csrd": "Reporting ESG, doppia materialità, evidenze sui dati e questionari fornitori."
       },
-      "body": "Scegliete gli obblighi che Splnit.eu deve trasformare in controlli. Per un prospect italiano, iniziate da NIS2 per la readiness cybersecurity o da ISO 27001 se l’obiettivo immediato è preparare la certificazione.",
-      "nextAction": "Prossimo passo: salvate la baseline selezionata, poi indicate i sistemi che usate davvero."
+      "body": "Scegliete gli obblighi che Splnit.eu deve trasformare in controlli. Per un potenziale cliente italiano, iniziate da NIS2 per la preparazione alla cybersecurity o da ISO 27001 se l’obiettivo immediato è preparare la certificazione.",
+      "nextAction": "Prossimo passo: salvate la base iniziale selezionata, poi indicate i sistemi che usate davvero."
     },
     "tools": {
       "title": "Strumenti AI e inventario SaaS",
-      "body": "Selezionate i sistemi che usate oggi. Così il setup resta aderente al vostro ambiente ed evita dati demo o fixture.",
+      "body": "Selezionate i sistemi che usate oggi. Così la configurazione resta aderente al vostro ambiente ed evita dati demo o dati fittizi.",
       "nextAction": "Prossimo passo: Splnit.eu suggerisce la prima integrazione in base agli strumenti selezionati."
     },
     "integration": {
       "title": "Integrazione consigliata",
       "body": "Per molti percorsi NIS2 e ISO 27001, Microsoft 365 è la prima fonte utile di evidenze: MFA, Conditional Access, ospiti e ruoli privilegiati.",
       "open": "Apri impostazioni integrazione",
-      "optional": "È un prossimo passo consigliato, non un blocco. Rivedete ora l’ambito; collegate l’integrazione quando il responsabile del workspace è pronto.",
-      "nextAction": "Prossimo passo: rivedete il punteggio baseline iniziale e completate l’onboarding."
+      "optional": "È un prossimo passo consigliato, non un blocco. Rivedete ora l’ambito; collegate l’integrazione quando il responsabile dello spazio di lavoro è pronto.",
+      "nextAction": "Prossimo passo: rivedete il punteggio iniziale di base e completate l’onboarding."
     },
     "score": {
       "label": "Punteggio iniziale",
-      "title": "La prima baseline è pronta",
-      "body": "Il punteggio è una baseline iniziale basata sui framework selezionati e sull’inventario strumenti. Non è una dichiarazione di conformità; integrazioni collegate ed evidenze revisionate lo rafforzano.",
-      "nextStep": "Dopo il completamento, iniziate dalla dashboard: rivedete framework attivi, controlli aperti e integrazione consigliata."
+      "title": "La prima base iniziale è pronta",
+      "body": "Il punteggio è una base iniziale basata sui framework selezionati e sull’inventario strumenti. Non è una dichiarazione di conformità; integrazioni collegate ed evidenze revisionate lo rafforzano.",
+      "nextStep": "Dopo il completamento, iniziate dal cruscotto: rivedete framework attivi, controlli aperti e integrazione consigliata."
     },
     "sectors": {
       "technology": "Tecnologia",
@@ -1712,19 +1713,19 @@
     },
     "intake": {
       "title": "Intake ambito in 15 minuti",
-      "body": "Rispondete a domande deterministiche di scoping così Splnit.eu può prioritizzare la baseline iniziale dei controlli senza fare dichiarazioni legali di conformità.",
+      "body": "Rispondete a domande deterministiche sull’ambito così Splnit.eu può prioritizzare la base iniziale dei controlli senza fare dichiarazioni legali di conformità.",
       "nextAction": "Prossimo passo: salvate l’ambito derivato, poi rivedete la prima integrazione consigliata.",
       "yes": "Sì",
       "no": "No",
       "previewTitle": "Anteprima ambito derivato",
-      "applicableControls": "Controlli nel perimetro readiness",
+      "applicableControls": "Controlli nell’ambito interno di preparazione",
       "priorityControls": "Controlli prioritari",
       "manualReviewControls": "Revisione manuale",
-      "previewDisclaimer": "È un ambito interno di readiness, non una classificazione legale né una garanzia di conformità.",
+      "previewDisclaimer": "È un ambito interno di preparazione, non una classificazione legale né una garanzia di conformità.",
       "questions": {
         "businessModel": {
           "label": "Quale modello di business descrive meglio l’organizzazione?",
-          "helpText": "Usato solo per definire l’ambito di readiness; non è una classificazione legale."
+          "helpText": "Usato solo per definire l’ambito di preparazione; non è una classificazione legale."
         },
         "sector": {
           "label": "Qual è il settore più vicino?",
@@ -1736,7 +1737,7 @@
         },
         "handlesPersonalData": {
           "label": "Quali dati personali tratta l’organizzazione?",
-          "helpText": "Influenza le attività GDPR readiness e le priorità di evidenza privacy."
+          "helpText": "Influenza le attività di preparazione GDPR e le priorità delle evidenze privacy."
         },
         "handlesSensitiveData": {
           "label": "Tratta dati sensibili, sanitari, finanziari o ad alto rischio?",
@@ -1747,12 +1748,12 @@
           "helpText": "L’uso del cloud aggiunge controlli su logging, cifratura e account root."
         },
         "hasPublicApp": {
-          "label": "Gestisce app, portali, API o sistemi customer-facing pubblici?",
+          "label": "Gestisce app, portali, API o sistemi pubblici rivolti ai clienti?",
           "helpText": "L’esposizione pubblica aggiunge priorità su vulnerabilità e test."
         },
         "hasProductionSoftware": {
           "label": "Sviluppa o distribuisce software di produzione?",
-          "helpText": "La delivery software aggiunge controlli su code review, dipendenze e change management."
+          "helpText": "La distribuzione software aggiunge controlli su code review, dipendenze e change management."
         },
         "hasCriticalOperations": {
           "label": "Un downtime interromperebbe materialmente clienti, pazienti o produzione?",
@@ -1792,7 +1793,7 @@
           "250_plus": "250+"
         },
         "handlesPersonalData": {
-          "none": "Nessun dato personale oltre ai contatti business",
+          "none": "Nessun dato personale oltre ai contatti aziendali",
           "employees_only": "Solo dipendenti / collaboratori",
           "customers_and_employees": "Clienti e dipendenti"
         },
@@ -1841,7 +1842,7 @@
       "clerkOrg": "Organizzazione Clerk",
       "plan": "Piano",
       "jurisdiction": "Giurisdizione",
-      "onboarding": "Onboarding",
+      "onboarding": "Configurazione iniziale",
       "toolInventory": "Inventario strumenti",
       "updated": "Aggiornato",
       "notSet": "non impostato"
@@ -1862,17 +1863,17 @@
       "controlsBody": "Usati come contesto principale per le risposte.",
       "evidence": "Evidenze",
       "evidenceBody": "Le evidenze automatiche supportano risposte ad alta confidenza.",
-      "policies": "Policy",
+      "policies": "Politiche",
       "policiesBody": "I documenti attivi supportano risposte a confidenza media."
     },
     "history": {
       "title": "Output salvati",
-      "subtitle": "Risposte ai questionari e gap report generati di recente per questa organizzazione.",
+      "subtitle": "Risposte ai questionari e report sui gap generati di recente per questa organizzazione.",
       "empty": "Non ci sono ancora output generati salvati.",
       "notAvailable": "senza data",
       "kinds": {
         "questionnaireAnswers": "Risposte questionario",
-        "gapAnalysis": "Gap report"
+        "gapAnalysis": "Report sui gap"
       }
     },
     "workbench": {
@@ -1888,11 +1889,11 @@
       "resultsTitle": "Risposte generate",
       "resultMeta": "{count} domande · {model}",
       "noResultSubtitle": "Le risposte appariranno qui dopo la generazione.",
-      "emptyBody": "Le risposte generate saranno basate sui controlli superati, sulle evidenze e sulle policy attive di {organisation}.",
+      "emptyBody": "Le risposte generate saranno basate sui controlli superati, sulle evidenze e sulle politiche attive di {organisation}.",
       "artifact": "Output salvato",
       "evidence": "Evidenze",
       "legal": "Citazioni normative",
-      "policies": "Policy",
+      "policies": "Politiche",
       "none": "nessuna",
       "reviewerAnswerLabel": "Testo risposta revisionato",
       "reviewNotesLabel": "Note di revisione / fonti usate",
@@ -1902,14 +1903,14 @@
       "exportBlocked": "L'export PDF/XLSX è disattivato finché tutte le risposte non sono approvate.",
       "sampleQuestions": [
         "Richiedete MFA per tutti gli utenti?",
-        "Avete una policy di risposta agli incidenti e un processo di notifica violazioni?",
+        "Avete una politica di risposta agli incidenti e un processo di notifica delle violazioni?",
         "Come gestite il rischio di sicurezza dei fornitori?",
         "Le revisioni degli accessi vengono eseguite almeno ogni trimestre?",
         "Conservate i log di audit per gli eventi di sicurezza?"
       ]
     },
     "actionErrors": {
-      "authRequired": "Sono richiesti accesso e organizzazione attiva.",
+      "authRequired": "Sono richiesti accesso e un’organizzazione attiva.",
       "invalidInput": "Incolla il testo del questionario o carica un file di testo.",
       "missingConfig": "Il modulo AI per questionari non è abilitato o il provider non è configurato.",
       "noQuestions": "Non sono state trovate domande nel questionario.",
@@ -1920,7 +1921,7 @@
     "unsupported": {
       "summary": "Non è ancora disponibile un contesto compliance supportato per questa organizzazione.",
       "answer": "Dai dati attuali dell'organizzazione in Splnit.eu non è disponibile una risposta documentabile.",
-      "notes": "Aggiungi controlli superati, evidenze, policy attive o citazioni normative verificate prima di usare questa risposta verso l'esterno."
+      "notes": "Aggiungi controlli superati, evidenze, politiche attive o citazioni normative verificate prima di usare questa risposta verso l’esterno."
     }
   }
 }

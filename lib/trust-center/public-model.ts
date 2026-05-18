@@ -851,7 +851,7 @@ function splnitTrustCopy(locale: Locale) {
     return {
       description:
         "This page publishes the current Splnit.eu security posture, legal documents, and sub-processor information. Splnit.eu is in early access, so certifications that are not complete are shown as in progress rather than claimed.",
-      eyebrow: "SPLNIT.EU TRUST CENTER · EARLY ACCESS",
+      eyebrow: "SPLNIT.EU TRUST CENTER · PŘEDBĚŽNÝ PŘÍSTUP",
       gdpr: "Privacy docs published",
       hosting: "Vercel · Neon",
       iso: "In progress · 2026",
@@ -879,14 +879,14 @@ function splnitTrustCopy(locale: Locale) {
 
   return {
     description:
-      "Tato stránka publikuje aktuální bezpečnostní postoj Splnit.eu, právní dokumenty a informace o subdodavatelích. Splnit.eu je v early access, takže nedokončené certifikace uvádíme jako rozpracované, ne jako získané.",
-    eyebrow: "SPLNIT.EU TRUST CENTER · EARLY ACCESS",
-    gdpr: "Privacy dokumenty publikovány",
+      "Tato stránka publikuje aktuální bezpečnostní postoj Splnit.eu, právní dokumenty a informace o subdodavatelích. Splnit.eu je v předběžném přístupu, takže nedokončené certifikace uvádíme jako rozpracované, ne jako získané.",
+    eyebrow: "SPLNIT.EU TRUST CENTER · PŘEDBĚŽNÝ PŘÍSTUP",
+    gdpr: "Dokumenty k ochraně soukromí publikovány",
     hosting: "Vercel · Neon",
     iso: "Probíhá · 2026",
     security: "security@splnit.eu",
     title:
       "Splnit.eu publikuje vlastní Trust Center pro bezpečnostní postoj, subdodavatele a právní dokumenty.",
-    uptime: "Status page propojena",
+    uptime: "Stavová stránka propojena",
   };
 }

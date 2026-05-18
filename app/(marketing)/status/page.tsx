@@ -30,13 +30,13 @@ type StatusCopy = {
 const copy: Record<Locale, StatusCopy> = {
   "cs-CZ": {
     appBody:
-      "Veřejný stav je jednoduchý early-access přehled. Detailní incidentovou komunikaci posíláme přímo dotčeným zákazníkům.",
+      "Veřejný stav je jednoduchý přehled v předběžném přístupu. Detailní incidentovou komunikaci posíláme přímo dotčeným zákazníkům.",
     appTitle: "Aplikace Splnit.eu",
     contact: "Nahlásit problém",
     degraded: "Vyžaduje kontrolu",
-    eyebrow: "STATUS · EARLY ACCESS",
-    healthBody: "Strojově čitelný health endpoint je dostupný na /api/health.",
-    healthTitle: "Health endpoint",
+    eyebrow: "STATUS · PŘEDBĚŽNÝ PŘÍSTUP",
+    healthBody: "Strojově čitelný kontrolní endpoint je dostupný na /api/health.",
+    healthTitle: "Kontrolní endpoint",
     lead:
       "Aktuální veřejný stav produkčního prostředí Splnit.eu. Nejde o SLA ani historický uptime report.",
     metadata: {
@@ -45,7 +45,7 @@ const copy: Record<Locale, StatusCopy> = {
       locale: "cs_CZ",
       title: "Status | Splnit.eu",
     },
-    operational: "Operational",
+    operational: "V provozu",
     recommendedConfigured: "Doporučené služby připravené",
     requiredConfigured: "Povinné služby připravené",
     title: "Status Splnit.eu.",
@@ -84,8 +84,8 @@ const copy: Record<Locale, StatusCopy> = {
     contact: "Segnala problema",
     degraded: "Richiede controllo",
     eyebrow: "STATUS · ACCESSO ANTICIPATO",
-    healthBody: "L'endpoint health leggibile da macchine è disponibile su /api/health.",
-    healthTitle: "Endpoint health",
+    healthBody: "L'endpoint di controllo leggibile da macchine è disponibile su /api/health.",
+    healthTitle: "Endpoint di controllo",
     lead:
       "Stato pubblico attuale dell'ambiente di produzione Splnit.eu. Non è uno SLA né un report storico di uptime.",
     metadata: {
@@ -94,7 +94,7 @@ const copy: Record<Locale, StatusCopy> = {
       locale: "it_IT",
       title: "Status | Splnit.eu",
     },
-    operational: "Operational",
+    operational: "Operativo",
     recommendedConfigured: "Servizi raccomandati pronti",
     requiredConfigured: "Servizi obbligatori pronti",
     title: "Status Splnit.eu.",

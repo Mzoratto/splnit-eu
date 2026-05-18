@@ -7,7 +7,44 @@ import {
   View,
   renderToBuffer,
 } from "@react-pdf/renderer";
+import type { Locale } from "@/i18n/routing";
 import type { QuestionnaireResult } from "@/lib/questionnaires/types";
+
+const QUESTIONNAIRE_PDF_COPY = {
+  "cs-CZ": {
+    confidence: "Spolehlivost",
+    evidence: "Evidence",
+    evidenceFallback: "žádná",
+    eyebrow: "Splnit.eu AI dotazník",
+    legal: "Právní odkazy",
+    legalFallback: "žádné",
+    policies: "Politiky",
+    policiesFallback: "žádné",
+    title: "Odpovědi bezpečnostního dotazníku",
+  },
+  "en-EU": {
+    confidence: "Confidence",
+    evidence: "Evidence",
+    evidenceFallback: "none",
+    eyebrow: "Splnit.eu Questionnaire AI",
+    legal: "Legal",
+    legalFallback: "none",
+    policies: "Policies",
+    policiesFallback: "none",
+    title: "Security questionnaire answers",
+  },
+  "it-IT": {
+    confidence: "Confidenza",
+    evidence: "Evidenze",
+    evidenceFallback: "nessuna",
+    eyebrow: "Questionario AI Splnit.eu",
+    legal: "Riferimenti legali",
+    legalFallback: "nessuno",
+    policies: "Policy",
+    policiesFallback: "nessuna",
+    title: "Risposte al questionario di sicurezza",
+  },
+} as const satisfies Record<Locale, Record<string, string>>;
 
 const styles = StyleSheet.create({
   page: {
@@ -61,16 +98,20 @@ const styles = StyleSheet.create({
   },
 });
 
-function QuestionnaireAnswers({ result }: { result: QuestionnaireResult }) {
+function QuestionnaireAnswers({
+  locale,
+  result,
+}: {
+  locale: Locale;
+  result: QuestionnaireResult;
+}) {
+  const copy = QUESTIONNAIRE_PDF_COPY[locale];
+
   return (
-    <Document
-      author="Splnit.eu"
-      subject="Security questionnaire answers"
-      title="Security questionnaire answers"
-    >
+    <Document author="Splnit.eu" subject={copy.title} title={copy.title}>
       <Page size="A4" style={styles.page}>
-        <Text style={styles.eyebrow}>Splnit.eu Questionnaire AI</Text>
-        <Text style={styles.title}>Security questionnaire answers</Text>
+        <Text style={styles.eyebrow}>{copy.eyebrow}</Text>
+        <Text style={styles.title}>{copy.title}</Text>
         <Text style={styles.muted}>
           {result.organisationName} · {result.generatedAt.slice(0, 10)} ·{" "}
           {result.model}
@@ -82,16 +123,18 @@ function QuestionnaireAnswers({ result }: { result: QuestionnaireResult }) {
             <Text style={styles.question}>
               {index + 1}. {answer.question}
             </Text>
-            <Text style={styles.confidence}>Confidence: {answer.confidence}</Text>
+            <Text style={styles.confidence}>
+              {copy.confidence}: {answer.confidence}
+            </Text>
             <Text>{answer.answer}</Text>
             <Text style={styles.meta}>
-              Evidence: {answer.evidenceRefs.join(", ") || "none"}
+              {copy.evidence}: {answer.evidenceRefs.join(", ") || copy.evidenceFallback}
             </Text>
             <Text style={styles.meta}>
-              Legal: {answer.legalRefs.join(", ") || "none"}
+              {copy.legal}: {answer.legalRefs.join(", ") || copy.legalFallback}
             </Text>
             <Text style={styles.meta}>
-              Policies: {answer.policyRefs.join(", ") || "none"}
+              {copy.policies}: {answer.policyRefs.join(", ") || copy.policiesFallback}
             </Text>
             {answer.notes ? <Text style={styles.meta}>{answer.notes}</Text> : null}
           </View>
@@ -101,6 +144,9 @@ function QuestionnaireAnswers({ result }: { result: QuestionnaireResult }) {
   );
 }
 
-export async function renderQuestionnaireAnswersPdf(result: QuestionnaireResult) {
-  return renderToBuffer(<QuestionnaireAnswers result={result} />);
+export async function renderQuestionnaireAnswersPdf(
+  result: QuestionnaireResult,
+  locale: Locale,
+) {
+  return renderToBuffer(<QuestionnaireAnswers locale={locale} result={result} />);
 }

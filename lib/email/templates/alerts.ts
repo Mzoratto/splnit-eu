@@ -41,7 +41,7 @@ const alertEmailCopy = {
         "Je čas spustit kvartální přístupovou revizi pro Microsoft 365 a GitHub.",
       trustCenterAccessExpiry: "Přístup je platný 24 hodin.",
       vendorQuestionnaire:
-        "Prosíme o vyplnění bezpečnostního dotazníku pro supply-chain risk review.",
+        "Prosíme o vyplnění bezpečnostního dotazníku pro hodnocení rizik dodavatelského řetězce.",
     },
     labels: {
       approval: "Schválení",
@@ -111,7 +111,7 @@ const alertEmailCopy = {
         "È il momento di avviare la revisione trimestrale degli accessi per Microsoft 365 e GitHub.",
       trustCenterAccessExpiry: "L'accesso è valido per 24 ore.",
       vendorQuestionnaire:
-        "Ti chiediamo di compilare il questionario di sicurezza per la revisione del rischio supply chain.",
+        "Ti chiediamo di compilare il questionario di sicurezza per la revisione del rischio della catena di fornitura.",
     },
     labels: {
       approval: "Approvazione",

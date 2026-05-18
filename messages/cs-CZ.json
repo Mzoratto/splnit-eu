@@ -1,7 +1,7 @@
 {
   "app": {
     "name": "Splnit.eu",
-    "tagline": "Automatizace compliance pro evropské MSP"
+    "tagline": "Automatizace práce na souladu pro evropské MSP"
   },
   "navigation": {
     "sections": {
@@ -30,7 +30,7 @@
     "notifications": "Oznámení",
     "demoOrganisation": "Demo organizace",
     "organisationFallback": "Organizace",
-    "freePlanBanner": "Free plán: projděte si nastavení v jednom menším workspace. Upgrade dává smysl až ve chvíli, kdy potřebujete vyšší limity pro frameworky, integrace, uživatele nebo veřejné důkazy.",
+    "freePlanBanner": "Plán zdarma: projděte si nastavení v jednom menším pracovním prostoru. Vyšší tarif dává smysl až ve chvíli, kdy potřebujete vyšší limity pro frameworky, integrace, uživatele nebo důkazy pro zákazníky.",
     "upgradePlan": "Upgradovat plán",
     "switchToLight": "Přepnout na světlý režim",
     "switchToDark": "Přepnout na tmavý režim",
@@ -39,7 +39,7 @@
   "appError": {
     "eyebrow": "Chyba aplikace",
     "title": "Něco se nepodařilo načíst",
-    "body": "Událost byla zaznamenána. Zkuste stránku obnovit, nebo se vraťte do dashboardu.",
+    "body": "Událost byla zaznamenána. Zkuste stránku obnovit, nebo se vraťte na přehled.",
     "retry": "Zkusit znovu"
   },
   "authFallback": {
@@ -96,7 +96,7 @@
       },
       "consultant": {
         "name": "Consultant",
-        "description": "Neomezené klientské pracovní prostory a white-label reporting."
+        "description": "Neomezené klientské pracovní prostory a reporty pod vlastní značkou."
       }
     },
     "billingUnavailable": "Checkout a zákaznický portál jsou v tomto prostředí vypnuté, dokud nejsou nastavené Stripe klíče. Lokální limity plánů zůstávají viditelné pro plánování."
@@ -111,7 +111,7 @@
     "scoreStatus": "Výchozí stav",
     "controls": "Zkontrolovat namapované kontroly",
     "editAnswers": "Upravit odpovědi nastavení",
-    "intro": "Odpovědi vytvoří první baseline kontrol. Volbu „Částečně“ použijte, když práce existuje, ale ještě není doložená nebo otestovaná.",
+    "intro": "Odpovězte na otázky nastavení a vytvořte první výchozí sadu kontrol. Volbu „Částečně“ použijte, když práce existuje, ale ještě není doložená nebo otestovaná.",
     "step": "Krok {step}",
     "questionRange": "Otázky {from}-{to}",
     "answered": "Zodpovězeno {answered} z {total}",
@@ -178,8 +178,8 @@
         "help": "Zahrňte odpovědné osoby, cíle obnovy a závislosti."
       },
       "secure_baseline": {
-        "text": "Používáte bezpečné konfigurační baseline pro systémy?",
-        "help": "Například hardening nastavení pro M365, AWS nebo endpointy."
+        "text": "Používáte bezpečné výchozí konfigurace systémů?",
+        "help": "Například zpevněná nastavení pro M365, AWS nebo koncová zařízení."
       },
       "network_segmentation": {
         "text": "Jsou kritické systémy oddělené od zbytku sítě?",
@@ -302,7 +302,7 @@
         "help": "CloudTrail, MFA root účtu, šifrování S3 nebo ekvivalenty."
       },
       "change_management_iso": {
-        "text": "Je change management auditovatelný?",
+        "text": "Je řízení změn auditovatelné?",
         "help": "Schvalování, testování, rollback a odpovědná osoba za změnu."
       },
       "isms_governance": {
@@ -379,11 +379,11 @@
       "viewAll": "Všechny"
     },
     "frameworkDescriptions": {
-      "nis2": "Kybernetická bezpečnost, řízení rizik, incident reporting a odpovědnost managementu.",
+      "nis2": "Kybernetická bezpečnost, řízení rizik, hlášení incidentů a odpovědnost vedení.",
       "ai-act": "Povinnosti nasazovatelů AI systémů, AI gramotnost, vysoce riziková AI a transparentnost.",
       "gdpr": "Ochrana osobních údajů, záznamy o činnostech zpracování, bezpečnost a oznamování porušení.",
       "iso27001": "Systém řízení bezpečnosti informací a katalog bezpečnostních opatření.",
-      "csrd": "ESG reporting, dvojí materialita, datová evidence a dodavatelské dotazníky."
+      "csrd": "ESG reporting, dvojí materialita, důkazy k datům a dodavatelské dotazníky."
     },
     "nukib": {
       "badge": "🇨🇿 NÚKIB",
@@ -422,12 +422,12 @@
     },
     "intakeScope": {
       "title": "Rozsah z 15minutového vstupu",
-      "subtitle": "Deterministický readiness rozsah z odpovědí v onboardingu. Pouze interní vodítko, ne právní klasifikace.",
+      "subtitle": "Deterministický rozsah připravenosti podle odpovědí při onboardingu. Pouze interní vodítko, ne právní klasifikace.",
       "applicable": "Aplikovatelné kontroly",
       "priority": "Prioritní mezery podle vašeho vstupu",
       "manualReview": "Manuální revize",
       "outOfScope": "Mimo rozsah / nerelevantní",
-      "openControls": "Otevřené scoped kontroly",
+      "openControls": "Otevřené kontroly v rozsahu",
       "viewControls": "Zkontrolovat kontroly"
     }
   },
@@ -457,9 +457,10 @@
     },
     "records": {
       "title": "Záznamy evidence",
-      "empty": "Evidence se objeví po nastavení frameworku, integracích, nahrání souborů nebo vygenerování dokumentů, které vytvoří první záznamy ke kontrolám.",
+      "empty": "Důkazy se objeví po nastavení frameworku, integracích, nahrání souborů nebo vygenerování dokumentů, které vytvoří první záznamy ke kontrolám.",
       "emptyFiltered": "Žádné záznamy neodpovídají aktuálním filtrům. Upravte nebo vymažte filtry a zobrazte další záznamy.",
-      "emptyAction": "Nastavit framework"
+      "emptyAction": "Nastavit framework",
+      "aiDraftHumanReview": "AI návrh · vyžaduje lidskou kontrolu"
     },
     "expiry": {
       "label": "Expirace",
@@ -473,11 +474,11 @@
   },
   "frameworks": {
     "descriptions": {
-      "nis2": "Kybernetická bezpečnost, řízení rizik, incident reporting a odpovědnost managementu.",
+      "nis2": "Kybernetická bezpečnost, řízení rizik, hlášení incidentů a odpovědnost vedení.",
       "ai-act": "Povinnosti nasazovatelů AI systémů, AI gramotnost, vysoce riziková AI a transparentnost.",
       "gdpr": "Ochrana osobních údajů, záznamy o činnostech zpracování, bezpečnost a oznamování porušení.",
       "iso27001": "Systém řízení bezpečnosti informací a katalog bezpečnostních opatření.",
-      "csrd": "ESG reporting, dvojí materialita, datová evidence a dodavatelské dotazníky."
+      "csrd": "ESG reporting, dvojí materialita, důkazy k datům a dodavatelské dotazníky."
     },
     "regulators": {
       "nis2": "NÚKIB",
@@ -494,7 +495,7 @@
       "enrolledSubtitle": "Frameworky aktuálně aktivní v této organizaci.",
       "availableTitle": "Dostupné k zapnutí",
       "availableSubtitle": "Knihovní frameworky jsou možnosti nastavení, ne aktivní rozsah organizace.",
-      "emptyEnrolled": "Začněte aktivací jednoho frameworku. NIS2 je obvyklý první baseline pro EU cybersecurity readiness.",
+      "emptyEnrolled": "Začněte aktivací jednoho frameworku. NIS2 je obvyklý první výchozí rámec pro přípravu na kybernetickou bezpečnost v EU.",
       "scoreLabel": "Skóre",
       "statusLabel": "Stav",
       "open": "Otevřít",
@@ -519,7 +520,7 @@
       "downloadZip": "Stáhnout ZIP",
       "certificationLinksTitle": "Certifikační odkazy",
       "csrdQuestionnaireTitle": "Šablona dotazníku pro dodavatelský řetězec",
-      "csrdQuestionnaireBody": "Výchozí sada otázek pro dodavatele a enterprise zákazníky.",
+      "csrdQuestionnaireBody": "Výchozí sada otázek pro dodavatele a firemní zákazníky.",
       "controlsTitle": "Kontroly a povinnosti",
       "noReference": "Bez reference",
       "automated": "Automatická",
@@ -532,7 +533,7 @@
       "microsoft365": "MFA, Conditional Access, hosté, privilegované role a sensitivity labels.",
       "github": "Branch protection, secret scanning, 2FA enforcement a dependency alerts.",
       "aws": "CloudTrail, S3 šifrování, IAM MFA, root MFA a VPC Flow Logs.",
-      "google_workspace": "Audit logy Workspace, sdílení Drive a administrátorské účty."
+      "google_workspace": "Protokoly auditu Workspace, sdílení na Disku a administrátorské účty."
     },
     "index": {
       "eyebrow": "Integrace",
@@ -555,7 +556,7 @@
       "eyebrow": "Plánovaná integrace",
       "back": "Zpět na integrace",
       "statusTitle": "Stav",
-      "statusBody": "OAuth tok ani ukládání tokenů pro tohoto poskytovatele zatím nejsou aktivní.",
+      "statusBody": "Tok OAuth a ukládání tokenů pro tohoto poskytovatele zatím nejsou aktivní.",
       "plannedChecksTitle": "Plánované kontroly",
       "plannedChecksBody": "Kontroly zatím nejsou zapojené do historie automatických běhů.",
       "dependencyTitle": "Závislost",
@@ -564,11 +565,11 @@
       "scopeTitle": "Rozsah",
       "scopeItemStatus": "Plánováno. Produkční kontroly zatím nejsou zapnuté.",
       "googleWorkspace": {
-        "description": "Google Workspace audit logy, sdílení Drive a kontrola administrátorských účtů jsou naplánované po ověření Microsoft 365, GitHub a AWS integrací.",
+        "description": "Protokoly auditu Google Workspace, sdílení na Disku a kontrola administrátorských účtů jsou naplánované po ověření integrací Microsoft 365, GitHub a AWS.",
         "checks": [
           "MFA administrátorů a revize privilegovaných účtů",
           "Externí sdílení v Google Drive",
-          "Retence Workspace audit logů"
+          "Retence protokolů auditu Workspace"
         ]
       }
     },
@@ -581,7 +582,7 @@
         "runResults": "Výsledky běhů",
         "runResultsEmpty": "Výsledky se zobrazí po prvním automatickém běhu.",
         "testSuite": "Test suite",
-        "connectionUnavailable": "Akce připojení jsou vypnuté, dokud nejsou dostupné aplikační přihlašovací údaje a aktivní workspace. Rozsah testů níže zůstává viditelný pro kontrolu.",
+        "connectionUnavailable": "Akce připojení jsou vypnuté, dokud nejsou dostupné přihlašovací údaje aplikace a aktivní pracovní prostor. Rozsah testů níže zůstává viditelný pro kontrolu.",
         "statusActionNeeded": "Vyžaduje pozornost",
         "statusConnected": "Připojeno",
         "statusConnecting": "Připojování",
@@ -813,7 +814,7 @@
     "never": "nikdy",
     "eyebrow": "Konzultant",
     "title": "Klientský dashboard",
-    "subtitle": "Spravujte klientské organizace, sledujte skóre a připravte white-label Trust Center výstupy.",
+    "subtitle": "Spravujte klientské organizace, sledujte skóre a připravujte výstupy Trust Center pod vlastní značkou.",
     "planLabel": "Plán",
     "lock": {
       "demoTitle": "Demo režim",
@@ -861,7 +862,7 @@
     "modules": {
       "accessReviews": {
         "title": "Přístupové revize",
-        "description": "Kvartální workflow pro ponechání, odebrání nebo úpravu přístupu uživatelů Microsoft 365 a GitHubu."
+        "description": "Kvartální proces pro ponechání, odebrání nebo úpravu přístupu uživatelů Microsoft 365 a GitHubu."
       },
       "roleAssignments": {
         "title": "Role a oprávnění",
@@ -1300,7 +1301,7 @@
     "about": {
       "tag": "O nás",
       "title": "Kdo stojí za Splnit.eu.",
-      "body": "Splnit.eu je zaměřená platforma vedená zakladatelem, postavená seniorním IT inženýrem s praktickou zkušeností s evropskými compliance workflow.",
+      "body": "Splnit.eu je zaměřená platforma vedená zakladatelem, postavená seniorním IT inženýrem s praktickou zkušeností s evropskými procesy compliance.",
       "primaryCta": "Stát se design partnerem",
       "realTodayTitle": "Co je pravda dnes",
       "notYetTitle": "Co zatím netvrdíme",
@@ -1310,23 +1311,23 @@
       "whyP2": "Splnit.eu začíná menší: automatické kontroly pro systémy, které firmy už používají, dokumenty připravené k právní kontrole a přímá práce se zakladatelem u prvních design partnerů.",
       "realToday": {
         "solo": "Splnit.eu je produkt v předběžném přístupu vedený zakladatelem a postavený v Olomouci.",
-        "focus": "Produkt se zaměřuje na EU compliance automation pro NIS2, GDPR a ISO 27001.",
+        "focus": "Produkt se zaměřuje na automatizaci EU compliance pro NIS2, GDPR a ISO 27001.",
         "legalReview": "DPA a finální právní dokumenty jsou připravené jako pracovní návrhy pro právní kontrolu před placeným produkčním spoléháním.",
         "noFakeProof": "Veřejné reference a metriky nejsou uvedené, dokud nebudou ověřené."
       },
       "notYet": {
         "legalAdvice": "Nejde o právní poradenství, auditorské stanovisko ani certifikaci.",
-        "enterprise": "Splnit.eu zatím není enterprise vendor s 24/7 SLA a penalizacemi.",
+        "enterprise": "Splnit.eu zatím není enterprise dodavatel s 24/7 SLA a smluvními sankcemi.",
         "certification": "ISO 27001 nebo SOC 2 certifikace Splnit.eu samotného není veřejně deklarovaná.",
         "entity": "Identifikační údaje provozovatele budou uvedené na právních stránkách před uzavřením jakékoliv smlouvy."
       }
     }
   },
   "home": {
-    "badge": "Readiness k EU compliance pro české firmy",
+    "badge": "Připravenost na EU compliance pro české firmy",
     "titleLine1": "Zpřehledněte compliance práci ve své jurisdikci.",
     "titleLine2": "",
-    "lead": "Workflow pro NIS2, EU AI Act, GDPR a ISO 27001 s citacemi předpisů pro kontrolu. Postaveno pro evropské MSP v italštině, češtině a angličtině.",
+    "lead": "Postupy pro NIS2, EU AI Act, GDPR a ISO 27001 s citacemi předpisů pro kontrolu. Postaveno pro evropské MSP v italštině, češtině a angličtině.",
     "primaryCta": "Stát se design partnerem",
     "secondaryCta": "Zobrazit demo",
     "trustLine": "Předběžný přístup · Přímý kontakt se zakladatelem · Infrastruktura Vercel + Neon",
@@ -1383,10 +1384,10 @@
   },
   "pricing": {
     "title": "Transparentní ceny. Žádná překvapení.",
-    "subtitle": "Early-access ceny pro týmy začínající se strukturovanou readiness prací.",
-    "footnote": "Produkční nastavení je navržené pro EU regiony · Early-access podmínky · Změny plánu na vyžádání",
+    "subtitle": "Ceny v předběžném přístupu pro týmy, které začínají se strukturovanou prací na připravenosti.",
+    "footnote": "Produkční nastavení je navržené pro EU regiony · Podmínky předběžného přístupu · Změny plánu na vyžádání",
     "partnerTitle": "Jste poradce nebo MSP?",
-    "partnerBody": "Klientské workspaces, white-label možnost a partnerský listing po schválení.",
+    "partnerBody": "Klientské pracovní prostory, možnost výstupů pod vlastní značkou a partnerský zápis po schválení.",
     "partnerPrice": "7 475 Kč/měsíc",
     "partnerCta": "Zjistit více →",
     "comparisonTag": "Srovnání funkcí",
@@ -1442,7 +1443,7 @@
           "Vybrané integrace, až 10 zdrojů",
           "Trust Center",
           "Modul rizik dodavatelů",
-          "Workspace přístupových revizí",
+          "Pracovní prostor přístupových revizí",
           "Log incidentů",
           "25 uživatelů",
           "Prioritní founder/email podpora"
@@ -1502,7 +1503,7 @@
     },
     "faqs": {
       "cancelQuestion": "Mohu změnit nebo ukončit měsíční plán?",
-      "cancelAnswer": "Měsíční plány lze měnit na vyžádání. Změny ročních plánů a případné vratky se řeší podle dohodnutých early-access podmínek.",
+      "cancelAnswer": "Měsíční plány lze měnit na vyžádání. Změny ročních plánů a případné vratky se řeší podle dohodnutých podmínek předběžného přístupu.",
       "dataQuestion": "Jsou moje data uložena v EU?",
       "dataAnswer": "Produkční konfigurace je navržená pro EU regiony. Přesné lokace zpracování a případné mechanismy předání mimo EU/EHP potvrzujeme v DPA a subdodavatelském přehledu.",
       "setupQuestion": "Potřebuji technické znalosti k nastavení?",
@@ -1619,7 +1620,7 @@
   "onboarding": {
     "eyebrow": "Onboarding",
     "title": "Nastavení organizace",
-    "description": "Šest kroků připraví compliance workspace: profil organizace, baseline frameworků, inventář nástrojů, deterministický rozsah intake a první praktickou integraci.",
+    "description": "Šest kroků připraví pracovní prostor pro compliance s italským zaměřením: profil organizace, výchozí rámec, inventář nástrojů, deterministický rozsah vstupu a první praktickou integraci.",
     "saveStepError": "Uložení kroku se nepodařilo.",
     "finishError": "Dokončení onboardingu se nepodařilo.",
     "steps": {
@@ -1652,31 +1653,31 @@
     "frameworks": {
       "title": "Vyberte frameworky",
       "descriptions": {
-        "nis2": "Kybernetická bezpečnost, řízení rizik, incident reporting a odpovědnost managementu.",
+        "nis2": "Kybernetická bezpečnost, řízení rizik, hlášení incidentů a odpovědnost vedení.",
         "ai-act": "Povinnosti nasazovatelů AI systémů, AI gramotnost, vysoce riziková AI a transparentnost.",
         "gdpr": "Ochrana osobních údajů, záznamy o činnostech zpracování, bezpečnost a oznamování porušení.",
         "iso27001": "Systém řízení bezpečnosti informací a katalog bezpečnostních opatření.",
-        "csrd": "ESG reporting, dvojí materialita, datová evidence a dodavatelské dotazníky."
+        "csrd": "ESG reporting, dvojí materialita, důkazy k datům a dodavatelské dotazníky."
       },
-      "body": "Vyberte povinnosti, které má Splnit.eu převést na kontroly. Pro italského zájemce začněte NIS2 pro cybersecurity readiness nebo ISO 27001, pokud je cílem příprava na certifikaci.",
-      "nextAction": "Další krok: uložte vybranou baseline a potom označte systémy, které opravdu používáte."
+      "body": "Vyberte povinnosti, které má Splnit.eu převést na kontroly. U italského zájemce začněte NIS2 pro přípravu na kybernetickou bezpečnost nebo ISO 27001, pokud je bezprostředním cílem příprava na certifikaci.",
+      "nextAction": "Další krok: uložte vybraný výchozí rámec a potom označte systémy, které opravdu používáte."
     },
     "tools": {
       "title": "AI nástroje a SaaS inventář",
-      "body": "Vyberte systémy, které dnes opravdu používáte. Setup tak zůstane navázaný na reálné prostředí a nebude působit jako demo nebo fixture data.",
+      "body": "Vyberte systémy, které dnes opravdu používáte. Nastavení tak zůstane navázané na reálné prostředí a nebude působit jako demo nebo testovací data.",
       "nextAction": "Další krok: Splnit.eu doporučí první integraci podle vybraných nástrojů."
     },
     "integration": {
       "title": "Doporučená integrace",
       "body": "Pro mnoho NIS2 a ISO 27001 začátků je Microsoft 365 první užitečný zdroj důkazů: MFA, Conditional Access, hosté a privilegované role.",
       "open": "Otevřít nastavení integrace",
-      "optional": "Tohle je doporučený další krok, ne blokace. Rozsah zkontrolujte teď; integraci připojte, až bude vlastník workspace připravený.",
-      "nextAction": "Další krok: zkontrolujte úvodní baseline skóre a dokončete onboarding."
+      "optional": "Tohle je doporučený další krok, ne blokace. Rozsah zkontrolujte teď; integraci připojte, až bude vlastník pracovního prostoru připravený.",
+      "nextAction": "Další krok: zkontrolujte úvodní výchozí skóre a dokončete onboarding."
     },
     "score": {
       "label": "Úvodní skóre",
-      "title": "První baseline je připravená",
-      "body": "Skóre je úvodní baseline podle vybraných frameworků a inventáře nástrojů. Není to tvrzení o souladu; připojené integrace a zkontrolované důkazy ho zpřesní.",
+      "title": "První výchozí stav je připravený",
+      "body": "Skóre je úvodní výchozí stav podle vybraných frameworků a inventáře nástrojů. Není to tvrzení o souladu; připojené integrace a zkontrolované důkazy ho zpřesní.",
       "nextStep": "Po dokončení začněte na dashboardu: zkontrolujte aktivní frameworky, otevřené kontroly a doporučenou integraci."
     },
     "sectors": {
@@ -1712,19 +1713,19 @@
     },
     "intake": {
       "title": "15minutový intake rozsahu",
-      "body": "Odpovězte na deterministické otázky rozsahu, aby Splnit.eu mohlo prioritizovat úvodní baseline kontrol bez právních tvrzení o souladu.",
+      "body": "Odpovězte na deterministické otázky k rozsahu, aby Splnit.eu mohlo prioritizovat úvodní výchozí sadu kontrol bez právních tvrzení o souladu.",
       "nextAction": "Další krok: uložte odvozený rozsah a potom zkontrolujte doporučenou první integraci.",
       "yes": "Ano",
       "no": "Ne",
       "previewTitle": "Náhled odvozeného rozsahu",
-      "applicableControls": "Kontroly v interním rozsahu readiness",
+      "applicableControls": "Kontroly v interním rozsahu připravenosti",
       "priorityControls": "Prioritní kontroly",
       "manualReviewControls": "Ruční kontrola",
       "previewDisclaimer": "Jde o interní rozsah připravenosti, ne o právní klasifikaci ani garanci souladu.",
       "questions": {
         "businessModel": {
           "label": "Který obchodní model organizaci nejlépe vystihuje?",
-          "helpText": "Používá se jen pro rozsah readiness; nejde o právní klasifikaci."
+          "helpText": "Používá se jen pro určení rozsahu připravenosti; nejde o právní klasifikaci."
         },
         "sector": {
           "label": "Který sektor je nejbližší?",
@@ -1736,7 +1737,7 @@
         },
         "handlesPersonalData": {
           "label": "Jaké osobní údaje organizace zpracovává?",
-          "helpText": "Ovlivňuje GDPR readiness úkoly a priority privacy evidence."
+          "helpText": "Ovlivňuje úkoly připravenosti na GDPR a priority důkazů k ochraně soukromí."
         },
         "handlesSensitiveData": {
           "label": "Zpracovává citlivá, zdravotní, finanční nebo vysoce riziková data?",
@@ -1918,7 +1919,7 @@
       "organisationFallback": "Organizace"
     },
     "unsupported": {
-      "summary": "Pro tuto organizaci zatím není dostupný žádný podpůrný compliance kontext.",
+      "summary": "Pro tuto organizaci zatím není dostupný žádný podpůrný kontext pro compliance.",
       "answer": "Z aktuálních dat organizace ve Splnit.eu není dostupná žádná doložitelná odpověď.",
       "notes": "Před externím použitím doplňte splněné kontroly, evidenci, aktivní politiky nebo zkontrolované právní citace."
     }

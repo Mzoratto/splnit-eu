@@ -459,7 +459,8 @@
       "title": "Evidence records",
       "empty": "Evidence will appear after framework setup, integrations, uploads, or generated documents create the first control records.",
       "emptyFiltered": "No evidence records match the current filters. Clear or adjust filters to see other records.",
-      "emptyAction": "Set up a framework"
+      "emptyAction": "Set up a framework",
+      "aiDraftHumanReview": "AI draft · human review required"
     },
     "expiry": {
       "label": "Expiry",

@@ -71,7 +71,7 @@ const copy: Record<Locale, PlatformCopy> = {
       body:
         "Připojte Microsoft 365, GitHub nebo AWS podle dostupné integrace. Splnit.eu pomáhá průběžně kontrolovat bezpečnostní nastavení a ukládat auditní záznamy.",
       cta: "Rezervovat demo",
-      tag: "Developer First",
+      tag: "Pro vývojáře",
       title: "Automatické kontroly pro systémy, které už používáte.",
     },
     steps: [
@@ -136,7 +136,7 @@ const copy: Record<Locale, PlatformCopy> = {
           title: "Hlídání vypršení",
         },
       ],
-      tag: "Evidence vault",
+      tag: "Úložiště evidencí",
       title: "Auditní záznamy. Automaticky.",
     },
     trustCenter: {
@@ -144,7 +144,7 @@ const copy: Record<Locale, PlatformCopy> = {
       body:
         "Zákazníci a partneři mohou vidět vámi publikovaný přehled stavu kontrol. Odkaz níže otevírá pouze ukázkový Trust Center.",
       cta: "Zobrazit ukázkový Trust Center →",
-      title: "Trust Center — zveřejněte přehled své kontrolní posture.",
+      title: "Trust Center — zveřejněte přehled stavu svých kontrol.",
     },
     finalNote:
       "Bezpečnostní a právní dokumentace se doplňuje podle reálného stavu před produkčním spuštěním.",
@@ -269,7 +269,7 @@ const copy: Record<Locale, PlatformCopy> = {
       body:
         "Collegate Microsoft 365, GitHub o AWS quando l’integrazione è disponibile. Splnit.eu aiuta a controllare le impostazioni di sicurezza nel tempo e a conservare evidenze di audit, con riferimenti normativi aggiunti solo quando verificati.",
       cta: "Prenota demo",
-      tag: "Developer First",
+      tag: "Pensato per sviluppatori",
       title: "Controlli automatici per i sistemi che usate già.",
     },
     steps: [
@@ -334,7 +334,7 @@ const copy: Record<Locale, PlatformCopy> = {
           title: "Controllo scadenze",
         },
       ],
-      tag: "Evidence vault",
+      tag: "Archivio evidenze",
       title: "Evidenze per audit. Automatiche.",
     },
     trustCenter: {
@@ -342,7 +342,7 @@ const copy: Record<Locale, PlatformCopy> = {
       body:
         "Clienti e partner possono vedere il riepilogo dello stato controlli che scegliete di pubblicare. Il link sotto apre solo un Trust Center di esempio.",
       cta: "Vedi Trust Center di esempio →",
-      title: "Trust Center — pubblicate un riepilogo della postura controlli.",
+      title: "Trust Center — pubblicate un riepilogo dello stato dei controlli.",
     },
     finalNote:
       "La documentazione sicurezza e legale viene completata in base al reale setup di produzione prima del lancio.",

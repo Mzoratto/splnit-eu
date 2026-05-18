@@ -206,11 +206,11 @@ function splnitDocumentCopy(locale: Locale) {
     return {
       dpa: "DPA",
       dpaDescription: "Termini pubblici di trattamento dati e impegni del responsabile.",
-      privacy: "Privacy Policy",
+      privacy: "Informativa privacy",
       privacyDescription: "Informazioni pubbliche sul trattamento dei dati personali da parte di Splnit.eu.",
-      securityWhitepaper: "Security Whitepaper",
+      securityWhitepaper: "Whitepaper sicurezza",
       securityWhitepaperDescription:
-        "Sintesi aggiornata di sicurezza early-access, hosting, accessi e risposta agli incidenti.",
+        "Sintesi aggiornata di sicurezza in accesso anticipato, hosting, accessi e risposta agli incidenti.",
       subprocessors: "Lista sub-responsabili",
       subprocessorsDescription:
         "Principali sub-responsabili e contesto di trattamento mantenuti nella pagina DPA pubblica.",
@@ -222,11 +222,11 @@ function splnitDocumentCopy(locale: Locale) {
   return {
     dpa: "DPA",
     dpaDescription: "Veřejné podmínky zpracování dat a závazky zpracovatele.",
-    privacy: "Privacy Policy",
+    privacy: "Zásady ochrany osobních údajů",
     privacyDescription: "Veřejné informace o zpracování osobních údajů ve Splnit.eu.",
-    securityWhitepaper: "Security Whitepaper",
+    securityWhitepaper: "Bezpečnostní dokument",
     securityWhitepaperDescription:
-      "Aktuální early-access přehled bezpečnosti, hostingu, přístupů a incident response.",
+      "Aktuální přehled bezpečnosti, hostingu, přístupů a reakce na incidenty v předběžném přístupu.",
     subprocessors: "Seznam subdodavatelů",
     subprocessorsDescription:
       "Hlavní subdodavatelé a kontext zpracování udržovaný na veřejné DPA stránce.",

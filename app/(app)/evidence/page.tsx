@@ -273,7 +273,7 @@ export default async function EvidencePage({
                       </StatusPill>
                       {item.evidenceStatus === "draft" ? (
                         <span className="rounded-sm border border-amber-200 bg-amber-50 px-2 py-1 text-xs font-medium text-amber-900">
-                          AI draft · human review required
+                          {copy.records.aiDraftHumanReview}
                         </span>
                       ) : null}
                     </div>
