@@ -12,7 +12,7 @@ No critical unknowns remain for `dashboard -> controls -> frameworks -> evidence
 
 Public regulatory/resource and platform copy was hardened on 2026-05-17 to keep public claims indicative and review-oriented. The committed local state `b159333` passed `npm run smoke:copy-hygiene`, `npm run typecheck`, `npm run lint`, and `npm run build`; deployment was not part of that pass.
 
-Policy-to-Evidence Loop v1 Tasks 1-4 were implemented locally on 2026-05-18 for `ctrl_mfa_all_users`: deterministic recommendation/status helpers, control detail recommendation card, dashboard default filtering for intake not-applicable/out-of-scope controls, and copy hygiene coverage. Local smoke/type/lint checks passed; protected-route browser verification and production smoke remain pending. See `docs/reviews/policy-to-evidence-loop-v1.md`.
+Policy-to-Evidence Loop v1 is implemented, deployed, and production-smoked for the narrow `ctrl_mfa_all_users` slice as of 2026-05-18: deterministic recommendation/status helpers, control detail recommendation card, dashboard default filtering for intake not-applicable/out-of-scope controls, copy hygiene coverage, production migration drift guard, and authenticated production control-detail smoke at desktop/mobile widths passed. Safe reliance is limited to this review-oriented slice; it is not a complete all-controls Policy-to-Evidence Loop. See `docs/reviews/policy-to-evidence-loop-v1.md`.
 
 ## Latest Production Verification
 

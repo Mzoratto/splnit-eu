@@ -1,7 +1,7 @@
 # Policy-to-Evidence Loop v1 Review
 
 Date: 2026-05-18
-Status: Tasks 1-4 implemented locally; runtime/browser verification blocked by protected-route auth challenge in this environment
+Status: v1 implemented, deployed, and production-smoked for the `ctrl_mfa_all_users` slice
 
 ## Implemented scope
 
@@ -12,6 +12,7 @@ Status: Tasks 1-4 implemented locally; runtime/browser verification blocked by p
 - Preserved existing evidence upload and manual status update flows.
 - Kept dashboard priority-gap rows linked to `/controls/[controlKey]` and filtered intake `not_applicable` / `out_of_scope` controls out of the default dashboard priority list.
 - Extended copy hygiene coverage over the policy-to-evidence control/detail helper surfaces.
+- Extended production intake/profile smoke coverage to include the `ctrl_mfa_all_users` policy-to-evidence control detail card on desktop and mobile widths.
 
 ## Honest proof/status behavior
 
@@ -35,6 +36,12 @@ Local/source checks passed:
 - `npm run lint`
 - `npm run build`
 
+Production verification passed after deployment to `https://splnit.eu`:
+
+- `npm run check:production-migration-drift`
+- `curl -fsS https://splnit.eu/api/health`
+- `npm run smoke:production-intake-profile`
+
 The policy-to-evidence smoke covers:
 
 - `ctrl_mfa_all_users` returns recommendation metadata.
@@ -43,20 +50,27 @@ The policy-to-evidence smoke covers:
 - Dashboard priority shaping filters not-applicable controls and sorts intake-priority controls first.
 - Proof-state derivation covers no evidence, evidence-needs-review, reviewed pass, open issue, expired evidence, and not-applicable/out-of-scope.
 
+The production intake/profile smoke now also covers the policy-to-evidence control detail path:
+
+- `/controls/ctrl_mfa_all_users` renders for a temporary authenticated production org.
+- The “Recommended next action” card renders with conservative “Gap still open” status when no supporting evidence exists.
+- The security-policy link, evidence upload section, and status review section are present.
+- Desktop and mobile widths have no horizontal overflow for the control-detail card.
+- The smoke cleans up the temporary production organization and rows after the run.
+
 ## Not verified in this pass
 
-- Protected-route browser visual QA for `/controls/ctrl_mfa_all_users` was attempted locally but redirected to Clerk and then hit the accounts-domain Cloudflare/security challenge. No authenticated browser screenshot/desktop/mobile pass was completed in this environment.
-- Evidence upload runtime behavior was not re-tested; the implementation intentionally reuses the existing upload action/form.
-- Production behavior was not deployed or smoked.
+- Evidence upload file persistence was not re-tested as a new behavior; the implementation intentionally reuses the existing org-scoped upload action/form.
+- Manual status-update persistence was not re-tested as a new behavior; the implementation intentionally reuses the existing org-scoped status action/form.
+- Additional controls beyond `ctrl_mfa_all_users` are not configured for v1 recommendations.
 
 ## Production reliance notes
 
-No new database migration was introduced by this v1 slice.
+No new database migration was introduced by this v1 slice. Production drift guard passed before and after deployment.
 
-Before relying on this in production, run the normal pre-deploy checks and a targeted authenticated tenant smoke that confirms:
+Safe reliance boundary:
 
-- Dashboard priority gap for `ctrl_mfa_all_users` links to `/controls/ctrl_mfa_all_users`.
-- The control detail card renders for `ctrl_mfa_all_users` and not for unconfigured controls.
-- The card layout has no overflow/overlap on desktop and mobile widths.
-- Upload/status review flows still work for the active org.
-- Public Trust Center output remains category-level and does not expose individual control IDs or evidence filenames.
+- Safe to rely on the narrow `ctrl_mfa_all_users` recommendation/status card and dashboard-to-control path as a review-oriented workflow.
+- Do not claim a complete Policy-to-Evidence Loop across all controls.
+- Do not claim compliance, certification, auditor readiness, legal proof, or real-time compliance status from this flow.
+- Public Trust Center output remains category-level; this v1 slice does not expose individual control IDs or evidence filenames publicly.
