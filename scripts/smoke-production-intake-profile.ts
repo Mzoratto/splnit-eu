@@ -147,24 +147,45 @@ async function assertNoHorizontalOverflow(page: Page, label: string) {
   );
 }
 
-async function verifyPolicyEvidenceControlDetail(page: Page, testingToken: string) {
-  await page.setViewportSize({ width: 1280, height: 900 });
-  const desktopResponse = await page.goto(pageUrl("/controls/ctrl_mfa_all_users", testingToken), {
-    waitUntil: "domcontentloaded",
-  });
-  assert.equal(desktopResponse?.status(), 200, "production MFA control detail page should render.");
-  await page.getByRole("heading", { name: /Recommended next action/i }).waitFor({ state: "visible" });
-  await page.getByText(/Gap still open/i).waitFor({ state: "visible" });
-  await page.getByText("Supporting evidence", { exact: true }).waitFor({ state: "visible" });
-  await page.getByRole("link", { name: /Open security policy/i }).waitFor({ state: "visible" });
-  await page.locator("#evidence-upload").waitFor({ state: "attached" });
-  await page.locator("#status-review").waitFor({ state: "attached" });
-  await assertNoHorizontalOverflow(page, "desktop policy-to-evidence control detail");
+const policyEvidenceSmokeControls = [
+  {
+    key: "ctrl_mfa_all_users",
+    label: "MFA",
+    expectedEvidenceText: /MFA state/i,
+  },
+  {
+    key: "ctrl_backup_tested",
+    label: "backup testing",
+    expectedEvidenceText: /restore-test record/i,
+  },
+] as const;
 
-  await page.setViewportSize({ width: 390, height: 844 });
-  await page.reload({ waitUntil: "domcontentloaded" });
-  await page.getByRole("heading", { name: /Recommended next action/i }).waitFor({ state: "visible" });
-  await assertNoHorizontalOverflow(page, "mobile policy-to-evidence control detail");
+async function verifyPolicyEvidenceControlDetail(page: Page, testingToken: string) {
+  for (const control of policyEvidenceSmokeControls) {
+    await page.setViewportSize({ width: 1280, height: 900 });
+    const desktopResponse = await page.goto(pageUrl(`/controls/${control.key}`, testingToken), {
+      waitUntil: "domcontentloaded",
+    });
+    assert.equal(
+      desktopResponse?.status(),
+      200,
+      `production ${control.label} control detail page should render.`,
+    );
+    await page.getByRole("heading", { name: /Recommended next action/i }).waitFor({ state: "visible" });
+    await page.getByText(/Gap still open/i).waitFor({ state: "visible" });
+    await page.getByText("Supporting evidence", { exact: true }).waitFor({ state: "visible" });
+    await page.getByText(control.expectedEvidenceText).waitFor({ state: "visible" });
+    await page.getByRole("link", { name: /Open security policy/i }).waitFor({ state: "visible" });
+    await page.locator("#evidence-upload").waitFor({ state: "attached" });
+    await page.locator("#status-review").waitFor({ state: "attached" });
+    await assertNoHorizontalOverflow(page, `desktop policy-to-evidence control detail for ${control.key}`);
+
+    await page.setViewportSize({ width: 390, height: 844 });
+    await page.reload({ waitUntil: "domcontentloaded" });
+    await page.getByRole("heading", { name: /Recommended next action/i }).waitFor({ state: "visible" });
+    await page.getByText(control.expectedEvidenceText).waitFor({ state: "visible" });
+    await assertNoHorizontalOverflow(page, `mobile policy-to-evidence control detail for ${control.key}`);
+  }
 }
 
 async function verifyPersistedIntake(clerkOrgId: string) {
@@ -326,7 +347,9 @@ async function main() {
         onboardingWritePath: true,
         outOfScopeFilterRendered: true,
         persistedReadBack: true,
+        policyEvidenceBackupControlDetailRendered: true,
         policyEvidenceControlDetailRendered: true,
+        policyEvidenceMfaControlDetailRendered: true,
         policyEvidenceNoDesktopOverflow: true,
         policyEvidenceNoMobileOverflow: true,
       },

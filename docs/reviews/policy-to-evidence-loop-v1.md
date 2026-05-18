@@ -14,7 +14,7 @@ Status: v1 implemented and deployed for the `ctrl_mfa_all_users` slice; next loc
 - Kept dashboard priority-gap rows linked to `/controls/[controlKey]` and filtered intake `not_applicable` / `out_of_scope` controls out of the default dashboard priority list.
 - Extended copy hygiene coverage over the policy-to-evidence control/detail helper surfaces.
 - Extended production intake/profile smoke coverage to include the `ctrl_mfa_all_users` policy-to-evidence control detail card on desktop and mobile widths.
-- `ctrl_backup_tested` is locally smoke-covered only in this pass; production browser smoke has not been extended to that second control yet.
+- `ctrl_backup_tested` is locally smoke-covered only in this pass; the authenticated production smoke source has been extended to cover it, but that production smoke has not been rerun after deployment yet.
 
 ## Honest proof/status behavior
 
@@ -66,7 +66,7 @@ The production intake/profile smoke now also covers the policy-to-evidence contr
 - Evidence upload file persistence was not re-tested as a new behavior; the implementation intentionally reuses the existing org-scoped upload action/form.
 - Manual status-update persistence was not re-tested as a new behavior; the implementation intentionally reuses the existing org-scoped status action/form.
 - Additional controls beyond `ctrl_mfa_all_users` and `ctrl_backup_tested` are not configured for v1 recommendations.
-- The `ctrl_backup_tested` control-detail route has not yet been production-smoked at desktop/mobile widths.
+- The authenticated production smoke source now covers `/controls/ctrl_backup_tested` at desktop/mobile widths, including backup-specific evidence copy, but it has not yet been rerun against a deployment containing this change.
 
 ## Production reliance notes
 
@@ -75,7 +75,7 @@ No new database migration was introduced by this v1 slice. Production drift guar
 Safe reliance boundary:
 
 - Safe to rely on the narrow `ctrl_mfa_all_users` recommendation/status card and dashboard-to-control path as a production-smoked review-oriented workflow.
-- Treat `ctrl_backup_tested` as locally verified until the authenticated production smoke is extended and rerun for that control.
+- Treat `ctrl_backup_tested` as locally verified until the extended authenticated production smoke is rerun against a deployment containing this change.
 - Do not claim a complete Policy-to-Evidence Loop across all controls.
 - Do not claim compliance, certification, auditor readiness, legal proof, or real-time compliance status from this flow.
 - Public Trust Center output remains category-level; this v1 slice does not expose individual control IDs or evidence filenames publicly.
