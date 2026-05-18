@@ -163,16 +163,18 @@ export default async function RegulationDetailPage({
         <section className="border-t border-zinc-200/50 bg-white py-16">
           <div className="mx-auto max-w-7xl px-5">
             <div className="mb-10">
-              <span className="section-tag mb-5">{t("finesTag")}</span>
+              <span className="section-tag mb-5">
+                {framework.riskSection?.tag ?? t("finesTag")}
+              </span>
               <h2 className="text-3xl font-semibold tracking-[-0.03em] text-zinc-900">
-                {t("finesTitle")}
+                {framework.riskSection?.title ?? t("finesTitle")}
               </h2>
             </div>
             <div className="overflow-hidden rounded-[24px] border border-zinc-200">
               <div className="grid grid-cols-3 bg-zinc-50 px-5 py-3 text-xs font-semibold text-zinc-600">
-                <span>{t("violationHeader")}</span>
-                <span>{t("maximumHeader")}</span>
-                <span>{t("enforcerHeader")}</span>
+                <span>{framework.riskSection?.violationHeader ?? t("violationHeader")}</span>
+                <span>{framework.riskSection?.maximumHeader ?? t("maximumHeader")}</span>
+                <span>{framework.riskSection?.enforcerHeader ?? t("enforcerHeader")}</span>
               </div>
               {framework.fines.map((fine) => (
                 <div
@@ -221,6 +223,60 @@ export default async function RegulationDetailPage({
             </Link>
           </div>
         </section>
+
+        {framework.relatedFrameworks?.length ? (
+          <section className="border-t border-zinc-200/50 bg-white py-16">
+            <div className="mx-auto max-w-5xl px-5">
+              <span className="section-tag mb-5">{t("relatedTag")}</span>
+              <h2 className="text-3xl font-semibold tracking-[-0.03em] text-zinc-900">
+                {t("relatedTitle", { name: framework.name })}
+              </h2>
+              <div className="mt-6 grid gap-3 md:grid-cols-2">
+                {framework.relatedFrameworks.map((related) => (
+                  <Link
+                    key={related.slug}
+                    href={getLocalizedMarketingPath(`/predpisy/${related.slug}`, locale)}
+                    className="rounded-2xl border border-zinc-100 bg-zinc-50 p-5 transition-colors hover:border-blue-200 hover:bg-blue-50/40"
+                  >
+                    <span className="text-sm font-semibold text-blue-700">
+                      {related.name} →
+                    </span>
+                    <p className="mt-2 text-sm leading-6 text-zinc-600">
+                      {related.reason}
+                    </p>
+                  </Link>
+                ))}
+              </div>
+            </div>
+          </section>
+        ) : null}
+
+        {framework.relatedArticles?.length ? (
+          <section className="border-t border-zinc-200/50 bg-white py-16">
+            <div className="mx-auto max-w-5xl px-5">
+              <span className="section-tag mb-5">{t("relatedArticlesTag")}</span>
+              <h2 className="text-3xl font-semibold tracking-[-0.03em] text-zinc-900">
+                {t("relatedArticlesTitle")}
+              </h2>
+              <div className="mt-6 grid gap-3 md:grid-cols-2">
+                {framework.relatedArticles.map((article) => (
+                  <Link
+                    key={article.slug}
+                    href={getLocalizedMarketingPath(`/blog/${article.slug}`, locale)}
+                    className="rounded-2xl border border-zinc-100 bg-zinc-50 p-5 transition-colors hover:border-blue-200 hover:bg-blue-50/40"
+                  >
+                    <span className="text-sm font-semibold text-blue-700">
+                      {article.title} →
+                    </span>
+                    <p className="mt-2 text-sm leading-6 text-zinc-600">
+                      {article.description}
+                    </p>
+                  </Link>
+                ))}
+              </div>
+            </div>
+          </section>
+        ) : null}
 
         <section className="border-t border-zinc-200/50 bg-white py-16">
           <div className="mx-auto max-w-5xl px-5">

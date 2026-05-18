@@ -99,6 +99,11 @@ export default async function BlogPostPage({
                 {post.title}
               </h1>
               <p className="mt-6 text-lg leading-8 text-zinc-500">{post.summary}</p>
+              <p className="mt-4 text-sm font-medium text-zinc-500">
+                {post.author && post.authorRole
+                  ? `Autor: ${post.author}, ${post.authorRole}`
+                  : pageCopy.articleAuthorFallback}
+              </p>
             </div>
           </section>
 
@@ -163,18 +168,32 @@ export default async function BlogPostPage({
                   </section>
                 ))}
 
+                {post.regulationHref ? (
+                  <div className="rounded-2xl border border-zinc-100 bg-zinc-50 p-5">
+                    <p className="text-sm font-semibold text-zinc-900">
+                      {pageCopy.relatedRegulationTitle}
+                    </p>
+                    <Link
+                      href={getLocalizedMarketingPath(post.regulationHref, locale)}
+                      className="mt-2 inline-flex text-sm font-medium text-blue-700 hover:text-blue-800"
+                    >
+                      {pageCopy.relatedRegulationOpen}: {post.category} →
+                    </Link>
+                  </div>
+                ) : null}
+
                 <div className="rounded-[2rem] border border-blue-100 bg-blue-50/40 p-8">
                   <h2 className="text-2xl font-semibold tracking-[-0.03em] text-zinc-900">
-                    {pageCopy.articleCtaTitle}
+                    {post.ctaTitle ?? pageCopy.articleCtaTitle}
                   </h2>
                   <p className="mt-3 max-w-2xl text-sm leading-6 text-zinc-500">
-                    {pageCopy.articleCtaBody}
+                    {post.ctaBody ?? pageCopy.articleCtaBody}
                   </p>
                   <Link
-                    href="/platform"
+                    href={getLocalizedMarketingPath(post.ctaHref ?? "/platform", locale)}
                     className="mt-6 inline-flex rounded-full bg-blue-600 px-6 py-2.5 text-sm font-medium text-white transition-colors hover:bg-blue-500"
                   >
-                    {pageCopy.articleCtaButton}
+                    {post.ctaButton ?? pageCopy.articleCtaButton}
                   </Link>
                 </div>
               </div>

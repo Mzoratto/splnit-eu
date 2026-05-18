@@ -1609,6 +1609,10 @@
       "helpsTag": "Jak Splnit.eu pomáhá",
       "helpsTitle": "Převod povinností na kontroly, důkazy a termíny.",
       "platformCta": "Zobrazit v akci",
+      "relatedTag": "Související předpisy",
+      "relatedTitle": "Pokud řešíte {name}, pravděpodobně se vás týká i toto.",
+      "relatedArticlesTag": "Související články",
+      "relatedArticlesTitle": "Praktický průvodce k tématu.",
       "resourcesTitle": "Stáhnout zdroje"
     }
   },

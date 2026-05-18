@@ -1609,6 +1609,10 @@
       "helpsTag": "Come aiuta Splnit.eu",
       "helpsTitle": "Trasforma obblighi in controlli, evidenze e scadenze.",
       "platformCta": "Scoprite la piattaforma",
+      "relatedTag": "Normative correlate",
+      "relatedTitle": "Se stai lavorando su {name}, probabilmente si sovrappongono anche queste aree.",
+      "relatedArticlesTag": "Articoli correlati",
+      "relatedArticlesTitle": "Guida pratica su questo tema.",
       "resourcesTitle": "Scarica risorse"
     }
   },

@@ -7,6 +7,13 @@ export type BlogPost = {
   category: string;
   publishedAt: string;
   readTime: string;
+  author?: string;
+  authorRole?: string;
+  regulationHref?: string;
+  ctaTitle?: string;
+  ctaBody?: string;
+  ctaButton?: string;
+  ctaHref?: string;
   summary: string;
   sections: {
     heading: string;
@@ -17,10 +24,13 @@ export type BlogPost = {
 
 export type BlogPageCopy = {
   allArticles: string;
+  articleAuthorFallback: string;
   articleCtaBody: string;
   articleCtaButton: string;
   articleCtaTitle: string;
   articleNavTitle: string;
+  relatedRegulationTitle: string;
+  relatedRegulationOpen: string;
   description: string;
   jsonLdDescription: string;
   locale: string;
@@ -33,11 +43,14 @@ export type BlogPageCopy = {
 export const blogPageCopy: Record<Locale, BlogPageCopy> = {
   "cs-CZ": {
     allArticles: "← Všechny články",
+    articleAuthorFallback: "Autor: Marco Zoratto, zakladatel Splnit.eu",
     articleCtaBody:
       "Splnit.eu mapuje povinnosti na kontroly, důkazy a termíny, aby šly průběžně ověřovat.",
     articleCtaButton: "Zobrazit platformu",
     articleCtaTitle: "Převést článek na kontrolní seznam",
     articleNavTitle: "V článku",
+    relatedRegulationTitle: "Související přehled předpisu",
+    relatedRegulationOpen: "Otevřít přehled",
     description:
       "Praktické návody pro české firmy, které potřebují proměnit NIS2, EU AI Act a GDPR na kontroly, důkazy a odpovědnosti.",
     jsonLdDescription:
@@ -50,11 +63,14 @@ export const blogPageCopy: Record<Locale, BlogPageCopy> = {
   },
   "en-EU": {
     allArticles: "← All articles",
+    articleAuthorFallback: "Author: Marco Zoratto, founder of Splnit.eu",
     articleCtaBody:
       "Splnit.eu maps obligations to controls, evidence, and deadlines so they can be checked continuously.",
     articleCtaButton: "View platform",
     articleCtaTitle: "Turn this article into a control checklist",
     articleNavTitle: "In this article",
+    relatedRegulationTitle: "Related regulation overview",
+    relatedRegulationOpen: "Open overview",
     description:
       "Practical articles for EU SMBs that need to turn NIS2, the EU AI Act, and GDPR into controls, evidence, and responsibilities.",
     jsonLdDescription:
@@ -67,11 +83,14 @@ export const blogPageCopy: Record<Locale, BlogPageCopy> = {
   },
   "it-IT": {
     allArticles: "← Tutti gli articoli",
+    articleAuthorFallback: "Autore: Marco Zoratto, fondatore di Splnit.eu",
     articleCtaBody:
       "Splnit.eu mappa obblighi, controlli, evidenze e scadenze così possono essere verificati nel tempo.",
     articleCtaButton: "Vedi piattaforma",
     articleCtaTitle: "Trasforma l'articolo in checklist controlli",
     articleNavTitle: "Nell'articolo",
+    relatedRegulationTitle: "Panoramica normativa correlata",
+    relatedRegulationOpen: "Apri panoramica",
     description:
       "Articoli pratici per PMI europee che devono trasformare NIS2, EU AI Act e GDPR in controlli, evidenze e responsabilità.",
     jsonLdDescription:
@@ -92,8 +111,15 @@ const posts: Record<Locale, BlogPost[]> = {
       description:
         "Kdy se NIS2 týká české firmy, co připravit pro NÚKIB a jak začít s auditovatelnými kontrolami.",
       category: "NIS2",
-      publishedAt: "2026-04-30",
-      readTime: "7 min",
+      publishedAt: "2026-04-28",
+      readTime: "2 min",
+      author: "Marco Zoratto",
+      authorRole: "zakladatel Splnit.eu",
+      regulationHref: "/predpisy/nis2",
+      ctaTitle: "Převést NIS2 na první kontrolní seznam",
+      ctaBody: "Začněte u MFA, incident response a dodavatelů: Splnit.eu je mapuje na kontroly, vlastníky a důkazy, které můžete průběžně ověřovat.",
+      ctaButton: "Otevřít NIS2 přehled",
+      ctaHref: "/predpisy/nis2",
       summary:
         "NIS2 není jen právní povinnost. Pro české MSP znamená zavést měřitelné bezpečnostní kontroly, doložit řízení rizik a umět rychle reagovat na incidenty.",
       sections: [
@@ -130,8 +156,15 @@ const posts: Record<Locale, BlogPost[]> = {
       description:
         "Praktický přehled povinností pro firmy, které používají generativní AI, HR automatizaci nebo jiné AI systémy.",
       category: "EU AI Act",
-      publishedAt: "2026-04-30",
-      readTime: "6 min",
+      publishedAt: "2026-04-29",
+      readTime: "2 min",
+      author: "Marco Zoratto",
+      authorRole: "zakladatel Splnit.eu",
+      regulationHref: "/predpisy/eu-ai-act",
+      ctaTitle: "Z AI článku udělat inventář použití",
+      ctaBody: "Splnit.eu pomáhá evidovat AI nástroje, vlastníky, účely a školení, aby nové použití AI nezůstalo bez odpovědnosti.",
+      ctaButton: "Otevřít EU AI Act přehled",
+      ctaHref: "/predpisy/eu-ai-act",
       summary:
         "EU AI Act rozlišuje zakázané praktiky, high-risk systémy a běžné použití AI. I běžné použití generativní AI vyžaduje jasná pravidla, školení a evidenci.",
       sections: [
@@ -163,6 +196,53 @@ const posts: Record<Locale, BlogPost[]> = {
         },
       ],
     },
+
+    {
+      slug: "iso-27001-priprava-na-tendr",
+      title: "ISO 27001 pro SaaS firmy: příprava na enterprise tendr",
+      description:
+        "Co mít připravené, když zákazník v tendru požaduje ISO 27001, SoA, access reviews a doložitelné bezpečnostní procesy.",
+      category: "ISO 27001",
+      publishedAt: "2026-05-02",
+      readTime: "3 min",
+      author: "Marco Zoratto",
+      authorRole: "zakladatel Splnit.eu",
+      regulationHref: "/predpisy/iso-27001",
+      ctaTitle: "Převést ISO 27001 požadavky na gap analýzu",
+      ctaBody: "Splnit.eu propojí SoA, rizika, politiky a důkazy z nástrojů, aby bylo před tendrem vidět, co je připravené a co ještě chybí.",
+      ctaButton: "Otevřít ISO 27001 přehled",
+      ctaHref: "/predpisy/iso-27001",
+      summary:
+        "ISO 27001 je pro mnoho SaaS firem vstupenka do enterprise tendrů. Nejde jen o certifikát, ale o schopnost doložit rizika, vybrané kontroly, vlastníky a pravidelné ověřování.",
+      sections: [
+        {
+          heading: "Co zákazník obvykle chce vidět",
+          body: [
+            "V tendru se ISO 27001 často objeví dřív než samotný certifikační audit. Zákazník chce vědět, jestli máte řízení rizik, schválené bezpečnostní politiky, přístupové revize a proces pro incidenty.",
+            "Pokud certifikát ještě nemáte, pomáhá ukázat realistickou gap analýzu: které kontroly běží, které mají důkaz a které mají vlastníka a termín dokončení.",
+          ],
+          bullets: [
+            "Statement of Applicability s důvody výběru a výjimek",
+            "risk register a plán ošetření rizik",
+            "access reviews, MFA a správa privilegovaných účtů",
+            "incident response, zálohy a vendor management",
+          ],
+        },
+        {
+          heading: "Proč nestačí sada dokumentů",
+          body: [
+            "Politiky bez důkazů rychle zastarají. Enterprise zákazník nebo auditor se bude ptát, kdy byla kontrola naposledy ověřena, kdo schválil výjimku a kde je podklad ze systému.",
+            "Praktický přístup je vést každou kontrolu jako živý záznam: vlastník, status, důkaz, datum revize a návaznost na riziko nebo zákaznický požadavek.",
+          ],
+        },
+        {
+          heading: "Jak začít bez přestřelených tvrzení",
+          body: [
+            "Neříkejte, že jste ISO-ready, pokud chybí důkazy. Bezpečnější formulace je ukázat aktuální readiness: hotové kontroly, otevřené gapy a plán k certifikaci nebo tendru.",
+          ],
+        },
+      ],
+    },
     {
       slug: "gdpr-checklist-pro-audit",
       title: "GDPR checklist pro auditovatelnou firmu",
@@ -170,7 +250,14 @@ const posts: Record<Locale, BlogPost[]> = {
         "Checklist pro ROPA, zpracovatele, práva subjektů údajů, DPIA a 72hodinové hlášení incidentů.",
       category: "GDPR",
       publishedAt: "2026-04-30",
-      readTime: "8 min",
+      readTime: "3 min",
+      author: "Marco Zoratto",
+      authorRole: "zakladatel Splnit.eu",
+      regulationHref: "/predpisy/gdpr",
+      ctaTitle: "Převést GDPR checklist na ROPA a důkazy",
+      ctaBody: "Místo statické tabulky udržujte zpracování, dodavatele, DPIA a incidenty jako živé záznamy navázané na systémy a vlastníky.",
+      ctaButton: "Otevřít GDPR přehled",
+      ctaHref: "/predpisy/gdpr",
       summary:
         "GDPR audit nestojí na jedné privacy policy. Potřebujete přehled zpracování, smlouvy se zpracovateli, proces práv subjektů a schopnost doložit bezpečnostní opatření.",
       sections: [
@@ -210,8 +297,13 @@ const posts: Record<Locale, BlogPost[]> = {
       description:
         "When NIS2 affects an SMB, what to prepare for the competent authority, and how to start with auditable controls.",
       category: "NIS2",
-      publishedAt: "2026-04-30",
-      readTime: "7 min",
+      publishedAt: "2026-04-28",
+      readTime: "2 min",
+      regulationHref: "/predpisy/nis2",
+      ctaTitle: "Turn NIS2 into a first control checklist",
+      ctaBody: "Start with MFA, incident response, and suppliers: Splnit.eu maps them to controls, owners, and evidence you can check continuously.",
+      ctaButton: "Open the NIS2 overview",
+      ctaHref: "/predpisy/nis2",
       summary:
         "NIS2 is not only a legal obligation. For SMBs it means measurable security controls, evidence of risk management, and the ability to respond quickly to incidents.",
       sections: [
@@ -248,8 +340,13 @@ const posts: Record<Locale, BlogPost[]> = {
       description:
         "A practical overview for companies using generative AI, HR automation, or other AI systems.",
       category: "EU AI Act",
-      publishedAt: "2026-04-30",
-      readTime: "6 min",
+      publishedAt: "2026-04-29",
+      readTime: "2 min",
+      regulationHref: "/predpisy/eu-ai-act",
+      ctaTitle: "Turn the AI Act article into an AI inventory",
+      ctaBody: "Track AI tools, owners, purposes, risks, and training evidence before new AI use spreads across teams.",
+      ctaButton: "Open the EU AI Act overview",
+      ctaHref: "/predpisy/eu-ai-act",
       summary:
         "The EU AI Act separates prohibited practices, high-risk systems, and ordinary AI use. Even everyday generative AI use needs clear rules, training, and records.",
       sections: [
@@ -288,7 +385,12 @@ const posts: Record<Locale, BlogPost[]> = {
         "A checklist for ROPA, processors, data subject rights, DPIA, and 72-hour breach notification.",
       category: "GDPR",
       publishedAt: "2026-04-30",
-      readTime: "8 min",
+      readTime: "3 min",
+      regulationHref: "/predpisy/gdpr",
+      ctaTitle: "Turn the GDPR checklist into ROPA and evidence",
+      ctaBody: "Keep processing records, processors, DPIAs, and incidents as living records tied to systems and owners.",
+      ctaButton: "Open the GDPR overview",
+      ctaHref: "/predpisy/gdpr",
       summary:
         "A GDPR audit does not rest on one privacy policy. You need a processing inventory, processor contracts, a data subject rights process, and evidence of security measures.",
       sections: [
@@ -328,8 +430,13 @@ const posts: Record<Locale, BlogPost[]> = {
       description:
         "Quando NIS2 riguarda una PMI, cosa preparare per l'autorità competente e come iniziare con controlli auditabili.",
       category: "NIS2",
-      publishedAt: "2026-04-30",
-      readTime: "7 min",
+      publishedAt: "2026-04-28",
+      readTime: "2 min",
+      regulationHref: "/predpisy/nis2",
+      ctaTitle: "Trasforma NIS2 in una prima checklist controlli",
+      ctaBody: "Parti da MFA, incident response e fornitori: Splnit.eu li collega a controlli, owner ed evidenze verificabili nel tempo.",
+      ctaButton: "Apri la panoramica NIS2",
+      ctaHref: "/predpisy/nis2",
       summary:
         "NIS2 non è solo un obbligo legale. Per le PMI significa controlli di sicurezza misurabili, evidenze sulla gestione del rischio e capacità di rispondere rapidamente agli incidenti.",
       sections: [
@@ -366,8 +473,13 @@ const posts: Record<Locale, BlogPost[]> = {
       description:
         "Panoramica pratica per aziende che usano AI generativa, automazione HR o altri sistemi AI.",
       category: "EU AI Act",
-      publishedAt: "2026-04-30",
-      readTime: "6 min",
+      publishedAt: "2026-04-29",
+      readTime: "2 min",
+      regulationHref: "/predpisy/eu-ai-act",
+      ctaTitle: "Trasforma l'articolo AI Act in inventario AI",
+      ctaBody: "Traccia strumenti AI, owner, finalità, rischi e formazione prima che nuovi usi restino senza responsabilità.",
+      ctaButton: "Apri la panoramica EU AI Act",
+      ctaHref: "/predpisy/eu-ai-act",
       summary:
         "L'EU AI Act distingue pratiche vietate, sistemi ad alto rischio e uso ordinario dell'AI. Anche l'uso quotidiano di AI generativa richiede regole chiare, formazione e registri.",
       sections: [
@@ -406,7 +518,12 @@ const posts: Record<Locale, BlogPost[]> = {
         "Checklist per registro trattamenti, responsabili, diritti degli interessati, DPIA e notifica data breach entro 72 ore.",
       category: "GDPR",
       publishedAt: "2026-04-30",
-      readTime: "8 min",
+      readTime: "3 min",
+      regulationHref: "/predpisy/gdpr",
+      ctaTitle: "Trasforma la checklist GDPR in registri ed evidenze",
+      ctaBody: "Mantieni trattamenti, responsabili, DPIA e incidenti come record vivi collegati a sistemi e owner.",
+      ctaButton: "Apri la panoramica GDPR",
+      ctaHref: "/predpisy/gdpr",
       summary:
         "Un audit GDPR non si regge su una sola privacy policy. Servono inventario trattamenti, contratti con responsabili, processo diritti degli interessati ed evidenze sulle misure di sicurezza.",
       sections: [

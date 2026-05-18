@@ -25,8 +25,25 @@ export type FrameworkDetail = FrameworkCard & {
     maximum: string;
     enforcer: string;
   }[];
+  riskSection?: {
+    tag: string;
+    title: string;
+    violationHeader: string;
+    maximumHeader: string;
+    enforcerHeader: string;
+  };
   splnitHelps: {
     icon: string;
+    title: string;
+    description: string;
+  }[];
+  relatedFrameworks?: {
+    slug: string;
+    name: string;
+    reason: string;
+  }[];
+  relatedArticles?: {
+    slug: string;
     title: string;
     description: string;
   }[];
@@ -149,17 +166,36 @@ export const frameworkDetails: FrameworkDetail[] = [
       {
         icon: "solar:shield-network-linear",
         title: "NÚKIB feed",
-        description: "České zranitelnosti a upozornění mapované na vaše integrace.",
+        description: "Zranitelnosti a upozornění NÚKIB se převádějí na konkrétní systémy, vlastníky a úkoly, místo aby zůstaly jako ruční monitoring mimo compliance proces.",
       },
       {
         icon: "solar:bolt-circle-linear",
         title: "21 opatření",
-        description: "Kontroly rozdělené podle povinných bezpečnostních opatření.",
+        description: "Povinná bezpečnostní opatření dostanou vlastní kontroly, stav a chybějící důkazy, takže vidíte, co je připravené a co je jen deklarace.",
       },
       {
         icon: "solar:document-check-linear",
         title: "Hlášení a důkazy",
-        description: "Auditní stopa pro incidenty, přístupy a dodavatelská rizika.",
+        description: "Incidenty, přístupy a dodavatelská rizika se ukládají s časovou osou a podklady pro pozdější kontrolu nebo zákaznický dotazník.",
+      },
+    ],
+    relatedArticles: [
+      {
+        slug: "nis2-pruvodce-pro-msp",
+        title: "NIS2 pro české MSP: praktický průvodce",
+        description: "Kdy se NIS2 týká české firmy a jak začít s auditovatelnými kontrolami.",
+      },
+    ],
+    relatedFrameworks: [
+      {
+        slug: "gdpr",
+        name: "GDPR",
+        reason: "incidenty, dodavatelé a přístupová práva často zahrnují osobní údaje",
+      },
+      {
+        slug: "iso-27001",
+        name: "ISO 27001",
+        reason: "MFA, incident response, access reviews a vendor management se překrývají s Annex A kontrolami",
       },
     ],
     resources: ["NIS2 checklist", "Mapa povinností NÚKIB", "Incident log šablona"],
@@ -222,17 +258,36 @@ export const frameworkDetails: FrameworkDetail[] = [
       {
         icon: "solar:cpu-bolt-linear",
         title: "AI inventář",
-        description: "Záznam všech používaných AI nástrojů, vlastníků a rizik.",
+        description: "Každý AI nástroj dostane vlastníka, účel použití, typ vstupních dat a riziko, aby nové AI použití nebylo schované v týmech nebo SaaS účtech.",
       },
       {
         icon: "solar:document-text-linear",
         title: "Politika AI",
-        description: "Šablona interní politiky AI pro české firmy.",
+        description: "Z pravidel pro povolené a zakázané použití AI vznikne interní politika navázaná na školení, schvalování a opakovanou revizi.",
       },
       {
         icon: "solar:users-group-rounded-linear",
         title: "AI gramotnost",
-        description: "Evidence školení a potvrzení zaměstnanců.",
+        description: "U školení ukládáte účast, verzi materiálů a potvrzení zaměstnanců, takže AI gramotnost není jen odkaz na prezentaci.",
+      },
+    ],
+    relatedArticles: [
+      {
+        slug: "eu-ai-act-pruvodce-pro-msp",
+        title: "EU AI Act pro MSP: co připravit v roce 2026",
+        description: "Praktický přehled inventáře AI, AI gramotnosti a interní politiky.",
+      },
+    ],
+    relatedFrameworks: [
+      {
+        slug: "gdpr",
+        name: "GDPR",
+        reason: "AI inventář musí rozlišit, kdy nástroje zpracovávají osobní údaje",
+      },
+      {
+        slug: "iso-27001",
+        name: "ISO 27001",
+        reason: "řízení přístupů, změn a dodavatelů AI nástrojů spadá i do bezpečnostního řízení",
       },
     ],
     resources: ["EU AI Act přehled", "Politika AI", "Školení AI gramotnosti"],
@@ -295,17 +350,36 @@ export const frameworkDetails: FrameworkDetail[] = [
       {
         icon: "solar:folder-with-files-linear",
         title: "ROPA generátor",
-        description: "Přehled zpracování podle systémů, týmů a dodavatelů.",
+        description: "Namísto ručního mapování generujete ROPA ze systémů, týmů a dodavatelů a vidíte, co se musí přepsat při změně nástroje nebo zpracovatele.",
       },
       {
         icon: "solar:shield-user-linear",
         title: "DPIA workflow",
-        description: "Kroky, schvalování a evidence rizikových zpracování.",
+        description: "Rizikové zpracování vede tým přes otázky, schválení, mitigace a termín další revize, ne přes jednorázový dokument v cloudu.",
       },
       {
         icon: "solar:bell-linear",
         title: "72h incident log",
-        description: "Časová osa incidentu a export pro ÚOOÚ.",
+        description: "Od prvního zjištění běží časová osa rozhodnutí, dopadu a oznámení, aby šlo zpětně doložit, proč se incident hlásil nebo nehlásil.",
+      },
+    ],
+    relatedArticles: [
+      {
+        slug: "gdpr-checklist-pro-audit",
+        title: "GDPR checklist pro auditovatelnou firmu",
+        description: "Checklist pro ROPA, zpracovatele, práva subjektů a 72hodinové hlášení.",
+      },
+    ],
+    relatedFrameworks: [
+      {
+        slug: "nis2",
+        name: "NIS2",
+        reason: "incident response, přístupy, dodavatelé a bezpečnostní opatření se řeší v obou režimech",
+      },
+      {
+        slug: "eu-ai-act",
+        name: "EU AI Act",
+        reason: "AI nástroje často pracují s osobními údaji a potřebují jasný účel, vlastníka a kontrolu",
       },
     ],
     resources: ["GDPR audit checklist", "ROPA šablona", "DPIA šablona"],
@@ -364,21 +438,47 @@ export const frameworkDetails: FrameworkDetail[] = [
         enforcer: "Bureau Veritas / Lloyd's Register CZ",
       },
     ],
+    riskSection: {
+      tag: "Obchodní riziko a důsledky",
+      title: "ISO 27001 obvykle neznamená správní pokutu, ale může rozhodnout o certifikaci, tendru nebo smlouvě.",
+      violationHeader: "Riziko",
+      maximumHeader: "Dopad",
+      enforcerHeader: "Kdo ho uplatní",
+    },
     splnitHelps: [
       {
         icon: "solar:document-check-linear",
         title: "SoA a politiky",
-        description: "Generování dokumentů pro Annex A a řízení rizik.",
+        description: "Statement of Applicability navazuje na reálný rozsah, rizika a důvody výjimek, takže není oddělený od důkazů v systému.",
       },
       {
         icon: "solar:cloud-download-linear",
         title: "Evidence vault",
-        description: "Automatické důkazy z Microsoft 365, GitHubu a AWS.",
+        description: "Důkazy z Microsoft 365, GitHubu a AWS se ukládají ke konkrétním kontrolám a ukazují, co má před auditem ještě chybějící vlastník.",
       },
       {
         icon: "solar:users-group-rounded-linear",
         title: "Access reviews",
-        description: "Pravidelný přehled účtů, rolí a odchylek.",
+        description: "Pravidelné revize účtů a rolí mají termín, schvalovatele a výjimky, aby auditor neviděl jen export uživatelů bez rozhodnutí.",
+      },
+    ],
+    relatedArticles: [
+      {
+        slug: "iso-27001-priprava-na-tendr",
+        title: "ISO 27001 pro SaaS firmy: příprava na enterprise tendr",
+        description: "Co mít připravené, když zákazník požaduje SoA, access reviews a důkazy.",
+      },
+    ],
+    relatedFrameworks: [
+      {
+        slug: "nis2",
+        name: "NIS2",
+        reason: "bezpečnostní opatření, řízení rizik a evidence kontrol mají velký překryv",
+      },
+      {
+        slug: "gdpr",
+        name: "GDPR",
+        reason: "přístupová práva, šifrování, incidenty a dodavatelé chrání i osobní údaje",
       },
     ],
     resources: ["ISO 27001 gap analýza", "Statement of Applicability", "Annex A checklist"],
@@ -398,19 +498,19 @@ export const frameworkDetails: FrameworkDetail[] = [
       {
         title: "Dvojí materialita",
         reference: "ESRS 1",
-        deadline: "2026+",
+        deadline: "Q1 2026 pro velké subjekty",
         description: "Vyhodnocení dopadu firmy na okolí i dopadu ESG témat na firmu.",
       },
       {
         title: "Datová evidence",
         reference: "ESRS 2",
-        deadline: "2026+",
+        deadline: "Q1–Q2 2026 podle reportovacího cyklu",
         description: "Sběr auditovatelných údajů pro ESG reporting.",
       },
       {
         title: "Dodavatelský řetězec",
         reference: "ESRS G1",
-        deadline: "2026+",
+        deadline: "2026 při zákaznickém požadavku",
         description: "Evidence odpovědností a dotazníků od obchodních partnerů.",
       },
       {
@@ -441,17 +541,29 @@ export const frameworkDetails: FrameworkDetail[] = [
       {
         icon: "solar:leaf-linear",
         title: "ESG inventář",
-        description: "Evidence požadavků, vlastníků a datových zdrojů.",
+        description: "Požadavky zákazníků, vlastníci a datové zdroje se evidují po tématech ESRS, aby bylo jasné, kdo dodá čísla a odkud pocházejí.",
       },
       {
         icon: "solar:documents-linear",
         title: "Dotazníky",
-        description: "Odpovědi pro enterprise zákazníky z jednoho zdroje.",
+        description: "Opakované ESG dotazníky vyplňujete z ověřených odpovědí a důkazů, místo aby každý obchodník hledal poslední verzi v e-mailu.",
       },
       {
         icon: "solar:calendar-check-linear",
         title: "Termíny",
-        description: "Hlídání reportovacích cyklů a schválení.",
+        description: "Termíny sběru dat, kontroly a schválení drží vlastníky v jednom workflow, takže reporting není až poslední týden před odevzdáním.",
+      },
+    ],
+    relatedFrameworks: [
+      {
+        slug: "iso-27001",
+        name: "ISO 27001",
+        reason: "enterprise tendry často kombinují bezpečnostní a ESG požadavky na dodavatele",
+      },
+      {
+        slug: "gdpr",
+        name: "GDPR",
+        reason: "HR a dodavatelská ESG data mohou obsahovat osobní údaje a vyžadovat řízené zpracování",
       },
     ],
     resources: ["CSRD readiness checklist", "ESG data inventory", "Dodavatelský dotazník"],

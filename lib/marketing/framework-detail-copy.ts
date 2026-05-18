@@ -2,7 +2,7 @@ import type { Locale } from "@/i18n/routing";
 import type { FrameworkDetail } from "@/lib/marketing/frameworks";
 
 type FrameworkDetailCopy = Partial<
-  Pick<FrameworkDetail, "regulator" | "deadline" | "law" | "hero" | "appliesTo" | "obligations" | "fines" | "splnitHelps" | "resources">
+  Pick<FrameworkDetail, "regulator" | "deadline" | "law" | "hero" | "appliesTo" | "obligations" | "fines" | "riskSection" | "splnitHelps" | "relatedFrameworks" | "relatedArticles" | "resources">
 >;
 
 const englishDetails: Record<string, FrameworkDetailCopy> = {
@@ -917,5 +917,10 @@ export function localizeFrameworkDetail(
   return {
     ...framework,
     ...copy,
+    relatedFrameworks:
+      copy.relatedFrameworks ?? (locale === "cs-CZ" ? framework.relatedFrameworks : undefined),
+    relatedArticles:
+      copy.relatedArticles ?? (locale === "cs-CZ" ? framework.relatedArticles : undefined),
+    riskSection: copy.riskSection ?? (locale === "cs-CZ" ? framework.riskSection : undefined),
   };
 }

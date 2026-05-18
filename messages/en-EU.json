@@ -1609,6 +1609,10 @@
       "helpsTag": "How Splnit.eu helps",
       "helpsTitle": "Turn obligations into controls, evidence, and deadlines.",
       "platformCta": "See the platform",
+      "relatedTag": "Related regulations",
+      "relatedTitle": "If you are working on {name}, these areas probably overlap too.",
+      "relatedArticlesTag": "Related articles",
+      "relatedArticlesTitle": "Practical guide to this topic.",
       "resourcesTitle": "Download resources"
     }
   },
