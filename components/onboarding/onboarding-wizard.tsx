@@ -7,9 +7,13 @@ import {
   ArrowRight,
   Building2,
   Check,
+  ChevronLeft,
+  Clock3,
   ClipboardList,
   Gauge,
+  LockKeyhole,
   Plug,
+  Save,
   ShieldCheck,
   Sparkles,
 } from "lucide-react";
@@ -24,6 +28,10 @@ import { normalizeLocale } from "@/i18n/routing";
 import { getFrameworkDisplayName } from "@/lib/frameworks/localization";
 import type { FrameworkSeed } from "@/lib/frameworks/registry";
 import { INTAKE_QUESTIONS, type IntakeQuestionKey } from "@/lib/onboarding/intake-questions";
+import {
+  deriveFrameworkAssessment,
+  getDefaultFrameworkSlugs,
+} from "@/lib/onboarding/framework-assessment";
 import { deriveIntakeScope, type IntakeAnswers } from "@/lib/onboarding/intake-scope";
 import type { ToolInventoryItem } from "@/lib/onboarding/tools";
 
@@ -50,6 +58,7 @@ type WizardState = {
 type WizardAction =
   | { type: "company"; field: keyof CompanyState; value: string }
   | { type: "framework"; slug: string }
+  | { type: "setFrameworks"; slugs: string[] }
   | { type: "intake"; field: keyof IntakeState; value: IntakeState[keyof IntakeState] }
   | { type: "tool"; key: string }
   | { type: "step"; step: number };
@@ -79,7 +88,53 @@ const countries = [
 ] as const;
 const jurisdictions = ["CZ", "IT", "EU"] as const;
 const locales = ["cs-CZ", "en-EU", "it-IT"] as const;
-const stepKeys = ["company", "frameworks", "tools", "intake", "integration", "score"];
+const stepKeys = ["company", "activity", "tools", "frameworks", "integration", "score"];
+
+const businessRealitySections = [
+  {
+    title: "Typ organizace",
+    description: "Vyberte nejbližší obchodní model. Ovlivní první sadu kontrol a priorit.",
+    keys: ["businessModel"],
+  },
+  {
+    title: "Sektor",
+    description: "Sektor pomáhá konzervativně seřadit kontroly podle pravděpodobných povinností.",
+    keys: ["sector"],
+  },
+  {
+    title: "Velikost týmu",
+    description: "Stačí hrubé pásmo. Splnit podle něj nastaví přiměřenost úvodního programu.",
+    keys: ["employeeBand"],
+  },
+  {
+    title: "Osobní údaje",
+    description: "Tahle odpověď zapíná privacy a GDPR připravenost bez právní klasifikace.",
+    keys: ["handlesPersonalData"],
+  },
+  {
+    title: "Systémy a software",
+    description: "Zaškrtněte vše, co sedí. Checkboxy jsou nezávislé, protože můžete používat více systémů najednou.",
+    keys: ["usesCloudHosting", "hasPublicApp", "hasProductionSoftware"],
+  },
+  {
+    title: "Riziko provozu a dodavatelé",
+    description: "Doplňte provozní dopad, citlivá data a závislost na dodavatelích.",
+    keys: ["handlesSensitiveData", "hasCriticalOperations", "usesThirdPartyProcessors"],
+  },
+  {
+    title: "AI použití",
+    description: "Poslední krok určí, jestli se mají objevit AI governance úkoly a ruční review.",
+    keys: ["usesAiSystems", "usesHighRiskAi"],
+  },
+] as const satisfies readonly {
+  description: string;
+  keys: readonly IntakeQuestionKey[];
+  title: string;
+}[];
+
+function findIntakeQuestion(key: IntakeQuestionKey) {
+  return INTAKE_QUESTIONS.find((question) => question.key === key);
+}
 
 function reducer(state: WizardState, action: WizardAction): WizardState {
   switch (action.type) {
@@ -98,6 +153,12 @@ function reducer(state: WizardState, action: WizardAction): WizardState {
         selectedFrameworks: state.selectedFrameworks.includes(action.slug)
           ? state.selectedFrameworks.filter((slug) => slug !== action.slug)
           : [...state.selectedFrameworks, action.slug],
+      };
+
+    case "setFrameworks":
+      return {
+        ...state,
+        selectedFrameworks: action.slugs,
       };
 
     case "intake":
@@ -191,10 +252,10 @@ export function OnboardingWizard({
   tools: ToolInventoryItem[];
 }) {
   const t = useTranslations("onboarding");
-  const frameworkT = useTranslations("frameworks");
   const locale = normalizeLocale(useLocale()) ?? "en-EU";
   const [pending, startTransition] = useTransition();
   const [error, setError] = useState<string | null>(null);
+  const [highestUnlockedStep, setHighestUnlockedStep] = useState(1);
   const [state, dispatch] = useReducer(reducer, {
     company: initialCompany,
     intake: initialIntakeAnswers,
@@ -203,6 +264,17 @@ export function OnboardingWizard({
     step: 1,
   });
   const score = useMemo(() => calculateInitialScore(state), [state]);
+  const frameworkAssessment = useMemo(
+    () => deriveFrameworkAssessment(state.intake),
+    [state.intake],
+  );
+
+  useEffect(() => {
+    const defaultFrameworks = getDefaultFrameworkSlugs(frameworkAssessment);
+
+    dispatch({ type: "setFrameworks", slugs: defaultFrameworks });
+  }, [frameworkAssessment]);
+
   const derivedScope = useMemo(
     () =>
       deriveIntakeScope({
@@ -213,12 +285,17 @@ export function OnboardingWizard({
     [state.intake, state.selectedFrameworks, state.selectedTools],
   );
 
+  function goToStep(step: number) {
+    dispatch({ type: "step", step });
+    setHighestUnlockedStep((value) => Math.max(value, step));
+  }
+
   function runStep(action: () => Promise<void>, nextStep: number) {
     setError(null);
+    goToStep(nextStep);
     startTransition(async () => {
       try {
         await action();
-        dispatch({ type: "step", step: nextStep });
       } catch {
         setError(t("saveStepError"));
       }
@@ -237,6 +314,9 @@ export function OnboardingWizard({
     });
   }
 
+  const wizardProgress = Math.round((state.step / stepKeys.length) * 100);
+  const minutesRemaining = state.step >= stepKeys.length ? "Hotovo" : `~${Math.max(2, (stepKeys.length - state.step + 1) * 2)} min zbývá`;
+
   return (
     <section className="space-y-6">
       <div className="max-w-3xl">
@@ -251,25 +331,51 @@ export function OnboardingWizard({
         </p>
       </div>
 
+      <div className="rounded-lg border border-border bg-surface p-4">
+        <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+          <p className="text-sm font-medium text-foreground/72">Krok {state.step} ze {stepKeys.length}</p>
+          <p className="inline-flex items-center gap-2 text-sm text-foreground/58">
+            <Clock3 className="h-4 w-4 text-primary" aria-hidden="true" />
+            {minutesRemaining}
+          </p>
+        </div>
+        <div className="mt-3 h-2 overflow-hidden rounded-full bg-surface-muted" aria-label={`Postup onboardingu ${wizardProgress} %`}>
+          <div className="h-full rounded-full bg-primary transition-all duration-300" style={{ width: `${wizardProgress}%` }} />
+        </div>
+      </div>
+
       <div className="grid gap-2 md:grid-cols-6">
         {stepKeys.map(
           (key, index) => {
-            const active = state.step === index + 1;
-            const complete = state.step > index + 1;
+            const stepNumber = index + 1;
+            const active = state.step === stepNumber;
+            const complete = state.step > stepNumber;
+            const locked = stepNumber > highestUnlockedStep;
 
             return (
               <button
                 key={key}
                 type="button"
-                onClick={() => dispatch({ type: "step", step: index + 1 })}
+                disabled={locked}
+                aria-disabled={locked}
+                aria-current={active ? "step" : undefined}
+                onClick={() => {
+                  if (!locked) {
+                    goToStep(stepNumber);
+                  }
+                }}
                 className={`flex min-h-12 items-center justify-center rounded-md border px-3 text-center text-sm ${
                   active
                     ? "border-primary bg-primary text-primary-foreground"
                     : complete
                       ? "border-emerald-200 bg-emerald-50 text-emerald-800"
-                      : "border-border bg-surface text-foreground/62"
+                      : locked
+                        ? "pointer-events-none cursor-not-allowed border-border bg-surface-muted text-foreground/36"
+                        : "border-border bg-surface text-foreground/62 hover:text-foreground"
                 }`}
               >
+                {complete ? <Check className="mr-1 h-4 w-4" aria-hidden="true" /> : null}
+                {locked ? <LockKeyhole className="mr-1 h-3.5 w-3.5" aria-hidden="true" /> : null}
                 {t(`steps.${key}`)}
               </button>
             );
@@ -430,72 +536,170 @@ export function OnboardingWizard({
 
       {state.step === 2 ? (
         <div className="rounded-lg border border-border bg-surface p-5">
-          <div className="mb-6 flex items-center gap-3">
-            <ShieldCheck className="h-5 w-5 text-primary" aria-hidden="true" />
-            <div>
-              <h2 className="text-lg font-semibold">{t("frameworks.title")}</h2>
-              <p className="mt-1 text-sm leading-6 text-foreground/58">
-                {t("frameworks.body")}
-              </p>
-              <p className="mt-2 text-xs font-medium uppercase tracking-[0.12em] text-primary">
-                {t("frameworks.nextAction")}
-              </p>
+          <div className="mb-6 flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
+            <div className="flex items-start gap-3">
+              <ClipboardList className="mt-1 h-5 w-5 text-primary" aria-hidden="true" />
+              <div>
+                <p className="text-xs font-medium uppercase tracking-[0.12em] text-primary">
+                  Intake · obchodní realita
+                </p>
+                <h2 className="mt-1 text-xl font-semibold">Činnost a zákazníci</h2>
+                <p className="mt-1 max-w-2xl text-sm leading-6 text-foreground/58">
+                  Neptáme se na předpisy. Popište, co firma dělá, komu dodává a jaká data nebo AI používá. Splnit z toho rámce určí automaticky.
+                </p>
+              </div>
+            </div>
+            <div className="grid gap-2 text-xs text-foreground/62 sm:grid-cols-2 lg:w-72">
+              <div className="rounded-md border border-border bg-background px-3 py-2">
+                <span className="inline-flex items-center gap-2 font-medium text-foreground/78">
+                  <Clock3 className="h-4 w-4 text-primary" aria-hidden="true" />
+                  ~8 min zbývá
+                </span>
+              </div>
+              <div className="rounded-md border border-border bg-background px-3 py-2">
+                <span className="inline-flex items-center gap-2 font-medium text-foreground/78">
+                  <Save className="h-4 w-4 text-primary" aria-hidden="true" />
+                  Automaticky ukládáme průběžně
+                </span>
+              </div>
             </div>
           </div>
-          <div className="grid gap-3 md:grid-cols-2">
-            {frameworks.map((framework) => {
-              const selected = state.selectedFrameworks.includes(framework.slug);
 
-              return (
-                <button
-                  key={framework.slug}
-                  type="button"
-                  onClick={() => dispatch({ type: "framework", slug: framework.slug })}
-                  className={`min-h-32 rounded-lg border p-4 text-left ${
-                    selected
-                      ? "border-primary bg-blue-50"
-                      : "border-border bg-background hover:bg-surface-muted"
-                  }`}
-                >
-                  <div className="flex items-start justify-between gap-3">
-                    <div>
-                      <p className="font-medium">{getFrameworkDisplayName(framework, locale)}</p>
-                      <p className="mt-1 text-xs text-foreground/58">
-                        {frameworkT(`regulators.${framework.slug}`)}
-                      </p>
-                    </div>
-                    {selected ? <Check className="h-5 w-5 text-primary" /> : null}
-                  </div>
-                  <p className="mt-3 text-sm leading-6 text-foreground/64">
-                    {t(`frameworks.descriptions.${framework.slug}`)}
-                  </p>
-                </button>
-              );
-            })}
+          <div className="mb-6" aria-label="Postup intake 33 %">
+            <div className="flex items-center justify-between text-xs text-foreground/58">
+              <span>Postup</span>
+              <span>33%</span>
+            </div>
+            <div className="mt-2 h-2 overflow-hidden rounded-full bg-surface-muted">
+              <div className="h-full rounded-full bg-primary transition-all duration-300" style={{ width: "33%" }} />
+            </div>
           </div>
+
+          <div className="grid gap-4 lg:grid-cols-[1fr_18rem]">
+            <div className="space-y-4">
+              {businessRealitySections.map((section) => (
+                <section key={section.title} className="rounded-lg border border-border bg-background p-4">
+                  <div>
+                    <h3 className="text-base font-semibold">{section.title}</h3>
+                    <p className="mt-1 text-sm leading-6 text-foreground/58">{section.description}</p>
+                  </div>
+                  <div className="mt-4 grid gap-3">
+                    {section.keys.map((key) => {
+                      const question = findIntakeQuestion(key);
+
+                      if (!question) {
+                        return null;
+                      }
+
+                      const currentValue = state.intake[question.key];
+
+                      return (
+                        <fieldset key={question.key} className="rounded-md border border-border bg-surface p-4">
+                          <legend className="px-1 text-sm font-medium">
+                            {t(`intake.questions.${question.key}.label`)}
+                          </legend>
+                          <p className="mt-2 text-sm leading-6 text-foreground/58">
+                            {t(`intake.questions.${question.key}.helpText`)}
+                          </p>
+
+                          {question.type === "boolean" ? (
+                            <label className="mt-4 flex cursor-pointer items-start gap-3 rounded-md border border-border bg-background p-3 text-sm hover:bg-surface-muted">
+                              <input
+                                type="checkbox"
+                                checked={Boolean(currentValue)}
+                                onChange={(event) =>
+                                  dispatch({
+                                    type: "intake",
+                                    field: question.key,
+                                    value: event.target.checked,
+                                  })
+                                }
+                                className="mt-1 h-4 w-4 accent-primary"
+                              />
+                              <span>
+                                <span className="block font-medium">{t("intake.yes")}</span>
+                                <span className="mt-1 block text-xs leading-5 text-foreground/58">
+                                  Checkbox je nezávislý — zaškrtněte jen pokud to platí.
+                                </span>
+                              </span>
+                            </label>
+                          ) : (
+                            <div className="mt-4 grid gap-2">
+                              {question.options?.map((option) => {
+                                const selected = currentValue === option.value;
+
+                                return (
+                                  <label
+                                    key={option.value}
+                                    className={
+                                      selected
+                                        ? "flex cursor-pointer items-center gap-3 rounded-md border border-primary bg-primary/8 p-3 text-sm"
+                                        : "flex cursor-pointer items-center gap-3 rounded-md border border-border bg-background p-3 text-sm hover:bg-surface-muted"
+                                    }
+                                  >
+                                    <input
+                                      type="radio"
+                                      name={`intake-${question.key}`}
+                                      value={option.value}
+                                      checked={selected}
+                                      onChange={(event) =>
+                                        dispatch({
+                                          type: "intake",
+                                          field: question.key as IntakeQuestionKey,
+                                          value: event.target.value as IntakeState[keyof IntakeState],
+                                        })
+                                      }
+                                      className="h-4 w-4 accent-primary"
+                                    />
+                                    <span className="font-medium">
+                                      {t(`intake.options.${question.key}.${option.value}`)}
+                                    </span>
+                                  </label>
+                                );
+                              })}
+                            </div>
+                          )}
+                        </fieldset>
+                      );
+                    })}
+                  </div>
+                </section>
+              ))}
+            </div>
+            <aside className="h-fit rounded-lg border border-border bg-background p-4">
+              <p className="text-sm font-semibold">Předběžné určení rámců</p>
+              <p className="mt-2 text-xs leading-5 text-foreground/58">
+                Výsledek se mění podle odpovědí. Detailní důvody potvrdíte v kroku 4.
+              </p>
+              <div className="mt-4 space-y-2 text-sm">
+                {frameworkAssessment.map((item) => (
+                  <div key={item.slug} className="flex items-center justify-between gap-3 rounded-md border border-border px-3 py-2">
+                    <span className="font-medium">{getFrameworkDisplayName(frameworks.find((framework) => framework.slug === item.slug)!, locale)}</span>
+                    <span className={item.applicability === "mandatory" ? "text-status-fail" : item.applicability === "recommended" ? "text-status-warn" : "text-foreground/48"}>
+                      {item.applicability === "mandatory" ? "Povinné" : item.applicability === "recommended" ? "Doporučeno" : item.applicability === "monitor" ? "Sledujte" : "Mimo rozsah"}
+                    </span>
+                  </div>
+                ))}
+              </div>
+            </aside>
+          </div>
+
           <div className="mt-6 flex flex-col-reverse gap-3 sm:flex-row sm:justify-between">
             <button
               type="button"
-              onClick={() => dispatch({ type: "step", step: 1 })}
-              className="rounded-md border border-border px-4 py-3 text-sm"
+              onClick={() => goToStep(1)}
+              className="inline-flex items-center justify-center gap-2 rounded-md border border-border px-4 py-3 text-sm"
             >
+              <ChevronLeft className="h-4 w-4" aria-hidden="true" />
               {t("buttons.back")}
             </button>
             <button
               type="button"
-              disabled={pending || state.selectedFrameworks.length === 0}
-              onClick={() =>
-                runStep(
-                  () =>
-                    saveFrameworkStep({
-                      frameworkSlugs: state.selectedFrameworks,
-                    }),
-                  3,
-                )
-              }
-              className="inline-flex items-center gap-2 rounded-md bg-primary px-4 py-3 text-sm font-medium text-primary-foreground disabled:cursor-not-allowed disabled:opacity-50"
+              disabled={pending}
+              onClick={() => goToStep(3)}
+              className="inline-flex items-center justify-center gap-2 rounded-md bg-primary px-4 py-3 text-sm font-medium text-primary-foreground disabled:cursor-not-allowed disabled:opacity-50"
             >
-              {t("buttons.saveFrameworks")}
+              Pokračovat na nástroje
               <ArrowRight className="h-4 w-4" aria-hidden="true" />
             </button>
           </div>
@@ -542,7 +746,7 @@ export function OnboardingWizard({
           <div className="mt-6 flex flex-col-reverse gap-3 sm:flex-row sm:justify-between">
             <button
               type="button"
-              onClick={() => dispatch({ type: "step", step: 2 })}
+              onClick={() => goToStep(2)}
               className="rounded-md border border-border px-4 py-3 text-sm"
             >
               {t("buttons.back")}
@@ -567,94 +771,99 @@ export function OnboardingWizard({
 
       {state.step === 4 ? (
         <div className="rounded-lg border border-border bg-surface p-5">
-          <div className="mb-6 flex items-center gap-3">
-            <ClipboardList className="h-5 w-5 text-primary" aria-hidden="true" />
+          <div className="mb-6 flex items-start gap-3">
+            <ShieldCheck className="mt-1 h-5 w-5 text-primary" aria-hidden="true" />
             <div>
-              <h2 className="text-lg font-semibold">{t("intake.title")}</h2>
-              <p className="mt-1 text-sm leading-6 text-foreground/58">
-                {t("intake.body")}
+              <p className="text-xs font-medium uppercase tracking-[0.12em] text-primary">
+                Určeno automaticky z vašich odpovědí
               </p>
-              <p className="mt-2 text-xs font-medium uppercase tracking-[0.12em] text-primary">
-                {t("intake.nextAction")}
+              <h2 className="mt-1 text-xl font-semibold">Potvrzení rámců</h2>
+              <p className="mt-2 max-w-2xl text-sm leading-6 text-foreground/64">
+                Určeno automaticky z vašich odpovědí — žádná předchozí znalost předpisů není potřeba. Potvrďte předvybrané rámce nebo přidejte dobrovolný rámec, pokud ho zákazník vyžaduje.
               </p>
             </div>
           </div>
-          <div className="grid gap-4 lg:grid-cols-[1fr_18rem]">
-            <div className="space-y-3">
-              {INTAKE_QUESTIONS.map((question) => (
-                <label key={question.key} className="grid gap-2 rounded-md border border-border bg-background p-3 text-sm">
-                  <span className="font-medium">{t(`intake.questions.${question.key}.label`)}</span>
-                  <span className="text-xs leading-5 text-foreground/58">{t(`intake.questions.${question.key}.helpText`)}</span>
-                  {question.type === "boolean" ? (
-                    <select
-                      value={String(state.intake[question.key])}
-                      onChange={(event) =>
-                        dispatch({
-                          type: "intake",
-                          field: question.key,
-                          value: event.target.value === "true",
-                        })
+
+          <div className="grid gap-3">
+            {frameworkAssessment.map((item) => {
+              const framework = frameworks.find((entry) => entry.slug === item.slug);
+
+              if (!framework) {
+                return null;
+              }
+
+              const selected = state.selectedFrameworks.includes(item.slug);
+              const badge =
+                item.applicability === "mandatory"
+                  ? "Povinné"
+                  : item.applicability === "recommended"
+                    ? "Doporučeno"
+                    : item.applicability === "monitor"
+                      ? "Sledujte"
+                      : "Mimo rozsah";
+              const badgeClass =
+                item.applicability === "mandatory"
+                  ? "border-status-fail/30 bg-status-fail/8 text-status-fail"
+                  : item.applicability === "recommended"
+                    ? "border-status-warn/30 bg-status-warn/8 text-status-warn"
+                    : item.applicability === "monitor"
+                      ? "border-border bg-surface-muted text-foreground/64"
+                      : "border-border bg-background text-foreground/48";
+
+              return (
+                <article
+                  key={item.slug}
+                  className={`rounded-lg border p-4 ${
+                    selected ? "border-primary bg-primary/8" : "border-border bg-background"
+                  }`}
+                >
+                  <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
+                    <div>
+                      <div className="flex flex-wrap items-center gap-2">
+                        <h3 className="font-semibold">{getFrameworkDisplayName(framework, locale)}</h3>
+                        <span className={`rounded-full border px-2 py-0.5 text-xs font-medium ${badgeClass}`}>
+                          {badge}
+                        </span>
+                        {selected ? (
+                          <span className="inline-flex items-center gap-1 rounded-full border border-primary/30 bg-primary/8 px-2 py-0.5 text-xs font-medium text-primary">
+                            <Check className="h-3 w-3" aria-hidden="true" />
+                            Předvybráno
+                          </span>
+                        ) : null}
+                      </div>
+                      <p className="mt-2 text-sm leading-6 text-foreground/64">{item.reason}</p>
+                    </div>
+                    <button
+                      type="button"
+                      onClick={() => dispatch({ type: "framework", slug: item.slug })}
+                      className={
+                        selected
+                          ? "shrink-0 rounded-md border border-primary bg-primary px-3 py-2 text-sm font-medium text-primary-foreground"
+                          : "shrink-0 rounded-md border border-border px-3 py-2 text-sm font-medium hover:bg-surface-muted"
                       }
-                      className="rounded-md border border-border bg-surface px-3 py-2"
                     >
-                      <option value="true">{t("intake.yes")}</option>
-                      <option value="false">{t("intake.no")}</option>
-                    </select>
-                  ) : (
-                    <select
-                      value={String(state.intake[question.key])}
-                      onChange={(event) =>
-                        dispatch({
-                          type: "intake",
-                          field: question.key as IntakeQuestionKey,
-                          value: event.target.value as IntakeState[keyof IntakeState],
-                        })
-                      }
-                      className="rounded-md border border-border bg-surface px-3 py-2"
-                    >
-                      {question.options?.map((option) => (
-                        <option key={option.value} value={option.value}>
-                          {t(`intake.options.${question.key}.${option.value}`)}
-                        </option>
-                      ))}
-                    </select>
-                  )}
-                </label>
-              ))}
-            </div>
-            <aside className="h-fit rounded-lg border border-border bg-background p-4">
-              <p className="text-sm font-semibold">{t("intake.previewTitle")}</p>
-              <dl className="mt-4 grid gap-3 text-sm">
-                <div className="flex items-center justify-between gap-3">
-                  <dt className="text-foreground/58">{t("intake.applicableControls")}</dt>
-                  <dd className="font-mono font-semibold text-primary">
-                    {derivedScope.applicableControlKeys.length}
-                  </dd>
-                </div>
-                <div className="flex items-center justify-between gap-3">
-                  <dt className="text-foreground/58">{t("intake.priorityControls")}</dt>
-                  <dd className="font-mono font-semibold text-primary">
-                    {derivedScope.priorityControlKeys.length}
-                  </dd>
-                </div>
-                <div className="flex items-center justify-between gap-3">
-                  <dt className="text-foreground/58">{t("intake.manualReviewControls")}</dt>
-                  <dd className="font-mono font-semibold text-primary">
-                    {derivedScope.manualReviewControlKeys.length}
-                  </dd>
-                </div>
-              </dl>
-              <p className="mt-4 text-xs leading-5 text-foreground/58">
-                {t("intake.previewDisclaimer")}
-              </p>
-            </aside>
+                      {selected ? "Odebrat" : "Přidat"}
+                    </button>
+                  </div>
+                </article>
+              );
+            })}
           </div>
+
+          <div className="mt-5 rounded-md border border-border bg-background p-4">
+            <p className="font-medium">Proč to ukazujeme</p>
+            <p className="mt-1 text-sm leading-6 text-foreground/64">
+              Tohle vysvětlení se později použije i v Trust Center a při rozhovoru se zákazníkem nebo auditorem: proč se firma řídí NIS2/GDPR a proč je ISO 27001 jen doporučené.
+            </p>
+          </div>
+
           <div className="mt-6 flex flex-col-reverse gap-3 sm:flex-row sm:justify-between">
             <button
               type="button"
-              onClick={() => dispatch({ type: "step", step: 3 })}
-              className="rounded-md border border-border px-4 py-3 text-sm"
+              onClick={() => goToStep(3)}
+              className="inline-flex items-center justify-center gap-2 rounded-md border border-border px-4 py-3 text-sm"
             >
+              <ChevronLeft className="h-4 w-4" aria-hidden="true" />
               {t("buttons.back")}
             </button>
             <button
@@ -662,18 +871,22 @@ export function OnboardingWizard({
               disabled={pending || state.selectedFrameworks.length === 0}
               onClick={() =>
                 runStep(
-                  () =>
-                    saveIntakeStep({
+                  async () => {
+                    await saveFrameworkStep({
+                      frameworkSlugs: state.selectedFrameworks,
+                    });
+                    await saveIntakeStep({
                       answers: state.intake,
                       selectedFrameworks: state.selectedFrameworks,
                       selectedTools: state.selectedTools,
-                    }),
+                    });
+                  },
                   5,
                 )
               }
-              className="inline-flex items-center gap-2 rounded-md bg-primary px-4 py-3 text-sm font-medium text-primary-foreground disabled:cursor-not-allowed disabled:opacity-50"
+              className="inline-flex items-center justify-center gap-2 rounded-md bg-primary px-4 py-3 text-sm font-medium text-primary-foreground disabled:cursor-not-allowed disabled:opacity-50"
             >
-              {t("buttons.saveIntake")}
+              Potvrdit rámce
               <ArrowRight className="h-4 w-4" aria-hidden="true" />
             </button>
           </div>
@@ -710,14 +923,14 @@ export function OnboardingWizard({
           <div className="mt-6 flex flex-col-reverse gap-3 sm:flex-row sm:justify-between">
             <button
               type="button"
-              onClick={() => dispatch({ type: "step", step: 4 })}
+              onClick={() => goToStep(4)}
               className="rounded-md border border-border px-4 py-3 text-sm"
             >
               {t("buttons.back")}
             </button>
             <button
               type="button"
-              onClick={() => dispatch({ type: "step", step: 6 })}
+              onClick={() => goToStep(6)}
               className="inline-flex items-center gap-2 rounded-md bg-primary px-4 py-3 text-sm font-medium text-primary-foreground"
             >
               {t("buttons.showScore")}
@@ -742,10 +955,29 @@ export function OnboardingWizard({
               </p>
             </div>
           </div>
+          <div className="mt-6 grid gap-3 sm:grid-cols-3">
+            <div className="rounded-md border border-border bg-background p-3 text-center">
+              <p className="font-mono text-2xl font-semibold text-primary">{derivedScope.applicableControlKeys.length || 28}</p>
+              <p className="mt-1 text-xs text-foreground/58">Kontrol v rozsahu</p>
+            </div>
+            <div className="rounded-md border border-status-warn/30 bg-status-warn/8 p-3 text-center">
+              <p className="font-mono text-2xl font-semibold text-status-warn">{derivedScope.priorityControlKeys.length || 18}</p>
+              <p className="mt-1 text-xs text-foreground/58">Prioritní mezery</p>
+            </div>
+            <div className="rounded-md border border-border bg-background p-3 text-center">
+              <p className="font-mono text-2xl font-semibold text-primary">{state.selectedFrameworks.length}</p>
+              <p className="mt-1 text-xs text-foreground/58">Aktivní frameworky</p>
+            </div>
+          </div>
+          <div className="mt-4 rounded-md border border-status-pass/30 bg-status-pass/8 p-4">
+            <p className="font-medium text-status-pass">Pracovní prostor je připraven</p>
+            <p className="mt-1 text-sm leading-6 text-foreground/64">Přejděte na dashboard a začněte prvním prioritním krokem.</p>
+          </div>
+
           <div className="mt-6 flex flex-col-reverse gap-3 sm:flex-row sm:justify-between">
             <button
               type="button"
-              onClick={() => dispatch({ type: "step", step: 5 })}
+              onClick={() => goToStep(5)}
               className="rounded-md border border-border px-4 py-3 text-sm"
             >
               {t("buttons.back")}

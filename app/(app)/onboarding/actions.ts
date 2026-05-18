@@ -5,11 +5,13 @@ import { revalidatePath } from "next/cache";
 import { cookies } from "next/headers";
 import { z } from "zod";
 import { localeCookieName } from "@/i18n/routing";
+import { hasDatabaseUrl } from "@/lib/db";
 import type { FrameworkSlug } from "@/lib/controls/library";
 import {
   completeOnboarding,
   markOnboardingIntakeCompleted,
   saveOnboardingCompany,
+  seedInitialControlStatusesFromIntakeScope,
   saveOnboardingFrameworks,
   saveOnboardingIntakeProfile,
   saveOnboardingTools,
@@ -115,6 +117,14 @@ const completeSchema = z.object({
 });
 
 async function getActiveOrgId() {
+  const clerkConfigured =
+    Boolean(process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY) &&
+    Boolean(process.env.CLERK_SECRET_KEY);
+
+  if (!clerkConfigured || !hasDatabaseUrl()) {
+    return null;
+  }
+
   const session = await auth();
 
   if (!session.userId || !session.orgId) {
@@ -137,6 +147,10 @@ export async function saveCompanyStep(input: unknown) {
   const parsed = companySchema.parse(input);
   const clerkOrgId = await getActiveOrgId();
 
+  if (!clerkOrgId) {
+    return;
+  }
+
   await saveOnboardingCompany({
     clerkOrgId,
     country: parsed.country,
@@ -156,6 +170,10 @@ export async function saveFrameworkStep(input: unknown) {
   const parsed = frameworkSchema.parse(input);
   const clerkOrgId = await getActiveOrgId();
 
+  if (!clerkOrgId) {
+    return;
+  }
+
   await saveOnboardingFrameworks({
     clerkOrgId,
     frameworkSlugs: parsed.frameworkSlugs,
@@ -163,11 +181,16 @@ export async function saveFrameworkStep(input: unknown) {
 
   revalidatePath("/onboarding");
   revalidatePath("/dashboard");
+  revalidatePath("/controls");
 }
 
 export async function saveToolsStep(input: unknown) {
   const parsed = toolSchema.parse(input);
   const clerkOrgId = await getActiveOrgId();
+
+  if (!clerkOrgId) {
+    return;
+  }
 
   await saveOnboardingTools({
     clerkOrgId,
@@ -186,6 +209,10 @@ export async function saveIntakeStep(input: unknown) {
     selectedTools: parsed.selectedTools,
   });
 
+  if (!clerkOrgId) {
+    return;
+  }
+
   await saveOnboardingIntakeProfile({
     answers: parsed.answers,
     clerkOrgId,
@@ -193,14 +220,20 @@ export async function saveIntakeStep(input: unknown) {
     version: INTAKE_PROFILE_VERSION,
   });
   await markOnboardingIntakeCompleted(clerkOrgId);
+  await seedInitialControlStatusesFromIntakeScope(clerkOrgId);
 
   revalidatePath("/onboarding");
   revalidatePath("/dashboard");
+  revalidatePath("/controls");
 }
 
 export async function completeOnboardingStep(input: unknown) {
   const parsed = completeSchema.parse(input);
   const clerkOrgId = await getActiveOrgId();
+
+  if (!clerkOrgId) {
+    return;
+  }
 
   await completeOnboarding({
     clerkOrgId,
@@ -209,4 +242,5 @@ export async function completeOnboardingStep(input: unknown) {
 
   revalidatePath("/dashboard");
   revalidatePath("/onboarding");
+  revalidatePath("/controls");
 }

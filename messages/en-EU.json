@@ -380,8 +380,18 @@
       "reviewGapsCta": "Review priority gaps",
       "reassurance": "You can explore the platform, but results and scores become reliable after the intake.",
       "demoNote": "Demo mode: live data will load after the intake and first integration are connected.",
-      "steps": ["Intake", "Framework", "Integration", "First evidence"],
-      "stepHints": ["Defines relevant controls", "Activate GDPR, NIS2, ISO", "Connect first source", "Upload first proof"],
+      "steps": [
+        "Intake",
+        "Framework",
+        "Integration",
+        "First evidence"
+      ],
+      "stepHints": [
+        "Defines relevant controls",
+        "Activate GDPR, NIS2, ISO",
+        "Connect first source",
+        "Upload first proof"
+      ],
       "stepDetails": [
         {
           "title": "Complete the intake questionnaire",
@@ -1078,6 +1088,7 @@
       "unknown": "Unknown",
       "pass": "Passed",
       "fail": "Not passed",
+      "warning": "Warning",
       "manual_review": "Partial",
       "not_applicable": "N/A",
       "out_of_scope": "Out of scope"
@@ -1678,16 +1689,16 @@
   "onboarding": {
     "eyebrow": "Onboarding",
     "title": "Organisation setup",
-    "description": "Six steps prepare an Italy-first compliance workspace: organisation profile, framework baseline, tool inventory, deterministic intake scope, and the first practical integration.",
+    "description": "Six steps prepare the workspace: company profile, business reality, tools in use, automatically determined frameworks, first integration, and initial score.",
     "saveStepError": "The step could not be saved.",
     "finishError": "Onboarding could not be completed.",
     "steps": {
       "company": "Company",
-      "frameworks": "Frameworks",
+      "activity": "Activity",
       "tools": "Tools",
+      "frameworks": "Frameworks",
       "integration": "Integration",
-      "score": "Score",
-      "intake": "Scope"
+      "score": "Score"
     },
     "company": {
       "title": "Company details",

@@ -66,13 +66,13 @@ async function loadHubData() {
     Boolean(process.env.CLERK_SECRET_KEY);
 
   if (!clerkConfigured || !hasDatabaseUrl()) {
-    return { data: null, organisationLocale: null };
+    return { data: null, organisationLocale: null, toolInventory: [] as string[] };
   }
 
   const session = await auth();
 
   if (!session.orgId) {
-    return { data: null, organisationLocale: null };
+    return { data: null, organisationLocale: null, toolInventory: [] as string[] };
   }
 
   try {
@@ -84,9 +84,12 @@ async function loadHubData() {
     return {
       data,
       organisationLocale: organisation?.locale ?? null,
+      toolInventory: Array.isArray(organisation?.toolInventory)
+        ? organisation.toolInventory.filter((tool): tool is string => typeof tool === "string")
+        : [],
     };
   } catch {
-    return { data: null, organisationLocale: null };
+    return { data: null, organisationLocale: null, toolInventory: [] as string[] };
   }
 }
 
@@ -156,6 +159,19 @@ function getTestCount(provider: string, fallback: number, data: HubData | null) 
   return data.tests.filter((test) => test.provider === provider).length;
 }
 
+
+function getRecommendedProvider(toolInventory: string[]) {
+  if (toolInventory.includes("microsoft-copilot")) {
+    return "microsoft365";
+  }
+
+  if (toolInventory.includes("github-copilot")) {
+    return "github";
+  }
+
+  return "microsoft365";
+}
+
 function getProviderDescription(
   providerKey: IntegrationProviderKey,
   copy: IntegrationsCopy,
@@ -165,7 +181,7 @@ function getProviderDescription(
 
 export default async function IntegrationsPage() {
   const requestLocale = normalizeLocale(await getLocale()) ?? "cs-CZ";
-  const { data, organisationLocale } = await loadHubData();
+  const { data, organisationLocale, toolInventory } = await loadHubData();
   const locale = normalizeLocale(organisationLocale) ?? requestLocale;
   const copy = getMessagesForLocale(locale).integrations;
   const integrationMap = new Map(
@@ -177,6 +193,10 @@ export default async function IntegrationsPage() {
   const hasConnecting = data?.integrations.some(
     (integration) => integration.status === "connecting",
   ) ?? false;
+  const hasConnectedIntegration = data?.integrations.some(
+    (integration) => integration.status === "connected" || integration.status === "connecting",
+  ) ?? false;
+  const recommendedProvider = getRecommendedProvider(toolInventory);
 
   return (
     <section className="space-y-6">
@@ -187,7 +207,30 @@ export default async function IntegrationsPage() {
         subtitle={copy.index.subtitle}
       />
 
-      <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
+      {!hasConnectedIntegration ? (
+        <section className="rounded-lg border border-primary/30 bg-primary/8 p-5">
+          <div className="max-w-3xl">
+            <p className="text-xs font-medium uppercase tracking-[0.12em] text-primary">
+              Doporučeno na základě vašeho intake
+            </p>
+            <h2 className="mt-2 text-xl font-semibold">Připojte první zdroj důkazů</h2>
+            <p className="mt-2 text-sm leading-6 text-foreground/64">
+              Začněte integrací, kterou už podle intake pravděpodobně používáte. Splnit z ní vytvoří první automatické testy a důkazy; pokud váš stack není v seznamu, použijte ruční upload dole.
+            </p>
+          </div>
+        </section>
+      ) : null}
+
+      <div className="flex flex-wrap items-center gap-x-3 gap-y-2 rounded-lg border border-border bg-surface px-4 py-3 text-xs text-foreground/62">
+        <span className="font-medium text-foreground/78">{copy.index.results24h}</span>
+        <span className="inline-flex items-center gap-1"><span className="h-2 w-2 rounded-full bg-status-pass" aria-hidden="true" />pass</span>
+        <span className="inline-flex items-center gap-1"><span className="h-2 w-2 rounded-full bg-danger" aria-hidden="true" />fail</span>
+        <span className="inline-flex items-center gap-1"><span className="h-2 w-2 rounded-full bg-warning" aria-hidden="true" />varování</span>
+        <span className="inline-flex items-center gap-1"><span className="h-2 w-2 rounded-full bg-primary" aria-hidden="true" />ruční</span>
+        <span className="inline-flex items-center gap-1"><span className="h-2 w-2 rounded-full bg-foreground/40" aria-hidden="true" />error</span>
+      </div>
+
+      <div className="grid items-stretch gap-4 md:grid-cols-2 xl:grid-cols-4">
         {providers.map((provider) => {
           const Icon = provider.icon;
           const integration = integrationMap.get(provider.key);
@@ -201,13 +244,22 @@ export default async function IntegrationsPage() {
           return (
             <article
               key={provider.key}
-              className="card interactive-card"
+              className={
+                !hasConnectedIntegration && provider.key === recommendedProvider
+                  ? "card interactive-card flex h-full flex-col border-primary/50 ring-1 ring-primary/20"
+                  : "card interactive-card flex h-full flex-col"
+              }
             >
               <div className="flex items-start justify-between gap-4">
                 <div>
-                  <StatusPill tone={providerStatus.tone}>
-                    {providerStatus.label}
-                  </StatusPill>
+                  <div className="flex flex-wrap gap-2">
+                    <StatusPill tone={providerStatus.tone}>
+                      {providerStatus.label}
+                    </StatusPill>
+                    {!hasConnectedIntegration && provider.key === recommendedProvider ? (
+                      <StatusPill tone="warn">Doporučeno</StatusPill>
+                    ) : null}
+                  </div>
                   <h2 className="mt-3 text-lg font-medium">{provider.name}</h2>
                 </div>
                 {connected ? (
@@ -254,26 +306,26 @@ export default async function IntegrationsPage() {
                 <p className="text-xs font-medium text-foreground/60">
                   {copy.index.results24h}
                 </p>
-                <div className="mt-2 grid grid-cols-5 gap-2 text-center font-mono text-xs">
-                  <span className="rounded-sm bg-background px-1 py-1 text-status-pass">
+                <div className="mt-2 grid grid-cols-5 gap-2 text-center font-mono text-xs" aria-label="Výsledky za 24 hodin: pass, fail, warning, ruční review, error">
+                  <span className="rounded-sm bg-background px-1 py-1 text-status-pass" title="Pass">
                     {breakdown.pass}
                   </span>
-                  <span className="rounded-sm bg-background px-1 py-1 text-danger">
+                  <span className="rounded-sm bg-background px-1 py-1 text-danger" title="Fail">
                     {breakdown.fail}
                   </span>
-                  <span className="rounded-sm bg-background px-1 py-1 text-warning">
+                  <span className="rounded-sm bg-background px-1 py-1 text-warning" title="Warning">
                     {breakdown.warning}
                   </span>
-                  <span className="rounded-sm bg-background px-1 py-1 text-primary">
+                  <span className="rounded-sm bg-background px-1 py-1 text-primary" title="Ruční review">
                     {breakdown.manual_review}
                   </span>
-                  <span className="rounded-sm bg-background px-1 py-1 text-foreground/58">
+                  <span className="rounded-sm bg-background px-1 py-1 text-foreground/58" title="Error">
                     {breakdown.error}
                   </span>
                 </div>
               </div>
 
-              <div className="mt-5 flex flex-wrap gap-2">
+              <div className="mt-auto flex flex-wrap gap-2 pt-5">
                 {provider.planned ? (
                   <span
                     className="btn btn-secondary cursor-not-allowed opacity-60"
@@ -307,6 +359,23 @@ export default async function IntegrationsPage() {
           );
         })}
       </div>
+
+      {!hasConnectedIntegration ? (
+        <section className="rounded-lg border border-border bg-surface p-5">
+          <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+            <div>
+              <h2 className="text-lg font-medium">Nemáte svůj stack v seznamu?</h2>
+              <p className="mt-1 text-sm leading-6 text-foreground/64">
+                Ruční upload udrží aktivační loop průchodný: vyberte prioritní kontrolu, nahrajte screenshot, export nebo dokument a vraťte se k integracím později.
+              </p>
+            </div>
+            <Link href="/evidence" className="btn btn-secondary shrink-0">
+              Nahrát důkaz ručně
+              <ArrowRight className="h-4 w-4" aria-hidden="true" strokeWidth={1.5} />
+            </Link>
+          </div>
+        </section>
+      ) : null}
     </section>
   );
 }

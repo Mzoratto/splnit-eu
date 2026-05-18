@@ -1,8 +1,7 @@
 import Link from "next/link";
 import { auth } from "@clerk/nextjs/server";
 import { getLocale } from "next-intl/server";
-import { ArrowRight, ShieldCheck } from "lucide-react";
-import { DataModeNotice } from "@/components/app/data-mode-notice";
+import { ArrowRight, CircleHelp } from "lucide-react";
 import { PageHeader } from "@/components/app/page-header";
 import { StatusPill, type StatusPillTone } from "@/components/app/status-pill";
 import { getMessagesForLocale } from "@/i18n/messages";
@@ -18,7 +17,44 @@ import { getOrganisationByClerkOrgId } from "@/lib/db/queries/organisations";
 
 type ControlsCopy = ReturnType<typeof getMessagesForLocale>["controlsPage"];
 type OrgControl = Awaited<ReturnType<typeof listOrgControlsForIndex>>[number];
+type DataMode = "live" | "demo" | "unavailable";
 type ScopeFilter = "in-scope" | "priority" | "gaps" | "out-of-scope";
+type ViewMode = "focus" | "all";
+
+
+function buildDemoControls(): OrgControl[] {
+  const statusCycle: Array<OrgControl["status"]> = ["fail", "manual_review", "warning", "unknown", null];
+  const frameworkNameBySlug = new Map([
+    ["nis2", { nameCs: "NIS2", nameEn: "NIS2" }],
+    ["gdpr", { nameCs: "GDPR", nameEn: "GDPR" }],
+    ["iso27001", { nameCs: "ISO 27001", nameEn: "ISO 27001" }],
+    ["ai-act", { nameCs: "EU AI Act", nameEn: "EU AI Act" }],
+    ["csrd", { nameCs: "CSRD", nameEn: "CSRD" }],
+  ]);
+
+  return CONTROL_LIBRARY.slice(0, 28).map((control, index) => {
+    const frameworks = control.frameworkMappings.map((mapping) => ({
+      nameCs: frameworkNameBySlug.get(mapping.frameworkSlug)?.nameCs ?? mapping.frameworkSlug,
+      nameEn: frameworkNameBySlug.get(mapping.frameworkSlug)?.nameEn ?? mapping.frameworkSlug,
+      slug: mapping.frameworkSlug,
+    }));
+
+    return {
+      category: control.category,
+      descriptionCs: control.descriptionCs ?? null,
+      frameworks,
+      intakeRationale: null,
+      isAutomated: control.isAutomated,
+      isIntakePriority: index < 5,
+      key: control.key,
+      scopeStatus: index > 23 ? "out_of_scope" : "applicable",
+      status: statusCycle[index % statusCycle.length],
+      titleCs: control.titleCs,
+      titleEn: control.titleEn,
+      updatedAt: null,
+    };
+  });
+}
 
 async function loadControlsIndexData() {
   const clerkConfigured =
@@ -26,13 +62,13 @@ async function loadControlsIndexData() {
     Boolean(process.env.CLERK_SECRET_KEY);
 
   if (!clerkConfigured || !hasDatabaseUrl()) {
-    return { controls: [], mode: "unavailable" as const, organisationLocale: null };
+    return { controls: buildDemoControls(), mode: "demo" as DataMode, organisationLocale: null };
   }
 
   const session = await auth();
 
   if (!session.orgId) {
-    return { controls: [], mode: "unavailable" as const, organisationLocale: null };
+    return { controls: buildDemoControls(), mode: "demo" as DataMode, organisationLocale: null };
   }
 
   try {
@@ -47,7 +83,7 @@ async function loadControlsIndexData() {
       organisationLocale: organisation?.locale ?? null,
     };
   } catch {
-    return { controls: [], mode: "unavailable" as const, organisationLocale: null };
+    return { controls: buildDemoControls(), mode: "demo" as DataMode, organisationLocale: null };
   }
 }
 
@@ -85,18 +121,6 @@ function getFrameworkNames(control: OrgControl, locale: Locale) {
     .join(", ");
 }
 
-function getScopeLabel(control: OrgControl, copy: ControlsCopy) {
-  if (control.scopeStatus === "out_of_scope") {
-    return copy.index.outOfScope;
-  }
-
-  if (control.scopeStatus === "not_applicable") {
-    return getStatusLabel("not_applicable", copy);
-  }
-
-  return copy.index.scopeLabel;
-}
-
 function normalizeScopeFilter(value: string | string[] | undefined): ScopeFilter {
   const raw = Array.isArray(value) ? value[0] : value;
 
@@ -105,6 +129,74 @@ function normalizeScopeFilter(value: string | string[] | undefined): ScopeFilter
   }
 
   return "in-scope";
+}
+
+
+function normalizeViewMode(value: string | string[] | undefined): ViewMode {
+  const raw = Array.isArray(value) ? value[0] : value;
+
+  return raw === "all" ? "all" : "focus";
+}
+
+function normalizeVisibleCount(value: string | string[] | undefined) {
+  const raw = Array.isArray(value) ? value[0] : value;
+  const parsed = Number.parseInt(raw ?? "", 10);
+
+  if (!Number.isFinite(parsed)) {
+    return 5;
+  }
+
+  return Math.min(Math.max(parsed, 5), 50);
+}
+
+function getControlPriorityScore(control: OrgControl) {
+  let score = 0;
+
+  if (control.isIntakePriority) {
+    score += 100;
+  }
+
+  if (control.status === "fail") {
+    score += 40;
+  } else if (control.status === "manual_review" || control.status === "warning") {
+    score += 25;
+  } else if (control.status === "unknown" || control.status === null) {
+    score += 15;
+  }
+
+  if (control.scopeStatus === "applicable") {
+    score += 10;
+  }
+
+  if (control.intakeRationale) {
+    score += 5;
+  }
+
+  return score;
+}
+
+function getPriorityBorderClass(control: OrgControl) {
+  if (control.isIntakePriority || control.status === "fail") {
+    return "border-l-4 border-l-status-fail";
+  }
+
+  if (control.status === "manual_review" || control.status === "warning" || control.status === "unknown" || control.status === null) {
+    return "border-l-4 border-l-status-warn";
+  }
+
+  return "border-l-4 border-l-border";
+}
+
+function getEffortEstimate(control: OrgControl) {
+  if (control.isAutomated) {
+    return "~10 min s integrací";
+  }
+
+  if (control.category === "governance" || control.category === "supplier") {
+    return "~30 min";
+  }
+
+  return "~15 min";
 }
 
 function filterControlsByScope(controls: OrgControl[], scopeFilter: ScopeFilter) {
@@ -144,20 +236,24 @@ export default async function ControlsPage({
   const messages = getMessagesForLocale(locale);
   const copy = messages.controlsPage;
   const scopeFilter = normalizeScopeFilter(resolvedSearchParams.scope);
+  const viewMode = normalizeViewMode(resolvedSearchParams.view);
+  const visibleCount = normalizeVisibleCount(resolvedSearchParams.limit);
   const filteredControls = filterControlsByScope(controls, scopeFilter);
+  const rankedControls = [...filteredControls].sort((first, second) => {
+    const scoreDelta = getControlPriorityScore(second) - getControlPriorityScore(first);
+
+    return scoreDelta || first.key.localeCompare(second.key);
+  });
+  const focusControls = rankedControls.filter((control) => getControlPriorityScore(control) > 0);
+  const controlsForView = viewMode === "focus" ? focusControls.slice(0, 5) : rankedControls.slice(0, visibleCount);
+  const hasMoreControls = viewMode === "all" && rankedControls.length > visibleCount;
   const scopeFilters: { href: string; label: string; value: ScopeFilter }[] = [
     { href: "/controls", label: copy.index.allScope, value: "in-scope" },
     { href: "/controls?scope=priority", label: copy.index.priorityScope, value: "priority" },
     { href: "/controls?scope=gaps", label: copy.index.gapScope, value: "gaps" },
     { href: "/controls?scope=out-of-scope", label: copy.index.outOfScope, value: "out-of-scope" },
   ];
-  const notice =
-    mode === "unavailable"
-      ? {
-          body: messages.appDataNotice.unavailableBody,
-          title: messages.appDataNotice.unavailableTitle,
-        }
-      : null;
+  const demoMode = mode !== "live";
 
   return (
     <section className="space-y-6">
@@ -167,24 +263,59 @@ export default async function ControlsPage({
         subtitle={copy.index.subtitle}
       />
 
-      {notice ? <DataModeNotice body={notice.body} title={notice.title} /> : null}
+      {demoMode ? (
+        <div className="inline-flex w-fit items-center gap-2 rounded-full border border-border bg-surface px-3 py-1.5 text-xs font-medium text-foreground/64">
+          Demo režim: ukázková data bez přihlášené organizace
+        </div>
+      ) : null}
 
       <section className="space-y-4">
-        <div>
-          <h2 className="text-lg font-medium">{copy.index.activeTitle}</h2>
-          <p className="mt-1 text-sm text-foreground/58">
-            {copy.index.activeSubtitle}
-          </p>
+        <div className="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
+          <div>
+            <h2 className="text-lg font-medium">
+              {viewMode === "focus" ? "Začněte tady" : copy.index.activeTitle}
+            </h2>
+            <p className="mt-1 max-w-2xl text-sm text-foreground/58">
+              {viewMode === "focus"
+                ? "Výchozí pohled ukazuje nejdůležitější mezery z intake. Celou knihovnu otevřete přepínačem Všechny."
+                : copy.index.activeSubtitle}
+            </p>
+          </div>
+          <div className="inline-flex w-fit rounded-md border border-border bg-background p-1 text-sm">
+            <Link
+              href={`/controls?scope=${scopeFilter}`}
+              className={
+                viewMode === "focus"
+                  ? "rounded-sm bg-primary px-3 py-2 font-medium text-primary-foreground"
+                  : "rounded-sm px-3 py-2 font-medium text-foreground/64 hover:text-foreground"
+              }
+            >
+              Fokus
+            </Link>
+            <Link
+              href={`/controls?view=all&scope=${scopeFilter}`}
+              className={
+                viewMode === "all"
+                  ? "rounded-sm bg-primary px-3 py-2 font-medium text-primary-foreground"
+                  : "rounded-sm px-3 py-2 font-medium text-foreground/64 hover:text-foreground"
+              }
+            >
+              Všechny
+            </Link>
+          </div>
         </div>
+
         <div className="rounded-lg border border-border bg-surface p-3">
           <p className="text-xs font-medium text-foreground/52">
             {copy.index.scopeFiltersTitle}
           </p>
-          <div className="mt-3 flex flex-wrap gap-2">
+          <div className="mt-3 flex flex-wrap gap-2" role="tablist" aria-label={copy.index.scopeFiltersTitle}>
             {scopeFilters.map((filter) => (
               <Link
                 key={filter.value}
-                href={filter.href}
+                href={viewMode === "all" ? `${filter.href}${filter.href.includes("?") ? "&" : "?"}view=all` : filter.href}
+                role="tab"
+                aria-selected={filter.value === scopeFilter}
                 className={
                   filter.value === scopeFilter
                     ? "rounded-sm bg-primary px-3 py-1.5 text-xs font-medium text-primary-foreground"
@@ -196,72 +327,68 @@ export default async function ControlsPage({
             ))}
           </div>
         </div>
+
         {controls.length ? (
-          filteredControls.length ? (
-            <div className="grid gap-4 md:grid-cols-2">
-              {filteredControls.map((control) => (
-                <article key={control.key} className="card interactive-card">
-                  <div className="flex items-start justify-between gap-4">
+          controlsForView.length ? (
+            <div className="space-y-3">
+              {controlsForView.map((control, index) => (
+                <article key={control.key} className={`rounded-lg border border-border bg-surface p-4 ${getPriorityBorderClass(control)}`}>
+                  <div className="grid gap-4 lg:grid-cols-[minmax(0,1fr)_auto] lg:items-start">
                     <div>
-                      <p className="font-mono text-xs text-foreground/52">
-                        {control.key}
-                      </p>
-                      <h2 className="mt-1 text-lg font-medium">
+                      <div className="flex flex-wrap items-center gap-2">
+                        <span className="font-mono text-xs text-foreground/52">#{index + 1} · {control.key}</span>
+                        <span className="rounded-sm bg-surface-muted px-2 py-1 text-xs font-medium text-foreground/64">
+                          {getCategoryLabel(control.category ?? "unknown", copy)}
+                        </span>
+                        <StatusPill tone={getStatusTone(control.status)}>
+                          {getStatusLabel(control.status, copy)}
+                        </StatusPill>
+                      </div>
+                      <h3 className="mt-2 text-lg font-medium">
                         {getControlDisplayTitle(control, locale)}
-                      </h2>
-                      <p className="mt-1 text-xs text-foreground/52">
-                        {getCategoryLabel(control.category ?? "unknown", copy)}
+                      </h3>
+                      <p className="mt-2 text-sm leading-6 text-foreground/64">
+                        {getControlDisplayDescription(control, locale)}
                       </p>
+                      {control.intakeRationale ? (
+                        <div className="mt-3 inline-flex items-center gap-1.5 rounded-full border border-border bg-background px-2.5 py-1 text-xs font-medium text-foreground/58" title={control.intakeRationale}>
+                          <CircleHelp className="h-3.5 w-3.5" aria-hidden="true" strokeWidth={1.8} />
+                          {copy.index.rationaleLabel}
+                        </div>
+                      ) : null}
                     </div>
-                    <StatusPill tone={getStatusTone(control.status)}>
-                      {getStatusLabel(control.status, copy)}
-                    </StatusPill>
-                  </div>
-                  <div className="mt-3 flex flex-wrap items-center gap-2">
-                    <span className="rounded-sm bg-surface-muted px-2 py-1 text-xs font-medium text-foreground/64">
-                      {getScopeLabel(control, copy)}
-                    </span>
-                    {control.isIntakePriority ? (
-                      <span className="rounded-sm bg-status-fail/10 px-2 py-1 text-xs font-medium text-status-fail">
-                        {copy.index.priorityLabel}
-                      </span>
-                    ) : null}
-                  </div>
-                  <p className="mt-3 text-sm leading-6 text-foreground/64">
-                    {getControlDisplayDescription(control, locale)}
-                  </p>
-                  {control.intakeRationale ? (
-                    <div className="mt-4 rounded-md border border-border bg-background p-3 text-sm">
-                      <p className="text-xs text-foreground/52">
-                        {copy.index.rationaleLabel}
-                      </p>
-                      <p className="mt-1 leading-6 text-foreground/64">
-                        {control.intakeRationale}
-                      </p>
+                    <div className="flex flex-col gap-3 lg:w-56">
+                      <div className="rounded-md bg-surface-muted p-3 text-sm">
+                        <p className="text-xs text-foreground/52">Odhad úsilí</p>
+                        <p className="mt-1 font-medium">{getEffortEstimate(control)}</p>
+                      </div>
+                      <div className="rounded-md bg-surface-muted p-3 text-sm">
+                        <p className="text-xs text-foreground/52">{copy.index.frameworksLabel}</p>
+                        <p className="mt-1 text-sm font-medium">{getFrameworkNames(control, locale)}</p>
+                      </div>
+                      <Link href={`/controls/${control.key}`} className="btn btn-secondary justify-center">
+                        {copy.index.openControl}
+                        <ArrowRight className="h-4 w-4" aria-hidden="true" strokeWidth={1.5} />
+                      </Link>
                     </div>
-                  ) : null}
-                  <div className="mt-4 rounded-md bg-surface-muted p-3 text-sm">
-                    <p className="text-xs text-foreground/52">
-                      {copy.index.frameworksLabel}
-                    </p>
-                    <p className="mt-1 text-sm font-medium">
-                      {getFrameworkNames(control, locale)}
-                    </p>
                   </div>
-                  <Link
-                    href={`/controls/${control.key}`}
-                    className="btn btn-secondary mt-5"
-                  >
-                    {copy.index.openControl}
-                    <ArrowRight className="h-4 w-4" aria-hidden="true" strokeWidth={1.5} />
-                  </Link>
                 </article>
               ))}
+              {hasMoreControls ? (
+                <div className="flex justify-center pt-2">
+                  <Link href={`/controls?view=all&scope=${scopeFilter}&limit=${visibleCount + 5}`} className="btn btn-secondary">
+                    Načíst dalších 5
+                    <ArrowRight className="h-4 w-4" aria-hidden="true" strokeWidth={1.5} />
+                  </Link>
+                </div>
+              ) : null}
             </div>
           ) : (
             <div className="rounded-lg border border-border bg-surface p-5">
               <p className="text-sm leading-6 text-foreground/64">
-                {copy.index.emptyFiltered}
+                {viewMode === "focus"
+                  ? "Z intake zatím nevznikly prioritní mezery pro tento filtr. Přepněte na Všechny nebo upravte filtr."
+                  : copy.index.emptyFiltered}
               </p>
             </div>
           )
@@ -278,44 +405,7 @@ export default async function ControlsPage({
         )}
       </section>
 
-      <section className="space-y-4">
-        <div>
-          <h2 className="text-lg font-medium">{copy.index.libraryTitle}</h2>
-          <p className="mt-1 text-sm text-foreground/58">
-            {copy.index.librarySubtitle}
-          </p>
-        </div>
-        <div className="grid gap-4 md:grid-cols-2">
-          {CONTROL_LIBRARY.map((control) => (
-            <article key={control.key} className="card interactive-card">
-              <div className="flex items-start justify-between gap-4">
-                <div>
-                  <p className="font-mono text-xs text-foreground/52">
-                    {control.key}
-                  </p>
-                  <h2 className="mt-1 text-lg font-medium">
-                    {getControlDisplayTitle(control, locale)}
-                  </h2>
-                  <p className="mt-1 text-xs text-foreground/52">
-                    {getCategoryLabel(control.category, copy)}
-                  </p>
-                </div>
-                <ShieldCheck
-                  className="h-5 w-5 text-primary"
-                  aria-hidden="true"
-                  strokeWidth={1.5}
-                />
-              </div>
-              <p className="mt-3 text-sm leading-6 text-foreground/64">
-                {getControlDisplayDescription(control, locale)}
-              </p>
-              <div className="mt-4 inline-flex rounded-sm bg-surface-muted px-2 py-1 text-xs text-foreground/58">
-                {control.isAutomated ? copy.index.automated : copy.index.manual}
-              </div>
-            </article>
-          ))}
-        </div>
-      </section>
+
     </section>
   );
 }

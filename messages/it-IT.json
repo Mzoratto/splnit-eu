@@ -380,8 +380,18 @@
       "reviewGapsCta": "Rivedi gap prioritari",
       "reassurance": "Puoi esplorare la piattaforma, ma risultati e punteggi diventano affidabili dopo l'intake.",
       "demoNote": "Modalità demo: i dati reali si caricheranno dopo l'intake e il collegamento della prima integrazione.",
-      "steps": ["Intake", "Framework", "Integrazione", "Prima evidenza"],
-      "stepHints": ["Definisce i controlli rilevanti", "Attiva GDPR, NIS2, ISO", "Collega la prima fonte", "Carica la prima prova"],
+      "steps": [
+        "Intake",
+        "Framework",
+        "Integrazione",
+        "Prima evidenza"
+      ],
+      "stepHints": [
+        "Definisce i controlli rilevanti",
+        "Attiva GDPR, NIS2, ISO",
+        "Collega la prima fonte",
+        "Carica la prima prova"
+      ],
       "stepDetails": [
         {
           "title": "Completa il questionario intake",
@@ -1078,6 +1088,7 @@
       "unknown": "Sconosciuto",
       "pass": "Superato",
       "fail": "Non superato",
+      "warning": "Avviso",
       "manual_review": "Parziale",
       "not_applicable": "N/A",
       "out_of_scope": "Fuori ambito"
@@ -1678,16 +1689,16 @@
   "onboarding": {
     "eyebrow": "Configurazione iniziale",
     "title": "Configurazione organizzazione",
-    "description": "Sei passaggi preparano uno spazio di lavoro di compliance orientato all’Italia: profilo dell’organizzazione, base iniziale dei framework, inventario degli strumenti, ambito deterministico dell’intake e prima integrazione pratica.",
+    "description": "Sei passaggi preparano lo spazio di lavoro: profilo aziendale, realtà operativa, strumenti usati, framework determinati automaticamente, prima integrazione e punteggio iniziale.",
     "saveStepError": "Non è stato possibile salvare il passaggio.",
     "finishError": "Non è stato possibile completare l'onboarding.",
     "steps": {
       "company": "Azienda",
-      "frameworks": "Framework",
+      "activity": "Attività",
       "tools": "Strumenti",
+      "frameworks": "Framework",
       "integration": "Integrazione",
-      "score": "Punteggio",
-      "intake": "Ambito"
+      "score": "Punteggio"
     },
     "company": {
       "title": "Dati aziendali",

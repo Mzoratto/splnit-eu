@@ -42,13 +42,13 @@ export default async function OnboardingPage() {
     <OnboardingWizard
       frameworks={FRAMEWORK_LIBRARY}
       initialCompany={{
-        country: onboardingState?.organisation?.country ?? "IT",
+        country: onboardingState?.organisation?.country ?? "CZ",
         employeeCount: onboardingState?.organisation?.employeeCount ?? "10-49",
         ico: onboardingState?.organisation?.ico ?? "",
-        locale: onboardingState?.organisation?.locale ?? "it-IT",
+        locale: onboardingState?.organisation?.locale ?? "cs-CZ",
         name: onboardingState?.organisation?.name ?? "",
         primaryJurisdiction:
-          onboardingState?.organisation?.primaryJurisdiction ?? "IT",
+          onboardingState?.organisation?.primaryJurisdiction ?? "CZ",
         sector: onboardingState?.organisation?.sector ?? "technology",
       }}
       initialFrameworks={onboardingState?.selectedFrameworks ?? ["nis2"]}
@@ -56,7 +56,7 @@ export default async function OnboardingPage() {
         ...defaultIntakeAnswers,
         ...(onboardingState?.intakeProfile?.answers as Partial<IntakeAnswers> | undefined),
       }}
-      initialTools={onboardingState?.organisation?.toolInventory ?? []}
+      initialTools={onboardingState?.organisation?.toolInventory ?? ["microsoft-copilot", "github-copilot"]}
       tools={TOOL_INVENTORY_LIBRARY}
     />
   );

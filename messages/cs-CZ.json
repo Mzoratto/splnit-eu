@@ -380,8 +380,18 @@
       "reviewGapsCta": "Zkontrolovat prioritní mezery",
       "reassurance": "Platformu můžete procházet hned, ale výsledky a skóre budou spolehlivé až po dokončení intake.",
       "demoNote": "Demo režim: živá data se načtou po dokončení intake a připojení první integrace.",
-      "steps": ["Intake", "Framework", "Integrace", "První důkaz"],
-      "stepHints": ["Určí relevantní kontroly", "Aktivujte GDPR, NIS2, ISO", "Připojte první zdroj", "Nahrajte první důkaz"],
+      "steps": [
+        "Intake",
+        "Framework",
+        "Integrace",
+        "První důkaz"
+      ],
+      "stepHints": [
+        "Určí relevantní kontroly",
+        "Aktivujte GDPR, NIS2, ISO",
+        "Připojte první zdroj",
+        "Nahrajte první důkaz"
+      ],
       "stepDetails": [
         {
           "title": "Vyplňte intake dotazník",
@@ -1078,6 +1088,7 @@
       "unknown": "Neznámé",
       "pass": "Splněno",
       "fail": "Nesplněno",
+      "warning": "Varování",
       "manual_review": "Částečně",
       "not_applicable": "N/A",
       "out_of_scope": "Mimo rozsah"
@@ -1678,16 +1689,16 @@
   "onboarding": {
     "eyebrow": "Onboarding",
     "title": "Nastavení organizace",
-    "description": "Šest kroků připraví pracovní prostor pro compliance s italským zaměřením: profil organizace, výchozí rámec, inventář nástrojů, deterministický rozsah vstupu a první praktickou integraci.",
+    "description": "Šest kroků připraví pracovní prostor: profil firmy, obchodní realita, používané nástroje, automaticky určené rámce, první integrace a úvodní skóre.",
     "saveStepError": "Uložení kroku se nepodařilo.",
     "finishError": "Dokončení onboardingu se nepodařilo.",
     "steps": {
       "company": "Firma",
-      "frameworks": "Frameworky",
+      "activity": "Činnost",
       "tools": "Nástroje",
+      "frameworks": "Frameworky",
       "integration": "Integrace",
-      "score": "Skóre",
-      "intake": "Rozsah"
+      "score": "Skóre"
     },
     "company": {
       "title": "Údaje o firmě",
@@ -1705,7 +1716,7 @@
       "saveFrameworks": "Uložit frameworky",
       "saveTools": "Uložit nástroje",
       "showScore": "Zobrazit skóre",
-      "finish": "Dokončit onboarding",
+      "finish": "Přejít na dashboard",
       "saveIntake": "Uložit rozsah"
     },
     "frameworks": {
@@ -1717,7 +1728,7 @@
         "iso27001": "Systém řízení bezpečnosti informací a katalog bezpečnostních opatření.",
         "csrd": "ESG reporting, dvojí materialita, důkazy k datům a dodavatelské dotazníky."
       },
-      "body": "Vyberte povinnosti, které má Splnit.eu převést na kontroly. U italského zájemce začněte NIS2 pro přípravu na kybernetickou bezpečnost nebo ISO 27001, pokud je bezprostředním cílem příprava na certifikaci.",
+      "body": "Vyberte povinnosti, které má Splnit.eu převést na kontroly. Pro český nebo evropský tým začněte NIS2 pro kybernetickou připravenost, GDPR pro osobní údaje a ISO 27001, pokud je cílem bezpečnostní program nebo certifikace.",
       "nextAction": "Další krok: uložte vybraný výchozí rámec a potom označte systémy, které opravdu používáte."
     },
     "tools": {
@@ -1729,7 +1740,7 @@
       "title": "Doporučená integrace",
       "body": "Pro mnoho NIS2 a ISO 27001 začátků je Microsoft 365 první užitečný zdroj důkazů: MFA, Conditional Access, hosté a privilegované role.",
       "open": "Otevřít nastavení integrace",
-      "optional": "Tohle je doporučený další krok, ne blokace. Rozsah zkontrolujte teď; integraci připojte, až bude vlastník pracovního prostoru připravený.",
+      "optional": "Integrace lze přidat kdykoliv v Nastavení — tenhle krok lze přeskočit. Doporučení se znovu objeví na dashboardu.",
       "nextAction": "Další krok: zkontrolujte úvodní výchozí skóre a dokončete onboarding."
     },
     "score": {
