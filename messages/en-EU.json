@@ -361,16 +361,37 @@
     "greeting": "Good morning",
     "summary": {
       "openFindings": "open findings",
-      "failedControls": "controls not passed"
+      "failedControls": "controls not passed",
+      "setupPending": "Complete the intake to see applicable controls, priority gaps, and next actions."
     },
     "aiActWizardCta": "Start AI Act wizard",
     "scoreLabel": "Score",
     "general": "General",
+    "onboarding": {
+      "eyebrow": "Guided setup",
+      "title": "Let's start the setup",
+      "subtitle": "Complete these steps to see applicable controls, priority gaps, and next actions.",
+      "primaryCta": "Start intake (15 min)",
+      "continueSetupCta": "Continue setup",
+      "reviewGapsCta": "Review priority gaps",
+      "reassurance": "You can explore the platform, but results and scores become reliable after the intake.",
+      "steps": ["Intake", "Framework", "Integration", "First evidence"]
+    },
+    "statusLabels": {
+      "fail": "Needs correction",
+      "manualReview": "In review",
+      "outOfScope": "Out of scope",
+      "pass": "Compliant",
+      "toAssess": "To assess"
+    },
     "metrics": {
       "scoreTitle": "Compliance score",
       "scoreBody": "Average of framework scores and control statuses.",
+      "scorePendingBody": "Available after intake and first control assessments.",
+      "pendingScore": "Pending",
       "activeFrameworks": "Active frameworks",
       "failedControls": "Controls not passed",
+      "toAssessControls": "Controls to assess",
       "lastChange": "Latest change"
     },
     "frameworks": {

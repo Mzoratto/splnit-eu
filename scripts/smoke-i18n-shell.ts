@@ -265,7 +265,7 @@ assert.equal(
 );
 
 const cs = getMessagesForLocale("cs-CZ");
-assert.equal(cs.app.tagline, "Automatizace compliance pro evropské MSP");
+assert.equal(cs.app.tagline, "Automatizace práce na souladu pro evropské MSP");
 assert.equal(cs.shell.trustCenter, "Trust Center");
 assert.equal(cs.marketing.nav.regulations, "EU Předpisy");
 assert.equal(cs.marketing.footer.operator, "Splnit.eu — OSVČ, Olomouc");

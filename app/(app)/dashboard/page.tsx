@@ -187,15 +187,15 @@ function frameworkStatusLabel(score: number | null | undefined) {
   return "FAIL";
 }
 
-function controlStatusLabel(status: string) {
+function controlStatusLabel(status: string, copy: DashboardCopy) {
   const labels: Record<string, string> = {
-    fail: "FAIL",
-    manual_review: "WARN",
+    fail: copy.statusLabels.fail,
+    manual_review: copy.statusLabels.manualReview,
     not_applicable: "N/A",
-    out_of_scope: "OUT OF SCOPE",
-    pass: "PASS",
-    unknown: "PENDING",
-    warning: "WARN",
+    out_of_scope: copy.statusLabels.outOfScope,
+    pass: copy.statusLabels.pass,
+    unknown: copy.statusLabels.toAssess,
+    warning: copy.statusLabels.manualReview,
   };
 
   return labels[status] ?? status.toUpperCase();
@@ -394,11 +394,23 @@ export default async function DashboardPage() {
     frameworkScores,
     statusRows,
   });
-  const failingControls = statusRows.filter((row) => row.status === "fail").length;
-  const warningControls = statusRows.filter((row) =>
-    ["manual_review", "warning", "unknown"].includes(row.status),
-  ).length;
+  const isPreIntake = Boolean(data) && !hasIntakeScope;
+  const assessedRows = statusRows.filter((row) =>
+    ["fail", "manual_review", "pass", "warning"].includes(row.status),
+  );
+  const shouldShowScore = !isPreIntake && (frameworkScores.some((item) => typeof item.score === "number") || assessedRows.length > 0);
+  const failingControls = isPreIntake ? 0 : statusRows.filter((row) => row.status === "fail").length;
+  const warningControls = isPreIntake
+    ? 0
+    : statusRows.filter((row) =>
+        ["manual_review", "warning", "unknown"].includes(row.status),
+      ).length;
   const openFindings = failingControls + warningControls;
+  const setupCta = isPreIntake
+    ? { href: "/onboarding", label: copy.onboarding.primaryCta }
+    : hasIntakeScope
+      ? { href: "/controls?scope=priority", label: copy.onboarding.reviewGapsCta }
+      : { href: "/onboarding", label: copy.onboarding.continueSetupCta };
   const regulatoryFeedSources = new Set([
     jurisdiction.authorities.cybersecurity,
     jurisdiction.authorities.dataProtection,
@@ -418,6 +430,46 @@ export default async function DashboardPage() {
 
   return (
     <section className="page-enter-active space-y-8">
+      {isPreIntake ? (
+        <section className="rounded-xl border border-primary/20 bg-primary p-5 text-primary-foreground shadow-sm sm:p-6">
+          <div className="flex flex-col justify-between gap-5 lg:flex-row lg:items-start">
+            <div className="max-w-3xl">
+              <p className="text-xs font-semibold uppercase tracking-[0.16em] text-primary-foreground/72">
+                {copy.onboarding.eyebrow}
+              </p>
+              <h2 className="mt-3 text-xl font-medium tracking-tight sm:text-2xl">
+                {copy.onboarding.title}
+              </h2>
+              <p className="mt-2 text-sm leading-6 text-primary-foreground/78">
+                {copy.onboarding.subtitle}
+              </p>
+            </div>
+            <Link href="/onboarding" className="btn bg-white text-primary hover:bg-white/90">
+              {copy.onboarding.primaryCta}
+              <ArrowRight className="h-4 w-4" aria-hidden="true" strokeWidth={1.5} />
+            </Link>
+          </div>
+          <div className="mt-5 grid gap-2 sm:grid-cols-2 xl:grid-cols-4">
+            {copy.onboarding.steps.map((step, index) => (
+              <div
+                key={step}
+                className={`rounded-md border px-3 py-2 text-sm ${
+                  index === 0
+                    ? "border-white bg-white text-primary"
+                    : "border-white/22 bg-white/10 text-primary-foreground/78"
+                }`}
+              >
+                <span className="mr-2 font-mono text-xs">{index + 1}.</span>
+                {step}
+              </div>
+            ))}
+          </div>
+          <p className="mt-4 text-xs leading-5 text-primary-foreground/70">
+            {copy.onboarding.reassurance}
+          </p>
+        </section>
+      ) : null}
+
       <div className="flex flex-col justify-between gap-4 border-b border-border pb-6 md:flex-row md:items-end">
         <div>
           <p className="text-sm font-medium text-primary">Dashboard</p>
@@ -425,12 +477,13 @@ export default async function DashboardPage() {
             {copy.greeting}{firstName ? `, ${firstName}` : ""}
           </h1>
           <p className="mt-1 text-sm text-foreground/64">
-            {openFindings} {copy.summary.openFindings} · {failingControls}{" "}
-            {copy.summary.failedControls}
+            {isPreIntake
+              ? copy.summary.setupPending
+              : `${openFindings} ${copy.summary.openFindings} · ${failingControls} ${copy.summary.failedControls}`}
           </p>
         </div>
-        <Link href="/frameworks/ai-act/setup" className="btn btn-primary">
-          {copy.aiActWizardCta}
+        <Link href={setupCta.href} className="btn btn-primary">
+          {setupCta.label}
           <ArrowRight className="h-4 w-4" aria-hidden="true" strokeWidth={1.5} />
         </Link>
       </div>
@@ -484,11 +537,20 @@ export default async function DashboardPage() {
 
       <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
         <article className="metric-card flex items-center gap-5">
-          <AnimatedScoreRing label={copy.scoreLabel} locale={locale} score={score} />
+          {shouldShowScore ? (
+            <AnimatedScoreRing label={copy.scoreLabel} locale={locale} score={score} />
+          ) : (
+            <div className="grid h-[120px] w-[120px] place-items-center rounded-full border-8 border-border bg-background text-center">
+              <div>
+                <p className="text-base font-medium">{copy.metrics.pendingScore}</p>
+                <p className="mt-1 text-[11px] text-foreground/52">{copy.scoreLabel}</p>
+              </div>
+            </div>
+          )}
           <div>
             <p className="text-xs text-foreground/52">{copy.metrics.scoreTitle}</p>
             <p className="mt-2 text-sm leading-6 text-foreground/64">
-              {copy.metrics.scoreBody}
+              {shouldShowScore ? copy.metrics.scoreBody : copy.metrics.scorePendingBody}
             </p>
           </div>
         </article>
@@ -501,23 +563,29 @@ export default async function DashboardPage() {
             <ShieldCheck className="h-4 w-4 text-status-pass" aria-hidden="true" strokeWidth={1.5} />
           </div>
           <p className="mt-5 font-mono text-[28px] font-medium">
-            {frameworkScores.length}
+            {isPreIntake ? "—" : frameworkScores.length}
           </p>
-          <StatusPill tone="pass" className="mt-4">PASS</StatusPill>
+          <StatusPill tone={isPreIntake ? "neutral" : "pass"} className="mt-4">
+            {isPreIntake ? copy.statusLabels.toAssess : copy.statusLabels.pass}
+          </StatusPill>
         </article>
 
         <article className="metric-card">
           <div className="flex items-center justify-between gap-3">
             <p className="text-xs text-foreground/52">
-              {copy.metrics.failedControls}
+              {isPreIntake ? copy.metrics.toAssessControls : copy.metrics.failedControls}
             </p>
-            <AlertTriangle className="h-4 w-4 text-status-fail" aria-hidden="true" strokeWidth={1.5} />
+            <AlertTriangle className={`h-4 w-4 ${isPreIntake ? "text-foreground/38" : "text-status-fail"}`} aria-hidden="true" strokeWidth={1.5} />
           </div>
           <p className="mt-5 font-mono text-[28px] font-medium">
-            {failingControls}
+            {isPreIntake ? "—" : failingControls}
           </p>
-          <StatusPill tone={failingControls > 0 ? "fail" : "pass"} className="mt-4">
-            {failingControls > 0 ? "FAIL" : "PASS"}
+          <StatusPill tone={isPreIntake ? "neutral" : failingControls > 0 ? "fail" : "pass"} className="mt-4">
+            {isPreIntake
+              ? copy.statusLabels.toAssess
+              : failingControls > 0
+                ? copy.statusLabels.fail
+                : copy.statusLabels.pass}
           </StatusPill>
         </article>
 
@@ -557,7 +625,7 @@ export default async function DashboardPage() {
             {frameworkScores.map((item) => {
               const framework = FRAMEWORK_LIBRARY.find((fw) => fw.slug === item.slug);
               const rowScore = item.score ?? 0;
-              const tone = statusTone(item.status, item.score);
+              const tone = isPreIntake ? "neutral" : statusTone(item.status, item.score);
 
               return (
                 <Link
@@ -582,9 +650,11 @@ export default async function DashboardPage() {
                         : item.regulator ?? "Framework"}
                     </p>
                   </div>
-                  <StatusPill tone={tone}>{frameworkStatusLabel(item.score)}</StatusPill>
+                  <StatusPill tone={tone}>
+                    {isPreIntake ? copy.statusLabels.toAssess : frameworkStatusLabel(item.score)}
+                  </StatusPill>
                   <span className="font-mono text-sm font-medium">
-                    {rowScore}%
+                    {isPreIntake ? "—" : `${rowScore}%`}
                   </span>
                   <span
                     className={
@@ -592,7 +662,9 @@ export default async function DashboardPage() {
                         ? "text-status-pass"
                         : tone === "warn"
                           ? "text-status-warn"
-                          : "text-status-fail"
+                          : tone === "fail"
+                            ? "text-status-fail"
+                            : "text-foreground/30"
                     }
                   >
                     <Sparkline score={rowScore} />
@@ -672,9 +744,11 @@ export default async function DashboardPage() {
                 >
                   <CircleDot
                     className={
-                      statusTone(control.status) === "fail"
-                        ? "mt-0.5 h-4 w-4 text-status-fail"
-                        : "mt-0.5 h-4 w-4 text-status-warn"
+                      isPreIntake
+                        ? "mt-0.5 h-4 w-4 text-foreground/38"
+                        : statusTone(control.status) === "fail"
+                          ? "mt-0.5 h-4 w-4 text-status-fail"
+                          : "mt-0.5 h-4 w-4 text-status-warn"
                     }
                     aria-hidden="true"
                     strokeWidth={1.5}
@@ -682,14 +756,14 @@ export default async function DashboardPage() {
                   <div className="min-w-0">
                     <div className="flex flex-wrap items-center gap-2">
                       <p className="truncate text-sm font-medium">{control.title}</p>
-                      {control.isIntakePriority ? (
+                      {control.isIntakePriority && !isPreIntake ? (
                         <span className="rounded-sm bg-status-fail/10 px-2 py-0.5 text-[11px] font-medium text-status-fail">
                           {copy.intakeScope.priority}
                         </span>
                       ) : null}
                     </div>
                     <p className="mt-1 font-mono text-xs text-foreground/52">
-                      {control.key} · {controlStatusLabel(control.status)}
+                      {control.key} · {isPreIntake ? copy.statusLabels.toAssess : controlStatusLabel(control.status, copy)}
                     </p>
                   </div>
                 </Link>

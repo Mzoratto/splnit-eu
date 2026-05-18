@@ -361,16 +361,37 @@
     "greeting": "Dobré ráno",
     "summary": {
       "openFindings": "otevřených nálezů",
-      "failedControls": "nesplněných kontrol"
+      "failedControls": "nesplněných kontrol",
+      "setupPending": "Dokončete vstupní dotazník, abyste viděli použitelné kontroly, prioritní mezery a další kroky."
     },
     "aiActWizardCta": "Spustit průvodce EU AI Act",
     "scoreLabel": "Skóre",
     "general": "Obecné",
+    "onboarding": {
+      "eyebrow": "Řízené nastavení",
+      "title": "Začněme s konfigurací",
+      "subtitle": "Dokončete tyto kroky, abyste viděli použitelné kontroly, prioritní mezery a další kroky.",
+      "primaryCta": "Spustit intake (15 min)",
+      "continueSetupCta": "Pokračovat v nastavení",
+      "reviewGapsCta": "Zkontrolovat prioritní mezery",
+      "reassurance": "Platformu můžete procházet hned, ale výsledky a skóre budou spolehlivé až po dokončení intake.",
+      "steps": ["Intake", "Framework", "Integrace", "První důkaz"]
+    },
+    "statusLabels": {
+      "fail": "K opravě",
+      "manualReview": "V revizi",
+      "outOfScope": "Mimo rozsah",
+      "pass": "V souladu",
+      "toAssess": "K posouzení"
+    },
     "metrics": {
       "scoreTitle": "Compliance skóre",
-      "scoreBody": "Průměr frameworků a stavů kontrol.",
+      "scoreBody": "Průměr skóre frameworků a stavů kontrol.",
+      "scorePendingBody": "Dostupné po intake a prvním posouzení kontrol.",
+      "pendingScore": "Pending",
       "activeFrameworks": "Aktivní frameworky",
       "failedControls": "Nesplněné kontroly",
+      "toAssessControls": "Kontroly k posouzení",
       "lastChange": "Poslední změna"
     },
     "frameworks": {

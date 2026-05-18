@@ -361,16 +361,37 @@
     "greeting": "Buongiorno",
     "summary": {
       "openFindings": "rilievi aperti",
-      "failedControls": "controlli non superati"
+      "failedControls": "controlli non superati",
+      "setupPending": "Completa l'intake per vedere controlli applicabili, gap prioritari e prossime azioni."
     },
     "aiActWizardCta": "Avvia wizard AI Act",
     "scoreLabel": "Punteggio",
     "general": "Generale",
+    "onboarding": {
+      "eyebrow": "Avvio guidato",
+      "title": "Iniziamo la configurazione",
+      "subtitle": "Completa questi passaggi per vedere controlli applicabili, gap prioritari e prossime azioni.",
+      "primaryCta": "Avvia intake (15 min)",
+      "continueSetupCta": "Continua configurazione",
+      "reviewGapsCta": "Rivedi gap prioritari",
+      "reassurance": "Puoi esplorare la piattaforma, ma risultati e punteggi diventano affidabili dopo l'intake.",
+      "steps": ["Intake", "Framework", "Integrazione", "Prima evidenza"]
+    },
+    "statusLabels": {
+      "fail": "Da correggere",
+      "manualReview": "In revisione",
+      "outOfScope": "Fuori ambito",
+      "pass": "Conforme",
+      "toAssess": "Da valutare"
+    },
     "metrics": {
       "scoreTitle": "Punteggio compliance",
       "scoreBody": "Media dei punteggi framework e degli stati dei controlli.",
+      "scorePendingBody": "Disponibile dopo intake e valutazione dei primi controlli.",
+      "pendingScore": "Pending",
       "activeFrameworks": "Framework attivi",
       "failedControls": "Controlli non superati",
+      "toAssessControls": "Controlli da valutare",
       "lastChange": "Ultima modifica"
     },
     "frameworks": {
