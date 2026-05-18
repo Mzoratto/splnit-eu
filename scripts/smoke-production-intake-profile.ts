@@ -134,6 +134,39 @@ async function cleanupDatabase(clerkOrgId: string) {
   await db.delete(organisations).where(eq(organisations.clerkOrgId, clerkOrgId));
 }
 
+async function assertNoHorizontalOverflow(page: Page, label: string) {
+  const result = await page.evaluate(() => ({
+    bodyScrollWidth: document.body.scrollWidth,
+    documentScrollWidth: document.documentElement.scrollWidth,
+    viewportWidth: window.innerWidth,
+  }));
+  const maxScrollWidth = Math.max(result.bodyScrollWidth, result.documentScrollWidth);
+  assert.ok(
+    maxScrollWidth <= result.viewportWidth + 1,
+    `${label} should not horizontally overflow: viewport=${result.viewportWidth}, scrollWidth=${maxScrollWidth}`,
+  );
+}
+
+async function verifyPolicyEvidenceControlDetail(page: Page, testingToken: string) {
+  await page.setViewportSize({ width: 1280, height: 900 });
+  const desktopResponse = await page.goto(pageUrl("/controls/ctrl_mfa_all_users", testingToken), {
+    waitUntil: "domcontentloaded",
+  });
+  assert.equal(desktopResponse?.status(), 200, "production MFA control detail page should render.");
+  await page.getByRole("heading", { name: /Recommended next action/i }).waitFor({ state: "visible" });
+  await page.getByText(/Gap still open/i).waitFor({ state: "visible" });
+  await page.getByText("Supporting evidence", { exact: true }).waitFor({ state: "visible" });
+  await page.getByRole("link", { name: /Open security policy/i }).waitFor({ state: "visible" });
+  await page.locator("#evidence-upload").waitFor({ state: "attached" });
+  await page.locator("#status-review").waitFor({ state: "attached" });
+  await assertNoHorizontalOverflow(page, "desktop policy-to-evidence control detail");
+
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.reload({ waitUntil: "domcontentloaded" });
+  await page.getByRole("heading", { name: /Recommended next action/i }).waitFor({ state: "visible" });
+  await assertNoHorizontalOverflow(page, "mobile policy-to-evidence control detail");
+}
+
 async function verifyPersistedIntake(clerkOrgId: string) {
   const db = getDb();
   const rows = await db
@@ -276,6 +309,8 @@ async function main() {
     assert.equal(outOfScopeResponse?.status(), 200, "production out-of-scope controls view should render.");
     await page.getByRole("link", { name: /Out of scope \/ not applicable|Mimo rozsah \/ nerelevantní|Fuori ambito \/ non applicabile/i }).waitFor({ state: "visible" });
 
+    await verifyPolicyEvidenceControlDetail(page, testingToken.token);
+
     const persisted = await verifyPersistedIntake(organization.id);
     assert.deepEqual(pageErrors, [], `Browser page errors: ${pageErrors.join(" | ")}`);
 
@@ -291,6 +326,9 @@ async function main() {
         onboardingWritePath: true,
         outOfScopeFilterRendered: true,
         persistedReadBack: true,
+        policyEvidenceControlDetailRendered: true,
+        policyEvidenceNoDesktopOverflow: true,
+        policyEvidenceNoMobileOverflow: true,
       },
       databaseHostClass: parsedDatabaseUrl.hostname.includes("neon.tech") ? "neon" : "non_local_other",
       persisted,
