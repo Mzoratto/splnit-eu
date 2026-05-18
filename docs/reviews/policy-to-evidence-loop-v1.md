@@ -1,7 +1,7 @@
 # Policy-to-Evidence Loop v1 Review
 
 Date: 2026-05-18
-Status: v1 implemented and deployed for the `ctrl_mfa_all_users` slice; next local slice added for `ctrl_backup_tested`
+Status: v1 implemented and deployed for the `ctrl_mfa_all_users` and `ctrl_backup_tested` slices
 
 ## Implemented scope
 
@@ -13,8 +13,7 @@ Status: v1 implemented and deployed for the `ctrl_mfa_all_users` slice; next loc
 - Preserved existing evidence upload and manual status update flows.
 - Kept dashboard priority-gap rows linked to `/controls/[controlKey]` and filtered intake `not_applicable` / `out_of_scope` controls out of the default dashboard priority list.
 - Extended copy hygiene coverage over the policy-to-evidence control/detail helper surfaces.
-- Extended production intake/profile smoke coverage to include the `ctrl_mfa_all_users` policy-to-evidence control detail card on desktop and mobile widths.
-- `ctrl_backup_tested` is locally smoke-covered only in this pass; the authenticated production smoke source has been extended to cover it, but that production smoke has not been rerun after deployment yet.
+- Extended production intake/profile smoke coverage to include the `ctrl_mfa_all_users` and `ctrl_backup_tested` policy-to-evidence control detail cards on desktop and mobile widths.
 
 ## Honest proof/status behavior
 
@@ -56,7 +55,8 @@ The policy-to-evidence smoke covers:
 The production intake/profile smoke now also covers the policy-to-evidence control detail path:
 
 - `/controls/ctrl_mfa_all_users` renders for a temporary authenticated production org.
-- The “Recommended next action” card renders with conservative “Gap still open” status when no supporting evidence exists.
+- `/controls/ctrl_backup_tested` renders for a temporary authenticated production org.
+- The “Recommended next action” card renders with conservative review-oriented status when no supporting evidence exists.
 - The security-policy link, evidence upload section, and status review section are present.
 - Desktop and mobile widths have no horizontal overflow for the control-detail card.
 - The smoke cleans up the temporary production organization and rows after the run.
@@ -66,7 +66,6 @@ The production intake/profile smoke now also covers the policy-to-evidence contr
 - Evidence upload file persistence was not re-tested as a new behavior; the implementation intentionally reuses the existing org-scoped upload action/form.
 - Manual status-update persistence was not re-tested as a new behavior; the implementation intentionally reuses the existing org-scoped status action/form.
 - Additional controls beyond `ctrl_mfa_all_users` and `ctrl_backup_tested` are not configured for v1 recommendations.
-- The authenticated production smoke source now covers `/controls/ctrl_backup_tested` at desktop/mobile widths, including backup-specific evidence copy, but it has not yet been rerun against a deployment containing this change.
 
 ## Production reliance notes
 
@@ -74,8 +73,7 @@ No new database migration was introduced by this v1 slice. Production drift guar
 
 Safe reliance boundary:
 
-- Safe to rely on the narrow `ctrl_mfa_all_users` recommendation/status card and dashboard-to-control path as a production-smoked review-oriented workflow.
-- Treat `ctrl_backup_tested` as locally verified until the extended authenticated production smoke is rerun against a deployment containing this change.
+- Safe to rely on the narrow `ctrl_mfa_all_users` and `ctrl_backup_tested` recommendation/status cards and dashboard-to-control paths as production-smoked review-oriented workflows.
 - Do not claim a complete Policy-to-Evidence Loop across all controls.
 - Do not claim compliance, certification, auditor readiness, legal proof, or real-time compliance status from this flow.
 - Public Trust Center output remains category-level; this v1 slice does not expose individual control IDs or evidence filenames publicly.
