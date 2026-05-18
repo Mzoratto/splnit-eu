@@ -19,7 +19,14 @@ assert.equal(recommendation.policyHref, "/policies/security_policy");
 assert.match(recommendation.evidenceAction, /MFA/i);
 assert.match(recommendation.evidenceAction, /active users/i);
 assert.match(recommendation.policyAction, /does not prove the control by itself/i);
-assert.equal(getPolicyEvidenceRecommendation("ctrl_backup_tested"), null);
+const backupRecommendation = getPolicyEvidenceRecommendation("ctrl_backup_tested");
+assert.ok(backupRecommendation, "ctrl_backup_tested should have a policy-to-evidence recommendation.");
+assert.equal(backupRecommendation.controlKey, "ctrl_backup_tested");
+assert.equal(backupRecommendation.policyType, "security_policy");
+assert.equal(backupRecommendation.policyHref, "/policies/security_policy");
+assert.match(backupRecommendation.evidenceAction, /backup/i);
+assert.match(backupRecommendation.evidenceAction, /restore-test/i);
+assert.match(backupRecommendation.policyAction, /does not prove the control by itself/i);
 assert.equal(getPolicyEvidenceRecommendation("unknown_control"), null);
 
 const renderedCard = renderToStaticMarkup(

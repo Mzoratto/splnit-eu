@@ -1,18 +1,20 @@
 # Policy-to-Evidence Loop v1 Review
 
 Date: 2026-05-18
-Status: v1 implemented, deployed, and production-smoked for the `ctrl_mfa_all_users` slice
+Status: v1 implemented and deployed for the `ctrl_mfa_all_users` slice; next local slice added for `ctrl_backup_tested`
 
 ## Implemented scope
 
-- Added deterministic recommendation metadata for `ctrl_mfa_all_users` only.
+- Added deterministic recommendation metadata for `ctrl_mfa_all_users`.
+- Added the next deterministic recommendation slice for `ctrl_backup_tested`, reusing the existing security-policy support path and review-oriented proof status card.
 - Added deterministic proof-state derivation from existing evidence rows and manual control status.
-- Rendered the recommendation card on `/controls/ctrl_mfa_all_users` when the configured recommendation exists.
+- Rendered the recommendation card on configured control detail pages when the recommendation exists.
 - Linked the card to `/policies/security_policy`, `#evidence-upload`, and `#status-review`.
 - Preserved existing evidence upload and manual status update flows.
 - Kept dashboard priority-gap rows linked to `/controls/[controlKey]` and filtered intake `not_applicable` / `out_of_scope` controls out of the default dashboard priority list.
 - Extended copy hygiene coverage over the policy-to-evidence control/detail helper surfaces.
 - Extended production intake/profile smoke coverage to include the `ctrl_mfa_all_users` policy-to-evidence control detail card on desktop and mobile widths.
+- `ctrl_backup_tested` is locally smoke-covered only in this pass; production browser smoke has not been extended to that second control yet.
 
 ## Honest proof/status behavior
 
@@ -45,6 +47,7 @@ Production verification passed after deployment to `https://splnit.eu`:
 The policy-to-evidence smoke covers:
 
 - `ctrl_mfa_all_users` returns recommendation metadata.
+- `ctrl_backup_tested` returns recommendation metadata.
 - Unknown controls return `null`.
 - The rendered recommendation card contains the policy link, evidence/status anchors, and no prohibited proof/compliance wording.
 - Dashboard priority shaping filters not-applicable controls and sorts intake-priority controls first.
@@ -62,7 +65,8 @@ The production intake/profile smoke now also covers the policy-to-evidence contr
 
 - Evidence upload file persistence was not re-tested as a new behavior; the implementation intentionally reuses the existing org-scoped upload action/form.
 - Manual status-update persistence was not re-tested as a new behavior; the implementation intentionally reuses the existing org-scoped status action/form.
-- Additional controls beyond `ctrl_mfa_all_users` are not configured for v1 recommendations.
+- Additional controls beyond `ctrl_mfa_all_users` and `ctrl_backup_tested` are not configured for v1 recommendations.
+- The `ctrl_backup_tested` control-detail route has not yet been production-smoked at desktop/mobile widths.
 
 ## Production reliance notes
 
@@ -70,7 +74,8 @@ No new database migration was introduced by this v1 slice. Production drift guar
 
 Safe reliance boundary:
 
-- Safe to rely on the narrow `ctrl_mfa_all_users` recommendation/status card and dashboard-to-control path as a review-oriented workflow.
+- Safe to rely on the narrow `ctrl_mfa_all_users` recommendation/status card and dashboard-to-control path as a production-smoked review-oriented workflow.
+- Treat `ctrl_backup_tested` as locally verified until the authenticated production smoke is extended and rerun for that control.
 - Do not claim a complete Policy-to-Evidence Loop across all controls.
 - Do not claim compliance, certification, auditor readiness, legal proof, or real-time compliance status from this flow.
 - Public Trust Center output remains category-level; this v1 slice does not expose individual control IDs or evidence filenames publicly.
