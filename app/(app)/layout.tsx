@@ -9,6 +9,7 @@ import { getMessagesForLocale } from "@/i18n/messages";
 import { normalizeLocale, type Locale } from "@/i18n/routing";
 import { hasDatabaseUrl } from "@/lib/db";
 import { getOrganisationByClerkOrgId } from "@/lib/db/queries/organisations";
+import { getOnboardingIntakeProfile } from "@/lib/db/queries/onboarding";
 import { countUnreadRelevantRegulationUpdates } from "@/lib/db/queries/regulation-updates";
 import { getPublicTrustCenterSlugByClerkOrgId } from "@/lib/db/queries/trust-center";
 import { normalizePlanKey, type PlanKey } from "@/lib/stripe/plans";
@@ -35,6 +36,7 @@ export default async function ProtectedLayout({
   let regulationUpdateCount = 0;
   let tenantLocale: Locale = normalizeLocale(await getLocale()) ?? "cs-CZ";
   let trustCenterSlug: string | null = null;
+  let isPreIntake = true;
 
   if (clerkConfigured) {
     const session = await auth();
@@ -47,16 +49,19 @@ export default async function ProtectedLayout({
         organisation,
         unreadRegulationUpdateCount,
         savedTrustCenterSlug,
+        intakeProfile,
       ] = await Promise.all([
         getOrganisationByClerkOrgId(session.orgId),
         countUnreadRelevantRegulationUpdates(session.orgId),
         getPublicTrustCenterSlugByClerkOrgId(session.orgId),
+        getOnboardingIntakeProfile(session.orgId),
       ]);
       organisationName = organisation?.name ?? null;
       plan = normalizePlanKey(organisation?.plan);
       regulationUpdateCount = unreadRegulationUpdateCount;
       tenantLocale = normalizeLocale(organisation?.locale) ?? tenantLocale;
       trustCenterSlug = savedTrustCenterSlug;
+      isPreIntake = !intakeProfile?.completedAt;
     }
   }
 
@@ -76,6 +81,7 @@ export default async function ProtectedLayout({
         clerkEnabled={clerkConfigured}
         organisationName={displayOrganisationName}
         plan={plan}
+        isPreIntake={isPreIntake}
         regulationUpdateCount={regulationUpdateCount}
         trustCenterHref={
           trustCenterSlug ? `/trust/${trustCenterSlug}` : "/trust-center"

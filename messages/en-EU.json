@@ -21,7 +21,8 @@
     "risks": "Risks",
     "clients": "Clients",
     "team": "Team",
-    "settings": "Settings"
+    "settings": "Settings",
+    "lockedUntilIntake": "Available after intake"
   },
   "shell": {
     "plan": "Plan",
@@ -32,6 +33,7 @@
     "organisationFallback": "Organisation",
     "freePlanBanner": "Free plan: explore setup with one small workspace. Upgrade only when you need higher limits for frameworks, integrations, users, or customer-facing proof.",
     "upgradePlan": "Upgrade plan",
+    "dismissFreePlanBanner": "Dismiss free plan notice",
     "switchToLight": "Switch to light mode",
     "switchToDark": "Switch to dark mode",
     "demoUser": "Demo user"
@@ -371,11 +373,45 @@
       "eyebrow": "Guided setup",
       "title": "Let's start the setup",
       "subtitle": "Complete these steps to see applicable controls, priority gaps, and next actions.",
-      "primaryCta": "Start intake (15 min)",
+      "progressLabel": "Workspace setup · step 1 of 4",
+      "stepLabel": "Step",
+      "primaryCta": "Start intake",
       "continueSetupCta": "Continue setup",
       "reviewGapsCta": "Review priority gaps",
       "reassurance": "You can explore the platform, but results and scores become reliable after the intake.",
-      "steps": ["Intake", "Framework", "Integration", "First evidence"]
+      "demoNote": "Demo mode: live data will load after the intake and first integration are connected.",
+      "steps": ["Intake", "Framework", "Integration", "First evidence"],
+      "stepHints": ["Defines relevant controls", "Activate GDPR, NIS2, ISO", "Connect first source", "Upload first proof"],
+      "stepDetails": [
+        {
+          "title": "Complete the intake questionnaire",
+          "description": "A roughly 15-minute guide identifies which controls and frameworks apply to your organisation. Without this step, the compliance score is not reliable.",
+          "time": "~15 minutes",
+          "unlocks": "Unlocks: frameworks, controls, and priority gaps",
+          "button": "Start intake"
+        },
+        {
+          "title": "Activate relevant frameworks",
+          "description": "Confirm which regulations to track based on the intake result: GDPR, NIS2, ISO 27001, or the EU AI Act.",
+          "time": "~5 minutes",
+          "unlocks": "Unlocks: integrations and control status",
+          "button": "Activate frameworks"
+        },
+        {
+          "title": "Connect the first integration",
+          "description": "Connect Microsoft 365, GitHub, or AWS so evidence can start collecting automatically.",
+          "time": "~10 minutes",
+          "unlocks": "Unlocks: automated checks",
+          "button": "Connect integration"
+        },
+        {
+          "title": "Upload the first evidence",
+          "description": "Choose one priority gap and upload a document, screenshot, or note. This makes the score meaningful.",
+          "time": "~5 minutes",
+          "unlocks": "Activates: compliance score",
+          "button": "Upload evidence"
+        }
+      ]
     },
     "statusLabels": {
       "fail": "Needs correction",
@@ -410,6 +446,7 @@
       "badge": "EU monitor",
       "exclusive": "Monitored",
       "title": "Regulatory feed",
+      "showFeed": "Show feed",
       "openSource": "Open source",
       "markRead": "Mark as read"
     },

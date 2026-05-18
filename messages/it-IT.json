@@ -21,7 +21,8 @@
     "risks": "Rischi",
     "clients": "Clienti",
     "team": "Team",
-    "settings": "Impostazioni"
+    "settings": "Impostazioni",
+    "lockedUntilIntake": "Disponibile dopo l'intake"
   },
   "shell": {
     "plan": "Piano",
@@ -32,6 +33,7 @@
     "organisationFallback": "Organizzazione",
     "freePlanBanner": "Piano Free: esplorate la configurazione in un piccolo spazio di lavoro. Fate l’upgrade solo quando servono limiti più alti per framework, integrazioni, utenti o prove pubbliche.",
     "upgradePlan": "Aggiorna piano",
+    "dismissFreePlanBanner": "Nascondi avviso piano Free",
     "switchToLight": "Passa alla modalità chiara",
     "switchToDark": "Passa alla modalità scura",
     "demoUser": "Utente demo"
@@ -371,11 +373,45 @@
       "eyebrow": "Avvio guidato",
       "title": "Iniziamo la configurazione",
       "subtitle": "Completa questi passaggi per vedere controlli applicabili, gap prioritari e prossime azioni.",
-      "primaryCta": "Avvia intake (15 min)",
+      "progressLabel": "Configurazione workspace · passo 1 di 4",
+      "stepLabel": "Passo",
+      "primaryCta": "Avvia intake",
       "continueSetupCta": "Continua configurazione",
       "reviewGapsCta": "Rivedi gap prioritari",
       "reassurance": "Puoi esplorare la piattaforma, ma risultati e punteggi diventano affidabili dopo l'intake.",
-      "steps": ["Intake", "Framework", "Integrazione", "Prima evidenza"]
+      "demoNote": "Modalità demo: i dati reali si caricheranno dopo l'intake e il collegamento della prima integrazione.",
+      "steps": ["Intake", "Framework", "Integrazione", "Prima evidenza"],
+      "stepHints": ["Definisce i controlli rilevanti", "Attiva GDPR, NIS2, ISO", "Collega la prima fonte", "Carica la prima prova"],
+      "stepDetails": [
+        {
+          "title": "Completa il questionario intake",
+          "description": "Un percorso di circa 15 minuti identifica quali controlli e framework sono rilevanti per la tua organizzazione. Senza questo passaggio il punteggio compliance non è affidabile.",
+          "time": "~15 minuti",
+          "unlocks": "Sblocca: framework, controlli e gap prioritari",
+          "button": "Avvia intake"
+        },
+        {
+          "title": "Attiva i framework rilevanti",
+          "description": "Conferma quali normative monitorare in base all'intake: GDPR, NIS2, ISO 27001 o EU AI Act.",
+          "time": "~5 minuti",
+          "unlocks": "Sblocca: integrazioni e stato controlli",
+          "button": "Attiva framework"
+        },
+        {
+          "title": "Collega la prima integrazione",
+          "description": "Collega Microsoft 365, GitHub o AWS per iniziare a raccogliere evidenze automaticamente.",
+          "time": "~10 minuti",
+          "unlocks": "Sblocca: test automatici",
+          "button": "Collega integrazione"
+        },
+        {
+          "title": "Carica la prima evidenza",
+          "description": "Scegli un gap prioritario e carica un documento, screenshot o nota. Questo rende il punteggio significativo.",
+          "time": "~5 minuti",
+          "unlocks": "Attiva: punteggio compliance",
+          "button": "Carica evidenza"
+        }
+      ]
     },
     "statusLabels": {
       "fail": "Da correggere",
@@ -410,6 +446,7 @@
       "badge": "Monitor UE",
       "exclusive": "Monitorato",
       "title": "Feed normativo",
+      "showFeed": "Mostra feed",
       "openSource": "Apri fonte",
       "markRead": "Segna come letto"
     },

@@ -22,7 +22,7 @@ export default async function SignUpPage() {
 
   return (
     <main className="grid min-h-screen place-items-center px-5">
-      <SignUp />
+      <SignUp fallbackRedirectUrl="/dashboard" />
     </main>
   );
 }

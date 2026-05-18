@@ -1,7 +1,8 @@
 "use client";
 
+import { useState } from "react";
 import Link from "next/link";
-import { Bell, Search } from "lucide-react";
+import { Bell, Search, X } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { OrgSwitcher } from "@/components/app/org-switcher";
 import { MobileTabBar, Sidebar } from "@/components/app/sidebar";
@@ -14,6 +15,7 @@ type AppShellProps = {
   clerkEnabled: boolean;
   organisationName: string;
   plan: PlanKey;
+  isPreIntake?: boolean;
   regulationUpdateCount?: number;
   trustCenterHref: string;
 };
@@ -23,14 +25,16 @@ export function AppShell({
   clerkEnabled,
   organisationName,
   plan,
+  isPreIntake = false,
   regulationUpdateCount = 0,
   trustCenterHref,
 }: AppShellProps) {
   const t = useTranslations("shell");
+  const [freePlanBannerVisible, setFreePlanBannerVisible] = useState(true);
 
   return (
     <div className="min-h-screen bg-background pb-[calc(5.5rem+env(safe-area-inset-bottom))] text-foreground lg:pb-0">
-      <Sidebar regulationUpdateCount={regulationUpdateCount} />
+      <Sidebar isPreIntake={isPreIntake} regulationUpdateCount={regulationUpdateCount} />
       <div className="lg:pl-[220px]">
         <header className="sticky top-0 z-[var(--z-sticky)] flex h-14 items-center justify-between border-b border-border bg-surface/85 px-4 backdrop-blur-xl sm:px-5">
           <div className="flex min-w-0 items-center gap-3 pr-3">
@@ -66,18 +70,26 @@ export function AppShell({
             <UserMenu enabled={clerkEnabled} />
           </div>
         </header>
-        {plan === "free" ? (
-          <div className="border-b border-[var(--status-warn-border)] bg-[var(--status-warn-subtle)] px-5 py-3 text-sm text-[var(--status-warn)]">
-            <div className="flex w-full flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
-              <span>
+        {plan === "free" && freePlanBannerVisible ? (
+          <div className="border-b border-border bg-background px-5 py-1.5 text-xs text-foreground/58">
+            <div className="flex w-full items-center gap-3">
+              <span className="min-w-0 flex-1 truncate">
                 {t("freePlanBanner")}
               </span>
               <Link
                 href="/settings/billing"
-                className="font-medium text-[var(--status-warn)] underline underline-offset-4"
+                className="shrink-0 text-foreground/64 underline underline-offset-4 hover:text-foreground"
               >
                 {t("upgradePlan")}
               </Link>
+              <button
+                type="button"
+                className="grid h-5 w-5 shrink-0 place-items-center rounded-sm text-foreground/42 hover:bg-bg-hover hover:text-foreground"
+                aria-label={t("dismissFreePlanBanner")}
+                onClick={() => setFreePlanBannerVisible(false)}
+              >
+                <X className="h-3.5 w-3.5" aria-hidden="true" strokeWidth={1.5} />
+              </button>
             </div>
           </div>
         ) : null}
@@ -85,7 +97,7 @@ export function AppShell({
           {children}
         </main>
       </div>
-      <MobileTabBar regulationUpdateCount={regulationUpdateCount} />
+      <MobileTabBar isPreIntake={isPreIntake} regulationUpdateCount={regulationUpdateCount} />
     </div>
   );
 }

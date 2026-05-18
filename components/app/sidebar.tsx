@@ -32,18 +32,18 @@ const navigation = [
   },
   {
     items: [
-      { href: "/integrations", labelKey: "integrations", icon: Plug },
-      { href: "/policies", labelKey: "policies", icon: ScrollText },
-      { href: "/vendors", labelKey: "vendors", icon: Boxes },
-      { href: "/questionnaires", labelKey: "questionnaires", icon: FileQuestion },
+      { href: "/integrations", labelKey: "integrations", icon: Plug, lockedUntilIntake: true },
+      { href: "/policies", labelKey: "policies", icon: ScrollText, lockedUntilIntake: true },
+      { href: "/vendors", labelKey: "vendors", icon: Boxes, lockedUntilIntake: true },
+      { href: "/questionnaires", labelKey: "questionnaires", icon: FileQuestion, lockedUntilIntake: true },
     ],
     sectionKey: "operations",
   },
   {
     items: [
-      { href: "/incidents", labelKey: "incidents", icon: AlertTriangle },
-      { href: "/risks", labelKey: "risks", icon: BarChart3 },
-      { href: "/clients", labelKey: "clients", icon: BriefcaseBusiness },
+      { href: "/incidents", labelKey: "incidents", icon: AlertTriangle, lockedUntilIntake: true },
+      { href: "/risks", labelKey: "risks", icon: BarChart3, lockedUntilIntake: true },
+      { href: "/clients", labelKey: "clients", icon: BriefcaseBusiness, lockedUntilIntake: true },
       { href: "/team", labelKey: "team", icon: Users },
       { href: "/settings/organisation", labelKey: "settings", icon: Settings },
     ],
@@ -76,8 +76,10 @@ function Badge({ count }: { count: number }) {
 }
 
 export function Sidebar({
+  isPreIntake = false,
   regulationUpdateCount = 0,
 }: {
+  isPreIntake?: boolean;
   regulationUpdateCount?: number;
 }) {
   const pathname = usePathname();
@@ -98,13 +100,19 @@ export function Sidebar({
             <div className="grid gap-1">
               {group.items.map((item) => {
                 const active = isActivePath(pathname, item.href);
+                const locked = isPreIntake && Boolean(item.lockedUntilIntake);
 
                 return (
                   <Link
                     key={item.href}
-                    href={item.href}
+                    href={locked ? "#" : item.href}
+                    aria-disabled={locked}
+                    title={locked ? t("lockedUntilIntake") : undefined}
+                    tabIndex={locked ? -1 : undefined}
                     className={`flex items-center gap-2.5 rounded-md px-3 py-2 text-[13px] ${
-                      active
+                      locked
+                        ? "pointer-events-none cursor-not-allowed text-foreground/35 opacity-45"
+                        : active
                         ? "bg-[var(--accent-subtle)] font-medium text-primary"
                         : "text-foreground/70 hover:bg-bg-hover hover:text-foreground"
                     }`}
@@ -126,8 +134,10 @@ export function Sidebar({
 }
 
 export function MobileTabBar({
+  isPreIntake = false,
   regulationUpdateCount = 0,
 }: {
+  isPreIntake?: boolean;
   regulationUpdateCount?: number;
 }) {
   const pathname = usePathname();
@@ -137,13 +147,18 @@ export function MobileTabBar({
     <nav className="fixed inset-x-0 bottom-0 z-30 grid grid-cols-5 border-t border-border bg-surface/95 px-2 pb-[calc(0.5rem+env(safe-area-inset-bottom))] pt-1 backdrop-blur-xl lg:hidden">
       {mobileNavigation.map((item) => {
         const active = isActivePath(pathname, item.href);
+        const locked = isPreIntake && Boolean(item.lockedUntilIntake);
 
         return (
           <Link
             key={item.href}
-            href={item.href}
+            href={locked ? "#" : item.href}
+            aria-disabled={locked}
+            tabIndex={locked ? -1 : undefined}
             className={`flex min-h-12 min-w-0 flex-col items-center justify-center gap-1 rounded-md px-1 text-[11px] ${
-              active
+              locked
+                ? "pointer-events-none cursor-not-allowed text-foreground/35 opacity-45"
+                : active
                 ? "bg-[var(--accent-subtle)] font-medium text-primary"
                 : "text-foreground/62"
             }`}

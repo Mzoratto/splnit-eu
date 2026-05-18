@@ -5,11 +5,15 @@ import {
   AlertTriangle,
   ArrowRight,
   CalendarClock,
+  CheckCircle2,
   CircleDot,
   Clock3,
   FileArchive,
+  FileUp,
+  Info,
   Landmark,
-  Newspaper,
+  LockKeyhole,
+  Plug,
   ShieldCheck,
 } from "lucide-react";
 import { AnimatedScoreRing } from "@/components/app/animated-score-ring";
@@ -394,7 +398,7 @@ export default async function DashboardPage() {
     frameworkScores,
     statusRows,
   });
-  const isPreIntake = Boolean(data) && !hasIntakeScope;
+  const isPreIntake = !hasIntakeScope;
   const assessedRows = statusRows.filter((row) =>
     ["fail", "manual_review", "pass", "warning"].includes(row.status),
   );
@@ -411,6 +415,9 @@ export default async function DashboardPage() {
     : hasIntakeScope
       ? { href: "/controls?scope=priority", label: copy.onboarding.reviewGapsCta }
       : { href: "/onboarding", label: copy.onboarding.continueSetupCta };
+  const onboardingStepIcons = [CheckCircle2, Landmark, Plug, FileUp];
+  const activeOnboardingStep = 0;
+  const activeOnboardingDetail = copy.onboarding.stepDetails[activeOnboardingStep];
   const regulatoryFeedSources = new Set([
     jurisdiction.authorities.cybersecurity,
     jurisdiction.authorities.dataProtection,
@@ -431,66 +438,129 @@ export default async function DashboardPage() {
   return (
     <section className="page-enter-active space-y-8">
       {isPreIntake ? (
-        <section className="rounded-xl border border-primary/20 bg-primary p-5 text-primary-foreground shadow-sm sm:p-6">
-          <div className="flex flex-col justify-between gap-5 lg:flex-row lg:items-start">
-            <div className="max-w-3xl">
-              <p className="text-xs font-semibold uppercase tracking-[0.16em] text-primary-foreground/72">
-                {copy.onboarding.eyebrow}
-              </p>
-              <h2 className="mt-3 text-xl font-medium tracking-tight sm:text-2xl">
-                {copy.onboarding.title}
-              </h2>
-              <p className="mt-2 text-sm leading-6 text-primary-foreground/78">
-                {copy.onboarding.subtitle}
+        <section className="rounded-xl border border-border bg-surface p-5 shadow-sm sm:p-6">
+          <div className="flex flex-col justify-between gap-4 border-b border-border pb-5 md:flex-row md:items-start">
+            <div>
+              <p className="text-sm font-medium text-primary">Dashboard</p>
+              <h1 className="mt-2 text-[22px] font-medium tracking-normal">
+                {copy.greeting}{firstName ? `, ${firstName}` : ""}
+              </h1>
+              <p className="mt-1 text-sm text-foreground/64">
+                {copy.onboarding.progressLabel}
               </p>
             </div>
-            <Link href="/onboarding" className="btn bg-white text-primary hover:bg-white/90">
-              {copy.onboarding.primaryCta}
+            <Link href={setupCta.href} className="btn btn-primary">
+              {setupCta.label}
               <ArrowRight className="h-4 w-4" aria-hidden="true" strokeWidth={1.5} />
             </Link>
           </div>
-          <div className="mt-5 grid gap-2 sm:grid-cols-2 xl:grid-cols-4">
-            {copy.onboarding.steps.map((step, index) => (
-              <div
-                key={step}
-                className={`rounded-md border px-3 py-2 text-sm ${
-                  index === 0
-                    ? "border-white bg-white text-primary"
-                    : "border-white/22 bg-white/10 text-primary-foreground/78"
-                }`}
-              >
-                <span className="mr-2 font-mono text-xs">{index + 1}.</span>
-                {step}
-              </div>
-            ))}
+
+          <div className="mt-5 grid gap-3 lg:grid-cols-4">
+            {copy.onboarding.steps.map((step, index) => {
+              const StepIcon = onboardingStepIcons[index] ?? CircleDot;
+              const isActive = index === activeOnboardingStep;
+              const isLocked = index > activeOnboardingStep;
+
+              return (
+                <div key={step} className="flex items-center gap-3">
+                  <div
+                    className={`flex flex-1 items-center gap-3 rounded-md border px-3 py-2.5 ${
+                      isActive
+                        ? "border-primary/35 bg-primary/8 text-primary"
+                        : isLocked
+                          ? "border-border bg-background text-foreground/46"
+                          : "border-status-pass/25 bg-status-pass/8 text-status-pass"
+                    }`}
+                    aria-current={isActive ? "step" : undefined}
+                  >
+                    <span
+                      className={`grid h-7 w-7 shrink-0 place-items-center rounded-full ${
+                        isActive
+                          ? "bg-primary text-primary-foreground"
+                          : isLocked
+                            ? "bg-border text-foreground/46"
+                            : "bg-status-pass text-white"
+                      }`}
+                    >
+                      {isLocked ? (
+                        <LockKeyhole className="h-3.5 w-3.5" aria-hidden="true" strokeWidth={1.7} />
+                      ) : (
+                        <StepIcon className="h-3.5 w-3.5" aria-hidden="true" strokeWidth={1.7} />
+                      )}
+                    </span>
+                    <span className="min-w-0">
+                      <span className="block text-[11px] text-foreground/46">
+                        {copy.onboarding.stepLabel} {index + 1}
+                      </span>
+                      <span className="block truncate text-sm font-medium">{step}</span>
+                      <span className="mt-0.5 block truncate text-[11px] text-foreground/45">
+                        {copy.onboarding.stepHints[index]}
+                      </span>
+                    </span>
+                  </div>
+                  {index < copy.onboarding.steps.length - 1 ? (
+                    <span className="hidden h-px w-5 bg-border lg:block" aria-hidden="true" />
+                  ) : null}
+                </div>
+              );
+            })}
           </div>
-          <p className="mt-4 text-xs leading-5 text-primary-foreground/70">
-            {copy.onboarding.reassurance}
-          </p>
+
+          <div className="mt-5 rounded-md border border-primary/20 bg-primary/5 p-4">
+            <div className="flex flex-col gap-4 md:flex-row md:items-start">
+              <div className="grid h-10 w-10 shrink-0 place-items-center rounded-md bg-primary text-primary-foreground">
+                <CheckCircle2 className="h-5 w-5" aria-hidden="true" strokeWidth={1.7} />
+              </div>
+              <div className="min-w-0 flex-1">
+                <h2 className="text-base font-medium">{activeOnboardingDetail.title}</h2>
+                <p className="mt-1 max-w-3xl text-sm leading-6 text-foreground/64">
+                  {activeOnboardingDetail.description}
+                </p>
+                <div className="mt-3 flex flex-wrap gap-2">
+                  <span className="rounded-full border border-border bg-background px-3 py-1 text-xs text-foreground/58">
+                    {activeOnboardingDetail.time}
+                  </span>
+                  <span className="rounded-full border border-border bg-background px-3 py-1 text-xs text-foreground/58">
+                    {activeOnboardingDetail.unlocks}
+                  </span>
+                </div>
+                {useDemoData || dataNotice ? (
+                  <p className="mt-3 inline-flex max-w-3xl items-start gap-2 rounded-md border border-border bg-background px-3 py-2 text-xs leading-5 text-foreground/58">
+                    <Info className="mt-0.5 h-3.5 w-3.5 shrink-0" aria-hidden="true" strokeWidth={1.7} />
+                    {copy.onboarding.demoNote}
+                  </p>
+                ) : null}
+              </div>
+              <Link href={setupCta.href} className="btn btn-primary md:mt-1">
+                {activeOnboardingDetail.button}
+                <ArrowRight className="h-4 w-4" aria-hidden="true" strokeWidth={1.5} />
+              </Link>
+            </div>
+          </div>
         </section>
-      ) : null}
+      ) : (
+        <>
+          <div className="flex flex-col justify-between gap-4 border-b border-border pb-6 md:flex-row md:items-end">
+            <div>
+              <p className="text-sm font-medium text-primary">Dashboard</p>
+              <h1 className="mt-2 text-[22px] font-medium tracking-normal">
+                {copy.greeting}{firstName ? `, ${firstName}` : ""}
+              </h1>
+              <p className="mt-1 text-sm text-foreground/64">
+                {`${openFindings} ${copy.summary.openFindings} · ${failingControls} ${copy.summary.failedControls}`}
+              </p>
+            </div>
+            <Link href={setupCta.href} className="btn btn-primary">
+              {setupCta.label}
+              <ArrowRight className="h-4 w-4" aria-hidden="true" strokeWidth={1.5} />
+            </Link>
+          </div>
 
-      <div className="flex flex-col justify-between gap-4 border-b border-border pb-6 md:flex-row md:items-end">
-        <div>
-          <p className="text-sm font-medium text-primary">Dashboard</p>
-          <h1 className="mt-2 text-[22px] font-medium tracking-normal">
-            {copy.greeting}{firstName ? `, ${firstName}` : ""}
-          </h1>
-          <p className="mt-1 text-sm text-foreground/64">
-            {isPreIntake
-              ? copy.summary.setupPending
-              : `${openFindings} ${copy.summary.openFindings} · ${failingControls} ${copy.summary.failedControls}`}
-          </p>
-        </div>
-        <Link href={setupCta.href} className="btn btn-primary">
-          {setupCta.label}
-          <ArrowRight className="h-4 w-4" aria-hidden="true" strokeWidth={1.5} />
-        </Link>
-      </div>
-
-      {dataNotice ? (
-        <DataModeNotice body={dataNotice.body} title={dataNotice.title} />
-      ) : null}
+          {dataNotice ? (
+            <DataModeNotice body={dataNotice.body} title={dataNotice.title} />
+          ) : null}
+        </>
+      )}
 
       {hasIntakeScope && intakeScopeSummary ? (
         <section className="card">
@@ -536,16 +606,11 @@ export default async function DashboardPage() {
       ) : null}
 
       <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
-        <article className="metric-card flex items-center gap-5">
+        <article className={`metric-card ${shouldShowScore ? "flex items-center gap-5" : "flex flex-col items-start gap-3"}`}>
           {shouldShowScore ? (
             <AnimatedScoreRing label={copy.scoreLabel} locale={locale} score={score} />
           ) : (
-            <div className="grid h-[120px] w-[120px] place-items-center rounded-full border-8 border-border bg-background text-center">
-              <div>
-                <p className="text-base font-medium">{copy.metrics.pendingScore}</p>
-                <p className="mt-1 text-[11px] text-foreground/52">{copy.scoreLabel}</p>
-              </div>
-            </div>
+            <StatusPill tone="neutral">{copy.metrics.pendingScore}</StatusPill>
           )}
           <div>
             <p className="text-xs text-foreground/52">{copy.metrics.scoreTitle}</p>
@@ -605,7 +670,7 @@ export default async function DashboardPage() {
         </article>
       </div>
 
-      <div className="grid gap-4 xl:grid-cols-[1.5fr_1fr]">
+      <div className="grid gap-4">
         <section className="card">
           <div className="mb-4 flex items-center justify-between gap-4">
             <div>
@@ -676,9 +741,9 @@ export default async function DashboardPage() {
         </section>
 
         <div className="grid gap-4">
-          <section className="nukib-card">
-            <div className="flex items-start justify-between gap-3">
-              <div>
+          <details className="nukib-card group">
+            <summary className="flex cursor-pointer list-none items-center justify-between gap-4 [&::-webkit-details-marker]:hidden">
+              <div className="min-w-0">
                 <div className="flex flex-wrap items-center gap-2">
                   <span className="rounded-sm border border-[var(--nukib-border)] bg-white/10 px-2 py-1 text-[11px] font-medium">
                     {copy.nukib.badge}
@@ -687,10 +752,13 @@ export default async function DashboardPage() {
                     {copy.nukib.exclusive}
                   </span>
                 </div>
-                <h2 className="mt-3 text-lg font-medium">{copy.nukib.title}</h2>
+                <h2 className="mt-2 text-lg font-medium">{copy.nukib.title}</h2>
               </div>
-              <Newspaper className="h-5 w-5 text-[var(--nukib-accent)]" aria-hidden="true" strokeWidth={1.5} />
-            </div>
+              <span className="flex shrink-0 items-center gap-2 text-sm font-medium text-[var(--nukib-accent)]">
+                {copy.nukib.showFeed}
+                <ArrowRight className="h-4 w-4 transition-transform group-open:rotate-90" aria-hidden="true" strokeWidth={1.5} />
+              </span>
+            </summary>
             <div className="mt-4 grid gap-3">
               {visibleRegulatoryUpdates.slice(0, 3).map((update) => (
                 <article
@@ -731,7 +799,7 @@ export default async function DashboardPage() {
                 </article>
               ))}
             </div>
-          </section>
+          </details>
 
           <section className="card">
             <h2 className="text-lg font-medium">{copy.activity.title}</h2>

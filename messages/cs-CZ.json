@@ -21,7 +21,8 @@
     "risks": "Rizika",
     "clients": "Klienti",
     "team": "Tým",
-    "settings": "Nastavení"
+    "settings": "Nastavení",
+    "lockedUntilIntake": "Dostupné po intake"
   },
   "shell": {
     "plan": "Plán",
@@ -32,6 +33,7 @@
     "organisationFallback": "Organizace",
     "freePlanBanner": "Plán zdarma: projděte si nastavení v jednom menším pracovním prostoru. Vyšší tarif dává smysl až ve chvíli, kdy potřebujete vyšší limity pro frameworky, integrace, uživatele nebo důkazy pro zákazníky.",
     "upgradePlan": "Upgradovat plán",
+    "dismissFreePlanBanner": "Skrýt upozornění tarifu zdarma",
     "switchToLight": "Přepnout na světlý režim",
     "switchToDark": "Přepnout na tmavý režim",
     "demoUser": "Demo uživatel"
@@ -371,11 +373,45 @@
       "eyebrow": "Řízené nastavení",
       "title": "Začněme s konfigurací",
       "subtitle": "Dokončete tyto kroky, abyste viděli použitelné kontroly, prioritní mezery a další kroky.",
-      "primaryCta": "Spustit intake (15 min)",
+      "progressLabel": "Nastavení pracovního prostoru · krok 1 ze 4",
+      "stepLabel": "Krok",
+      "primaryCta": "Zahájit intake",
       "continueSetupCta": "Pokračovat v nastavení",
       "reviewGapsCta": "Zkontrolovat prioritní mezery",
       "reassurance": "Platformu můžete procházet hned, ale výsledky a skóre budou spolehlivé až po dokončení intake.",
-      "steps": ["Intake", "Framework", "Integrace", "První důkaz"]
+      "demoNote": "Demo režim: živá data se načtou po dokončení intake a připojení první integrace.",
+      "steps": ["Intake", "Framework", "Integrace", "První důkaz"],
+      "stepHints": ["Určí relevantní kontroly", "Aktivujte GDPR, NIS2, ISO", "Připojte první zdroj", "Nahrajte první důkaz"],
+      "stepDetails": [
+        {
+          "title": "Vyplňte intake dotazník",
+          "description": "15minutový průvodce určí, které kontroly a frameworky jsou pro vaši organizaci relevantní. Bez tohoto kroku nelze spolehlivě spočítat compliance skóre.",
+          "time": "~15 minut",
+          "unlocks": "Odemkne: frameworky, kontroly a prioritní mezery",
+          "button": "Zahájit intake"
+        },
+        {
+          "title": "Aktivujte relevantní frameworky",
+          "description": "Na základě výsledku intake potvrďte, které předpisy sledovat: GDPR, NIS2, ISO 27001 nebo EU AI Act.",
+          "time": "~5 minut",
+          "unlocks": "Odemkne: integrace a stav kontrol",
+          "button": "Aktivovat frameworky"
+        },
+        {
+          "title": "Připojte první integraci",
+          "description": "Propojte Microsoft 365, GitHub nebo AWS, aby se důkazy začaly sbírat automaticky.",
+          "time": "~10 minut",
+          "unlocks": "Odemkne: automatické testy",
+          "button": "Připojit integraci"
+        },
+        {
+          "title": "Nahrajte první důkaz",
+          "description": "Vyberte jednu prioritní mezeru a nahrajte dokument, screenshot nebo poznámku. Tím se aktivuje smysluplné skóre.",
+          "time": "~5 minut",
+          "unlocks": "Aktivuje: compliance skóre",
+          "button": "Nahrát důkaz"
+        }
+      ]
     },
     "statusLabels": {
       "fail": "K opravě",
@@ -388,7 +424,7 @@
       "scoreTitle": "Compliance skóre",
       "scoreBody": "Průměr skóre frameworků a stavů kontrol.",
       "scorePendingBody": "Dostupné po intake a prvním posouzení kontrol.",
-      "pendingScore": "Pending",
+      "pendingScore": "Čeká",
       "activeFrameworks": "Aktivní frameworky",
       "failedControls": "Nesplněné kontroly",
       "toAssessControls": "Kontroly k posouzení",
@@ -410,6 +446,7 @@
       "badge": "🇨🇿 NÚKIB",
       "exclusive": "Sledováno",
       "title": "Feed NÚKIB",
+      "showFeed": "Zobrazit feed",
       "openSource": "Otevřít zdroj",
       "markRead": "Označit přečtené"
     },
