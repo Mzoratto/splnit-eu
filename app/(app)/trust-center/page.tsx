@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { auth } from "@clerk/nextjs/server";
+import { eq, sql } from "drizzle-orm";
 import { getLocale } from "next-intl/server";
 import {
   CheckCircle2,
@@ -9,11 +10,14 @@ import {
   XCircle,
 } from "lucide-react";
 import { DataModeNotice } from "@/components/app/data-mode-notice";
+import { TrustCenterPreviewPanel } from "@/components/trust-center/trust-center-preview-panel";
 import { getMessagesForLocale } from "@/i18n/messages";
 import { normalizeLocale, type Locale } from "@/i18n/routing";
-import { hasDatabaseUrl } from "@/lib/db";
+import { getDb, hasDatabaseUrl } from "@/lib/db";
+import { listOrgControlsForIndex } from "@/lib/db/queries/controls";
 import { getOrganisationByClerkOrgId } from "@/lib/db/queries/organisations";
 import { getTrustCenterSettings } from "@/lib/db/queries/trust-center";
+import { evidence } from "@/lib/db/schema";
 import { isLocalDemoDataEnabled } from "@/lib/demo-mode";
 import { FRAMEWORK_LIBRARY } from "@/lib/frameworks/registry";
 import {
@@ -39,6 +43,8 @@ async function loadSettings() {
       data: null,
       mode: getFallbackMode(),
       organisationLocale: null,
+      organisationName: null,
+      trustStats: null,
     };
   }
 
@@ -49,25 +55,46 @@ async function loadSettings() {
       data: null,
       mode: getFallbackMode(),
       organisationLocale: null,
+      organisationName: null,
+      trustStats: null,
     };
   }
 
   try {
-    const [data, organisation] = await Promise.all([
+    const db = getDb();
+    const [data, organisation, controls, evidenceRows] = await Promise.all([
       getTrustCenterSettings(session.orgId),
       getOrganisationByClerkOrgId(session.orgId),
+      listOrgControlsForIndex(session.orgId),
+      db
+        .select({ value: sql<number>`count(*)::int` })
+        .from(evidence)
+        .where(eq(evidence.clerkOrgId, session.orgId)),
     ]);
+    const trustRelevantControls = controls.filter(
+      (control) =>
+        control.scopeStatus !== "out_of_scope" &&
+        control.status !== "not_applicable",
+    );
 
     return {
       data,
       mode: "live" as const,
       organisationLocale: organisation?.locale ?? null,
+      organisationName: organisation?.name ?? null,
+      trustStats: {
+        evidenceCount: evidenceRows[0]?.value ?? 0,
+        passedControls: trustRelevantControls.filter((control) => control.status === "pass").length,
+        totalControls: trustRelevantControls.length,
+      },
     };
   } catch {
     return {
       data: null,
       mode: "unavailable" as const,
       organisationLocale: null,
+      organisationName: null,
+      trustStats: null,
     };
   }
 }
@@ -89,7 +116,7 @@ function formatDate(
 
 export default async function TrustCenterSettingsPage() {
   const requestLocale = normalizeLocale(await getLocale()) ?? "cs-CZ";
-  const { data, mode, organisationLocale } = await loadSettings();
+  const { data, mode, organisationLocale, organisationName, trustStats } = await loadSettings();
   const locale = normalizeLocale(organisationLocale) ?? requestLocale;
   const messages = getMessagesForLocale(locale);
   const copy = messages.trustCenterSettings;
@@ -123,6 +150,15 @@ export default async function TrustCenterSettingsPage() {
         : [];
   const subdomain = trustCenter?.subdomain ?? (mode === "demo" ? "demo" : "");
   const publicUrl = subdomain && trustCenter?.isPublic ? `/trust/${subdomain}` : null;
+  const liveStats = {
+    accessRequests: data?.requests.length ?? 0,
+    lastUpdatedLabel: formatDate(trustCenter?.lastUpdated, locale, "zatím nepublikováno"),
+    publishLabel: trustCenter?.isPublic ? "Publikováno" : "Soukromý náhled",
+    evidenceCount: trustStats?.evidenceCount ?? 0,
+    passedControls: trustStats?.passedControls ?? 0,
+    totalControls: trustStats?.totalControls ?? 0,
+    visibleFrameworks: visibleFrameworks.length,
+  };
   const canMutate = mode === "live" && Boolean(data);
 
   return (
@@ -155,6 +191,12 @@ export default async function TrustCenterSettingsPage() {
       </div>
 
       {notice ? <DataModeNotice body={notice.body} title={notice.title} /> : null}
+
+      <TrustCenterPreviewPanel
+        organisationName={organisationName ?? "Vaše firma"}
+        publicUrl={publicUrl}
+        liveStats={liveStats}
+      />
 
       <div className="grid gap-4 lg:grid-cols-[1fr_1.1fr]">
         <section className="rounded-lg border border-border bg-surface p-5">

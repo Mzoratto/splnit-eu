@@ -393,6 +393,7 @@ export async function listWeeklyRegulationDigestRecipients(since: Date) {
   const recipients = new Map<
     string,
     {
+      clerkOrgId: string;
       email: string;
       frameworkIds: Set<string>;
       organisationName: string;
@@ -409,6 +410,7 @@ export async function listWeeklyRegulationDigestRecipients(since: Date) {
     const recipient =
       recipients.get(key) ??
       {
+        clerkOrgId: row.clerkOrgId,
         email: row.email,
         frameworkIds: new Set<string>(),
         organisationName: row.organisationName,
@@ -441,6 +443,7 @@ export async function listWeeklyRegulationDigestRecipients(since: Date) {
 
     return {
       email: recipient.email,
+      clerkOrgId: recipient.clerkOrgId,
       organisationName: recipient.organisationName,
       updates,
     };

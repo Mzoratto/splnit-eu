@@ -27,6 +27,7 @@
 .DS_Store
 *.pem
 /agent-skills/
+/tmp/
 
 # debug
 npm-debug.log*

@@ -45,6 +45,7 @@
     "verify:controlled-mailbox-receipt-source": "tsx scripts/verify-controlled-mailbox-receipt-source.ts",
     "smoke:trust-center-settings": "tsx scripts/smoke-trust-center-settings.ts",
     "smoke:trust-center-public-disclosure": "tsx scripts/smoke-trust-center-public-disclosure.ts",
+    "smoke:weekly-digest-edge-cases": "tsx scripts/smoke-weekly-digest-edge-cases.ts",
     "smoke:public-module-seams": "tsx scripts/smoke-public-module-seams.ts",
     "smoke:export-endpoints-source": "tsx scripts/smoke-export-endpoints-source.ts",
     "smoke:org-boundaries": "tsx scripts/smoke-org-boundaries.ts",
