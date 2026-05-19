@@ -1,6 +1,6 @@
 export type EvidenceAssessmentResult =
   | "pass"
-  | "fail"
+  | "gap"
   | "warning"
   | "manual_review"
   | "not_applicable"
@@ -10,7 +10,7 @@ export type EvidenceCollectionStatus =
   | "collected"
   | "blocked"
   | "pending"
-  | "expired";
+  | "failed";
 
 export type EvidenceSource = "connector" | "manual" | "intake" | "imported";
 
