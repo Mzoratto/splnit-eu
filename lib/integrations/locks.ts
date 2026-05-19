@@ -1,10 +1,11 @@
 import { getRedis, hasRedisConfig } from "@/lib/redis/client";
 
 const LOCK_TTL_SECONDS = 55 * 60;
+const FIRST_RUN_ENQUEUE_LOCK_TTL_SECONDS = 24 * 60 * 60;
 
-export async function acquireIntegrationRunLock(input: {
-  clerkOrgId: string;
-  provider: string;
+async function acquireRedisLock(input: {
+  key: string;
+  ttlSeconds: number;
 }) {
   if (!hasRedisConfig()) {
     return {
@@ -15,9 +16,8 @@ export async function acquireIntegrationRunLock(input: {
   }
 
   const redis = getRedis();
-  const key = `integration-run:${input.clerkOrgId}:${input.provider}`;
-  const acquired = await redis.set(key, new Date().toISOString(), {
-    ex: LOCK_TTL_SECONDS,
+  const acquired = await redis.set(input.key, new Date().toISOString(), {
+    ex: input.ttlSeconds,
     nx: true,
   });
 
@@ -25,7 +25,27 @@ export async function acquireIntegrationRunLock(input: {
     acquired: acquired === "OK",
     enabled: true,
     release: async () => {
-      await redis.del(key);
+      await redis.del(input.key);
     },
   };
+}
+
+export async function acquireIntegrationRunLock(input: {
+  clerkOrgId: string;
+  provider: string;
+}) {
+  return acquireRedisLock({
+    key: `integration-run:${input.clerkOrgId}:${input.provider}`,
+    ttlSeconds: LOCK_TTL_SECONDS,
+  });
+}
+
+export async function acquireIntegrationFirstRunEnqueueLock(input: {
+  clerkOrgId: string;
+  provider: string;
+}) {
+  return acquireRedisLock({
+    key: `integration-first-run-enqueue:${input.clerkOrgId}:${input.provider}`,
+    ttlSeconds: FIRST_RUN_ENQUEUE_LOCK_TTL_SECONDS,
+  });
 }

@@ -7,9 +7,11 @@ import { getDb } from "@/lib/db";
 import { createAuditLog } from "@/lib/db/queries/audit-logs";
 import { upsertIntegrationConnection } from "@/lib/db/queries/integrations";
 import { controls, evidence } from "@/lib/db/schema";
+import { acquireIntegrationFirstRunEnqueueLock } from "@/lib/integrations/locks";
 import { exchangeMicrosoftCode } from "@/lib/integrations/microsoft365/oauth";
 import { MICROSOFT365_TEST_DEFINITIONS } from "@/lib/integrations/microsoft365/test-definitions";
 import { verifyOAuthState } from "@/lib/integrations/oauth-state";
+import { inngest } from "@/inngest/client";
 
 const MICROSOFT365_CONNECTION_EVIDENCE_TYPE = "microsoft365_connection";
 
@@ -97,6 +99,39 @@ async function createPendingMicrosoftEvidence(input: {
   }
 }
 
+async function enqueueMicrosoftFirstRun(input: {
+  clerkOrgId: string;
+  integrationId: string;
+}) {
+  const provider = "microsoft365";
+  const lock = await acquireIntegrationFirstRunEnqueueLock({
+    clerkOrgId: input.clerkOrgId,
+    provider,
+  });
+
+  if (!lock.acquired) {
+    return { enqueued: false, lockEnabled: lock.enabled };
+  }
+
+  try {
+    await inngest.send({
+      id: `integration-first-run:${input.clerkOrgId}:${provider}:${input.integrationId}`,
+      name: "integrations/tests.run",
+      data: {
+        clerkOrgId: input.clerkOrgId,
+        integrationId: input.integrationId,
+        provider,
+        trigger: "oauth_callback_first_run",
+      },
+    });
+  } catch (error) {
+    await lock.release();
+    throw error;
+  }
+
+  return { enqueued: true, lockEnabled: lock.enabled };
+}
+
 export async function GET(request: Request) {
   const url = new URL(request.url);
   const code = url.searchParams.get("code");
@@ -151,6 +186,22 @@ export async function GET(request: Request) {
   await createPendingMicrosoftEvidence({
     clerkOrgId: session.orgId,
     integrationId: integration.id,
+  });
+  const firstRun = await enqueueMicrosoftFirstRun({
+    clerkOrgId: session.orgId,
+    integrationId: integration.id,
+  });
+  await createAuditLog({
+    action: firstRun.enqueued
+      ? "integration.first_run_queued"
+      : "integration.first_run_queue_skipped",
+    clerkOrgId: session.orgId,
+    entityId: integration.id,
+    entityType: "integration",
+    metadata: {
+      lockEnabled: firstRun.lockEnabled,
+      provider: "microsoft365",
+    },
   });
 
   return NextResponse.redirect(new URL("/integrations/microsoft365", url.origin));

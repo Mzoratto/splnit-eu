@@ -29,6 +29,62 @@ type ProviderRunSummary = {
   testsRun: number;
 };
 
+function getErrorStatusCode(error: unknown) {
+  if (typeof error !== "object" || error === null) {
+    return null;
+  }
+
+  const maybeError = error as {
+    status?: unknown;
+    statusCode?: unknown;
+    response?: { status?: unknown };
+  };
+  const status = maybeError.statusCode ?? maybeError.status ?? maybeError.response?.status;
+  const numericStatus = Number(status);
+
+  return Number.isInteger(numericStatus) ? numericStatus : null;
+}
+
+function describeCollectionError(error: unknown) {
+  return error instanceof Error ? error.message : String(error);
+}
+
+function buildCollectionErrorResult(error: unknown, provider: string) {
+  const statusCode = getErrorStatusCode(error);
+  const isMicrosoftPermissionFailure =
+    provider === "microsoft365" &&
+    (statusCode === 401 || statusCode === 403 || statusCode === 404);
+  const isMicrosoftRetryableFailure =
+    provider === "microsoft365" &&
+    (statusCode === 429 || (statusCode !== null && statusCode >= 500));
+  const errorMessage = describeCollectionError(error);
+
+  if (isMicrosoftPermissionFailure) {
+    return {
+      status: "manual_review" as const,
+      resultData: {
+        blockedReason: "missing_permission",
+        errorMessage,
+        graphStatusCode: statusCode,
+      },
+      failureReason:
+        `Cannot read Microsoft 365 evidence. Review Microsoft Graph permissions and upload evidence manually.${errorMessage ? ` Graph error: ${errorMessage}` : ""}`,
+    };
+  }
+
+  return {
+    status: "error" as const,
+    resultData: {
+      blockedReason: "collection_failed",
+      errorMessage,
+      graphStatusCode: provider === "microsoft365" ? statusCode : undefined,
+    },
+    failureReason: isMicrosoftRetryableFailure
+      ? `Microsoft 365 evidence collection failed; retry after Microsoft Graph recovers.${errorMessage ? ` Graph error: ${errorMessage}` : ""}`
+      : errorMessage,
+  };
+}
+
 export async function runTestsForOrg(
   clerkOrgId: string,
   options: RunTestsOptions = {},
@@ -188,13 +244,56 @@ export async function runTestsForOrg(
           testsRun += 1;
         } catch (error) {
           errors += 1;
-          await db.insert(integrationRuns).values({
-            integrationId: integration.id,
-            testId: test.id,
-            clerkOrgId,
-            status: "error",
-            failureReason: error instanceof Error ? error.message : String(error),
-          });
+          const now = new Date();
+          const errorResult = buildCollectionErrorResult(error, integration.provider);
+          const resultData = errorResult.resultData;
+          const insertedRuns = await db
+            .insert(integrationRuns)
+            .values({
+              integrationId: integration.id,
+              testId: test.id,
+              clerkOrgId,
+              status: errorResult.status,
+              resultData,
+              failureReason: errorResult.failureReason,
+            })
+            .returning({ id: integrationRuns.id });
+          const integrationRunId = insertedRuns[0]?.id;
+
+          if (integration.provider === "microsoft365" && integrationRunId) {
+            await createAutomatedEvidenceForIntegrationRun({
+              checkLogic: test.checkLogic,
+              clerkOrgId,
+              controlId: test.controlId,
+              failureReason: errorResult.failureReason,
+              integrationRunId,
+              passCriteria: test.passCriteria,
+              provider: integration.provider,
+              resultData,
+              status: errorResult.status,
+              testName: test.name,
+            });
+            evidenceCreated += 1;
+
+            await db
+              .insert(orgControlStatuses)
+              .values({
+                clerkOrgId,
+                controlId: test.controlId,
+                lastEvidenceAt: now,
+                lastTestedAt: now,
+                status: errorResult.status,
+              })
+              .onConflictDoUpdate({
+                target: [orgControlStatuses.clerkOrgId, orgControlStatuses.controlId],
+                set: {
+                  lastEvidenceAt: now,
+                  lastTestedAt: now,
+                  status: errorResult.status,
+                  updatedAt: now,
+                },
+              });
+          }
         }
       }
 

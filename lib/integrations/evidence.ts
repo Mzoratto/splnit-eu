@@ -1,4 +1,6 @@
 import { and, asc, eq } from "drizzle-orm";
+import { createEvidenceState } from "@/lib/activation/evidence-state";
+import type { EvidenceBlockedReason } from "@/lib/activation/evidence-state";
 import { getDb } from "@/lib/db";
 import {
   articles,
@@ -107,6 +109,61 @@ export function buildAutomatedEvidenceSnapshot(input: {
   };
 }
 
+function getEvidenceStateForTestResult(input: {
+  resultData: Record<string, unknown>;
+  status: TestStatus;
+}) {
+  const blockedReason = input.resultData.blockedReason;
+  const explicitBlockedReason =
+    typeof blockedReason === "string" ? blockedReason as EvidenceBlockedReason : null;
+
+  switch (input.status) {
+    case "pass":
+      return createEvidenceState({
+        assessment_result: "pass",
+        collected_at: new Date(),
+        collection_status: "collected",
+        source: "connector",
+      });
+    case "fail":
+      return createEvidenceState({
+        assessment_result: "gap",
+        collected_at: new Date(),
+        collection_status: "collected",
+        source: "connector",
+      });
+    case "warning":
+      return createEvidenceState({
+        assessment_result: "warning",
+        collected_at: new Date(),
+        collection_status: "collected",
+        source: "connector",
+      });
+    case "manual_review":
+      return createEvidenceState({
+        assessment_result: "manual_review",
+        blocked_reason: explicitBlockedReason ?? "needs_manual_upload",
+        collection_status: "blocked",
+        source: "connector",
+      });
+    case "not_applicable":
+      return createEvidenceState({
+        assessment_result: "not_applicable",
+        blocked_reason: "not_applicable",
+        collection_status: "blocked",
+        source: "connector",
+      });
+    case "error":
+    default:
+      return createEvidenceState({
+        assessment_result: "unknown",
+        blocked_reason: explicitBlockedReason ?? "collection_failed",
+        collection_status: "failed",
+        source: "connector",
+      });
+  }
+}
+
 async function listReviewedCitationsForControl(
   controlId: string,
 ): Promise<ReviewedCitation[]> {
@@ -163,10 +220,19 @@ export async function createAutomatedEvidenceForIntegrationRun(input: {
 }) {
   const db = getDb();
   const reviewedCitations = await listReviewedCitationsForControl(input.controlId);
+  const evidenceState = getEvidenceStateForTestResult({
+    resultData: input.resultData,
+    status: input.status,
+  });
 
   await db.insert(evidence).values({
+    assessmentResult: evidenceState.assessment_result,
+    blockedReason: evidenceState.blocked_reason,
     clerkOrgId: input.clerkOrgId,
+    collectedAt: evidenceState.collected_at,
     collectedBy: "system:integration-runner",
+    collectionStatus: evidenceState.collection_status,
+    confidence: evidenceState.confidence,
     controlId: input.controlId,
     description: `${input.provider} automated check: ${input.testName} (${input.status}).`,
     integrationRunId: input.integrationRunId,
@@ -180,7 +246,7 @@ export async function createAutomatedEvidenceForIntegrationRun(input: {
       status: input.status,
       testName: input.testName,
     }),
-    source: "connector" as const,
+    source: evidenceState.source,
     type: "automated_snapshot",
   });
 }
