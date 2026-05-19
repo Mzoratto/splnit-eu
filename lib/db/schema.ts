@@ -15,6 +15,14 @@ import {
   vector,
 } from "drizzle-orm/pg-core";
 
+import type {
+  EvidenceAssessmentResult,
+  EvidenceBlockedReason,
+  EvidenceCollectionStatus,
+  EvidenceConfidence,
+  EvidenceSource,
+} from "@/lib/activation/evidence-state";
+
 export const mappingReviewFrameworkEnum = pgEnum("mapping_review_framework", [
   "nis2",
   "eu_ai_act",
@@ -422,16 +430,30 @@ export const evidence = pgTable("evidence", {
     .references(() => controls.id),
   integrationRunId: uuid("integration_run_id").references(() => integrationRuns.id),
   type: text("type").notNull(),
-  source: text("source"),
+  source: text("source")
+    .$type<EvidenceSource>()
+    .notNull()
+    .default("manual"),
   sourceArtifactId: uuid("source_artifact_id").references(() => generatedArtifacts.id, {
     onDelete: "set null",
   }),
-  status: text("status").notNull().default("reviewed"),
+  assessmentResult: text("assessment_result")
+    .$type<EvidenceAssessmentResult>()
+    .notNull()
+    .default("unknown"),
+  collectionStatus: text("collection_status")
+    .$type<EvidenceCollectionStatus>()
+    .notNull()
+    .default("collected"),
+  confidence: text("confidence")
+    .$type<EvidenceConfidence>()
+    .notNull()
+    .default("medium"),
+  blockedReason: text("blocked_reason").$type<EvidenceBlockedReason>(),
   blobUrl: text("blob_url"),
   snapshotData: jsonb("snapshot_data").$type<Record<string, unknown>>(),
   description: text("description"),
   collectedBy: text("collected_by"),
-  expiresAt: date("expires_at"),
   collectedAt: timestamp("collected_at", { withTimezone: true }).defaultNow(),
 });
 
