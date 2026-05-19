@@ -56,7 +56,7 @@ const BASE_CONTROL_LIBRARY: ControlSeed[] = [
   },
   {
     key: "ctrl_privileged_access_reviewed",
-    titleCs: "Přístup privilegovaných uživatelů je pravidelně přezkoumaný",
+    titleCs: "Pravidelně přezkoumávejte přístup privilegovaných uživatelů",
     titleEn: "Privileged user access is periodically reviewed",
     descriptionCs:
       "Organizace pravidelně kontroluje účty s administrátorskými oprávněními a udržuje jejich počet minimální.",
@@ -86,10 +86,10 @@ const BASE_CONTROL_LIBRARY: ControlSeed[] = [
   },
   {
     key: "ctrl_guest_access_controlled",
-    titleCs: "Externí a hostovské účty jsou kontrolované",
+    titleCs: "Kontrolujte externí a hostovské účty",
     titleEn: "Guest and external user access is controlled",
     descriptionCs:
-      "Neaktivní hostovské účty jsou pravidelně identifikovány a revokovány.",
+      "Pravidelně vyhledávejte a odebírejte neaktivní hostovské účty.",
     category: "access_control",
     testType: "automated",
     requiresEvidence: true,
@@ -118,7 +118,7 @@ const BASE_CONTROL_LIBRARY: ControlSeed[] = [
   },
   {
     key: "ctrl_incident_plan_documented",
-    titleCs: "Plán reakce na incidenty je zdokumentován a přezkoumaný",
+    titleCs: "Zdokumentujte a přezkoumejte plán reakce na incidenty",
     titleEn: "Incident response plan is documented and reviewed annually",
     descriptionCs:
       "Organizace má schválený plán reakce na incidenty s určenými rolemi, eskalací a revizí.",
@@ -134,7 +134,7 @@ const BASE_CONTROL_LIBRARY: ControlSeed[] = [
   },
   {
     key: "ctrl_incident_72h_notification",
-    titleCs: "Incidenty hlášeny do 72 hodin příslušnému orgánu",
+    titleCs: "Oznamujte incidenty do 72 hodin příslušnému orgánu",
     titleEn: "Security incidents reported to authority within 72 hours",
     descriptionCs:
       "Proces incidentů sleduje zákonné lhůty pro oznámení příslušnému dozorovému nebo regulatornímu orgánu.",
@@ -161,10 +161,10 @@ const BASE_CONTROL_LIBRARY: ControlSeed[] = [
   },
   {
     key: "ctrl_data_encrypted_at_rest",
-    titleCs: "Data jsou šifrována v klidu",
+    titleCs: "Šifrujte data v klidu",
     titleEn: "Sensitive data is encrypted at rest",
     descriptionCs:
-      "Citlivá data jsou chráněna šifrováním v úložištích a klasifikačními pravidly.",
+      "Chraňte citlivá data šifrováním a klasifikačními pravidly.",
     category: "data_protection",
     testType: "automated",
     requiresEvidence: true,
@@ -177,7 +177,7 @@ const BASE_CONTROL_LIBRARY: ControlSeed[] = [
   },
   {
     key: "ctrl_data_processing_inventory",
-    titleCs: "Záznamy o zpracování osobních údajů jsou vedeny",
+    titleCs: "Veďte záznamy o zpracování osobních údajů",
     titleEn: "Records of processing activities are maintained",
     descriptionCs:
       "Organizace vede ROPA podle GDPR včetně účelů, kategorií subjektů a příjemců.",
@@ -191,7 +191,7 @@ const BASE_CONTROL_LIBRARY: ControlSeed[] = [
   },
   {
     key: "ctrl_ai_system_inventory",
-    titleCs: "Inventář AI systémů je aktualizován",
+    titleCs: "Aktualizujte inventář AI systémů",
     titleEn: "AI system inventory is maintained and up to date",
     descriptionCs:
       "Organizace eviduje název systému, dodavatele, účel, roli, rizikovou klasifikaci a poslední přezkum.",
@@ -233,7 +233,7 @@ const BASE_CONTROL_LIBRARY: ControlSeed[] = [
   },
   {
     key: "ctrl_ai_high_risk_provider_verification",
-    titleCs: "Poskytovatel vysoce rizikové AI byl ověřen",
+    titleCs: "Ověřte poskytovatele vysoce rizikové AI",
     titleEn: "High-risk AI provider compliance has been verified",
     descriptionCs:
       "Před použitím vysoce rizikového AI systému je ověřeno CE označení, prohlášení o shodě a technická dokumentace.",
@@ -320,7 +320,7 @@ const BASE_CONTROL_LIBRARY: ControlSeed[] = [
   },
   {
     key: "ctrl_password_policy",
-    titleCs: "Politika hesel a blokace účtů je nastavena",
+    titleCs: "Nastavte politiku hesel a blokace účtů",
     titleEn: "Password and account lockout policy is configured",
     descriptionCs:
       "Hesla, blokace po neúspěšných pokusech a zákaz opakovaného použití jsou nastavené v identitním systému.",
@@ -366,7 +366,7 @@ const BASE_CONTROL_LIBRARY: ControlSeed[] = [
   },
   {
     key: "ctrl_patch_management",
-    titleCs: "Bezpečnostní aktualizace jsou řízené a sledované",
+    titleCs: "Řiďte a sledujte bezpečnostní aktualizace",
     titleEn: "Security patching is managed and tracked",
     descriptionCs:
       "Kritické aktualizace operačních systémů a aplikací jsou nasazované v definovaných lhůtách.",
@@ -381,7 +381,7 @@ const BASE_CONTROL_LIBRARY: ControlSeed[] = [
   },
   {
     key: "ctrl_backup_tested",
-    titleCs: "Zálohy jsou pravidelně testované",
+    titleCs: "Zálohy pravidelně testujte",
     titleEn: "Backups are tested regularly",
     descriptionCs:
       "Kritická data jsou zálohovaná a obnovení je testované alespoň jednou za čtvrtletí.",
@@ -397,7 +397,7 @@ const BASE_CONTROL_LIBRARY: ControlSeed[] = [
   },
   {
     key: "ctrl_business_continuity_plan",
-    titleCs: "Plán kontinuity provozu je zdokumentovaný",
+    titleCs: "Zdokumentujte plán kontinuity provozu",
     titleEn: "Business continuity plan is documented",
     descriptionCs:
       "Organizace má schválený plán obnovy kritických procesů, vlastníky a prioritizaci služeb.",
@@ -412,7 +412,7 @@ const BASE_CONTROL_LIBRARY: ControlSeed[] = [
   },
   {
     key: "ctrl_disaster_recovery_test",
-    titleCs: "Obnova po havárii je pravidelně testovaná",
+    titleCs: "Pravidelně testujte obnovu po havárii",
     titleEn: "Disaster recovery is tested regularly",
     descriptionCs:
       "Postupy obnovy systémů a dat jsou testované a výsledky testů vedou k nápravným opatřením.",
@@ -443,7 +443,7 @@ const BASE_CONTROL_LIBRARY: ControlSeed[] = [
   },
   {
     key: "ctrl_data_classification",
-    titleCs: "Data jsou klasifikována podle citlivosti",
+    titleCs: "Klasifikujte data podle jejich citlivosti",
     titleEn: "Data is classified by sensitivity",
     descriptionCs:
       "Organizace rozlišuje veřejná, interní, důvěrná a osobní data a podle klasifikace volí ochranná opatření.",
@@ -458,7 +458,7 @@ const BASE_CONTROL_LIBRARY: ControlSeed[] = [
   },
   {
     key: "ctrl_dpia_process",
-    titleCs: "Proces DPIA je zaveden pro riziková zpracování",
+    titleCs: "Zaveďte proces DPIA pro riziková zpracování",
     titleEn: "DPIA process exists for high-risk processing",
     descriptionCs:
       "Pro nové nebo rizikové zpracování osobních údajů organizace vyhodnocuje potřebu DPIA a uchovává výstupy.",
@@ -473,7 +473,7 @@ const BASE_CONTROL_LIBRARY: ControlSeed[] = [
   },
   {
     key: "ctrl_privacy_notice_current",
-    titleCs: "Informace o zpracování osobních údajů jsou aktuální",
+    titleCs: "Aktualizujte informace o zpracování osobních údajů",
     titleEn: "Privacy notice is current",
     descriptionCs:
       "Zákazníci, zaměstnanci a další subjekty údajů mají dostupné aktuální informace o zpracování.",
@@ -487,7 +487,7 @@ const BASE_CONTROL_LIBRARY: ControlSeed[] = [
   },
   {
     key: "ctrl_dsr_process",
-    titleCs: "Žádosti subjektů údajů jsou řízené",
+    titleCs: "Řiďte žádosti subjektů údajů",
     titleEn: "Data subject requests are managed",
     descriptionCs:
       "Organizace má proces pro příjem, ověření, vyřízení a evidenci žádostí subjektů údajů v zákonných lhůtách.",
@@ -501,7 +501,7 @@ const BASE_CONTROL_LIBRARY: ControlSeed[] = [
   },
   {
     key: "ctrl_data_retention_schedule",
-    titleCs: "Doby uchování dat jsou definované a uplatňované",
+    titleCs: "Definujte a uplatňujte doby uchování dat",
     titleEn: "Data retention schedule is defined and enforced",
     descriptionCs:
       "Pro hlavní kategorie dat jsou definované retenční doby, právní důvody a postup bezpečné likvidace.",
@@ -532,7 +532,7 @@ const BASE_CONTROL_LIBRARY: ControlSeed[] = [
   },
   {
     key: "ctrl_supplier_contract_security",
-    titleCs: "Smlouvy s dodavateli obsahují bezpečnostní požadavky",
+    titleCs: "Zahrňte bezpečnostní požadavky do smluv s dodavateli",
     titleEn: "Supplier contracts include security requirements",
     descriptionCs:
       "Smlouvy s kritickými dodavateli upravují bezpečnost, hlášení incidentů, auditní práva a ochranu dat.",
@@ -579,10 +579,10 @@ const BASE_CONTROL_LIBRARY: ControlSeed[] = [
   },
   {
     key: "ctrl_branch_protection_enabled",
-    titleCs: "Produkční větve jsou chráněné",
+    titleCs: "Chraňte produkční větve",
     titleEn: "Production branches are protected",
     descriptionCs:
-      "Hlavní větve vyžadují schválení, CI kontroly a blokují přímý push bez revize.",
+      "Vyžadujte schválení, CI kontroly a blokujte přímý push bez revize.",
     category: "asset_management",
     testType: "automated",
     requiresEvidence: true,
@@ -594,7 +594,7 @@ const BASE_CONTROL_LIBRARY: ControlSeed[] = [
   },
   {
     key: "ctrl_dependency_vulnerability_monitoring",
-    titleCs: "Zranitelnosti závislostí jsou monitorované",
+    titleCs: "Monitorujte zranitelnosti závislostí",
     titleEn: "Dependency vulnerabilities are monitored",
     descriptionCs:
       "Projekt sleduje bezpečnostní upozornění v závislostech a kritické nálezy mají vlastníka a lhůtu nápravy.",
@@ -640,7 +640,7 @@ const BASE_CONTROL_LIBRARY: ControlSeed[] = [
   },
   {
     key: "ctrl_vulnerability_management",
-    titleCs: "Zranitelnosti jsou evidované a řízené",
+    titleCs: "Evidujte a řiďte zranitelnosti",
     titleEn: "Vulnerabilities are tracked and remediated",
     descriptionCs:
       "Zranitelnosti z interních i externích zdrojů jsou prioritizované podle závažnosti a mají termín nápravy.",
@@ -655,7 +655,7 @@ const BASE_CONTROL_LIBRARY: ControlSeed[] = [
   },
   {
     key: "ctrl_penetration_test_annual",
-    titleCs: "Penetrační testy probíhají alespoň ročně",
+    titleCs: "Provádějte penetrační testy alespoň ročně",
     titleEn: "Penetration testing is performed at least annually",
     descriptionCs:
       "Internetově dostupné aplikace a kritické systémy jsou testované a nálezy jsou sledované do uzavření.",
@@ -670,7 +670,7 @@ const BASE_CONTROL_LIBRARY: ControlSeed[] = [
   },
   {
     key: "ctrl_secure_configuration_baseline",
-    titleCs: "Bezpečné konfigurační baseline jsou definované",
+    titleCs: "Definujte bezpečné konfigurační baseline",
     titleEn: "Secure configuration baselines are defined",
     descriptionCs:
       "Cloudové účty, identita, koncová zařízení a produkční systémy mají definované minimální bezpečnostní nastavení.",
@@ -685,10 +685,10 @@ const BASE_CONTROL_LIBRARY: ControlSeed[] = [
   },
   {
     key: "ctrl_change_management",
-    titleCs: "Produkční změny jsou řízené",
+    titleCs: "Řiďte produkční změny",
     titleEn: "Production changes are controlled",
     descriptionCs:
-      "Změny v produkci mají vlastníka, schválení, plán nasazení a možnost návratu.",
+      "Určete vlastníka, schválení, plán nasazení a možnost návratu pro změny v produkci.",
     category: "asset_management",
     testType: "manual",
     requiresEvidence: true,
@@ -700,7 +700,7 @@ const BASE_CONTROL_LIBRARY: ControlSeed[] = [
   },
   {
     key: "ctrl_physical_access_control",
-    titleCs: "Fyzický přístup k pracovišti je řízený",
+    titleCs: "Řiďte fyzický přístup k pracovišti",
     titleEn: "Physical access to offices is controlled",
     descriptionCs:
       "Přístup do kanceláří, serveroven a skladů zařízení je omezený na oprávněné osoby a pravidelně revidovaný.",
@@ -792,7 +792,7 @@ const BASE_CONTROL_LIBRARY: ControlSeed[] = [
   },
   {
     key: "ctrl_root_account_mfa",
-    titleCs: "Root nebo break-glass účty mají MFA",
+    titleCs: "Používejte MFA pro root nebo break-glass účty",
     titleEn: "Root or break-glass accounts have MFA",
     descriptionCs:
       "Nejvyšší privilegované účty v cloudových a identitních systémech jsou chráněné MFA a monitorované.",
@@ -822,7 +822,7 @@ const ISO27001_EXTENSION_CONTROLS: ControlSeed[] = [
   },
   {
     key: "ctrl_statement_of_applicability",
-    titleCs: "Statement of Applicability je aktuální",
+    titleCs: "Udržujte aktuální Statement of Applicability",
     titleEn: "Statement of Applicability is current",
     descriptionCs:
       "SoA uvádí použitelnost všech Annex A kontrol, odůvodnění výjimek a odkaz na důkaz.",
@@ -834,7 +834,7 @@ const ISO27001_EXTENSION_CONTROLS: ControlSeed[] = [
   },
   {
     key: "ctrl_security_roles_responsibilities",
-    titleCs: "Bezpečnostní role a odpovědnosti jsou přiřazené",
+    titleCs: "Přiřaďte bezpečnostní role a odpovědnosti",
     titleEn: "Security roles and responsibilities are assigned",
     descriptionCs:
       "Vlastníci aktiv, kontrol a bezpečnostních procesů jsou jasně určeni a pravidelně potvrzují odpovědnosti.",
@@ -858,7 +858,7 @@ const ISO27001_EXTENSION_CONTROLS: ControlSeed[] = [
   },
   {
     key: "ctrl_risk_treatment_plan",
-    titleCs: "Plán ošetření rizik je udržovaný",
+    titleCs: "Udržujte plán ošetření rizik",
     titleEn: "Risk treatment plan is maintained",
     descriptionCs:
       "Rizika mají vlastníka, opatření, termín, akceptaci zbytkového rizika a vazbu na použité kontroly.",
@@ -906,7 +906,7 @@ const ISO27001_EXTENSION_CONTROLS: ControlSeed[] = [
   },
   {
     key: "ctrl_control_exceptions_tracked",
-    titleCs: "Výjimky z kontrol jsou evidované a schválené",
+    titleCs: "Evidujte a schvalujte výjimky z kontrol",
     titleEn: "Control exceptions are tracked and approved",
     descriptionCs:
       "Výjimky obsahují důvod, vlastníka, kompenzační opatření a termín přezkumu.",
@@ -918,7 +918,7 @@ const ISO27001_EXTENSION_CONTROLS: ControlSeed[] = [
   },
   {
     key: "ctrl_threat_intelligence",
-    titleCs: "Threat intelligence je sledovaná a vyhodnocovaná",
+    titleCs: "Sledujte a vyhodnocujte threat intelligence",
     titleEn: "Threat intelligence is monitored and assessed",
     descriptionCs:
       "Relevantní bezpečnostní hrozby jsou sledované, vyhodnocené a převáděné do úkolů pro odpovědné týmy.",
@@ -966,7 +966,7 @@ const ISO27001_EXTENSION_CONTROLS: ControlSeed[] = [
   },
   {
     key: "ctrl_identity_lifecycle_policy",
-    titleCs: "Životní cyklus identit je řízený",
+    titleCs: "Řiďte životní cyklus identit",
     titleEn: "Identity lifecycle is controlled",
     descriptionCs:
       "Nástup, změna role, offboarding a pravidelný přezkum přístupů jsou vynucené procesem.",
@@ -978,7 +978,7 @@ const ISO27001_EXTENSION_CONTROLS: ControlSeed[] = [
   },
   {
     key: "ctrl_supplier_monitoring",
-    titleCs: "Dodavatelské služby jsou pravidelně monitorované",
+    titleCs: "Pravidelně monitorujte dodavatelské služby",
     titleEn: "Supplier services are periodically monitored",
     descriptionCs:
       "Služby klíčových dodavatelů jsou přezkoumávané podle smluvních SLA, incidentů, změn a rizika.",
@@ -1002,7 +1002,7 @@ const ISO27001_EXTENSION_CONTROLS: ControlSeed[] = [
   },
   {
     key: "ctrl_clock_sync",
-    titleCs: "Systémové hodiny jsou synchronizované",
+    titleCs: "Synchronizujte systémové hodiny",
     titleEn: "System clocks are synchronized",
     descriptionCs:
       "Servery, cloudové služby a bezpečnostní nástroje používají spolehlivý časový zdroj pro korelaci logů.",
@@ -1014,7 +1014,7 @@ const ISO27001_EXTENSION_CONTROLS: ControlSeed[] = [
   },
   {
     key: "ctrl_secure_development_policy",
-    titleCs: "Bezpečný vývoj je řízený politikou",
+    titleCs: "Řiďte bezpečný vývoj podle politiky",
     titleEn: "Secure development is governed by policy",
     descriptionCs:
       "Vývojový proces zahrnuje bezpečnostní požadavky, review, testování, oddělení prostředí a řízení změn.",
