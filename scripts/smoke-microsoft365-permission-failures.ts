@@ -74,7 +74,7 @@ async function main() {
       }),
     );
 
-    assert.equal(permissionFailureResult.status, "manual_review");
+    assert.equal(permissionFailureResult.status, "error");
     assert.equal(permissionFailureResult.data.blockedReason, "missing_permission");
     assert.equal(permissionFailureResult.data.graphStatusCode, statusCode);
     assert.equal(permissionFailureResult.data.totalUsers, 1);

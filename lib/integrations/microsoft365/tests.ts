@@ -95,7 +95,7 @@ export function classifyMicrosoftGraphCollectionFailure(input: {
     statusCode === null
   ) {
     return {
-      status: "manual_review",
+      status: "error",
       data: {
         blockedReason: "missing_permission",
         graphStatusCode: statusCode,

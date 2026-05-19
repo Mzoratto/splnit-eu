@@ -61,7 +61,7 @@ function buildCollectionErrorResult(error: unknown, provider: string) {
 
   if (isMicrosoftPermissionFailure) {
     return {
-      status: "manual_review" as const,
+      status: "error" as const,
       resultData: {
         blockedReason: "missing_permission",
         errorMessage,
@@ -188,6 +188,7 @@ export async function runTestsForOrg(
             lastEvidenceAt: currentStatus?.lastEvidenceAt ?? null,
             now,
             previousStatus: currentStatus?.status ?? null,
+            resultData: result.data,
             resultStatus: result.status,
           });
 
@@ -259,8 +260,19 @@ export async function runTestsForOrg(
             })
             .returning({ id: integrationRuns.id });
           const integrationRunId = insertedRuns[0]?.id;
+          const shouldCreateErrorEvidence = shouldCollectAutomatedEvidence({
+            lastEvidenceAt: null,
+            now,
+            previousStatus: null,
+            resultData,
+            resultStatus: errorResult.status,
+          });
 
-          if (integration.provider === "microsoft365" && integrationRunId) {
+          if (
+            integration.provider === "microsoft365" &&
+            integrationRunId &&
+            shouldCreateErrorEvidence
+          ) {
             await createAutomatedEvidenceForIntegrationRun({
               checkLogic: test.checkLogic,
               clerkOrgId,

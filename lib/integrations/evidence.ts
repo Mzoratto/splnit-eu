@@ -49,10 +49,11 @@ export function shouldCollectAutomatedEvidence(input: {
   lastEvidenceAt: Date | null;
   now: Date;
   previousStatus: string | null;
+  resultData?: Record<string, unknown>;
   resultStatus: TestStatus;
 }) {
   if (input.resultStatus === "error") {
-    return false;
+    return input.resultData?.blockedReason === "missing_permission";
   }
 
   if (!input.lastEvidenceAt) {
@@ -155,6 +156,15 @@ function getEvidenceStateForTestResult(input: {
       });
     case "error":
     default:
+      if (explicitBlockedReason === "missing_permission") {
+        return createEvidenceState({
+          assessment_result: "unknown",
+          blocked_reason: "missing_permission",
+          collection_status: "blocked",
+          source: "connector",
+        });
+      }
+
       return createEvidenceState({
         assessment_result: "unknown",
         blocked_reason: explicitBlockedReason ?? "collection_failed",

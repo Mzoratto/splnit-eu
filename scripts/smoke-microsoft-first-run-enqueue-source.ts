@@ -2,6 +2,7 @@ import * as assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 
 const callbackSource = readFileSync("app/api/integrations/microsoft/callback/route.ts", "utf8");
+const evidenceSource = readFileSync("lib/integrations/evidence.ts", "utf8");
 const locksSource = readFileSync("lib/integrations/locks.ts", "utf8");
 const runnerSource = readFileSync("lib/integrations/runner.ts", "utf8");
 
@@ -48,13 +49,28 @@ assert.match(
 );
 assert.match(
   runnerSource,
-  /status:\s*["']manual_review["']/,
-  "Microsoft permission failures from collection must create manual-review integration results.",
+  /status:\s*["']error["']/,
+  "Microsoft permission failures from collection must create error integration results while evidence remains unknown and blocked.",
 );
 assert.match(
   runnerSource,
   /blockedReason:\s*["']missing_permission["']/,
   "Microsoft permission failures from collection must map evidence to missing_permission.",
+);
+assert.match(
+  runnerSource,
+  /shouldCreateErrorEvidence/,
+  "Microsoft retryable collection failures must not blindly create new evidence.",
+);
+assert.match(
+  evidenceSource,
+  /input\.resultData\?\.blockedReason === ["']missing_permission["']/,
+  "Missing-permission error results should still collect an evidence snapshot.",
+);
+assert.match(
+  evidenceSource,
+  /assessment_result:\s*["']unknown["'][\s\S]*blocked_reason:\s*["']missing_permission["'][\s\S]*collection_status:\s*["']blocked["']/,
+  "Missing-permission evidence must be unknown + blocked instead of manual_review.",
 );
 assert.match(
   runnerSource,
