@@ -86,9 +86,9 @@ export const blogPageCopy: Record<Locale, BlogPageCopy> = {
     articleAuthorFallback: "Autore: Marco Zoratto, fondatore di Splnit.eu",
     articleCtaBody:
       "Splnit.eu mappa obblighi, controlli, evidenze e scadenze così possono essere verificati nel tempo.",
-    articleCtaButton: "Vedi piattaforma",
+    articleCtaButton: "Visualizza la piattaforma",
     articleCtaTitle: "Trasforma l'articolo in checklist controlli",
-    articleNavTitle: "Nell'articolo",
+    articleNavTitle: "In questo articolo",
     relatedRegulationTitle: "Panoramica normativa correlata",
     relatedRegulationOpen: "Apri panoramica",
     description:
@@ -97,7 +97,7 @@ export const blogPageCopy: Record<Locale, BlogPageCopy> = {
       "Guide pratiche Splnit.eu su NIS2, EU AI Act, GDPR e ISO 27001 per PMI europee.",
     locale: "it_IT",
     metadataTitle: "Blog | Splnit.eu — NIS2, EU AI Act e GDPR per PMI europee",
-    readArticle: "Leggi articolo",
+    readArticle: "Leggi l'articolo",
     tag: "Guide compliance",
     title: "Guide alla compliance UE chiare e concrete.",
   },
