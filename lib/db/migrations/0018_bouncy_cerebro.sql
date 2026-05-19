@@ -1,3 +1,5 @@
+UPDATE "evidence" SET "source" = 'manual' WHERE "source" = 'manual_upload';--> statement-breakpoint
+UPDATE "evidence" SET "source" = 'imported' WHERE "source" = 'questionnaire_ai';--> statement-breakpoint
 UPDATE "evidence" SET "source" = 'manual' WHERE "source" IS NULL;--> statement-breakpoint
 ALTER TABLE "evidence" ALTER COLUMN "source" SET DEFAULT 'manual';--> statement-breakpoint
 ALTER TABLE "evidence" ALTER COLUMN "source" SET NOT NULL;--> statement-breakpoint

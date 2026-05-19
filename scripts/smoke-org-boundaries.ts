@@ -167,7 +167,7 @@ async function assertEvidenceBoundary(controlId: string) {
       clerkOrgId: orgA,
       controlId,
       description: "Org boundary evidence",
-      source: "smoke",
+      source: "manual" as const,
       type: "text/plain",
     })
     .returning({ id: evidence.id });

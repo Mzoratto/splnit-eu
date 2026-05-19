@@ -127,7 +127,10 @@ export async function createQuestionnaireAnswerEvidence(input: {
       collectedBy: input.createdBy,
       controlId,
       description: `AI-generated draft questionnaire answer requiring human review: ${answer.question}`,
-      source: "questionnaire_ai",
+      assessmentResult: "manual_review" as const,
+      collectionStatus: "collected" as const,
+      confidence: "low" as const,
+      source: "imported" as const,
       sourceArtifactId: input.artifactId,
       snapshotData: {
         answer: answer.answer,
@@ -139,7 +142,6 @@ export async function createQuestionnaireAnswerEvidence(input: {
         policyRefs: answer.policyRefs,
         question: answer.question,
       },
-      status: "draft",
       type: "questionnaire_answer",
     })),
   );

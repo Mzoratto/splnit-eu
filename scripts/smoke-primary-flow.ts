@@ -212,7 +212,7 @@ async function main() {
       description: "Primary flow smoke evidence",
       expiresAt: isoDate(addYears(new Date(), 1)),
       fileType: "text/plain",
-      source: "primary_flow_smoke",
+      source: "manual",
     });
     assert.ok(evidenceResult.evidenceId);
 

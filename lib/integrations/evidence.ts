@@ -180,7 +180,7 @@ export async function createAutomatedEvidenceForIntegrationRun(input: {
       status: input.status,
       testName: input.testName,
     }),
-    source: `integration:${input.provider}`,
+    source: "connector" as const,
     type: "automated_snapshot",
   });
 }

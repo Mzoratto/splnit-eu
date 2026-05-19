@@ -43,10 +43,12 @@ export async function getQuestionnaireComplianceContext(clerkOrgId: string) {
           controlTitle: controls.titleCs,
           description: evidence.description,
           evidenceId: evidence.id,
-          expiresAt: evidence.expiresAt,
+          assessmentResult: evidence.assessmentResult,
+          blockedReason: evidence.blockedReason,
+          collectionStatus: evidence.collectionStatus,
+          confidence: evidence.confidence,
           integrationRunId: evidence.integrationRunId,
           source: evidence.source,
-          status: evidence.status,
           type: evidence.type,
         })
         .from(evidence)

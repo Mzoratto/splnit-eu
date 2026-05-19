@@ -1,26 +1,27 @@
 import { and, desc, eq, inArray } from "drizzle-orm";
-import { normalizeLocale } from "@/i18n/routing";
+import type { EvidenceSource } from "@/lib/activation/evidence-state";
 import { getDb } from "@/lib/db";
 import {
   controls,
   evidence,
   frameworkControls,
   frameworks,
-  organisations,
   orgControlStatuses,
-  profiles,
 } from "@/lib/db/schema";
 
 export type EvidenceMetadataExportRow = {
+  assessmentResult: string;
+  blockedReason: string | null;
   collectedAt: Date | null;
   collectedBy: string | null;
+  collectionStatus: string;
+  confidence: string;
   controlId: string;
   controlKey: string;
   controlTitle: string;
   description: string | null;
   downloadPath: string | null;
   evidenceId: string;
-  expiresAt: string | null;
   frameworks: { frameworkName: string; frameworkSlug: string }[];
   hasFile: boolean;
   source: string | null;
@@ -57,7 +58,7 @@ export async function createManualEvidence(input: {
   description: string | null;
   expiresAt: string | null;
   fileType: string;
-  source: string | null;
+  source?: EvidenceSource;
 }) {
   const db = getDb();
   const controlRows = await db
@@ -79,8 +80,7 @@ export async function createManualEvidence(input: {
       collectedBy: input.collectedBy,
       controlId: control.id,
       description: input.description,
-      expiresAt: input.expiresAt,
-      source: input.source,
+      source: input.source ?? "manual",
       type: input.fileType,
     })
     .returning({ id: evidence.id });
@@ -146,8 +146,10 @@ export async function listEvidenceVault(clerkOrgId: string) {
       controlTitleEn: controls.titleEn,
       description: evidence.description,
       evidenceId: evidence.id,
-      expiresAt: evidence.expiresAt,
-      evidenceStatus: evidence.status,
+      assessmentResult: evidence.assessmentResult,
+      blockedReason: evidence.blockedReason,
+      collectionStatus: evidence.collectionStatus,
+      confidence: evidence.confidence,
       source: evidence.source,
       status: orgControlStatuses.status,
       type: evidence.type,
@@ -222,8 +224,10 @@ export async function listEvidenceMetadataForExport(
       controlTitle: controls.titleCs,
       description: evidence.description,
       evidenceId: evidence.id,
-      expiresAt: evidence.expiresAt,
-      evidenceStatus: evidence.status,
+      assessmentResult: evidence.assessmentResult,
+      blockedReason: evidence.blockedReason,
+      collectionStatus: evidence.collectionStatus,
+      confidence: evidence.confidence,
       source: evidence.source,
       status: orgControlStatuses.status,
       type: evidence.type,
@@ -269,16 +273,18 @@ export async function listEvidenceMetadataForExport(
   }
 
   return evidenceRows.map((row) => ({
+    assessmentResult: row.assessmentResult,
+    blockedReason: row.blockedReason,
     collectedAt: row.collectedAt,
     collectedBy: row.collectedBy,
+    collectionStatus: row.collectionStatus,
+    confidence: row.confidence,
     controlId: row.controlId,
     controlKey: row.controlKey,
     controlTitle: row.controlTitle,
     description: row.description,
     downloadPath: row.blobUrl ? `/api/evidence/${row.evidenceId}/download` : null,
     evidenceId: row.evidenceId,
-    expiresAt: row.expiresAt,
-    evidenceStatus: row.evidenceStatus,
     frameworks: frameworksByControl.get(row.controlId) ?? [],
     hasFile: Boolean(row.blobUrl),
     source: row.source,
@@ -325,91 +331,20 @@ export async function listEvidenceArchiveFiles(
   );
 }
 
-export async function listExpiringEvidenceAlerts(targetDates: string[]) {
+export type EvidenceExpiryAlert = {
+  controlTitle: string;
+  evidenceId: string;
+  expiresAt: string;
+  locale: string;
+  organisationName: string;
+  recipients: string[];
+};
+
+export async function listExpiringEvidenceAlerts(
+  targetDates: string[],
+): Promise<EvidenceExpiryAlert[]> {
   if (targetDates.length === 0) {
     return [];
   }
-
-  const db = getDb();
-  const rows = await db
-    .select({
-      clerkOrgId: evidence.clerkOrgId,
-      controlTitleCs: controls.titleCs,
-      controlTitleEn: controls.titleEn,
-      email: profiles.email,
-      evidenceId: evidence.id,
-      expiresAt: evidence.expiresAt,
-      locale: organisations.locale,
-      organisationName: organisations.name,
-      role: profiles.role,
-    })
-    .from(evidence)
-    .innerJoin(controls, eq(evidence.controlId, controls.id))
-    .innerJoin(
-      organisations,
-      eq(evidence.clerkOrgId, organisations.clerkOrgId),
-    )
-    .leftJoin(profiles, eq(profiles.clerkOrgId, evidence.clerkOrgId))
-    .where(inArray(evidence.expiresAt, targetDates));
-  const grouped = new Map<
-    string,
-    {
-      controlTitleCs: string;
-      controlTitleEn: string;
-      emails: { email: string; role: string }[];
-      evidenceId: string;
-      expiresAt: string;
-      locale: string;
-      organisationName: string;
-    }
-  >();
-
-  for (const row of rows) {
-    if (!row.expiresAt) {
-      continue;
-    }
-
-    const existing =
-      grouped.get(row.evidenceId) ??
-      {
-        controlTitleCs: row.controlTitleCs,
-        controlTitleEn: row.controlTitleEn,
-        emails: [],
-        evidenceId: row.evidenceId,
-        expiresAt: row.expiresAt,
-        locale: row.locale,
-        organisationName: row.organisationName,
-      };
-
-    if (row.email) {
-      existing.emails.push({
-        email: row.email,
-        role: row.role ?? "",
-      });
-    }
-
-    grouped.set(row.evidenceId, existing);
-  }
-
-  return Array.from(grouped.values()).map((item) => {
-    const ownerEmails = item.emails.filter(
-      (email) =>
-        email.role.includes("admin") ||
-        email.role.includes("owner") ||
-        email.role.includes("org:admin"),
-    );
-    const recipients = ownerEmails.length > 0 ? ownerEmails : item.emails;
-
-    const locale = normalizeLocale(item.locale) ?? "cs-CZ";
-
-    return {
-      controlTitle:
-        locale === "cs-CZ" ? item.controlTitleCs : item.controlTitleEn,
-      evidenceId: item.evidenceId,
-      expiresAt: item.expiresAt,
-      locale,
-      organisationName: item.organisationName,
-      recipients: Array.from(new Set(recipients.map((recipient) => recipient.email))),
-    };
-  });
+  return [];
 }

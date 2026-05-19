@@ -117,7 +117,7 @@ assert.deepEqual(
 assert.deepEqual(
   derivePolicyEvidenceProofStatus({
     controlStatus: "unknown",
-    evidence: [{ expiresAt: null }],
+    evidence: [{ collectionStatus: "collected" }],
   }),
   {
     label: "Evidence added — needs review.",
@@ -128,7 +128,7 @@ assert.deepEqual(
 assert.deepEqual(
   derivePolicyEvidenceProofStatus({
     controlStatus: "manual_review",
-    evidence: [{ expiresAt: "2099-01-01" }],
+    evidence: [{ collectionStatus: "collected" }],
   }),
   {
     label: "Evidence added — needs review.",
@@ -139,7 +139,7 @@ assert.deepEqual(
 assert.deepEqual(
   derivePolicyEvidenceProofStatus({
     controlStatus: "pass",
-    evidence: [{ expiresAt: "2099-01-01" }],
+    evidence: [{ collectionStatus: "collected" }],
   }),
   {
     label: "Reviewed as passing with supporting evidence.",
@@ -161,7 +161,7 @@ assert.deepEqual(
 assert.deepEqual(
   derivePolicyEvidenceProofStatus({
     controlStatus: "fail",
-    evidence: [{ expiresAt: "2099-01-01" }],
+    evidence: [{ collectionStatus: "collected" }],
   }),
   {
     label: "Gap still open.",
@@ -172,8 +172,7 @@ assert.deepEqual(
 assert.deepEqual(
   derivePolicyEvidenceProofStatus({
     controlStatus: "manual_review",
-    evidence: [{ expiresAt: "2000-01-01" }],
-    now: new Date("2026-05-18T00:00:00.000Z"),
+    evidence: [{ collectionStatus: "blocked" }],
   }),
   {
     label: "Gap still open.",
@@ -184,7 +183,7 @@ assert.deepEqual(
 assert.deepEqual(
   derivePolicyEvidenceProofStatus({
     controlStatus: "not_applicable",
-    evidence: [{ expiresAt: "2099-01-01" }],
+    evidence: [{ collectionStatus: "collected" }],
   }),
   {
     label: "Out of scope or not applicable based on intake/review.",
@@ -195,7 +194,7 @@ assert.deepEqual(
 assert.deepEqual(
   derivePolicyEvidenceProofStatus({
     controlStatus: "pass",
-    evidence: [{ expiresAt: "2099-01-01" }],
+    evidence: [{ collectionStatus: "collected" }],
     scopeStatus: "out_of_scope",
   }),
   {

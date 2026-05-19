@@ -163,7 +163,7 @@ export default async function EvidencePage({
       !filters.framework ||
       row.frameworks.some((framework) => framework.frameworkSlug === filters.framework);
     const statusMatch = !filters.status || status === filters.status;
-    const daysUntilExpiry = getDaysUntil(row.expiresAt);
+    const daysUntilExpiry = getDaysUntil(null);
     const expiryMatch =
       !filters.expiry ||
       (filters.expiry === "expired" && daysUntilExpiry !== null && daysUntilExpiry < 0) ||
@@ -254,7 +254,7 @@ export default async function EvidencePage({
         <div className="divide-y divide-border">
           {filteredRows.length > 0 ? (
             filteredRows.map((item) => {
-              const daysUntilExpiry = getDaysUntil(item.expiresAt);
+              const daysUntilExpiry = getDaysUntil(null);
               const controlTitle = getControlTitle(item, locale);
 
               return (
@@ -271,7 +271,7 @@ export default async function EvidencePage({
                       <StatusPill tone={statusTone(item.status)}>
                         {statusLabel(item.status)}
                       </StatusPill>
-                      {item.evidenceStatus === "draft" ? (
+                      {item.collectionStatus === "pending" || item.assessmentResult === "manual_review" ? (
                         <span className="rounded-sm border border-amber-200 bg-amber-50 px-2 py-1 text-xs font-medium text-amber-900">
                           {copy.records.aiDraftHumanReview}
                         </span>
@@ -294,11 +294,7 @@ export default async function EvidencePage({
                   </div>
                   <div className="flex flex-col gap-3 lg:items-end">
                     <span className="rounded-md bg-surface-muted px-2 py-1 text-xs text-foreground/64">
-                      {copy.expiry.label}{" "}
-                      {formatDate(item.expiresAt, locale, copy.noDate)}
-                      {daysUntilExpiry !== null
-                        ? ` (${formatDaysUntil(daysUntilExpiry, copy)})`
-                        : ""}
+                      {item.collectionStatus} · {item.confidence}
                     </span>
                     {item.blobUrl ? (
                       <Link

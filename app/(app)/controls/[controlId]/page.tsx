@@ -244,7 +244,7 @@ export default async function ControlDetailPage({
                 {copy.detail.source}
                 <input
                   name="source"
-                  defaultValue="manual_upload"
+                  defaultValue="manual"
                   disabled={!canUpload}
                   className="rounded-md border border-border bg-background px-3 py-2"
                 />
@@ -347,8 +347,7 @@ export default async function ControlDetailPage({
                       </p>
                     </div>
                     <span className="rounded-md bg-surface-muted px-2 py-1 text-xs text-foreground/64">
-                      {copy.detail.expires}{" "}
-                      {formatDate(item.expiresAt, locale, copy.noDate)}
+                      {item.collectionStatus}
                     </span>
                   </div>
                   {item.blobUrl ? (

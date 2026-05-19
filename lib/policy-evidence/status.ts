@@ -11,7 +11,7 @@ export type PolicyEvidenceProofStatus = {
 };
 
 type EvidenceSupport = {
-  expiresAt?: Date | string | null;
+  collectionStatus?: string | null;
 };
 
 type ScopeStatus = "applicable" | "not_applicable" | "out_of_scope" | null;
@@ -39,14 +39,16 @@ export function derivePolicyEvidenceProofStatus(input: {
   }
 
   const hasEvidence = input.evidence.length > 0;
-  const hasCurrentEvidence = input.evidence.some((item) => !isExpired(item.expiresAt, input.now));
+  const hasCollectedEvidence = input.evidence.some(
+    (item) => item.collectionStatus !== "blocked" && item.collectionStatus !== "failed",
+  );
 
-  if (input.controlStatus === "fail" || (hasEvidence && !hasCurrentEvidence)) {
+  if (input.controlStatus === "fail" || (hasEvidence && !hasCollectedEvidence)) {
     return proofStatus("reviewed_issue");
   }
 
   if (input.controlStatus === "pass") {
-    return hasCurrentEvidence ? proofStatus("reviewed_pass") : proofStatus("reviewed_issue");
+    return hasCollectedEvidence ? proofStatus("reviewed_pass") : proofStatus("reviewed_issue");
   }
 
   if (!hasEvidence) {
@@ -65,18 +67,4 @@ function proofStatus(state: PolicyEvidenceProofState): PolicyEvidenceProofStatus
     label: PROOF_STATUS_COPY[state],
     state,
   };
-}
-
-function isExpired(value: Date | string | null | undefined, now = new Date()) {
-  if (!value) {
-    return false;
-  }
-
-  const expiry = value instanceof Date ? value : new Date(value);
-
-  if (Number.isNaN(expiry.getTime())) {
-    return false;
-  }
-
-  return expiry.getTime() < now.getTime();
 }

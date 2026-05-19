@@ -337,7 +337,7 @@ async function seedQuestionnaireSupportContext(input: { clerkOrgId: string; crea
     description: `Production readiness live questionnaire smoke ${runId}: MFA required for administrative access.`,
     expiresAt: isoDate(addYears(new Date(), 1)),
     fileType: "text/plain",
-    source: "production_readiness_live_questionnaire_smoke",
+    source: "manual",
   });
   await insertGeneratedPolicy({
     blobUrl: `production-smoke://questionnaire-live/${runId}/access-control-policy.pdf`,

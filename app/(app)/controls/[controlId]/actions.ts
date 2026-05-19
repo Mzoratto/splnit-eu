@@ -105,7 +105,6 @@ export async function uploadEvidenceAction(
 
   const description = getStringValue(formData, "description").trim();
   const expiresAt = getStringValue(formData, "expiresAt").trim();
-  const source = getStringValue(formData, "source").trim();
   const safeName = sanitizeFilename(file.name) || "evidence-file";
   const uploadedAt = Date.now();
   const blob = await put(
@@ -125,7 +124,7 @@ export async function uploadEvidenceAction(
     description: description || null,
     expiresAt: expiresAt || null,
     fileType: file.type || "application/octet-stream",
-    source: source || "manual_upload",
+    source: "manual",
   }).catch((error: unknown) =>
     deleteBlobUrlsAfterFailedSave([blob.url], error),
   );
@@ -141,7 +140,7 @@ export async function uploadEvidenceAction(
       expiresAt: expiresAt || null,
       fileSize: file.size,
       fileType: file.type || "application/octet-stream",
-      source: source || "manual_upload",
+      source: "manual",
     },
   });
 
