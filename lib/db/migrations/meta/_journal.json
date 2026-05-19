@@ -127,6 +127,13 @@
       "when": 1779005943615,
       "tag": "0017_wakeful_thunderbolt",
       "breakpoints": true
+    },
+    {
+      "idx": 18,
+      "version": "7",
+      "when": 1779226632531,
+      "tag": "0018_bouncy_cerebro",
+      "breakpoints": true
     }
   ]
 }

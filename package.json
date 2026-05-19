@@ -5,6 +5,7 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
+    "predeploy": "npm run check:production-migration-drift",
     "analyze": "ANALYZE=true next build",
     "start": "next start",
     "lint": "eslint",
