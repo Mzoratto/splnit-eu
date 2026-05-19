@@ -56,7 +56,7 @@ export default async function OnboardingPage() {
         ...defaultIntakeAnswers,
         ...(onboardingState?.intakeProfile?.answers as Partial<IntakeAnswers> | undefined),
       }}
-      initialTools={onboardingState?.organisation?.toolInventory ?? ["microsoft-copilot", "github-copilot"]}
+      initialTools={onboardingState?.organisation?.toolInventory ?? ["microsoft365", "github"]}
       tools={TOOL_INVENTORY_LIBRARY}
     />
   );

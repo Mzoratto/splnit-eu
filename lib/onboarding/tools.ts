@@ -5,6 +5,9 @@ export type ToolInventoryItem = {
 };
 
 export const TOOL_INVENTORY_LIBRARY: ToolInventoryItem[] = [
+  { key: "microsoft365", name: "Microsoft 365", category: "Productivity suite" },
+  { key: "github", name: "GitHub", category: "Developer platform" },
+  { key: "aws", name: "AWS", category: "Cloud hosting" },
   { key: "chatgpt", name: "ChatGPT", category: "AI assistant" },
   { key: "microsoft-copilot", name: "Microsoft Copilot", category: "AI assistant" },
   { key: "github-copilot", name: "GitHub Copilot", category: "Developer tool" },

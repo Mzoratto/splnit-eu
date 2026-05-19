@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useLocale, useTranslations } from "next-intl";
-import { useEffect, useMemo, useReducer, useState, useTransition } from "react";
+import { useEffect, useMemo, useReducer, useRef, useState, useTransition } from "react";
 import {
   ArrowRight,
   Building2,
@@ -60,6 +60,7 @@ type WizardAction =
   | { type: "framework"; slug: string }
   | { type: "setFrameworks"; slugs: string[] }
   | { type: "intake"; field: keyof IntakeState; value: IntakeState[keyof IntakeState] }
+  | { type: "restoreDraft"; draft: Partial<WizardState> }
   | { type: "tool"; key: string }
   | { type: "step"; step: number };
 
@@ -89,6 +90,12 @@ const countries = [
 const jurisdictions = ["CZ", "IT", "EU"] as const;
 const locales = ["cs-CZ", "en-EU", "it-IT"] as const;
 const stepKeys = ["company", "activity", "tools", "frameworks", "integration", "score"];
+const intakeDraftStorageKey = "splnit:onboarding-draft:v1";
+const integrationRecommendations = [
+  { aliases: ["microsoft365", "microsoft-copilot"], label: "Microsoft 365" },
+  { aliases: ["github", "github-copilot"], label: "GitHub" },
+  { aliases: ["aws"], label: "AWS" },
+] as const;
 
 const businessRealitySections = [
   {
@@ -170,6 +177,22 @@ function reducer(state: WizardState, action: WizardAction): WizardState {
         },
       };
 
+    case "restoreDraft":
+      return {
+        ...state,
+        company: {
+          ...state.company,
+          ...action.draft.company,
+        },
+        intake: {
+          ...state.intake,
+          ...action.draft.intake,
+        },
+        selectedFrameworks: action.draft.selectedFrameworks ?? state.selectedFrameworks,
+        selectedTools: action.draft.selectedTools ?? state.selectedTools,
+        step: action.draft.step ?? state.step,
+      };
+
     case "tool":
       return {
         ...state,
@@ -181,6 +204,59 @@ function reducer(state: WizardState, action: WizardAction): WizardState {
     case "step":
       return { ...state, step: action.step };
   }
+}
+
+function clampStep(value: unknown, fallback: number) {
+  return typeof value === "number" && Number.isInteger(value)
+    ? Math.min(stepKeys.length, Math.max(1, value))
+    : fallback;
+}
+
+function clampIntakeSectionIndex(value: unknown, fallback: number) {
+  return typeof value === "number" && Number.isInteger(value)
+    ? Math.min(businessRealitySections.length - 1, Math.max(0, value))
+    : fallback;
+}
+
+function readStoredDraft(): (Partial<WizardState> & { intakeSectionIndex?: number }) | null {
+  try {
+    const rawDraft = window.localStorage.getItem(intakeDraftStorageKey);
+
+    if (!rawDraft) {
+      return null;
+    }
+
+    const parsed = JSON.parse(rawDraft) as Partial<WizardState> & { intakeSectionIndex?: number };
+
+    return {
+      company: typeof parsed.company === "object" && parsed.company ? parsed.company : undefined,
+      intake: typeof parsed.intake === "object" && parsed.intake ? parsed.intake : undefined,
+      intakeSectionIndex: clampIntakeSectionIndex(parsed.intakeSectionIndex, 0),
+      selectedFrameworks: Array.isArray(parsed.selectedFrameworks) ? parsed.selectedFrameworks : undefined,
+      selectedTools: Array.isArray(parsed.selectedTools) ? parsed.selectedTools : undefined,
+      step: clampStep(parsed.step, 1),
+    };
+  } catch {
+    return null;
+  }
+}
+
+function getRecommendedIntegration(selectedTools: string[], tools: ToolInventoryItem[]) {
+  const selectedKey = selectedTools.includes("microsoft365") ? "microsoft365" : selectedTools[0];
+  const recommended = integrationRecommendations.find((item) => item.aliases.some((alias) => alias === selectedKey));
+
+  if (recommended) {
+    return recommended.label;
+  }
+
+  return tools.find((tool) => tool.key === selectedKey)?.name ?? "Microsoft 365";
+}
+
+function getRecommendedIntegrationHref(selectedTools: string[]) {
+  const selectedKey = selectedTools.includes("microsoft365") ? "microsoft365" : selectedTools[0];
+  const providerKey = integrationRecommendations.find((item) => item.aliases.some((alias) => alias === selectedKey))?.aliases[0];
+
+  return `/integrations/${providerKey ?? "microsoft365"}`;
 }
 
 function calculateInitialScore(state: WizardState) {
@@ -265,11 +341,41 @@ export function OnboardingWizard({
     selectedTools: initialTools,
     step: 1,
   });
+  const draftHydrated = useRef(false);
   const score = useMemo(() => calculateInitialScore(state), [state]);
   const frameworkAssessment = useMemo(
     () => deriveFrameworkAssessment(state.intake),
     [state.intake],
   );
+
+  useEffect(() => {
+    const storedDraft = readStoredDraft();
+
+    if (storedDraft) {
+      dispatch({ type: "restoreDraft", draft: storedDraft });
+      setIntakeSectionIndex(clampIntakeSectionIndex(storedDraft.intakeSectionIndex, 0));
+      setHighestUnlockedStep((value) => Math.max(value, clampStep(storedDraft.step, 1)));
+    }
+  }, []);
+
+  useEffect(() => {
+    if (!draftHydrated.current) {
+      draftHydrated.current = true;
+      return;
+    }
+
+    window.localStorage.setItem(
+      intakeDraftStorageKey,
+      JSON.stringify({
+        company: state.company,
+        intake: state.intake,
+        intakeSectionIndex,
+        selectedFrameworks: state.selectedFrameworks,
+        selectedTools: state.selectedTools,
+        step: state.step,
+      }),
+    );
+  }, [intakeSectionIndex, state]);
 
   useEffect(() => {
     const defaultFrameworks = getDefaultFrameworkSlugs(frameworkAssessment);
@@ -338,6 +444,8 @@ export function OnboardingWizard({
   const intakeStepNumber = intakeSectionIndex + 1;
   const intakeProgress = Math.round((intakeStepNumber / businessRealitySections.length) * 100);
   const intakeMinutesRemaining = Math.max(1, businessRealitySections.length - intakeSectionIndex);
+  const recommendedIntegration = getRecommendedIntegration(state.selectedTools, tools);
+  const recommendedIntegrationHref = getRecommendedIntegrationHref(state.selectedTools);
 
   return (
     <section className="space-y-6">
@@ -782,7 +890,7 @@ export function OnboardingWizard({
                     <p className="mt-1 text-xs text-foreground/58">Prioritních mezer</p>
                   </div>
                   <div className="rounded-md border border-border bg-surface p-3 text-center">
-                    <p className="font-mono text-2xl font-semibold text-primary">Microsoft 365</p>
+                    <p className="font-mono text-2xl font-semibold text-primary">{recommendedIntegration}</p>
                     <p className="mt-1 text-xs text-foreground/58">Doporučená integrace</p>
                   </div>
                 </div>
@@ -1007,7 +1115,7 @@ export function OnboardingWizard({
             </div>
           </div>
           <div className="rounded-lg border border-border bg-background p-5">
-            <p className="text-lg font-semibold">Microsoft 365</p>
+            <p className="text-lg font-semibold">{recommendedIntegration}</p>
             <p className="mt-2 text-sm leading-6 text-foreground/64">
               {t("integration.body")}
             </p>
@@ -1015,7 +1123,7 @@ export function OnboardingWizard({
               {t("integration.optional")}
             </p>
             <Link
-              href="/integrations/microsoft365"
+              href={recommendedIntegrationHref}
               className="mt-5 inline-flex items-center gap-2 rounded-md border border-border px-4 py-3 text-sm font-medium hover:bg-surface-muted"
             >
               {t("integration.open")}
