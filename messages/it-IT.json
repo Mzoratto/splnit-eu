@@ -1058,7 +1058,16 @@
       "scopeLabel": "Ambito intake",
       "priorityLabel": "Gap prioritario basato sul vostro intake",
       "rationaleLabel": "Motivo dall'intake",
-      "emptyFiltered": "Nessun controllo corrisponde a questo filtro ambito."
+      "emptyFiltered": "Nessun controllo corrisponde a questo filtro ambito.",
+      "focusStartTitle": "Iniziate qui",
+      "focusStartSubtitle": "La vista predefinita mostra i gap più importanti emersi dall’intake. Aprite l’intera libreria con il selettore Tutti.",
+      "focusView": "Focus",
+      "allView": "Tutti",
+      "effortLabel": "Stima sforzo",
+      "effortWithIntegration": "~10 min con integrazione",
+      "loadMore": "Carica altri 5",
+      "demoMode": "Modalità demo: dati di esempio senza organizzazione autenticata",
+      "emptyFocus": "L’intake non ha ancora prodotto gap prioritari per questo filtro. Passate a Tutti oppure modificate il filtro."
     },
     "detail": {
       "statusTitle": "Stato controllo",

@@ -1058,7 +1058,16 @@
       "scopeLabel": "Rozsah vstupu",
       "priorityLabel": "Prioritní mezera podle vašeho vstupu",
       "rationaleLabel": "Důvod ze vstupu",
-      "emptyFiltered": "Tomuto filtru rozsahu neodpovídají žádné kontroly."
+      "emptyFiltered": "Tomuto filtru rozsahu neodpovídají žádné kontroly.",
+      "focusStartTitle": "Začněte tady",
+      "focusStartSubtitle": "Výchozí pohled ukazuje nejdůležitější mezery z intake. Celou knihovnu otevřete přepínačem Všechny.",
+      "focusView": "Fokus",
+      "allView": "Všechny",
+      "effortLabel": "Odhad úsilí",
+      "effortWithIntegration": "~10 min s integrací",
+      "loadMore": "Načíst dalších 5",
+      "demoMode": "Demo režim: ukázková data bez přihlášené organizace",
+      "emptyFocus": "Z intake zatím nevznikly prioritní mezery pro tento filtr. Přepněte na Všechny nebo upravte filtr."
     },
     "detail": {
       "statusTitle": "Stav kontroly",

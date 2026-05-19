@@ -197,6 +197,24 @@ assert.equal(it.auditLogPage.records.title, "Voci del log");
 assert.equal(it.billingSettings.monthSuffix, "/mese");
 assert.equal(it.clientDetailPage.back, "Torna ai clienti");
 assert.equal(it.controlsPage.index.title, "Libreria controlli");
+assert.equal(it.controlsPage.index.focusStartTitle, "Iniziate qui");
+assert.equal(
+  it.controlsPage.index.focusStartSubtitle,
+  "La vista predefinita mostra i gap più importanti emersi dall’intake. Aprite l’intera libreria con il selettore Tutti.",
+);
+assert.equal(it.controlsPage.index.focusView, "Focus");
+assert.equal(it.controlsPage.index.allView, "Tutti");
+assert.equal(it.controlsPage.index.effortLabel, "Stima sforzo");
+assert.equal(it.controlsPage.index.effortWithIntegration, "~10 min con integrazione");
+assert.equal(it.controlsPage.index.loadMore, "Carica altri 5");
+assert.equal(
+  it.controlsPage.index.demoMode,
+  "Modalità demo: dati di esempio senza organizzazione autenticata",
+);
+assert.equal(
+  it.controlsPage.index.emptyFocus,
+  "L’intake non ha ancora prodotto gap prioritari per questo filtro. Passate a Tutti oppure modificate il filtro.",
+);
 assert.equal(it.controlsPage.detail.saveStatus, "Salva stato");
 assert.equal(it.controlsPage.statuses.fail, "Non superato");
 assert.equal(it.dashboard.metrics.scoreTitle, "Punteggio compliance");

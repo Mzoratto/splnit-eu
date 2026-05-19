@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { auth } from "@clerk/nextjs/server";
 import { getLocale } from "next-intl/server";
 import {
   ArrowRight,
@@ -8,6 +9,8 @@ import {
 } from "lucide-react";
 import { getMessagesForLocale } from "@/i18n/messages";
 import { normalizeLocale } from "@/i18n/routing";
+import { hasDatabaseUrl } from "@/lib/db";
+import { getOrganisationByClerkOrgId } from "@/lib/db/queries/organisations";
 
 const moduleIcons = {
   accessReviews: ShieldCheck,
@@ -16,7 +19,21 @@ const moduleIcons = {
 } as const;
 
 export default async function TeamPage() {
-  const locale = normalizeLocale(await getLocale()) ?? "cs-CZ";
+  const requestLocale = normalizeLocale(await getLocale()) ?? "cs-CZ";
+  let locale = requestLocale;
+
+  const clerkConfigured =
+    Boolean(process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY) &&
+    Boolean(process.env.CLERK_SECRET_KEY);
+
+  if (clerkConfigured && hasDatabaseUrl()) {
+    const session = await auth();
+    const organisation = session.orgId
+      ? await getOrganisationByClerkOrgId(session.orgId).catch(() => null)
+      : null;
+    locale = normalizeLocale(organisation?.locale) ?? requestLocale;
+  }
+
   const copy = getMessagesForLocale(locale).teamPage;
   const modules = [
     {

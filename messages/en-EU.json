@@ -1058,7 +1058,16 @@
       "scopeLabel": "Intake scope",
       "priorityLabel": "Priority gap based on your intake",
       "rationaleLabel": "Reason from intake",
-      "emptyFiltered": "No controls match this scope filter."
+      "emptyFiltered": "No controls match this scope filter.",
+      "focusStartTitle": "Start here",
+      "focusStartSubtitle": "The default view shows the most important gaps from intake. Open the full library with the All toggle.",
+      "focusView": "Focus",
+      "allView": "All",
+      "effortLabel": "Effort estimate",
+      "effortWithIntegration": "~10 min with integration",
+      "loadMore": "Load 5 more",
+      "demoMode": "Demo mode: sample data without a signed-in organisation",
+      "emptyFocus": "Intake has not produced priority gaps for this filter yet. Switch to All or adjust the filter."
     },
     "detail": {
       "statusTitle": "Control status",

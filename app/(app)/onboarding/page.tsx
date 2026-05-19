@@ -56,6 +56,7 @@ export default async function OnboardingPage() {
         ...defaultIntakeAnswers,
         ...(onboardingState?.intakeProfile?.answers as Partial<IntakeAnswers> | undefined),
       }}
+      serverPersistenceEnabled={Boolean(session?.orgId && hasDatabaseUrl())}
       initialTools={onboardingState?.organisation?.toolInventory ?? ["microsoft365", "github"]}
       tools={TOOL_INVENTORY_LIBRARY}
     />

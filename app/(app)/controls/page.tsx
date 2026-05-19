@@ -149,6 +149,18 @@ function normalizeVisibleCount(value: string | string[] | undefined) {
   return Math.min(Math.max(parsed, 5), 50);
 }
 
+function getLocalizedAppHref(path: string, requestLocale: Locale) {
+  if (requestLocale === "it-IT") {
+    return `/it${path}`;
+  }
+
+  if (requestLocale === "en-EU") {
+    return `/en${path}`;
+  }
+
+  return path;
+}
+
 function getControlPriorityScore(control: OrgControl) {
   let score = 0;
 
@@ -187,9 +199,9 @@ function getPriorityBorderClass(control: OrgControl) {
   return "border-l-4 border-l-border";
 }
 
-function getEffortEstimate(control: OrgControl) {
+function getEffortEstimate(control: OrgControl, copy: ControlsCopy) {
   if (control.isAutomated) {
-    return "~10 min s integrací";
+    return copy.index.effortWithIntegration;
   }
 
   if (control.category === "governance" || control.category === "supplier") {
@@ -247,11 +259,12 @@ export default async function ControlsPage({
   const focusControls = rankedControls.filter((control) => getControlPriorityScore(control) > 0);
   const controlsForView = viewMode === "focus" ? focusControls.slice(0, 5) : rankedControls.slice(0, visibleCount);
   const hasMoreControls = viewMode === "all" && rankedControls.length > visibleCount;
+  const localizedControlsPath = getLocalizedAppHref("/controls", requestLocale);
   const scopeFilters: { href: string; label: string; value: ScopeFilter }[] = [
-    { href: "/controls", label: copy.index.allScope, value: "in-scope" },
-    { href: "/controls?scope=priority", label: copy.index.priorityScope, value: "priority" },
-    { href: "/controls?scope=gaps", label: copy.index.gapScope, value: "gaps" },
-    { href: "/controls?scope=out-of-scope", label: copy.index.outOfScope, value: "out-of-scope" },
+    { href: localizedControlsPath, label: copy.index.allScope, value: "in-scope" },
+    { href: `${localizedControlsPath}?scope=priority`, label: copy.index.priorityScope, value: "priority" },
+    { href: `${localizedControlsPath}?scope=gaps`, label: copy.index.gapScope, value: "gaps" },
+    { href: `${localizedControlsPath}?scope=out-of-scope`, label: copy.index.outOfScope, value: "out-of-scope" },
   ];
   const demoMode = mode !== "live";
 
@@ -265,7 +278,7 @@ export default async function ControlsPage({
 
       {demoMode ? (
         <div className="inline-flex w-fit items-center gap-2 rounded-full border border-border bg-surface px-3 py-1.5 text-xs font-medium text-foreground/64">
-          Demo režim: ukázková data bez přihlášené organizace
+          {copy.index.demoMode}
         </div>
       ) : null}
 
@@ -273,34 +286,34 @@ export default async function ControlsPage({
         <div className="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
           <div>
             <h2 className="text-lg font-medium">
-              {viewMode === "focus" ? "Začněte tady" : copy.index.activeTitle}
+              {viewMode === "focus" ? copy.index.focusStartTitle : copy.index.activeTitle}
             </h2>
             <p className="mt-1 max-w-2xl text-sm text-foreground/58">
               {viewMode === "focus"
-                ? "Výchozí pohled ukazuje nejdůležitější mezery z intake. Celou knihovnu otevřete přepínačem Všechny."
+                ? copy.index.focusStartSubtitle
                 : copy.index.activeSubtitle}
             </p>
           </div>
           <div className="inline-flex w-fit rounded-md border border-border bg-background p-1 text-sm">
             <Link
-              href={`/controls?scope=${scopeFilter}`}
+              href={`${localizedControlsPath}?scope=${scopeFilter}`}
               className={
                 viewMode === "focus"
                   ? "rounded-sm bg-primary px-3 py-2 font-medium text-primary-foreground"
                   : "rounded-sm px-3 py-2 font-medium text-foreground/64 hover:text-foreground"
               }
             >
-              Fokus
+              {copy.index.focusView}
             </Link>
             <Link
-              href={`/controls?view=all&scope=${scopeFilter}`}
+              href={`${localizedControlsPath}?view=all&scope=${scopeFilter}`}
               className={
                 viewMode === "all"
                   ? "rounded-sm bg-primary px-3 py-2 font-medium text-primary-foreground"
                   : "rounded-sm px-3 py-2 font-medium text-foreground/64 hover:text-foreground"
               }
             >
-              Všechny
+              {copy.index.allView}
             </Link>
           </div>
         </div>
@@ -359,14 +372,14 @@ export default async function ControlsPage({
                     </div>
                     <div className="flex flex-col gap-3 lg:w-56">
                       <div className="rounded-md bg-surface-muted p-3 text-sm">
-                        <p className="text-xs text-foreground/52">Odhad úsilí</p>
-                        <p className="mt-1 font-medium">{getEffortEstimate(control)}</p>
+                        <p className="text-xs text-foreground/52">{copy.index.effortLabel}</p>
+                        <p className="mt-1 font-medium">{getEffortEstimate(control, copy)}</p>
                       </div>
                       <div className="rounded-md bg-surface-muted p-3 text-sm">
                         <p className="text-xs text-foreground/52">{copy.index.frameworksLabel}</p>
                         <p className="mt-1 text-sm font-medium">{getFrameworkNames(control, locale)}</p>
                       </div>
-                      <Link href={`/controls/${control.key}`} className="btn btn-secondary justify-center">
+                      <Link href={getLocalizedAppHref(`/controls/${control.key}`, requestLocale)} className="btn btn-secondary justify-center">
                         {copy.index.openControl}
                         <ArrowRight className="h-4 w-4" aria-hidden="true" strokeWidth={1.5} />
                       </Link>
@@ -376,8 +389,8 @@ export default async function ControlsPage({
               ))}
               {hasMoreControls ? (
                 <div className="flex justify-center pt-2">
-                  <Link href={`/controls?view=all&scope=${scopeFilter}&limit=${visibleCount + 5}`} className="btn btn-secondary">
-                    Načíst dalších 5
+                  <Link href={`${localizedControlsPath}?view=all&scope=${scopeFilter}&limit=${visibleCount + 5}`} className="btn btn-secondary">
+                    {copy.index.loadMore}
                     <ArrowRight className="h-4 w-4" aria-hidden="true" strokeWidth={1.5} />
                   </Link>
                 </div>
@@ -387,7 +400,7 @@ export default async function ControlsPage({
             <div className="rounded-lg border border-border bg-surface p-5">
               <p className="text-sm leading-6 text-foreground/64">
                 {viewMode === "focus"
-                  ? "Z intake zatím nevznikly prioritní mezery pro tento filtr. Přepněte na Všechny nebo upravte filtr."
+                  ? copy.index.emptyFocus
                   : copy.index.emptyFiltered}
               </p>
             </div>
@@ -397,7 +410,7 @@ export default async function ControlsPage({
             <p className="text-sm leading-6 text-foreground/64">
               {copy.index.emptyActive}
             </p>
-            <Link href="/frameworks" className="btn btn-primary mt-4">
+            <Link href={getLocalizedAppHref("/frameworks", requestLocale)} className="btn btn-primary mt-4">
               {copy.index.emptyActiveAction}
               <ArrowRight className="h-4 w-4" aria-hidden="true" strokeWidth={1.5} />
             </Link>

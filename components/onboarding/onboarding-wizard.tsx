@@ -317,6 +317,7 @@ export function OnboardingWizard({
   initialCompany,
   initialFrameworks,
   initialIntakeAnswers,
+  serverPersistenceEnabled,
   initialTools,
   tools,
 }: {
@@ -324,6 +325,7 @@ export function OnboardingWizard({
   initialCompany: CompanyState;
   initialFrameworks: string[];
   initialIntakeAnswers: IntakeAnswers;
+  serverPersistenceEnabled: boolean;
   initialTools: string[];
   tools: ToolInventoryItem[];
 }) {
@@ -400,6 +402,12 @@ export function OnboardingWizard({
 
   function completeIntakeFlow() {
     setError(null);
+
+    if (!serverPersistenceEnabled) {
+      setIntakeRevealOpen(true);
+      return;
+    }
+
     startTransition(async () => {
       try {
         await saveIntakeStep({
@@ -417,6 +425,11 @@ export function OnboardingWizard({
   function runStep(action: () => Promise<void>, nextStep: number) {
     setError(null);
     goToStep(nextStep);
+
+    if (!serverPersistenceEnabled) {
+      return;
+    }
+
     startTransition(async () => {
       try {
         await action();
@@ -428,6 +441,12 @@ export function OnboardingWizard({
 
   function finishOnboarding() {
     setError(null);
+
+    if (!serverPersistenceEnabled) {
+      window.location.href = "/dashboard";
+      return;
+    }
+
     startTransition(async () => {
       try {
         await completeOnboardingStep({ initialScore: score });

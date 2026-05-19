@@ -1,4 +1,5 @@
 import { auth } from "@clerk/nextjs/server";
+import { getLocale } from "next-intl/server";
 import { Building2, CheckCircle2, Database, ShieldCheck } from "lucide-react";
 import { getMessagesForLocale } from "@/i18n/messages";
 import { normalizeLocale } from "@/i18n/routing";
@@ -140,7 +141,10 @@ function getNis2Category(input: { employeeCount: string; sector: string }) {
 export default async function OrganisationSettingsPage() {
   const data = await loadOrganisationSettings();
   const nis2Category = getNis2Category(data);
-  const locale = normalizeLocale(data.locale) ?? "cs-CZ";
+  const requestLocale = normalizeLocale(await getLocale()) ?? "cs-CZ";
+  const locale = data.canMutate
+    ? normalizeLocale(data.locale) ?? requestLocale
+    : requestLocale;
   const messages = getMessagesForLocale(locale);
   const copy = messages.organisationSettings;
   const onboardingCopy = messages.onboarding;
