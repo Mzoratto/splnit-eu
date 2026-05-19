@@ -13,6 +13,7 @@
     "test:e2e:intake-prioritization": "playwright test tests/e2e/intake-prioritization-smoke.spec.ts",
     "test:e2e:ui": "playwright test --ui",
     "smoke:i18n-shell": "tsx scripts/smoke-i18n-shell.ts",
+    "translate:microsoft": "tsx scripts/microsoft-translator-candidates.ts",
     "smoke:intake-scope": "tsx scripts/smoke-intake-scope.ts",
     "smoke:onboarding-status-seeding": "tsx scripts/smoke-onboarding-status-seeding.ts",
     "smoke:primary-flow": "tsx scripts/smoke-primary-flow.ts",

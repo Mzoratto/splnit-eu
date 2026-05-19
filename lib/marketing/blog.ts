@@ -92,14 +92,14 @@ export const blogPageCopy: Record<Locale, BlogPageCopy> = {
     relatedRegulationTitle: "Panoramica normativa correlata",
     relatedRegulationOpen: "Apri panoramica",
     description:
-      "Articoli pratici per PMI europee che devono trasformare NIS2, EU AI Act e GDPR in controlli, evidenze e responsabilità.",
+      "Articoli pratici per le PMI europee che devono trasformare NIS2, AI Act e GDPR in controlli, prove di conformità e responsabilità.",
     jsonLdDescription:
       "Guide pratiche Splnit.eu su NIS2, EU AI Act, GDPR e ISO 27001 per PMI europee.",
     locale: "it_IT",
     metadataTitle: "Blog | Splnit.eu — NIS2, EU AI Act e GDPR per PMI europee",
     readArticle: "Leggi articolo",
     tag: "Guide compliance",
-    title: "Guide alla compliance UE senza rumore legale.",
+    title: "Guide alla compliance UE chiare e concrete.",
   },
 };
 
