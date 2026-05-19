@@ -105,7 +105,7 @@ Commands:
 - Generate DB migrations: `npm run db:generate`
 - Apply DB migrations: `npm run db:migrate`
 - Seed DB: `npm run db:seed`
-- Production deploy: `vercel deploy --prod --yes`
+- Production deploy: `npm run deploy` (runs the production migration drift gate before `vercel deploy --prod --yes`)
 
 Prefer targeted checks during iteration. Run full checks before a commit or deploy when the blast radius is non-trivial.
 
