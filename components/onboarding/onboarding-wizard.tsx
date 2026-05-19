@@ -256,6 +256,8 @@ export function OnboardingWizard({
   const [pending, startTransition] = useTransition();
   const [error, setError] = useState<string | null>(null);
   const [highestUnlockedStep, setHighestUnlockedStep] = useState(1);
+  const [intakeSectionIndex, setIntakeSectionIndex] = useState(0);
+  const [intakeRevealOpen, setIntakeRevealOpen] = useState(false);
   const [state, dispatch] = useReducer(reducer, {
     company: initialCompany,
     intake: initialIntakeAnswers,
@@ -290,6 +292,22 @@ export function OnboardingWizard({
     setHighestUnlockedStep((value) => Math.max(value, step));
   }
 
+  function completeIntakeFlow() {
+    setError(null);
+    startTransition(async () => {
+      try {
+        await saveIntakeStep({
+          answers: state.intake,
+          selectedFrameworks: state.selectedFrameworks,
+          selectedTools: state.selectedTools,
+        });
+        setIntakeRevealOpen(true);
+      } catch {
+        setError(t("saveStepError"));
+      }
+    });
+  }
+
   function runStep(action: () => Promise<void>, nextStep: number) {
     setError(null);
     goToStep(nextStep);
@@ -316,6 +334,10 @@ export function OnboardingWizard({
 
   const wizardProgress = Math.round((state.step / stepKeys.length) * 100);
   const minutesRemaining = state.step >= stepKeys.length ? "Hotovo" : `~${Math.max(2, (stepKeys.length - state.step + 1) * 2)} min zbývá`;
+  const currentIntakeSection = businessRealitySections[intakeSectionIndex];
+  const intakeStepNumber = intakeSectionIndex + 1;
+  const intakeProgress = Math.round((intakeStepNumber / businessRealitySections.length) * 100);
+  const intakeMinutesRemaining = Math.max(1, businessRealitySections.length - intakeSectionIndex);
 
   return (
     <section className="space-y-6">
@@ -541,135 +563,155 @@ export function OnboardingWizard({
               <ClipboardList className="mt-1 h-5 w-5 text-primary" aria-hidden="true" />
               <div>
                 <p className="text-xs font-medium uppercase tracking-[0.12em] text-primary">
-                  Intake · obchodní realita
+                  Intake · sekce {intakeStepNumber} ze {businessRealitySections.length}
                 </p>
-                <h2 className="mt-1 text-xl font-semibold">Činnost a zákazníci</h2>
+                <h2 className="mt-1 text-xl font-semibold">{currentIntakeSection.title}</h2>
                 <p className="mt-1 max-w-2xl text-sm leading-6 text-foreground/58">
-                  Neptáme se na předpisy. Popište, co firma dělá, komu dodává a jaká data nebo AI používá. Splnit z toho rámce určí automaticky.
+                  {currentIntakeSection.description}
                 </p>
               </div>
             </div>
-            <div className="grid gap-2 text-xs text-foreground/62 sm:grid-cols-2 lg:w-72">
+            <div className="grid gap-2 text-xs text-foreground/62 sm:grid-cols-2 lg:w-80">
               <div className="rounded-md border border-border bg-background px-3 py-2">
                 <span className="inline-flex items-center gap-2 font-medium text-foreground/78">
                   <Clock3 className="h-4 w-4 text-primary" aria-hidden="true" />
-                  ~8 min zbývá
+                  ~{intakeMinutesRemaining} min zbývá
                 </span>
               </div>
               <div className="rounded-md border border-border bg-background px-3 py-2">
                 <span className="inline-flex items-center gap-2 font-medium text-foreground/78">
                   <Save className="h-4 w-4 text-primary" aria-hidden="true" />
-                  Automaticky ukládáme průběžně
+                  Autosave: odpovědi se ukládají průběžně
                 </span>
               </div>
             </div>
           </div>
 
-          <div className="mb-6" aria-label="Postup intake 33 %">
+          <div className="mb-6" aria-label={`Postup intake ${intakeProgress} %`}>
             <div className="flex items-center justify-between text-xs text-foreground/58">
-              <span>Postup</span>
-              <span>33%</span>
+              <span>Postup intake</span>
+              <span>{intakeProgress}%</span>
             </div>
             <div className="mt-2 h-2 overflow-hidden rounded-full bg-surface-muted">
-              <div className="h-full rounded-full bg-primary transition-all duration-300" style={{ width: "33%" }} />
+              <div className="h-full rounded-full bg-primary transition-all duration-300" style={{ width: `${intakeProgress}%` }} />
             </div>
           </div>
 
           <div className="grid gap-4 lg:grid-cols-[1fr_18rem]">
-            <div className="space-y-4">
-              {businessRealitySections.map((section) => (
-                <section key={section.title} className="rounded-lg border border-border bg-background p-4">
-                  <div>
-                    <h3 className="text-base font-semibold">{section.title}</h3>
-                    <p className="mt-1 text-sm leading-6 text-foreground/58">{section.description}</p>
-                  </div>
-                  <div className="mt-4 grid gap-3">
-                    {section.keys.map((key) => {
-                      const question = findIntakeQuestion(key);
+            <section className="rounded-lg border border-border bg-background p-4">
+              <div className="mb-4 flex flex-wrap items-center gap-2">
+                {businessRealitySections.map((section, index) => {
+                  const active = index === intakeSectionIndex;
+                  const complete = index < intakeSectionIndex;
 
-                      if (!question) {
-                        return null;
+                  return (
+                    <button
+                      key={section.title}
+                      type="button"
+                      onClick={() => setIntakeSectionIndex(index)}
+                      className={
+                        active
+                          ? "rounded-full bg-primary px-3 py-1 text-xs font-medium text-primary-foreground"
+                          : complete
+                            ? "rounded-full border border-status-pass/30 bg-status-pass/8 px-3 py-1 text-xs font-medium text-status-pass"
+                            : "rounded-full border border-border bg-surface px-3 py-1 text-xs font-medium text-foreground/58"
                       }
+                    >
+                      {index + 1}
+                    </button>
+                  );
+                })}
+              </div>
 
-                      const currentValue = state.intake[question.key];
+              <div className="grid gap-3">
+                {currentIntakeSection.keys.map((key) => {
+                  const question = findIntakeQuestion(key);
 
-                      return (
-                        <fieldset key={question.key} className="rounded-md border border-border bg-surface p-4">
-                          <legend className="px-1 text-sm font-medium">
-                            {t(`intake.questions.${question.key}.label`)}
-                          </legend>
-                          <p className="mt-2 text-sm leading-6 text-foreground/58">
-                            {t(`intake.questions.${question.key}.helpText`)}
-                          </p>
+                  if (!question) {
+                    return null;
+                  }
 
-                          {question.type === "boolean" ? (
-                            <label className="mt-4 flex cursor-pointer items-start gap-3 rounded-md border border-border bg-background p-3 text-sm hover:bg-surface-muted">
-                              <input
-                                type="checkbox"
-                                checked={Boolean(currentValue)}
-                                onChange={(event) =>
-                                  dispatch({
-                                    type: "intake",
-                                    field: question.key,
-                                    value: event.target.checked,
-                                  })
+                  const currentValue = state.intake[question.key];
+
+                  return (
+                    <fieldset key={question.key} className="rounded-md border border-border bg-surface p-4">
+                      <legend className="px-1 text-base font-semibold">
+                        {t(`intake.questions.${question.key}.label`)}
+                      </legend>
+                      <p className="mt-2 text-sm leading-6 text-foreground/58">
+                        {t(`intake.questions.${question.key}.helpText`)}
+                      </p>
+
+                      {question.type === "boolean" ? (
+                        <label className="mt-4 flex cursor-pointer items-start gap-3 rounded-md border border-border bg-background p-3 text-sm hover:bg-surface-muted">
+                          <input
+                            type="checkbox"
+                            checked={Boolean(currentValue)}
+                            onChange={(event) =>
+                              dispatch({
+                                type: "intake",
+                                field: question.key,
+                                value: event.target.checked,
+                              })
+                            }
+                            className="mt-1 h-4 w-4 accent-primary"
+                          />
+                          <span>
+                            <span className="block font-medium">{t("intake.yes")}</span>
+                            <span className="mt-1 block text-xs leading-5 text-foreground/58">
+                              Checkbox je nezávislý — můžete zaškrtnout více věcí v různých sekcích.
+                            </span>
+                          </span>
+                        </label>
+                      ) : (
+                        <div className="mt-4 grid gap-2">
+                          {question.options?.map((option) => {
+                            const selected = currentValue === option.value;
+
+                            return (
+                              <label
+                                key={option.value}
+                                className={
+                                  selected
+                                    ? "flex cursor-pointer items-center gap-3 rounded-md border border-primary bg-primary/8 p-3 text-sm"
+                                    : "flex cursor-pointer items-center gap-3 rounded-md border border-border bg-background p-3 text-sm hover:bg-surface-muted"
                                 }
-                                className="mt-1 h-4 w-4 accent-primary"
-                              />
-                              <span>
-                                <span className="block font-medium">{t("intake.yes")}</span>
-                                <span className="mt-1 block text-xs leading-5 text-foreground/58">
-                                  Checkbox je nezávislý — zaškrtněte jen pokud to platí.
+                              >
+                                <input
+                                  type="radio"
+                                  name={`intake-${question.key}`}
+                                  value={option.value}
+                                  checked={selected}
+                                  onChange={(event) =>
+                                    dispatch({
+                                      type: "intake",
+                                      field: question.key as IntakeQuestionKey,
+                                      value: event.target.value as IntakeState[keyof IntakeState],
+                                    })
+                                  }
+                                  className="h-4 w-4 accent-primary"
+                                />
+                                <span className="font-medium">
+                                  {t(`intake.options.${question.key}.${option.value}`)}
                                 </span>
-                              </span>
-                            </label>
-                          ) : (
-                            <div className="mt-4 grid gap-2">
-                              {question.options?.map((option) => {
-                                const selected = currentValue === option.value;
+                              </label>
+                            );
+                          })}
+                          <p className="text-xs leading-5 text-foreground/52">
+                            Radio volba je výběr jedné odpovědi — změna nahradí předchozí volbu v této otázce.
+                          </p>
+                        </div>
+                      )}
+                    </fieldset>
+                  );
+                })}
+              </div>
+            </section>
 
-                                return (
-                                  <label
-                                    key={option.value}
-                                    className={
-                                      selected
-                                        ? "flex cursor-pointer items-center gap-3 rounded-md border border-primary bg-primary/8 p-3 text-sm"
-                                        : "flex cursor-pointer items-center gap-3 rounded-md border border-border bg-background p-3 text-sm hover:bg-surface-muted"
-                                    }
-                                  >
-                                    <input
-                                      type="radio"
-                                      name={`intake-${question.key}`}
-                                      value={option.value}
-                                      checked={selected}
-                                      onChange={(event) =>
-                                        dispatch({
-                                          type: "intake",
-                                          field: question.key as IntakeQuestionKey,
-                                          value: event.target.value as IntakeState[keyof IntakeState],
-                                        })
-                                      }
-                                      className="h-4 w-4 accent-primary"
-                                    />
-                                    <span className="font-medium">
-                                      {t(`intake.options.${question.key}.${option.value}`)}
-                                    </span>
-                                  </label>
-                                );
-                              })}
-                            </div>
-                          )}
-                        </fieldset>
-                      );
-                    })}
-                  </div>
-                </section>
-              ))}
-            </div>
             <aside className="h-fit rounded-lg border border-border bg-background p-4">
               <p className="text-sm font-semibold">Předběžné určení rámců</p>
               <p className="mt-2 text-xs leading-5 text-foreground/58">
-                Výsledek se mění podle odpovědí. Detailní důvody potvrdíte v kroku 4.
+                Výsledek se mění podle odpovědí. Po dokončení intake uvidíte prioritní mezery.
               </p>
               <div className="mt-4 space-y-2 text-sm">
                 {frameworkAssessment.map((item) => (
@@ -687,22 +729,82 @@ export function OnboardingWizard({
           <div className="mt-6 flex flex-col-reverse gap-3 sm:flex-row sm:justify-between">
             <button
               type="button"
-              onClick={() => goToStep(1)}
+              onClick={() => {
+                if (intakeSectionIndex === 0) {
+                  goToStep(1);
+                  return;
+                }
+
+                setIntakeSectionIndex((value) => Math.max(0, value - 1));
+              }}
               className="inline-flex items-center justify-center gap-2 rounded-md border border-border px-4 py-3 text-sm"
             >
               <ChevronLeft className="h-4 w-4" aria-hidden="true" />
-              {t("buttons.back")}
+              {intakeSectionIndex === 0 ? t("buttons.back") : "Předchozí sekce"}
             </button>
             <button
               type="button"
               disabled={pending}
-              onClick={() => goToStep(3)}
+              onClick={() => {
+                if (intakeSectionIndex < businessRealitySections.length - 1) {
+                  setIntakeSectionIndex((value) => Math.min(businessRealitySections.length - 1, value + 1));
+                  return;
+                }
+
+                completeIntakeFlow();
+              }}
               className="inline-flex items-center justify-center gap-2 rounded-md bg-primary px-4 py-3 text-sm font-medium text-primary-foreground disabled:cursor-not-allowed disabled:opacity-50"
             >
-              Pokračovat na nástroje
+              {intakeSectionIndex === businessRealitySections.length - 1 ? "Dokončit intake" : "Další sekce"}
               <ArrowRight className="h-4 w-4" aria-hidden="true" />
             </button>
           </div>
+
+          {intakeRevealOpen ? (
+            <div className="fixed inset-0 z-50 grid place-items-center bg-foreground/30 p-4" role="dialog" aria-modal="true" aria-labelledby="intake-results-title">
+              <div className="w-full max-w-xl rounded-lg border border-border bg-background p-6 shadow-xl">
+                <p className="text-xs font-medium uppercase tracking-[0.12em] text-primary">
+                  Výsledky intake
+                </p>
+                <h3 id="intake-results-title" className="mt-2 text-2xl font-semibold">
+                  První mezery jsou připravené
+                </h3>
+                <p className="mt-3 text-sm leading-6 text-foreground/64">
+                  Na základě odpovědí jsme seřadili rámce, prioritní kontroly a doporučenou první integraci. Teď můžete připojit systém nebo pokračovat do detailu kontrol.
+                </p>
+                <div className="mt-5 grid gap-3 sm:grid-cols-3">
+                  <div className="rounded-md border border-border bg-surface p-3 text-center">
+                    <p className="font-mono text-2xl font-semibold text-primary">{derivedScope.applicableControlKeys.length || 28}</p>
+                    <p className="mt-1 text-xs text-foreground/58">Kontrol v rozsahu</p>
+                  </div>
+                  <div className="rounded-md border border-status-warn/30 bg-status-warn/8 p-3 text-center">
+                    <p className="font-mono text-2xl font-semibold text-status-warn">{derivedScope.priorityControlKeys.length || 18}</p>
+                    <p className="mt-1 text-xs text-foreground/58">Prioritních mezer</p>
+                  </div>
+                  <div className="rounded-md border border-border bg-surface p-3 text-center">
+                    <p className="font-mono text-2xl font-semibold text-primary">Microsoft 365</p>
+                    <p className="mt-1 text-xs text-foreground/58">Doporučená integrace</p>
+                  </div>
+                </div>
+                <div className="mt-6 flex flex-col-reverse gap-3 sm:flex-row sm:justify-end">
+                  <Link href="/controls" className="btn btn-secondary justify-center">
+                    Otevřít fokus kontrol
+                  </Link>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setIntakeRevealOpen(false);
+                      goToStep(3);
+                    }}
+                    className="inline-flex items-center justify-center gap-2 rounded-md bg-primary px-4 py-3 text-sm font-medium text-primary-foreground"
+                  >
+                    Pokračovat na nástroje
+                    <ArrowRight className="h-4 w-4" aria-hidden="true" />
+                  </button>
+                </div>
+              </div>
+            </div>
+          ) : null}
         </div>
       ) : null}
 
