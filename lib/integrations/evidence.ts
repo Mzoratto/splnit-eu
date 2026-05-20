@@ -1,4 +1,5 @@
 import { and, asc, eq } from "drizzle-orm";
+import { recordActivationEvent } from "@/lib/activation/events";
 import { createEvidenceState } from "@/lib/activation/evidence-state";
 import type { EvidenceBlockedReason } from "@/lib/activation/evidence-state";
 import { getDb } from "@/lib/db";
@@ -235,7 +236,7 @@ export async function createAutomatedEvidenceForIntegrationRun(input: {
     status: input.status,
   });
 
-  await db.insert(evidence).values({
+  const insertedRows = await db.insert(evidence).values({
     assessmentResult: evidenceState.assessment_result,
     blockedReason: evidenceState.blocked_reason,
     clerkOrgId: input.clerkOrgId,
@@ -258,5 +259,44 @@ export async function createAutomatedEvidenceForIntegrationRun(input: {
     }),
     source: evidenceState.source,
     type: "automated_snapshot",
-  });
+  }).returning({ id: evidence.id });
+  const evidenceId = insertedRows[0]?.id;
+
+  if (!evidenceId) {
+    throw new Error("Failed to create automated evidence record.");
+  }
+
+  if (evidenceState.collection_status === "collected") {
+    await recordActivationEvent({
+      clerkOrgId: input.clerkOrgId,
+      entityId: evidenceId,
+      entityType: "evidence",
+      metadata: {
+        assessmentResult: evidenceState.assessment_result,
+        collectionStatus: evidenceState.collection_status,
+        controlId: input.controlId,
+        provider: input.provider,
+        source: "connector",
+        testName: input.testName,
+      },
+      name: "EvidenceCollected",
+    });
+  } else if (evidenceState.collection_status === "blocked" || evidenceState.collection_status === "failed") {
+    await recordActivationEvent({
+      clerkOrgId: input.clerkOrgId,
+      entityId: evidenceId,
+      entityType: "evidence",
+      metadata: {
+        blockedReason: evidenceState.blocked_reason ?? "collection_failed",
+        collectionStatus: evidenceState.collection_status,
+        controlId: input.controlId,
+        provider: input.provider,
+        source: "connector",
+        testName: input.testName,
+      },
+      name: "EvidenceBlocked",
+    });
+  }
+
+  return { evidenceId };
 }

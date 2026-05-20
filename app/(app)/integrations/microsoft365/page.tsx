@@ -9,7 +9,6 @@ import { normalizeLocale, type Locale } from "@/i18n/routing";
 import { hasDatabaseUrl } from "@/lib/db";
 import { getIntegrationDetail } from "@/lib/db/queries/integrations";
 import { getOrganisationByClerkOrgId } from "@/lib/db/queries/organisations";
-import { getMicrosoft365AuthUrl } from "@/lib/integrations/microsoft365/oauth";
 import { MICROSOFT365_TEST_DEFINITIONS } from "@/lib/integrations/microsoft365/test-definitions";
 import { disconnectIntegrationAction } from "../actions";
 
@@ -89,10 +88,9 @@ async function loadMicrosoft365Data() {
     };
   }
 
-  const redirectUri = `${getAppUrl()}/api/integrations/microsoft/callback`;
   const authUrl =
     process.env.MICROSOFT_CLIENT_ID && process.env.MICROSOFT_CLIENT_SECRET
-      ? getMicrosoft365AuthUrl(session.orgId, redirectUri)
+      ? `${getAppUrl()}/api/integrations/microsoft/start`
       : null;
   const [detail, organisation] = hasDatabaseUrl()
     ? await Promise.all([

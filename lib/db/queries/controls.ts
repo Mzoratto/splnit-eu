@@ -366,6 +366,18 @@ export async function updateControlStatus(input: {
     throw new Error(`Unknown control: ${input.controlKey}`);
   }
 
+  const existingStatusRows = await db
+    .select({ status: orgControlStatuses.status })
+    .from(orgControlStatuses)
+    .where(
+      and(
+        eq(orgControlStatuses.clerkOrgId, input.clerkOrgId),
+        eq(orgControlStatuses.controlId, control.id),
+      ),
+    )
+    .limit(1);
+  const previousStatus = existingStatusRows[0]?.status ?? null;
+
   await db
     .insert(orgControlStatuses)
     .values({
@@ -397,6 +409,7 @@ export async function updateControlStatus(input: {
 
   return {
     controlId: control.id,
+    previousStatus,
     recalculatedFrameworks: frameworkRows.length,
   };
 }

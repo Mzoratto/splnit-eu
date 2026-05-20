@@ -1,6 +1,7 @@
 import { auth } from "@clerk/nextjs/server";
 import { and, eq, inArray } from "drizzle-orm";
 import { NextResponse } from "next/server";
+import { recordActivationEvent } from "@/lib/activation/events";
 import { createEvidenceState } from "@/lib/activation/evidence-state";
 import { encryptSecret } from "@/lib/crypto";
 import { getDb } from "@/lib/db";
@@ -149,6 +150,17 @@ export async function GET(request: Request) {
       tokenType: "oauth2",
     },
   });
+  await recordActivationEvent({
+    clerkOrgId: session.orgId,
+    clerkUserId: session.userId,
+    entityId: integration.id,
+    entityType: "connector",
+    metadata: {
+      provider: "microsoft365",
+      tokenType: "oauth2",
+    },
+    name: "ConnectorOAuthCompleted",
+  });
   await createPendingMicrosoftEvidence({
     clerkOrgId: session.orgId,
     integrationId: integration.id,
@@ -170,6 +182,19 @@ export async function GET(request: Request) {
       provider: "microsoft365",
     },
   });
+  if (firstRun.enqueued) {
+    await recordActivationEvent({
+      clerkOrgId: session.orgId,
+      entityId: integration.id,
+      entityType: "connector",
+      metadata: {
+        lockEnabled: firstRun.lockEnabled,
+        provider: "microsoft365",
+        trigger: "oauth_callback_first_run",
+      },
+      name: "EvidenceCollectionQueued",
+    });
+  }
 
   return NextResponse.redirect(new URL("/integrations/microsoft365", url.origin));
 }

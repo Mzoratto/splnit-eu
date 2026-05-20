@@ -29,6 +29,7 @@
     "smoke:activation-status": "tsx scripts/smoke-activation-status.tsx",
     "smoke:controls-focus-activation-status-source": "tsx scripts/smoke-controls-focus-activation-status-source.ts",
     "smoke:microsoft-first-run-enqueue-source": "tsx scripts/smoke-microsoft-first-run-enqueue-source.ts",
+    "smoke:activation-events-source": "tsx scripts/smoke-activation-events-source.ts",
     "smoke:microsoft365-permission-failures": "tsx scripts/smoke-microsoft365-permission-failures.ts",
     "smoke:policy-drafts": "tsx scripts/smoke-policy-drafts.ts",
     "smoke:incident-notifications": "tsx scripts/smoke-incident-notifications.ts",

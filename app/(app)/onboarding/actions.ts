@@ -6,6 +6,10 @@ import { cookies } from "next/headers";
 import { z } from "zod";
 import { localeCookieName } from "@/i18n/routing";
 import { hasDatabaseUrl } from "@/lib/db";
+import {
+  getRecommendedConnectorFromTools,
+  recordActivationEvent,
+} from "@/lib/activation/events";
 import type { FrameworkSlug } from "@/lib/controls/library";
 import {
   completeOnboarding,
@@ -221,6 +225,28 @@ export async function saveIntakeStep(input: unknown) {
   });
   await markOnboardingIntakeCompleted(clerkOrgId);
   await seedInitialControlStatusesFromIntakeScope(clerkOrgId);
+  await recordActivationEvent({
+    clerkOrgId,
+    entityId: clerkOrgId,
+    entityType: "intake",
+    metadata: {
+      selectedFrameworks: parsed.selectedFrameworks,
+      selectedTools: parsed.selectedTools,
+      version: INTAKE_PROFILE_VERSION,
+    },
+    name: "IntakeCompleted",
+  });
+  await recordActivationEvent({
+    clerkOrgId,
+    entityId: getRecommendedConnectorFromTools(parsed.selectedTools),
+    entityType: "connector",
+    metadata: {
+      provider: getRecommendedConnectorFromTools(parsed.selectedTools),
+      selectedTools: parsed.selectedTools,
+      source: "intake",
+    },
+    name: "ConnectorRecommended",
+  });
 
   revalidatePath("/onboarding");
   revalidatePath("/dashboard");

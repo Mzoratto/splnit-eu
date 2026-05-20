@@ -5,6 +5,7 @@ import { put } from "@vercel/blob";
 import { revalidatePath } from "next/cache";
 import { z } from "zod";
 import { deleteBlobUrlsAfterFailedSave } from "@/lib/blob/cleanup";
+import { recordActivationEvent } from "@/lib/activation/events";
 import { createAuditLog } from "@/lib/db/queries/audit-logs";
 import { updateControlStatus } from "@/lib/db/queries/controls";
 import { createManualEvidence } from "@/lib/db/queries/evidence";
@@ -77,6 +78,21 @@ export async function updateControlStatusAction(
       status: parsed.status,
     },
   });
+  if (result.previousStatus !== parsed.status) {
+    await recordActivationEvent({
+      clerkOrgId: session.clerkOrgId,
+      clerkUserId: session.userId,
+      entityId: result.controlId,
+      entityType: "assessment",
+      metadata: {
+        controlId: result.controlId,
+        nextStatus: parsed.status,
+        previousStatus: result.previousStatus,
+        source: "manual_status",
+      },
+      name: "AssessmentChanged",
+    });
+  }
 
   revalidatePath("/dashboard");
   revalidatePath("/evidence");
@@ -141,6 +157,20 @@ export async function uploadEvidenceAction(
       fileType: file.type || "application/octet-stream",
       source: "manual",
     },
+  });
+  await recordActivationEvent({
+    clerkOrgId: session.clerkOrgId,
+    clerkUserId: session.userId,
+    entityId: result.evidenceId,
+    entityType: "evidence",
+    metadata: {
+      controlId: result.controlId,
+      controlKey,
+      evidenceId: result.evidenceId,
+      fileType: file.type || "application/octet-stream",
+      source: "manual",
+    },
+    name: "ManualEvidenceAdded",
   });
 
   revalidatePath("/dashboard");

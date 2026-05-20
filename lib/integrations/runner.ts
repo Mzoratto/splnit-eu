@@ -1,4 +1,5 @@
 import { and, eq } from "drizzle-orm";
+import { recordActivationEvent } from "@/lib/activation/events";
 import { getDb } from "@/lib/db";
 import {
   integrationRuns,
@@ -150,6 +151,8 @@ export async function runTestsForOrg(
       for (const test of relevantTests) {
         const now = new Date();
 
+        let currentStatus: { lastEvidenceAt: Date | null; status: string | null } | null = null;
+
         try {
           const currentStatusRows = await db
             .select({
@@ -164,7 +167,7 @@ export async function runTestsForOrg(
               ),
             )
             .limit(1);
-          const currentStatus = currentStatusRows[0] ?? null;
+          currentStatus = currentStatusRows[0] ?? null;
           const result = await adapter.runTest(test.checkLogic, integration);
 
           const insertedRuns = await db
@@ -242,6 +245,20 @@ export async function runTestsForOrg(
               target: [orgControlStatuses.clerkOrgId, orgControlStatuses.controlId],
               set: statusUpdate,
             });
+          if (currentStatus?.status !== result.status) {
+            await recordActivationEvent({
+              clerkOrgId,
+              entityId: test.controlId,
+              entityType: "assessment",
+              metadata: {
+                controlId: test.controlId,
+                nextStatus: result.status,
+                previousStatus: currentStatus?.status ?? null,
+                source: "automated_evidence",
+              },
+              name: "AssessmentChanged",
+            });
+          }
           testsRun += 1;
         } catch (error) {
           errors += 1;
@@ -305,6 +322,20 @@ export async function runTestsForOrg(
                   updatedAt: now,
                 },
               });
+            if (currentStatus?.status !== errorResult.status) {
+              await recordActivationEvent({
+                clerkOrgId,
+                entityId: test.controlId,
+                entityType: "assessment",
+                metadata: {
+                  controlId: test.controlId,
+                  nextStatus: errorResult.status,
+                  previousStatus: currentStatus?.status ?? null,
+                  source: "automated_evidence",
+                },
+                name: "AssessmentChanged",
+              });
+            }
           }
         }
       }
