@@ -124,7 +124,6 @@ export async function uploadEvidenceAction(
     description: description || null,
     expiresAt: expiresAt || null,
     fileType: file.type || "application/octet-stream",
-    source: "manual",
   }).catch((error: unknown) =>
     deleteBlobUrlsAfterFailedSave([blob.url], error),
   );
