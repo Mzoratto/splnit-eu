@@ -18,6 +18,7 @@ import { getOrganisationByClerkOrgId } from "@/lib/db/queries/organisations";
 import { getWorkspaceProgress } from "@/lib/db/queries/workspaces";
 import { pohodaWorkspace } from "@/lib/workspaces/pohoda";
 import { heliosWorkspace } from "@/lib/workspaces/helios";
+import { moneyS3Workspace } from "@/lib/workspaces/money-s3";
 
 type ControlsCopy = ReturnType<typeof getMessagesForLocale>["controlsPage"];
 type OrgControl = Awaited<ReturnType<typeof listOrgControlsForIndex>>[number];
@@ -115,13 +116,13 @@ async function loadControlsIndexData() {
     Boolean(process.env.CLERK_SECRET_KEY);
 
   if (!clerkConfigured || !hasDatabaseUrl()) {
-    return { controls: buildDemoControls(), mode: "demo" as DataMode, organisationLocale: null, pohodaRecommended: false, pohodaCompletionPct: null, heliosRecommended: false, heliosCompletionPct: null };
+    return { controls: buildDemoControls(), mode: "demo" as DataMode, organisationLocale: null, pohodaRecommended: false, pohodaCompletionPct: null, heliosRecommended: false, heliosCompletionPct: null, moneyS3Recommended: false, moneyS3CompletionPct: null };
   }
 
   const session = await auth();
 
   if (!session.orgId) {
-    return { controls: buildDemoControls(), mode: "demo" as DataMode, organisationLocale: null, pohodaRecommended: false, pohodaCompletionPct: null, heliosRecommended: false, heliosCompletionPct: null };
+    return { controls: buildDemoControls(), mode: "demo" as DataMode, organisationLocale: null, pohodaRecommended: false, pohodaCompletionPct: null, heliosRecommended: false, heliosCompletionPct: null, moneyS3Recommended: false, moneyS3CompletionPct: null };
   }
 
   try {
@@ -133,6 +134,7 @@ async function loadControlsIndexData() {
 
     const pohodaRecommended = workspaceRecommendations.some((r) => r.platformKey === "pohoda");
     const heliosRecommended = workspaceRecommendations.some((r) => r.platformKey === "helios");
+    const moneyS3Recommended = workspaceRecommendations.some((r) => r.platformKey === "money_s3");
 
     let pohodaCompletionPct: number | null = null;
     if (pohodaRecommended) {
@@ -158,6 +160,18 @@ async function loadControlsIndexData() {
       }
     }
 
+    let moneyS3CompletionPct: number | null = null;
+    if (moneyS3Recommended) {
+      try {
+        const progress = await getWorkspaceProgress(session.orgId, moneyS3Workspace);
+        if (progress.completedControls > 0) {
+          moneyS3CompletionPct = progress.overallCompletionPct;
+        }
+      } catch {
+        // workspace progress unavailable — show card without percentage
+      }
+    }
+
     return {
       controls,
       mode: "live" as const,
@@ -166,9 +180,11 @@ async function loadControlsIndexData() {
       pohodaCompletionPct,
       heliosRecommended,
       heliosCompletionPct,
+      moneyS3Recommended,
+      moneyS3CompletionPct,
     };
   } catch {
-    return { controls: buildDemoControls(), mode: "demo" as DataMode, organisationLocale: null, pohodaRecommended: false, pohodaCompletionPct: null, heliosRecommended: false, heliosCompletionPct: null };
+    return { controls: buildDemoControls(), mode: "demo" as DataMode, organisationLocale: null, pohodaRecommended: false, pohodaCompletionPct: null, heliosRecommended: false, heliosCompletionPct: null, moneyS3Recommended: false, moneyS3CompletionPct: null };
   }
 }
 
@@ -328,7 +344,7 @@ export default async function ControlsPage({
 }) {
   const requestLocale = normalizeLocale(await getLocale()) ?? "cs-CZ";
   const resolvedSearchParams = searchParams ? await searchParams : {};
-  const { controls, mode, organisationLocale, pohodaRecommended, pohodaCompletionPct, heliosRecommended, heliosCompletionPct } = await loadControlsIndexData();
+  const { controls, mode, organisationLocale, pohodaRecommended, pohodaCompletionPct, heliosRecommended, heliosCompletionPct, moneyS3Recommended, moneyS3CompletionPct } = await loadControlsIndexData();
   const locale = normalizeLocale(organisationLocale) ?? requestLocale;
   const messages = getMessagesForLocale(locale);
   const copy = messages.controlsPage;
@@ -404,6 +420,28 @@ export default async function ControlsPage({
             {heliosCompletionPct !== null ? (
               <p className="mt-1.5 text-xs font-medium text-primary">
                 {Math.round(heliosCompletionPct * 100)}% dokončeno
+              </p>
+            ) : null}
+          </div>
+          <ArrowRight className="mt-0.5 h-4 w-4 shrink-0 text-primary" aria-hidden="true" />
+        </Link>
+      ) : null}
+
+      {viewMode === "focus" && moneyS3Recommended ? (
+        <Link
+          href={getLocalizedAppHref("/workspaces/money-s3", requestLocale)}
+          className="flex items-start gap-4 rounded-lg border border-primary/24 bg-primary/4 p-4 transition-colors hover:bg-primary/8"
+        >
+          <BookCheck className="mt-0.5 h-5 w-5 shrink-0 text-primary" aria-hidden="true" />
+          <div className="flex-1">
+            <p className="text-sm font-medium">Money S3 / S4 (Seyfor) — compliance workspace</p>
+            <p className="mt-0.5 text-xs text-foreground/60">
+              Projděte kontrolní vrstvy pro Money S3: infrastruktura, přístupy, zálohy a API.
+              Dokládejte důkazy a sledujte postup shody.
+            </p>
+            {moneyS3CompletionPct !== null ? (
+              <p className="mt-1.5 text-xs font-medium text-primary">
+                {Math.round(moneyS3CompletionPct * 100)}% dokončeno
               </p>
             ) : null}
           </div>

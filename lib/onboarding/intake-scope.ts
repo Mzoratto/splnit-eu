@@ -290,6 +290,14 @@ function deriveWorkspaceRecommendations(answers: IntakeAnswers): WorkspaceRecomm
     });
   }
 
+  if (answers.accountingPlatform === "money_s3") {
+    recommendations.push({
+      platformKey: "money_s3",
+      label: "Money S3 / S4 (Seyfor)",
+      reason: "Používáte Money S3 / S4 — doporučujeme projít sadou NIS2/ZoKB kontrol specifických pro Money S3 (zálohy databáze, přístupy, SQL Server konfigurace, API connectivity).",
+    });
+  }
+
   if (answers.accountingPlatform === "helios") {
     recommendations.push({
       platformKey: "helios",
