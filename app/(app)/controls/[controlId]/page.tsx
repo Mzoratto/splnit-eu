@@ -5,6 +5,7 @@ import {
   updateControlStatusAction,
   uploadEvidenceAction,
 } from "@/app/(app)/controls/[controlId]/actions";
+import { ActivationStatus, deriveActivationStatusState } from "@/components/activation/activation-status";
 import { RecommendedActionCard } from "@/components/policy-evidence/recommended-action-card";
 import { getMessagesForLocale } from "@/i18n/messages";
 import type { Locale } from "@/i18n/routing";
@@ -346,9 +347,15 @@ export default async function ControlDetailPage({
                         {formatDate(item.collectedAt, locale, copy.noDate)}
                       </p>
                     </div>
-                    <span className="rounded-md bg-surface-muted px-2 py-1 text-xs text-foreground/64">
-                      {item.collectionStatus}
-                    </span>
+                    <ActivationStatus
+                      className="md:max-w-64"
+                      confidence={item.confidence}
+                      state={deriveActivationStatusState({
+                        assessmentResult: item.assessmentResult,
+                        blockedReason: item.blockedReason,
+                        collectionStatus: item.collectionStatus,
+                      })}
+                    />
                   </div>
                   {item.blobUrl ? (
                     <a

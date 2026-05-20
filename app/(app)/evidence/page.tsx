@@ -2,8 +2,8 @@ import Link from "next/link";
 import { auth } from "@clerk/nextjs/server";
 import { getLocale } from "next-intl/server";
 import { ArrowRight, Download, FileText, Filter } from "lucide-react";
+import { ActivationStatus, deriveActivationStatusState } from "@/components/activation/activation-status";
 import { PageHeader } from "@/components/app/page-header";
-import { StatusPill, type StatusPillTone } from "@/components/app/status-pill";
 import { getMessagesForLocale } from "@/i18n/messages";
 import { normalizeLocale, type Locale } from "@/i18n/routing";
 import { getControlDisplayTitle } from "@/lib/controls/localization";
@@ -46,34 +46,6 @@ function getDaysUntil(value: Date | string | null) {
   target.setHours(0, 0, 0, 0);
 
   return Math.ceil((target.getTime() - today.getTime()) / 86_400_000);
-}
-
-function statusTone(status: string | null | undefined): StatusPillTone {
-  if (status === "pass") {
-    return "pass";
-  }
-
-  if (status === "fail") {
-    return "fail";
-  }
-
-  if (status === "manual_review" || status === "warning") {
-    return "warn";
-  }
-
-  return "neutral";
-}
-
-function statusLabel(status: string | null | undefined) {
-  const labels: Record<string, string> = {
-    fail: "FAIL",
-    manual_review: "WARN",
-    pass: "PASS",
-    unknown: "PENDING",
-    warning: "WARN",
-  };
-
-  return labels[status ?? "unknown"] ?? "PENDING";
 }
 
 function getControlTitle(item: EvidenceRow, locale: Locale) {
@@ -268,9 +240,15 @@ export default async function EvidencePage({
                       <h3 className="font-mono text-sm font-medium">
                         {item.description ?? controlTitle}
                       </h3>
-                      <StatusPill tone={statusTone(item.status)}>
-                        {statusLabel(item.status)}
-                      </StatusPill>
+                      <ActivationStatus
+                        confidence={item.confidence}
+                        showDetails={false}
+                        state={deriveActivationStatusState({
+                          assessmentResult: item.assessmentResult,
+                          blockedReason: item.blockedReason,
+                          collectionStatus: item.collectionStatus,
+                        })}
+                      />
                       {item.collectionStatus === "pending" || item.assessmentResult === "manual_review" ? (
                         <span className="rounded-sm border border-amber-200 bg-amber-50 px-2 py-1 text-xs font-medium text-amber-900">
                           {copy.records.aiDraftHumanReview}
@@ -293,9 +271,14 @@ export default async function EvidencePage({
                     </div>
                   </div>
                   <div className="flex flex-col gap-3 lg:items-end">
-                    <span className="rounded-md bg-surface-muted px-2 py-1 text-xs text-foreground/64">
-                      {item.collectionStatus} · {item.confidence}
-                    </span>
+                    <ActivationStatus
+                      confidence={item.confidence}
+                      state={deriveActivationStatusState({
+                        assessmentResult: item.assessmentResult,
+                        blockedReason: item.blockedReason,
+                        collectionStatus: item.collectionStatus,
+                      })}
+                    />
                     {item.blobUrl ? (
                       <Link
                         href={`/api/evidence/${item.evidenceId}/download`}
