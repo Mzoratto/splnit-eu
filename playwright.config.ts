@@ -18,10 +18,11 @@ export default defineConfig({
     trace: "retain-on-failure",
   },
   webServer: {
-    command: `NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY= CLERK_SECRET_KEY= npm run dev -- -p ${port}`,
+    command: `NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY= CLERK_SECRET_KEY=*** run dev -- -p ${port}`,
     env: {
       NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY: "",
       CLERK_SECRET_KEY: "",
+      NEXT_PUBLIC_ENABLE_TEST_ROUTES: "true",
     },
     reuseExistingServer: !process.env.CI,
     timeout: 120_000,

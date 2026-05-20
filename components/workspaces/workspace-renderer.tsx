@@ -96,15 +96,35 @@ function AttestationForm({ control, layerId, platformId }: AttestationFormProps)
     setError(null);
 
     try {
-      await submitWorkspaceAttestationAction({
-        answers: {
-          answer,
-          notes: notes.trim() || null,
-        },
-        controlKey: control.controlKey,
-        layerId,
-        platformId,
-      });
+      // When NEXT_PUBLIC_ENABLE_TEST_ROUTES is set (e.g. in Playwright E2E), use
+      // the plain fetch test route so tests can mock it via page.route() without
+      // needing to intercept Next.js RSC server action flight data.
+      if (process.env.NEXT_PUBLIC_ENABLE_TEST_ROUTES === "true") {
+        const res = await fetch("/api/test/workspace-attestation", {
+          method: "POST",
+          headers: { "content-type": "application/json" },
+          body: JSON.stringify({
+            answers: { answer, notes: notes.trim() || null },
+            controlKey: control.controlKey,
+            layerId,
+            platformId,
+          }),
+        });
+        if (!res.ok) {
+          const data = await res.json().catch(() => ({}));
+          throw new Error((data as { error?: string }).error ?? "Submission failed.");
+        }
+      } else {
+        await submitWorkspaceAttestationAction({
+          answers: {
+            answer,
+            notes: notes.trim() || null,
+          },
+          controlKey: control.controlKey,
+          layerId,
+          platformId,
+        });
+      }
       setSubmitted(true);
     } catch (err) {
       setError(err instanceof Error ? err.message : "Submission failed.");
