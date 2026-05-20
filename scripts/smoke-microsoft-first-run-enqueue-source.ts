@@ -3,32 +3,33 @@ import { readFileSync } from "node:fs";
 
 const callbackSource = readFileSync("app/api/integrations/microsoft/callback/route.ts", "utf8");
 const evidenceSource = readFileSync("lib/integrations/evidence.ts", "utf8");
+const firstRunEnqueueSource = readFileSync("lib/integrations/first-run-enqueue.ts", "utf8");
 const locksSource = readFileSync("lib/integrations/locks.ts", "utf8");
 const runnerSource = readFileSync("lib/integrations/runner.ts", "utf8");
 
 assert.match(
   callbackSource,
-  /enqueueMicrosoftFirstRun/,
+  /enqueueIntegrationFirstRun/,
   "Microsoft callback should explicitly enqueue the first integration run after OAuth succeeds.",
 );
 assert.match(
-  callbackSource,
+  firstRunEnqueueSource,
   /acquireIntegrationFirstRunEnqueueLock/,
   "Microsoft first-run enqueue must acquire a per-org/provider lock before sending Inngest work.",
 );
 assert.match(
-  callbackSource,
-  /id:\s*`integration-first-run:\$\{input\.clerkOrgId\}:\$\{provider\}:\$\{input\.integrationId\}`/,
+  firstRunEnqueueSource,
+  /id:\s*`integration-first-run:\$\{input\.clerkOrgId\}:\$\{input\.provider\}:\$\{input\.integrationId\}`/,
   "Microsoft first-run Inngest event should use a deterministic id for event-level deduplication.",
 );
 assert.match(
-  callbackSource,
+  firstRunEnqueueSource,
   /name:\s*["']integrations\/tests\.run["']/,
   "Microsoft callback should enqueue the integration test runner event.",
 );
 assert.match(
-  callbackSource,
-  /provider,\s*\n\s*trigger:\s*["']oauth_callback_first_run["']/,
+  firstRunEnqueueSource,
+  /provider:\s*input\.provider,\s*\n\s*trigger:\s*["']oauth_callback_first_run["']/,
   "Microsoft first-run event data should scope the run to Microsoft 365 and mark the OAuth first-run trigger.",
 );
 assert.match(
