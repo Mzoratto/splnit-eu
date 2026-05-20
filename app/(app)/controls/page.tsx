@@ -2,6 +2,7 @@ import Link from "next/link";
 import { auth } from "@clerk/nextjs/server";
 import { getLocale } from "next-intl/server";
 import { ArrowRight, CircleHelp } from "lucide-react";
+import { ActivationStatus, deriveActivationStatusState } from "@/components/activation/activation-status";
 import { PageHeader } from "@/components/app/page-header";
 import { StatusPill, type StatusPillTone } from "@/components/app/status-pill";
 import { getMessagesForLocale } from "@/i18n/messages";
@@ -24,6 +25,42 @@ type ViewMode = "focus" | "all";
 
 function buildDemoControls(): OrgControl[] {
   const statusCycle: Array<OrgControl["status"]> = ["fail", "manual_review", "warning", "unknown", null];
+  const evidenceCycle: Array<{
+    assessmentResult: OrgControl["latestEvidenceAssessmentResult"];
+    blockedReason: OrgControl["latestEvidenceBlockedReason"];
+    collectionStatus: OrgControl["latestEvidenceCollectionStatus"];
+    confidence: OrgControl["latestEvidenceConfidence"];
+    lastKnownAssessmentResult: OrgControl["lastKnownAssessmentResult"];
+  }> = [
+    {
+      assessmentResult: "gap",
+      blockedReason: null,
+      collectionStatus: "collected",
+      confidence: "high",
+      lastKnownAssessmentResult: null,
+    },
+    {
+      assessmentResult: "unknown",
+      blockedReason: "missing_permission",
+      collectionStatus: "blocked",
+      confidence: "low",
+      lastKnownAssessmentResult: "pass",
+    },
+    {
+      assessmentResult: "unknown",
+      blockedReason: null,
+      collectionStatus: "pending",
+      confidence: "medium",
+      lastKnownAssessmentResult: null,
+    },
+    {
+      assessmentResult: "pass",
+      blockedReason: null,
+      collectionStatus: "collected",
+      confidence: "high",
+      lastKnownAssessmentResult: null,
+    },
+  ];
   const frameworkNameBySlug = new Map([
     ["nis2", { nameCs: "NIS2", nameEn: "NIS2" }],
     ["gdpr", { nameCs: "GDPR", nameEn: "GDPR" }],
@@ -38,6 +75,7 @@ function buildDemoControls(): OrgControl[] {
       nameEn: frameworkNameBySlug.get(mapping.frameworkSlug)?.nameEn ?? mapping.frameworkSlug,
       slug: mapping.frameworkSlug,
     }));
+    const latestEvidence = evidenceCycle[index % evidenceCycle.length];
 
     return {
       category: control.category,
@@ -47,6 +85,12 @@ function buildDemoControls(): OrgControl[] {
       isAutomated: control.isAutomated,
       isIntakePriority: index < 5,
       key: control.key,
+      latestEvidenceAssessmentResult: latestEvidence.assessmentResult,
+      latestEvidenceBlockedReason: latestEvidence.blockedReason,
+      latestEvidenceCollectionStatus: latestEvidence.collectionStatus,
+      latestEvidenceConfidence: latestEvidence.confidence,
+      latestEvidenceCollectedAt: new Date(),
+      lastKnownAssessmentResult: latestEvidence.lastKnownAssessmentResult,
       scopeStatus: index > 23 ? "out_of_scope" : "applicable",
       status: statusCycle[index % statusCycle.length],
       titleCs: control.titleCs,
@@ -378,6 +422,19 @@ export default async function ControlsPage({
                       <div className="rounded-md bg-surface-muted p-3 text-sm">
                         <p className="text-xs text-foreground/52">{copy.index.frameworksLabel}</p>
                         <p className="mt-1 text-sm font-medium">{getFrameworkNames(control, locale)}</p>
+                      </div>
+                      <div className="rounded-md bg-surface-muted p-3 text-sm">
+                        <p className="mb-2 text-xs text-foreground/52">{copy.index.statusLabel}</p>
+                        <ActivationStatus
+                          confidence={control.latestEvidenceConfidence}
+                          showDetails={viewMode === "focus"}
+                          state={deriveActivationStatusState({
+                            assessmentResult: control.latestEvidenceAssessmentResult,
+                            blockedReason: control.latestEvidenceBlockedReason ?? undefined,
+                            collectionStatus: control.latestEvidenceCollectionStatus,
+                            lastKnownAssessmentResult: control.lastKnownAssessmentResult,
+                          })}
+                        />
                       </div>
                       <Link href={getLocalizedAppHref(`/controls/${control.key}`, requestLocale)} className="btn btn-secondary justify-center">
                         {copy.index.openControl}

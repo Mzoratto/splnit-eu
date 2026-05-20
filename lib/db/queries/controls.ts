@@ -1,4 +1,10 @@
-import { and, eq, inArray, sql } from "drizzle-orm";
+import { and, desc, eq, inArray, sql } from "drizzle-orm";
+import type {
+  EvidenceAssessmentResult,
+  EvidenceBlockedReason,
+  EvidenceCollectionStatus,
+  EvidenceConfidence,
+} from "@/lib/activation/evidence-state";
 import { recalculateFrameworkScore } from "@/lib/controls/scorer";
 import { getDb } from "@/lib/db";
 import {
@@ -104,6 +110,12 @@ export async function listOrgControlsForIndex(clerkOrgId: string) {
       isIntakePriority: boolean;
       isAutomated: boolean;
       key: string;
+      latestEvidenceAssessmentResult: EvidenceAssessmentResult | null;
+      latestEvidenceBlockedReason: EvidenceBlockedReason | null;
+      latestEvidenceCollectionStatus: EvidenceCollectionStatus | null;
+      latestEvidenceConfidence: EvidenceConfidence | null;
+      latestEvidenceCollectedAt: Date | null;
+      lastKnownAssessmentResult: EvidenceAssessmentResult | null;
       scopeStatus: "applicable" | "not_applicable" | "out_of_scope" | null;
       status: string | null;
       titleCs: string;
@@ -141,6 +153,12 @@ export async function listOrgControlsForIndex(clerkOrgId: string) {
       isIntakePriority: intakeScope.priorityControlKeys.includes(row.key),
       isAutomated: row.isAutomated,
       key: row.key,
+      latestEvidenceAssessmentResult: null,
+      latestEvidenceBlockedReason: null,
+      latestEvidenceCollectionStatus: null,
+      latestEvidenceConfidence: null,
+      latestEvidenceCollectedAt: null,
+      lastKnownAssessmentResult: null,
       scopeStatus: intakeScope.applicableControlKeys.includes(row.key)
         ? "applicable"
         : intakeScope.notApplicableControlKeys.includes(row.key)
@@ -155,7 +173,63 @@ export async function listOrgControlsForIndex(clerkOrgId: string) {
     });
   }
 
+  const controlIds = [...controlMap.keys()];
+
+  if (controlIds.length > 0) {
+    const evidenceRows = await db
+      .select({
+        assessmentResult: evidence.assessmentResult,
+        blockedReason: evidence.blockedReason,
+        collectedAt: evidence.collectedAt,
+        collectionStatus: evidence.collectionStatus,
+        confidence: evidence.confidence,
+        controlId: evidence.controlId,
+      })
+      .from(evidence)
+      .where(
+        and(
+          eq(evidence.clerkOrgId, clerkOrgId),
+          inArray(evidence.controlId, controlIds),
+        ),
+      )
+      .orderBy(desc(evidence.collectedAt));
+
+    const controlIdsWithLatestEvidence = new Set<string>();
+
+    for (const row of evidenceRows) {
+      const existing = controlMap.get(row.controlId);
+
+      if (!existing) {
+        continue;
+      }
+
+      if (!controlIdsWithLatestEvidence.has(row.controlId)) {
+        existing.latestEvidenceAssessmentResult = row.assessmentResult;
+        existing.latestEvidenceBlockedReason = row.blockedReason ?? null;
+        existing.latestEvidenceCollectionStatus = row.collectionStatus;
+        existing.latestEvidenceConfidence = row.confidence;
+        existing.latestEvidenceCollectedAt = row.collectedAt ?? null;
+        controlIdsWithLatestEvidence.add(row.controlId);
+        continue;
+      }
+
+      if (
+        existing.latestEvidenceCollectionStatus === "blocked" &&
+        !existing.lastKnownAssessmentResult &&
+        isConfirmedEvidenceAssessment(row.assessmentResult)
+      ) {
+        existing.lastKnownAssessmentResult = row.assessmentResult;
+      }
+    }
+  }
+
   return [...controlMap.values()];
+}
+
+function isConfirmedEvidenceAssessment(
+  value: EvidenceAssessmentResult | null,
+): value is "pass" | "gap" {
+  return value === "pass" || value === "gap";
 }
 
 function buildIntakeScopeSummary(derivedScope: unknown): IntakeScopeSummary {

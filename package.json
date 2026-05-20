@@ -26,6 +26,7 @@
     "smoke:microsoft-callback-dimensional-evidence-source": "tsx scripts/smoke-microsoft-callback-dimensional-evidence-source.ts",
     "smoke:integration-first-run-enqueue": "tsx scripts/smoke-integration-first-run-enqueue.ts",
     "smoke:activation-status": "tsx scripts/smoke-activation-status.tsx",
+    "smoke:controls-focus-activation-status-source": "tsx scripts/smoke-controls-focus-activation-status-source.ts",
     "smoke:microsoft-first-run-enqueue-source": "tsx scripts/smoke-microsoft-first-run-enqueue-source.ts",
     "smoke:microsoft365-permission-failures": "tsx scripts/smoke-microsoft365-permission-failures.ts",
     "smoke:policy-drafts": "tsx scripts/smoke-policy-drafts.ts",
