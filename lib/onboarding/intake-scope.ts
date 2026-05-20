@@ -290,6 +290,14 @@ function deriveWorkspaceRecommendations(answers: IntakeAnswers): WorkspaceRecomm
     });
   }
 
+  if (answers.accountingPlatform === "helios") {
+    recommendations.push({
+      platformKey: "helios",
+      label: "Helios (Asseco)",
+      reason: "Používáte Helios — doporučujeme projít sadou NIS2/ZoKB kontrol specifických pro Helios (SQL Server zálohy, přístupy, MES/SCADA integrace, EDI zabezpečení).",
+    });
+  }
+
   return recommendations;
 }
 
