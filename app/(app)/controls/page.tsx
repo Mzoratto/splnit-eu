@@ -13,8 +13,10 @@ import {
 } from "@/lib/controls/localization";
 import { CONTROL_LIBRARY } from "@/lib/controls/library";
 import { hasDatabaseUrl } from "@/lib/db";
-import { listOrgControlsForIndex } from "@/lib/db/queries/controls";
+import { listOrgControlsForIndex, getOrgWorkspaceRecommendations } from "@/lib/db/queries/controls";
 import { getOrganisationByClerkOrgId } from "@/lib/db/queries/organisations";
+import { getWorkspaceProgress } from "@/lib/db/queries/workspaces";
+import { pohodaWorkspace } from "@/lib/workspaces/pohoda";
 
 type ControlsCopy = ReturnType<typeof getMessagesForLocale>["controlsPage"];
 type OrgControl = Awaited<ReturnType<typeof listOrgControlsForIndex>>[number];
@@ -112,28 +114,45 @@ async function loadControlsIndexData() {
     Boolean(process.env.CLERK_SECRET_KEY);
 
   if (!clerkConfigured || !hasDatabaseUrl()) {
-    return { controls: buildDemoControls(), mode: "demo" as DataMode, organisationLocale: null };
+    return { controls: buildDemoControls(), mode: "demo" as DataMode, organisationLocale: null, pohodaRecommended: false, pohodaCompletionPct: null };
   }
 
   const session = await auth();
 
   if (!session.orgId) {
-    return { controls: buildDemoControls(), mode: "demo" as DataMode, organisationLocale: null };
+    return { controls: buildDemoControls(), mode: "demo" as DataMode, organisationLocale: null, pohodaRecommended: false, pohodaCompletionPct: null };
   }
 
   try {
-    const [controls, organisation] = await Promise.all([
+    const [controls, organisation, workspaceRecommendations] = await Promise.all([
       listOrgControlsForIndex(session.orgId),
       getOrganisationByClerkOrgId(session.orgId),
+      getOrgWorkspaceRecommendations(session.orgId),
     ]);
+
+    const pohodaRecommended = workspaceRecommendations.some((r) => r.platformKey === "pohoda");
+
+    let pohodaCompletionPct: number | null = null;
+    if (pohodaRecommended) {
+      try {
+        const progress = await getWorkspaceProgress(session.orgId, pohodaWorkspace);
+        if (progress.completedControls > 0) {
+          pohodaCompletionPct = progress.overallCompletionPct;
+        }
+      } catch {
+        // workspace progress unavailable — show card without percentage
+      }
+    }
 
     return {
       controls,
       mode: "live" as const,
       organisationLocale: organisation?.locale ?? null,
+      pohodaRecommended,
+      pohodaCompletionPct,
     };
   } catch {
-    return { controls: buildDemoControls(), mode: "demo" as DataMode, organisationLocale: null };
+    return { controls: buildDemoControls(), mode: "demo" as DataMode, organisationLocale: null, pohodaRecommended: false, pohodaCompletionPct: null };
   }
 }
 
@@ -293,7 +312,7 @@ export default async function ControlsPage({
 }) {
   const requestLocale = normalizeLocale(await getLocale()) ?? "cs-CZ";
   const resolvedSearchParams = searchParams ? await searchParams : {};
-  const { controls, mode, organisationLocale } = await loadControlsIndexData();
+  const { controls, mode, organisationLocale, pohodaRecommended, pohodaCompletionPct } = await loadControlsIndexData();
   const locale = normalizeLocale(organisationLocale) ?? requestLocale;
   const messages = getMessagesForLocale(locale);
   const copy = messages.controlsPage;
@@ -332,7 +351,7 @@ export default async function ControlsPage({
         </div>
       ) : null}
 
-      {viewMode === "focus" ? (
+      {viewMode === "focus" && pohodaRecommended ? (
         <Link
           href={getLocalizedAppHref("/workspaces/pohoda", requestLocale)}
           className="flex items-start gap-4 rounded-lg border border-primary/24 bg-primary/4 p-4 transition-colors hover:bg-primary/8"
@@ -344,6 +363,11 @@ export default async function ControlsPage({
               Projděte kontrolní vrstvy pro Pohodu: infrastruktura, přístupy, zálohy a API.
               Dokládejte důkazy a sledujte postup shody.
             </p>
+            {pohodaCompletionPct !== null ? (
+              <p className="mt-1.5 text-xs font-medium text-primary">
+                {Math.round(pohodaCompletionPct * 100)}% dokončeno
+              </p>
+            ) : null}
           </div>
           <ArrowRight className="mt-0.5 h-4 w-4 shrink-0 text-primary" aria-hidden="true" />
         </Link>
