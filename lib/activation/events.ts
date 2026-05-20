@@ -1,5 +1,6 @@
 import { createAuditLog } from "@/lib/db/queries/audit-logs";
 import type { EvidenceAssessmentResult, EvidenceBlockedReason, EvidenceCollectionStatus } from "./evidence-state";
+import { sanitizeActivationEvent } from "./sanitizer";
 
 export const ACTIVATION_EVENT_NAMES = [
   "IntakeCompleted",
@@ -106,6 +107,7 @@ export type ActivationEvent =
     >;
 
 export async function recordActivationEvent(event: ActivationEvent) {
+  sanitizeActivationEvent(event);
   await createAuditLog({
     action: `activation.${event.name}`,
     clerkOrgId: event.clerkOrgId,
