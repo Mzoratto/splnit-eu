@@ -39,3 +39,15 @@ match(
   /existing\.lastKnownAssessmentResult = row\.assessmentResult;/,
   "Controls index query should preserve the previous confirmed result when the latest evidence is blocked.",
 );
+
+match(
+  controlsQuerySource,
+  /latestEvidenceSource: EvidenceSource \| null;/,
+  "Controls index query type should expose latest evidence source so manual evidence can be distinguished.",
+);
+
+match(
+  controlsPageSource,
+  /reviewStatus: control\.status,[\s\S]*source: control\.latestEvidenceSource,/,
+  "Controls focus cards should pass manual review status and evidence source into the shared activation state.",
+);

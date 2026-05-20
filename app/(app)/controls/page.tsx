@@ -24,13 +24,14 @@ type ViewMode = "focus" | "all";
 
 
 function buildDemoControls(): OrgControl[] {
-  const statusCycle: Array<OrgControl["status"]> = ["fail", "manual_review", "warning", "unknown", null];
+  const statusCycle: Array<OrgControl["status"]> = ["fail", "manual_review", "warning", "pass", null];
   const evidenceCycle: Array<{
     assessmentResult: OrgControl["latestEvidenceAssessmentResult"];
     blockedReason: OrgControl["latestEvidenceBlockedReason"];
     collectionStatus: OrgControl["latestEvidenceCollectionStatus"];
     confidence: OrgControl["latestEvidenceConfidence"];
     lastKnownAssessmentResult: OrgControl["lastKnownAssessmentResult"];
+    source: OrgControl["latestEvidenceSource"];
   }> = [
     {
       assessmentResult: "gap",
@@ -38,6 +39,7 @@ function buildDemoControls(): OrgControl[] {
       collectionStatus: "collected",
       confidence: "high",
       lastKnownAssessmentResult: null,
+      source: "connector",
     },
     {
       assessmentResult: "unknown",
@@ -45,6 +47,7 @@ function buildDemoControls(): OrgControl[] {
       collectionStatus: "blocked",
       confidence: "low",
       lastKnownAssessmentResult: "pass",
+      source: "connector",
     },
     {
       assessmentResult: "unknown",
@@ -52,13 +55,15 @@ function buildDemoControls(): OrgControl[] {
       collectionStatus: "pending",
       confidence: "medium",
       lastKnownAssessmentResult: null,
+      source: "connector",
     },
     {
-      assessmentResult: "pass",
+      assessmentResult: "manual_review",
       blockedReason: null,
       collectionStatus: "collected",
-      confidence: "high",
+      confidence: "medium",
       lastKnownAssessmentResult: null,
+      source: "manual",
     },
   ];
   const frameworkNameBySlug = new Map([
@@ -90,6 +95,7 @@ function buildDemoControls(): OrgControl[] {
       latestEvidenceCollectionStatus: latestEvidence.collectionStatus,
       latestEvidenceConfidence: latestEvidence.confidence,
       latestEvidenceCollectedAt: new Date(),
+      latestEvidenceSource: latestEvidence.source,
       lastKnownAssessmentResult: latestEvidence.lastKnownAssessmentResult,
       scopeStatus: index > 23 ? "out_of_scope" : "applicable",
       status: statusCycle[index % statusCycle.length],
@@ -433,6 +439,8 @@ export default async function ControlsPage({
                             blockedReason: control.latestEvidenceBlockedReason ?? undefined,
                             collectionStatus: control.latestEvidenceCollectionStatus,
                             lastKnownAssessmentResult: control.lastKnownAssessmentResult,
+                            reviewStatus: control.status,
+                            source: control.latestEvidenceSource,
                           })}
                         />
                       </div>

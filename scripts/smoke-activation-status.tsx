@@ -51,6 +51,34 @@ const confirmedGap = render(
 );
 assertContains(confirmedGap, "Confirmed gap", "gap result should render as confirmed gap");
 
+const manualConfirmedPass = render(
+  deriveActivationStatusState({
+    assessmentResult: "manual_review",
+    collectionStatus: "collected",
+    reviewStatus: "pass",
+    source: "manual",
+  }),
+);
+assertContains(
+  manualConfirmedPass,
+  "Confirmed pass",
+  "reviewed manual evidence with pass status should render as confirmed pass",
+);
+
+const manualConfirmedGap = render(
+  deriveActivationStatusState({
+    assessmentResult: "manual_review",
+    collectionStatus: "collected",
+    reviewStatus: "fail",
+    source: "manual",
+  }),
+);
+assertContains(
+  manualConfirmedGap,
+  "Confirmed gap",
+  "reviewed manual evidence with fail status should render as confirmed gap",
+);
+
 const blockedWithPreservedPass = render(
   deriveActivationStatusState({
     blockedReason: "missing_permission",

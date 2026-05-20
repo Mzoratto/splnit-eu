@@ -354,6 +354,8 @@ export default async function ControlDetailPage({
                         assessmentResult: item.assessmentResult,
                         blockedReason: item.blockedReason,
                         collectionStatus: item.collectionStatus,
+                        reviewStatus: currentStatus,
+                        source: item.source,
                       })}
                     />
                   </div>

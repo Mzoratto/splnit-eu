@@ -4,6 +4,7 @@ import type {
   EvidenceBlockedReason,
   EvidenceCollectionStatus,
   EvidenceConfidence,
+  EvidenceSource,
 } from "@/lib/activation/evidence-state";
 import { recalculateFrameworkScore } from "@/lib/controls/scorer";
 import { getDb } from "@/lib/db";
@@ -115,6 +116,7 @@ export async function listOrgControlsForIndex(clerkOrgId: string) {
       latestEvidenceCollectionStatus: EvidenceCollectionStatus | null;
       latestEvidenceConfidence: EvidenceConfidence | null;
       latestEvidenceCollectedAt: Date | null;
+      latestEvidenceSource: EvidenceSource | null;
       lastKnownAssessmentResult: EvidenceAssessmentResult | null;
       scopeStatus: "applicable" | "not_applicable" | "out_of_scope" | null;
       status: string | null;
@@ -158,6 +160,7 @@ export async function listOrgControlsForIndex(clerkOrgId: string) {
       latestEvidenceCollectionStatus: null,
       latestEvidenceConfidence: null,
       latestEvidenceCollectedAt: null,
+      latestEvidenceSource: null,
       lastKnownAssessmentResult: null,
       scopeStatus: intakeScope.applicableControlKeys.includes(row.key)
         ? "applicable"
@@ -184,6 +187,7 @@ export async function listOrgControlsForIndex(clerkOrgId: string) {
         collectionStatus: evidence.collectionStatus,
         confidence: evidence.confidence,
         controlId: evidence.controlId,
+        source: evidence.source,
       })
       .from(evidence)
       .where(
@@ -209,6 +213,7 @@ export async function listOrgControlsForIndex(clerkOrgId: string) {
         existing.latestEvidenceCollectionStatus = row.collectionStatus;
         existing.latestEvidenceConfidence = row.confidence;
         existing.latestEvidenceCollectedAt = row.collectedAt ?? null;
+        existing.latestEvidenceSource = row.source;
         controlIdsWithLatestEvidence.add(row.controlId);
         continue;
       }

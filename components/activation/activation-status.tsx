@@ -6,6 +6,7 @@ import type {
   EvidenceBlockedReason,
   EvidenceCollectionStatus,
   EvidenceConfidence,
+  EvidenceSource,
 } from "@/lib/activation/evidence-state";
 
 export type ActivationConfirmedResult = "pass" | "gap";
@@ -33,6 +34,8 @@ export type ActivationStatusInput = {
   blockedReason?: EvidenceBlockedReason | string;
   collectionStatus?: EvidenceCollectionStatus | ActivationQueueStatus | null;
   lastKnownAssessmentResult?: EvidenceAssessmentResult | null;
+  reviewStatus?: string | null;
+  source?: EvidenceSource | string | null;
 };
 
 type ActivationStatusProps = {
@@ -98,6 +101,26 @@ function isConfirmedResult(value: EvidenceAssessmentResult | null | undefined): 
   return value === "pass" || value === "gap";
 }
 
+function deriveManualReviewResult(input: ActivationStatusInput): ActivationConfirmedResult | null {
+  if (
+    input.source !== "manual" ||
+    input.collectionStatus !== "collected" ||
+    input.assessmentResult !== "manual_review"
+  ) {
+    return null;
+  }
+
+  if (input.reviewStatus === "pass") {
+    return "pass";
+  }
+
+  if (input.reviewStatus === "fail") {
+    return "gap";
+  }
+
+  return null;
+}
+
 function formatBlockedReason(reason: string) {
   return BLOCKED_REASON_LABELS[reason] ?? reason.replaceAll("_", " ");
 }
@@ -120,6 +143,15 @@ export function deriveActivationStatusState(input: ActivationStatusInput): Activ
   if (isConfirmedResult(input.assessmentResult)) {
     return {
       result: input.assessmentResult,
+      status: "confirmed",
+    };
+  }
+
+  const manualReviewResult = deriveManualReviewResult(input);
+
+  if (manualReviewResult) {
+    return {
+      result: manualReviewResult,
       status: "confirmed",
     };
   }

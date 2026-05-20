@@ -247,6 +247,8 @@ export default async function EvidencePage({
                           assessmentResult: item.assessmentResult,
                           blockedReason: item.blockedReason,
                           collectionStatus: item.collectionStatus,
+                          reviewStatus: item.status,
+                          source: item.source,
                         })}
                       />
                       {item.collectionStatus === "pending" || item.assessmentResult === "manual_review" ? (
