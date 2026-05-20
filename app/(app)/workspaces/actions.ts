@@ -120,6 +120,7 @@ export async function submitWorkspaceAttestationAction(input: {
   revalidatePath("/evidence");
   revalidatePath("/settings/audit-log");
   revalidatePath(`/controls/${parsed.controlKey}`);
+  revalidatePath(`/workspaces/${parsed.platformId}`);
 
   return {
     assessmentResult,
