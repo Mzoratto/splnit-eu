@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { auth } from "@clerk/nextjs/server";
 import { getLocale } from "next-intl/server";
-import { ArrowRight, CircleHelp } from "lucide-react";
+import { ArrowRight, BookCheck, CircleHelp } from "lucide-react";
 import { ActivationStatus, deriveActivationStatusState } from "@/components/activation/activation-status";
 import { PageHeader } from "@/components/app/page-header";
 import { StatusPill, type StatusPillTone } from "@/components/app/status-pill";
@@ -330,6 +330,23 @@ export default async function ControlsPage({
         <div className="inline-flex w-fit items-center gap-2 rounded-full border border-border bg-surface px-3 py-1.5 text-xs font-medium text-foreground/64">
           {copy.index.demoMode}
         </div>
+      ) : null}
+
+      {viewMode === "focus" ? (
+        <Link
+          href={getLocalizedAppHref("/workspaces/pohoda", requestLocale)}
+          className="flex items-start gap-4 rounded-lg border border-primary/24 bg-primary/4 p-4 transition-colors hover:bg-primary/8"
+        >
+          <BookCheck className="mt-0.5 h-5 w-5 shrink-0 text-primary" aria-hidden="true" />
+          <div className="flex-1">
+            <p className="text-sm font-medium">Pohoda (Stormware) — compliance workspace</p>
+            <p className="mt-0.5 text-xs text-foreground/60">
+              Projděte kontrolní vrstvy pro Pohodu: infrastruktura, přístupy, zálohy a API.
+              Dokládejte důkazy a sledujte postup shody.
+            </p>
+          </div>
+          <ArrowRight className="mt-0.5 h-4 w-4 shrink-0 text-primary" aria-hidden="true" />
+        </Link>
       ) : null}
 
       <section className="space-y-4">
