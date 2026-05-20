@@ -1848,6 +1848,10 @@
         "usesHighRiskAi": {
           "label": "Un uso AI potrebbe incidere su persone in salute, lavoro, credito, istruzione o accesso a servizi?",
           "helpText": "Una risposta sì aggiunge attività di revisione manuale per possibile uso AI ad alto rischio."
+        },
+        "accountingPlatform": {
+          "label": "Quale software contabile utilizza l'organizzazione?",
+          "helpText": "Selezionando Pohoda si attiva una raccomandazione workspace specifica per Pohoda e un set di controlli NIS2."
         }
       },
       "options": {
@@ -1884,6 +1888,13 @@
           "none": "Nessun sistema AI",
           "internal_productivity": "Solo AI interna di produttività",
           "customer_or_patient_facing": "AI verso clienti, pazienti o supporto decisionale"
+        },
+        "accountingPlatform": {
+          "pohoda": "Pohoda (Stormware)",
+          "money_s3": "Money S3 / S4",
+          "helios": "Helios",
+          "other": "Altro software contabile",
+          "none": "Nessuno / non applicabile"
         }
       }
     }

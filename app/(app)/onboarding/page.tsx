@@ -8,6 +8,7 @@ import { TOOL_INVENTORY_LIBRARY } from "@/lib/onboarding/tools";
 import type { IntakeAnswers } from "@/lib/onboarding/intake-scope";
 
 const defaultIntakeAnswers: IntakeAnswers = {
+  accountingPlatform: "none",
   businessModel: "saas",
   employeeBand: "10_49",
   handlesPersonalData: "customers_and_employees",

@@ -15,6 +15,7 @@ export const INTAKE_QUESTION_KEYS = [
   "usesThirdPartyProcessors",
   "usesAiSystems",
   "usesHighRiskAi",
+  "accountingPlatform",
 ] as const;
 
 export type IntakeQuestionKey = (typeof INTAKE_QUESTION_KEYS)[number];
@@ -68,6 +69,14 @@ export const AI_USAGE_OPTIONS = [
   { value: "none" },
   { value: "internal_productivity" },
   { value: "customer_or_patient_facing" },
+] as const satisfies readonly IntakeOption[];
+
+export const ACCOUNTING_PLATFORM_OPTIONS = [
+  { value: "pohoda" },
+  { value: "money_s3" },
+  { value: "helios" },
+  { value: "other" },
+  { value: "none" },
 ] as const satisfies readonly IntakeOption[];
 
 export const INTAKE_QUESTIONS = [
@@ -136,6 +145,12 @@ export const INTAKE_QUESTIONS = [
     key: "usesHighRiskAi",
     required: true,
     type: "boolean",
+  },
+  {
+    key: "accountingPlatform",
+    required: false,
+    type: "single_choice",
+    options: ACCOUNTING_PLATFORM_OPTIONS,
   },
 ] as const satisfies readonly IntakeQuestion[];
 

@@ -1848,6 +1848,10 @@
         "usesHighRiskAi": {
           "label": "Může některé AI použití ovlivnit lidi ve zdraví, zaměstnání, úvěru, vzdělání nebo přístupu ke službám?",
           "helpText": "Odpověď ano přidá ruční review pro možné vysoce rizikové AI použití."
+        },
+        "accountingPlatform": {
+          "label": "Jaký účetní software organizace používá?",
+          "helpText": "Výběr Pohoda spustí doporučení pro pracovní prostor a sadu NIS2 kontrol specifických pro Pohoda."
         }
       },
       "options": {
@@ -1884,6 +1888,13 @@
           "none": "Žádné AI systémy",
           "internal_productivity": "Jen interní produktivní AI",
           "customer_or_patient_facing": "AI pro zákazníky, pacienty nebo podporu rozhodování"
+        },
+        "accountingPlatform": {
+          "pohoda": "Pohoda (Stormware)",
+          "money_s3": "Money S3 / S4",
+          "helios": "Helios",
+          "other": "Jiný účetní software",
+          "none": "Žádný / nepoužíváme"
         }
       }
     }

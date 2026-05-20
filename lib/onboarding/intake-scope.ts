@@ -18,8 +18,10 @@ export type EmployeeBand = "1_9" | "10_49" | "50_249" | "250_plus";
 export type PersonalDataScope = "none" | "employees_only" | "customers_and_employees";
 export type ThirdPartyProcessorUse = "none" | "few" | "many";
 export type AiSystemUse = "none" | "internal_productivity" | "customer_or_patient_facing";
+export type AccountingPlatform = "pohoda" | "money_s3" | "helios" | "other" | "none";
 
 export type IntakeAnswers = {
+  accountingPlatform?: AccountingPlatform;
   businessModel: BusinessModel;
   employeeBand: EmployeeBand;
   handlesPersonalData: PersonalDataScope;
@@ -47,6 +49,12 @@ export type IntakeRationaleCategory =
 
 export type DerivedScopeControlStatus = "applicable" | "not_applicable" | "out_of_scope";
 
+export type WorkspaceRecommendation = {
+  platformKey: string;
+  label: string;
+  reason: string;
+};
+
 export type DerivedScopeControl = {
   category: IntakeRationaleCategory;
   controlKey: string;
@@ -67,6 +75,7 @@ export type IntakeDerivedScope = {
   rationales: Record<string, string>;
   selectedFrameworks: FrameworkSlug[];
   version: number;
+  workspaceRecommendations: WorkspaceRecommendation[];
 };
 
 export type DeriveIntakeScopeInput = {
@@ -222,6 +231,9 @@ export function deriveIntakeScope(input: DeriveIntakeScopeInput): IntakeDerivedS
     add("ctrl_ai_individual_notice", "ai_governance", "People affected by AI-assisted decisions may need notice.", { status: "manual_review" });
   }
 
+  // Derive workspace recommendations from accounting platform selection.
+  const workspaceRecommendations: WorkspaceRecommendation[] = deriveWorkspaceRecommendations(input.answers);
+
   const controls = [...drafts.values()]
     .filter((draft) => isMappedToSelectedFramework(draft.controlKey, selectedFrameworks))
     .sort(compareControlDrafts)
@@ -259,11 +271,26 @@ export function deriveIntakeScope(input: DeriveIntakeScopeInput): IntakeDerivedS
     rationales,
     selectedFrameworks,
     version: INTAKE_PROFILE_VERSION,
+    workspaceRecommendations,
   };
 }
 
 function unique<T>(values: readonly T[]): T[] {
   return [...new Set(values)];
+}
+
+function deriveWorkspaceRecommendations(answers: IntakeAnswers): WorkspaceRecommendation[] {
+  const recommendations: WorkspaceRecommendation[] = [];
+
+  if (answers.accountingPlatform === "pohoda") {
+    recommendations.push({
+      platformKey: "pohoda",
+      label: "Pohoda",
+      reason: "Používáte Pohoda — doporučujeme propojit účetní data se sadou NIS2 kontrol specifických pro Pohoda (zálohování dat, přístup k mServeru, API credentials).",
+    });
+  }
+
+  return recommendations;
 }
 
 function isMappedToSelectedFramework(controlKey: string, selectedFrameworks: readonly FrameworkSlug[]) {

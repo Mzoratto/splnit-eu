@@ -133,6 +133,11 @@ const businessRealitySections = [
     description: "Poslední krok určí, jestli se mají objevit AI governance úkoly a ruční review.",
     keys: ["usesAiSystems", "usesHighRiskAi"],
   },
+  {
+    title: "Účetní software",
+    description: "Vyberte účetní platformu, kterou používáte. Pohoda spustí doporučení pro pracovní prostor specifický pro Pohoda.",
+    keys: ["accountingPlatform"],
+  },
 ] as const satisfies readonly {
   description: string;
   keys: readonly IntakeQuestionKey[];
@@ -1133,21 +1138,30 @@ export function OnboardingWizard({
               </p>
             </div>
           </div>
-          <div className="rounded-lg border border-border bg-background p-5">
-            <p className="text-lg font-semibold">{recommendedIntegration}</p>
-            <p className="mt-2 text-sm leading-6 text-foreground/64">
-              {t("integration.body")}
-            </p>
-            <p className="mt-2 text-sm leading-6 text-foreground/58">
-              {t("integration.optional")}
-            </p>
-            <Link
-              href={recommendedIntegrationHref}
-              className="mt-5 inline-flex items-center gap-2 rounded-md border border-border px-4 py-3 text-sm font-medium hover:bg-surface-muted"
-            >
-              {t("integration.open")}
-              <ArrowRight className="h-4 w-4" aria-hidden="true" />
-            </Link>
+          <div className="grid gap-3">
+            <div className="rounded-lg border border-border bg-background p-5">
+              <p className="text-lg font-semibold">{recommendedIntegration}</p>
+              <p className="mt-2 text-sm leading-6 text-foreground/64">
+                {t("integration.body")}
+              </p>
+              <p className="mt-2 text-sm leading-6 text-foreground/58">
+                {t("integration.optional")}
+              </p>
+              <Link
+                href={recommendedIntegrationHref}
+                className="mt-5 inline-flex items-center gap-2 rounded-md border border-border px-4 py-3 text-sm font-medium hover:bg-surface-muted"
+              >
+                {t("integration.open")}
+                <ArrowRight className="h-4 w-4" aria-hidden="true" />
+              </Link>
+            </div>
+            {derivedScope.workspaceRecommendations.map((rec) => (
+              <div key={rec.platformKey} className="rounded-lg border border-primary/30 bg-primary/5 p-5">
+                <p className="text-sm font-medium uppercase tracking-[0.12em] text-primary">Doporučení pracovního prostoru</p>
+                <p className="mt-2 text-base font-semibold">{rec.label}</p>
+                <p className="mt-2 text-sm leading-6 text-foreground/64">{rec.reason}</p>
+              </div>
+            ))}
           </div>
           <div className="mt-6 flex flex-col-reverse gap-3 sm:flex-row sm:justify-between">
             <button
