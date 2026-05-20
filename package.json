@@ -24,6 +24,7 @@
     "smoke:automated-evidence-citations": "tsx scripts/smoke-automated-evidence-citations.ts",
     "smoke:integration-evidence-policy": "tsx scripts/smoke-integration-evidence-policy.ts",
     "smoke:microsoft-callback-dimensional-evidence-source": "tsx scripts/smoke-microsoft-callback-dimensional-evidence-source.ts",
+    "smoke:manual-evidence-dimensions-source": "tsx scripts/smoke-manual-evidence-dimensions-source.ts",
     "smoke:integration-first-run-enqueue": "tsx scripts/smoke-integration-first-run-enqueue.ts",
     "smoke:activation-status": "tsx scripts/smoke-activation-status.tsx",
     "smoke:controls-focus-activation-status-source": "tsx scripts/smoke-controls-focus-activation-status-source.ts",

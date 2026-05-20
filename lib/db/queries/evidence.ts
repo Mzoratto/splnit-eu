@@ -1,5 +1,5 @@
 import { and, desc, eq, inArray } from "drizzle-orm";
-import type { EvidenceSource } from "@/lib/activation/evidence-state";
+import { createEvidenceState } from "@/lib/activation/evidence-state";
 import { getDb } from "@/lib/db";
 import {
   controls,
@@ -51,16 +51,22 @@ export async function listEvidenceForControl(clerkOrgId: string, controlId: stri
 }
 
 export async function createManualEvidence(input: {
-  blobUrl: string;
+  blobUrl?: string | null;
   clerkOrgId: string;
   collectedBy: string;
   controlKey: string;
   description: string | null;
   expiresAt: string | null;
   fileType: string;
-  source?: EvidenceSource;
+  snapshotData?: Record<string, unknown> | null;
 }) {
   const db = getDb();
+  const manualEvidenceState = createEvidenceState({
+    assessment_result: "manual_review",
+    collected_at: new Date(),
+    collection_status: "collected",
+    source: "manual",
+  });
   const controlRows = await db
     .select({ id: controls.id })
     .from(controls)
@@ -75,12 +81,18 @@ export async function createManualEvidence(input: {
   const insertedRows = await db
     .insert(evidence)
     .values({
-      blobUrl: input.blobUrl,
+      assessmentResult: manualEvidenceState.assessment_result,
+      blockedReason: manualEvidenceState.blocked_reason,
+      blobUrl: input.blobUrl ?? null,
       clerkOrgId: input.clerkOrgId,
+      collectedAt: manualEvidenceState.collected_at,
       collectedBy: input.collectedBy,
+      collectionStatus: manualEvidenceState.collection_status,
+      confidence: manualEvidenceState.confidence,
       controlId: control.id,
       description: input.description,
-      source: input.source ?? "manual",
+      snapshotData: input.snapshotData ?? null,
+      source: manualEvidenceState.source,
       type: input.fileType,
     })
     .returning({ id: evidence.id });
@@ -111,6 +123,28 @@ export async function createManualEvidence(input: {
     controlId: control.id,
     evidenceId,
   };
+}
+
+export async function createManualAttestationEvidence(input: {
+  answers: Record<string, unknown>;
+  clerkOrgId: string;
+  collectedBy: string;
+  controlKey: string;
+  description: string | null;
+  expiresAt?: string | null;
+}) {
+  return createManualEvidence({
+    blobUrl: null,
+    clerkOrgId: input.clerkOrgId,
+    collectedBy: input.collectedBy,
+    controlKey: input.controlKey,
+    description: input.description,
+    expiresAt: input.expiresAt ?? null,
+    fileType: "attestation_answers",
+    snapshotData: {
+      attestationAnswers: input.answers,
+    },
+  });
 }
 
 export async function getEvidenceForOrg(input: {
