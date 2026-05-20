@@ -27,6 +27,7 @@ const appRoutePrefixes = [
   "/team",
   "/trust-center",
   "/vendors",
+  "/workspaces",
 ];
 
 export function CookieConsent({
