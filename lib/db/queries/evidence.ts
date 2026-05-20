@@ -1,5 +1,5 @@
 import { and, desc, eq, inArray } from "drizzle-orm";
-import { createEvidenceState } from "@/lib/activation/evidence-state";
+import { createEvidenceState, type EvidenceAssessmentResult } from "@/lib/activation/evidence-state";
 import { getDb } from "@/lib/db";
 import {
   controls,
@@ -127,24 +127,79 @@ export async function createManualEvidence(input: {
 
 export async function createManualAttestationEvidence(input: {
   answers: Record<string, unknown>;
+  assessmentResult?: EvidenceAssessmentResult;
   clerkOrgId: string;
   collectedBy: string;
   controlKey: string;
   description: string | null;
   expiresAt?: string | null;
 }) {
-  return createManualEvidence({
-    blobUrl: null,
-    clerkOrgId: input.clerkOrgId,
-    collectedBy: input.collectedBy,
-    controlKey: input.controlKey,
-    description: input.description,
-    expiresAt: input.expiresAt ?? null,
-    fileType: "attestation_answers",
-    snapshotData: {
-      attestationAnswers: input.answers,
-    },
+  const db = getDb();
+  const controlRows = await db
+    .select({ id: controls.id })
+    .from(controls)
+    .where(eq(controls.key, input.controlKey))
+    .limit(1);
+  const control = controlRows[0] ?? null;
+
+  if (!control) {
+    throw new Error(`Unknown control: ${input.controlKey}`);
+  }
+
+  const evidenceState = createEvidenceState({
+    assessment_result: input.assessmentResult ?? "manual_review",
+    collected_at: new Date(),
+    collection_status: "collected",
+    source: "manual",
   });
+
+  const insertedRows = await db
+    .insert(evidence)
+    .values({
+      assessmentResult: evidenceState.assessment_result,
+      blockedReason: evidenceState.blocked_reason,
+      blobUrl: null,
+      clerkOrgId: input.clerkOrgId,
+      collectedAt: evidenceState.collected_at,
+      collectedBy: input.collectedBy,
+      collectionStatus: evidenceState.collection_status,
+      confidence: evidenceState.confidence,
+      controlId: control.id,
+      description: input.description,
+      snapshotData: {
+        attestationAnswers: input.answers,
+      },
+      source: evidenceState.source,
+      type: "attestation_answers",
+    })
+    .returning({ id: evidence.id });
+  const evidenceId = insertedRows[0]?.id;
+
+  if (!evidenceId) {
+    throw new Error("Failed to create attestation evidence record.");
+  }
+
+  await db
+    .insert(orgControlStatuses)
+    .values({
+      clerkOrgId: input.clerkOrgId,
+      controlId: control.id,
+      lastEvidenceAt: new Date(),
+      status: "unknown",
+      updatedAt: new Date(),
+    })
+    .onConflictDoUpdate({
+      target: [orgControlStatuses.clerkOrgId, orgControlStatuses.controlId],
+      set: {
+        lastEvidenceAt: new Date(),
+        updatedAt: new Date(),
+      },
+    });
+
+  return {
+    controlId: control.id,
+    evidenceId,
+  };
 }
 
 export async function getEvidenceForOrg(input: {
