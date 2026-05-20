@@ -25,6 +25,7 @@ type IntakeScopeSummary = {
   outOfScopeControlKeys: string[];
   priorityControlKeys: string[];
   rationales: Record<string, string>;
+  workspaceRecommendations: { platformKey: string; label: string; reason: string }[];
 };
 
 export async function listOrgControlStatusesForFramework(
@@ -248,6 +249,7 @@ function buildIntakeScopeSummary(derivedScope: unknown): IntakeScopeSummary {
     outOfScopeControlKeys?: unknown;
     priorityControlKeys?: unknown;
     rationales?: unknown;
+    workspaceRecommendations?: unknown;
   };
 
   return {
@@ -256,6 +258,7 @@ function buildIntakeScopeSummary(derivedScope: unknown): IntakeScopeSummary {
     outOfScopeControlKeys: stringArray(scope.outOfScopeControlKeys),
     priorityControlKeys: stringArray(scope.priorityControlKeys),
     rationales: stringRecord(scope.rationales),
+    workspaceRecommendations: workspaceRecommendationsArray(scope.workspaceRecommendations),
   };
 }
 
@@ -266,6 +269,7 @@ function emptyIntakeScopeSummary(): IntakeScopeSummary {
     outOfScopeControlKeys: [],
     priorityControlKeys: [],
     rationales: {},
+    workspaceRecommendations: [],
   };
 }
 
@@ -280,6 +284,21 @@ function stringRecord(value: unknown) {
 
   return Object.fromEntries(
     Object.entries(value).filter((entry): entry is [string, string] => typeof entry[1] === "string"),
+  );
+}
+
+function workspaceRecommendationsArray(value: unknown): { platformKey: string; label: string; reason: string }[] {
+  if (!Array.isArray(value)) {
+    return [];
+  }
+
+  return value.filter(
+    (item): item is { platformKey: string; label: string; reason: string } =>
+      typeof item === "object" &&
+      item !== null &&
+      typeof (item as Record<string, unknown>).platformKey === "string" &&
+      typeof (item as Record<string, unknown>).label === "string" &&
+      typeof (item as Record<string, unknown>).reason === "string",
   );
 }
 
@@ -412,4 +431,24 @@ export async function updateControlStatus(input: {
     previousStatus,
     recalculatedFrameworks: frameworkRows.length,
   };
+}
+
+/**
+ * Returns workspace recommendations from the org's latest intake profile.
+ * Returns an empty array when no intake profile exists or no recommendations
+ * were derived.
+ */
+export async function getOrgWorkspaceRecommendations(
+  clerkOrgId: string,
+): Promise<{ platformKey: string; label: string; reason: string }[]> {
+  const db = getDb();
+  const rows = await db
+    .select({ derivedScope: orgIntakeProfiles.derivedScope })
+    .from(orgIntakeProfiles)
+    .where(eq(orgIntakeProfiles.clerkOrgId, clerkOrgId))
+    .limit(1);
+
+  const derivedScope = rows[0]?.derivedScope ?? null;
+  const summary = buildIntakeScopeSummary(derivedScope);
+  return summary.workspaceRecommendations;
 }
