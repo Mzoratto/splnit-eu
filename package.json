@@ -31,6 +31,7 @@
     "smoke:microsoft-first-run-enqueue-source": "tsx scripts/smoke-microsoft-first-run-enqueue-source.ts",
     "smoke:activation-events-source": "tsx scripts/smoke-activation-events-source.ts",
     "smoke:activation-event-sanitizer": "tsx scripts/smoke-activation-event-sanitizer.ts",
+    "smoke:sanitizer-rejection": "tsx scripts/smoke-sanitizer-rejection.ts",
     "smoke:microsoft365-permission-failures": "tsx scripts/smoke-microsoft365-permission-failures.ts",
     "smoke:policy-drafts": "tsx scripts/smoke-policy-drafts.ts",
     "smoke:incident-notifications": "tsx scripts/smoke-incident-notifications.ts",
