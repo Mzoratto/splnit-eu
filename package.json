@@ -77,6 +77,7 @@
     "baseline:import": "tsx scripts/baseline-import.ts",
     "baseline:diff": "tsx scripts/baseline-diff.ts",
     "baseline:rollback": "tsx scripts/baseline-rollback.ts",
+    "smoke:nukib-baseline": "tsx scripts/smoke-nukib-baseline.ts",
     "smoke:italian-tenant": "tsx scripts/smoke-tenant-locales.ts",
     "smoke:italian-gdpr-layer": "tsx scripts/smoke-italian-gdpr-layer.ts",
     "smoke:tenant-locales": "tsx scripts/smoke-tenant-locales.ts",
