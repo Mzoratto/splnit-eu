@@ -8,6 +8,10 @@ export type NukibControlBlock = {
 // A single compliance control within a workspace layer.
 // evidenceType drives which collection UI to show per control.
 export type WorkspaceControl = {
+  apiEndpoint?: string;
+  apiExpected?: string;
+  apiField?: string;
+  automatable?: boolean;
   controlKey: string;
   question: string;
   guidance: string;
