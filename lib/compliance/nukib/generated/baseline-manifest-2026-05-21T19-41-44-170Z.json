@@ -1,0 +1,3035 @@
+{
+  "version": "2026-05-21T19:41:44.170Z",
+  "sourceFile": "prehled-bezpecnostnich-opatreni_v10_uid_69cbcd208cab4.xlsx",
+  "sourceSha256": "7914a50c1b62b844a3677850b370bdf94a04cdfbe5ca73a2d64219055e25d145",
+  "importedAt": "2026-05-21T19:41:44.170Z",
+  "controlCount": 110,
+  "controls": [
+    {
+      "paragraph": "§ 3",
+      "odstavec": "odst. 1",
+      "pismeno": "písm. a)",
+      "exactReference": "§ 3 odst. 1 písm. a)",
+      "title": "Systém zajišťování minimální kybernetické bezpečnosti",
+      "text": "zavede a provádí bezpečnostní opatření, která jsou přiměřená bezpečnostním potřebám, a",
+      "tier": "mandatory_minimum",
+      "priority": "high",
+      "deadline": {
+        "raw": "Jedná se o stále se opakující se proces (PDCA), z tohoto důvodu není termín uveden.",
+        "type": "unknown"
+      },
+      "owners": [
+        "Osoba pověřená za kybernetickou bezpečnost",
+        "Vrcholné vedení"
+      ],
+      "defaultState": "planned",
+      "implementationDescription": "Jsou zaváděna přiměřená bezpečnostní opatření dle potřeby organizace, fáze zavádění jednotlivých bezpečnostních opatření jsou popsány níže v tomto dokumentu.",
+      "frameworkMappings": [
+        {
+          "frameworkId": "zokb",
+          "reference": "§ 3 odst. 1 písm. a)",
+          "title": "Systém zajišťování minimální kybernetické bezpečnosti"
+        }
+      ],
+      "archived": false,
+      "sourceRow": 5
+    },
+    {
+      "paragraph": "§ 3",
+      "odstavec": "odst. 1",
+      "pismeno": "písm. b)",
+      "exactReference": "§ 3 odst. 1 písm. b)",
+      "title": "Systém zajišťování minimální kybernetické bezpečnosti",
+      "text": "zavede a provádí alespoň bezpečnostní opatření podle odstavce 2 až 6, § 4 až 6 a § 10",
+      "tier": "mandatory_minimum",
+      "priority": "high",
+      "deadline": {
+        "raw": "Jedná se o stále se opakující se proces (PDCA), z tohoto důvodu není termín uveden.",
+        "type": "unknown"
+      },
+      "owners": [
+        "Osoba pověřená za kybernetickou bezpečnost",
+        "Vrcholné vedení"
+      ],
+      "defaultState": "planned",
+      "implementationDescription": "Veškerá neopominutelná bezpečnostní opatření jsou přiměřeně zavedena nebo jsou v procesu zavádění. Aktuální stav bezpečnostních opatření je popsán níže v tomto dokumentu.",
+      "frameworkMappings": [
+        {
+          "frameworkId": "zokb",
+          "reference": "§ 3 odst. 1 písm. b)",
+          "title": "Systém zajišťování minimální kybernetické bezpečnosti"
+        }
+      ],
+      "archived": false,
+      "sourceRow": 6
+    },
+    {
+      "paragraph": "§ 3",
+      "odstavec": "odst. 2",
+      "pismeno": "písm. a)",
+      "exactReference": "§ 3 odst. 2 písm. a)",
+      "title": "Systém zajišťování minimální kybernetické bezpečnosti",
+      "text": "zpracuje přehled bezpečnostních opatření podle přílohy č. 1 k této vyhlášce, který obsahuje přehled všech bezpečnostních opatření, která",
+      "tier": "mandatory_minimum",
+      "priority": "unset",
+      "deadline": {
+        "raw": "-",
+        "type": "unknown"
+      },
+      "owners": [
+        "Osoba pověřená za kybernetickou bezpečnost"
+      ],
+      "defaultState": "implemented",
+      "implementationDescription": "Plněno dokumentem - Prehled bezpečnostnich opatreni.xlsx",
+      "frameworkMappings": [
+        {
+          "frameworkId": "zokb",
+          "reference": "§ 3 odst. 2 písm. a)",
+          "title": "Systém zajišťování minimální kybernetické bezpečnosti"
+        }
+      ],
+      "archived": false,
+      "sourceRow": 8
+    },
+    {
+      "paragraph": "§ 3",
+      "odstavec": "odst. 2",
+      "pismeno": "písm. a)",
+      "exactReference": "§ 3 odst. 2 písm. a) bod 1",
+      "title": "Systém zajišťování minimální kybernetické bezpečnosti",
+      "text": "byla povinnou osobou zavedena, včetně popisu jejich zavedení,",
+      "tier": "mandatory_minimum",
+      "priority": "unset",
+      "deadline": {
+        "raw": "-",
+        "type": "unknown"
+      },
+      "owners": [
+        "Osoba pověřená za kybernetickou bezpečnost"
+      ],
+      "defaultState": "implemented",
+      "implementationDescription": "Plněno dokumentem - Prehled bezpečnostnich opatreni.xlsx",
+      "frameworkMappings": [
+        {
+          "frameworkId": "zokb",
+          "reference": "§ 3 odst. 2 písm. a) bod 1",
+          "title": "Systém zajišťování minimální kybernetické bezpečnosti"
+        }
+      ],
+      "archived": false,
+      "sourceRow": 9
+    },
+    {
+      "paragraph": "§ 3",
+      "odstavec": "odst. 2",
+      "pismeno": "písm. a)",
+      "exactReference": "§ 3 odst. 2 písm. a) bod 2",
+      "title": "Systém zajišťování minimální kybernetické bezpečnosti",
+      "text": "budou povinnou osobou zavedena, včetně termínů pro jejich zavedení, priority jejich zavedení a určení osoby odpovědné za jejich zavedení, a",
+      "tier": "mandatory_minimum",
+      "priority": "unset",
+      "deadline": {
+        "raw": "-",
+        "type": "unknown"
+      },
+      "owners": [
+        "Osoba pověřená za kybernetickou bezpečnost"
+      ],
+      "defaultState": "implemented",
+      "implementationDescription": "Plněno dokumentem - Prehled bezpečnostnich opatreni.xlsx",
+      "frameworkMappings": [
+        {
+          "frameworkId": "zokb",
+          "reference": "§ 3 odst. 2 písm. a) bod 2",
+          "title": "Systém zajišťování minimální kybernetické bezpečnosti"
+        }
+      ],
+      "archived": false,
+      "sourceRow": 10
+    },
+    {
+      "paragraph": "§ 3",
+      "odstavec": "odst. 2",
+      "pismeno": "písm. a)",
+      "exactReference": "§ 3 odst. 2 písm. a) bod 3",
+      "title": "Systém zajišťování minimální kybernetické bezpečnosti",
+      "text": "nebyla zavedena, včetně odůvodnění jejich nezavedení,",
+      "tier": "mandatory_minimum",
+      "priority": "unset",
+      "deadline": {
+        "raw": "-",
+        "type": "unknown"
+      },
+      "owners": [
+        "Osoba pověřená za kybernetickou bezpečnost"
+      ],
+      "defaultState": "implemented",
+      "implementationDescription": "Plněno dokumentem - Prehled bezpečnostnich opatreni.xlsx",
+      "frameworkMappings": [
+        {
+          "frameworkId": "zokb",
+          "reference": "§ 3 odst. 2 písm. a) bod 3",
+          "title": "Systém zajišťování minimální kybernetické bezpečnosti"
+        }
+      ],
+      "archived": false,
+      "sourceRow": 11
+    },
+    {
+      "paragraph": "§ 3",
+      "odstavec": "odst. 2",
+      "pismeno": "písm. b)",
+      "exactReference": "§ 3 odst. 2 písm. b)",
+      "title": "Systém zajišťování minimální kybernetické bezpečnosti",
+      "text": "provede a dokumentuje alespoň jednou ročně aktualizaci přehledu bezpečnostních opatření, včetně vyhodnocení účinnosti zavedených bezpečnostních opatření,",
+      "tier": "mandatory_minimum",
+      "priority": "high",
+      "deadline": {
+        "raw": "Q3 2026",
+        "type": "unknown"
+      },
+      "owners": [
+        "Osoba pověřená za kybernetickou bezpečnost"
+      ],
+      "defaultState": "planned",
+      "implementationDescription": "Dokument Prehled bezpečnostnich opatreni.xlsx byl vytvořen k datu 1.11.2025, další aktualizace proběhne za rok, případně dříve dle potřeby.",
+      "frameworkMappings": [
+        {
+          "frameworkId": "zokb",
+          "reference": "§ 3 odst. 2 písm. b)",
+          "title": "Systém zajišťování minimální kybernetické bezpečnosti"
+        }
+      ],
+      "archived": false,
+      "sourceRow": 12
+    },
+    {
+      "paragraph": "§ 3",
+      "odstavec": "odst. 2",
+      "pismeno": "písm. c)",
+      "exactReference": "§ 3 odst. 2 písm. c)",
+      "title": "Systém zajišťování minimální kybernetické bezpečnosti",
+      "text": "uchovává jednotlivé přehledy bezpečnostních opatření, alespoň po dobu 4 let",
+      "tier": "mandatory_minimum",
+      "priority": "high",
+      "deadline": {
+        "raw": "Q3 2026",
+        "type": "unknown"
+      },
+      "owners": [
+        "Osoba pověřená za kybernetickou bezpečnost"
+      ],
+      "defaultState": "planned",
+      "implementationDescription": "Aktuální verze dokumentu Prehled bezpečnostnich opatreni.xlsx je uložena na Share Pointu organizace, kde budou následně uchovávány i další verze tohoto dokumentu.",
+      "frameworkMappings": [
+        {
+          "frameworkId": "zokb",
+          "reference": "§ 3 odst. 2 písm. c)",
+          "title": "Systém zajišťování minimální kybernetické bezpečnosti"
+        }
+      ],
+      "archived": false,
+      "sourceRow": 13
+    },
+    {
+      "paragraph": "§ 3",
+      "odstavec": "odst. 3",
+      "pismeno": "písm. a)",
+      "exactReference": "§ 3 odst. 3 písm. a)",
+      "title": "Systém zajišťování minimální kybernetické bezpečnosti",
+      "text": "stanoví bezpečnostní politiku a bezpečnostní dokumentaci k bezpečnostním opatřením požadovaným touto vyhláškou",
+      "tier": "mandatory_minimum",
+      "priority": "high",
+      "deadline": {
+        "raw": "Q1 2026",
+        "type": "unknown"
+      },
+      "owners": [
+        "Osoba pověřená za kybernetickou bezpečnost"
+      ],
+      "defaultState": "planned",
+      "implementationDescription": "Bezpečnostní politika a bezpečnostní dokumentace aktuálně obsahuje základní oblasti KB - dokument Bezpecnosti-politika-KB.docx, další oblasti požadováné vyhláškou jsou postupně doplňovány.",
+      "frameworkMappings": [
+        {
+          "frameworkId": "zokb",
+          "reference": "§ 3 odst. 3 písm. a)",
+          "title": "Systém zajišťování minimální kybernetické bezpečnosti"
+        }
+      ],
+      "archived": false,
+      "sourceRow": 15
+    },
+    {
+      "paragraph": "§ 3",
+      "odstavec": "odst. 3",
+      "pismeno": "písm. b)",
+      "exactReference": "§ 3 odst. 3 písm. b)",
+      "title": "Systém zajišťování minimální kybernetické bezpečnosti",
+      "text": "pravidelně přezkoumává a aktualizuje pravidla a postupy stanovené v bezpečnostní politice a bezpečnostní dokumentaci a",
+      "tier": "mandatory_minimum",
+      "priority": "high",
+      "deadline": {
+        "raw": "Q1 2027",
+        "type": "unknown"
+      },
+      "owners": [
+        "Osoba pověřená za kybernetickou bezpečnost"
+      ],
+      "defaultState": "planned",
+      "implementationDescription": "Bezpečnostní politika a bezpečnostní dokumentace budou procházet pravidelnou revizí a aktualizací vždy jednou ročně, a to po jejich kompletním vytvoření.",
+      "frameworkMappings": [
+        {
+          "frameworkId": "zokb",
+          "reference": "§ 3 odst. 3 písm. b)",
+          "title": "Systém zajišťování minimální kybernetické bezpečnosti"
+        }
+      ],
+      "archived": false,
+      "sourceRow": 16
+    },
+    {
+      "paragraph": "§ 3",
+      "odstavec": "odst. 3",
+      "pismeno": "písm. c)",
+      "exactReference": "§ 3 odst. 3 písm. c)",
+      "title": "Systém zajišťování minimální kybernetické bezpečnosti",
+      "text": "vynucuje dodržování pravidel a postupů stanovených v bezpečnostní politice a bezpečnostní dokumentaci.",
+      "tier": "mandatory_minimum",
+      "priority": "unset",
+      "deadline": {
+        "raw": "-",
+        "type": "unknown"
+      },
+      "owners": [
+        "Osoba pověřená za kybernetickou bezpečnost"
+      ],
+      "defaultState": "implemented",
+      "implementationDescription": "Stanovená pravidla a postupy v bezpečnostních politikách a bezpečnostních dokumentací jsou součástí vstupních a pravidelných školení kybernetické bezpečnosti a zaměstnanci se zavazují pracovní smlouvu k jejich dodržování.",
+      "frameworkMappings": [
+        {
+          "frameworkId": "zokb",
+          "reference": "§ 3 odst. 3 písm. c)",
+          "title": "Systém zajišťování minimální kybernetické bezpečnosti"
+        }
+      ],
+      "archived": false,
+      "sourceRow": 17
+    },
+    {
+      "paragraph": "§ 3",
+      "odstavec": "odst. 4",
+      "exactReference": "§ 3 odst. 4",
+      "title": "Systém zajišťování minimální kybernetické bezpečnosti",
+      "text": "Povinná osoba v rámci řízení aktiv stanoví pravidla pro používání a manipulaci technických aktiv",
+      "tier": "mandatory_minimum",
+      "priority": "unset",
+      "deadline": {
+        "raw": "-",
+        "type": "unknown"
+      },
+      "owners": [
+        "Osoba pověřená za kybernetickou bezpečnost",
+        "Oddělení IT"
+      ],
+      "defaultState": "implemented",
+      "implementationDescription": "Pravidla pro používání a manipulaci technických aktiv jsou stanovena v dokumentu Bezpecnosti-politika-KB.docx v kapitole Pravidla pro používání a manipulaci aktiv.",
+      "frameworkMappings": [
+        {
+          "frameworkId": "zokb",
+          "reference": "§ 3 odst. 4",
+          "title": "Systém zajišťování minimální kybernetické bezpečnosti"
+        }
+      ],
+      "archived": false,
+      "sourceRow": 18
+    },
+    {
+      "paragraph": "§ 3",
+      "odstavec": "odst. 5",
+      "exactReference": "§ 3 odst. 5",
+      "title": "Systém zajišťování minimální kybernetické bezpečnosti",
+      "text": "Povinná osoba při uzavírání smlouvy s dodavatelem ve stanoveném rozsahu dle § 12 zákona zohlední zranitelnosti spojené s tímto dodavatelem a na základě toho zajistí, aby smlouvy s tímto dodavatelem obsahovaly relevantní požadavky na smluvní ujednaní uvedené v příloze č. 2 k této vyhlášce",
+      "tier": "mandatory_minimum",
+      "priority": "high",
+      "deadline": {
+        "raw": "Q4 2026",
+        "type": "unknown"
+      },
+      "owners": [
+        "Osoba pověřená za kybernetickou bezpečnost",
+        "Oddělení právní"
+      ],
+      "defaultState": "planned",
+      "implementationDescription": "Smlouvy s jednotlivými dodavateli budou postupně přezkoumávány v roce 2026 a následně dojde k vyjednávání s dodavateli o možnostech doplnění jednotlivých požadavků dle přílohy č. 2 vyhlášky do smluv. V případě uzavírání nových smluv budou již požadavky na kybernetickou bezpečnost (příloha č. 2 vyhlášky) implementovány do smluv.",
+      "frameworkMappings": [
+        {
+          "frameworkId": "zokb",
+          "reference": "§ 3 odst. 5",
+          "title": "Systém zajišťování minimální kybernetické bezpečnosti"
+        }
+      ],
+      "archived": false,
+      "sourceRow": 19
+    },
+    {
+      "paragraph": "§ 3",
+      "odstavec": "odst. 6",
+      "exactReference": "§ 3 odst. 6",
+      "title": "Systém zajišťování minimální kybernetické bezpečnosti",
+      "text": "Povinná osoba v souvislosti s plánovanou akvizicí, vývojem a údržbou technických aktiv stanoví bezpečnostní požadavky v oblasti kybernetické bezpečnosti a vymáhá jejich dodržování, přičemž vychází z požadavků na bezpečnostní opatření podle této vyhlášky.",
+      "tier": "mandatory_minimum",
+      "priority": "unset",
+      "deadline": {
+        "raw": "-",
+        "type": "unknown"
+      },
+      "owners": [
+        "Osoba pověřená za kybernetickou bezpečnost",
+        "Oddělení právní"
+      ],
+      "defaultState": "implemented",
+      "implementationDescription": "Bezpečnostní požadavky v oblasti KB v souvislosti s plánovanou akvizicí, vývojem a údržbou jsou stanoveny v dokumentu Bezpecnosti-politika-KB.docx v kapitole Bezpečnostní požadavky v oblasti KB v souvislosti s plánovanou akvizicí, vývojem a údržbou. Bezpečnostní požadavky jsou v souladu s vyhláškou. Zároveň budou tyto bezpečnostní požadavky zaváděny i do smluv s dodavateli, tak aby bylo zajištěno jejich dodržování a případné vymáhání.",
+      "frameworkMappings": [
+        {
+          "frameworkId": "zokb",
+          "reference": "§ 3 odst. 6",
+          "title": "Systém zajišťování minimální kybernetické bezpečnosti"
+        }
+      ],
+      "archived": false,
+      "sourceRow": 20
+    },
+    {
+      "paragraph": "§ 4",
+      "pismeno": "písm. a)",
+      "exactReference": "§ 4 písm. a)",
+      "title": "Požadavky na vrcholné vedení",
+      "text": "určí osobu pověřenou kybernetickou bezpečností, které svěří pravomoci potřebné k řízení a rozvoji kybernetické bezpečnosti, dohledu nad stavem kybernetické bezpečnosti a komunikaci s vrcholným vedením, přičemž pro výkon této činnosti",
+      "tier": "mandatory_minimum",
+      "priority": "unset",
+      "deadline": {
+        "raw": "-",
+        "type": "unknown"
+      },
+      "owners": [
+        "Vrcholné vedení"
+      ],
+      "defaultState": "implemented",
+      "implementationDescription": "Osobou pověřenou za kybernetickou bezpečnost byl určen jeden ze zaměstnanců IT, který má s kybernetickou bezpečností značné zkušenosti. S tímto zaměstnancem byl podepsán jmenovací dekret.",
+      "frameworkMappings": [
+        {
+          "frameworkId": "zokb",
+          "reference": "§ 4 písm. a)",
+          "title": "Požadavky na vrcholné vedení"
+        }
+      ],
+      "archived": false,
+      "sourceRow": 22
+    },
+    {
+      "paragraph": "§ 4",
+      "pismeno": "písm. a)",
+      "exactReference": "§ 4 písm. a) bod 1",
+      "title": "Požadavky na vrcholné vedení",
+      "text": "absolvuje bez zbytečného odkladu odborné školení podle § 5 odst. 2 písm. d), nebo",
+      "tier": "mandatory_minimum",
+      "priority": "unset",
+      "deadline": {
+        "raw": "-",
+        "type": "unknown"
+      },
+      "owners": [
+        "Vrcholné vedení"
+      ],
+      "defaultState": "implemented",
+      "implementationDescription": "Osoba pověřená za kybernetickou bezpečnost ihned absolvovala e-learningový kurz od NÚKIB, určený k těmto účelům.",
+      "frameworkMappings": [
+        {
+          "frameworkId": "zokb",
+          "reference": "§ 4 písm. a) bod 1",
+          "title": "Požadavky na vrcholné vedení"
+        }
+      ],
+      "archived": false,
+      "sourceRow": 23
+    },
+    {
+      "paragraph": "§ 4",
+      "pismeno": "písm. a)",
+      "exactReference": "§ 4 písm. a) bod 2",
+      "title": "Požadavky na vrcholné vedení",
+      "text": "prokáže odbornou znalost v kybernetické bezpečnosti,",
+      "tier": "mandatory_minimum",
+      "priority": "unset",
+      "deadline": {
+        "raw": "-",
+        "type": "unknown"
+      },
+      "owners": [
+        "Vrcholné vedení",
+        "Personální oddělení"
+      ],
+      "defaultState": "implemented",
+      "implementationDescription": "Osoba pověřená za kybernetickou bezpečnost disponuje certifikátem o absolvování e-lerningového kurzu od NÚKIB. Následně absolvoval školení CompTIA, kde úspěšně absolvoval certifikační zkoušku. Všechny certifikáty jsou uloženy u personálního oddělení.",
+      "frameworkMappings": [
+        {
+          "frameworkId": "zokb",
+          "reference": "§ 4 písm. a) bod 2",
+          "title": "Požadavky na vrcholné vedení"
+        }
+      ],
+      "archived": false,
+      "sourceRow": 24
+    },
+    {
+      "paragraph": "§ 4",
+      "pismeno": "písm. b)",
+      "exactReference": "§ 4 písm. b)",
+      "title": "Požadavky na vrcholné vedení",
+      "text": "absolvuje prokazatelně školení podle § 5 odst. 2 písm. a),",
+      "tier": "mandatory_minimum",
+      "priority": "unset",
+      "deadline": {
+        "raw": "-",
+        "type": "unknown"
+      },
+      "owners": [
+        "Vrcholné vedení",
+        "Personální oddělení"
+      ],
+      "defaultState": "implemented",
+      "implementationDescription": "Vrcholné vedení se pravidelně účastní školení v oblasti kybernetické bezpečnosti na míru, kde se kromě základních témat řeší i aktuální hrozby a trendy v kybernetické bezpečnosti. Dále absolvuje pravidelná školení od NÚKIB, čímž získává přehled o svých povinnostech a hlavních kybernetických rizicích. Všechny záznamy o absolvování školení jsou uloženy u personálního oddělení.",
+      "frameworkMappings": [
+        {
+          "frameworkId": "zokb",
+          "reference": "§ 4 písm. b)",
+          "title": "Požadavky na vrcholné vedení"
+        }
+      ],
+      "archived": false,
+      "sourceRow": 25
+    },
+    {
+      "paragraph": "§ 4",
+      "pismeno": "písm. c)",
+      "exactReference": "§ 4 písm. c)",
+      "title": "Požadavky na vrcholné vedení",
+      "text": "zajistí dostupnost zdrojů potřebných pro zajišťování kybernetické bezpečnosti v souladu s přehledem bezpečnostních opatření,",
+      "tier": "mandatory_minimum",
+      "priority": "unset",
+      "deadline": {
+        "raw": "-",
+        "type": "unknown"
+      },
+      "owners": [
+        "Vrcholné vedení"
+      ],
+      "defaultState": "implemented",
+      "implementationDescription": "Organizace má alokovaný jasný rozpočet na KB. Zaměstnává odborníky na KB a vytváří atraktivní podmínky, aby je udržela. KB má v organizaci podporu vedení.",
+      "frameworkMappings": [
+        {
+          "frameworkId": "zokb",
+          "reference": "§ 4 písm. c)",
+          "title": "Požadavky na vrcholné vedení"
+        }
+      ],
+      "archived": false,
+      "sourceRow": 26
+    },
+    {
+      "paragraph": "§ 4",
+      "pismeno": "písm. d)",
+      "exactReference": "§ 4 písm. d)",
+      "title": "Požadavky na vrcholné vedení",
+      "text": "se prokazatelně seznamuje se stavem plnění bezpečnostních opatření uvedeným v přehledu bezpečnostních opatření podle § 3 odst. 2 písm. a),",
+      "tier": "mandatory_minimum",
+      "priority": "unset",
+      "deadline": {
+        "raw": "-",
+        "type": "unknown"
+      },
+      "owners": [
+        "Vrcholné vedení",
+        "Osoba pověřená za kybernetickou bezpečnost"
+      ],
+      "defaultState": "implemented",
+      "implementationDescription": "Vrcholné vedení každý měsíc dostává detailní reporty a zúčastňuje se pravidelných briefingů s oddělením IT.",
+      "frameworkMappings": [
+        {
+          "frameworkId": "zokb",
+          "reference": "§ 4 písm. d)",
+          "title": "Požadavky na vrcholné vedení"
+        }
+      ],
+      "archived": false,
+      "sourceRow": 27
+    },
+    {
+      "paragraph": "§ 4",
+      "pismeno": "písm. e)",
+      "exactReference": "§ 4 písm. e)",
+      "title": "Požadavky na vrcholné vedení",
+      "text": "prosazuje neustálé zlepšování zajišťování kybernetické bezpečnosti a za tímto účelem podporuje osobu pověřenou kybernetickou bezpečností a jiné relevantní osoby a",
+      "tier": "mandatory_minimum",
+      "priority": "unset",
+      "deadline": {
+        "raw": "-",
+        "type": "unknown"
+      },
+      "owners": [
+        "Vrcholné vedení"
+      ],
+      "defaultState": "implemented",
+      "implementationDescription": "Podpora neustálého zlepšování zajišťování kybernetické bezpečnosti je ukotvena v dokumentu Bezpecnosti-politika-KB.docx v kapitole Podpora neustálého zlepšování zajišťování kybernetické bezpečnosti. Organizace má vybudovanou interní bezpečnostní kulturu a vrcholné vedení aktivně podporuje zaměstnance v hlášení bezpečnostních incidentů a jsou pravidelně pořádány workshopy.",
+      "frameworkMappings": [
+        {
+          "frameworkId": "zokb",
+          "reference": "§ 4 písm. e)",
+          "title": "Požadavky na vrcholné vedení"
+        }
+      ],
+      "archived": false,
+      "sourceRow": 28
+    },
+    {
+      "paragraph": "§ 4",
+      "pismeno": "písm. f)",
+      "exactReference": "§ 4 písm. f)",
+      "title": "Požadavky na vrcholné vedení",
+      "text": "stanoví prioritu obnovy primárních aktiv.",
+      "tier": "mandatory_minimum",
+      "priority": "unset",
+      "deadline": {
+        "raw": "Testování plánů obnovy - Q4 2026",
+        "type": "unknown"
+      },
+      "owners": [
+        "Vrcholné vedení",
+        "Osoba pověřená za kybernetickou bezpečnost"
+      ],
+      "defaultState": "implemented",
+      "implementationDescription": "Vrcholné vedení rozhoduje na základě jasně definovaných kritérií (v dokument Bezpecnostni-politika-KB.docx), co musí být obnoveno jako první, a pravidelně to ověřuje. Má detailní plán obnovy (v dokumentu Plany-obnovy.xlsx), který bude pravidelně testován a aktualizován. V tomto dokumentu jsou stanoveny i priority obnovy primárních aktiv.",
+      "frameworkMappings": [
+        {
+          "frameworkId": "zokb",
+          "reference": "§ 4 písm. f)",
+          "title": "Požadavky na vrcholné vedení"
+        }
+      ],
+      "archived": false,
+      "sourceRow": 29
+    },
+    {
+      "paragraph": "§ 5",
+      "odstavec": "odst. 1",
+      "pismeno": "písm. a)",
+      "exactReference": "§ 5 odst. 1 písm. a)",
+      "title": "Bezpečnost lidských zdrojů",
+      "text": "stanoví politiku bezpečného chování uživatelů, v jejímž rámci zohledňuje relevantní témata uvedená v příloze č. 3 k této vyhlášce,",
+      "tier": "mandatory_minimum",
+      "priority": "unset",
+      "deadline": {
+        "raw": "-",
+        "type": "unknown"
+      },
+      "owners": [
+        "Osoba pověřená za kybernetickou bezpečnost"
+      ],
+      "defaultState": "implemented",
+      "implementationDescription": "Plněno dokumentem Bezpecnosti-politika-KB.docx, kapitola Bezpečné chování uživatelů. Jsou zohledněna všechna témata v příloze č. 3 vyhlášky.",
+      "frameworkMappings": [
+        {
+          "frameworkId": "zokb",
+          "reference": "§ 5 odst. 1 písm. a)",
+          "title": "Bezpečnost lidských zdrojů"
+        }
+      ],
+      "archived": false,
+      "sourceRow": 31
+    },
+    {
+      "paragraph": "§ 5",
+      "odstavec": "odst. 1",
+      "pismeno": "písm. b)",
+      "exactReference": "§ 5 odst. 1 písm. b)",
+      "title": "Bezpečnost lidských zdrojů",
+      "text": "stanoví pravidla rozvoje bezpečnostního povědomí vrcholného vedení, uživatelů, administrátorů a osoby pověřené kybernetickou bezpečností, včetně pravidel pro tvorbu hesel,",
+      "tier": "mandatory_minimum",
+      "priority": "unset",
+      "deadline": {
+        "raw": "-",
+        "type": "unknown"
+      },
+      "owners": [
+        "Osoba pověřená za kybernetickou bezpečnost"
+      ],
+      "defaultState": "implemented",
+      "implementationDescription": "Plněno dokumentem Bezpecnosti-politika-KB.docx, kapitoly Rozvoj bezpečnostního povědomí a Pravidla pro tvorbu hesel.",
+      "frameworkMappings": [
+        {
+          "frameworkId": "zokb",
+          "reference": "§ 5 odst. 1 písm. b)",
+          "title": "Bezpečnost lidských zdrojů"
+        }
+      ],
+      "archived": false,
+      "sourceRow": 32
+    },
+    {
+      "paragraph": "§ 5",
+      "odstavec": "odst. 1",
+      "pismeno": "písm. c)",
+      "exactReference": "§ 5 odst. 1 písm. c)",
+      "title": "Bezpečnost lidských zdrojů",
+      "text": "zajistí kontrolu dodržování bezpečnostní politiky ze strany uživatelů, administrátorů a osoby pověřené kybernetickou bezpečností a",
+      "tier": "mandatory_minimum",
+      "priority": "unset",
+      "deadline": {
+        "raw": "-",
+        "type": "unknown"
+      },
+      "owners": [
+        "Osoba pověřená za kybernetickou bezpečnost",
+        "vedoucí zaměstanec"
+      ],
+      "defaultState": "implemented",
+      "implementationDescription": "Každý zaměstnanec (včetně stážistů a zaměstnanců na dohodu) je smluvně zavázán dodržovat interní směrnice organizace. Některé politiky jsou vynucovány technicky (např. tvorba hesel) a také probíhá náhodná kontrola dodržovaní bezpečnostních politik osobou pověřenou za KB nebo vedoucím zaměstnancem.",
+      "frameworkMappings": [
+        {
+          "frameworkId": "zokb",
+          "reference": "§ 5 odst. 1 písm. c)",
+          "title": "Bezpečnost lidských zdrojů"
+        }
+      ],
+      "archived": false,
+      "sourceRow": 33
+    },
+    {
+      "paragraph": "§ 5",
+      "odstavec": "odst. 1",
+      "pismeno": "písm. d)",
+      "exactReference": "§ 5 odst. 1 písm. d)",
+      "title": "Bezpečnost lidských zdrojů",
+      "text": "stanoví pravidla a postupy pro řešení případů porušení bezpečnostní politiky.",
+      "tier": "mandatory_minimum",
+      "priority": "unset",
+      "deadline": {
+        "raw": "-",
+        "type": "unknown"
+      },
+      "owners": [
+        "Vrcholné vedení"
+      ],
+      "defaultState": "implemented",
+      "implementationDescription": "V dokumentu Bezpecnosti-politika-KB.docx jsou stanovena pravidla a postupy pro řešení případů porušení bezpečnostní politiky, která vychází ze Zákoníku práce.",
+      "frameworkMappings": [
+        {
+          "frameworkId": "zokb",
+          "reference": "§ 5 odst. 1 písm. d)",
+          "title": "Bezpečnost lidských zdrojů"
+        }
+      ],
+      "archived": false,
+      "sourceRow": 34
+    },
+    {
+      "paragraph": "§ 5",
+      "odstavec": "odst. 2",
+      "pismeno": "písm. a)",
+      "exactReference": "§ 5 odst. 2 písm. a)",
+      "title": "Bezpečnost lidských zdrojů",
+      "text": "poučení vrcholného vedení o jeho povinnostech a o bezpečnostní politice, zejména v oblasti zajišťování kybernetické bezpečnosti, formou vstupních a pravidelných školení,",
+      "tier": "mandatory_minimum",
+      "priority": "high",
+      "deadline": {
+        "raw": "Q1 2026",
+        "type": "unknown"
+      },
+      "owners": [
+        "Vrcholné vedení",
+        "Osoba pověřená za kybernetickou bezpečnost"
+      ],
+      "defaultState": "planned",
+      "implementationDescription": "Vrcholné vedení bude absolvovat e-learnigový kurz od NÚKIB s názvem Kurz pro vrcholné vedení. Dále bude vrcholné vedení absolvovat pravidelné školení KB.",
+      "frameworkMappings": [
+        {
+          "frameworkId": "zokb",
+          "reference": "§ 5 odst. 2 písm. a)",
+          "title": "Bezpečnost lidských zdrojů"
+        }
+      ],
+      "archived": false,
+      "sourceRow": 36
+    },
+    {
+      "paragraph": "§ 5",
+      "odstavec": "odst. 2",
+      "pismeno": "písm. b)",
+      "exactReference": "§ 5 odst. 2 písm. b)",
+      "title": "Bezpečnost lidských zdrojů",
+      "text": "vstupní školení v oblasti kybernetické bezpečnosti,",
+      "tier": "mandatory_minimum",
+      "priority": "unset",
+      "deadline": {
+        "raw": "-",
+        "type": "unknown"
+      },
+      "owners": [
+        "Osoba poveřená za kybernetickou bezpečnost"
+      ],
+      "defaultState": "implemented",
+      "implementationDescription": "Každý nový zaměstnanec absolvuje vstupní školení v oblasti kybernetické bezpečnosti.",
+      "frameworkMappings": [
+        {
+          "frameworkId": "zokb",
+          "reference": "§ 5 odst. 2 písm. b)",
+          "title": "Bezpečnost lidských zdrojů"
+        }
+      ],
+      "archived": false,
+      "sourceRow": 37
+    },
+    {
+      "paragraph": "§ 5",
+      "odstavec": "odst. 2",
+      "pismeno": "písm. c)",
+      "exactReference": "§ 5 odst. 2 písm. c)",
+      "title": "Bezpečnost lidských zdrojů",
+      "text": "pravidelná školení v oblasti kybernetické bezpečnosti a",
+      "tier": "mandatory_minimum",
+      "priority": "unset",
+      "deadline": {
+        "raw": "-",
+        "type": "unknown"
+      },
+      "owners": [
+        "Osoba poveřená za kybernetickou bezpečnost"
+      ],
+      "defaultState": "implemented",
+      "implementationDescription": "Jednou za rok probíhají prezenční průběžná školení v oblasti kybernetické bezpečnosti uzpůsobena na míru organizaci.",
+      "frameworkMappings": [
+        {
+          "frameworkId": "zokb",
+          "reference": "§ 5 odst. 2 písm. c)",
+          "title": "Bezpečnost lidských zdrojů"
+        }
+      ],
+      "archived": false,
+      "sourceRow": 38
+    },
+    {
+      "paragraph": "§ 5",
+      "odstavec": "odst. 2",
+      "pismeno": "písm. d)",
+      "exactReference": "§ 5 odst. 2 písm. d)",
+      "title": "Bezpečnost lidských zdrojů",
+      "text": "potřebná odborná teoretická i praktická školení administrátorů a osoby pověřené kybernetickou bezpečností v souladu s jejich pracovní náplní.",
+      "tier": "mandatory_minimum",
+      "priority": "unset",
+      "deadline": {
+        "raw": "-",
+        "type": "unknown"
+      },
+      "owners": [
+        "Osoba poveřená za kybernetickou bezpečnost"
+      ],
+      "defaultState": "implemented",
+      "implementationDescription": "Administrátoři a osoba pověřená kybernetickou bezpečností mají vlastní rozpočet na školení a několikrát ročně absolvují odborná školení, jež mají teoretickou i praktickou náplň.",
+      "frameworkMappings": [
+        {
+          "frameworkId": "zokb",
+          "reference": "§ 5 odst. 2 písm. d)",
+          "title": "Bezpečnost lidských zdrojů"
+        }
+      ],
+      "archived": false,
+      "sourceRow": 39
+    },
+    {
+      "paragraph": "§ 5",
+      "odstavec": "odst. 3",
+      "exactReference": "§ 5 odst. 3",
+      "title": "Bezpečnost lidských zdrojů",
+      "text": "Povinná osoba vede přehledy o provedených školeních a seznamy školených osob podle odstavce 2.",
+      "tier": "mandatory_minimum",
+      "priority": "medium",
+      "deadline": {
+        "raw": "Q1 2026",
+        "type": "unknown"
+      },
+      "owners": [
+        "Osoba poveřená za kybernetickou bezpečnost"
+      ],
+      "defaultState": "not_implemented",
+      "implementationDescription": "První přehled za rok 2025 bude k dispozici na začátku roku 2026, až absolvují školení všichni zaměstnanci organizace. Přehled bude vedený u personálního oddělení.",
+      "notImplementedJustification": "První přehled za rok 2025 bude k dispozici na začátku roku 2026, až absolvují školení všichni zaměstnanci organizace. Přehled bude vedený u personálního oddělení.",
+      "frameworkMappings": [
+        {
+          "frameworkId": "zokb",
+          "reference": "§ 5 odst. 3",
+          "title": "Bezpečnost lidských zdrojů"
+        }
+      ],
+      "archived": false,
+      "sourceRow": 40
+    },
+    {
+      "paragraph": "§ 6",
+      "pismeno": "písm. a)",
+      "exactReference": "§ 6 písm. a)",
+      "title": "Řízení kontinuity činností",
+      "text": "stanoví prioritu technických aktiv, pořadí a postupy jejich obnovy a zohlední přitom stanovenou prioritu relevantního primárního aktiva podle § 4 písm. f),",
+      "tier": "mandatory_minimum",
+      "priority": "unset",
+      "deadline": {
+        "raw": "-",
+        "type": "unknown"
+      },
+      "owners": [
+        "Vrcholné vedení",
+        "Osoba pověřená za kybernetickou bezpečnost"
+      ],
+      "defaultState": "implemented",
+      "implementationDescription": "Povinnost stanovení priority technických aktiv, pořadí a postupy jejich obnovy a zohlední přitom stanovenou prioritu relevantního primárního aktiva podle § 4 písm. f) je ukotvena v dokumentu Bezpecnosti-politika-KB.docx, samotné priority, pořadí a postupy jsou vypracovány v dokumentu Plany-obnovy.xlsx.",
+      "frameworkMappings": [
+        {
+          "frameworkId": "zokb",
+          "reference": "§ 6 písm. a)",
+          "title": "Řízení kontinuity činností"
+        }
+      ],
+      "archived": false,
+      "sourceRow": 42
+    },
+    {
+      "paragraph": "§ 6",
+      "pismeno": "písm. b)",
+      "exactReference": "§ 6 písm. b)",
+      "title": "Řízení kontinuity činností",
+      "text": "stanoví povinnosti a odpovědnost konkrétních osob za jednotlivé činnosti pro zajištění kontinuity činností a k obnově podle písmene a) a",
+      "tier": "mandatory_minimum",
+      "priority": "unset",
+      "deadline": {
+        "raw": "-",
+        "type": "unknown"
+      },
+      "owners": [
+        "Vrcholné vedení",
+        "Osoba pověřená za kybernetickou bezpečnost"
+      ],
+      "defaultState": "implemented",
+      "implementationDescription": "Povinnosti a odpovědnosti konkrétních osob za jednotlivé činnosti pro zajištění kontinuity činností a k obnově technický aktiv jsou stanoveny v dokumentu Plany-obnovy.xlsx.",
+      "frameworkMappings": [
+        {
+          "frameworkId": "zokb",
+          "reference": "§ 6 písm. b)",
+          "title": "Řízení kontinuity činností"
+        }
+      ],
+      "archived": false,
+      "sourceRow": 43
+    },
+    {
+      "paragraph": "§ 6",
+      "pismeno": "písm. c)",
+      "exactReference": "§ 6 písm. c)",
+      "title": "Řízení kontinuity činností",
+      "text": "vytváří pravidelné zálohy informací, dat, konfigurací a nastavení technických aktiv nezbytných zejména pro účely obnovy regulované služby pro případ kybernetického bezpečnostního incidentu.",
+      "tier": "mandatory_minimum",
+      "priority": "high",
+      "deadline": {
+        "raw": "Q4 2026",
+        "type": "unknown"
+      },
+      "owners": [
+        "Oddělení IT"
+      ],
+      "defaultState": "planned",
+      "implementationDescription": "Prozatím nejsou prováděny zálohy všech informací, dat, konfigurací a nastavení technických aktiv nezbytných zejména pro účely obnovy regulované služby. Postupně jsou do procesu záloh přidávána aktiva dle priority stanovené v dokumentu Plany-obnovy.xlsx. V tomto dokumentu je také vyznačeno, u kterých technických aktiv jsou zálohy prováděny a v jakém intervalu a rozsahu. Na rok 2026 je plánováno pořízení nového zálohovacího serveru a zavedení procesu zálohování u technických aktiv s prioritou 3 a výšší.",
+      "frameworkMappings": [
+        {
+          "frameworkId": "zokb",
+          "reference": "§ 6 písm. c)",
+          "title": "Řízení kontinuity činností"
+        }
+      ],
+      "archived": false,
+      "sourceRow": 44
+    },
+    {
+      "paragraph": "§ 7",
+      "odstavec": "odst. 1",
+      "pismeno": "písm. a)",
+      "exactReference": "§ 7 odst. 1 písm. a)",
+      "title": "Řízení přístupu",
+      "text": "přidělí každému uživateli a administrátorovi přistupujícímu k aktivům přístupová práva a oprávnění na úroveň nezbytně nutnou k výkonu jejich práce a jedinečný identifikátor daného typu účtu, přičemž od sebe odděluje uživatelské a administrátorské účty jedné osoby",
+      "tier": "assessable",
+      "priority": "unset",
+      "deadline": {
+        "raw": "-",
+        "type": "unknown"
+      },
+      "owners": [
+        "Oddělení IT"
+      ],
+      "defaultState": "implemented",
+      "implementationDescription": "Pravidla ohledně uživatelksých účtů jsou stanovena v dokumentu Bezpecnosti-politika-KB.docx v kapitole Řízení přístupu.",
+      "frameworkMappings": [
+        {
+          "frameworkId": "zokb",
+          "reference": "§ 7 odst. 1 písm. a)",
+          "title": "Řízení přístupu"
+        }
+      ],
+      "archived": false,
+      "sourceRow": 46
+    },
+    {
+      "paragraph": "§ 7",
+      "odstavec": "odst. 1",
+      "pismeno": "písm. b)",
+      "exactReference": "§ 7 odst. 1 písm. b)",
+      "title": "Řízení přístupu",
+      "text": "řídí identifikátory, přístupová práva a oprávnění účtů technických aktiv,",
+      "tier": "assessable",
+      "priority": "unset",
+      "deadline": {
+        "raw": "-",
+        "type": "unknown"
+      },
+      "owners": [
+        "Oddělení IT"
+      ],
+      "defaultState": "implemented",
+      "implementationDescription": "Je vedena evidence typů uživatelských účtů a jejich spojení s konkrétními aktivy v dokumentu evidence-uctu.xlsx. Dále je využíváno velké množství specifických aktiv, kde u některých z nich není možné k řízení uživatelských účtů komplexně přistupovat. Pro jednotlivá aktiva s odlišným způsobem řízení uživatelských oprávnění je vedena speciální evidence, obsahující informace a politiky technických účtů v dokumentu specifikace-evidence-uctu.xlsx.",
+      "frameworkMappings": [
+        {
+          "frameworkId": "zokb",
+          "reference": "§ 7 odst. 1 písm. b)",
+          "title": "Řízení přístupu"
+        }
+      ],
+      "archived": false,
+      "sourceRow": 47
+    },
+    {
+      "paragraph": "§ 7",
+      "odstavec": "odst. 1",
+      "pismeno": "písm. c)",
+      "exactReference": "§ 7 odst. 1 písm. c)",
+      "title": "Řízení přístupu",
+      "text": "zavádí bezpečnostní opatření potřebná pro bezpečné používání mobilních zařízení a jiných obdobných technických aktiv, popřípadě i bezpečnostní opatření spojená s využitím technických aktiv, která povinná osoba nemá ve své správě,",
+      "tier": "assessable",
+      "priority": "high",
+      "deadline": {
+        "raw": "Q1 2027",
+        "type": "unknown"
+      },
+      "owners": [
+        "Oddělení IT"
+      ],
+      "defaultState": "planned",
+      "implementationDescription": "Bezpečnostní opatření pro mobilní zařízení jsou popsána v dokumentu Bezpecnosti-politika-KB.docx v kapitole Řízení přístupu. Je zaveden centrální nástroj na správu mobilních zařízení. Na začátku roku 2027 je plánováno pořízení nástroje EDR.",
+      "frameworkMappings": [
+        {
+          "frameworkId": "zokb",
+          "reference": "§ 7 odst. 1 písm. c)",
+          "title": "Řízení přístupu"
+        }
+      ],
+      "archived": false,
+      "sourceRow": 48
+    },
+    {
+      "paragraph": "§ 7",
+      "odstavec": "odst. 1",
+      "pismeno": "písm. d)",
+      "exactReference": "§ 7 odst. 1 písm. d)",
+      "title": "Řízení přístupu",
+      "text": "provádí pravidelné přezkoumání nastavení veškerých přístupových práv a oprávnění,",
+      "tier": "assessable",
+      "priority": "unset",
+      "deadline": {
+        "raw": "-",
+        "type": "unknown"
+      },
+      "owners": [
+        "Oddělení IT",
+        "Pověřená osoba za kybernetickou bezpečnost"
+      ],
+      "defaultState": "implemented",
+      "implementationDescription": "Organizace periodicky (jednou za měsíc) kontroluje relevantnost přidělených práv. Nutnost pravidelné kontroly je stanovena v dokumentu Bezpecnosti-politika-KB.docx v kapitole Řízení přístupu.",
+      "frameworkMappings": [
+        {
+          "frameworkId": "zokb",
+          "reference": "§ 7 odst. 1 písm. d)",
+          "title": "Řízení přístupu"
+        }
+      ],
+      "archived": false,
+      "sourceRow": 49
+    },
+    {
+      "paragraph": "§ 7",
+      "odstavec": "odst. 1",
+      "pismeno": "písm. e)",
+      "exactReference": "§ 7 odst. 1 písm. e)",
+      "title": "Řízení přístupu",
+      "text": "zajistí bezodkladné odebrání nebo změnu přístupových práv a oprávnění při změně pozice nebo zařazení uživatelů nebo administrátorů a",
+      "tier": "assessable",
+      "priority": "unset",
+      "deadline": {
+        "raw": "-",
+        "type": "unknown"
+      },
+      "owners": [
+        "Oddělení IT",
+        "Pověřená osoba za kybernetickou bezpečnost",
+        "Personální oddělení"
+      ],
+      "defaultState": "implemented",
+      "implementationDescription": "Pravidla stanoveny v dokumentu Bezpecnosti-politika-KB.docx v kapitole Řízení přístupu. Při procesu odchodu zaměstnance může dojít i k dřívějšímu vypnutí některých služeb, jako např. VPN připojení či izolace síťových disků. Informační systém personální agendy byl doplněn o technologii, zajišťující informování relevantních pracovníků IT oddělení s technickou kontrolou činností, zda byly provedeny kroky dle schválených politik.",
+      "frameworkMappings": [
+        {
+          "frameworkId": "zokb",
+          "reference": "§ 7 odst. 1 písm. e)",
+          "title": "Řízení přístupu"
+        }
+      ],
+      "archived": false,
+      "sourceRow": 50
+    },
+    {
+      "paragraph": "§ 7",
+      "odstavec": "odst. 1",
+      "pismeno": "písm. f)",
+      "exactReference": "§ 7 odst. 1 písm. f)",
+      "title": "Řízení přístupu",
+      "text": "zajistí deaktivaci účtu a bezodkladné odebrání nebo změnu přístupových práv a oprávnění při ukončení nebo změně smluvního vztahu, na jehož základě došlo ke zřízení přístupu k aktivům.",
+      "tier": "assessable",
+      "priority": "unset",
+      "deadline": {
+        "raw": "",
+        "type": "unknown"
+      },
+      "owners": [],
+      "defaultState": "implemented",
+      "frameworkMappings": [
+        {
+          "frameworkId": "zokb",
+          "reference": "§ 7 odst. 1 písm. f)",
+          "title": "Řízení přístupu"
+        }
+      ],
+      "archived": false,
+      "sourceRow": 51
+    },
+    {
+      "paragraph": "§ 7",
+      "odstavec": "odst. 2",
+      "exactReference": "§ 7 odst. 2",
+      "title": "Řízení přístupu",
+      "text": "Povinná osoba v rámci zajištění fyzické bezpečnosti zamezí neoprávněnému přístupu ke svým aktivům a předchází poškození, odcizení, zneužití aktiv, neoprávněným zásahům do nich a narušení bezpečnosti poskytování regulované služby.",
+      "tier": "assessable",
+      "priority": "unset",
+      "deadline": {
+        "raw": "-",
+        "type": "unknown"
+      },
+      "owners": [
+        "Oddělení IT",
+        "Oddělení fyzické bezpečnosti"
+      ],
+      "defaultState": "implemented",
+      "implementationDescription": "Z pohledu fyzického zabezpečení organizace vypracovala rozdělení fyzických perimetrů areálu do zón v dokumentu Bezpecnostni-politika-KB.docx v kapitole Fyzická bezpečnost, pro které jsou zpracovány bezpečnostní pravidla s ohledem na jejich rizikovost a zohledněním dopadu na celkový chod organizace. Dále jsou v této kapitole uvedeny zavedená bezpečnostní opatření zajišťující předcházení poškození, odcizení, zneužití dotčených aktiv organizace.",
+      "frameworkMappings": [
+        {
+          "frameworkId": "zokb",
+          "reference": "§ 7 odst. 2",
+          "title": "Řízení přístupu"
+        }
+      ],
+      "archived": false,
+      "sourceRow": 52
+    },
+    {
+      "paragraph": "§ 8",
+      "odstavec": "odst. 1",
+      "pismeno": "písm. a)",
+      "exactReference": "§ 8 odst. 1 písm. a)",
+      "title": "Řízení identit a jejich oprávnění",
+      "text": "řízení počtu možných neúspěšných pokusů o přihlášení,",
+      "tier": "assessable",
+      "priority": "unset",
+      "deadline": {
+        "raw": "-",
+        "type": "unknown"
+      },
+      "owners": [
+        "Oddělení IT"
+      ],
+      "defaultState": "implemented",
+      "implementationDescription": "Pravidla ohledně řízení identit a jejich oprávnění jsou stanovena v dokumentu Bezpecnosti-politika-KB.docx v kapitole Řízení identit a jejich oprávnění.",
+      "frameworkMappings": [
+        {
+          "frameworkId": "zokb",
+          "reference": "§ 8 odst. 1 písm. a)",
+          "title": "Řízení identit a jejich oprávnění"
+        }
+      ],
+      "archived": false,
+      "sourceRow": 54
+    },
+    {
+      "paragraph": "§ 8",
+      "odstavec": "odst. 1",
+      "pismeno": "písm. b)",
+      "exactReference": "§ 8 odst. 1 písm. b)",
+      "title": "Řízení identit a jejich oprávnění",
+      "text": "opětovné ověření identity po stanovené době nečinnosti,",
+      "tier": "assessable",
+      "priority": "unset",
+      "deadline": {
+        "raw": "-",
+        "type": "unknown"
+      },
+      "owners": [
+        "Oddělení IT"
+      ],
+      "defaultState": "implemented",
+      "implementationDescription": "Pravidla ohledně řízení identit a jejich oprávnění jsou stanovena v dokumentu Bezpecnosti-politika-KB.docx v kapitole Řízení identit a jejich oprávnění.",
+      "frameworkMappings": [
+        {
+          "frameworkId": "zokb",
+          "reference": "§ 8 odst. 1 písm. b)",
+          "title": "Řízení identit a jejich oprávnění"
+        }
+      ],
+      "archived": false,
+      "sourceRow": 55
+    },
+    {
+      "paragraph": "§ 8",
+      "odstavec": "odst. 1",
+      "pismeno": "písm. c)",
+      "exactReference": "§ 8 odst. 1 písm. c)",
+      "title": "Řízení identit a jejich oprávnění",
+      "text": "odolnost uložených a přenášených autentizačních údajů a",
+      "tier": "assessable",
+      "priority": "unset",
+      "deadline": {
+        "raw": "-",
+        "type": "unknown"
+      },
+      "owners": [
+        "Oddělení IT"
+      ],
+      "defaultState": "implemented",
+      "implementationDescription": "Pravidla ohledně řízení identit a jejich oprávnění jsou stanovena v dokumentu Bezpecnosti-politika-KB.docx v kapitole Řízení identit a jejich oprávnění.",
+      "frameworkMappings": [
+        {
+          "frameworkId": "zokb",
+          "reference": "§ 8 odst. 1 písm. c)",
+          "title": "Řízení identit a jejich oprávnění"
+        }
+      ],
+      "archived": false,
+      "sourceRow": 56
+    },
+    {
+      "paragraph": "§ 8",
+      "odstavec": "odst. 1",
+      "pismeno": "písm. d)",
+      "exactReference": "§ 8 odst. 1 písm. d)",
+      "title": "Řízení identit a jejich oprávnění",
+      "text": "řízení přístupových práv, oprávnění pro čtení a zápis informací a dat a změnu oprávnění.",
+      "tier": "assessable",
+      "priority": "unset",
+      "deadline": {
+        "raw": "-",
+        "type": "unknown"
+      },
+      "owners": [
+        "Oddělení IT"
+      ],
+      "defaultState": "implemented",
+      "implementationDescription": "Pravidla ohledně řízení identit a jejich oprávnění jsou stanovena v dokumentu Bezpecnosti-politika-KB.docx v kapitole Řízení identit a jejich oprávnění.",
+      "frameworkMappings": [
+        {
+          "frameworkId": "zokb",
+          "reference": "§ 8 odst. 1 písm. d)",
+          "title": "Řízení identit a jejich oprávnění"
+        }
+      ],
+      "archived": false,
+      "sourceRow": 57
+    },
+    {
+      "paragraph": "§ 8",
+      "odstavec": "odst. 2",
+      "exactReference": "§ 8 odst. 2",
+      "title": "Řízení identit a jejich oprávnění",
+      "text": "Povinná osoba pro ověření identity administrátorů, uživatelů a technických aktiv využívá autentizační mechanismus, který je založený na vícefaktorové autentizaci s alespoň dvěma různými typy faktorů, nebo využívá autentizační mechanismus, který je založen na aktuálně odolné kontinuální autentizaci založené na modelu nulové důvěry.",
+      "tier": "assessable",
+      "priority": "unset",
+      "deadline": {
+        "raw": "-",
+        "type": "unknown"
+      },
+      "owners": [
+        "Oddělení IT"
+      ],
+      "defaultState": "implemented",
+      "implementationDescription": "Je využívána vícefaktorová autentizace. Pravidla ohledně řízení identit a jejich oprávnění jsou stanovena v dokumentu Bezpecnosti-politika-KB.docx v kapitole Řízení identit a jejich oprávnění.",
+      "frameworkMappings": [
+        {
+          "frameworkId": "zokb",
+          "reference": "§ 8 odst. 2",
+          "title": "Řízení identit a jejich oprávnění"
+        }
+      ],
+      "archived": false,
+      "sourceRow": 58
+    },
+    {
+      "paragraph": "§ 8",
+      "odstavec": "odst. 3",
+      "exactReference": "§ 8 odst. 3",
+      "title": "Řízení identit a jejich oprávnění",
+      "text": "Povinná osoba do doby využívání autentizačního mechanismu podle odstavce 2 využívá autentizaci pomocí kryptografických klíčů nebo certifikátů.",
+      "tier": "assessable",
+      "priority": "unset",
+      "deadline": {
+        "raw": "-",
+        "type": "unknown"
+      },
+      "owners": [
+        "-"
+      ],
+      "defaultState": "not_applicable",
+      "implementationDescription": "Nerelevantní, jelikož je využívána vícefaktorová autentizace.",
+      "notImplementedJustification": "Nerelevantní, jelikož je využívána vícefaktorová autentizace.",
+      "frameworkMappings": [
+        {
+          "frameworkId": "zokb",
+          "reference": "§ 8 odst. 3",
+          "title": "Řízení identit a jejich oprávnění"
+        }
+      ],
+      "archived": false,
+      "sourceRow": 59
+    },
+    {
+      "paragraph": "§ 8",
+      "odstavec": "odst. 4",
+      "exactReference": "§ 8 odst. 4",
+      "title": "Řízení identit a jejich oprávnění",
+      "text": "Povinná osoba do doby využívání autentizačního mechanismu podle odstavce 3 využívá nástroj založený na autentizaci pomocí identifikátoru účtu a hesla, kdy tento nástroj musí vynucovat pravidla",
+      "tier": "assessable",
+      "priority": "unset",
+      "deadline": {
+        "raw": "-",
+        "type": "unknown"
+      },
+      "owners": [
+        "-"
+      ],
+      "defaultState": "not_applicable",
+      "implementationDescription": "Nerelevantní, jelikož je využívána vícefaktorová autentizace.",
+      "notImplementedJustification": "Nerelevantní, jelikož je využívána vícefaktorová autentizace.",
+      "frameworkMappings": [
+        {
+          "frameworkId": "zokb",
+          "reference": "§ 8 odst. 4",
+          "title": "Řízení identit a jejich oprávnění"
+        }
+      ],
+      "archived": false,
+      "sourceRow": 60
+    },
+    {
+      "paragraph": "§ 8",
+      "odstavec": "odst. 4",
+      "pismeno": "písm. a)",
+      "exactReference": "§ 8 odst. 4 písm. a) bod 1",
+      "title": "Řízení identit a jejich oprávnění",
+      "text": "12 znaků pro účty uživatelů,",
+      "tier": "assessable",
+      "priority": "unset",
+      "deadline": {
+        "raw": "-",
+        "type": "unknown"
+      },
+      "owners": [
+        "-"
+      ],
+      "defaultState": "not_applicable",
+      "implementationDescription": "Nerelevantní, jelikož je využívána vícefaktorová autentizace.",
+      "notImplementedJustification": "Nerelevantní, jelikož je využívána vícefaktorová autentizace.",
+      "frameworkMappings": [
+        {
+          "frameworkId": "zokb",
+          "reference": "§ 8 odst. 4 písm. a) bod 1",
+          "title": "Řízení identit a jejich oprávnění"
+        }
+      ],
+      "archived": false,
+      "sourceRow": 62
+    },
+    {
+      "paragraph": "§ 8",
+      "odstavec": "odst. 4",
+      "pismeno": "písm. a)",
+      "exactReference": "§ 8 odst. 4 písm. a) bod 2",
+      "title": "Řízení identit a jejich oprávnění",
+      "text": "17 znaků pro účty administrátorů,",
+      "tier": "assessable",
+      "priority": "unset",
+      "deadline": {
+        "raw": "-",
+        "type": "unknown"
+      },
+      "owners": [
+        "-"
+      ],
+      "defaultState": "not_applicable",
+      "implementationDescription": "Nerelevantní, jelikož je využívána vícefaktorová autentizace.",
+      "notImplementedJustification": "Nerelevantní, jelikož je využívána vícefaktorová autentizace.",
+      "frameworkMappings": [
+        {
+          "frameworkId": "zokb",
+          "reference": "§ 8 odst. 4 písm. a) bod 2",
+          "title": "Řízení identit a jejich oprávnění"
+        }
+      ],
+      "archived": false,
+      "sourceRow": 63
+    },
+    {
+      "paragraph": "§ 8",
+      "odstavec": "odst. 4",
+      "pismeno": "písm. a)",
+      "exactReference": "§ 8 odst. 4 písm. a) bod 3",
+      "title": "Řízení identit a jejich oprávnění",
+      "text": "22 znaků pro účty technických aktiv,",
+      "tier": "assessable",
+      "priority": "unset",
+      "deadline": {
+        "raw": "-",
+        "type": "unknown"
+      },
+      "owners": [
+        "-"
+      ],
+      "defaultState": "not_applicable",
+      "implementationDescription": "Nerelevantní, jelikož je využívána vícefaktorová autentizace.",
+      "notImplementedJustification": "Nerelevantní, jelikož je využívána vícefaktorová autentizace.",
+      "frameworkMappings": [
+        {
+          "frameworkId": "zokb",
+          "reference": "§ 8 odst. 4 písm. a) bod 3",
+          "title": "Řízení identit a jejich oprávnění"
+        }
+      ],
+      "archived": false,
+      "sourceRow": 64
+    },
+    {
+      "paragraph": "§ 8",
+      "odstavec": "odst. 4",
+      "pismeno": "písm. b)",
+      "exactReference": "§ 8 odst. 4 písm. b)",
+      "title": "Řízení identit a jejich oprávnění",
+      "text": "bezodkladné změny výchozího hesla pro ověření identity technických aktiv, přičemž nové heslo musí být vytvořeno náhodným řetězcem složeným z malých a velkých písmen, číslic a speciálních znaků,",
+      "tier": "assessable",
+      "priority": "unset",
+      "deadline": {
+        "raw": "-",
+        "type": "unknown"
+      },
+      "owners": [
+        "-"
+      ],
+      "defaultState": "not_applicable",
+      "implementationDescription": "Nerelevantní, jelikož je využívána vícefaktorová autentizace.",
+      "notImplementedJustification": "Nerelevantní, jelikož je využívána vícefaktorová autentizace.",
+      "frameworkMappings": [
+        {
+          "frameworkId": "zokb",
+          "reference": "§ 8 odst. 4 písm. b)",
+          "title": "Řízení identit a jejich oprávnění"
+        }
+      ],
+      "archived": false,
+      "sourceRow": 65
+    },
+    {
+      "paragraph": "§ 8",
+      "odstavec": "odst. 4",
+      "pismeno": "písm. c)",
+      "exactReference": "§ 8 odst. 4 písm. c)",
+      "title": "Řízení identit a jejich oprávnění",
+      "text": "neomezující použití malých a velkých písmen, číslic a speciálních znaků,",
+      "tier": "assessable",
+      "priority": "unset",
+      "deadline": {
+        "raw": "-",
+        "type": "unknown"
+      },
+      "owners": [
+        "-"
+      ],
+      "defaultState": "not_applicable",
+      "implementationDescription": "Nerelevantní, jelikož je využívána vícefaktorová autentizace.",
+      "notImplementedJustification": "Nerelevantní, jelikož je využívána vícefaktorová autentizace.",
+      "frameworkMappings": [
+        {
+          "frameworkId": "zokb",
+          "reference": "§ 8 odst. 4 písm. c)",
+          "title": "Řízení identit a jejich oprávnění"
+        }
+      ],
+      "archived": false,
+      "sourceRow": 66
+    },
+    {
+      "paragraph": "§ 8",
+      "odstavec": "odst. 4",
+      "pismeno": "písm. d)",
+      "exactReference": "§ 8 odst. 4 písm. d)",
+      "title": "Řízení identit a jejich oprávnění",
+      "text": "povinné změny hesla v intervalu alespoň jednou za 18 měsíců a",
+      "tier": "assessable",
+      "priority": "unset",
+      "deadline": {
+        "raw": "-",
+        "type": "unknown"
+      },
+      "owners": [
+        "-"
+      ],
+      "defaultState": "not_applicable",
+      "implementationDescription": "Nerelevantní, jelikož je využívána vícefaktorová autentizace.",
+      "notImplementedJustification": "Nerelevantní, jelikož je využívána vícefaktorová autentizace.",
+      "frameworkMappings": [
+        {
+          "frameworkId": "zokb",
+          "reference": "§ 8 odst. 4 písm. d)",
+          "title": "Řízení identit a jejich oprávnění"
+        }
+      ],
+      "archived": false,
+      "sourceRow": 67
+    },
+    {
+      "paragraph": "§ 8",
+      "odstavec": "odst. 4",
+      "pismeno": "písm. e)",
+      "exactReference": "§ 8 odst. 4 písm. e)",
+      "title": "Řízení identit a jejich oprávnění",
+      "text": "neumožňující uživatelům a administrátorům",
+      "tier": "assessable",
+      "priority": "unset",
+      "deadline": {
+        "raw": "-",
+        "type": "unknown"
+      },
+      "owners": [
+        "-"
+      ],
+      "defaultState": "not_applicable",
+      "implementationDescription": "Nerelevantní, jelikož je využívána vícefaktorová autentizace.",
+      "notImplementedJustification": "Nerelevantní, jelikož je využívána vícefaktorová autentizace.",
+      "frameworkMappings": [
+        {
+          "frameworkId": "zokb",
+          "reference": "§ 8 odst. 4 písm. e)",
+          "title": "Řízení identit a jejich oprávnění"
+        }
+      ],
+      "archived": false,
+      "sourceRow": 68
+    },
+    {
+      "paragraph": "§ 8",
+      "odstavec": "odst. 4",
+      "pismeno": "písm. e)",
+      "exactReference": "§ 8 odst. 4 písm. e) bod 1",
+      "title": "Řízení identit a jejich oprávnění",
+      "text": "zvolit si jednoduchá a často používaná hesla,",
+      "tier": "assessable",
+      "priority": "unset",
+      "deadline": {
+        "raw": "-",
+        "type": "unknown"
+      },
+      "owners": [
+        "-"
+      ],
+      "defaultState": "not_applicable",
+      "implementationDescription": "Nerelevantní, jelikož je využívána vícefaktorová autentizace.",
+      "notImplementedJustification": "Nerelevantní, jelikož je využívána vícefaktorová autentizace.",
+      "frameworkMappings": [
+        {
+          "frameworkId": "zokb",
+          "reference": "§ 8 odst. 4 písm. e) bod 1",
+          "title": "Řízení identit a jejich oprávnění"
+        }
+      ],
+      "archived": false,
+      "sourceRow": 69
+    },
+    {
+      "paragraph": "§ 8",
+      "odstavec": "odst. 4",
+      "pismeno": "písm. e)",
+      "exactReference": "§ 8 odst. 4 písm. e) bod 2",
+      "title": "Řízení identit a jejich oprávnění",
+      "text": "tvořit hesla na základě mnohonásobně opakujících se znaků, přihlašovacích jmen, adres elektronické pošty, názvů systémů nebo obdobným způsobem a",
+      "tier": "assessable",
+      "priority": "unset",
+      "deadline": {
+        "raw": "-",
+        "type": "unknown"
+      },
+      "owners": [
+        "-"
+      ],
+      "defaultState": "not_applicable",
+      "implementationDescription": "Nerelevantní, jelikož je využívána vícefaktorová autentizace.",
+      "notImplementedJustification": "Nerelevantní, jelikož je využívána vícefaktorová autentizace.",
+      "frameworkMappings": [
+        {
+          "frameworkId": "zokb",
+          "reference": "§ 8 odst. 4 písm. e) bod 2",
+          "title": "Řízení identit a jejich oprávnění"
+        }
+      ],
+      "archived": false,
+      "sourceRow": 70
+    },
+    {
+      "paragraph": "§ 8",
+      "odstavec": "odst. 4",
+      "pismeno": "písm. e)",
+      "exactReference": "§ 8 odst. 4 písm. e) bod 3",
+      "title": "Řízení identit a jejich oprávnění",
+      "text": "opětovného použití dříve používaných hesel s pamětí alespoň 12 předchozích hesel.",
+      "tier": "assessable",
+      "priority": "unset",
+      "deadline": {
+        "raw": "-",
+        "type": "unknown"
+      },
+      "owners": [
+        "-"
+      ],
+      "defaultState": "not_applicable",
+      "implementationDescription": "Nerelevantní, jelikož je využívána vícefaktorová autentizace.",
+      "notImplementedJustification": "Nerelevantní, jelikož je využívána vícefaktorová autentizace.",
+      "frameworkMappings": [
+        {
+          "frameworkId": "zokb",
+          "reference": "§ 8 odst. 4 písm. e) bod 3",
+          "title": "Řízení identit a jejich oprávnění"
+        }
+      ],
+      "archived": false,
+      "sourceRow": 71
+    },
+    {
+      "paragraph": "§ 8",
+      "odstavec": "odst. 5",
+      "pismeno": "písm. a)",
+      "exactReference": "§ 8 odst. 5 písm. a)",
+      "title": "Řízení identit a jejich oprávnění",
+      "text": "důvěrnost při vytváření výchozích autentizačních údajů a při obnově přístupu,",
+      "tier": "assessable",
+      "priority": "unset",
+      "deadline": {
+        "raw": "-",
+        "type": "unknown"
+      },
+      "owners": [
+        "Oddělení IT"
+      ],
+      "defaultState": "implemented",
+      "implementationDescription": "Pravidla ohledně řízení identit a jejich oprávnění jsou stanovena v dokumentu Bezpecnosti-politika-KB.docx v kapitole Řízení identit a jejich oprávnění.",
+      "frameworkMappings": [
+        {
+          "frameworkId": "zokb",
+          "reference": "§ 8 odst. 5 písm. a)",
+          "title": "Řízení identit a jejich oprávnění"
+        }
+      ],
+      "archived": false,
+      "sourceRow": 73
+    },
+    {
+      "paragraph": "§ 8",
+      "odstavec": "odst. 5",
+      "pismeno": "písm. b)",
+      "exactReference": "§ 8 odst. 5 písm. b)",
+      "title": "Řízení identit a jejich oprávnění",
+      "text": "změnu výchozího hesla nebo hesla sloužícího k obnově přístupu po jeho prvním použití,",
+      "tier": "assessable",
+      "priority": "unset",
+      "deadline": {
+        "raw": "-",
+        "type": "unknown"
+      },
+      "owners": [
+        "Oddělení IT"
+      ],
+      "defaultState": "implemented",
+      "implementationDescription": "Pravidla ohledně řízení identit a jejich oprávnění jsou stanovena v dokumentu Bezpecnosti-politika-KB.docx v kapitole Řízení identit a jejich oprávnění.",
+      "frameworkMappings": [
+        {
+          "frameworkId": "zokb",
+          "reference": "§ 8 odst. 5 písm. b)",
+          "title": "Řízení identit a jejich oprávnění"
+        }
+      ],
+      "archived": false,
+      "sourceRow": 74
+    },
+    {
+      "paragraph": "§ 8",
+      "odstavec": "odst. 5",
+      "pismeno": "písm. c)",
+      "exactReference": "§ 8 odst. 5 písm. c)",
+      "title": "Řízení identit a jejich oprávnění",
+      "text": "zneplatnění hesla nebo identifikátoru sloužícího k obnově přístupu nejpozději do 24 hodin od jeho vytvoření,",
+      "tier": "assessable",
+      "priority": "unset",
+      "deadline": {
+        "raw": "-",
+        "type": "unknown"
+      },
+      "owners": [
+        "Oddělení IT"
+      ],
+      "defaultState": "implemented",
+      "implementationDescription": "Pravidla ohledně řízení identit a jejich oprávnění jsou stanovena v dokumentu Bezpecnosti-politika-KB.docx v kapitole Řízení identit a jejich oprávnění.",
+      "frameworkMappings": [
+        {
+          "frameworkId": "zokb",
+          "reference": "§ 8 odst. 5 písm. c)",
+          "title": "Řízení identit a jejich oprávnění"
+        }
+      ],
+      "archived": false,
+      "sourceRow": 75
+    },
+    {
+      "paragraph": "§ 8",
+      "odstavec": "odst. 5",
+      "pismeno": "písm. d)",
+      "exactReference": "§ 8 odst. 5 písm. d)",
+      "title": "Řízení identit a jejich oprávnění",
+      "text": "bezodkladnou změnu přístupového hesla v případě důvodného podezření na jeho kompromitaci a",
+      "tier": "assessable",
+      "priority": "unset",
+      "deadline": {
+        "raw": "-",
+        "type": "unknown"
+      },
+      "owners": [
+        "Oddělení IT"
+      ],
+      "defaultState": "implemented",
+      "implementationDescription": "Pravidla ohledně řízení identit a jejich oprávnění jsou stanovena v dokumentu Bezpecnosti-politika-KB.docx v kapitole Řízení identit a jejich oprávnění.",
+      "frameworkMappings": [
+        {
+          "frameworkId": "zokb",
+          "reference": "§ 8 odst. 5 písm. d)",
+          "title": "Řízení identit a jejich oprávnění"
+        }
+      ],
+      "archived": false,
+      "sourceRow": 76
+    },
+    {
+      "paragraph": "§ 8",
+      "odstavec": "odst. 5",
+      "pismeno": "písm. e)",
+      "exactReference": "§ 8 odst. 5 písm. e)",
+      "title": "Řízení identit a jejich oprávnění",
+      "text": "zabezpečení administrátorských účtů technických aktiv zejména určených pro případ obnovy po kybernetickém bezpečnostním incidentu a využívá tyto účty pouze v nezbytně nutných případech.",
+      "tier": "assessable",
+      "priority": "unset",
+      "deadline": {
+        "raw": "-",
+        "type": "unknown"
+      },
+      "owners": [
+        "Oddělení IT"
+      ],
+      "defaultState": "implemented",
+      "implementationDescription": "Pravidla ohledně řízení identit a jejich oprávnění jsou stanovena v dokumentu Bezpecnosti-politika-KB.docx v kapitole Řízení identit a jejich oprávnění.",
+      "frameworkMappings": [
+        {
+          "frameworkId": "zokb",
+          "reference": "§ 8 odst. 5 písm. e)",
+          "title": "Řízení identit a jejich oprávnění"
+        }
+      ],
+      "archived": false,
+      "sourceRow": 77
+    },
+    {
+      "paragraph": "§ 9",
+      "odstavec": "odst. 1",
+      "pismeno": "písm. a)",
+      "exactReference": "§ 9 odst. 1 písm. a)",
+      "title": "Detekce a zaznamenávání kybernetických bezpečnostních událostí",
+      "text": "ověření a kontrolu přenášených dat na perimetru komunikační sítě, včetně blokování nežádoucí komunikace,",
+      "tier": "assessable",
+      "priority": "unset",
+      "deadline": {
+        "raw": "-",
+        "type": "unknown"
+      },
+      "owners": [
+        "Oddělení IT"
+      ],
+      "defaultState": "implemented",
+      "implementationDescription": "Ochrana dat na perimetru komunikační sítě je stanovena v dokumentu Detekce-a-zaznamenavani-KBU.docx. Veškerá perimetrová komunikace probíhá skrze provozovaný FW, zajišťující plnění požadavku bezpečnostního opatření.",
+      "frameworkMappings": [
+        {
+          "frameworkId": "zokb",
+          "reference": "§ 9 odst. 1 písm. a)",
+          "title": "Detekce a zaznamenávání kybernetických bezpečnostních událostí"
+        }
+      ],
+      "archived": false,
+      "sourceRow": 79
+    },
+    {
+      "paragraph": "§ 9",
+      "odstavec": "odst. 1",
+      "pismeno": "písm. b)",
+      "exactReference": "§ 9 odst. 1 písm. b)",
+      "title": "Detekce a zaznamenávání kybernetických bezpečnostních událostí",
+      "text": "použití nástroje pro nepřetržitou a automatickou ochranu před škodlivým kódem na technických aktivech, zejména na",
+      "tier": "assessable",
+      "priority": "unset",
+      "deadline": {
+        "raw": "-",
+        "type": "unknown"
+      },
+      "owners": [
+        "Oddělení IT"
+      ],
+      "defaultState": "implemented",
+      "implementationDescription": "Nástroj je nasazen u běžných IT aktiv jako kancelářské koncové počítačové stanice a servery. U aktiv průmyslového charakteru s nemožností nasazení tohoto nástroje jsou zavedena náhradní bezpečnostního opatření (např. omezení síťové komunikace, fyzické zablokování komunikačních portů či řízení fyzického přístupu k těmto aktivům). Deitailně popsáno v dokumentu Detekce-a-zaznamenavani-KBU.docx.",
+      "frameworkMappings": [
+        {
+          "frameworkId": "zokb",
+          "reference": "§ 9 odst. 1 písm. b)",
+          "title": "Detekce a zaznamenávání kybernetických bezpečnostních událostí"
+        }
+      ],
+      "archived": false,
+      "sourceRow": 80
+    },
+    {
+      "paragraph": "§ 9",
+      "odstavec": "odst. 1",
+      "pismeno": "písm. b)",
+      "exactReference": "§ 9 odst. 1 písm. b) bod 1",
+      "title": "Detekce a zaznamenávání kybernetických bezpečnostních událostí",
+      "text": "serverech a",
+      "tier": "assessable",
+      "priority": "unset",
+      "deadline": {
+        "raw": "",
+        "type": "unknown"
+      },
+      "owners": [],
+      "defaultState": "implemented",
+      "frameworkMappings": [
+        {
+          "frameworkId": "zokb",
+          "reference": "§ 9 odst. 1 písm. b) bod 1",
+          "title": "Detekce a zaznamenávání kybernetických bezpečnostních událostí"
+        }
+      ],
+      "archived": false,
+      "sourceRow": 81
+    },
+    {
+      "paragraph": "§ 9",
+      "odstavec": "odst. 1",
+      "pismeno": "písm. b)",
+      "exactReference": "§ 9 odst. 1 písm. b) bod 2",
+      "title": "Detekce a zaznamenávání kybernetických bezpečnostních událostí",
+      "text": "koncových stanicích,",
+      "tier": "assessable",
+      "priority": "unset",
+      "deadline": {
+        "raw": "",
+        "type": "unknown"
+      },
+      "owners": [],
+      "defaultState": "implemented",
+      "frameworkMappings": [
+        {
+          "frameworkId": "zokb",
+          "reference": "§ 9 odst. 1 písm. b) bod 2",
+          "title": "Detekce a zaznamenávání kybernetických bezpečnostních událostí"
+        }
+      ],
+      "archived": false,
+      "sourceRow": 82
+    },
+    {
+      "paragraph": "§ 9",
+      "odstavec": "odst. 1",
+      "pismeno": "písm. c)",
+      "exactReference": "§ 9 odst. 1 písm. c)",
+      "title": "Detekce a zaznamenávání kybernetických bezpečnostních událostí",
+      "text": "řízení automatického spouštění obsahu, zejména u vyměnitelných zařízení a datových nosičů,",
+      "tier": "assessable",
+      "priority": "medium",
+      "deadline": {
+        "raw": "Q2 2026",
+        "type": "unknown"
+      },
+      "owners": [
+        "Oddělení IT"
+      ],
+      "defaultState": "planned",
+      "implementationDescription": "Řízení automatického spouštění obsahu je stanoveno v dokumentu Detekce-a-zaznamenavani-KBU.docx v kapitole Řízení automatického spouštění obsahu. Blokování automatického spouštění datových nosičů bylo vyřešeno na všech systémech nastavením dané politiky. U průmyslových výrobních zařízení budou volně dostupné USB porty zamčeny mechanickými klíči.",
+      "frameworkMappings": [
+        {
+          "frameworkId": "zokb",
+          "reference": "§ 9 odst. 1 písm. c)",
+          "title": "Detekce a zaznamenávání kybernetických bezpečnostních událostí"
+        }
+      ],
+      "archived": false,
+      "sourceRow": 83
+    },
+    {
+      "paragraph": "§ 9",
+      "odstavec": "odst. 1",
+      "pismeno": "písm. d)",
+      "exactReference": "§ 9 odst. 1 písm. d)",
+      "title": "Detekce a zaznamenávání kybernetických bezpečnostních událostí",
+      "text": "nepřetržité poskytování informací o relevantních detekovaných kybernetických bezpečnostních událostech a včasné varování relevantních osob a",
+      "tier": "assessable",
+      "priority": "unset",
+      "deadline": {
+        "raw": "-",
+        "type": "unknown"
+      },
+      "owners": [
+        "Osoba pověřená za kybernetickou bezpečnost",
+        "Oddělení IT"
+      ],
+      "defaultState": "implemented",
+      "implementationDescription": "Instalovaný nástroj automatické ochrany před škodlivým kódem disponuje centrální konzolí zobrazující stav zapojených koncových stanic. V případě výskytu podezření na bezpečnostní událost konzole automaticky zašle příslušným zaměstnancům notifikaci. Detailně popsáno v dokumentu Detekce-a-zaznamenavani-KBU.docx.",
+      "frameworkMappings": [
+        {
+          "frameworkId": "zokb",
+          "reference": "§ 9 odst. 1 písm. d)",
+          "title": "Detekce a zaznamenávání kybernetických bezpečnostních událostí"
+        }
+      ],
+      "archived": false,
+      "sourceRow": 84
+    },
+    {
+      "paragraph": "§ 9",
+      "odstavec": "odst. 1",
+      "pismeno": "písm. e)",
+      "exactReference": "§ 9 odst. 1 písm. e)",
+      "title": "Detekce a zaznamenávání kybernetických bezpečnostních událostí",
+      "text": "pravidelnou a bezodkladnou aktualizaci nástrojů pro nepřetržitou a automatickou ochranu před škodlivým kódem a dalších detekčních nástrojů a jejich pravidel.",
+      "tier": "assessable",
+      "priority": "unset",
+      "deadline": {
+        "raw": "-",
+        "type": "unknown"
+      },
+      "owners": [
+        "Osoba pověřená za kybernetickou bezpečnost+K85",
+        "Oddělení IT"
+      ],
+      "defaultState": "implemented",
+      "implementationDescription": "Instalovaný nástroj automatické ochrany před škodlivým kódem disponuje centrální konzolí zajišťujicí pravidelnou aktualizaci. Detailně popsáno v dokumentu Detekce-a-zaznamenavani-KBU.docx.",
+      "frameworkMappings": [
+        {
+          "frameworkId": "zokb",
+          "reference": "§ 9 odst. 1 písm. e)",
+          "title": "Detekce a zaznamenávání kybernetických bezpečnostních událostí"
+        }
+      ],
+      "archived": false,
+      "sourceRow": 85
+    },
+    {
+      "paragraph": "§ 9",
+      "odstavec": "odst. 2",
+      "pismeno": "písm. a)",
+      "exactReference": "§ 9 odst. 2 písm. a)",
+      "title": "Detekce a zaznamenávání kybernetických bezpečnostních událostí",
+      "text": "bezpečnostní a relevantní provozní události detekované podle odstavce 1 a bezpečnostní a relevantní provozní události technických aktiv na základě svých bezpečnostních potřeb a",
+      "tier": "assessable",
+      "priority": "unset",
+      "deadline": {
+        "raw": "-",
+        "type": "unknown"
+      },
+      "owners": [
+        "Oddělení IT"
+      ],
+      "defaultState": "implemented",
+      "implementationDescription": "Je zaveden nástroj na zaznamenávání bezpečnostních a relevantních provozní událostí. Detailně popsáno v dokumentu Detekce-a-zaznamenavani-KBU.docx.",
+      "frameworkMappings": [
+        {
+          "frameworkId": "zokb",
+          "reference": "§ 9 odst. 2 písm. a)",
+          "title": "Detekce a zaznamenávání kybernetických bezpečnostních událostí"
+        }
+      ],
+      "archived": false,
+      "sourceRow": 87
+    },
+    {
+      "paragraph": "§ 9",
+      "odstavec": "odst. 2",
+      "pismeno": "písm. b)",
+      "exactReference": "§ 9 odst. 2 písm. b)",
+      "title": "Detekce a zaznamenávání kybernetických bezpečnostních událostí",
+      "text": "u událostí podle písm. a) následující informace o události",
+      "tier": "assessable",
+      "priority": "unset",
+      "deadline": {
+        "raw": "-",
+        "type": "unknown"
+      },
+      "owners": [
+        "Oddělení IT"
+      ],
+      "defaultState": "implemented",
+      "implementationDescription": "Veškeré požadované informace o kybernetické bezpečnostní události jsou zaznamenávány dle požadavků vyhlášky. Detailně popsáno v dokumentu Detekce-a-zaznamenavani-KBU.docx.",
+      "frameworkMappings": [
+        {
+          "frameworkId": "zokb",
+          "reference": "§ 9 odst. 2 písm. b)",
+          "title": "Detekce a zaznamenávání kybernetických bezpečnostních událostí"
+        }
+      ],
+      "archived": false,
+      "sourceRow": 88
+    },
+    {
+      "paragraph": "§ 9",
+      "odstavec": "odst. 2",
+      "pismeno": "písm. b)",
+      "exactReference": "§ 9 odst. 2 písm. b) bod 1",
+      "title": "Detekce a zaznamenávání kybernetických bezpečnostních událostí",
+      "text": "datum a čas, včetně specifikace časového pásma,",
+      "tier": "assessable",
+      "priority": "unset",
+      "deadline": {
+        "raw": "",
+        "type": "unknown"
+      },
+      "owners": [],
+      "defaultState": "implemented",
+      "frameworkMappings": [
+        {
+          "frameworkId": "zokb",
+          "reference": "§ 9 odst. 2 písm. b) bod 1",
+          "title": "Detekce a zaznamenávání kybernetických bezpečnostních událostí"
+        }
+      ],
+      "archived": false,
+      "sourceRow": 89
+    },
+    {
+      "paragraph": "§ 9",
+      "odstavec": "odst. 2",
+      "pismeno": "písm. b)",
+      "exactReference": "§ 9 odst. 2 písm. b) bod 2",
+      "title": "Detekce a zaznamenávání kybernetických bezpečnostních událostí",
+      "text": "typ činnosti,",
+      "tier": "assessable",
+      "priority": "unset",
+      "deadline": {
+        "raw": "",
+        "type": "unknown"
+      },
+      "owners": [],
+      "defaultState": "implemented",
+      "frameworkMappings": [
+        {
+          "frameworkId": "zokb",
+          "reference": "§ 9 odst. 2 písm. b) bod 2",
+          "title": "Detekce a zaznamenávání kybernetických bezpečnostních událostí"
+        }
+      ],
+      "archived": false,
+      "sourceRow": 90
+    },
+    {
+      "paragraph": "§ 9",
+      "odstavec": "odst. 2",
+      "pismeno": "písm. b)",
+      "exactReference": "§ 9 odst. 2 písm. b) bod 3",
+      "title": "Detekce a zaznamenávání kybernetických bezpečnostních událostí",
+      "text": "jednoznačnou identifikaci technického aktiva a identifikaci účtu původce a",
+      "tier": "assessable",
+      "priority": "unset",
+      "deadline": {
+        "raw": "",
+        "type": "unknown"
+      },
+      "owners": [],
+      "defaultState": "implemented",
+      "frameworkMappings": [
+        {
+          "frameworkId": "zokb",
+          "reference": "§ 9 odst. 2 písm. b) bod 3",
+          "title": "Detekce a zaznamenávání kybernetických bezpečnostních událostí"
+        }
+      ],
+      "archived": false,
+      "sourceRow": 91
+    },
+    {
+      "paragraph": "§ 9",
+      "odstavec": "odst. 2",
+      "pismeno": "písm. b)",
+      "exactReference": "§ 9 odst. 2 písm. b) bod 4",
+      "title": "Detekce a zaznamenávání kybernetických bezpečnostních událostí",
+      "text": "úspěšnost nebo neúspěšnost činnosti.",
+      "tier": "assessable",
+      "priority": "unset",
+      "deadline": {
+        "raw": "",
+        "type": "unknown"
+      },
+      "owners": [],
+      "defaultState": "implemented",
+      "frameworkMappings": [
+        {
+          "frameworkId": "zokb",
+          "reference": "§ 9 odst. 2 písm. b) bod 4",
+          "title": "Detekce a zaznamenávání kybernetických bezpečnostních událostí"
+        }
+      ],
+      "archived": false,
+      "sourceRow": 92
+    },
+    {
+      "paragraph": "§ 9",
+      "odstavec": "odst. 3",
+      "exactReference": "§ 9 odst. 3",
+      "title": "Detekce a zaznamenávání kybernetických bezpečnostních událostí",
+      "text": "Povinná osoba uchovává záznamy bezpečnostních a relevantních provozních událostí po dobu, kterou si stanoví na základě svých bezpečnostních potřeb.",
+      "tier": "assessable",
+      "priority": "unset",
+      "deadline": {
+        "raw": "-",
+        "type": "unknown"
+      },
+      "owners": [
+        "Oddělení IT"
+      ],
+      "defaultState": "implemented",
+      "implementationDescription": "Dobu uchovávání bezpečnostních informací je stanovena na 18 měsíců. Detailně popsáno v dokumentu Detekce-a-zaznamenavani-KBU.docx. V oblasti fyzické bezpečnosti díky velkému množství provozovaných bezpečnostních kamer s vysokým rozlišením došlo k zohlednění přiměřenosti finančních nákladů na paměťovou kapacitu souvisejících úložišť kamerových záznamů. Bylo vyhodnoceno, že po stanovené době (7 dnů) bude docházet k automatickému přepisování uchovávaných dat. Detailně popsáno v dokumentu Bezpecnostni-politika-KB.docx v kapitole Fyzická bezpečnost.",
+      "frameworkMappings": [
+        {
+          "frameworkId": "zokb",
+          "reference": "§ 9 odst. 3",
+          "title": "Detekce a zaznamenávání kybernetických bezpečnostních událostí"
+        }
+      ],
+      "archived": false,
+      "sourceRow": 93
+    },
+    {
+      "paragraph": "§ 10",
+      "pismeno": "písm. a)",
+      "exactReference": "§ 10 písm. a)",
+      "title": "Řešení kybernetických bezpečnostních incidentů",
+      "text": "zajistí, že uživatelé, administrátoři, osoby pověřené kybernetickou bezpečností a další zaměstnanci budou oznamovat neobvyklé chování technických aktiv a podezření na jakékoliv zranitelnosti,",
+      "tier": "mandatory_minimum",
+      "priority": "unset",
+      "deadline": {
+        "raw": "-",
+        "type": "unknown"
+      },
+      "owners": [
+        "Osoba poveřená za kybernetickou bezpečnost"
+      ],
+      "defaultState": "implemented",
+      "implementationDescription": "Povinnost hlásit neobvyklé chování technických aktiv, podezření na jakékoliv zranitelnosti a způsoby hlášení jsou stanoveny v dokumentu Bezpečné chování uživatelů.docx.",
+      "frameworkMappings": [
+        {
+          "frameworkId": "zokb",
+          "reference": "§ 10 písm. a)",
+          "title": "Řešení kybernetických bezpečnostních incidentů"
+        }
+      ],
+      "archived": false,
+      "sourceRow": 95
+    },
+    {
+      "paragraph": "§ 10",
+      "pismeno": "písm. b)",
+      "exactReference": "§ 10 písm. b)",
+      "title": "Řešení kybernetických bezpečnostních incidentů",
+      "text": "vytvoří metodiku pro posuzování kybernetických bezpečnostních událostí a kybernetických bezpečnostních incidentů, včetně posuzování významnosti dopadu kybernetického bezpečnostního incidentu v souladu s § 14,",
+      "tier": "mandatory_minimum",
+      "priority": "unset",
+      "deadline": {
+        "raw": "-",
+        "type": "unknown"
+      },
+      "owners": [
+        "Osoba poveřená za kybernetickou bezpečnost"
+      ],
+      "defaultState": "implemented",
+      "implementationDescription": "Plněno dokumentem Řešení kybernetických bezpečnostních incidentů.docx v kapitole Posuzování kybernetických bezpečnostních událostí a kybernetických bezpečnostních incidentů.",
+      "frameworkMappings": [
+        {
+          "frameworkId": "zokb",
+          "reference": "§ 10 písm. b)",
+          "title": "Řešení kybernetických bezpečnostních incidentů"
+        }
+      ],
+      "archived": false,
+      "sourceRow": 96
+    },
+    {
+      "paragraph": "§ 10",
+      "pismeno": "písm. c)",
+      "exactReference": "§ 10 písm. c)",
+      "title": "Řešení kybernetických bezpečnostních incidentů",
+      "text": "zajistí detekci kybernetických bezpečnostních událostí,",
+      "tier": "mandatory_minimum",
+      "priority": "high",
+      "deadline": {
+        "raw": "Q4 2026",
+        "type": "unknown"
+      },
+      "owners": [
+        "Osoba pověřená za kybernetickou bezpečnost",
+        "Oddělení IT"
+      ],
+      "defaultState": "planned",
+      "implementationDescription": "Nyní jsou bezpečnostní logy ukládány na centrálním uložišti a 1x denně probíhá jejich vyhodnocování. Na rok 2026 je plánována investice na pořízení pokročilejšího nástroje na detekci KBU a také je v plánu zefektivnění celého procesu a sbíraní bezpečnostních logů ze všech zařízení v síti organizace.",
+      "frameworkMappings": [
+        {
+          "frameworkId": "zokb",
+          "reference": "§ 10 písm. c)",
+          "title": "Řešení kybernetických bezpečnostních incidentů"
+        }
+      ],
+      "archived": false,
+      "sourceRow": 97
+    },
+    {
+      "paragraph": "§ 10",
+      "pismeno": "písm. d)",
+      "exactReference": "§ 10 písm. d)",
+      "title": "Řešení kybernetických bezpečnostních incidentů",
+      "text": "zajistí posuzování kybernetických bezpečnostních událostí a kybernetických bezpečnostních incidentů v souladu s metodikou podle písmene b),",
+      "tier": "mandatory_minimum",
+      "priority": "unset",
+      "deadline": {
+        "raw": "-",
+        "type": "unknown"
+      },
+      "owners": [
+        "Osoba pověřená za kybernetickou bezpečnost",
+        "Oddělení IT"
+      ],
+      "defaultState": "implemented",
+      "implementationDescription": "Posuzování KBU a KBI je stanoveno v dokumentu Řešení kybernetických bezpečnostních incidentů.docx v kapitole posuzování kybernetických bezpečnostních událostí a kybernetických bezpečnostních incidentů, kde jsou stanoveny i jednotlivé povinnosti v rámci tohoto procesu.",
+      "frameworkMappings": [
+        {
+          "frameworkId": "zokb",
+          "reference": "§ 10 písm. d)",
+          "title": "Řešení kybernetických bezpečnostních incidentů"
+        }
+      ],
+      "archived": false,
+      "sourceRow": 98
+    },
+    {
+      "paragraph": "§ 10",
+      "pismeno": "písm. e)",
+      "exactReference": "§ 10 písm. e)",
+      "title": "Řešení kybernetických bezpečnostních incidentů",
+      "text": "zajistí hlášení kybernetického bezpečnostního incidentu s významným dopadem podle § 15 zákona,",
+      "tier": "mandatory_minimum",
+      "priority": "unset",
+      "deadline": {
+        "raw": "-",
+        "type": "unknown"
+      },
+      "owners": [
+        "Osoba pověřená za kybernetickou bezpečnost"
+      ],
+      "defaultState": "implemented",
+      "implementationDescription": "Hlásí kybernetické bezpečnostní incidenty s významným dopadem Národnímu CERT. Hlášení KBI s významným dopadem provádí dle stanovené politiky Řešení kybernetických bezpečnostních incidentů.docx v kapitole Hlášení KBI osoba pověřená kybernetickou bezpečností.",
+      "frameworkMappings": [
+        {
+          "frameworkId": "zokb",
+          "reference": "§ 10 písm. e)",
+          "title": "Řešení kybernetických bezpečnostních incidentů"
+        }
+      ],
+      "archived": false,
+      "sourceRow": 99
+    },
+    {
+      "paragraph": "§ 10",
+      "pismeno": "písm. f)",
+      "exactReference": "§ 10 písm. f)",
+      "title": "Řešení kybernetických bezpečnostních incidentů",
+      "text": "zajistí vytvoření závěrečné zprávy o vyřešení kybernetického bezpečnostního incidentu s významným dopadem podle § 16 zákona.",
+      "tier": "mandatory_minimum",
+      "priority": "unset",
+      "deadline": {
+        "raw": "-",
+        "type": "unknown"
+      },
+      "owners": [
+        "Osoba pověřená za kybernetickou bezpečnost"
+      ],
+      "defaultState": "implemented",
+      "implementationDescription": "Povinnost vytvoření závěrečné zprávy je stanovena v dokumentu Řešení kybernetických bezpečnostních incidentů.docx. Je vytvořena šablona závěrečné zprávy, která bude vyplněna v případě nastalého KBI s významným dopadem, včetně popisu příčiny vzniklého incidentu. Šablonu pro vyplnění závěrečné zprávy lze nalézt v dokument Zaverecna-zprava.docx.",
+      "frameworkMappings": [
+        {
+          "frameworkId": "zokb",
+          "reference": "§ 10 písm. f)",
+          "title": "Řešení kybernetických bezpečnostních incidentů"
+        }
+      ],
+      "archived": false,
+      "sourceRow": 100
+    },
+    {
+      "paragraph": "§ 11",
+      "pismeno": "písm. a)",
+      "exactReference": "§ 11 písm. a)",
+      "title": "Bezpečnost komunikačních sítí",
+      "text": "zajistí segmentaci komunikační sítě, včetně oddělení provozního a zálohovacího prostředí,",
+      "tier": "assessable",
+      "priority": "high",
+      "deadline": {
+        "raw": "Q3 2026",
+        "type": "unknown"
+      },
+      "owners": [
+        "Oddělení IT"
+      ],
+      "defaultState": "planned",
+      "implementationDescription": "Je zajištěna pokročilá segmentace, mikrosegmentace, řízení provozu, oddělení záloh, což je vedeno v dokumentu Bezpecnost-komunikacnich-siti.docx. Je plánováno zavedení segmentu pro průmyslová zařízení a související aktiva ve výrobě.",
+      "frameworkMappings": [
+        {
+          "frameworkId": "zokb",
+          "reference": "§ 11 písm. a)",
+          "title": "Bezpečnost komunikačních sítí"
+        }
+      ],
+      "archived": false,
+      "sourceRow": 102
+    },
+    {
+      "paragraph": "§ 11",
+      "pismeno": "písm. b)",
+      "exactReference": "§ 11 písm. b)",
+      "title": "Bezpečnost komunikačních sítí",
+      "text": "omezí odchozí a příchozí komunikaci na perimetru komunikační sítě na dobu nezbytně nutnou pro řádné zajištění poskytování regulované služby,",
+      "tier": "assessable",
+      "priority": "unset",
+      "deadline": {
+        "raw": "-",
+        "type": "unknown"
+      },
+      "owners": [
+        "Oddělení IT"
+      ],
+      "defaultState": "implemented",
+      "implementationDescription": "Je využíván perimetrový FW a je řízen a monitorován segment DMZ. U používaných řešení je kontrolováno zajištění technické podpory výrobce (aktualizace FW / SW), periodicky se kontroluje nastavení a konfigurace bezpečnostních pravidel vzhledem k aktuálním potřebám provozovaných aktiv. Podrobný popis bezpečnostních opatření je uveden v dokumentu Bezpecnost-komunikacnich-siti.docx.",
+      "frameworkMappings": [
+        {
+          "frameworkId": "zokb",
+          "reference": "§ 11 písm. b)",
+          "title": "Bezpečnost komunikačních sítí"
+        }
+      ],
+      "archived": false,
+      "sourceRow": 103
+    },
+    {
+      "paragraph": "§ 11",
+      "pismeno": "písm. c)",
+      "exactReference": "§ 11 písm. c)",
+      "title": "Bezpečnost komunikačních sítí",
+      "text": "užívá aktuálně odolné a bezpečné komunikační protokoly,",
+      "tier": "assessable",
+      "priority": "high",
+      "deadline": {
+        "raw": "Q4 2026",
+        "type": "unknown"
+      },
+      "owners": [
+        "Oddělení IT"
+      ],
+      "defaultState": "planned",
+      "implementationDescription": "Povinnost užívání aktuálně odolných a bezpečných komunikačních protoků je stanovena v dokumentu Bezpecnost-komunikacnich-siti.docx. Dále dochází k pravidelnému vyhodnocování používaných síťových protokolů a jejich parametrů (např. jejich verzí a použitých kryptografických prostředků). U průmyslových zařízení provozovaných v sousedním areálu, které komunikují v otevřené nechráněné podobě bude zavedeno technické opatření zapouzdřující uvedené komunikace do síťového tunelu, chráněného kryptografickou šifrou, odolnou dle doporučení NÚKIB.",
+      "frameworkMappings": [
+        {
+          "frameworkId": "zokb",
+          "reference": "§ 11 písm. c)",
+          "title": "Bezpečnost komunikačních sítí"
+        }
+      ],
+      "archived": false,
+      "sourceRow": 104
+    },
+    {
+      "paragraph": "§ 11",
+      "pismeno": "písm. d)",
+      "exactReference": "§ 11 písm. d)",
+      "title": "Bezpečnost komunikačních sítí",
+      "text": "v případě užití vzdáleného připojení do interní komunikační sítě nebo vzdálené správy technických aktiv regulované služby",
+      "tier": "assessable",
+      "priority": "unset",
+      "deadline": {
+        "raw": "-",
+        "type": "unknown"
+      },
+      "owners": [
+        "Oddělení IT"
+      ],
+      "defaultState": "implemented",
+      "implementationDescription": "Vzdálené připojování do interní sítě je povolené pouze z řízených koncových stanic (např. pod správou MDM), u kterých je kontrolováno splnění bezpečnostních požadavků před připojením (aktuální verze OS, ochrany před škodlivým kódem atd). Vzdálená připojení dodavatelů jsou smluvně ošetřena, řízena a technicky připravena (přidělení certifikátů, identit a MFA), připojení je na straně organizace povoleno pouze po předchozí komunikaci s dodavatelem, kterému není umožněno svévolného přístupu k síti organizace. K aktivům organizace je dodavateli umožněn přístup pouze skrze pro tento účel vytvořenou stanici (tzv. jump) organizace, na které je zajištěn bezpečnostní monitoring nad prováděnými činnostmi. Podrobný popis pravidel a zavadených bezpečnostních patření týkajících se vzdáleného připojení jsou popsána v dokumentu Bezpecnost-komunikacnich-siti.docx v kapitole Vzdálené připojení. Evidence zařízení využívající vzdálené připojení do interní sítě organizace je vedena v dokumentu Vzdalene-zarizeni-evidence.xlsx.",
+      "frameworkMappings": [
+        {
+          "frameworkId": "zokb",
+          "reference": "§ 11 písm. d)",
+          "title": "Bezpečnost komunikačních sítí"
+        }
+      ],
+      "archived": false,
+      "sourceRow": 105
+    },
+    {
+      "paragraph": "§ 11",
+      "pismeno": "písm. d)",
+      "exactReference": "§ 11 písm. d) bod 1",
+      "title": "Bezpečnost komunikačních sítí",
+      "text": "omezí tato připojení na nezbytně nutná,",
+      "tier": "assessable",
+      "priority": "unset",
+      "deadline": {
+        "raw": "",
+        "type": "unknown"
+      },
+      "owners": [],
+      "defaultState": "implemented",
+      "frameworkMappings": [
+        {
+          "frameworkId": "zokb",
+          "reference": "§ 11 písm. d) bod 1",
+          "title": "Bezpečnost komunikačních sítí"
+        }
+      ],
+      "archived": false,
+      "sourceRow": 106
+    },
+    {
+      "paragraph": "§ 11",
+      "pismeno": "písm. d)",
+      "exactReference": "§ 11 písm. d) bod 2",
+      "title": "Bezpečnost komunikačních sítí",
+      "text": "zavede bezpečnostní opatření, která zajistí důvěrnost a integritu těchto vzdálených připojení a vzdálené správy, a",
+      "tier": "assessable",
+      "priority": "unset",
+      "deadline": {
+        "raw": "",
+        "type": "unknown"
+      },
+      "owners": [],
+      "defaultState": "implemented",
+      "frameworkMappings": [
+        {
+          "frameworkId": "zokb",
+          "reference": "§ 11 písm. d) bod 2",
+          "title": "Bezpečnost komunikačních sítí"
+        }
+      ],
+      "archived": false,
+      "sourceRow": 107
+    },
+    {
+      "paragraph": "§ 11",
+      "pismeno": "písm. d)",
+      "exactReference": "§ 11 písm. d) bod 3",
+      "title": "Bezpečnost komunikačních sítí",
+      "text": "má přehled o uživatelích a administrátorech, kteří tato vzdálená připojení nebo vzdálenou správu užívají.",
+      "tier": "assessable",
+      "priority": "unset",
+      "deadline": {
+        "raw": "",
+        "type": "unknown"
+      },
+      "owners": [],
+      "defaultState": "implemented",
+      "frameworkMappings": [
+        {
+          "frameworkId": "zokb",
+          "reference": "§ 11 písm. d) bod 3",
+          "title": "Bezpečnost komunikačních sítí"
+        }
+      ],
+      "archived": false,
+      "sourceRow": 108
+    },
+    {
+      "paragraph": "§ 12",
+      "pismeno": "písm. a)",
+      "exactReference": "§ 12 písm. a)",
+      "title": "Aplikační bezpečnost",
+      "text": "zajistí bezodkladné aplikování schválených bezpečnostních aktualizací vydaných pro technická aktiva,",
+      "tier": "assessable",
+      "priority": "unset",
+      "deadline": {
+        "raw": "-",
+        "type": "unknown"
+      },
+      "owners": [
+        "Oddělení IT"
+      ],
+      "defaultState": "implemented",
+      "implementationDescription": "Povinnost bezodkladného aplikování schválených bezpečnostních aktualizací je stanovena v dokumentu Bezpecnosti-politika-KB.docx v kapitole Aplikační bezpečnost.",
+      "frameworkMappings": [
+        {
+          "frameworkId": "zokb",
+          "reference": "§ 12 písm. a)",
+          "title": "Aplikační bezpečnost"
+        }
+      ],
+      "archived": false,
+      "sourceRow": 110
+    },
+    {
+      "paragraph": "§ 12",
+      "pismeno": "písm. b)",
+      "exactReference": "§ 12 písm. b) bod 1",
+      "title": "Aplikační bezpečnost",
+      "text": "vede jejich evidenci,",
+      "tier": "assessable",
+      "priority": "unset",
+      "deadline": {
+        "raw": "-",
+        "type": "unknown"
+      },
+      "owners": [
+        "Oddělení IT"
+      ],
+      "defaultState": "implemented",
+      "implementationDescription": "Je vedena evidence veškerého používaného SW a HW v dokumentu evidence-HW-a-SW.xlsx. Evidence zahrnuje přesnou identifikaci aktiva, informaci o verzi systému či sestavení a dodatečně jsou evidovány aplikované bezpečnostní záplaty či zda má systém zajištěnu bezpečnostní podporu výrobce.",
+      "frameworkMappings": [
+        {
+          "frameworkId": "zokb",
+          "reference": "§ 12 písm. b) bod 1",
+          "title": "Aplikační bezpečnost"
+        }
+      ],
+      "archived": false,
+      "sourceRow": 112
+    },
+    {
+      "paragraph": "§ 12",
+      "pismeno": "písm. b)",
+      "exactReference": "§ 12 písm. b) bod 2",
+      "title": "Aplikační bezpečnost",
+      "text": "zavede bezpečnostní opatření, která zaručí obdobnou nebo vyšší úroveň bezpečnosti, a",
+      "tier": "assessable",
+      "priority": "high",
+      "deadline": {
+        "raw": "Q3 2026",
+        "type": "unknown"
+      },
+      "owners": [
+        "Oddělení IT"
+      ],
+      "defaultState": "planned",
+      "implementationDescription": "Některé stroje výrobní linky elektrotechnických zařízení zakoupené jako „black-box“ disponují vysoce zastaralými OS. Uvedené stroje budou izolovány v rámci vlastního síťového perimetru a síťové komunikace bude povolena pouze na relevantní stanice technologů, které budou vybaveny podporovaným systémem a implementují další monitorovací nástroje.",
+      "frameworkMappings": [
+        {
+          "frameworkId": "zokb",
+          "reference": "§ 12 písm. b) bod 2",
+          "title": "Aplikační bezpečnost"
+        }
+      ],
+      "archived": false,
+      "sourceRow": 113
+    },
+    {
+      "paragraph": "§ 12",
+      "pismeno": "písm. b)",
+      "exactReference": "§ 12 písm. b) bod 3",
+      "title": "Aplikační bezpečnost",
+      "text": "omezí jejich komunikaci v komunikační síti na nezbytně nutnou,",
+      "tier": "assessable",
+      "priority": "high",
+      "deadline": {
+        "raw": "Q3 2026",
+        "type": "unknown"
+      },
+      "owners": [
+        "Oddělení IT"
+      ],
+      "defaultState": "planned",
+      "frameworkMappings": [
+        {
+          "frameworkId": "zokb",
+          "reference": "§ 12 písm. b) bod 3",
+          "title": "Aplikační bezpečnost"
+        }
+      ],
+      "archived": false,
+      "sourceRow": 114
+    },
+    {
+      "paragraph": "§ 12",
+      "pismeno": "písm. c)",
+      "exactReference": "§ 12 písm. c)",
+      "title": "Aplikační bezpečnost",
+      "text": "provádí pravidelné skenování zranitelností relevantních technických aktiv a aplikuje přiměřená bezpečnostní opatření na základě zjištěných výsledků.",
+      "tier": "assessable",
+      "priority": "unset",
+      "deadline": {
+        "raw": "-",
+        "type": "unknown"
+      },
+      "owners": [
+        "Oddělení IT"
+      ],
+      "defaultState": "implemented",
+      "implementationDescription": "Pravidla pro skenování zranitelnosti jsou uvedena v dokumentu Bezpecnosti-politika-KB.docx v kapitole Aplikační bezpečnost. Skenování zranitelností je prováděno pravidelně jednou za rok. Podrobný popis skenování zranitelností je uveden v dokumentu Bezpecnosti-politika-KB.docx v kapitole Aplikační bezpečnost.",
+      "frameworkMappings": [
+        {
+          "frameworkId": "zokb",
+          "reference": "§ 12 písm. c)",
+          "title": "Aplikační bezpečnost"
+        }
+      ],
+      "archived": false,
+      "sourceRow": 115
+    },
+    {
+      "paragraph": "§ 13",
+      "odstavec": "odst. 1",
+      "pismeno": "písm. a)",
+      "exactReference": "§ 13 odst. 1 písm. a)",
+      "title": "Kryptografické algoritmy",
+      "text": "používá aktuálně odolné kryptografické algoritmy,",
+      "tier": "assessable",
+      "priority": "unset",
+      "deadline": {
+        "raw": "-",
+        "type": "unknown"
+      },
+      "owners": [
+        "Oddělení IT"
+      ],
+      "defaultState": "implemented",
+      "implementationDescription": "Zaměstnanci IT jsou odpovědní za kontrolu využívání aktuálně odolných kryptografikcých algoritmů. Tato povinnost je stanovena v dokumentu Bezpecnosti-politika-KB.docx v kapitole Kryptografické algoritmy.",
+      "frameworkMappings": [
+        {
+          "frameworkId": "zokb",
+          "reference": "§ 13 odst. 1 písm. a)",
+          "title": "Kryptografické algoritmy"
+        }
+      ],
+      "archived": false,
+      "sourceRow": 117
+    },
+    {
+      "paragraph": "§ 13",
+      "odstavec": "odst. 1",
+      "pismeno": "písm. b)",
+      "exactReference": "§ 13 odst. 1 písm. b)",
+      "title": "Kryptografické algoritmy",
+      "text": "prosazuje bezpečné nakládání s kryptografickými algoritmy a",
+      "tier": "assessable",
+      "priority": "unset",
+      "deadline": {
+        "raw": "-",
+        "type": "unknown"
+      },
+      "owners": [
+        "Oddělení IT",
+        "Osoba pověřená za kybernetickou bezpečnost"
+      ],
+      "defaultState": "implemented",
+      "implementationDescription": "Zaměstnanci disponují jednotlivými nástroji, pravidly a postupy pro práci se šifrovacími algoritmy (např. pro zasílání citlivých dokumentů) a jejich používání je hlídáno, aby nedocházelo např. k nedůvěrnému předávání informací klientům či jiné organizaci. Tyto povinnosti jsou stanoveny v dokumentu Bezpecnosti-politika-KB.docx v kapitole Kryptografické algoritmy.",
+      "frameworkMappings": [
+        {
+          "frameworkId": "zokb",
+          "reference": "§ 13 odst. 1 písm. b)",
+          "title": "Kryptografické algoritmy"
+        }
+      ],
+      "archived": false,
+      "sourceRow": 118
+    },
+    {
+      "paragraph": "§ 13",
+      "odstavec": "odst. 1",
+      "pismeno": "písm. c)",
+      "exactReference": "§ 13 odst. 1 písm. c)",
+      "title": "Kryptografické algoritmy",
+      "text": "zohledňuje doporučení a metodiky v oblasti kryptografických algoritmů vydané Národním úřadem pro kybernetickou a informační bezpečnost.",
+      "tier": "assessable",
+      "priority": "unset",
+      "deadline": {
+        "raw": "-",
+        "type": "unknown"
+      },
+      "owners": [
+        "Oddělení IT"
+      ],
+      "defaultState": "implemented",
+      "implementationDescription": "Doporučení a metodiky vydávané NÚKIB v organizaci slouží k revizi a dílčím úpravám nastavení a konfigurací technických aktiv. Povinnost zohledňovat tato doporučení je stanovena v dokumentu Bezpecnosti-politika-KB.docx v kapitole Kryptografické algoritmy.",
+      "frameworkMappings": [
+        {
+          "frameworkId": "zokb",
+          "reference": "§ 13 odst. 1 písm. c)",
+          "title": "Kryptografické algoritmy"
+        }
+      ],
+      "archived": false,
+      "sourceRow": 119
+    },
+    {
+      "paragraph": "§ 13",
+      "odstavec": "odst. 2",
+      "pismeno": "písm. a)",
+      "exactReference": "§ 13 odst. 2 písm. a)",
+      "title": "Kryptografické algoritmy",
+      "text": "hlasovou, audiovizuální a textovou komunikaci, a to včetně e-mailové komunikace, a",
+      "tier": "assessable",
+      "priority": "unset",
+      "deadline": {
+        "raw": "-",
+        "type": "unknown"
+      },
+      "owners": [
+        "Oddělení IT",
+        "Osoba pověřená za kybernetickou bezpečnost"
+      ],
+      "defaultState": "implemented",
+      "implementationDescription": "Zaměstnanci používají pro hlasovou, audiovizuální a textovou komunici aplikace s end-to-end šifrováním dle doporučení NÚKIB. Totéž platí pro nouzovou komunikaci. Pro zabezpečenou e-mailovou komunikaci se řídí opatřeními NÚKIB v oblasti zabezpečení elektronické pošty.",
+      "frameworkMappings": [
+        {
+          "frameworkId": "zokb",
+          "reference": "§ 13 odst. 2 písm. a)",
+          "title": "Kryptografické algoritmy"
+        }
+      ],
+      "archived": false,
+      "sourceRow": 121
+    },
+    {
+      "paragraph": "§ 13",
+      "odstavec": "odst. 2",
+      "pismeno": "písm. b)",
+      "exactReference": "§ 13 odst. 2 písm. b)",
+      "title": "Kryptografické algoritmy",
+      "text": "nouzovou komunikaci v rámci organizace.",
+      "tier": "assessable",
+      "priority": "unset",
+      "deadline": {
+        "raw": "-",
+        "type": "unknown"
+      },
+      "owners": [
+        "Oddělení IT",
+        "Osoba pověřená za kybernetickou bezpečnost"
+      ],
+      "defaultState": "implemented",
+      "implementationDescription": "Zaměstnanci používají pro hlasovou, audiovizuální a textovou komunici aplikace s end-to-end šifrováním dle doporučení NÚKIB. Totéž platí pro nouzovou komunikaci.",
+      "frameworkMappings": [
+        {
+          "frameworkId": "zokb",
+          "reference": "§ 13 odst. 2 písm. b)",
+          "title": "Kryptografické algoritmy"
+        }
+      ],
+      "archived": false,
+      "sourceRow": 122
+    },
+    {
+      "paragraph": "§ 14",
+      "odstavec": "odst. 1",
+      "pismeno": "písm. a)",
+      "exactReference": "§ 14 odst. 1 písm. a)",
+      "title": "Stanovení významnosti dopadu kybernetického bezpečnostní incidentu",
+      "text": "únosnou míru újmy způsobené kybernetickým bezpečnostním incidentem, v jehož důsledku ještě není ohrožen život nebo zdraví osob nebo schopnost povinné osoby dostát svým závazkům,",
+      "tier": "assessable",
+      "priority": "unset",
+      "deadline": {
+        "raw": "-",
+        "type": "unknown"
+      },
+      "owners": [
+        "Osoba pověřená za kybernetickou bezpečnost",
+        "Vrcholné vedení"
+      ],
+      "defaultState": "implemented",
+      "implementationDescription": "Pravidla a postupy pro vyhodnocení dopadu kybernetického incidentu na poskytování regulované služby jsou stanoveny v dokumentu Stanoveni-vyznamnosti-dopadu-kybernetickeho-incidentu.docx. Tento dokument splňuje všechny požadavky § 14 vyhlášky a vychází zejména z hodnot priority obnovy primárních aktiv stanovených v dokumentu Plany-obnovy.xlsx.",
+      "frameworkMappings": [
+        {
+          "frameworkId": "zokb",
+          "reference": "§ 14 odst. 1 písm. a)",
+          "title": "Stanovení významnosti dopadu kybernetického bezpečnostní incidentu"
+        }
+      ],
+      "archived": false,
+      "sourceRow": 124
+    },
+    {
+      "paragraph": "§ 14",
+      "odstavec": "odst. 1",
+      "pismeno": "písm. b)",
+      "exactReference": "§ 14 odst. 1 písm. b)",
+      "title": "Stanovení významnosti dopadu kybernetického bezpečnostní incidentu",
+      "text": "oblasti pro posouzení významnosti dopadu kybernetických bezpečnostních incidentů zohledňující zejména",
+      "tier": "assessable",
+      "priority": "unset",
+      "deadline": {
+        "raw": "",
+        "type": "unknown"
+      },
+      "owners": [],
+      "defaultState": "implemented",
+      "frameworkMappings": [
+        {
+          "frameworkId": "zokb",
+          "reference": "§ 14 odst. 1 písm. b)",
+          "title": "Stanovení významnosti dopadu kybernetického bezpečnostní incidentu"
+        }
+      ],
+      "archived": false,
+      "sourceRow": 125
+    },
+    {
+      "paragraph": "§ 14",
+      "odstavec": "odst. 1",
+      "pismeno": "písm. b)",
+      "exactReference": "§ 14 odst. 1 písm. b) bod 1",
+      "title": "Stanovení významnosti dopadu kybernetického bezpečnostní incidentu",
+      "text": "provozní dopad kybernetického bezpečnostního incidentu na povinnou osobu a její schopnost poskytovat regulovanou službu,",
+      "tier": "assessable",
+      "priority": "unset",
+      "deadline": {
+        "raw": "",
+        "type": "unknown"
+      },
+      "owners": [],
+      "defaultState": "implemented",
+      "frameworkMappings": [
+        {
+          "frameworkId": "zokb",
+          "reference": "§ 14 odst. 1 písm. b) bod 1",
+          "title": "Stanovení významnosti dopadu kybernetického bezpečnostní incidentu"
+        }
+      ],
+      "archived": false,
+      "sourceRow": 126
+    },
+    {
+      "paragraph": "§ 14",
+      "odstavec": "odst. 1",
+      "pismeno": "písm. b)",
+      "exactReference": "§ 14 odst. 1 písm. b) bod 2",
+      "title": "Stanovení významnosti dopadu kybernetického bezpečnostní incidentu",
+      "text": "množství uživatelů regulované služby a jiných orgánů a osob zasažených kybernetickým bezpečnostním incidentem,",
+      "tier": "assessable",
+      "priority": "unset",
+      "deadline": {
+        "raw": "",
+        "type": "unknown"
+      },
+      "owners": [],
+      "defaultState": "implemented",
+      "frameworkMappings": [
+        {
+          "frameworkId": "zokb",
+          "reference": "§ 14 odst. 1 písm. b) bod 2",
+          "title": "Stanovení významnosti dopadu kybernetického bezpečnostní incidentu"
+        }
+      ],
+      "archived": false,
+      "sourceRow": 127
+    },
+    {
+      "paragraph": "§ 14",
+      "odstavec": "odst. 1",
+      "pismeno": "písm. b)",
+      "exactReference": "§ 14 odst. 1 písm. b) bod 3",
+      "title": "Stanovení významnosti dopadu kybernetického bezpečnostní incidentu",
+      "text": "časové, lidské a technické zdroje, které jsou potřebné k obnově poskytování zasažené regulované služby,",
+      "tier": "assessable",
+      "priority": "unset",
+      "deadline": {
+        "raw": "",
+        "type": "unknown"
+      },
+      "owners": [],
+      "defaultState": "implemented",
+      "frameworkMappings": [
+        {
+          "frameworkId": "zokb",
+          "reference": "§ 14 odst. 1 písm. b) bod 3",
+          "title": "Stanovení významnosti dopadu kybernetického bezpečnostní incidentu"
+        }
+      ],
+      "archived": false,
+      "sourceRow": 128
+    },
+    {
+      "paragraph": "§ 14",
+      "odstavec": "odst. 1",
+      "pismeno": "písm. b)",
+      "exactReference": "§ 14 odst. 1 písm. b) bod 4",
+      "title": "Stanovení významnosti dopadu kybernetického bezpečnostní incidentu",
+      "text": "typ a umístění aktiv dotčených kybernetickým bezpečnostním incidentem,",
+      "tier": "assessable",
+      "priority": "unset",
+      "deadline": {
+        "raw": "",
+        "type": "unknown"
+      },
+      "owners": [],
+      "defaultState": "implemented",
+      "frameworkMappings": [
+        {
+          "frameworkId": "zokb",
+          "reference": "§ 14 odst. 1 písm. b) bod 4",
+          "title": "Stanovení významnosti dopadu kybernetického bezpečnostní incidentu"
+        }
+      ],
+      "archived": false,
+      "sourceRow": 129
+    },
+    {
+      "paragraph": "§ 14",
+      "odstavec": "odst. 1",
+      "pismeno": "písm. b)",
+      "exactReference": "§ 14 odst. 1 písm. b) bod 5",
+      "title": "Stanovení významnosti dopadu kybernetického bezpečnostní incidentu",
+      "text": "citlivost informací a dat zasažených kybernetickým bezpečnostním incidentem a újmu, jakou může narušení bezpečnosti těchto informací a dat způsobit povinné osobě nebo jinému orgánu nebo osobě, a",
+      "tier": "assessable",
+      "priority": "unset",
+      "deadline": {
+        "raw": "",
+        "type": "unknown"
+      },
+      "owners": [],
+      "defaultState": "implemented",
+      "frameworkMappings": [
+        {
+          "frameworkId": "zokb",
+          "reference": "§ 14 odst. 1 písm. b) bod 5",
+          "title": "Stanovení významnosti dopadu kybernetického bezpečnostní incidentu"
+        }
+      ],
+      "archived": false,
+      "sourceRow": 130
+    },
+    {
+      "paragraph": "§ 14",
+      "odstavec": "odst. 1",
+      "pismeno": "písm. b)",
+      "exactReference": "§ 14 odst. 1 písm. b) bod 6",
+      "title": "Stanovení významnosti dopadu kybernetického bezpečnostní incidentu",
+      "text": "přímou příčinu kybernetického bezpečnostního incidentu, je-li povinné osobě známo, zda se jedná o lidskou chybu, technickou závadu nebo úmyslné jednání.",
+      "tier": "assessable",
+      "priority": "unset",
+      "deadline": {
+        "raw": "",
+        "type": "unknown"
+      },
+      "owners": [],
+      "defaultState": "implemented",
+      "frameworkMappings": [
+        {
+          "frameworkId": "zokb",
+          "reference": "§ 14 odst. 1 písm. b) bod 6",
+          "title": "Stanovení významnosti dopadu kybernetického bezpečnostní incidentu"
+        }
+      ],
+      "archived": false,
+      "sourceRow": 131
+    },
+    {
+      "paragraph": "§ 14",
+      "odstavec": "odst. 2",
+      "pismeno": "písm. a)",
+      "exactReference": "§ 14 odst. 2 písm. a)",
+      "title": "Stanovení významnosti dopadu kybernetického bezpečnostní incidentu",
+      "text": "přesáhne povinnou osobou stanovenou únosnou míru újmy způsobenou kybernetickým bezpečnostním incidentem podle odstavce 1 písm. a) a současně",
+      "tier": "assessable",
+      "priority": "unset",
+      "deadline": {
+        "raw": "-",
+        "type": "unknown"
+      },
+      "owners": [
+        "Osoba pověřená za kybernetickou bezpečnost",
+        "Vrcholné vedení"
+      ],
+      "defaultState": "implemented",
+      "implementationDescription": "Pravidla a postupy pro vyhodnocení dopadu kybernetického incidentu na poskytování regulované služby jsou stanoveny v dokumentu Stanoveni-vyznamnosti-dopadu-kybernetickeho-incidentu.docx. Tento dokument splňuje všechny požadavky § 14 vyhlášky a vychází zejména z hodnot priority obnovy primárních aktiv stanovených v dokumentu Plany-obnovy.xlsx.",
+      "frameworkMappings": [
+        {
+          "frameworkId": "zokb",
+          "reference": "§ 14 odst. 2 písm. a)",
+          "title": "Stanovení významnosti dopadu kybernetického bezpečnostní incidentu"
+        }
+      ],
+      "archived": false,
+      "sourceRow": 133
+    },
+    {
+      "paragraph": "§ 14",
+      "odstavec": "odst. 2",
+      "pismeno": "písm. b)",
+      "exactReference": "§ 14 odst. 2 písm. b)",
+      "title": "Stanovení významnosti dopadu kybernetického bezpečnostní incidentu",
+      "text": "je oblast pro posouzení významnosti dopadu podle odstavce 1 písm. b) posouzena jako významná.",
+      "tier": "assessable",
+      "priority": "unset",
+      "deadline": {
+        "raw": "",
+        "type": "unknown"
+      },
+      "owners": [],
+      "defaultState": "implemented",
+      "frameworkMappings": [
+        {
+          "frameworkId": "zokb",
+          "reference": "§ 14 odst. 2 písm. b)",
+          "title": "Stanovení významnosti dopadu kybernetického bezpečnostní incidentu"
+        }
+      ],
+      "archived": false,
+      "sourceRow": 134
+    }
+  ]
+}
