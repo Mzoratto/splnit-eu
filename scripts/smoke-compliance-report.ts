@@ -84,6 +84,22 @@ function fixtureEvidence(): EvidenceRecord[] {
       assessmentResult: "pass",
       assessedAt: generatedAt,
       collectedAt: generatedAt,
+      connectorName: "Konektor Hetzner Cloud",
+      controlId: "ctrl_hetzner_api",
+      controlKey: "hetzner-infra-server-running",
+      controlName: "Hetzner Cloud server je spuštěný",
+      evidenceId: "ev_hetzner_api",
+      finding: "Konektor Hetzner Cloud ověřil stav serveru: running.",
+      nukibBlock: {
+        blockTitle: "§ Technická opatření",
+        sectionTitle: "Zajištění úrovně dostupnosti",
+      },
+      source: "connector",
+    },
+    {
+      assessmentResult: "pass",
+      assessedAt: generatedAt,
+      collectedAt: generatedAt,
       connectorName: "Microsoft 365",
       controlId: "ctrl_api",
       controlKey: "ctrl_mfa_all_users",
@@ -132,7 +148,7 @@ function fixtureEvidence(): EvidenceRecord[] {
 
 function fixtureContext(rezimPovinnosti: "nizsi" | "vyssi"): ReportContext {
   return {
-    connectorNames: ["Microsoft 365"],
+    connectorNames: ["Microsoft 365", "Konektor Hetzner Cloud"],
     evidenceRecords: fixtureEvidence(),
     generatedAt,
     org: fixtureOrg(rezimPovinnosti),
@@ -141,7 +157,7 @@ function fixtureContext(rezimPovinnosti: "nizsi" | "vyssi"): ReportContext {
 }
 
 async function seedDatabaseFixture() {
-  const [apiControlId, manualControlId, gapControlId] = await Promise.all([
+  const [apiControlId, manualControlId, gapControlId, hetznerControlId] = await Promise.all([
     ensureControl({
       category: "access_control",
       key: "ctrl_mfa_all_users",
@@ -160,6 +176,12 @@ async function seedDatabaseFixture() {
       titleCs: "Test obnovy databáze Pohody",
       titleEn: "Pohoda database restoration test",
     }),
+    ensureControl({
+      category: "business_continuity",
+      key: "hetzner-infra-server-running",
+      titleCs: "Hetzner Cloud server je spuštěný",
+      titleEn: "Hetzner Cloud server is running",
+    }),
   ]);
 
   await db.insert(organisations).values({
@@ -175,12 +197,20 @@ async function seedDatabaseFixture() {
     sidlo: "Václavské náměstí 1, Praha",
   });
 
-  await db.insert(integrations).values({
-    clerkOrgId: runId,
-    config: {},
-    provider: "microsoft365",
-    status: "connected",
-  });
+  await db.insert(integrations).values([
+    {
+      clerkOrgId: runId,
+      config: {},
+      provider: "microsoft365",
+      status: "connected",
+    },
+    {
+      clerkOrgId: runId,
+      config: {},
+      provider: "hetzner",
+      status: "connected",
+    },
+  ]);
 
   await db.insert(evidence).values([
     {
@@ -195,6 +225,22 @@ async function seedDatabaseFixture() {
         resultData: {
           mfaEnabled: 4,
           totalUsers: 4,
+        },
+      },
+      source: "connector",
+      type: "automated_snapshot",
+    },
+    {
+      assessmentResult: "pass",
+      clerkOrgId: runId,
+      collectedAt: generatedAt,
+      collectionStatus: "collected",
+      confidence: "high",
+      controlId: hetznerControlId,
+      snapshotData: {
+        provider: "hetzner",
+        resultData: {
+          serverStatus: "running",
         },
       },
       source: "connector",
@@ -245,6 +291,16 @@ function assertHtml(html: string) {
   assert.match(html, /Právní ref\./, "HTML contains Czech legal reference label.");
   assert.match(html, /Doporučení/, "HTML contains Czech recommendation label.");
   assert.match(html, /evidence-pass-api/, "HTML contains green block class.");
+  assert.match(
+    html,
+    /source=api \(Konektor Hetzner Cloud\)/,
+    "HTML contains Czech Hetzner connector source label.",
+  );
+  assert.match(
+    html,
+    /Konektor Hetzner Cloud ověřil stav serveru: running\./,
+    "HTML contains Hetzner automated finding.",
+  );
   assert.match(html, /evidence-pass-manual/, "HTML contains grey block class.");
   assert.match(html, /evidence-gap/, "HTML contains amber block class.");
   assert.match(html, /Splněno/, "HTML contains Czech pass status.");
