@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
 import { createManualAttestationEvidence } from "@/lib/db/queries/evidence";
+import { deriveWorkspaceAttestationAssessmentResult } from "@/lib/workspaces/attestation";
 
 // Test-only route — hard-blocked in production and requires explicit opt-in.
 // Allows E2E tests to submit workspace attestation evidence without Clerk auth.
@@ -42,11 +43,13 @@ export async function POST(request: NextRequest) {
   }
 
   const { answers, assessmentResult, controlKey, layerId, platformId } = parsed.data;
+  const resolvedAssessmentResult =
+    assessmentResult ?? deriveWorkspaceAttestationAssessmentResult(answers);
 
   try {
     const result = await createManualAttestationEvidence({
       answers,
-      assessmentResult,
+      assessmentResult: resolvedAssessmentResult,
       clerkOrgId: TEST_CLERK_ORG_ID,
       collectedBy: TEST_COLLECTED_BY,
       controlKey,
@@ -54,7 +57,7 @@ export async function POST(request: NextRequest) {
     });
 
     return NextResponse.json({
-      assessmentResult: assessmentResult ?? "manual_review",
+      assessmentResult: resolvedAssessmentResult,
       clerkOrgId: TEST_CLERK_ORG_ID,
       controlId: result.controlId,
       controlKey,

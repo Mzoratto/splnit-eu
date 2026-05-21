@@ -69,6 +69,67 @@ export const pohodaWorkspace: PlatformWorkspace = {
       title: "Řízení přístupu a správa identit",
       controls: [
         {
+          controlKey: "§4-poverena-osoba",
+          title: "Designated cybersecurity responsible person (§4)",
+          description:
+            "Mandatory appointment of a named individual with authority over cybersecurity management and regular reporting to top management.",
+          question:
+            "Má organizace jmenovanou osobu pověřenou kybernetickou bezpečností?",
+          questionText:
+            "Má organizace jmenovanou osobu pověřenou kybernetickou bezpečností?",
+          guidance:
+            "Vrcholné vedení musí jmenovat osobu pověřenou kybernetickou bezpečností (§ 4 vyhl. č. 410/2025 Sb.). Osoba nemusí být odborník — může jít o zaměstnance IT nebo externího dodavatele. Bezplatné školení NÚKIB: https://osveta.nukib.gov.cz/",
+          helpText:
+            "Vrcholné vedení musí jmenovat osobu pověřenou kybernetickou bezpečností (§ 4 vyhl. č. 410/2025 Sb.). Osoba nemusí být odborník — může jít o zaměstnance IT nebo externího dodavatele. Bezplatné školení NÚKIB: https://osveta.nukib.gov.cz/",
+          evidenceType: "attestation",
+          evidenceFields: [
+            { key: "jmeno", label: "Jméno pověřené osoby", type: "text", required: true },
+            { key: "datum_jmenovani", label: "Datum jmenování", type: "date", required: true },
+            {
+              key: "skoleni_absolvovano",
+              label: "Absolvovala školení kybernetické bezpečnosti?",
+              type: "boolean",
+              required: true,
+            },
+            {
+              key: "skoleni_datum",
+              label: "Datum absolvování školení",
+              type: "date",
+              required: false,
+            },
+            {
+              defaultValue: "https://osveta.nukib.gov.cz/",
+              key: "skoleni_zdroj",
+              label: "Zdroj školení",
+              type: "text",
+              required: false,
+            },
+            {
+              key: "pravomoci_dokumentovany",
+              label: "Jsou pravomoci zdokumentovány v bezpečnostní politice?",
+              type: "boolean",
+              required: true,
+            },
+          ],
+          frameworkMappings: [
+            {
+              frameworkId: "zokb",
+              reference: "§ 4",
+              title: "Požadavky na vrcholné vedení",
+            },
+          ],
+          officialBaselineRefs: ["§ 4"],
+          nukibBlock: {
+            blockTitle: "§ Organizační bezpečnost",
+            sectionTitle: "Požadavky na vrcholné vedení",
+          },
+          nukibComplianceState: "not_implemented",
+          nukibPriority: "high",
+          nukibTier: "mandatory_minimum",
+          nis2ArticleRef: "ZoKB § 4",
+          zobkSectionRef: "§ 4",
+        },
+        {
           controlKey: "pohoda-iam-user-accounts",
           question:
             "Jsou uživatelé Pohody spravováni přes systém Stormware (Pohoda E1 pokročilé role) a má každý zaměstnanec samostatný účet?",
@@ -137,6 +198,17 @@ export const pohodaWorkspace: PlatformWorkspace = {
           guidance:
             "Pohoda umožňuje automatické zálohy přes vestavěný Plánovač záloh nebo externí nástroje jako Backup Complete SQL (doporučený partner Stormware). Záloha by měla být šifrovaná a ukládaná na jiné médium než produkční server (lokální NAS, FTPS nebo cloud). Ověřte, že záloha probíhá mimo pracovní dobu. Přiložte konfiguraci plánovače nebo log úspěšných záloh za posledních 30 dní.",
           evidenceType: "both",
+          frameworkMappings: [
+            {
+              frameworkId: "zokb",
+              reference: "§ 6",
+              title: "Řízení kontinuity činností",
+            },
+          ],
+          officialBaselineRefs: ["§ 6", "§ 6 písm. c)"],
+          nukibComplianceState: "planned",
+          nukibPriority: "high",
+          nukibTier: "mandatory_minimum",
           nis2ArticleRef: "Article 21(2)(c)",
           zobkSectionRef: "§ 8 odst. 2",
         },

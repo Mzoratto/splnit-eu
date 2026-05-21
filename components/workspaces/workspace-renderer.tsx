@@ -81,19 +81,64 @@ type AttestationFormProps = {
   platformId: string;
 };
 
+type StructuredFieldValue = string | boolean | "";
+
+function initialStructuredFieldValues(control: WorkspaceControl): Record<string, StructuredFieldValue> {
+  return Object.fromEntries(
+    (control.evidenceFields ?? []).map((field) => [
+      field.key,
+      field.defaultValue ?? "",
+    ]),
+  );
+}
+
+function hasMissingRequiredStructuredField(
+  control: WorkspaceControl,
+  values: Record<string, StructuredFieldValue>,
+): boolean {
+  return (control.evidenceFields ?? []).some((field) => {
+    if (!field.required) {
+      return false;
+    }
+
+    const value = values[field.key];
+    return value === "" || value === undefined || value === null;
+  });
+}
+
+function structuredFieldAnswers(
+  control: WorkspaceControl,
+  values: Record<string, StructuredFieldValue>,
+): Record<string, unknown> {
+  return Object.fromEntries(
+    (control.evidenceFields ?? [])
+      .map((field) => [field.key, values[field.key] ?? null] as const)
+      .filter(([, value]) => value !== ""),
+  );
+}
+
 function AttestationForm({ control, layerId, platformId }: AttestationFormProps) {
   const [answer, setAnswer] = React.useState<"yes" | "no" | "partial" | "">("");
+  const [fieldValues, setFieldValues] = React.useState<Record<string, StructuredFieldValue>>(
+    () => initialStructuredFieldValues(control),
+  );
   const [notes, setNotes] = React.useState("");
   const [pending, setPending] = React.useState(false);
   const [submitted, setSubmitted] = React.useState(false);
   const [error, setError] = React.useState<string | null>(null);
+  const missingRequiredFields = hasMissingRequiredStructuredField(control, fieldValues);
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
-    if (!answer) return;
+    if (!answer || missingRequiredFields) return;
 
     setPending(true);
     setError(null);
+    const answers = {
+      answer,
+      notes: notes.trim() || null,
+      ...structuredFieldAnswers(control, fieldValues),
+    };
 
     try {
       // When NEXT_PUBLIC_ENABLE_TEST_ROUTES is set (e.g. in Playwright E2E), use
@@ -104,7 +149,7 @@ function AttestationForm({ control, layerId, platformId }: AttestationFormProps)
           method: "POST",
           headers: { "content-type": "application/json" },
           body: JSON.stringify({
-            answers: { answer, notes: notes.trim() || null },
+            answers,
             controlKey: control.controlKey,
             layerId,
             platformId,
@@ -116,10 +161,7 @@ function AttestationForm({ control, layerId, platformId }: AttestationFormProps)
         }
       } else {
         await submitWorkspaceAttestationAction({
-          answers: {
-            answer,
-            notes: notes.trim() || null,
-          },
+          answers,
           controlKey: control.controlKey,
           layerId,
           platformId,
@@ -171,6 +213,77 @@ function AttestationForm({ control, layerId, platformId }: AttestationFormProps)
         </div>
       </fieldset>
 
+      {control.evidenceFields?.length ? (
+        <fieldset className="space-y-2 rounded-md border border-border bg-surface-muted p-3">
+          <legend className="px-1 text-sm font-medium">Doplňující údaje</legend>
+          <div className="grid gap-3">
+            {control.evidenceFields.map((field) => {
+              const inputId = `${control.controlKey}-${field.key}`;
+              const value = fieldValues[field.key] ?? "";
+
+              if (field.type === "boolean") {
+                return (
+                  <div key={field.key} className="grid gap-1.5 text-sm">
+                    <span className="font-medium text-foreground/72">{field.label}</span>
+                    <div className="flex flex-wrap gap-2">
+                      {[
+                        { key: "true", label: "Ano", value: true },
+                        { key: "false", label: "Ne", value: false },
+                      ].map((option) => (
+                        <label
+                          key={option.key}
+                          className={clsx(
+                            "flex cursor-pointer items-center gap-2 rounded-md border px-3 py-2 text-sm transition-colors",
+                            value === option.value
+                              ? "border-primary bg-primary/8 text-primary"
+                              : "border-border bg-background text-foreground/68 hover:bg-surface",
+                          )}
+                        >
+                          <input
+                            type="radio"
+                            name={inputId}
+                            value={option.key}
+                            checked={value === option.value}
+                            onChange={() =>
+                              setFieldValues((current) => ({
+                                ...current,
+                                [field.key]: option.value,
+                              }))
+                            }
+                            className="sr-only"
+                            required={field.required}
+                          />
+                          {option.label}
+                        </label>
+                      ))}
+                    </div>
+                  </div>
+                );
+              }
+
+              return (
+                <label key={field.key} htmlFor={inputId} className="grid gap-1.5 text-sm">
+                  <span className="font-medium text-foreground/72">{field.label}</span>
+                  <input
+                    id={inputId}
+                    type={field.type}
+                    required={field.required}
+                    value={typeof value === "string" ? value : ""}
+                    onChange={(event) =>
+                      setFieldValues((current) => ({
+                        ...current,
+                        [field.key]: event.target.value,
+                      }))
+                    }
+                    className="rounded-md border border-border bg-background px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-primary"
+                  />
+                </label>
+              );
+            })}
+          </div>
+        </fieldset>
+      ) : null}
+
       <label className="grid gap-1.5 text-sm">
         <span className="font-medium text-foreground/72">Notes (optional)</span>
         <textarea
@@ -188,7 +301,7 @@ function AttestationForm({ control, layerId, platformId }: AttestationFormProps)
 
       <button
         type="submit"
-        disabled={!answer || pending}
+        disabled={!answer || missingRequiredFields || pending}
         className="inline-flex items-center gap-2 rounded-md bg-primary px-4 py-2.5 text-sm font-medium text-primary-foreground disabled:cursor-not-allowed disabled:opacity-50"
       >
         {pending ? "Saving…" : "Save attestation"}

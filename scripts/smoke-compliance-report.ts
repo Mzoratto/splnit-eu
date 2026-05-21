@@ -87,15 +87,27 @@ function fixtureEvidence(): EvidenceRecord[] {
       connectorName: "Konektor Hetzner Cloud",
       controlId: "ctrl_hetzner_api",
       controlKey: "hetzner-infra-server-running",
-      controlName: "Hetzner Cloud server je spuštěný",
-      evidenceId: "ev_hetzner_api",
-      finding: "Konektor Hetzner Cloud ověřil stav serveru: running.",
-      nukibBlock: {
-        blockTitle: "§ Technická opatření",
-        sectionTitle: "Zajištění úrovně dostupnosti",
+        controlName: "Hetzner Cloud server je spuštěný",
+        evidenceId: "ev_hetzner_api",
+        frameworkMappings: [
+          {
+            frameworkId: "zokb",
+            reference: "§ 6",
+            title: "Řízení kontinuity činností",
+          },
+          {
+            frameworkId: "nis2",
+            reference: "Article 21(2)(c)",
+          },
+        ],
+        finding: "Konektor Hetzner Cloud ověřil stav serveru: running.",
+        nukibBlock: {
+          blockTitle: "§ Technická opatření",
+          sectionTitle: "Zajištění úrovně dostupnosti",
+        },
+        nukibTier: "mandatory_minimum",
+        source: "connector",
       },
-      source: "connector",
-    },
     {
       assessmentResult: "pass",
       assessedAt: generatedAt,
@@ -140,11 +152,36 @@ function fixtureEvidence(): EvidenceRecord[] {
         blockTitle: "§ Technická opatření",
         sectionTitle: "Zajištění úrovně dostupnosti",
       },
-      recommendation: "Proveďte dokumentovaný test obnovy.",
-      source: "manual",
-    },
-  ];
-}
+        recommendation: "Proveďte dokumentovaný test obnovy.",
+        source: "manual",
+      },
+      {
+        assessmentResult: "gap",
+        assessedAt: generatedAt,
+        collectedAt: generatedAt,
+        controlId: "ctrl_poverena_osoba",
+        controlKey: "§4-poverena-osoba",
+        controlName: "Jmenování osoby pověřené kybernetickou bezpečností",
+        evidenceId: "ev_poverena_osoba_gap",
+        frameworkMappings: [
+          {
+            frameworkId: "zokb",
+            reference: "§ 4",
+            title: "Požadavky na vrcholné vedení",
+          },
+        ],
+        gapDescription:
+          "Školení pověřené osoby je starší než 12 měsíců nebo nebylo absolvováno.",
+        nukibBlock: {
+          blockTitle: "§ Organizační bezpečnost",
+          sectionTitle: "Požadavky na vrcholné vedení",
+        },
+        nukibTier: "mandatory_minimum",
+        recommendation: "Jmenujte odpovědnou osobu a doložte aktuální školení.",
+        source: "manual",
+      },
+    ];
+  }
 
 function fixtureContext(rezimPovinnosti: "nizsi" | "vyssi"): ReportContext {
   return {
@@ -289,6 +326,11 @@ function assertHtml(html: string) {
   assert.match(html, /Zdroj/, "HTML contains Czech source label.");
   assert.match(html, /Stav/, "HTML contains Czech status label.");
   assert.match(html, /Právní ref\./, "HTML contains Czech legal reference label.");
+  assert.match(
+    html,
+    /Přehled bezpečnostních opatření dle § 3 odst\. 2 vyhl\. č\. 410\/2025 Sb\./,
+    "HTML contains NÚKIB přehled subtitle.",
+  );
   assert.match(html, /Doporučení/, "HTML contains Czech recommendation label.");
   assert.match(html, /evidence-pass-api/, "HTML contains green block class.");
   assert.match(
@@ -303,6 +345,12 @@ function assertHtml(html: string) {
   );
   assert.match(html, /evidence-pass-manual/, "HTML contains grey block class.");
   assert.match(html, /evidence-gap/, "HTML contains amber block class.");
+  assert.match(html, /evidence-breach/, "HTML contains red mandatory breach class.");
+  assert.match(
+    html,
+    /vyhláška č\. 410\/2025 Sb\., § 6 — Řízení kontinuity činností \(Article 21\(2\)\(c\)\)/,
+    "HTML renders ZoKB reference before NIS2 reference.",
+  );
   assert.match(html, /Splněno/, "HTML contains Czech pass status.");
   assert.match(html, /Deklarováno/, "HTML contains Czech manual declaration status.");
   assert.match(html, /Nesplněno/, "HTML contains Czech gap status.");

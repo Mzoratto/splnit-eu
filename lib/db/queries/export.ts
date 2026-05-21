@@ -14,6 +14,7 @@ import type {
   FrameworkMapping,
   NukibControlTier,
 } from "@/lib/compliance/nukib/types";
+import { isDesignatedPersonTrainingGap } from "@/lib/workspaces/attestation";
 import type { NukibControlBlock, PlatformWorkspace } from "@/lib/workspaces/types";
 import { heliosWorkspace } from "@/lib/workspaces/helios";
 import { hetznerWorkspace } from "@/lib/workspaces/hetzner";
@@ -100,9 +101,9 @@ function workspaceControlLookup(workspaces: readonly PlatformWorkspace[]) {
 
   for (const workspace of workspaces) {
     for (const layer of workspace.layers) {
-      for (const control of layer.controls) {
-        lookup.set(control.controlKey, {
-          block: layer.nukibBlock,
+	      for (const control of layer.controls) {
+	        lookup.set(control.controlKey, {
+	          block: control.nukibBlock ?? layer.nukibBlock,
           frameworkMappings: control.frameworkMappings,
           legacyNis2ArticleRef: control.nis2ArticleRef,
           legacyZobkSectionRef: control.zobkSectionRef,
@@ -200,6 +201,12 @@ function formatGapDescription(input: {
   snapshotData: SnapshotData;
   source: EvidenceSource;
 }): string {
+  const attestationAnswers = asRecord(asRecord(input.snapshotData).attestationAnswers);
+
+  if (isDesignatedPersonTrainingGap(attestationAnswers)) {
+    return "Školení pověřené osoby je starší než 12 měsíců nebo nebylo absolvováno.";
+  }
+
   if (input.source === "connector") {
     return "Automatická kontrola identifikovala nesoulad proti požadovanému opatření.";
   }

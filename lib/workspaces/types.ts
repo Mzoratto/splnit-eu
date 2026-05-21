@@ -6,6 +6,14 @@ export type NukibControlBlock = {
   sectionTitle: string;
 };
 
+export type WorkspaceEvidenceField = {
+  defaultValue?: string | boolean;
+  key: string;
+  label: string;
+  required: boolean;
+  type: "text" | "date" | "boolean";
+};
+
 // A single compliance control within a workspace layer.
 // evidenceType drives which collection UI to show per control.
 export type WorkspaceControl = NukibWorkspaceExtensions & {
@@ -14,10 +22,16 @@ export type WorkspaceControl = NukibWorkspaceExtensions & {
   apiField?: string;
   automatable?: boolean;
   controlKey: string;
+  description?: string;
+  evidenceFields?: WorkspaceEvidenceField[];
   question: string;
+  questionText?: string;
   guidance: string;
+  helpText?: string;
   evidenceType: "attestation" | "file_upload" | "both";
   nis2ArticleRef: string;
+  nukibBlock?: NukibControlBlock;
+  title?: string;
   zobkSectionRef?: string;
 };
 

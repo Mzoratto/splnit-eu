@@ -283,12 +283,17 @@ function renderEvidenceBlock(record: EvidenceRecord, org: Org): string {
 
   const gapDescription =
     record.gapDescription ?? record.finding ?? "Opatření není podle dostupných důkazů splněno.";
+  const isMandatoryBreach = record.nukibTier === "mandatory_minimum";
+  const gapClass = isMandatoryBreach ? "evidence-breach" : "evidence-gap";
+  const gapLabel = isMandatoryBreach
+    ? "Nesplněno – Porušení neopominutelného opatření"
+    : "Nesplněno – Identifikovaná mezera";
 
   return `
-    <div class="evidence-block evidence-gap">
+    <div class="evidence-block ${gapClass}">
       <div class="block-header">
         <span class="icon">!</span>
-        <span class="label">Nesplněno – Identifikovaná mezera</span>
+        <span class="label">${escapeHtml(gapLabel)}</span>
       </div>
       <dl>
         ${renderDefinitionRow("Opatření", escapeHtml(record.controlName))}
@@ -501,6 +506,11 @@ function renderStyles(): string {
         border-color: #b45309;
       }
 
+      .evidence-breach {
+        background: #fef2f2;
+        border-color: #991b1b;
+      }
+
       .block-header {
         align-items: center;
         display: flex;
@@ -519,6 +529,10 @@ function renderStyles(): string {
 
       .evidence-gap .icon {
         color: #b45309;
+      }
+
+      .evidence-breach .icon {
+        color: #991b1b;
       }
 
       dl {

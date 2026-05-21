@@ -6,44 +6,7 @@ import { z } from "zod";
 import { recordActivationEvent } from "@/lib/activation/events";
 import { createAuditLog } from "@/lib/db/queries/audit-logs";
 import { createManualAttestationEvidence } from "@/lib/db/queries/evidence";
-
-/**
- * Derives the assessment_result from attestation answers.
- *
- * Rules:
- *  - Any answer that is strictly false, "fail", or "no" (case-insensitive) → "gap"
- *  - All answers strictly true, "pass", or "yes" → "pass"
- *  - No answers or all values undefined/null → "manual_review"
- */
-function deriveAssessmentResult(
-  answers: Record<string, unknown>,
-): "pass" | "gap" | "manual_review" {
-  const values = Object.values(answers);
-
-  if (values.length === 0) {
-    return "manual_review";
-  }
-
-  const failing = values.some(
-    (v) =>
-      v === false ||
-      (typeof v === "string" &&
-        (v.toLowerCase() === "fail" || v.toLowerCase() === "no")),
-  );
-
-  if (failing) {
-    return "gap";
-  }
-
-  const passing = values.some(
-    (v) =>
-      v === true ||
-      (typeof v === "string" &&
-        (v.toLowerCase() === "pass" || v.toLowerCase() === "yes")),
-  );
-
-  return passing ? "pass" : "manual_review";
-}
+import { deriveWorkspaceAttestationAssessmentResult } from "@/lib/workspaces/attestation";
 
 async function getActiveSession() {
   const session = await auth();
@@ -74,7 +37,7 @@ export async function submitWorkspaceAttestationAction(input: {
   const parsed = submitAttestationSchema.parse(input);
   const session = await getActiveSession();
 
-  const assessmentResult = deriveAssessmentResult(parsed.answers);
+  const assessmentResult = deriveWorkspaceAttestationAssessmentResult(parsed.answers);
 
   const result = await createManualAttestationEvidence({
     answers: parsed.answers,
