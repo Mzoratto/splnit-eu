@@ -1,5 +1,10 @@
 import type { EvidenceAssessmentResult, EvidenceCollectionStatus } from "@/lib/activation/evidence-state";
 
+export type NukibControlBlock = {
+  blockTitle: string;
+  sectionTitle: string;
+};
+
 // A single compliance control within a workspace layer.
 // evidenceType drives which collection UI to show per control.
 export type WorkspaceControl = {
@@ -15,6 +20,7 @@ export type WorkspaceControl = {
 // cross-platform layers; title is locale-display only.
 export type ComplianceLayer = {
   id: "infrastructure" | "iam" | "backup_dr" | "api_connectivity";
+  nukibBlock: NukibControlBlock;
   title: string;
   controls: WorkspaceControl[];
 };

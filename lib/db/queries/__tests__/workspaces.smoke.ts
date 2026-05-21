@@ -56,6 +56,10 @@ const fixtureWorkspace: PlatformWorkspace = {
   layers: [
     {
       id: "infrastructure",
+      nukibBlock: {
+        blockTitle: "§ Technická opatření",
+        sectionTitle: "Kryptografické prostředky",
+      },
       title: "Infrastructure",
       controls: [
         {
@@ -77,6 +81,10 @@ const fixtureWorkspace: PlatformWorkspace = {
     },
     {
       id: "iam",
+      nukibBlock: {
+        blockTitle: "§ Technická opatření",
+        sectionTitle: "Správa přístupových oprávnění",
+      },
       title: "IAM",
       controls: [
         {

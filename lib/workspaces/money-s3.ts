@@ -11,6 +11,10 @@ export const moneyS3Workspace: PlatformWorkspace = {
     // ─── Layer 1: Infrastructure & Storage Security ──────────────────────────
     {
       id: "infrastructure",
+      nukibBlock: {
+        blockTitle: "§ Technická opatření",
+        sectionTitle: "Kryptografické prostředky",
+      },
       title: "Infrastruktura a zabezpečení úložiště",
       controls: [
         {
@@ -58,6 +62,10 @@ export const moneyS3Workspace: PlatformWorkspace = {
     // ─── Layer 2: Access Control & IAM ──────────────────────────────────────
     {
       id: "iam",
+      nukibBlock: {
+        blockTitle: "§ Technická opatření",
+        sectionTitle: "Správa přístupových oprávnění",
+      },
       title: "Řízení přístupu a správa identit",
       controls: [
         {
@@ -106,6 +114,10 @@ export const moneyS3Workspace: PlatformWorkspace = {
     // ─── Layer 3: Backup & Disaster Recovery ─────────────────────────────────
     {
       id: "backup_dr",
+      nukibBlock: {
+        blockTitle: "§ Technická opatření",
+        sectionTitle: "Zajištění úrovně dostupnosti",
+      },
       title: "Zálohy a obnova po havárii",
       controls: [
         {
@@ -154,6 +166,10 @@ export const moneyS3Workspace: PlatformWorkspace = {
     // ─── Layer 4: API & Interconnectivity Security ───────────────────────────
     {
       id: "api_connectivity",
+      nukibBlock: {
+        blockTitle: "§ Technická opatření",
+        sectionTitle: "Kryptografické prostředky",
+      },
       title: "Zabezpečení API a propojení",
       controls: [
         {
