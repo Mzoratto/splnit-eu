@@ -1,4 +1,5 @@
 import type { EvidenceAssessmentResult, EvidenceCollectionStatus } from "@/lib/activation/evidence-state";
+import type { NukibWorkspaceExtensions } from "@/lib/compliance/nukib/types";
 
 export type NukibControlBlock = {
   blockTitle: string;
@@ -7,7 +8,7 @@ export type NukibControlBlock = {
 
 // A single compliance control within a workspace layer.
 // evidenceType drives which collection UI to show per control.
-export type WorkspaceControl = {
+export type WorkspaceControl = NukibWorkspaceExtensions & {
   apiEndpoint?: string;
   apiExpected?: string;
   apiField?: string;

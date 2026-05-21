@@ -10,6 +10,10 @@ import {
 } from "@/lib/db/schema";
 import type { EvidenceSource } from "@/lib/activation/evidence-state";
 import type { EvidenceRecord, ReportContext } from "@/lib/export/report-template";
+import type {
+  FrameworkMapping,
+  NukibControlTier,
+} from "@/lib/compliance/nukib/types";
 import type { NukibControlBlock, PlatformWorkspace } from "@/lib/workspaces/types";
 import { heliosWorkspace } from "@/lib/workspaces/helios";
 import { hetznerWorkspace } from "@/lib/workspaces/hetzner";
@@ -85,6 +89,10 @@ function workspaceControlLookup(workspaces: readonly PlatformWorkspace[]) {
     string,
     {
       block: NukibControlBlock;
+      frameworkMappings?: FrameworkMapping[];
+      legacyNis2ArticleRef: string;
+      legacyZobkSectionRef?: string;
+      nukibTier?: NukibControlTier;
       recommendation: string;
       workspaceName: string;
     }
@@ -95,6 +103,10 @@ function workspaceControlLookup(workspaces: readonly PlatformWorkspace[]) {
       for (const control of layer.controls) {
         lookup.set(control.controlKey, {
           block: layer.nukibBlock,
+          frameworkMappings: control.frameworkMappings,
+          legacyNis2ArticleRef: control.nis2ArticleRef,
+          legacyZobkSectionRef: control.zobkSectionRef,
+          nukibTier: control.nukibTier,
           recommendation: control.guidance,
           workspaceName: workspace.platformName,
         });
@@ -313,6 +325,7 @@ export async function getOrgWithEvidence(orgId: string): Promise<ReportContext> 
         controlKey: row.controlKey,
         controlName: row.controlName,
         evidenceId: row.evidenceId,
+        frameworkMappings: workspaceControl?.frameworkMappings,
         finding: isConnector && isPass ? formatAutomatedFinding(row.snapshotData) : null,
         gapDescription: isGap
           ? formatGapDescription({
@@ -321,6 +334,9 @@ export async function getOrgWithEvidence(orgId: string): Promise<ReportContext> 
             })
           : null,
         nukibBlock: blockForControl(row.category, row.controlKey),
+        legacyNis2ArticleRef: workspaceControl?.legacyNis2ArticleRef ?? null,
+        legacyZobkSectionRef: workspaceControl?.legacyZobkSectionRef ?? null,
+        nukibTier: workspaceControl?.nukibTier,
         recommendation: workspaceControl?.recommendation ?? null,
         source: row.source,
       };

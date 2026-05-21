@@ -7,6 +7,10 @@ import type {
   EvidenceAssessmentResult,
   EvidenceSource,
 } from "@/lib/activation/evidence-state";
+import type {
+  FrameworkMapping,
+  NukibControlTier,
+} from "@/lib/compliance/nukib/types";
 import type { NukibControlBlock } from "@/lib/workspaces/types";
 
 export interface Org {
@@ -30,9 +34,13 @@ export interface EvidenceRecord {
   controlKey: string;
   controlName: string;
   evidenceId: string;
+  frameworkMappings?: FrameworkMapping[];
   finding?: string | null;
   gapDescription?: string | null;
+  legacyNis2ArticleRef?: string | null;
+  legacyZobkSectionRef?: string | null;
   nukibBlock: NukibControlBlock;
+  nukibTier?: NukibControlTier;
   recommendation?: string | null;
   source: EvidenceSource | "api";
 }
@@ -122,6 +130,55 @@ export function getVyhlaskaRef(
   return `Zákon č. 264/2025 Sb., o kybernetické bezpečnosti; vyhláška č. ${cislo}/2025 Sb., § ${sectionName}`;
 }
 
+function getVyhlaskaNumber(rezim: ObligationRegime): "409" | "410" {
+  return rezim === "vyssi" ? "409" : "410";
+}
+
+function formatFrameworkMapping(mapping: FrameworkMapping): string {
+  return mapping.title
+    ? `${mapping.reference} — ${mapping.title}`
+    : mapping.reference;
+}
+
+function formatLegalReference(record: EvidenceRecord, org: Org): string {
+  const mappings = record.frameworkMappings ?? [];
+  const zokbMappings = mappings.filter((mapping) => mapping.frameworkId === "zokb");
+  const nis2Mappings = mappings.filter((mapping) => mapping.frameworkId === "nis2");
+  const legacyNis2 = record.legacyNis2ArticleRef?.trim();
+  const legacyZokb = record.legacyZobkSectionRef?.trim();
+  const nis2References = [
+    ...nis2Mappings.map(formatFrameworkMapping),
+    legacyNis2,
+  ].filter((reference): reference is string => Boolean(reference));
+
+  if (zokbMappings.length > 0) {
+    const primary = zokbMappings
+      .map((mapping) =>
+        `vyhláška č. ${getVyhlaskaNumber(org.rezimPovinnosti)}/2025 Sb., ${formatFrameworkMapping(mapping)}`,
+      )
+      .join("; ");
+    const secondary = nis2References.length > 0
+      ? ` (${Array.from(new Set(nis2References)).join("; ")})`
+      : "";
+
+    return `${primary}${secondary}`;
+  }
+
+  if (legacyZokb) {
+    const primary = `vyhláška č. ${getVyhlaskaNumber(org.rezimPovinnosti)}/2025 Sb., ${legacyZokb}`;
+    return legacyNis2 ? `${primary} (${legacyNis2})` : primary;
+  }
+
+  if (legacyNis2) {
+    return legacyNis2;
+  }
+
+  return getVyhlaskaRef(
+    org.rezimPovinnosti,
+    record.nukibBlock.sectionTitle || DEFAULT_NUKIB_BLOCK.sectionTitle,
+  );
+}
+
 function resolveBranding(org: Org) {
   const hasAgencyLogo = org.tier === "agency" && Boolean(org.brandingConfig.logoUrl);
   const displayName = org.brandingConfig.displayName ?? org.name;
@@ -181,10 +238,7 @@ function renderDefinitionRow(label: string, value: string): string {
 function renderEvidenceBlock(record: EvidenceRecord, org: Org): string {
   const tone = getEvidenceTone(record);
   const date = evidenceDate(record);
-  const legalRef = getVyhlaskaRef(
-    org.rezimPovinnosti,
-    record.nukibBlock.sectionTitle || DEFAULT_NUKIB_BLOCK.sectionTitle,
-  );
+  const legalRef = formatLegalReference(record, org);
   const source = formatSource(record);
   const recommendation =
     record.recommendation ??
@@ -525,7 +579,7 @@ export function renderReportTemplate(ctx: ReportContext): string {
         <section class="cover">
           <div class="logo-row">${branding.logoHtml}</div>
           <h1>Zpráva o hodnocení stavu kybernetické bezpečnosti (NIS2 / ZoKB)</h1>
-          <p class="subtitle">Zákon č. 264/2025 Sb., o kybernetické bezpečnosti</p>
+          <p class="subtitle">Přehled bezpečnostních opatření dle § 3 odst. 2 vyhl. č. 410/2025 Sb.</p>
 
           <dl class="identity-grid">
             ${renderDefinitionRow("Název společnosti", escapeHtml(ctx.org.name))}
