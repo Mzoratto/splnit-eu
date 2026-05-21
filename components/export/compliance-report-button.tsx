@@ -7,6 +7,7 @@ import { Download, Loader2 } from "lucide-react";
 type ComplianceReportButtonProps = {
   missingFields: string[];
   orgId: string;
+  settingsHref?: string;
 };
 
 function filenameFromDisposition(disposition: string | null) {
@@ -18,6 +19,7 @@ function filenameFromDisposition(disposition: string | null) {
 export function ComplianceReportButton({
   missingFields,
   orgId,
+  settingsHref = "/settings/profile",
 }: ComplianceReportButtonProps) {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -86,7 +88,7 @@ export function ComplianceReportButton({
       {missingFields.length > 0 ? (
         <p className="text-xs leading-5 text-foreground/58">
           Před exportem vyplňte: {missingFields.join(", ")}.{" "}
-          <Link href="/settings/profile" className="font-medium text-primary hover:underline">
+          <Link href={settingsHref} className="font-medium text-primary hover:underline">
             Upravit profil společnosti
           </Link>
         </p>

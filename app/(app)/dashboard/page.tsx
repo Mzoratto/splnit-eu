@@ -308,8 +308,13 @@ function FrameworkIcon({ tone }: { tone: StatusPillTone }) {
   );
 }
 
-export default async function DashboardPage() {
+export default async function DashboardPage({
+  searchParams,
+}: {
+  searchParams?: Promise<Record<string, string | string[] | undefined>>;
+}) {
   const requestLocale = normalizeLocale(await getLocale()) ?? "cs-CZ";
+  const resolvedSearchParams = searchParams ? await searchParams : {};
   const [data, firstName] = await Promise.all([
     loadDashboardData(),
     loadUserName(),
@@ -432,7 +437,18 @@ export default async function DashboardPage() {
     : useDemoData
       ? fallbackUpdates
       : [];
-  const reportExportIdentity = data?.organisationExportIdentity ?? null;
+  const exportProfileMode = Array.isArray(resolvedSearchParams.exportProfile)
+    ? resolvedSearchParams.exportProfile[0]
+    : resolvedSearchParams.exportProfile;
+  const demoReportExportIdentity = useDemoData
+    ? {
+        clerkOrgId: "org_demo_export",
+        dic: exportProfileMode === "incomplete" ? null : "CZ12345678",
+        ico: "12345678",
+        sidlo: "Václavské náměstí 1, Praha",
+      }
+    : null;
+  const reportExportIdentity = data?.organisationExportIdentity ?? demoReportExportIdentity;
   const reportMissingFields = reportExportIdentity
     ? [
         !reportExportIdentity.ico && "IČO",
@@ -588,6 +604,12 @@ export default async function DashboardPage() {
             <ComplianceReportButton
               missingFields={reportMissingFields}
               orgId={reportExportIdentity.clerkOrgId}
+              settingsHref={
+                process.env.NEXT_PUBLIC_ENABLE_TEST_ROUTES === "true" &&
+                exportProfileMode === "incomplete"
+                  ? "/settings/profile?testProfile=editable-incomplete"
+                  : "/settings/profile"
+              }
             />
           </div>
         </section>

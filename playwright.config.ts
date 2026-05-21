@@ -17,17 +17,20 @@ export default defineConfig({
     baseURL: `http://127.0.0.1:${port}`,
     trace: "retain-on-failure",
   },
-  webServer: {
-    command: `NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY= CLERK_SECRET_KEY=*** run dev -- -p ${port}`,
-    env: {
-      NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY: "",
-      CLERK_SECRET_KEY: "",
-      NEXT_PUBLIC_ENABLE_TEST_ROUTES: "true",
-    },
-    reuseExistingServer: !process.env.CI,
-    timeout: 120_000,
-    url: `http://127.0.0.1:${port}`,
-  },
+  ...(process.env.CI
+    ? {
+        webServer: {
+          command: `npm run dev -- --hostname 127.0.0.1 -p ${port}`,
+          env: {
+            ENABLE_LOCAL_DEMO_DATA: "true",
+            NEXT_PUBLIC_ENABLE_TEST_ROUTES: "true",
+          },
+          reuseExistingServer: false,
+          timeout: 120_000,
+          url: `http://127.0.0.1:${port}`,
+        },
+      }
+    : {}),
   projects: [
     {
       name: "chromium",

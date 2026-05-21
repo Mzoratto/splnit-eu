@@ -110,6 +110,26 @@ async function loadOrganisationSettings(): Promise<OrganisationSettingsData> {
   };
 }
 
+function applyTestProfile(
+  data: OrganisationSettingsData,
+  testProfile: string | string[] | undefined,
+): OrganisationSettingsData {
+  const profile = Array.isArray(testProfile) ? testProfile[0] : testProfile;
+
+  if (
+    process.env.NEXT_PUBLIC_ENABLE_TEST_ROUTES !== "true" ||
+    profile !== "editable-incomplete"
+  ) {
+    return data;
+  }
+
+  return {
+    ...data,
+    canMutate: true,
+    dic: "",
+  };
+}
+
 function formatDate(
   value: Date | string | null | undefined,
   locale: string,
@@ -144,8 +164,16 @@ function getNis2Category(input: { employeeCount: string; sector: string }) {
   return "monitoring";
 }
 
-export default async function OrganisationSettingsPage() {
-  const data = await loadOrganisationSettings();
+export default async function OrganisationSettingsPage({
+  searchParams,
+}: {
+  searchParams?: Promise<Record<string, string | string[] | undefined>>;
+}) {
+  const resolvedSearchParams = searchParams ? await searchParams : {};
+  const data = applyTestProfile(
+    await loadOrganisationSettings(),
+    resolvedSearchParams.testProfile,
+  );
   const nis2Category = getNis2Category(data);
   const requestLocale = normalizeLocale(await getLocale()) ?? "cs-CZ";
   const locale = data.canMutate
