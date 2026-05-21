@@ -23,13 +23,27 @@ export const hetznerWorkspace: PlatformWorkspace = {
           apiField: "servers[0].status",
           automatable: true,
           controlKey: "hetzner-infra-server-running",
-          evidenceType: "both",
-          guidance:
-            "Automatická kontrola ověří, že alespoň jeden server Hetzner Cloud běží ve stavu running. Pokud API kontrola selže, doložte ručně snímek z Hetzner Cloud Console nebo export serverů s datem kontroly a odpovědnou osobou.",
-          nis2ArticleRef: "Article 21(2)(h)",
-          question:
-            "Běží produkční server v Hetzner Cloud a je dostupný pro provoz služby?",
-          zobkSectionRef: "§ 6 odst. 1 písm. b)",
+            evidenceType: "both",
+            guidance:
+              "Automatická kontrola ověří, že alespoň jeden server Hetzner Cloud běží ve stavu running. Pokud API kontrola selže, doložte ručně snímek z Hetzner Cloud Console nebo export serverů s datem kontroly a odpovědnou osobou.",
+            frameworkMappings: [
+              {
+                frameworkId: "zokb",
+                reference: "§ 6",
+                title: "Řízení kontinuity činností",
+              },
+              {
+                frameworkId: "nis2",
+                reference: "Article 21(2)(c)",
+              },
+            ],
+            officialBaselineRefs: ["§ 6", "§ 6 písm. a)"],
+            nukibPriority: "high",
+            nukibTier: "mandatory_minimum",
+            nis2ArticleRef: "Article 21(2)(c)",
+            question:
+              "Běží produkční server v Hetzner Cloud a je dostupný pro provoz služby?",
+            zobkSectionRef: "§ 6 odst. 1 písm. b)",
         },
         {
           // GET /firewalls → rules array non-empty
@@ -38,12 +52,26 @@ export const hetznerWorkspace: PlatformWorkspace = {
           apiField: "firewalls[0].rules",
           automatable: true,
           controlKey: "hetzner-infra-firewall-present",
-          evidenceType: "both",
-          guidance:
-            "Automatická kontrola ověří, že je v Hetzner Cloud definován firewall s neprázdnou sadou pravidel. Pokud API kontrola selže, doložte ručně export firewall pravidel nebo snímek nastavení s anonymizovanými IP adresami.",
-          nis2ArticleRef: "Article 21(2)(h)",
-          question:
-            "Je pro servery v Hetzner Cloud nastavena neprázdná sada firewall pravidel?",
+            evidenceType: "both",
+            guidance:
+              "Automatická kontrola ověří, že je v Hetzner Cloud definován firewall s neprázdnou sadou pravidel. Pokud API kontrola selže, doložte ručně export firewall pravidel nebo snímek nastavení s anonymizovanými IP adresami.",
+            frameworkMappings: [
+              {
+                frameworkId: "zokb",
+                reference: "§ 11",
+                title: "Bezpečnost komunikačních sítí",
+              },
+              {
+                frameworkId: "nis2",
+                reference: "Article 21(2)(h)",
+              },
+            ],
+            officialBaselineRefs: ["§ 11", "§ 11 písm. b)"],
+            nukibPriority: "high",
+            nukibTier: "assessable",
+            nis2ArticleRef: "Article 21(2)(h)",
+            question:
+              "Je pro servery v Hetzner Cloud nastavena neprázdná sada firewall pravidel?",
           zobkSectionRef: "§ 5 odst. 1 písm. e)",
         },
         {
@@ -53,12 +81,26 @@ export const hetznerWorkspace: PlatformWorkspace = {
           apiField: "images[0].created",
           automatable: true,
           controlKey: "hetzner-infra-snapshot-recent",
-          evidenceType: "both",
-          guidance:
-            "Automatická kontrola ověří, že existuje snapshot vytvořený v posledních 7 dnech. Pokud API kontrola selže nebo snapshot není čitelný přes API, doložte ručně plán záloh a snímek posledního snapshotu včetně data vytvoření.",
-          nis2ArticleRef: "Article 21(2)(c)",
-          question:
-            "Existuje snapshot nebo záloha produkčního serveru vytvořená v posledních 7 dnech?",
+            evidenceType: "both",
+            guidance:
+              "Automatická kontrola ověří, že existuje snapshot vytvořený v posledních 7 dnech. Pokud API kontrola selže nebo snapshot není čitelný přes API, doložte ručně plán záloh a snímek posledního snapshotu včetně data vytvoření.",
+            frameworkMappings: [
+              {
+                frameworkId: "zokb",
+                reference: "§ 6",
+                title: "Řízení kontinuity činností",
+              },
+              {
+                frameworkId: "nis2",
+                reference: "Article 21(2)(c)",
+              },
+            ],
+            officialBaselineRefs: ["§ 6", "§ 6 písm. c)"],
+            nukibPriority: "high",
+            nukibTier: "mandatory_minimum",
+            nis2ArticleRef: "Article 21(2)(c)",
+            question:
+              "Existuje snapshot nebo záloha produkčního serveru vytvořená v posledních 7 dnech?",
           zobkSectionRef: "§ 8 odst. 1",
         },
       ],
@@ -73,12 +115,26 @@ export const hetznerWorkspace: PlatformWorkspace = {
       controls: [
         {
           controlKey: "hetzner-iam-api-key-scopes",
-          evidenceType: "attestation",
-          guidance:
-            "Zkontrolujte, že API token používaný pro Splnit.eu je projektový token s oprávněním pouze pro čtení. Nepoužívejte token s oprávněním Read & Write, pokud není prokazatelně nutný.",
-          nis2ArticleRef: "Article 21(2)(i)",
-          question:
-            "Je přístup API tokenu omezen na minimální potřebné čtecí oprávnění?",
+            evidenceType: "attestation",
+            guidance:
+              "Zkontrolujte, že API token používaný pro Splnit.eu je projektový token s oprávněním pouze pro čtení. Nepoužívejte token s oprávněním Read & Write, pokud není prokazatelně nutný.",
+            frameworkMappings: [
+              {
+                frameworkId: "zokb",
+                reference: "§ 7",
+                title: "Řízení přístupu",
+              },
+              {
+                frameworkId: "nis2",
+                reference: "Article 21(2)(i)",
+              },
+            ],
+            officialBaselineRefs: ["§ 7"],
+            nukibPriority: "unset",
+            nukibTier: "assessable",
+            nis2ArticleRef: "Article 21(2)(i)",
+            question:
+              "Je přístup API tokenu omezen na minimální potřebné čtecí oprávnění?",
           zobkSectionRef: "§ 7 odst. 2",
         },
         {
@@ -118,12 +174,26 @@ export const hetznerWorkspace: PlatformWorkspace = {
           apiField: "images[*].created",
           automatable: true,
           controlKey: "hetzner-backup-snapshot-schedule",
-          evidenceType: "both",
-          guidance:
-            "Ověřte automatický plán snapshotů nebo doložte sérii posledních snapshotů. Pokud API kontrola není dostupná, přiložte ručně konfiguraci snapshot schedule nebo interní postup zálohování.",
-          nis2ArticleRef: "Article 21(2)(c)",
-          question:
-            "Je potvrzen automatický plán snapshotů nebo ekvivalentní pravidelná záloha?",
+            evidenceType: "both",
+            guidance:
+              "Ověřte automatický plán snapshotů nebo doložte sérii posledních snapshotů. Pokud API kontrola není dostupná, přiložte ručně konfiguraci snapshot schedule nebo interní postup zálohování.",
+            frameworkMappings: [
+              {
+                frameworkId: "zokb",
+                reference: "§ 6",
+                title: "Řízení kontinuity činností",
+              },
+              {
+                frameworkId: "nis2",
+                reference: "Article 21(2)(c)",
+              },
+            ],
+            officialBaselineRefs: ["§ 6", "§ 6 písm. c)"],
+            nukibPriority: "high",
+            nukibTier: "mandatory_minimum",
+            nis2ArticleRef: "Article 21(2)(c)",
+            question:
+              "Je potvrzen automatický plán snapshotů nebo ekvivalentní pravidelná záloha?",
           zobkSectionRef: "§ 8 odst. 2",
         },
         {
@@ -168,12 +238,26 @@ export const hetznerWorkspace: PlatformWorkspace = {
         },
         {
           controlKey: "hetzner-api-key-rotation-schedule",
-          evidenceType: "attestation",
-          guidance:
-            "Doložte interní pravidlo rotace API klíčů nejpozději každých 90 dní nebo při změně odpovědné osoby. Přiložte datum poslední rotace bez zveřejnění samotného klíče.",
-          nis2ArticleRef: "Article 21(2)(j)",
-          question:
-            "Je definován harmonogram rotace API klíčů nejpozději každých 90 dní?",
+            evidenceType: "attestation",
+            guidance:
+              "Doložte interní pravidlo rotace API klíčů nejpozději každých 90 dní nebo při změně odpovědné osoby. Přiložte datum poslední rotace bez zveřejnění samotného klíče.",
+            frameworkMappings: [
+              {
+                frameworkId: "zokb",
+                reference: "§ 8",
+                title: "Řízení identit a jejich oprávnění",
+              },
+              {
+                frameworkId: "nis2",
+                reference: "Article 21(2)(i)",
+              },
+            ],
+            officialBaselineRefs: ["§ 8"],
+            nukibPriority: "unset",
+            nukibTier: "assessable",
+            nis2ArticleRef: "Article 21(2)(i)",
+            question:
+              "Je definován harmonogram rotace API klíčů nejpozději každých 90 dní?",
           zobkSectionRef: "§ 9 odst. 2",
         },
         {

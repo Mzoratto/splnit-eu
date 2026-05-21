@@ -23,13 +23,27 @@ export const ovhcloudWorkspace: PlatformWorkspace = {
           apiField: "status",
           automatable: true,
           controlKey: "ovhcloud-infra-server-operational",
-          evidenceType: "both",
-          guidance:
-            "Automatická kontrola ověří stav dedikovaného serveru OVHcloud. Pokud API kontrola selže, doložte ručně snímek z OVHcloud Manageru nebo export služby s datem kontroly a názvem serviceName.",
-          nis2ArticleRef: "Article 21(2)(h)",
-          question:
-            "Je produkční server v OVHcloud v provozním stavu operational?",
-          zobkSectionRef: "§ 6 odst. 1 písm. b)",
+            evidenceType: "both",
+            guidance:
+              "Automatická kontrola ověří stav dedikovaného serveru OVHcloud. Pokud API kontrola selže, doložte ručně snímek z OVHcloud Manageru nebo export služby s datem kontroly a názvem serviceName.",
+            frameworkMappings: [
+              {
+                frameworkId: "zokb",
+                reference: "§ 6",
+                title: "Řízení kontinuity činností",
+              },
+              {
+                frameworkId: "nis2",
+                reference: "Article 21(2)(c)",
+              },
+            ],
+            officialBaselineRefs: ["§ 6", "§ 6 písm. a)"],
+            nukibPriority: "high",
+            nukibTier: "mandatory_minimum",
+            nis2ArticleRef: "Article 21(2)(c)",
+            question:
+              "Je produkční server v OVHcloud v provozním stavu operational?",
+            zobkSectionRef: "§ 6 odst. 1 písm. b)",
         },
         {
           // GET /dedicated/server/{serviceName}/firewall → enabled === true
@@ -38,12 +52,26 @@ export const ovhcloudWorkspace: PlatformWorkspace = {
           apiField: "enabled",
           automatable: true,
           controlKey: "ovhcloud-infra-firewall-enabled",
-          evidenceType: "both",
-          guidance:
-            "Automatická kontrola ověří, zda je u služby OVHcloud zapnutý firewall. Pokud API kontrola selže, doložte ručně snímek nastavení firewallu nebo export bezpečnostního nastavení serveru.",
-          nis2ArticleRef: "Article 21(2)(h)",
-          question:
-            "Je pro server OVHcloud zapnutý firewall nebo ekvivalentní síťová ochrana?",
+            evidenceType: "both",
+            guidance:
+              "Automatická kontrola ověří, zda je u služby OVHcloud zapnutý firewall. Pokud API kontrola selže, doložte ručně snímek nastavení firewallu nebo export bezpečnostního nastavení serveru.",
+            frameworkMappings: [
+              {
+                frameworkId: "zokb",
+                reference: "§ 11",
+                title: "Bezpečnost komunikačních sítí",
+              },
+              {
+                frameworkId: "nis2",
+                reference: "Article 21(2)(h)",
+              },
+            ],
+            officialBaselineRefs: ["§ 11", "§ 11 písm. b)"],
+            nukibPriority: "high",
+            nukibTier: "assessable",
+            nis2ArticleRef: "Article 21(2)(h)",
+            question:
+              "Je pro server OVHcloud zapnutý firewall nebo ekvivalentní síťová ochrana?",
           zobkSectionRef: "§ 5 odst. 1 písm. e)",
         },
         {
@@ -53,12 +81,26 @@ export const ovhcloudWorkspace: PlatformWorkspace = {
           apiField: "backupStorage",
           automatable: true,
           controlKey: "ovhcloud-infra-backup-present",
-          evidenceType: "both",
-          guidance:
-            "Automatická kontrola ověří přítomnost backup storage u dedikovaného serveru. Pokud API kontrola selže, doložte ručně konfiguraci backup storage, plán záloh nebo potvrzení o poslední záloze.",
-          nis2ArticleRef: "Article 21(2)(c)",
-          question:
-            "Je pro server OVHcloud dostupné backup storage nebo ekvivalentní zálohování?",
+            evidenceType: "both",
+            guidance:
+              "Automatická kontrola ověří přítomnost backup storage u dedikovaného serveru. Pokud API kontrola selže, doložte ručně konfiguraci backup storage, plán záloh nebo potvrzení o poslední záloze.",
+            frameworkMappings: [
+              {
+                frameworkId: "zokb",
+                reference: "§ 6",
+                title: "Řízení kontinuity činností",
+              },
+              {
+                frameworkId: "nis2",
+                reference: "Article 21(2)(c)",
+              },
+            ],
+            officialBaselineRefs: ["§ 6", "§ 6 písm. c)"],
+            nukibPriority: "high",
+            nukibTier: "mandatory_minimum",
+            nis2ArticleRef: "Article 21(2)(c)",
+            question:
+              "Je pro server OVHcloud dostupné backup storage nebo ekvivalentní zálohování?",
           zobkSectionRef: "§ 8 odst. 1",
         },
       ],
@@ -73,12 +115,26 @@ export const ovhcloudWorkspace: PlatformWorkspace = {
       controls: [
         {
           controlKey: "ovhcloud-iam-api-key-scopes",
-          evidenceType: "attestation",
-          guidance:
-            "Zkontrolujte, že OVHcloud application key a consumer key mají pouze čtecí pravidla potřebná pro dedikované servery, firewall a backup storage. Nepovolujte zápis, pokud není prokazatelně nutný.",
-          nis2ArticleRef: "Article 21(2)(i)",
-          question:
-            "Je přístup API klíčů omezen na minimální potřebná čtecí oprávnění?",
+            evidenceType: "attestation",
+            guidance:
+              "Zkontrolujte, že OVHcloud application key a consumer key mají pouze čtecí pravidla potřebná pro dedikované servery, firewall a backup storage. Nepovolujte zápis, pokud není prokazatelně nutný.",
+            frameworkMappings: [
+              {
+                frameworkId: "zokb",
+                reference: "§ 7",
+                title: "Řízení přístupu",
+              },
+              {
+                frameworkId: "nis2",
+                reference: "Article 21(2)(i)",
+              },
+            ],
+            officialBaselineRefs: ["§ 7"],
+            nukibPriority: "unset",
+            nukibTier: "assessable",
+            nis2ArticleRef: "Article 21(2)(i)",
+            question:
+              "Je přístup API klíčů omezen na minimální potřebná čtecí oprávnění?",
           zobkSectionRef: "§ 7 odst. 2",
         },
         {
@@ -118,12 +174,26 @@ export const ovhcloudWorkspace: PlatformWorkspace = {
           apiField: "backupStorage",
           automatable: true,
           controlKey: "ovhcloud-backup-storage-schedule",
-          evidenceType: "both",
-          guidance:
-            "Ověřte, že backup storage existuje a je navázané na provozní zálohovací plán. Pokud API nevrátí dostatek detailů, doložte ručně plán záloh nebo záznamy posledních běhů.",
-          nis2ArticleRef: "Article 21(2)(c)",
-          question:
-            "Je potvrzen pravidelný plán záloh využívající OVHcloud backup storage nebo ekvivalent?",
+            evidenceType: "both",
+            guidance:
+              "Ověřte, že backup storage existuje a je navázané na provozní zálohovací plán. Pokud API nevrátí dostatek detailů, doložte ručně plán záloh nebo záznamy posledních běhů.",
+            frameworkMappings: [
+              {
+                frameworkId: "zokb",
+                reference: "§ 6",
+                title: "Řízení kontinuity činností",
+              },
+              {
+                frameworkId: "nis2",
+                reference: "Article 21(2)(c)",
+              },
+            ],
+            officialBaselineRefs: ["§ 6", "§ 6 písm. c)"],
+            nukibPriority: "high",
+            nukibTier: "mandatory_minimum",
+            nis2ArticleRef: "Article 21(2)(c)",
+            question:
+              "Je potvrzen pravidelný plán záloh využívající OVHcloud backup storage nebo ekvivalent?",
           zobkSectionRef: "§ 8 odst. 2",
         },
         {
@@ -168,12 +238,26 @@ export const ovhcloudWorkspace: PlatformWorkspace = {
         },
         {
           controlKey: "ovhcloud-api-key-rotation-schedule",
-          evidenceType: "attestation",
-          guidance:
-            "Doložte pravidlo rotace OVHcloud klíčů nejpozději každých 90 dní nebo při změně odpovědné osoby. Uveďte datum poslední rotace bez zveřejnění samotných tajných hodnot.",
-          nis2ArticleRef: "Article 21(2)(j)",
-          question:
-            "Je definován harmonogram rotace OVHcloud API klíčů nejpozději každých 90 dní?",
+            evidenceType: "attestation",
+            guidance:
+              "Doložte pravidlo rotace OVHcloud klíčů nejpozději každých 90 dní nebo při změně odpovědné osoby. Uveďte datum poslední rotace bez zveřejnění samotných tajných hodnot.",
+            frameworkMappings: [
+              {
+                frameworkId: "zokb",
+                reference: "§ 8",
+                title: "Řízení identit a jejich oprávnění",
+              },
+              {
+                frameworkId: "nis2",
+                reference: "Article 21(2)(i)",
+              },
+            ],
+            officialBaselineRefs: ["§ 8"],
+            nukibPriority: "unset",
+            nukibTier: "assessable",
+            nis2ArticleRef: "Article 21(2)(i)",
+            question:
+              "Je definován harmonogram rotace OVHcloud API klíčů nejpozději každých 90 dní?",
           zobkSectionRef: "§ 9 odst. 2",
         },
         {

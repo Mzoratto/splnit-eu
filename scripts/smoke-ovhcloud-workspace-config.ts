@@ -21,6 +21,27 @@ for (const control of controls) {
   assert.ok(control.guidance.length > 40, `${control.controlKey} must include Czech guidance.`);
 }
 
+const expectedZokbRefs: Record<string, { reference: string; tier: "mandatory_minimum" | "assessable" }> = {
+  "ovhcloud-api-key-rotation-schedule": { reference: "§ 8", tier: "assessable" },
+  "ovhcloud-backup-storage-schedule": { reference: "§ 6", tier: "mandatory_minimum" },
+  "ovhcloud-iam-api-key-scopes": { reference: "§ 7", tier: "assessable" },
+  "ovhcloud-infra-backup-present": { reference: "§ 6", tier: "mandatory_minimum" },
+  "ovhcloud-infra-firewall-enabled": { reference: "§ 11", tier: "assessable" },
+  "ovhcloud-infra-server-operational": { reference: "§ 6", tier: "mandatory_minimum" },
+};
+
+for (const [controlKey, expected] of Object.entries(expectedZokbRefs)) {
+  const control = controls.find((candidate) => candidate.controlKey === controlKey);
+  assert.ok(control, `${controlKey} must exist.`);
+  assert.equal(control.nukibTier, expected.tier, `${controlKey} must carry NÚKIB tier.`);
+  assert.ok(
+    control.frameworkMappings?.some(
+      (mapping) => mapping.frameworkId === "zokb" && mapping.reference === expected.reference,
+    ),
+    `${controlKey} must carry primary ZoKB ${expected.reference} mapping.`,
+  );
+}
+
 const layer1 = controls.filter((control) => control.layerId === "infrastructure");
 assert.equal(layer1.length, 3);
 
