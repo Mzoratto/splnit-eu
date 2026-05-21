@@ -11,7 +11,7 @@ test.describe("Compliance report happy path", () => {
 
   test("export downloads PDF with expected filename", async ({ page }) => {
     await mockComplianceReportDownload(page);
-    await page.goto("/dashboard");
+    await page.goto("/controls");
 
     const button = page.getByRole("button", {
       name: "Stáhnout zprávu o shodě (PDF)",

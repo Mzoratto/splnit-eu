@@ -5,6 +5,7 @@ import { ArrowRight, BookCheck, CircleHelp } from "lucide-react";
 import { ActivationStatus, deriveActivationStatusState } from "@/components/activation/activation-status";
 import { PageHeader } from "@/components/app/page-header";
 import { StatusPill, type StatusPillTone } from "@/components/app/status-pill";
+import { ComplianceReportButton } from "@/components/export/compliance-report-button";
 import { getMessagesForLocale } from "@/i18n/messages";
 import { normalizeLocale, type Locale } from "@/i18n/routing";
 import {
@@ -232,7 +233,6 @@ function normalizeScopeFilter(value: string | string[] | undefined): ScopeFilter
   return "in-scope";
 }
 
-
 function normalizeViewMode(value: string | string[] | undefined): ViewMode {
   const raw = Array.isArray(value) ? value[0] : value;
 
@@ -369,6 +369,24 @@ export default async function ControlsPage({
   ];
   const demoMode = mode !== "live";
 
+  const exportProfileParam =
+    typeof resolvedSearchParams.exportProfile === "string"
+      ? resolvedSearchParams.exportProfile
+      : undefined;
+
+  const demoExportIdentity = {
+    clerkOrgId: "org_demo_export",
+    dic: exportProfileParam === "incomplete" ? null : "CZ12345678",
+    ico: "12345678",
+    sidlo: "Václavské náměstí 1, Praha",
+  };
+
+  const reportMissingFields = [
+    !demoExportIdentity.ico && "IČO",
+    !demoExportIdentity.dic && "DIČ",
+    !demoExportIdentity.sidlo && "Sídlo",
+  ].filter((f): f is string => Boolean(f));
+
   return (
     <section className="space-y-6">
       <PageHeader
@@ -382,6 +400,25 @@ export default async function ControlsPage({
           {copy.index.demoMode}
         </div>
       ) : null}
+
+      <div className="card flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+        <div>
+          <h2 className="text-base font-medium">Zpráva o hodnocení stavu kybernetické bezpečnosti</h2>
+          <p className="mt-1 text-sm text-foreground/58">
+            Exportujte aktuální stav opatření a důkazů do PDF pro auditora nebo NÚKIB.
+          </p>
+        </div>
+        <ComplianceReportButton
+          missingFields={reportMissingFields}
+          orgId={demoExportIdentity.clerkOrgId}
+          settingsHref={
+            process.env.NEXT_PUBLIC_ENABLE_TEST_ROUTES === "true" &&
+            exportProfileParam === "incomplete"
+              ? "/settings/organisation?testProfile=editable-incomplete"
+              : "/settings/organisation"
+          }
+        />
+      </div>
 
       {viewMode === "focus" && pohodaRecommended ? (
         <Link
@@ -599,8 +636,6 @@ export default async function ControlsPage({
           </div>
         )}
       </section>
-
-
     </section>
   );
 }

@@ -9,7 +9,7 @@ test.describe("Compliance report gap export", () => {
 
   test("downloaded PDF text contains gap evidence", async ({ page }) => {
     await mockComplianceReportDownload(page);
-    await page.goto("/dashboard");
+    await page.goto("/controls");
 
     const downloadPromise = page.waitForEvent("download");
     await page

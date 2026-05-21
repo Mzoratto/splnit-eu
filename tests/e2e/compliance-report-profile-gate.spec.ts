@@ -14,7 +14,7 @@ test.describe("Compliance report profile gate", () => {
     page,
   }) => {
     await mockComplianceReportDownload(page);
-    await page.goto("/dashboard?exportProfile=incomplete");
+    await page.goto("/controls?exportProfile=incomplete");
 
     const button = page.getByRole("button", {
       name: "Stáhnout zprávu o shodě (PDF)",
@@ -45,7 +45,7 @@ test.describe("Compliance report profile gate", () => {
 
     await page.getByLabel("DIČ").fill("CZ12345678");
     await page.getByRole("button", { name: /Uložit změny/ }).click();
-    await page.goto("/dashboard");
+    await page.goto("/controls");
 
     const enabledButton = page.getByRole("button", {
       name: "Stáhnout zprávu o shodě (PDF)",
