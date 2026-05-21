@@ -28,6 +28,7 @@
     "smoke:manual-evidence-dimensions-source": "tsx scripts/smoke-manual-evidence-dimensions-source.ts",
     "smoke:integration-first-run-enqueue": "tsx scripts/smoke-integration-first-run-enqueue.ts",
     "smoke:activation-status": "tsx scripts/smoke-activation-status.tsx",
+    "smoke:api-key-base": "tsx scripts/smoke-api-key-base.ts",
     "smoke:controls-focus-activation-status-source": "tsx scripts/smoke-controls-focus-activation-status-source.ts",
     "smoke:microsoft-first-run-enqueue-source": "tsx scripts/smoke-microsoft-first-run-enqueue-source.ts",
     "smoke:activation-events-source": "tsx scripts/smoke-activation-events-source.ts",

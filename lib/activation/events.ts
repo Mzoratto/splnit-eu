@@ -53,7 +53,7 @@ export type ActivationEvent =
       "ConnectorOAuthCompleted",
       {
         provider: string;
-        tokenType: "oauth2";
+        tokenType: "api_key" | "oauth2";
       }
     >
   | ActivationEventBase<

@@ -92,4 +92,38 @@ assertContains(
   "blocked state should express a preserved last-known passing result",
 );
 
+const apiKeyBlockedStates = [
+  {
+    expected: "API klíč zatím není připojen.",
+    reason: "not_connected",
+  },
+  {
+    expected: "Uložený klíč poskytovatel odmítl.",
+    reason: "invalid_key",
+  },
+  {
+    expected: "Uložený klíč nemá minimální potřebná oprávnění.",
+    reason: "insufficient_scope",
+  },
+  {
+    expected: "Službu poskytovatele se nepodařilo kontaktovat.",
+    reason: "unreachable",
+  },
+] as const;
+
+for (const state of apiKeyBlockedStates) {
+  const markup = render(
+    deriveActivationStatusState({
+      blockedReason: state.reason,
+      collectionStatus: "blocked",
+    }),
+  );
+
+  assertContains(
+    markup,
+    state.expected,
+    `${state.reason} should render API-key connector guidance`,
+  );
+}
+
 console.log("activation status component smoke passed");

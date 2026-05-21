@@ -47,11 +47,26 @@ type ActivationStatusProps = {
 
 const BLOCKED_REASON_LABELS: Record<string, string> = {
   collection_failed: "Collection failed",
+  insufficient_scope: "Chybí oprávnění",
+  invalid_key: "Neplatný klíč",
   missing_integration: "Integration missing",
   missing_permission: "Permission missing",
   needs_manual_upload: "Manual upload needed",
+  not_connected: "Konektor není připojen",
   not_applicable: "Not applicable",
   unsupported_provider: "Provider unsupported",
+  unreachable: "Služba je nedostupná",
+};
+
+const API_KEY_BLOCKED_DETAILS: Record<string, string> = {
+  insufficient_scope:
+    "Uložený klíč nemá minimální potřebná oprávnění. Zkontrolujte rozsahy klíče a vložte nový klíč.",
+  invalid_key:
+    "Uložený klíč poskytovatel odmítl. Vložte nový nebo opravený API klíč.",
+  not_connected:
+    "API klíč zatím není připojen. Připojte konektor nebo doložte opatření manuálně.",
+  unreachable:
+    "Službu poskytovatele se nepodařilo kontaktovat. Zkuste kontrolu opakovat nebo doložte opatření manuálně.",
 };
 
 const STATE_COPY = {
@@ -169,6 +184,10 @@ export function ActivationStatus({
   const copy = STATE_COPY[key];
   const Icon = icons[key];
   const blockedReason = state.status === "blocked" ? formatBlockedReason(state.blockedReason) : null;
+  const blockedDetail =
+    state.status === "blocked"
+      ? API_KEY_BLOCKED_DETAILS[state.blockedReason]
+      : null;
   const preservedResult = state.status === "blocked" && state.lastKnownResult === "pass";
 
   return (
@@ -193,7 +212,8 @@ export function ActivationStatus({
       {showDetails ? (
         <div className="mt-1 space-y-1 text-xs leading-5 opacity-85">
           <p>{copy.detail}</p>
-          {blockedReason ? <p>Reason: {blockedReason}.</p> : null}
+          {blockedDetail ? <p>{blockedDetail}</p> : null}
+          {blockedReason && !blockedDetail ? <p>Reason: {blockedReason}.</p> : null}
           {preservedResult ? (
             <p>Last confirmed result is still passing while collection is blocked.</p>
           ) : null}
