@@ -14,11 +14,18 @@ import type { NukibControlBlock, PlatformWorkspace } from "@/lib/workspaces/type
 import { heliosWorkspace } from "@/lib/workspaces/helios";
 import { hetznerWorkspace } from "@/lib/workspaces/hetzner";
 import { moneyS3Workspace } from "@/lib/workspaces/money-s3";
+import { ovhcloudWorkspace } from "@/lib/workspaces/ovhcloud";
 import { pohodaWorkspace } from "@/lib/workspaces/pohoda";
 
 type SnapshotData = Record<string, unknown> | null;
 
-const WORKSPACES = [pohodaWorkspace, moneyS3Workspace, heliosWorkspace, hetznerWorkspace] as const;
+const WORKSPACES = [
+  pohodaWorkspace,
+  moneyS3Workspace,
+  heliosWorkspace,
+  hetznerWorkspace,
+  ovhcloudWorkspace,
+] as const;
 
 const PROVIDER_LABELS: Record<string, string> = {
   aws: "AWS",
@@ -26,6 +33,7 @@ const PROVIDER_LABELS: Record<string, string> = {
   google_workspace: "Google Workspace",
   hetzner: "Konektor Hetzner Cloud",
   microsoft365: "Microsoft 365",
+  ovhcloud: "Konektor OVHcloud",
 };
 
 const CATEGORY_BLOCKS: Record<string, NukibControlBlock> = {
@@ -136,8 +144,10 @@ function formatAutomatedFinding(snapshotData: SnapshotData): string {
   const totalUsers = resultData.totalUsers;
   const serverStatus = resultData.serverStatus;
   const firewallRulesPresent = resultData.firewallRulesPresent;
+  const firewallEnabled = resultData.firewallEnabled;
   const snapshotWithinWindow = resultData.snapshotWithinWindow;
   const snapshotWindowDays = resultData.snapshotWindowDays;
+  const backupPresent = resultData.backupPresent;
 
   if (provider === "hetzner" && typeof serverStatus === "string") {
     return `Konektor Hetzner Cloud ověřil stav serveru: ${serverStatus}.`;
@@ -153,6 +163,18 @@ function formatAutomatedFinding(snapshotData: SnapshotData): string {
     typeof snapshotWindowDays === "number"
   ) {
     return `Konektor Hetzner Cloud ověřil snapshot vytvořený v posledních ${snapshotWindowDays} dnech.`;
+  }
+
+  if (provider === "ovhcloud" && typeof serverStatus === "string") {
+    return `Konektor OVHcloud ověřil stav serveru: ${serverStatus}.`;
+  }
+
+  if (provider === "ovhcloud" && firewallEnabled === true) {
+    return "Konektor OVHcloud ověřil, že firewall je zapnutý.";
+  }
+
+  if (provider === "ovhcloud" && backupPresent === true) {
+    return "Konektor OVHcloud ověřil dostupnost backup storage.";
   }
 
   if (typeof mfaEnabled === "number" && typeof totalUsers === "number") {

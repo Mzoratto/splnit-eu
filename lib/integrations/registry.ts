@@ -3,12 +3,14 @@ import { awsAdapter } from "./aws/tests";
 import { githubAdapter } from "./github/tests";
 import { hetznerAdapter } from "./hetzner/tests";
 import { microsoft365Adapter } from "./microsoft365/tests";
+import { ovhcloudAdapter } from "./ovhcloud/tests";
 
 export const supportedIntegrationProviders = [
   "microsoft365",
   "github",
   "aws",
   "hetzner",
+  "ovhcloud",
 ] as const satisfies IntegrationProvider[];
 
 export type SupportedIntegrationProvider =
@@ -19,6 +21,7 @@ const adapters: Record<SupportedIntegrationProvider, IntegrationAdapter> = {
   github: githubAdapter,
   hetzner: hetznerAdapter,
   microsoft365: microsoft365Adapter,
+  ovhcloud: ovhcloudAdapter,
 };
 
 export function getAdapter(provider: string) {

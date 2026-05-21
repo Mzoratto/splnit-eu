@@ -805,6 +805,51 @@ const BASE_CONTROL_LIBRARY: ControlSeed[] = [
     ],
   },
   {
+    key: "ovhcloud-infra-server-operational",
+    titleCs: "OVHcloud server je provozní",
+    titleEn: "OVHcloud server is operational",
+    descriptionCs:
+      "Dedikovaný server v OVHcloud je dostupný a API kontrola potvrzuje stav operational.",
+    category: "business_continuity",
+    testType: "automated",
+    requiresEvidence: true,
+    isAutomated: true,
+    frameworkMappings: [
+      { frameworkSlug: "nis2", articleRef: "Article 21(2)(h)", level: "mandatory" },
+      { frameworkSlug: "iso27001", articleRef: "A.12.1.3", level: "recommended" },
+    ],
+  },
+  {
+    key: "ovhcloud-infra-firewall-enabled",
+    titleCs: "OVHcloud firewall je zapnutý",
+    titleEn: "OVHcloud firewall is enabled",
+    descriptionCs:
+      "Pro dedikovaný server v OVHcloud je zapnutý firewall nebo ekvivalentní síťová ochrana.",
+    category: "asset_management",
+    testType: "automated",
+    requiresEvidence: true,
+    isAutomated: true,
+    frameworkMappings: [
+      { frameworkSlug: "nis2", articleRef: "Article 21(2)(h)", level: "mandatory" },
+      { frameworkSlug: "iso27001", articleRef: "A.13.1.1", level: "recommended" },
+    ],
+  },
+  {
+    key: "ovhcloud-infra-backup-present",
+    titleCs: "OVHcloud backup storage existuje",
+    titleEn: "OVHcloud backup storage is present",
+    descriptionCs:
+      "Pro dedikovaný server v OVHcloud existuje backup storage nebo ekvivalentní záloha.",
+    category: "business_continuity",
+    testType: "automated",
+    requiresEvidence: true,
+    isAutomated: true,
+    frameworkMappings: [
+      { frameworkSlug: "nis2", articleRef: "Article 21(2)(c)", level: "mandatory" },
+      { frameworkSlug: "iso27001", articleRef: "A.12.3.1", level: "recommended" },
+    ],
+  },
+  {
     key: "ctrl_cloudtrail_enabled",
     titleCs: "CloudTrail nebo ekvivalentní auditní log je zapnutý",
     titleEn: "CloudTrail or equivalent audit logging is enabled",

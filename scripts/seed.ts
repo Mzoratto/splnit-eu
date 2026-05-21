@@ -16,6 +16,7 @@ import { AWS_TEST_DEFINITIONS } from "../lib/integrations/aws/test-definitions";
 import { GITHUB_TEST_DEFINITIONS } from "../lib/integrations/github/test-definitions";
 import { HETZNER_TEST_DEFINITIONS } from "../lib/integrations/hetzner/test-definitions";
 import { MICROSOFT365_TEST_DEFINITIONS } from "../lib/integrations/microsoft365/test-definitions";
+import { OVHCLOUD_TEST_DEFINITIONS } from "../lib/integrations/ovhcloud/test-definitions";
 import { POLICY_TEMPLATES } from "../lib/policies/templates";
 import { AUTHORITATIVE_SOURCE_DOCUMENTS } from "../lib/regulations/authoritative-sources";
 
@@ -341,6 +342,10 @@ async function seedIntegrationTests(controlIds: Map<string, string>) {
     ...HETZNER_TEST_DEFINITIONS.map((definition) => ({
       ...definition,
       integrationType: "hetzner",
+    })),
+    ...OVHCLOUD_TEST_DEFINITIONS.map((definition) => ({
+      ...definition,
+      integrationType: "ovhcloud",
     })),
   ];
 

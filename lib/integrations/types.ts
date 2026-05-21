@@ -4,6 +4,7 @@ export type IntegrationProvider =
   | "microsoft365"
   | "github"
   | "hetzner"
+  | "ovhcloud"
   | "aws"
   | "azure"
   | "gcp"

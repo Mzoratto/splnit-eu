@@ -46,7 +46,11 @@ async function getConnectorHealthProbe(platform: ConnectorPlatform) {
     return module.hetznerHealthProbe;
   }
 
-  // TODO: Return the OVHcloud probe once Phase 7 wires the three-part auth checks.
+  if (platform === "ovhcloud") {
+    const module = await import("@/lib/connectors/ovhcloud/checks");
+    return module.ovhcloudHealthProbe;
+  }
+
   return null;
 }
 
