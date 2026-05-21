@@ -6,7 +6,7 @@ test.describe("English billing", () => {
   test("shows EUR billing settings and keeps checkout disabled without auth", async ({
     page,
   }) => {
-    await page.goto("/settings/billing");
+    await page.goto("/en/settings/billing");
 
     await expect(page.getByRole("heading", { name: "Subscription" })).toBeVisible();
     await expect(page.getByText("Current plan", { exact: true })).toBeVisible();
@@ -31,7 +31,7 @@ test.describe("Italian billing", () => {
   test.use({ locale: "it-IT" });
 
   test("shows Italian copy with EUR pricing", async ({ page }) => {
-    await page.goto("/settings/billing");
+    await page.goto("/it/settings/billing");
 
     await expect(page.getByRole("heading", { name: "Abbonamento" })).toBeVisible();
     await expect(page.getByText("Piano attuale", { exact: true })).toBeVisible();
