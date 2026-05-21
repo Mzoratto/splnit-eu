@@ -104,14 +104,15 @@ function createdWithinWindow(value: string | undefined, windowDays: number) {
 export async function hetznerHealthProbe(input: {
   credentials: StoredConnectorCredential;
   signal?: AbortSignal;
-}): Promise<HealthCheckResult> {
+}, deps: CheckDeps = {}): Promise<HealthCheckResult> {
   if (input.credentials.platform !== "hetzner") {
     return "invalid_key";
   }
 
   try {
     const response = await hetznerGet(input.credentials.apiKey, "/servers", {
-      signal: input.signal,
+      fetch: deps.fetch,
+      signal: input.signal ?? deps.signal,
     });
 
     return mapHttpStatusToHealthCheck(response.status);

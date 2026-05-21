@@ -111,7 +111,7 @@ export function buildAutomatedEvidenceSnapshot(input: {
   };
 }
 
-function getEvidenceStateForTestResult(input: {
+export function getEvidenceStateForTestResult(input: {
   resultData: Record<string, unknown>;
   status: TestStatus;
 }) {

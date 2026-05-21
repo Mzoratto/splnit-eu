@@ -35,6 +35,7 @@
     "smoke:activation-event-sanitizer": "tsx scripts/smoke-activation-event-sanitizer.ts",
     "smoke:sanitizer-rejection": "tsx scripts/smoke-sanitizer-rejection.ts",
     "smoke:microsoft365-permission-failures": "tsx scripts/smoke-microsoft365-permission-failures.ts",
+    "smoke:hetzner-checks": "tsx scripts/smoke-hetzner-checks.ts",
     "smoke:policy-drafts": "tsx scripts/smoke-policy-drafts.ts",
     "smoke:incident-notifications": "tsx scripts/smoke-incident-notifications.ts",
     "smoke:questionnaire-artifacts": "tsx scripts/smoke-questionnaire-artifacts.ts",
