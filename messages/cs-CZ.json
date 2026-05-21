@@ -1430,7 +1430,7 @@
     "docsCta": "Zobrazit dokumentaci",
     "steps": {
       "connectTitle": "Připojte nástroje",
-      "connectBody": "Propojte Microsoft 365, GitHub nebo AWS. Délka nastavení závisí na zvolených systémech a oprávněních.",
+      "connectBody": "Propojte Microsoft 365, GitHub, AWS, Hetzner Cloud nebo OVHcloud. Pro české SME jsou k dispozici specializované pracovní prostory pro Pohodu, Money S3 a Helios.",
       "testsTitle": "Kontroly mohou běžet nad propojenými systémy",
       "testsBody": "Nakonfigurované kontroly sledují připojené systémy a ukládají výsledky jako interní evidenci ke kontrole.",
       "resultsTitle": "Dostanete výsledky",
@@ -1442,7 +1442,7 @@
       "monitoringTitle": "Monitoring konfigurace",
       "monitoringBody": "Zviditelněte konfigurační odchylky v propojených systémech, aby je tým mohl zkontrolovat.",
       "documentsTitle": "Automatické dokumenty",
-      "documentsBody": "Generujte pracovní dokumenty a balíčky evidence, které můžete předat právníkovi, auditorovi nebo konzultantovi k finální kontrole."
+      "documentsBody": "Exportujte Zprávu o hodnocení stavu kybernetické bezpečnosti — dokument mapovaný na vyhlášku č. 410/2025 Sb., připravený pro auditora nebo NÚKIB inspekci. Automaticky ověřená opatření se zobrazí jako zelené bloky, manuálně deklarovaná jako šedé."
     },
     "trustBadges": {
       "early": "Předběžný přístup",

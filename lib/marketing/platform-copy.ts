@@ -98,7 +98,9 @@ const copy: Record<Locale, PlatformCopy> = {
       body:
         "Nevěříme na ruční sběr důkazů. Splnit.eu se nativně připojuje k vašim identity providerům, cloudovým platformám a interním systémům.",
       bullets: [
-        "Integrace pro Microsoft 365, GitHub a AWS",
+        "Cloudové integrace: Microsoft 365, GitHub a AWS",
+        "Infrastrukturní konektory: Hetzner Cloud a OVHcloud (automatické kontroly serveru, firewallu a záloh)",
+        "České ERP pracovní prostory: Pohoda, Money S3 / S4 a Helios s mapováním na ZoKB",
         "Upozornění na selhání kontrol v aplikaci",
         "Lokální regulatorní zdroje tam, kde jsou ověřené",
         "API-first architektura pro vlastní interní nástroje",
@@ -197,10 +199,12 @@ const copy: Record<Locale, PlatformCopy> = {
       body:
         "Manual evidence collection does not scale. Splnit.eu connects directly to identity providers, cloud platforms, and internal systems.",
       bullets: [
-        "Microsoft 365, GitHub, and AWS integrations",
-        "In-app alerts when checks fail",
-        "Local regulatory sources where they have been verified",
-        "API-first architecture for internal tools",
+        "Cloud integrations: Microsoft 365, GitHub and AWS",
+        "Infrastructure connectors: Hetzner Cloud and OVHcloud (automated server, firewall and backup checks)",
+        "Czech ERP workspaces: Pohoda, Money S3 / S4 and Helios mapped to ZoKB obligations",
+        "In-app alerts on failed controls",
+        "Local regulatory sources where verified",
+        "API-first architecture for custom internal tools",
       ],
       localSourcesBadge: "Verified only",
       localSourcesBody:
@@ -296,10 +300,12 @@ const copy: Record<Locale, PlatformCopy> = {
       body:
         "La raccolta manuale delle evidenze non scala. Splnit.eu si collega direttamente a identity provider, piattaforme cloud e sistemi interni.",
       bullets: [
-        "Integrazioni per Microsoft 365, GitHub e AWS",
-        "Alert in app quando un controllo fallisce",
-        "Fonti normative locali dove sono state verificate",
-        "Architettura API-first per strumenti interni",
+        "Integrazioni cloud: Microsoft 365, GitHub e AWS",
+        "Connettori infrastrutturali: Hetzner Cloud e OVHcloud (controlli automatici di server, firewall e backup)",
+        "Spazi di lavoro ERP cechi: Pohoda, Money S3 / S4 e Helios mappati sugli obblighi ZoKB",
+        "Avvisi in-app per controlli falliti",
+        "Fonti normative locali dove verificate",
+        "Architettura API-first per strumenti interni personalizzati",
       ],
       localSourcesBadge: "Solo verificato",
       localSourcesBody:

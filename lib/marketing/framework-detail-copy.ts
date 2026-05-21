@@ -77,6 +77,11 @@ const englishDetails: Record<string, FrameworkDetailCopy> = {
         title: "Incident evidence",
         description: "Keep an audit trail for incidents, access, vulnerabilities, and supplier risk.",
       },
+      {
+        icon: "solar:document-text-linear",
+        title: "Auditor report",
+        description: "PDF export mapped to vyhláška č. 410/2025 Sb. (lower obligations) or č. 409/2025 Sb. (higher obligations). Automatically verified controls are labelled as connector evidence — ready for NÚKIB inspection.",
+      },
     ],
     resources: ["NIS2 checklist", "NIS2 obligations map", "Incident log template"],
   },
@@ -523,6 +528,11 @@ const italianDetails: Record<string, FrameworkDetailCopy> = {
         icon: "solar:document-check-linear",
         title: "Evidenze incidenti",
         description: "Mantiene una traccia audit per incidenti, accessi, vulnerabilità e rischio fornitori.",
+      },
+      {
+        icon: "solar:document-text-linear",
+        title: "Rapporto per il revisore",
+        description: "Export PDF mappato sulla vyhláška č. 410/2025 Sb. (obblighi inferiori) o č. 409/2025 Sb. (obblighi superiori). I controlli verificati automaticamente sono contrassegnati come prove da connettore — pronti per l'ispezione NÚKIB.",
       },
     ],
     resources: ["Checklist NIS2", "Mappa obblighi NIS2", "Template incident log"],

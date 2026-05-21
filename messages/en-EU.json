@@ -1430,7 +1430,7 @@
     "docsCta": "View documentation",
     "steps": {
       "connectTitle": "Connect tools",
-      "connectBody": "Connect Microsoft 365, GitHub, or AWS. Setup time depends on the systems and permissions you choose.",
+      "connectBody": "Connect Microsoft 365, GitHub, AWS, Hetzner Cloud, or OVHcloud. Specialized workspaces for Pohoda, Money S3, and Helios are available for Czech SMEs.",
       "testsTitle": "Checks can run on connected systems",
       "testsBody": "Configured checks monitor connected systems and save results as internal evidence for review.",
       "resultsTitle": "Get results",
@@ -1442,7 +1442,7 @@
       "monitoringTitle": "Configuration monitoring",
       "monitoringBody": "Surface configuration drift in connected systems so the team can review it.",
       "documentsTitle": "Automated documents",
-      "documentsBody": "Generate working documents and evidence packs that can go to a lawyer, auditor, or consultant for final review."
+      "documentsBody": "Export a Cybersecurity Assessment Report — mapped to Czech ZoKB obligations and ready for an auditor or NÚKIB inspection. Automatically verified controls appear as green blocks, manually declared ones as grey."
     },
     "trustBadges": {
       "early": "Early access",

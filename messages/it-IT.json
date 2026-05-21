@@ -1429,7 +1429,7 @@
     "docsCta": "Vedi la documentazione",
     "steps": {
       "connectTitle": "Collegate gli strumenti",
-      "connectBody": "Collegate Microsoft 365, GitHub o AWS. Il tempo di configurazione dipende dai sistemi e dai permessi scelti.",
+      "connectBody": "Collegate Microsoft 365, GitHub, AWS, Hetzner Cloud o OVHcloud. Per le PMI ceche sono disponibili spazi di lavoro specializzati per Pohoda, Money S3 e Helios.",
       "testsTitle": "I controlli possono girare sui sistemi collegati",
       "testsBody": "I controlli configurati monitorano i sistemi collegati e salvano i risultati come evidenza interna da revisionare.",
       "resultsTitle": "Ricevete i risultati",
@@ -1441,7 +1441,7 @@
       "monitoringTitle": "Monitoraggio configurazione",
       "monitoringBody": "Fate emergere deviazioni di configurazione nei sistemi collegati, così il team può revisionarle.",
       "documentsTitle": "Documenti automatici",
-      "documentsBody": "Generate documenti di lavoro e pacchetti di evidenze da inviare a legale, revisore o consulente per la revisione finale."
+      "documentsBody": "Esporta un Rapporto di Valutazione della Cybersicurezza — mappato sugli obblighi ZoKB cechi e pronto per un revisore o un'ispezione NÚKIB. I controlli verificati automaticamente appaiono come blocchi verdi, quelli dichiarati manualmente come grigi."
     },
     "trustBadges": {
       "early": "Accesso anticipato",

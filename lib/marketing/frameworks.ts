@@ -178,6 +178,11 @@ export const frameworkDetails: FrameworkDetail[] = [
         title: "Hlášení a důkazy",
         description: "Incidenty, přístupy a dodavatelská rizika se ukládají s časovou osou a podklady pro pozdější kontrolu nebo zákaznický dotazník.",
       },
+      {
+        icon: "solar:document-text-linear",
+        title: "Zpráva pro auditora",
+        description: "PDF export s mapováním na vyhlášku č. 410/2025 Sb. (nižší povinnosti) nebo č. 409/2025 Sb. (vyšší povinnosti). Automaticky ověřená opatření jsou označena jako důkazy z konektoru — připraveno pro NÚKIB inspekci.",
+      },
     ],
     relatedArticles: [
       {

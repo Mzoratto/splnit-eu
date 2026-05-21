@@ -99,6 +99,11 @@ export default async function PlatformPage() {
                       ["logos:microsoft", "Microsoft 365"],
                       ["logos:github-icon", "GitHub"],
                       ["logos:aws", "AWS"],
+                      ["solar:server-square-linear", "Hetzner Cloud"],
+                      ["solar:cloud-download-linear", "OVHcloud"],
+                      ["solar:document-text-linear", "Pohoda"],
+                      ["solar:document-check-linear", "Money S3 / S4"],
+                      ["solar:settings-linear", "Helios"],
                     ].map(([icon, label]) => (
                       <div
                         key={label}
