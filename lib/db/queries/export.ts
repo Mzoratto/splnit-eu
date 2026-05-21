@@ -12,17 +12,19 @@ import type { EvidenceSource } from "@/lib/activation/evidence-state";
 import type { EvidenceRecord, ReportContext } from "@/lib/export/report-template";
 import type { NukibControlBlock, PlatformWorkspace } from "@/lib/workspaces/types";
 import { heliosWorkspace } from "@/lib/workspaces/helios";
+import { hetznerWorkspace } from "@/lib/workspaces/hetzner";
 import { moneyS3Workspace } from "@/lib/workspaces/money-s3";
 import { pohodaWorkspace } from "@/lib/workspaces/pohoda";
 
 type SnapshotData = Record<string, unknown> | null;
 
-const WORKSPACES = [pohodaWorkspace, moneyS3Workspace, heliosWorkspace] as const;
+const WORKSPACES = [pohodaWorkspace, moneyS3Workspace, heliosWorkspace, hetznerWorkspace] as const;
 
 const PROVIDER_LABELS: Record<string, string> = {
   aws: "AWS",
   github: "GitHub",
   google_workspace: "Google Workspace",
+  hetzner: "Konektor Hetzner Cloud",
   microsoft365: "Microsoft 365",
 };
 
@@ -128,9 +130,30 @@ function providerFromSnapshot(snapshotData: SnapshotData): string | null {
 }
 
 function formatAutomatedFinding(snapshotData: SnapshotData): string {
+  const provider = providerFromSnapshot(snapshotData);
   const resultData = asRecord(asRecord(snapshotData).resultData);
   const mfaEnabled = resultData.mfaEnabled;
   const totalUsers = resultData.totalUsers;
+  const serverStatus = resultData.serverStatus;
+  const firewallRulesPresent = resultData.firewallRulesPresent;
+  const snapshotWithinWindow = resultData.snapshotWithinWindow;
+  const snapshotWindowDays = resultData.snapshotWindowDays;
+
+  if (provider === "hetzner" && typeof serverStatus === "string") {
+    return `Konektor Hetzner Cloud ověřil stav serveru: ${serverStatus}.`;
+  }
+
+  if (provider === "hetzner" && firewallRulesPresent === true) {
+    return "Konektor Hetzner Cloud ověřil, že firewall obsahuje pravidla.";
+  }
+
+  if (
+    provider === "hetzner" &&
+    snapshotWithinWindow === true &&
+    typeof snapshotWindowDays === "number"
+  ) {
+    return `Konektor Hetzner Cloud ověřil snapshot vytvořený v posledních ${snapshotWindowDays} dnech.`;
+  }
 
   if (typeof mfaEnabled === "number" && typeof totalUsers === "number") {
     return `Zjištěno ${mfaEnabled} z ${totalUsers} účtů s vícefaktorovým ověřením.`;

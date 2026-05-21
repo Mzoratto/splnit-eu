@@ -3,6 +3,7 @@ import type { Integration } from "@/lib/db/schema";
 export type IntegrationProvider =
   | "microsoft365"
   | "github"
+  | "hetzner"
   | "aws"
   | "azure"
   | "gcp"

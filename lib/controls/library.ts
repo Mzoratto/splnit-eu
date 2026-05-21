@@ -760,6 +760,51 @@ const BASE_CONTROL_LIBRARY: ControlSeed[] = [
     ],
   },
   {
+    key: "hetzner-infra-server-running",
+    titleCs: "Hetzner Cloud server je spuštěný",
+    titleEn: "Hetzner Cloud server is running",
+    descriptionCs:
+      "Produkční server v Hetzner Cloud je dostupný a API kontrola potvrzuje stav running.",
+    category: "business_continuity",
+    testType: "automated",
+    requiresEvidence: true,
+    isAutomated: true,
+    frameworkMappings: [
+      { frameworkSlug: "nis2", articleRef: "Article 21(2)(h)", level: "mandatory" },
+      { frameworkSlug: "iso27001", articleRef: "A.12.1.3", level: "recommended" },
+    ],
+  },
+  {
+    key: "hetzner-infra-firewall-present",
+    titleCs: "Hetzner Cloud firewall má pravidla",
+    titleEn: "Hetzner Cloud firewall rules are present",
+    descriptionCs:
+      "Pro infrastrukturu v Hetzner Cloud je definována neprázdná sada firewall pravidel.",
+    category: "asset_management",
+    testType: "automated",
+    requiresEvidence: true,
+    isAutomated: true,
+    frameworkMappings: [
+      { frameworkSlug: "nis2", articleRef: "Article 21(2)(h)", level: "mandatory" },
+      { frameworkSlug: "iso27001", articleRef: "A.13.1.1", level: "recommended" },
+    ],
+  },
+  {
+    key: "hetzner-infra-snapshot-recent",
+    titleCs: "Hetzner Cloud snapshot je aktuální",
+    titleEn: "Hetzner Cloud snapshot is recent",
+    descriptionCs:
+      "Existuje snapshot produkční infrastruktury v Hetzner Cloud vytvořený v posledních 7 dnech.",
+    category: "business_continuity",
+    testType: "automated",
+    requiresEvidence: true,
+    isAutomated: true,
+    frameworkMappings: [
+      { frameworkSlug: "nis2", articleRef: "Article 21(2)(c)", level: "mandatory" },
+      { frameworkSlug: "iso27001", articleRef: "A.12.3.1", level: "recommended" },
+    ],
+  },
+  {
     key: "ctrl_cloudtrail_enabled",
     titleCs: "CloudTrail nebo ekvivalentní auditní log je zapnutý",
     titleEn: "CloudTrail or equivalent audit logging is enabled",

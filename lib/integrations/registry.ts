@@ -1,12 +1,14 @@
 import type { IntegrationAdapter, IntegrationProvider } from "./types";
 import { awsAdapter } from "./aws/tests";
 import { githubAdapter } from "./github/tests";
+import { hetznerAdapter } from "./hetzner/tests";
 import { microsoft365Adapter } from "./microsoft365/tests";
 
 export const supportedIntegrationProviders = [
   "microsoft365",
   "github",
   "aws",
+  "hetzner",
 ] as const satisfies IntegrationProvider[];
 
 export type SupportedIntegrationProvider =
@@ -15,6 +17,7 @@ export type SupportedIntegrationProvider =
 const adapters: Record<SupportedIntegrationProvider, IntegrationAdapter> = {
   aws: awsAdapter,
   github: githubAdapter,
+  hetzner: hetznerAdapter,
   microsoft365: microsoft365Adapter,
 };
 

@@ -36,6 +36,20 @@ export function mapHttpStatusToHealthCheck(status: number): HealthCheckResult {
   return "unreachable";
 }
 
+async function getConnectorHealthProbe(platform: ConnectorPlatform) {
+  if (healthProbes[platform]) {
+    return healthProbes[platform];
+  }
+
+  if (platform === "hetzner") {
+    const module = await import("@/lib/connectors/hetzner/checks");
+    return module.hetznerHealthProbe;
+  }
+
+  // TODO: Return the OVHcloud probe once Phase 7 wires the three-part auth checks.
+  return null;
+}
+
 export function isConnectorNetworkError(error: unknown) {
   if (error instanceof DOMException && error.name === "AbortError") {
     return true;
@@ -64,7 +78,7 @@ export async function runConnectorHealthProbe(
     timeoutMs?: number;
   } = {},
 ): Promise<HealthCheckResult> {
-  const probe = deps.probe ?? healthProbes[input.platform];
+  const probe = deps.probe ?? await getConnectorHealthProbe(input.platform);
 
   if (!probe) {
     // TODO: Replace this fallback when the platform-specific connector registers
