@@ -12,6 +12,7 @@ import {
   timestamp,
   unique,
   uuid,
+  varchar,
   vector,
 } from "drizzle-orm/pg-core";
 
@@ -63,11 +64,30 @@ export const mappingReviewConfidenceEnum = pgEnum("mapping_review_confidence", [
   "low",
 ]);
 
+export type OrgTier = "standard" | "agency";
+export type ObligationRegime = "nizsi" | "vyssi";
+
+export interface BrandingConfig {
+  logoUrl: string | null;
+  displayName: string | null;
+  footerText: string | null;
+}
+
 export const organisations = pgTable("organisations", {
   id: uuid("id").primaryKey().defaultRandom(),
   clerkOrgId: text("clerk_org_id").notNull().unique(),
   name: text("name").notNull(),
-  ico: text("ico"),
+  ico: varchar("ico", { length: 8 }),
+  dic: varchar("dic", { length: 12 }),
+  sidlo: text("sidlo"),
+  rezimPovinnosti: varchar("rezim_povinnosti", { length: 10 })
+    .$type<ObligationRegime>()
+    .notNull()
+    .default("nizsi"),
+  tier: varchar("tier", { length: 20 }).$type<OrgTier>().notNull().default("standard"),
+  brandingLogoUrl: text("branding_logo_url"),
+  brandingDisplayName: varchar("branding_display_name", { length: 200 }),
+  brandingFooterText: varchar("branding_footer_text", { length: 500 }),
   country: text("country").notNull().default("CZ"),
   primaryJurisdiction: text("primary_jurisdiction").notNull().default("CZ"),
   locale: text("locale").notNull().default("cs-CZ"),
