@@ -25,7 +25,7 @@ function getServiceName(config: IntegrationConfig) {
   return typeof value === "string" && value.trim() ? value : null;
 }
 
-function encryptedValuesForCredential(
+export function encryptedValuesForCredential(
   credential: ConnectorCredentialInput,
   clerkOrgId: string,
 ) {
