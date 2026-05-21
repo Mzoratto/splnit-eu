@@ -42,13 +42,13 @@ async function getConnectorHealthProbe(platform: ConnectorPlatform) {
   }
 
   if (platform === "hetzner") {
-    const module = await import("@/lib/connectors/hetzner/checks");
-    return module.hetznerHealthProbe;
+    const checks = await import("@/lib/connectors/hetzner/checks");
+    return checks.hetznerHealthProbe;
   }
 
   if (platform === "ovhcloud") {
-    const module = await import("@/lib/connectors/ovhcloud/checks");
-    return module.ovhcloudHealthProbe;
+    const checks = await import("@/lib/connectors/ovhcloud/checks");
+    return checks.ovhcloudHealthProbe;
   }
 
   return null;
