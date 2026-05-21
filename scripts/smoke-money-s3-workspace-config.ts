@@ -4,9 +4,10 @@
  * Verifies:
  *  1. All four layers are present (infrastructure, iam, backup_dr, api_connectivity).
  *  2. Every control in every layer has a non-empty nis2ArticleRef.
- *  3. No control contains Pohoda-specific terminology
+ *  3. Every control has NÚKIB-native ZoKB metadata.
+ *  4. No control contains Pohoda-specific terminology
  *     (Pohoda, Stormware, Údržba databáze, mServer).
- *  4. Layer 4 (api_connectivity) controls reference e-commerce/REST integrations
+ *  5. Layer 4 (api_connectivity) controls reference e-commerce/REST integrations
  *     (Shoptet, WooCommerce, REST API, konektor).
  *
  * Static config check — no DB or server required.
@@ -46,7 +47,43 @@ for (const layer of layers) {
   }
 }
 
-// 3. No control contains Pohoda-specific terminology.
+// 3. Every control has NÚKIB-native ZoKB metadata.
+for (const layer of layers) {
+  for (const control of layer.controls) {
+    const zokbMapping = control.frameworkMappings?.find((mapping) => mapping.frameworkId === "zokb");
+
+    assert.ok(
+      zokbMapping?.reference.startsWith("§"),
+      `Control "${control.controlKey}" in layer "${layer.id}" is missing ZoKB frameworkMappings metadata`,
+    );
+    assert.ok(
+      control.officialBaselineRefs && control.officialBaselineRefs.length > 0,
+      `Control "${control.controlKey}" in layer "${layer.id}" is missing officialBaselineRefs`,
+    );
+    assert.ok(
+      control.nukibTier === "mandatory_minimum" || control.nukibTier === "assessable",
+      `Control "${control.controlKey}" in layer "${layer.id}" is missing nukibTier`,
+    );
+  }
+}
+
+const backupLayer = layers.find((l) => l.id === "backup_dr");
+assert.ok(backupLayer, "Layer backup_dr must exist (already checked above)");
+
+for (const control of backupLayer.controls) {
+  assert.equal(
+    control.frameworkMappings?.find((mapping) => mapping.frameworkId === "zokb")?.reference,
+    "§ 6",
+    `Backup control "${control.controlKey}" must map to ZoKB § 6`,
+  );
+  assert.equal(
+    control.nukibTier,
+    "mandatory_minimum",
+    `Backup control "${control.controlKey}" must be a mandatory minimum`,
+  );
+}
+
+// 4. No control contains Pohoda-specific terminology.
 const pohodaTermPatterns = [
   /\bPohoda\b/i,
   /\bStormware\b/i,
@@ -83,7 +120,7 @@ assert.deepEqual(
   `Pohoda-specific terminology found in Money S3 config:\n${failures.join("\n")}`,
 );
 
-// 4. Layer 4 (api_connectivity) controls reference e-commerce/REST integrations.
+// 5. Layer 4 (api_connectivity) controls reference e-commerce/REST integrations.
 const layer4 = layers.find((l) => l.id === "api_connectivity");
 assert.ok(layer4, "Layer api_connectivity must exist (already checked above)");
 
@@ -106,5 +143,6 @@ console.log("Money S3 workspace config smoke test passed.");
 console.log(`  Layers: ${layers.length} (${actualLayerIds.join(", ")})`);
 console.log(`  Controls: ${totalControls}`);
 console.log(`  nis2ArticleRef: present on all ${totalControls} controls`);
+console.log(`  ZoKB metadata: present on all ${totalControls} controls`);
 console.log(`  Pohoda-specific terms: none found`);
 console.log(`  Layer 4 e-commerce/REST refs: all ${layer4.controls.length} controls pass`);

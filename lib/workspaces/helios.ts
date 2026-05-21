@@ -1,4 +1,68 @@
 import type { PlatformWorkspace } from "@/lib/workspaces/types";
+import type {
+  FrameworkMapping,
+  NukibControlTier,
+  NukibPriority,
+} from "@/lib/compliance/nukib/types";
+
+function zokbMetadata(input: {
+  officialBaselineRefs?: readonly string[];
+  priority: NukibPriority;
+  reference: string;
+  tier: NukibControlTier;
+  title: string;
+}) {
+  const mapping: FrameworkMapping = {
+    frameworkId: "zokb",
+    reference: input.reference,
+    title: input.title,
+  };
+
+  return {
+    frameworkMappings: [mapping],
+    nukibPriority: input.priority,
+    nukibTier: input.tier,
+    officialBaselineRefs: input.officialBaselineRefs ? [...input.officialBaselineRefs] : [input.reference],
+  };
+}
+
+const ZOKB_MINIMUM_SYSTEM = {
+  priority: "high",
+  reference: "§ 3",
+  tier: "mandatory_minimum",
+  title: "Systém zajišťování minimální kybernetické bezpečnosti",
+} as const;
+const ZOKB_CONTINUITY = {
+  officialBaselineRefs: ["§ 6", "§ 6 písm. c)"],
+  priority: "high",
+  reference: "§ 6",
+  tier: "mandatory_minimum",
+  title: "Řízení kontinuity činností",
+} as const;
+const ZOKB_ACCESS = {
+  priority: "unset",
+  reference: "§ 7",
+  tier: "assessable",
+  title: "Řízení přístupu",
+} as const;
+const ZOKB_IDENTITY = {
+  priority: "unset",
+  reference: "§ 8",
+  tier: "assessable",
+  title: "Řízení identit a jejich oprávnění",
+} as const;
+const ZOKB_NETWORK = {
+  priority: "high",
+  reference: "§ 11",
+  tier: "assessable",
+  title: "Bezpečnost komunikačních sítí",
+} as const;
+const ZOKB_APPLICATION_SECURITY = {
+  priority: "unset",
+  reference: "§ 12",
+  tier: "assessable",
+  title: "Aplikační bezpečnost",
+} as const;
 
 // Helios (Asseco) platform workspace configuration.
 // Covers the four standard compliance layers for NIS2 ZoKB SME readiness.
@@ -28,6 +92,7 @@ export const heliosWorkspace: PlatformWorkspace = {
             "Helios je nejčastěji nasazen na dedikovaných on-premises serverech ve výrobních provozech. Zdokumentujte typ nasazení, verzi Heliosu a verzi SQL Serveru. U cloudového hostingu zajistěte platnou smlouvu o zpracování dat (DPA) s poskytovatelem. Výrobní firmy jsou při nasazení on-premises plně odpovědné za fyzickou i síťovou bezpečnost serveru. Přiložte diagram nasazení nebo technický popis infrastruktury.",
           evidenceType: "attestation",
           nis2ArticleRef: "Article 21(2)(h)",
+          ...zokbMetadata(ZOKB_APPLICATION_SECURITY),
         },
         {
           controlKey: "helios-infra-physical-server-room",
@@ -38,6 +103,7 @@ export const heliosWorkspace: PlatformWorkspace = {
           evidenceType: "both",
           nis2ArticleRef: "Article 21(2)(h)",
           zobkSectionRef: "§ 5 odst. 1 písm. d)",
+          ...zokbMetadata(ZOKB_ACCESS),
         },
         {
           controlKey: "helios-infra-encryption-at-rest",
@@ -48,6 +114,7 @@ export const heliosWorkspace: PlatformWorkspace = {
           evidenceType: "both",
           nis2ArticleRef: "Article 21(2)(h)",
           zobkSectionRef: "§ 5 odst. 1 písm. d)",
+          ...zokbMetadata(ZOKB_MINIMUM_SYSTEM),
         },
         {
           controlKey: "helios-infra-os-patch-management",
@@ -58,6 +125,7 @@ export const heliosWorkspace: PlatformWorkspace = {
           evidenceType: "both",
           nis2ArticleRef: "Article 21(2)(h)",
           zobkSectionRef: "§ 6 odst. 1 písm. b)",
+          ...zokbMetadata(ZOKB_APPLICATION_SECURITY),
         },
         {
           controlKey: "helios-infra-network-segmentation",
@@ -68,6 +136,7 @@ export const heliosWorkspace: PlatformWorkspace = {
           evidenceType: "both",
           nis2ArticleRef: "Article 21(2)(h)",
           zobkSectionRef: "§ 5 odst. 1 písm. e)",
+          ...zokbMetadata(ZOKB_NETWORK),
         },
       ],
     },
@@ -90,6 +159,7 @@ export const heliosWorkspace: PlatformWorkspace = {
           evidenceType: "both",
           nis2ArticleRef: "Article 21(2)(i)",
           zobkSectionRef: "§ 7 odst. 1",
+          ...zokbMetadata(ZOKB_ACCESS),
         },
         {
           controlKey: "helios-iam-module-role-hierarchy",
@@ -100,6 +170,7 @@ export const heliosWorkspace: PlatformWorkspace = {
           evidenceType: "both",
           nis2ArticleRef: "Article 21(2)(i)",
           zobkSectionRef: "§ 7 odst. 2",
+          ...zokbMetadata(ZOKB_ACCESS),
         },
         {
           controlKey: "helios-iam-contractor-access-management",
@@ -110,6 +181,7 @@ export const heliosWorkspace: PlatformWorkspace = {
           evidenceType: "both",
           nis2ArticleRef: "Article 21(2)(i)",
           zobkSectionRef: "§ 7 odst. 3",
+          ...zokbMetadata(ZOKB_ACCESS),
         },
         {
           controlKey: "helios-iam-inactive-session-audit",
@@ -120,6 +192,7 @@ export const heliosWorkspace: PlatformWorkspace = {
           evidenceType: "both",
           nis2ArticleRef: "Article 21(2)(i)",
           zobkSectionRef: "§ 7 odst. 3",
+          ...zokbMetadata(ZOKB_ACCESS),
         },
         {
           controlKey: "helios-iam-offboarding",
@@ -130,6 +203,7 @@ export const heliosWorkspace: PlatformWorkspace = {
           evidenceType: "both",
           nis2ArticleRef: "Article 21(2)(i)",
           zobkSectionRef: "§ 7 odst. 4",
+          ...zokbMetadata(ZOKB_ACCESS),
         },
       ],
     },
@@ -152,6 +226,7 @@ export const heliosWorkspace: PlatformWorkspace = {
           evidenceType: "both",
           nis2ArticleRef: "Article 21(2)(c)",
           zobkSectionRef: "§ 8 odst. 1",
+          ...zokbMetadata(ZOKB_CONTINUITY),
         },
         {
           controlKey: "helios-backup-encryption",
@@ -162,6 +237,7 @@ export const heliosWorkspace: PlatformWorkspace = {
           evidenceType: "both",
           nis2ArticleRef: "Article 21(2)(c)",
           zobkSectionRef: "§ 8 odst. 2",
+          ...zokbMetadata(ZOKB_CONTINUITY),
         },
         {
           controlKey: "helios-backup-offsite-immutable",
@@ -172,6 +248,7 @@ export const heliosWorkspace: PlatformWorkspace = {
           evidenceType: "both",
           nis2ArticleRef: "Article 21(2)(c)",
           zobkSectionRef: "§ 8 odst. 3",
+          ...zokbMetadata(ZOKB_CONTINUITY),
         },
         {
           controlKey: "helios-backup-restoration-test",
@@ -182,6 +259,7 @@ export const heliosWorkspace: PlatformWorkspace = {
           evidenceType: "both",
           nis2ArticleRef: "Article 21(2)(c)",
           zobkSectionRef: "§ 8 odst. 4",
+          ...zokbMetadata(ZOKB_CONTINUITY),
         },
       ],
     },
@@ -204,6 +282,7 @@ export const heliosWorkspace: PlatformWorkspace = {
           evidenceType: "both",
           nis2ArticleRef: "Article 21(2)(g)",
           zobkSectionRef: "§ 9 odst. 1",
+          ...zokbMetadata(ZOKB_NETWORK),
         },
         {
           controlKey: "helios-api-edi-supplier-customer",
@@ -214,6 +293,7 @@ export const heliosWorkspace: PlatformWorkspace = {
           evidenceType: "both",
           nis2ArticleRef: "Article 21(2)(g)",
           zobkSectionRef: "§ 9 odst. 2",
+          ...zokbMetadata(ZOKB_NETWORK),
         },
         {
           controlKey: "helios-api-credential-rotation",
@@ -224,6 +304,7 @@ export const heliosWorkspace: PlatformWorkspace = {
           evidenceType: "attestation",
           nis2ArticleRef: "Article 21(2)(g)",
           zobkSectionRef: "§ 9 odst. 3",
+          ...zokbMetadata(ZOKB_IDENTITY),
         },
         {
           controlKey: "helios-api-network-access-control",
@@ -234,6 +315,7 @@ export const heliosWorkspace: PlatformWorkspace = {
           evidenceType: "both",
           nis2ArticleRef: "Article 21(2)(g)",
           zobkSectionRef: "§ 9 odst. 4",
+          ...zokbMetadata(ZOKB_NETWORK),
         },
         {
           controlKey: "helios-api-tls-enforcement",
@@ -244,6 +326,7 @@ export const heliosWorkspace: PlatformWorkspace = {
           evidenceType: "both",
           nis2ArticleRef: "Article 21(2)(g)",
           zobkSectionRef: "§ 9 odst. 5",
+          ...zokbMetadata(ZOKB_NETWORK),
         },
       ],
     },

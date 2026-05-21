@@ -1,4 +1,68 @@
 import type { PlatformWorkspace } from "@/lib/workspaces/types";
+import type {
+  FrameworkMapping,
+  NukibControlTier,
+  NukibPriority,
+} from "@/lib/compliance/nukib/types";
+
+function zokbMetadata(input: {
+  officialBaselineRefs?: readonly string[];
+  priority: NukibPriority;
+  reference: string;
+  tier: NukibControlTier;
+  title: string;
+}) {
+  const mapping: FrameworkMapping = {
+    frameworkId: "zokb",
+    reference: input.reference,
+    title: input.title,
+  };
+
+  return {
+    frameworkMappings: [mapping],
+    nukibPriority: input.priority,
+    nukibTier: input.tier,
+    officialBaselineRefs: input.officialBaselineRefs ? [...input.officialBaselineRefs] : [input.reference],
+  };
+}
+
+const ZOKB_MINIMUM_SYSTEM = {
+  priority: "high",
+  reference: "§ 3",
+  tier: "mandatory_minimum",
+  title: "Systém zajišťování minimální kybernetické bezpečnosti",
+} as const;
+const ZOKB_CONTINUITY = {
+  officialBaselineRefs: ["§ 6", "§ 6 písm. c)"],
+  priority: "high",
+  reference: "§ 6",
+  tier: "mandatory_minimum",
+  title: "Řízení kontinuity činností",
+} as const;
+const ZOKB_ACCESS = {
+  priority: "unset",
+  reference: "§ 7",
+  tier: "assessable",
+  title: "Řízení přístupu",
+} as const;
+const ZOKB_IDENTITY = {
+  priority: "unset",
+  reference: "§ 8",
+  tier: "assessable",
+  title: "Řízení identit a jejich oprávnění",
+} as const;
+const ZOKB_NETWORK = {
+  priority: "high",
+  reference: "§ 11",
+  tier: "assessable",
+  title: "Bezpečnost komunikačních sítí",
+} as const;
+const ZOKB_APPLICATION_SECURITY = {
+  priority: "unset",
+  reference: "§ 12",
+  tier: "assessable",
+  title: "Aplikační bezpečnost",
+} as const;
 
 // Money S3 / S4 (Seyfor) platform workspace configuration.
 // Covers the four standard compliance layers for NIS2 ZoKB SME readiness.
@@ -25,6 +89,7 @@ export const moneyS3Workspace: PlatformWorkspace = {
             "Zdokumentujte aktuální variantu nasazení. Money S3/S4 standardně využívá lokální databázi nebo Microsoft SQL Server. Cloudová varianta Money S5 (provozovaná Seyforem) přenáší část odpovědnosti za infrastrukturu na poskytovatele – zajistěte, že máte k dispozici aktuální smlouvu o zpracování dat (DPA) se Seyforem.",
           evidenceType: "attestation",
           nis2ArticleRef: "Article 21(2)(h)",
+          ...zokbMetadata(ZOKB_APPLICATION_SECURITY),
         },
         {
           controlKey: "money-s3-infra-encryption-at-rest",
@@ -35,6 +100,7 @@ export const moneyS3Workspace: PlatformWorkspace = {
           evidenceType: "both",
           nis2ArticleRef: "Article 21(2)(h)",
           zobkSectionRef: "§ 5 odst. 1 písm. d)",
+          ...zokbMetadata(ZOKB_MINIMUM_SYSTEM),
         },
         {
           controlKey: "money-s3-infra-os-patch-management",
@@ -45,6 +111,7 @@ export const moneyS3Workspace: PlatformWorkspace = {
           evidenceType: "both",
           nis2ArticleRef: "Article 21(2)(h)",
           zobkSectionRef: "§ 6 odst. 1 písm. b)",
+          ...zokbMetadata(ZOKB_APPLICATION_SECURITY),
         },
         {
           controlKey: "money-s3-infra-network-segmentation",
@@ -55,6 +122,7 @@ export const moneyS3Workspace: PlatformWorkspace = {
           evidenceType: "both",
           nis2ArticleRef: "Article 21(2)(h)",
           zobkSectionRef: "§ 5 odst. 1 písm. e)",
+          ...zokbMetadata(ZOKB_NETWORK),
         },
       ],
     },
@@ -77,6 +145,7 @@ export const moneyS3Workspace: PlatformWorkspace = {
           evidenceType: "both",
           nis2ArticleRef: "Article 21(2)(i)",
           zobkSectionRef: "§ 7 odst. 1",
+          ...zokbMetadata(ZOKB_ACCESS),
         },
         {
           controlKey: "money-s3-iam-least-privilege",
@@ -87,6 +156,7 @@ export const moneyS3Workspace: PlatformWorkspace = {
           evidenceType: "both",
           nis2ArticleRef: "Article 21(2)(i)",
           zobkSectionRef: "§ 7 odst. 2",
+          ...zokbMetadata(ZOKB_ACCESS),
         },
         {
           controlKey: "money-s3-iam-inactive-session-audit",
@@ -97,6 +167,7 @@ export const moneyS3Workspace: PlatformWorkspace = {
           evidenceType: "both",
           nis2ArticleRef: "Article 21(2)(i)",
           zobkSectionRef: "§ 7 odst. 3",
+          ...zokbMetadata(ZOKB_ACCESS),
         },
         {
           controlKey: "money-s3-iam-offboarding",
@@ -107,6 +178,7 @@ export const moneyS3Workspace: PlatformWorkspace = {
           evidenceType: "both",
           nis2ArticleRef: "Article 21(2)(i)",
           zobkSectionRef: "§ 7 odst. 4",
+          ...zokbMetadata(ZOKB_ACCESS),
         },
       ],
     },
@@ -129,6 +201,7 @@ export const moneyS3Workspace: PlatformWorkspace = {
           evidenceType: "both",
           nis2ArticleRef: "Article 21(2)(c)",
           zobkSectionRef: "§ 8 odst. 1",
+          ...zokbMetadata(ZOKB_CONTINUITY),
         },
         {
           controlKey: "money-s3-backup-automated-daily",
@@ -139,6 +212,7 @@ export const moneyS3Workspace: PlatformWorkspace = {
           evidenceType: "both",
           nis2ArticleRef: "Article 21(2)(c)",
           zobkSectionRef: "§ 8 odst. 2",
+          ...zokbMetadata(ZOKB_CONTINUITY),
         },
         {
           controlKey: "money-s3-backup-offsite-immutable",
@@ -149,6 +223,7 @@ export const moneyS3Workspace: PlatformWorkspace = {
           evidenceType: "both",
           nis2ArticleRef: "Article 21(2)(c)",
           zobkSectionRef: "§ 8 odst. 3",
+          ...zokbMetadata(ZOKB_CONTINUITY),
         },
         {
           controlKey: "money-s3-backup-restoration-test",
@@ -159,6 +234,7 @@ export const moneyS3Workspace: PlatformWorkspace = {
           evidenceType: "both",
           nis2ArticleRef: "Article 21(2)(c)",
           zobkSectionRef: "§ 8 odst. 4",
+          ...zokbMetadata(ZOKB_CONTINUITY),
         },
       ],
     },
@@ -181,6 +257,7 @@ export const moneyS3Workspace: PlatformWorkspace = {
           evidenceType: "both",
           nis2ArticleRef: "Article 21(2)(g)",
           zobkSectionRef: "§ 9 odst. 1",
+          ...zokbMetadata(ZOKB_IDENTITY),
         },
         {
           controlKey: "money-s3-api-credential-rotation",
@@ -191,6 +268,7 @@ export const moneyS3Workspace: PlatformWorkspace = {
           evidenceType: "attestation",
           nis2ArticleRef: "Article 21(2)(g)",
           zobkSectionRef: "§ 9 odst. 2",
+          ...zokbMetadata(ZOKB_IDENTITY),
         },
         {
           controlKey: "money-s3-api-ip-whitelist",
@@ -201,6 +279,7 @@ export const moneyS3Workspace: PlatformWorkspace = {
           evidenceType: "both",
           nis2ArticleRef: "Article 21(2)(g)",
           zobkSectionRef: "§ 9 odst. 3",
+          ...zokbMetadata(ZOKB_NETWORK),
         },
         {
           controlKey: "money-s3-api-tls-enforcement",
@@ -211,6 +290,7 @@ export const moneyS3Workspace: PlatformWorkspace = {
           evidenceType: "both",
           nis2ArticleRef: "Article 21(2)(g)",
           zobkSectionRef: "§ 9 odst. 4",
+          ...zokbMetadata(ZOKB_NETWORK),
         },
       ],
     },
