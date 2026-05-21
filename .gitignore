@@ -27,6 +27,7 @@
 .DS_Store
 *.pem
 /agent-skills/
+/.worktrees/
 /tmp/
 
 # debug
