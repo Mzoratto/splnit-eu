@@ -49,6 +49,7 @@
     "smoke:copy-hygiene": "tsx scripts/smoke-copy-hygiene.ts",
     "smoke:money-s3-workspace-config": "tsx scripts/smoke-money-s3-workspace-config.ts",
     "smoke:hetzner-workspace-config": "tsx scripts/smoke-hetzner-workspace-config.ts",
+    "smoke:ovhcloud-workspace-config": "tsx scripts/smoke-ovhcloud-workspace-config.ts",
     "smoke:compliance-report": "tsx scripts/smoke-compliance-report.ts",
     "smoke:helios-workspace-config": "tsx scripts/smoke-helios-workspace-config.ts",
     "smoke:policy-evidence-loop": "tsx scripts/smoke-policy-evidence-loop.ts",
