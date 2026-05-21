@@ -25,12 +25,14 @@ const locales = ["cs-CZ", "en-EU", "it-IT"] as const;
 
 const organisationSettingsSchema = z.object({
   country: z.enum(countries),
+  dic: z.string().trim().regex(/^CZ[0-9]{8,10}$/, "DIČ musí být ve formátu CZ12345678."),
   employeeCount: z.enum(employeeCounts),
-  ico: z.string().trim().max(32).optional(),
+  ico: z.string().trim().regex(/^[0-9]{8}$/, "IČO musí mít přesně 8 číslic."),
   locale: z.enum(locales),
   name: z.string().trim().min(2).max(120),
   primaryJurisdiction: z.enum(jurisdictions),
   sector: z.enum(sectors),
+  sidlo: z.string().trim().min(1).max(200),
 });
 
 function getStringValue(formData: FormData, key: string) {
@@ -62,23 +64,27 @@ export async function updateOrganisationSettingsAction(formData: FormData) {
   const session = requireActiveOrganisation(await auth());
   const parsed = organisationSettingsSchema.parse({
     country: getStringValue(formData, "country"),
+    dic: getStringValue(formData, "dic"),
     employeeCount: getStringValue(formData, "employeeCount"),
     ico: getStringValue(formData, "ico"),
     locale: getStringValue(formData, "locale"),
     name: getStringValue(formData, "name"),
     primaryJurisdiction: getStringValue(formData, "primaryJurisdiction"),
     sector: getStringValue(formData, "sector"),
+    sidlo: getStringValue(formData, "sidlo"),
   });
 
   await upsertOrganisationProfile({
     clerkOrgId: session.clerkOrgId,
     country: parsed.country,
+    dic: parsed.dic,
     employeeCount: parsed.employeeCount,
-    ico: parsed.ico || null,
+    ico: parsed.ico,
     locale: parsed.locale,
     name: parsed.name,
     primaryJurisdiction: parsed.primaryJurisdiction,
     sector: parsed.sector,
+    sidlo: parsed.sidlo,
   });
   await createAuditLog({
     action: "organisation.updated",
@@ -88,16 +94,20 @@ export async function updateOrganisationSettingsAction(formData: FormData) {
     entityType: "organisation",
     metadata: {
       country: parsed.country,
+      dic: parsed.dic,
       employeeCount: parsed.employeeCount,
-      ico: parsed.ico || null,
+      ico: parsed.ico,
       locale: parsed.locale,
       name: parsed.name,
       primaryJurisdiction: parsed.primaryJurisdiction,
       sector: parsed.sector,
+      sidlo: parsed.sidlo,
     },
   });
   await persistLocaleCookie(parsed.locale);
 
+  revalidatePath("/dashboard");
+  revalidatePath("/settings/profile");
   revalidatePath("/settings/organisation");
   revalidatePath("/settings/audit-log");
 }

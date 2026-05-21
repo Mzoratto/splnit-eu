@@ -59,8 +59,12 @@ export async function getDashboardData(clerkOrgId: string) {
     await Promise.all([
       db
         .select({
+          clerkOrgId: organisations.clerkOrgId,
+          dic: organisations.dic,
+          ico: organisations.ico,
           locale: organisations.locale,
           primaryJurisdiction: organisations.primaryJurisdiction,
+          sidlo: organisations.sidlo,
         })
         .from(organisations)
         .where(eq(organisations.clerkOrgId, clerkOrgId))
@@ -122,6 +126,14 @@ export async function getDashboardData(clerkOrgId: string) {
   return {
     frameworkScores,
     intakeScopeSummary: scopeSummary,
+    organisationExportIdentity: organisationRows[0]
+      ? {
+          clerkOrgId: organisationRows[0].clerkOrgId,
+          dic: organisationRows[0].dic,
+          ico: organisationRows[0].ico,
+          sidlo: organisationRows[0].sidlo,
+        }
+      : null,
     organisationJurisdiction: organisationRows[0]?.primaryJurisdiction ?? null,
     organisationLocale: organisationRows[0]?.locale ?? null,
     priorityControls: scopedPriorityControls,

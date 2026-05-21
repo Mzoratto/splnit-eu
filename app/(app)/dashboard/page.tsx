@@ -19,6 +19,7 @@ import {
 import { AnimatedScoreRing } from "@/components/app/animated-score-ring";
 import { DataModeNotice } from "@/components/app/data-mode-notice";
 import { StatusPill, type StatusPillTone } from "@/components/app/status-pill";
+import { ComplianceReportButton } from "@/components/export/compliance-report-button";
 import { markRegulationUpdateReadAction } from "@/app/(app)/dashboard/actions";
 import { getMessagesForLocale } from "@/i18n/messages";
 import { normalizeLocale, type Locale } from "@/i18n/routing";
@@ -431,6 +432,14 @@ export default async function DashboardPage() {
     : useDemoData
       ? fallbackUpdates
       : [];
+  const reportExportIdentity = data?.organisationExportIdentity ?? null;
+  const reportMissingFields = reportExportIdentity
+    ? [
+        !reportExportIdentity.ico && "IČO",
+        !reportExportIdentity.dic && "DIČ",
+        !reportExportIdentity.sidlo && "Sídlo",
+      ].filter((field): field is string => Boolean(field))
+    : [];
   const deadlines = FRAMEWORK_LIBRARY.filter(
     (framework) => framework.slug === "nis2" || framework.slug === "ai-act" || framework.slug === "gdpr",
   );
@@ -561,6 +570,28 @@ export default async function DashboardPage() {
           ) : null}
         </>
       )}
+
+      {reportExportIdentity ? (
+        <section className="card">
+          <div className="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
+            <div className="flex gap-3">
+              <div className="grid h-10 w-10 shrink-0 place-items-center rounded-md border border-border bg-background text-primary">
+                <FileArchive className="h-5 w-5" aria-hidden="true" strokeWidth={1.6} />
+              </div>
+              <div>
+                <h2 className="text-lg font-medium">Zpráva o hodnocení stavu kybernetické bezpečnosti</h2>
+                <p className="mt-1 max-w-2xl text-sm leading-6 text-foreground/58">
+                  Exportujte aktuální stav opatření, důkazů a mezer do PDF pro auditora nebo kontrolu NÚKIB.
+                </p>
+              </div>
+            </div>
+            <ComplianceReportButton
+              missingFields={reportMissingFields}
+              orgId={reportExportIdentity.clerkOrgId}
+            />
+          </div>
+        </section>
+      ) : null}
 
       {hasIntakeScope && intakeScopeSummary ? (
         <section className="card">

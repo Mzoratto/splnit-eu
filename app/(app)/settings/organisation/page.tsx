@@ -40,6 +40,7 @@ type OrganisationSettingsData = {
   canMutate: boolean;
   clerkOrgId: string;
   country: string;
+  dic: string;
   employeeCount: string;
   ico: string;
   locale: string;
@@ -48,6 +49,7 @@ type OrganisationSettingsData = {
   plan: string;
   primaryJurisdiction: string;
   sector: string;
+  sidlo: string;
   toolInventory: string[];
   updatedAt: Date | string | null;
 };
@@ -56,6 +58,7 @@ const fallbackOrganisation: OrganisationSettingsData = {
   canMutate: false,
   clerkOrgId: "demo",
   country: "CZ",
+  dic: "CZ12345678",
   employeeCount: "10-49",
   ico: "12345678",
   locale: "cs-CZ",
@@ -64,6 +67,7 @@ const fallbackOrganisation: OrganisationSettingsData = {
   plan: "free",
   primaryJurisdiction: "CZ",
   sector: "technology",
+  sidlo: "Václavské náměstí 1, Praha",
   toolInventory: ["chatgpt", "microsoft-copilot"],
   updatedAt: null,
 };
@@ -91,6 +95,7 @@ async function loadOrganisationSettings(): Promise<OrganisationSettingsData> {
     canMutate: true,
     clerkOrgId: session.orgId,
     country: organisation?.country ?? "CZ",
+    dic: organisation?.dic ?? "",
     employeeCount: organisation?.employeeCount ?? "10-49",
     ico: organisation?.ico ?? "",
     locale: organisation?.locale ?? "cs-CZ",
@@ -99,6 +104,7 @@ async function loadOrganisationSettings(): Promise<OrganisationSettingsData> {
     plan: normalizePlanKey(organisation?.plan),
     primaryJurisdiction: organisation?.primaryJurisdiction ?? "CZ",
     sector: organisation?.sector ?? "technology",
+    sidlo: organisation?.sidlo ?? "",
     toolInventory: organisation?.toolInventory ?? [],
     updatedAt: organisation?.updatedAt ?? null,
   };
@@ -201,14 +207,48 @@ export default async function OrganisationSettingsPage() {
 
             <div className="grid gap-4 md:grid-cols-2">
               <label className="grid gap-2 text-sm">
-                {jurisdictionContext.labels.legalIdentifier}
+                IČO
                 <input
                   name="ico"
                   defaultValue={data.ico}
                   disabled={!data.canMutate}
+                  inputMode="numeric"
+                  maxLength={8}
+                  pattern="[0-9]{8}"
+                  required
+                  title="IČO musí mít přesně 8 číslic."
                   className="rounded-md border border-border bg-background px-3 py-2"
                 />
               </label>
+              <label className="grid gap-2 text-sm">
+                DIČ
+                <input
+                  name="dic"
+                  defaultValue={data.dic}
+                  disabled={!data.canMutate}
+                  maxLength={12}
+                  pattern="CZ[0-9]{8,10}"
+                  required
+                  title="DIČ musí být ve formátu CZ12345678."
+                  className="rounded-md border border-border bg-background px-3 py-2"
+                />
+              </label>
+            </div>
+
+            <label className="grid gap-2 text-sm">
+              Sídlo
+              <textarea
+                name="sidlo"
+                defaultValue={data.sidlo}
+                disabled={!data.canMutate}
+                maxLength={200}
+                required
+                rows={3}
+                className="resize-none rounded-md border border-border bg-background px-3 py-2"
+              />
+            </label>
+
+            <div className="grid gap-4 md:grid-cols-2">
               <label className="grid gap-2 text-sm">
                 {copy.profile.employeeCount}
                 <select
