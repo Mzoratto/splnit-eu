@@ -101,8 +101,14 @@ No credentials were stored or printed during this audit.
   - `error.message`: `token is required`
 - This confirms the endpoint and bearer-token requirement.
 - Official docs reviewed:
+  - Hetzner Cloud API usage guide: `https://docs.hetzner.com/cloud/api/getting-started/using-api/`
   - Hetzner Cloud API reference home: `https://docs.hetzner.cloud/reference/cloud`
   - Hetzner Cloud changelog confirms `GET /v1/servers` and `GET /v1/firewalls` are current endpoints.
+- Token model from the Hetzner usage guide:
+  - API tokens are bound to the project where they are created.
+  - Requests use `Authorization: Bearer <API_TOKEN>`.
+  - `GET` requests require `Read`; `POST`, `PUT`, and `DELETE` require `Read & Write`.
+  - The guide does not describe granular `server:read`, `firewall:read`, or `volume:read` scopes. For Tranche 5 live verification, use a project-scoped read-only token.
 - Expected authenticated shapes for Tranche 5 checks:
   - `GET /servers` returns a top-level `servers` array; server objects expose `status` values including `running`.
   - `GET /firewalls` returns a top-level `firewalls` array; firewall objects expose a `rules` array.

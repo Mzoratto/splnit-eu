@@ -75,10 +75,10 @@ export const hetznerWorkspace: PlatformWorkspace = {
           controlKey: "hetzner-iam-api-key-scopes",
           evidenceType: "attestation",
           guidance:
-            "Zkontrolujte, že API klíč používaný pro Splnit.eu má pouze potřebné čtecí rozsahy server:read, firewall:read a volume:read. Nepoužívejte klíč s oprávněním k zápisu, pokud není prokazatelně nutný.",
+            "Zkontrolujte, že API token používaný pro Splnit.eu je projektový token s oprávněním pouze pro čtení. Nepoužívejte token s oprávněním Read & Write, pokud není prokazatelně nutný.",
           nis2ArticleRef: "Article 21(2)(i)",
           question:
-            "Je přístup API klíče omezen na minimální potřebné rozsahy?",
+            "Je přístup API tokenu omezen na minimální potřebné čtecí oprávnění?",
           zobkSectionRef: "§ 7 odst. 2",
         },
         {
