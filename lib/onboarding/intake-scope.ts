@@ -18,7 +18,7 @@ export type EmployeeBand = "1_9" | "10_49" | "50_249" | "250_plus";
 export type PersonalDataScope = "none" | "employees_only" | "customers_and_employees";
 export type ThirdPartyProcessorUse = "none" | "few" | "many";
 export type AiSystemUse = "none" | "internal_productivity" | "customer_or_patient_facing";
-export type AccountingPlatform = "pohoda" | "money_s3" | "helios" | "other" | "none";
+export type AccountingPlatform = "pohoda" | "abra_flexi" | "money_s3" | "helios" | "other" | "none";
 
 export type IntakeAnswers = {
   accountingPlatform?: AccountingPlatform;
@@ -287,6 +287,14 @@ function deriveWorkspaceRecommendations(answers: IntakeAnswers): WorkspaceRecomm
       platformKey: "pohoda",
       label: "Pohoda",
       reason: "Používáte Pohoda — doporučujeme propojit účetní data se sadou NIS2 kontrol specifických pro Pohoda (zálohování dat, přístup k mServeru, API credentials).",
+    });
+  }
+
+  if (answers.accountingPlatform === "abra_flexi") {
+    recommendations.push({
+      platformKey: "abra-flexi",
+      label: "ABRA Flexi",
+      reason: "Používáte ABRA Flexi — doporučujeme projít sadu NIS2/ZoKB kontrol pro REST API, uživatelské role, zálohy a bezpečný transport.",
     });
   }
 

@@ -50,9 +50,9 @@ export default async function TeamPage() {
     },
     {
       ...copy.modules.trainingLog,
-      href: null,
+      href: "/training",
       icon: moduleIcons.trainingLog,
-      status: "coming_soon",
+      status: "available",
     },
   ];
 

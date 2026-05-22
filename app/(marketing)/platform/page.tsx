@@ -104,6 +104,7 @@ export default async function PlatformPage() {
                       ["solar:document-text-linear", "Pohoda"],
                       ["solar:document-check-linear", "Money S3 / S4"],
                       ["solar:settings-linear", "Helios"],
+                      ["solar:database-linear", "ABRA Flexi"],
                     ].map(([icon, label]) => (
                       <div
                         key={label}

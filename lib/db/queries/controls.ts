@@ -18,6 +18,7 @@ import {
   orgIntakeProfiles,
   tests,
 } from "@/lib/db/schema";
+import { getTrainingGapSummary } from "@/lib/db/queries/training";
 
 type IntakeScopeSummary = {
   applicableControlKeys: string[];
@@ -226,6 +227,43 @@ export async function listOrgControlsForIndex(clerkOrgId: string) {
       ) {
         existing.lastKnownAssessmentResult = row.assessmentResult;
       }
+    }
+  }
+
+  const trainingControl = [...controlMap.values()].find(
+    (control) => control.key === "ctrl_security_training_annual",
+  );
+
+  if (trainingControl) {
+    const summary = await getTrainingGapSummary(clerkOrgId);
+    const latestTrainingDate = summary.records[0]?.trainingDate ?? null;
+
+    if (summary.total === 0) {
+      trainingControl.status = "fail";
+      trainingControl.latestEvidenceAssessmentResult = "gap";
+      trainingControl.latestEvidenceCollectionStatus = "collected";
+      trainingControl.latestEvidenceConfidence = "medium";
+      trainingControl.latestEvidenceCollectedAt = null;
+      trainingControl.latestEvidenceSource = "manual";
+    } else if (summary.expired > 0 || summary.expiringSoon > 0) {
+      trainingControl.status = "warning";
+      trainingControl.latestEvidenceAssessmentResult =
+        summary.expired > 0 ? "gap" : "manual_review";
+      trainingControl.latestEvidenceCollectionStatus = "collected";
+      trainingControl.latestEvidenceConfidence = "medium";
+      trainingControl.latestEvidenceCollectedAt = latestTrainingDate
+        ? new Date(`${latestTrainingDate}T00:00:00.000Z`)
+        : null;
+      trainingControl.latestEvidenceSource = "manual";
+    } else {
+      trainingControl.status = "pass";
+      trainingControl.latestEvidenceAssessmentResult = "pass";
+      trainingControl.latestEvidenceCollectionStatus = "collected";
+      trainingControl.latestEvidenceConfidence = "medium";
+      trainingControl.latestEvidenceCollectedAt = latestTrainingDate
+        ? new Date(`${latestTrainingDate}T00:00:00.000Z`)
+        : null;
+      trainingControl.latestEvidenceSource = "manual";
     }
   }
 

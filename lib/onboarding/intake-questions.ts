@@ -73,6 +73,7 @@ export const AI_USAGE_OPTIONS = [
 
 export const ACCOUNTING_PLATFORM_OPTIONS = [
   { value: "pohoda" },
+  { value: "abra_flexi" },
   { value: "money_s3" },
   { value: "helios" },
   { value: "other" },

@@ -135,7 +135,7 @@ const businessRealitySections = [
   },
   {
     title: "Účetní software",
-    description: "Vyberte účetní platformu, kterou používáte. Pohoda spustí doporučení pro pracovní prostor specifický pro Pohoda.",
+    description: "Vyberte účetní platformu, kterou používáte. Podporovaná platforma spustí doporučení pro specifický pracovní prostor.",
     keys: ["accountingPlatform"],
   },
 ] as const satisfies readonly {

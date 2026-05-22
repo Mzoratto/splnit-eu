@@ -6,6 +6,7 @@ import {
   CheckCircle2,
   CircleDashed,
   Cloud,
+  DatabaseZap,
   GitBranch,
   MonitorCog,
   PlugZap,
@@ -45,6 +46,14 @@ const providers = [
     name: "AWS",
     planned: false,
     testCount: 5,
+  },
+  {
+    href: "/workspaces/abra-flexi",
+    icon: DatabaseZap,
+    key: "abra-flexi",
+    name: "ABRA Flexi",
+    planned: false,
+    testCount: 4,
   },
   {
     href: "/integrations/google-workspace",
@@ -230,7 +239,7 @@ export default async function IntegrationsPage() {
         <span className="inline-flex items-center gap-1"><span className="h-2 w-2 rounded-full bg-foreground/40" aria-hidden="true" />error</span>
       </div>
 
-      <div className="grid items-stretch gap-4 md:grid-cols-2 xl:grid-cols-4">
+      <div className="grid items-stretch gap-4 md:grid-cols-2 xl:grid-cols-5">
         {providers.map((provider) => {
           const Icon = provider.icon;
           const integration = integrationMap.get(provider.key);

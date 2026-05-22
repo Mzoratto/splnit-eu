@@ -19,6 +19,7 @@ import {
   getWorkspaceProgress,
   type WorkspaceProgress,
 } from "@/lib/db/queries/workspaces";
+import { abraFlexiWorkspace } from "@/lib/workspaces/abra-flexi";
 import { heliosWorkspace } from "@/lib/workspaces/helios";
 import { moneyS3Workspace } from "@/lib/workspaces/money-s3";
 import { pohodaWorkspace } from "@/lib/workspaces/pohoda";
@@ -30,7 +31,12 @@ type PageProps = {
   params: Promise<{ orgId: string }>;
 };
 
-const WORKSPACES = [pohodaWorkspace, moneyS3Workspace, heliosWorkspace] as const;
+const WORKSPACES = [
+  pohodaWorkspace,
+  moneyS3Workspace,
+  heliosWorkspace,
+  abraFlexiWorkspace,
+] as const;
 
 function buildEmptyProgress(workspace: PlatformWorkspace): WorkspaceProgress {
   const layers = workspace.layers.map((layer) => ({

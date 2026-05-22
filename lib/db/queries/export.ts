@@ -15,6 +15,7 @@ import type {
   NukibControlTier,
 } from "@/lib/compliance/nukib/types";
 import { isDesignatedPersonTrainingGap } from "@/lib/workspaces/attestation";
+import { abraFlexiWorkspace } from "@/lib/workspaces/abra-flexi";
 import type { NukibControlBlock, PlatformWorkspace } from "@/lib/workspaces/types";
 import { heliosWorkspace } from "@/lib/workspaces/helios";
 import { hetznerWorkspace } from "@/lib/workspaces/hetzner";
@@ -25,6 +26,7 @@ import { pohodaWorkspace } from "@/lib/workspaces/pohoda";
 type SnapshotData = Record<string, unknown> | null;
 
 const WORKSPACES = [
+  abraFlexiWorkspace,
   pohodaWorkspace,
   moneyS3Workspace,
   heliosWorkspace,
@@ -34,6 +36,7 @@ const WORKSPACES = [
 
 const PROVIDER_LABELS: Record<string, string> = {
   aws: "AWS",
+  "abra-flexi": "Konektor ABRA Flexi",
   github: "GitHub",
   google_workspace: "Google Workspace",
   hetzner: "Konektor Hetzner Cloud",
@@ -161,6 +164,9 @@ function formatAutomatedFinding(snapshotData: SnapshotData): string {
   const snapshotWithinWindow = resultData.snapshotWithinWindow;
   const snapshotWindowDays = resultData.snapshotWindowDays;
   const backupPresent = resultData.backupPresent;
+  const userListAccessible = resultData.userListAccessible;
+  const configurationReadable = resultData.configurationReadable;
+  const baseUrlProtocol = resultData.baseUrlProtocol;
 
   if (provider === "hetzner" && typeof serverStatus === "string") {
     return `Konektor Hetzner Cloud ověřil stav serveru: ${serverStatus}.`;
@@ -188,6 +194,18 @@ function formatAutomatedFinding(snapshotData: SnapshotData): string {
 
   if (provider === "ovhcloud" && backupPresent === true) {
     return "Konektor OVHcloud ověřil dostupnost backup storage.";
+  }
+
+  if (provider === "abra-flexi" && userListAccessible === true) {
+    return "Konektor ABRA Flexi ověřil čitelnost evidence uživatelů.";
+  }
+
+  if (provider === "abra-flexi" && configurationReadable === true) {
+    return "Konektor ABRA Flexi ověřil čitelnost základní konfigurace.";
+  }
+
+  if (provider === "abra-flexi" && typeof baseUrlProtocol === "string") {
+    return `Konektor ABRA Flexi vyhodnotil transport API: ${baseUrlProtocol}.`;
   }
 
   if (typeof mfaEnabled === "number" && typeof totalUsers === "number") {

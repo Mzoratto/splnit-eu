@@ -20,6 +20,7 @@ import { getWorkspaceProgress } from "@/lib/db/queries/workspaces";
 import { pohodaWorkspace } from "@/lib/workspaces/pohoda";
 import { heliosWorkspace } from "@/lib/workspaces/helios";
 import { moneyS3Workspace } from "@/lib/workspaces/money-s3";
+import { abraFlexiWorkspace } from "@/lib/workspaces/abra-flexi";
 
 type ControlsCopy = ReturnType<typeof getMessagesForLocale>["controlsPage"];
 type OrgControl = Awaited<ReturnType<typeof listOrgControlsForIndex>>[number];
@@ -117,13 +118,13 @@ async function loadControlsIndexData() {
     Boolean(process.env.CLERK_SECRET_KEY);
 
   if (!clerkConfigured || !hasDatabaseUrl()) {
-    return { controls: buildDemoControls(), mode: "demo" as DataMode, organisationLocale: null, pohodaRecommended: false, pohodaCompletionPct: null, heliosRecommended: false, heliosCompletionPct: null, moneyS3Recommended: false, moneyS3CompletionPct: null };
+    return { controls: buildDemoControls(), mode: "demo" as DataMode, organisationLocale: null, pohodaRecommended: false, pohodaCompletionPct: null, heliosRecommended: false, heliosCompletionPct: null, moneyS3Recommended: false, moneyS3CompletionPct: null, abraFlexiRecommended: false, abraFlexiCompletionPct: null };
   }
 
   const session = await auth();
 
   if (!session.orgId) {
-    return { controls: buildDemoControls(), mode: "demo" as DataMode, organisationLocale: null, pohodaRecommended: false, pohodaCompletionPct: null, heliosRecommended: false, heliosCompletionPct: null, moneyS3Recommended: false, moneyS3CompletionPct: null };
+    return { controls: buildDemoControls(), mode: "demo" as DataMode, organisationLocale: null, pohodaRecommended: false, pohodaCompletionPct: null, heliosRecommended: false, heliosCompletionPct: null, moneyS3Recommended: false, moneyS3CompletionPct: null, abraFlexiRecommended: false, abraFlexiCompletionPct: null };
   }
 
   try {
@@ -136,6 +137,7 @@ async function loadControlsIndexData() {
     const pohodaRecommended = workspaceRecommendations.some((r) => r.platformKey === "pohoda");
     const heliosRecommended = workspaceRecommendations.some((r) => r.platformKey === "helios");
     const moneyS3Recommended = workspaceRecommendations.some((r) => r.platformKey === "money_s3");
+    const abraFlexiRecommended = workspaceRecommendations.some((r) => r.platformKey === "abra-flexi");
 
     let pohodaCompletionPct: number | null = null;
     if (pohodaRecommended) {
@@ -173,6 +175,18 @@ async function loadControlsIndexData() {
       }
     }
 
+    let abraFlexiCompletionPct: number | null = null;
+    if (abraFlexiRecommended) {
+      try {
+        const progress = await getWorkspaceProgress(session.orgId, abraFlexiWorkspace);
+        if (progress.completedControls > 0) {
+          abraFlexiCompletionPct = progress.overallCompletionPct;
+        }
+      } catch {
+        // workspace progress unavailable — show card without percentage
+      }
+    }
+
     return {
       controls,
       mode: "live" as const,
@@ -183,9 +197,11 @@ async function loadControlsIndexData() {
       heliosCompletionPct,
       moneyS3Recommended,
       moneyS3CompletionPct,
+      abraFlexiRecommended,
+      abraFlexiCompletionPct,
     };
   } catch {
-    return { controls: buildDemoControls(), mode: "demo" as DataMode, organisationLocale: null, pohodaRecommended: false, pohodaCompletionPct: null, heliosRecommended: false, heliosCompletionPct: null, moneyS3Recommended: false, moneyS3CompletionPct: null };
+    return { controls: buildDemoControls(), mode: "demo" as DataMode, organisationLocale: null, pohodaRecommended: false, pohodaCompletionPct: null, heliosRecommended: false, heliosCompletionPct: null, moneyS3Recommended: false, moneyS3CompletionPct: null, abraFlexiRecommended: false, abraFlexiCompletionPct: null };
   }
 }
 
@@ -322,7 +338,7 @@ function filterControlsByScope(controls: OrgControl[], scopeFilter: ScopeFilter)
       (control) =>
         control.scopeStatus !== "out_of_scope" &&
         control.scopeStatus !== "not_applicable" &&
-        ["fail", "manual_review", "unknown", null].includes(control.status),
+        ["fail", "manual_review", "warning", "unknown", null].includes(control.status),
     );
   }
 
@@ -344,7 +360,7 @@ export default async function ControlsPage({
 }) {
   const requestLocale = normalizeLocale(await getLocale()) ?? "cs-CZ";
   const resolvedSearchParams = searchParams ? await searchParams : {};
-  const { controls, mode, organisationLocale, pohodaRecommended, pohodaCompletionPct, heliosRecommended, heliosCompletionPct, moneyS3Recommended, moneyS3CompletionPct } = await loadControlsIndexData();
+  const { controls, mode, organisationLocale, pohodaRecommended, pohodaCompletionPct, heliosRecommended, heliosCompletionPct, moneyS3Recommended, moneyS3CompletionPct, abraFlexiRecommended, abraFlexiCompletionPct } = await loadControlsIndexData();
   const locale = normalizeLocale(organisationLocale) ?? requestLocale;
   const messages = getMessagesForLocale(locale);
   const copy = messages.controlsPage;
@@ -479,6 +495,28 @@ export default async function ControlsPage({
             {moneyS3CompletionPct !== null ? (
               <p className="mt-1.5 text-xs font-medium text-primary">
                 {Math.round(moneyS3CompletionPct * 100)}% dokončeno
+              </p>
+            ) : null}
+          </div>
+          <ArrowRight className="mt-0.5 h-4 w-4 shrink-0 text-primary" aria-hidden="true" />
+        </Link>
+      ) : null}
+
+      {viewMode === "focus" && abraFlexiRecommended ? (
+        <Link
+          href={getLocalizedAppHref("/workspaces/abra-flexi", requestLocale)}
+          className="flex items-start gap-4 rounded-lg border border-primary/24 bg-primary/4 p-4 transition-colors hover:bg-primary/8"
+        >
+          <BookCheck className="mt-0.5 h-5 w-5 shrink-0 text-primary" aria-hidden="true" />
+          <div className="flex-1">
+            <p className="text-sm font-medium">ABRA Flexi — compliance workspace</p>
+            <p className="mt-0.5 text-xs text-foreground/60">
+              Projděte kontrolní vrstvy pro ABRA Flexi: infrastruktura, přístupy, zálohy a REST API.
+              Dokládejte důkazy a sledujte postup shody.
+            </p>
+            {abraFlexiCompletionPct !== null ? (
+              <p className="mt-1.5 text-xs font-medium text-primary">
+                {Math.round(abraFlexiCompletionPct * 100)}% dokončeno
               </p>
             ) : null}
           </div>

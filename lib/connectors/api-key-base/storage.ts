@@ -2,6 +2,7 @@ import { and, eq } from "drizzle-orm";
 import { decryptSecret, encryptSecret } from "@/lib/crypto";
 import { getDb } from "@/lib/db";
 import { integrations } from "@/lib/db/schema";
+import { normalizeAbraFlexiBaseUrl } from "@/lib/connectors/abra-flexi/url";
 import type {
   ConnectorCredentialInput,
   ConnectorPlatform,
@@ -25,6 +26,11 @@ function getServiceName(config: IntegrationConfig) {
   return typeof value === "string" && value.trim() ? value : null;
 }
 
+function getStringConfig(config: IntegrationConfig, key: string) {
+  const value = config[key];
+  return typeof value === "string" && value.trim() ? value : null;
+}
+
 export function encryptedValuesForCredential(
   credential: ConnectorCredentialInput,
   clerkOrgId: string,
@@ -35,6 +41,21 @@ export function encryptedValuesForCredential(
       config: {
         credentialType: "api_key",
         tokenType: "api_key",
+      },
+      refreshTokenEnc: null,
+      tokenExpiresAt: null,
+    };
+  }
+
+  if (credential.platform === "abra-flexi") {
+    return {
+      accessTokenEnc: encryptSecret(clean(credential.password), clerkOrgId),
+      config: {
+        baseUrl: normalizeAbraFlexiBaseUrl(credential.baseUrl),
+        companyName: clean(credential.companyName),
+        credentialType: "abra_flexi_basic",
+        tokenType: "basic_auth",
+        usernameEnc: encryptSecret(clean(credential.username), clerkOrgId),
       },
       refreshTokenEnc: null,
       tokenExpiresAt: null,
@@ -130,6 +151,25 @@ export async function getStoredConnectorCredential(input: {
   }
 
   const config = (row.config ?? {}) as IntegrationConfig;
+
+  if (input.platform === "abra-flexi") {
+    const usernameEnc = getStringConfig(config, "usernameEnc");
+    const baseUrl = getStringConfig(config, "baseUrl");
+    const companyName = getStringConfig(config, "companyName");
+
+    if (!usernameEnc || !baseUrl || !companyName) {
+      return null;
+    }
+
+    return {
+      baseUrl,
+      companyName,
+      password: decryptSecret(row.accessTokenEnc, input.clerkOrgId),
+      platform: "abra-flexi",
+      username: decryptSecret(usernameEnc, input.clerkOrgId),
+    };
+  }
+
   const consumerKeyEnc = getConsumerKeyEnc(config);
 
   if (!row.refreshTokenEnc || !consumerKeyEnc) {

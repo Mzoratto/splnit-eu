@@ -23,7 +23,9 @@ export default defineConfig({
           command: `npm run dev -- --hostname 127.0.0.1 -p ${port}`,
           env: {
             ENABLE_LOCAL_DEMO_DATA: "true",
+            ENABLE_TEST_ROUTES: "true",
             NEXT_PUBLIC_ENABLE_TEST_ROUTES: "true",
+            TEST_BYPASS_PLAN_GATE: "true",
           },
           reuseExistingServer: false,
           timeout: 120_000,

@@ -6,7 +6,11 @@ import {
   type SubscriptionPlan,
   type SubscriptionStatus,
 } from "@/lib/db/schema";
-import { hasPlanAccess, type BillablePlanKey } from "@/lib/stripe/plans";
+import {
+  hasPlanAccess,
+  planGateBypassIsEnabled,
+  type BillablePlanKey,
+} from "@/lib/stripe/plans";
 
 export type Subscription = typeof subscriptions.$inferSelect;
 
@@ -59,6 +63,10 @@ export async function orgHasPlan(
   clerkOrgId: string,
   plan: BillablePlanKey,
 ): Promise<boolean> {
+  if (planGateBypassIsEnabled()) {
+    return true;
+  }
+
   const subscription = await getSubscriptionForOrg(clerkOrgId);
 
   return Boolean(
@@ -69,6 +77,10 @@ export async function orgHasPlan(
 }
 
 export async function orgIsSubscribed(clerkOrgId: string): Promise<boolean> {
+  if (planGateBypassIsEnabled()) {
+    return true;
+  }
+
   const subscription = await getSubscriptionForOrg(clerkOrgId);
 
   return Boolean(subscription && isActiveSubscriptionStatus(subscription.status));
@@ -107,6 +119,14 @@ export function billingGracePeriodIsActive(now = new Date()) {
 export async function requireActiveSubscription(
   clerkOrgId: string,
 ): Promise<SubscriptionRequirementResult> {
+  if (planGateBypassIsEnabled()) {
+    return {
+      grandfathered: true,
+      plan: "agency",
+      subscribed: true,
+    };
+  }
+
   const subscription = await getSubscriptionForOrg(clerkOrgId);
 
   if (subscription && isActiveSubscriptionStatus(subscription.status)) {

@@ -49,12 +49,14 @@ async function collectWorkspaceReferences(): Promise<Set<string>> {
     { pohodaWorkspace },
     { moneyS3Workspace },
     { heliosWorkspace },
+    { abraFlexiWorkspace },
     { hetznerWorkspace },
     { ovhcloudWorkspace },
   ] = await Promise.all([
     import("@/lib/workspaces/pohoda"),
     import("@/lib/workspaces/money-s3"),
     import("@/lib/workspaces/helios"),
+    import("@/lib/workspaces/abra-flexi"),
     import("@/lib/workspaces/hetzner"),
     import("@/lib/workspaces/ovhcloud"),
   ]);
@@ -64,6 +66,7 @@ async function collectWorkspaceReferences(): Promise<Set<string>> {
       pohodaWorkspace,
       moneyS3Workspace,
       heliosWorkspace,
+      abraFlexiWorkspace,
       hetznerWorkspace,
       ovhcloudWorkspace,
     ].flatMap((workspace) => workspaceReferenceList(workspace)),

@@ -13,6 +13,7 @@ import {
 import { FRAMEWORK_LIBRARY } from "../lib/frameworks/registry";
 import { ISO27001_ANNEX_A_MAPPINGS } from "../lib/frameworks/iso27001-annex-a";
 import { AWS_TEST_DEFINITIONS } from "../lib/integrations/aws/test-definitions";
+import { ABRA_FLEXI_TEST_DEFINITIONS } from "../lib/integrations/abra-flexi/test-definitions";
 import { GITHUB_TEST_DEFINITIONS } from "../lib/integrations/github/test-definitions";
 import { HETZNER_TEST_DEFINITIONS } from "../lib/integrations/hetzner/test-definitions";
 import { MICROSOFT365_TEST_DEFINITIONS } from "../lib/integrations/microsoft365/test-definitions";
@@ -338,6 +339,10 @@ async function seedIntegrationTests(controlIds: Map<string, string>) {
     ...AWS_TEST_DEFINITIONS.map((definition) => ({
       ...definition,
       integrationType: "aws",
+    })),
+    ...ABRA_FLEXI_TEST_DEFINITIONS.map((definition) => ({
+      ...definition,
+      integrationType: "abra-flexi",
     })),
     ...HETZNER_TEST_DEFINITIONS.map((definition) => ({
       ...definition,

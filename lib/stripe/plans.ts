@@ -67,10 +67,32 @@ export function normalizePlanKey(plan: string | null | undefined): PlanKey {
   return LEGACY_PLAN_ALIASES[plan] ?? "free";
 }
 
+export function planGateBypassIsEnabled() {
+  if (process.env.TEST_BYPASS_PLAN_GATE !== "true") {
+    return false;
+  }
+
+  // This flag is for CI/Playwright and smoke execution only. Do not allow it
+  // to weaken production billing gates if an environment variable is mis-set.
+  if (process.env.NODE_ENV === "production") {
+    return false;
+  }
+
+  return (
+    process.env.NODE_ENV === "test" ||
+    process.env.ENABLE_TEST_ROUTES === "true" ||
+    process.env.NEXT_PUBLIC_ENABLE_TEST_ROUTES === "true"
+  );
+}
+
 export function hasPlanAccess(
   currentPlan: string | null | undefined,
   requiredPlan: PlanKey,
 ) {
+  if (planGateBypassIsEnabled()) {
+    return true;
+  }
+
   return PLAN_ORDER[normalizePlanKey(currentPlan)] >= PLAN_ORDER[requiredPlan];
 }
 

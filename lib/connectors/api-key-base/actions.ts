@@ -7,6 +7,7 @@ import { recordActivationEvent } from "@/lib/activation/events";
 import { createAuditLog } from "@/lib/db/queries/audit-logs";
 import { disconnectIntegrationConnection } from "@/lib/db/queries/integrations";
 import { acquireIntegrationRunLock } from "@/lib/integrations/locks";
+import { normalizeAbraFlexiBaseUrl } from "@/lib/connectors/abra-flexi/url";
 import { checkConnectorCredentialHealth } from "./health";
 import { saveConnectorCredential } from "./storage";
 import type {
@@ -28,12 +29,33 @@ const ovhcloudCredentialSchema = z.object({
   serviceName: z.string().max(200).optional().nullable(),
 });
 
+const abraFlexiCredentialSchema = z.object({
+  baseUrl: z
+    .string()
+    .trim()
+    .min(1)
+    .max(2048)
+    .refine((value) => {
+      try {
+        normalizeAbraFlexiBaseUrl(value);
+        return true;
+      } catch {
+        return false;
+      }
+    }, "ABRA Flexi URL must use http or https."),
+  companyName: z.string().trim().min(1).max(200),
+  password: z.string().min(1).max(4096),
+  platform: z.literal("abra-flexi"),
+  username: z.string().trim().min(1).max(256),
+});
+
 const connectorCredentialSchema = z.discriminatedUnion("platform", [
+  abraFlexiCredentialSchema,
   hetznerCredentialSchema,
   ovhcloudCredentialSchema,
 ]);
 
-const platformSchema = z.enum(["hetzner", "ovhcloud"]);
+const platformSchema = z.enum(["hetzner", "ovhcloud", "abra-flexi"]);
 
 function requireActiveOrganisation(session: Awaited<ReturnType<typeof auth>>) {
   if (!session.userId || !session.orgId) {
@@ -51,6 +73,7 @@ function revalidateConnectorPaths(platform: ConnectorPlatform) {
   revalidatePath("/controls");
   revalidatePath("/integrations");
   revalidatePath(`/integrations/${platform}`);
+  revalidatePath(`/workspaces/${platform}`);
   revalidatePath("/settings/audit-log");
 }
 

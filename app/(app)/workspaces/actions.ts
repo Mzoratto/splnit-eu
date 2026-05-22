@@ -125,6 +125,7 @@ export async function createClientControlCommentAction(input: {
   revalidatePath("/workspaces/pohoda");
   revalidatePath("/workspaces/money-s3");
   revalidatePath("/workspaces/helios");
+  revalidatePath("/workspaces/abra-flexi");
   revalidatePath(`/agency/clients/${session.clerkOrgId}`);
   revalidatePath("/dashboard");
 }

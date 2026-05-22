@@ -179,6 +179,60 @@ export const profiles = pgTable(
   (table) => [unique().on(table.clerkUserId, table.clerkOrgId)],
 );
 
+export type EmployeeTrainingRole =
+  | "employee"
+  | "manager"
+  | "it_admin"
+  | "security_owner"
+  | "contractor";
+
+export type EmployeeTrainingType =
+  | "security_awareness"
+  | "role_based"
+  | "incident_response"
+  | "ai_literacy"
+  | "privacy";
+
+export const employeeTrainingRecords = pgTable(
+  "employee_training_records",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    clerkOrgId: text("clerk_org_id")
+      .notNull()
+      .references(() => organisations.clerkOrgId, { onDelete: "cascade" }),
+    employeeName: text("employee_name").notNull(),
+    employeeEmail: text("employee_email"),
+    employeeRole: text("employee_role")
+      .$type<EmployeeTrainingRole>()
+      .notNull()
+      .default("employee"),
+    trainingType: text("training_type")
+      .$type<EmployeeTrainingType>()
+      .notNull()
+      .default("security_awareness"),
+    trainingDate: date("training_date").notNull(),
+    provider: text("provider"),
+    notes: text("notes"),
+    createdBy: text("created_by").notNull(),
+    createdAt: timestamp("created_at", { withTimezone: true }).defaultNow(),
+  },
+  (table) => [
+    check(
+      "employee_training_records_employee_role_check",
+      sql`${table.employeeRole} IN ('employee', 'manager', 'it_admin', 'security_owner', 'contractor')`,
+    ),
+    check(
+      "employee_training_records_training_type_check",
+      sql`${table.trainingType} IN ('security_awareness', 'role_based', 'incident_response', 'ai_literacy', 'privacy')`,
+    ),
+    index("idx_employee_training_records_org").on(table.clerkOrgId),
+    index("idx_employee_training_records_org_training_date").on(
+      table.clerkOrgId,
+      table.trainingDate,
+    ),
+  ],
+);
+
 export const frameworks = pgTable("frameworks", {
   id: uuid("id").primaryKey().defaultRandom(),
   slug: text("slug").notNull().unique(),
@@ -983,6 +1037,7 @@ export type Test = typeof tests.$inferSelect;
 export type Integration = typeof integrations.$inferSelect;
 export type IntegrationRun = typeof integrationRuns.$inferSelect;
 export type Evidence = typeof evidence.$inferSelect;
+export type EmployeeTrainingRecord = typeof employeeTrainingRecords.$inferSelect;
 export type GeneratedArtifact = typeof generatedArtifacts.$inferSelect;
 export type MappingReviewQueueItem = typeof mappingReviewQueue.$inferSelect;
 export type MappingPromotionAudit = typeof mappingPromotionAudit.$inferSelect;

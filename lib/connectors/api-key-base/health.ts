@@ -51,6 +51,11 @@ async function getConnectorHealthProbe(platform: ConnectorPlatform) {
     return checks.ovhcloudHealthProbe;
   }
 
+  if (platform === "abra-flexi") {
+    const checks = await import("@/lib/connectors/abra-flexi/checks");
+    return checks.abraFlexiHealthProbe;
+  }
+
   return null;
 }
 

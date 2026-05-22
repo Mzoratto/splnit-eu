@@ -850,6 +850,186 @@ const BASE_CONTROL_LIBRARY: ControlSeed[] = [
     ],
   },
   {
+    key: "abra-flexi-infra-deployment-secured",
+    titleCs: "ABRA Flexi nasazení je zdokumentované a chráněné",
+    titleEn: "ABRA Flexi deployment is documented and protected",
+    descriptionCs:
+      "Organizace eviduje typ nasazení ABRA Flexi, odpovědnost za server a základní bezpečnostní opatření.",
+    category: "asset_management",
+    testType: "manual",
+    requiresEvidence: true,
+    isAutomated: false,
+    frameworkMappings: [
+      { frameworkSlug: "nis2", articleRef: "Article 21(2)(h)", level: "mandatory" },
+      { frameworkSlug: "iso27001", articleRef: "A.8.1.1", level: "recommended" },
+    ],
+  },
+  {
+    key: "abra-flexi-infra-database-protected",
+    titleCs: "Databáze ABRA Flexi je chráněná v klidu",
+    titleEn: "ABRA Flexi database is protected at rest",
+    descriptionCs:
+      "Databáze nebo server ABRA Flexi používá šifrování disku, řízený přístup a zdokumentovanou správu záplat.",
+    category: "data_protection",
+    testType: "manual",
+    requiresEvidence: true,
+    isAutomated: false,
+    frameworkMappings: [
+      { frameworkSlug: "nis2", articleRef: "Article 21(2)(h)", level: "mandatory" },
+      { frameworkSlug: "gdpr", articleRef: "Article 32(1)(a)", level: "mandatory" },
+    ],
+  },
+  {
+    key: "abra-flexi-infra-network-restricted",
+    titleCs: "Přístup k ABRA Flexi je síťově omezený",
+    titleEn: "ABRA Flexi access is network-restricted",
+    descriptionCs:
+      "Server nebo cloudová instance ABRA Flexi není vystavena bez omezení a přístup je řízen přes HTTPS, VPN nebo firewall pravidla.",
+    category: "asset_management",
+    testType: "manual",
+    requiresEvidence: true,
+    isAutomated: false,
+    frameworkMappings: [
+      { frameworkSlug: "nis2", articleRef: "Article 21(2)(h)", level: "mandatory" },
+      { frameworkSlug: "iso27001", articleRef: "A.13.1.1", level: "recommended" },
+    ],
+  },
+  {
+    key: "abra-flexi-iam-user-accounts",
+    titleCs: "ABRA Flexi používá individuální uživatelské účty",
+    titleEn: "ABRA Flexi uses individual user accounts",
+    descriptionCs:
+      "REST API dokáže načíst evidenci uživatelů a organizace dokládá, že aktivní pracovníci nepoužívají sdílené účty.",
+    category: "access_control",
+    testType: "hybrid",
+    requiresEvidence: true,
+    isAutomated: true,
+    frameworkMappings: [
+      { frameworkSlug: "nis2", articleRef: "Article 21(2)(i)", level: "mandatory" },
+      { frameworkSlug: "iso27001", articleRef: "A.9.2.1", level: "recommended" },
+    ],
+  },
+  {
+    key: "abra-flexi-iam-least-privilege",
+    titleCs: "Role ABRA Flexi dodržují nejmenší oprávnění",
+    titleEn: "ABRA Flexi roles follow least privilege",
+    descriptionCs:
+      "Role v ABRA Flexi jsou přiřazené podle odpovědnosti a přístup k účetním, mzdovým a skladovým agendám je oddělený.",
+    category: "access_control",
+    testType: "manual",
+    requiresEvidence: true,
+    isAutomated: false,
+    frameworkMappings: [
+      { frameworkSlug: "nis2", articleRef: "Article 21(2)(i)", level: "mandatory" },
+      { frameworkSlug: "iso27001", articleRef: "A.9.2.3", level: "recommended" },
+    ],
+  },
+  {
+    key: "abra-flexi-iam-offboarding",
+    titleCs: "Odchody pracovníků ruší přístup do ABRA Flexi",
+    titleEn: "Employee offboarding revokes ABRA Flexi access",
+    descriptionCs:
+      "Při ukončení spolupráce se deaktivuje účet ABRA Flexi, API přístupy a související identitní účty.",
+    category: "access_control",
+    testType: "manual",
+    requiresEvidence: true,
+    isAutomated: false,
+    frameworkMappings: [
+      { frameworkSlug: "nis2", articleRef: "Article 21(2)(i)", level: "mandatory" },
+      { frameworkSlug: "iso27001", articleRef: "A.9.2.6", level: "recommended" },
+    ],
+  },
+  {
+    key: "abra-flexi-backup-api",
+    titleCs: "Zálohy ABRA Flexi jsou doložené",
+    titleEn: "ABRA Flexi backups are evidenced",
+    descriptionCs:
+      "Backup endpoint nebo ruční důkaz potvrzuje existenci zálohování ABRA Flexi a organizace dokládá rozsah záloh.",
+    category: "business_continuity",
+    testType: "hybrid",
+    requiresEvidence: true,
+    isAutomated: true,
+    frameworkMappings: [
+      { frameworkSlug: "nis2", articleRef: "Article 21(2)(c)", level: "mandatory" },
+      { frameworkSlug: "iso27001", articleRef: "A.12.3.1", level: "recommended" },
+    ],
+  },
+  {
+    key: "abra-flexi-backup-schedule",
+    titleCs: "ABRA Flexi má pravidelný plán záloh",
+    titleEn: "ABRA Flexi has a regular backup schedule",
+    descriptionCs:
+      "Organizace dokládá frekvenci, odpovědnou osobu, uložení a retenci záloh ABRA Flexi.",
+    category: "business_continuity",
+    testType: "manual",
+    requiresEvidence: true,
+    isAutomated: false,
+    frameworkMappings: [
+      { frameworkSlug: "nis2", articleRef: "Article 21(2)(c)", level: "mandatory" },
+      { frameworkSlug: "iso27001", articleRef: "A.12.3.1", level: "recommended" },
+    ],
+  },
+  {
+    key: "abra-flexi-backup-restore-test",
+    titleCs: "Obnova ABRA Flexi je pravidelně testovaná",
+    titleEn: "ABRA Flexi restoration is tested regularly",
+    descriptionCs:
+      "V posledních 12 měsících proběhl dokumentovaný test obnovy ABRA Flexi do izolovaného prostředí.",
+    category: "business_continuity",
+    testType: "manual",
+    requiresEvidence: true,
+    isAutomated: false,
+    frameworkMappings: [
+      { frameworkSlug: "nis2", articleRef: "Article 21(2)(c)", level: "mandatory" },
+      { frameworkSlug: "iso27001", articleRef: "A.17.1.3", level: "recommended" },
+    ],
+  },
+  {
+    key: "abra-flexi-api-https",
+    titleCs: "ABRA Flexi API používá bezpečný transport",
+    titleEn: "ABRA Flexi API uses secure transport",
+    descriptionCs:
+      "Základní URL konektoru používá HTTPS, nebo je HTTP přístup kompenzován VPN a lokálním omezením.",
+    category: "data_protection",
+    testType: "hybrid",
+    requiresEvidence: true,
+    isAutomated: true,
+    frameworkMappings: [
+      { frameworkSlug: "nis2", articleRef: "Article 21(2)(g)", level: "mandatory" },
+      { frameworkSlug: "gdpr", articleRef: "Article 32(1)(a)", level: "mandatory" },
+    ],
+  },
+  {
+    key: "abra-flexi-api-config-readable",
+    titleCs: "REST API uživatel ABRA Flexi má čitelné minimální oprávnění",
+    titleEn: "ABRA Flexi REST API user has readable minimum access",
+    descriptionCs:
+      "REST API uživatel dokáže načíst základní konfigurační evidenci bez zápisových oprávnění navíc.",
+    category: "access_control",
+    testType: "hybrid",
+    requiresEvidence: true,
+    isAutomated: true,
+    frameworkMappings: [
+      { frameworkSlug: "nis2", articleRef: "Article 21(2)(i)", level: "mandatory" },
+      { frameworkSlug: "iso27001", articleRef: "A.9.4.1", level: "recommended" },
+    ],
+  },
+  {
+    key: "abra-flexi-api-credential-rotation",
+    titleCs: "Přihlašovací údaje ABRA Flexi API se rotují",
+    titleEn: "ABRA Flexi API credentials are rotated",
+    descriptionCs:
+      "Přihlašovací údaje REST API uživatele mají vlastníka, pravidlo rotace a postup okamžité výměny při odchodu odpovědné osoby.",
+    category: "access_control",
+    testType: "manual",
+    requiresEvidence: true,
+    isAutomated: false,
+    frameworkMappings: [
+      { frameworkSlug: "nis2", articleRef: "Article 21(2)(i)", level: "mandatory" },
+      { frameworkSlug: "iso27001", articleRef: "A.9.2.4", level: "recommended" },
+    ],
+  },
+  {
     key: "ctrl_cloudtrail_enabled",
     titleCs: "CloudTrail nebo ekvivalentní auditní log je zapnutý",
     titleEn: "CloudTrail or equivalent audit logging is enabled",

@@ -13,6 +13,7 @@
     "frameworks": "Frameworky",
     "controls": "Kontroly",
     "evidence": "Evidence",
+    "training": "Školení",
     "integrations": "Integrace",
     "policies": "Politiky",
     "vendors": "Dodavatelé",
@@ -609,6 +610,7 @@
       "microsoft365": "MFA, Conditional Access, hosté, privilegované role a sensitivity labels.",
       "github": "Branch protection, secret scanning, 2FA enforcement a dependency alerts.",
       "aws": "CloudTrail, S3 šifrování, IAM MFA, root MFA a VPC Flow Logs.",
+      "abra-flexi": "REST API připojení pro ABRA Flexi: uživatelé, transport, konfigurace a ruční fallback pro zálohy.",
       "google_workspace": "Protokoly auditu Workspace, sdílení na Disku a administrátorské účty."
     },
     "index": {
@@ -1087,6 +1089,28 @@
       "save": "Přidat komentář"
     }
   },
+  "abraFlexiWorkspace": {
+    "eyebrow": "Workspace",
+    "title": "ABRA Flexi",
+    "subtitle": "Pracovní prostor pro ABRA Flexi: infrastruktura, přístupy, zálohy a REST API s mapováním na ZoKB a NIS2.",
+    "back": "Zpět na přehled kontrol",
+    "demoMode": "Demo — přihlaste se s organizací pro uložení skutečného připojení.",
+    "connection": {
+      "title": "Připojit ABRA Flexi",
+      "body": "Zadejte URL instance, identifikátor firmy a samostatného REST API uživatele. Heslo a uživatelské jméno se ukládají šifrovaně.",
+      "baseUrl": "URL serveru",
+      "companyName": "Identifikátor firmy",
+      "username": "Uživatel REST API",
+      "password": "Heslo",
+      "connect": "Připojit ABRA Flexi",
+      "errors": {
+        "validation": "Zkontrolujte URL, identifikátor firmy a přihlašovací údaje.",
+        "invalid_key": "ABRA Flexi odmítla přihlašovací údaje.",
+        "insufficient_scope": "REST API uživatel nemá potřebná čtecí oprávnění.",
+        "unreachable": "ABRA Flexi se nepodařilo kontaktovat."
+      }
+    }
+  },
   "teamPage": {
     "eyebrow": "Tým",
     "title": "Přístupy a školení",
@@ -1107,6 +1131,64 @@
         "description": "Evidence bezpečnostního školení a AI gramotnosti pro audit."
       }
     }
+  },
+  "trainingPage": {
+    "eyebrow": "Školení",
+    "title": "Evidence školení podle § 5",
+    "subtitle": "Org-scoped evidence bezpečnostního, rolového, incidentního, privacy a AI školení pro kontrolu ctrl_security_training_annual.",
+    "demoMode": "Demo — přihlaste se s organizací pro ukládání skutečných záznamů.",
+    "noDate": "bez data",
+    "emptyValue": "n/a",
+    "metrics": {
+      "total": "Záznamy",
+      "current": "Aktuální",
+      "expiringSoon": "Končí do 2 měsíců",
+      "expired": "Po expiraci"
+    },
+    "form": {
+      "title": "Přidat záznam",
+      "employeeName": "Jméno zaměstnance",
+      "employeeEmail": "E-mail",
+      "employeeRole": "Role",
+      "trainingType": "Typ školení",
+      "trainingDate": "Datum školení",
+      "provider": "Poskytovatel",
+      "notes": "Poznámky",
+      "create": "Uložit školení"
+    },
+    "roles": {
+      "employee": "Zaměstnanec",
+      "manager": "Manažer",
+      "it_admin": "IT administrátor",
+      "security_owner": "Odpovědná osoba KB",
+      "contractor": "Dodavatel"
+    },
+    "types": {
+      "security_awareness": "Bezpečnostní povědomí",
+      "role_based": "Rolové školení",
+      "incident_response": "Reakce na incident",
+      "ai_literacy": "AI gramotnost",
+      "privacy": "Ochrana osobních údajů"
+    },
+    "statuses": {
+      "current": "Aktuální",
+      "expiring_soon": "Brzy končí",
+      "expired": "Po expiraci"
+    },
+    "table": {
+      "title": "Záznamy školení",
+      "employee": "Zaměstnanec",
+      "role": "Role",
+      "type": "Typ",
+      "date": "Datum",
+      "provider": "Poskytovatel",
+      "status": "Stav",
+      "actions": "Akce",
+      "delete": "Smazat",
+      "confirmDelete": "Opravdu smazat tento záznam školení?",
+      "empty": "Zatím nejsou uložené žádné záznamy školení."
+    },
+    "coverageNote": "Pokrytí vůči celkovému počtu zaměstnanců zatím není počítané, protože profil organizace ukládá velikost týmu jako pásmo, ne přesné číslo."
   },
   "vendorsPage": {
     "noDate": "nenaplánováno",
@@ -1597,7 +1679,7 @@
     "docsCta": "Zobrazit dokumentaci",
     "steps": {
       "connectTitle": "Připojte nástroje",
-      "connectBody": "Propojte Microsoft 365, GitHub, AWS, Hetzner Cloud nebo OVHcloud. Pro české SME jsou k dispozici specializované pracovní prostory pro Pohodu, Money S3 a Helios.",
+      "connectBody": "Propojte Microsoft 365, GitHub, AWS, Hetzner Cloud nebo OVHcloud. Pro české SME jsou k dispozici specializované pracovní prostory pro Pohodu, Money S3, Helios a ABRA Flexi.",
       "testsTitle": "Kontroly mohou běžet nad propojenými systémy",
       "testsBody": "Nakonfigurované kontroly sledují připojené systémy a ukládají výsledky jako interní evidenci ke kontrole.",
       "resultsTitle": "Dostanete výsledky",
@@ -2018,7 +2100,7 @@
         },
         "accountingPlatform": {
           "label": "Jaký účetní software organizace používá?",
-          "helpText": "Výběr Pohoda spustí doporučení pro pracovní prostor a sadu NIS2 kontrol specifických pro Pohoda."
+          "helpText": "Výběr podporovaného ERP spustí doporučení pro pracovní prostor a sadu NIS2 kontrol specifických pro daný systém."
         }
       },
       "options": {
@@ -2058,6 +2140,7 @@
         },
         "accountingPlatform": {
           "pohoda": "Pohoda (Stormware)",
+          "abra_flexi": "ABRA Flexi",
           "money_s3": "Money S3 / S4",
           "helios": "Helios",
           "other": "Jiný účetní software",

@@ -13,6 +13,7 @@
     "frameworks": "Frameworks",
     "controls": "Controls",
     "evidence": "Evidence",
+    "training": "Training",
     "integrations": "Integrations",
     "policies": "Policies",
     "vendors": "Vendors",
@@ -609,6 +610,7 @@
       "microsoft365": "MFA, Conditional Access, guests, privileged roles, and sensitivity labels.",
       "github": "Branch protection, secret scanning, 2FA enforcement, and dependency alerts.",
       "aws": "CloudTrail, S3 encryption, IAM MFA, root MFA, and VPC Flow Logs.",
+      "abra-flexi": "REST API connection for ABRA Flexi users, transport, configuration, and manual backup fallback.",
       "google_workspace": "Workspace audit logs, Drive sharing, and administrator accounts."
     },
     "index": {
@@ -1087,6 +1089,28 @@
       "save": "Add comment"
     }
   },
+  "abraFlexiWorkspace": {
+    "eyebrow": "Workspace",
+    "title": "ABRA Flexi",
+    "subtitle": "ABRA Flexi workspace for infrastructure, access, backups, and REST API controls mapped to ZoKB and NIS2.",
+    "back": "Back to controls overview",
+    "demoMode": "Demo — sign in with an organisation to save a real connection.",
+    "connection": {
+      "title": "Connect ABRA Flexi",
+      "body": "Enter the instance URL, company identifier, and a dedicated REST API user. Password and username are stored encrypted.",
+      "baseUrl": "Server URL",
+      "companyName": "Company identifier",
+      "username": "REST API user",
+      "password": "Password",
+      "connect": "Connect ABRA Flexi",
+      "errors": {
+        "validation": "Check the URL, company identifier, and credentials.",
+        "invalid_key": "ABRA Flexi rejected the credentials.",
+        "insufficient_scope": "The REST API user lacks the required read permissions.",
+        "unreachable": "ABRA Flexi could not be reached."
+      }
+    }
+  },
   "teamPage": {
     "eyebrow": "Team",
     "title": "Access and training",
@@ -1107,6 +1131,64 @@
         "description": "Security and AI literacy attendance evidence for auditors."
       }
     }
+  },
+  "trainingPage": {
+    "eyebrow": "Training",
+    "title": "§5 training tracker",
+    "subtitle": "Organisation-scoped evidence for security, role-based, incident, privacy, and AI training tied to ctrl_security_training_annual.",
+    "demoMode": "Demo — sign in with an organisation to save real records.",
+    "noDate": "no date",
+    "emptyValue": "n/a",
+    "metrics": {
+      "total": "Records",
+      "current": "Current",
+      "expiringSoon": "Expiring within 2 months",
+      "expired": "Expired"
+    },
+    "form": {
+      "title": "Add record",
+      "employeeName": "Employee name",
+      "employeeEmail": "Email",
+      "employeeRole": "Role",
+      "trainingType": "Training type",
+      "trainingDate": "Training date",
+      "provider": "Provider",
+      "notes": "Notes",
+      "create": "Save training"
+    },
+    "roles": {
+      "employee": "Employee",
+      "manager": "Manager",
+      "it_admin": "IT administrator",
+      "security_owner": "Security owner",
+      "contractor": "Contractor"
+    },
+    "types": {
+      "security_awareness": "Security awareness",
+      "role_based": "Role-based training",
+      "incident_response": "Incident response",
+      "ai_literacy": "AI literacy",
+      "privacy": "Privacy"
+    },
+    "statuses": {
+      "current": "Current",
+      "expiring_soon": "Expiring soon",
+      "expired": "Expired"
+    },
+    "table": {
+      "title": "Training records",
+      "employee": "Employee",
+      "role": "Role",
+      "type": "Type",
+      "date": "Date",
+      "provider": "Provider",
+      "status": "Status",
+      "actions": "Actions",
+      "delete": "Delete",
+      "confirmDelete": "Delete this training record?",
+      "empty": "No training records have been saved yet."
+    },
+    "coverageNote": "Coverage against the total employee count is not calculated yet because the organisation profile stores team size as a band, not an exact number."
   },
   "vendorsPage": {
     "noDate": "not scheduled",
@@ -1597,7 +1679,7 @@
     "docsCta": "View documentation",
     "steps": {
       "connectTitle": "Connect tools",
-      "connectBody": "Connect Microsoft 365, GitHub, AWS, Hetzner Cloud, or OVHcloud. Specialized workspaces for Pohoda, Money S3, and Helios are available for Czech SMEs.",
+      "connectBody": "Connect Microsoft 365, GitHub, AWS, Hetzner Cloud, or OVHcloud. Specialized workspaces for Pohoda, Money S3, Helios, and ABRA Flexi are available for Czech SMEs.",
       "testsTitle": "Checks can run on connected systems",
       "testsBody": "Configured checks monitor connected systems and save results as internal evidence for review.",
       "resultsTitle": "Get results",
@@ -2018,7 +2100,7 @@
         },
         "accountingPlatform": {
           "label": "Which accounting software does the organisation use?",
-          "helpText": "Selecting Pohoda enables a Pohoda-specific workspace recommendation and NIS2 control set."
+          "helpText": "Selecting a supported ERP enables a workspace recommendation and NIS2 control set for that system."
         }
       },
       "options": {
@@ -2058,6 +2140,7 @@
         },
         "accountingPlatform": {
           "pohoda": "Pohoda (Stormware)",
+          "abra_flexi": "ABRA Flexi",
           "money_s3": "Money S3 / S4",
           "helios": "Helios",
           "other": "Other accounting software",
