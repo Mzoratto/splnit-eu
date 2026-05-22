@@ -140,7 +140,7 @@ export default async function HomePage() {
                   </Link>
                 </div>
                 <Link
-                  href={getLocalizedMarketingPath("/platform", locale)}
+                  href="/demo"
                   className="flex items-center gap-2 rounded-full border border-zinc-200 bg-white px-7 py-3 font-medium text-zinc-800 shadow-sm transition-all hover:scale-[1.02] hover:bg-zinc-50 hover:shadow-md"
                 >
                   <Icon

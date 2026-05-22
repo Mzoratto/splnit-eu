@@ -15,6 +15,7 @@ import { normalizeLocale } from "@/i18n/routing";
 
 const links = [
   { href: "/platform", labelKey: "platform" },
+  { href: "/demo", labelKey: "demo" },
   { href: "/predpisy", labelKey: "regulations" },
   { href: "/blog", labelKey: "blog" },
   { href: "/early-access", labelKey: "earlyAccess" },
@@ -60,7 +61,10 @@ export function Nav() {
 
         <div className="hidden items-center gap-1 md:flex">
           {links.map((link) => {
-            const href = getLocalizedMarketingPath(link.href, locale);
+            const href =
+              link.href === "/demo"
+                ? "/demo"
+                : getLocalizedMarketingPath(link.href, locale);
             const active =
               internalPathname === link.href ||
               internalPathname.startsWith(`${link.href}/`);
@@ -128,7 +132,10 @@ export function Nav() {
         <div className="border-b border-zinc-200/70 bg-stone-50/95 px-5 py-4 shadow-lg shadow-zinc-200/40 backdrop-blur md:hidden">
           <div className="mx-auto grid max-w-7xl gap-1">
             {links.map((link) => {
-              const href = getLocalizedMarketingPath(link.href, locale);
+              const href =
+                link.href === "/demo"
+                  ? "/demo"
+                  : getLocalizedMarketingPath(link.href, locale);
               const active =
                 internalPathname === link.href ||
                 internalPathname.startsWith(`${link.href}/`);
