@@ -58,15 +58,16 @@
   "billingSettings": {
     "eyebrow": "Fatturazione",
     "title": "Abbonamento",
-    "subtitle": "Piano attuale e stato cliente Stripe per questa organizzazione Clerk.",
-    "customerPortal": "Portale cliente",
+    "subtitle": "Gestisci l'abbonamento per questa organizzazione. Lo Stripe Price ID determina valuta e importo effettivi.",
+    "customerPortal": "Gestisci abbonamento",
     "currentPlan": "Piano attuale",
-    "frameworks": "Framework",
-    "integrations": "Integrazioni",
-    "users": "Utenti",
+    "status": "Stato",
+    "nextBillingDate": "Periodo corrente fino al",
+    "clientUsage": "Organizzazioni cliente",
+    "clients": "{used} / {limit} clienti",
     "stripeConnection": "Connessione Stripe",
-    "stripeConfigured": "Le chiavi di fatturazione sono configurate per checkout e portale.",
-    "stripeMissing": "Le chiavi Stripe non sono ancora configurate in questo ambiente.",
+    "stripeConfigured": "Le chiavi di fatturazione e i Price ID sono configurati.",
+    "stripeMissing": "Le chiavi Stripe o i Price ID non sono ancora configurati in questo ambiente.",
     "customer": "Cliente",
     "subscription": "Abbonamento",
     "notCreated": "Non creato",
@@ -74,34 +75,41 @@
     "stripeSynced": "Sincronizzato con Stripe",
     "local": "Locale",
     "monthSuffix": "/mese",
-    "annualMonthly": "{price}/mese con fatturazione annuale",
-    "limitFrameworks": "Framework: {count}",
-    "limitIntegrations": "Integrazioni: {count}",
-    "limitUsers": "Utenti: {count}",
-    "currentPlanButton": "Piano attuale",
-    "monthlyCheckout": "Checkout mensile",
-    "annualCheckout": "Checkout annuale",
+    "success": "L'abbonamento è stato attivato. Lo stato Stripe può richiedere qualche secondo per sincronizzarsi.",
+    "canceled": "Il checkout è stato annullato. Puoi avviarlo di nuovo.",
+    "agencyRequired": "Il portale consulente richiede il piano Agency.",
+    "portalMissing": "Il portale cliente sarà disponibile dopo la creazione del cliente Stripe.",
+    "choosePlan": "Scegli un piano",
+    "subscribe": "Abbonati",
     "planNames": {
       "free": "Gratis",
-      "starter": "Starter",
-      "business": "Business",
-      "consultant": "Consultant"
+      "sme": "SME",
+      "agency": "Agency"
     },
     "plans": {
-      "starter": {
-        "name": "Starter",
-        "description": "Raccolta automatizzata delle evidenze per un piccolo team compliance."
+      "sme": {
+        "name": "SME",
+        "price": "490 Kč/mese",
+        "description": "Workspace compliance completo per una organizzazione.",
+        "features": [
+          "Tutti i connettori: Microsoft 365, Hetzner Cloud e OVHcloud",
+          "Export PDF della panoramica delle misure di sicurezza",
+          "Una organizzazione"
+        ]
       },
-      "business": {
-        "name": "Business",
-        "description": "Trust Center, rischio fornitori, incidenti e revisioni accessi."
-      },
-      "consultant": {
-        "name": "Consultant",
-        "description": "Spazi di lavoro cliente illimitati e reportistica white-label."
+      "agency": {
+        "name": "Agency",
+        "price": "1 990 Kč/mese",
+        "description": "Portale consulente per gestire organizzazioni cliente.",
+        "features": [
+          "Tutto il piano SME",
+          "Portale consulente white-label",
+          "Fino a 20 organizzazioni cliente gestite",
+          "Posti consulente illimitati"
+        ]
       }
     },
-    "billingUnavailable": "Checkout e portale cliente sono disabilitati in questo ambiente finché le chiavi Stripe non sono configurate. I limiti locali del piano restano visibili per pianificare."
+    "billingUnavailable": "Checkout e portale cliente sono disabilitati in questo ambiente finché chiavi Stripe e Price ID non sono configurati."
   },
   "frameworkWizard": {
     "error": "Non è stato possibile salvare la valutazione.",
@@ -434,7 +442,7 @@
       "scoreTitle": "Punteggio compliance",
       "scoreBody": "Media dei punteggi framework e degli stati dei controlli.",
       "scorePendingBody": "Disponibile dopo intake e valutazione dei primi controlli.",
-      "pendingScore": "Pending",
+      "pendingScore": "In attesa",
       "activeFrameworks": "Framework attivi",
       "failedControls": "Controlli non superati",
       "toAssessControls": "Controlli da valutare",
@@ -922,6 +930,27 @@
     ]
   },
   "agency": {
+    "signup": {
+      "eyebrow": "Agency",
+      "headline": "Lancia il tuo portale consulente",
+      "subtitle": "Crea il profilo agenzia e continua al pagamento del piano Agency.",
+      "defaultName": "La mia agenzia",
+      "canceled": "Il checkout è stato annullato. I dati sono pronti per riprovare.",
+      "form": {
+        "name": "Nome agenzia",
+        "slug": "Slug URL",
+        "continue": "Continua al pagamento",
+        "duplicateSlug": "Questo slug è già usato da un'altra agenzia.",
+        "invalid": "Controlla nome e slug dell'agenzia.",
+        "genericError": "Non è stato possibile avviare la registrazione agenzia."
+      }
+    },
+    "signupComplete": {
+      "eyebrow": "Agency",
+      "title": "Stiamo configurando il portale",
+      "body": "In attesa della conferma di pagamento Stripe e della creazione agenzia.",
+      "timeout": "La configurazione richiede più tempo del solito. Aggiorna la pagina tra poco."
+    },
     "dashboard": {
       "eyebrow": "Agenzia",
       "title": "Clienti gestiti",
@@ -981,6 +1010,7 @@
       "eyebrow": "Agenzia",
       "title": "Impostazioni",
       "subtitle": "Gestisci branding dell'agenzia, collegamenti cliente e accessi dei consulenti.",
+      "setupSuccess": "Il tuo portale consulente è pronto.",
       "tabs": {
         "branding": "Branding",
         "clients": "Clienti",
@@ -1024,8 +1054,10 @@
       "eyebrow": "Invito agenzia",
       "title": "Collega questa organizzazione",
       "body": "{agency} ha invitato questa organizzazione a essere gestita nel portale agenzia.",
+      "consultantBody": "{agency} ti ha invitato come consulente nel portale agenzia.",
       "invalidBody": "Questo invito non è stato trovato.",
       "activeHelp": "Accettando, l'organizzazione Clerk attiva viene collegata all'agenzia. Cambia organizzazione prima, se necessario.",
+      "consultantHelp": "Accettando, il tuo account utente viene aggiunto ai consulenti dell'agenzia.",
       "accept": "Accetta invito",
       "expired": "Questo invito è scaduto.",
       "unavailable": "Questo invito non è più disponibile."
