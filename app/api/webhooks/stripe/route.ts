@@ -1,53 +1,92 @@
+import { clerkClient } from "@clerk/nextjs/server";
 import { NextResponse } from "next/server";
 import type Stripe from "stripe";
-import { updateOrganisationBilling } from "@/lib/db/queries/organisations";
+import { getOrganisationByClerkOrgId } from "@/lib/db/queries/organisations";
+import { sendSubscriptionConfirmation } from "@/lib/email/send";
 import {
-  syncClerkPlanMetadata,
+  getObjectId,
+  getPrimaryEmail,
   syncSubscriptionToOrg,
 } from "@/lib/stripe/billing";
 import { getStripe } from "@/lib/stripe/client";
-import { normalizePlanKey } from "@/lib/stripe/plans";
+import { isBillablePlanKey } from "@/lib/stripe/plans";
+import {
+  syncLegacyOrganisationBilling,
+  updateSubscriptionStatus,
+  upsertSubscription,
+} from "@/lib/stripe/subscriptions";
 
 export const dynamic = "force-dynamic";
-
-function getObjectId(value: string | { id: string } | null) {
-  if (!value) {
-    return null;
-  }
-
-  return typeof value === "string" ? value : value.id;
-}
+export const runtime = "nodejs";
 
 async function handleCheckoutSessionCompleted(session: Stripe.Checkout.Session) {
-  const clerkOrgId = session.metadata?.clerkOrgId;
-
-  if (!clerkOrgId) {
-    throw new Error(`Checkout session ${session.id} is missing clerkOrgId metadata.`);
-  }
-
-  const stripeCustomerId = getObjectId(session.customer);
   const stripeSubscriptionId = getObjectId(session.subscription);
 
-  if (stripeSubscriptionId) {
-    const subscription = await getStripe().subscriptions.retrieve(stripeSubscriptionId);
-    await syncSubscriptionToOrg(subscription);
-    return;
+  if (!stripeSubscriptionId) {
+    const clerkOrgId = session.metadata?.clerkOrgId;
+    const plan = session.metadata?.plan;
+    const stripeCustomerId = getObjectId(session.customer);
+
+    if (!clerkOrgId || !stripeCustomerId || !isBillablePlanKey(plan)) {
+      return null;
+    }
+
+    await upsertSubscription({
+      clerkOrgId,
+      plan,
+      status: "active",
+      stripeCustomerId,
+      stripeSubscriptionId: null,
+    });
+    await syncLegacyOrganisationBilling({
+      clerkOrgId,
+      plan,
+      stripeCustomerId,
+      stripeSubscriptionId: null,
+    });
+
+    return {
+      clerkOrgId,
+      currentPeriodEnd: null,
+      plan,
+      status: "active",
+      stripeCustomerId,
+      stripeSubscriptionId: null,
+    };
   }
 
-  const plan = normalizePlanKey(session.metadata?.plan);
+  const subscription = await getStripe().subscriptions.retrieve(stripeSubscriptionId);
 
-  await updateOrganisationBilling({
-    clerkOrgId,
-    plan,
-    stripeCustomerId,
-    stripeSubscriptionId: null,
-  });
+  const result = await syncSubscriptionToOrg(subscription);
+  const clerkUserId = session.metadata?.clerkUserId ?? subscription.metadata.clerkUserId;
 
-  await syncClerkPlanMetadata({
-    clerkOrgId,
-    plan,
-    stripeCustomerId,
-    stripeSubscriptionId: null,
+  if (clerkUserId && process.env.CLERK_SECRET_KEY) {
+    const clerk = await clerkClient();
+    const [user, organisation] = await Promise.all([
+      clerk.users.getUser(clerkUserId),
+      getOrganisationByClerkOrgId(result.clerkOrgId),
+    ]);
+    const email = getPrimaryEmail(user);
+
+    if (email) {
+      await sendSubscriptionConfirmation(email, {
+        orgName: organisation?.name ?? result.clerkOrgId,
+        periodEnd: result.currentPeriodEnd?.toISOString().slice(0, 10) ?? "neuvedeno",
+        plan: result.plan,
+      });
+    }
+  }
+
+  return result;
+}
+
+async function handlePaymentFailed(invoice: Stripe.Invoice) {
+  await updateSubscriptionStatus({
+    status: "past_due",
+    stripeCustomerId: getObjectId(invoice.customer),
+    stripeSubscriptionId: getObjectId(
+      (invoice as { subscription?: string | { id: string } | null }).subscription ?? null,
+    ),
   });
 }
 
@@ -70,10 +109,10 @@ export async function POST(request: Request) {
   }
 
   let event: Stripe.Event;
-  const body = await request.text();
+  const rawBody = Buffer.from(await request.arrayBuffer());
 
   try {
-    event = getStripe().webhooks.constructEvent(body, signature, webhookSecret);
+    event = getStripe().webhooks.constructEvent(rawBody, signature, webhookSecret);
   } catch {
     return NextResponse.json(
       { error: "Invalid Stripe webhook signature." },
@@ -90,6 +129,10 @@ export async function POST(request: Request) {
     case "customer.subscription.updated":
     case "customer.subscription.deleted":
       await syncSubscriptionToOrg(event.data.object);
+      break;
+
+    case "invoice.payment_failed":
+      await handlePaymentFailed(event.data.object);
       break;
   }
 

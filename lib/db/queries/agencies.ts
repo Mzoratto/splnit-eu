@@ -1,5 +1,5 @@
 import { createHash, randomBytes } from "node:crypto";
-import { and, desc, eq, inArray, or } from "drizzle-orm";
+import { and, count, desc, eq, inArray, or } from "drizzle-orm";
 import { calculateComplianceScore } from "@/lib/dashboard/score";
 import { getDb } from "@/lib/db";
 import {
@@ -7,6 +7,7 @@ import {
   agencyBranding,
   agencyClientInvites,
   agencyClientOrgs,
+  agencyConsultantInvites,
   agencyConsultants,
   controlComments,
   organisations,
@@ -98,6 +99,98 @@ export async function getAgencyForUser(userId: string): Promise<AgencyMembership
     .limit(1);
 
   return rows[0] ?? null;
+}
+
+export async function getAgencyByClerkOrgId(clerkOrgId: string) {
+  const db = getDb();
+  const rows = await db
+    .select()
+    .from(agencies)
+    .where(eq(agencies.clerkOrgId, clerkOrgId))
+    .limit(1);
+
+  return rows[0] ?? null;
+}
+
+export async function getAgencyBySlug(slug: string) {
+  const db = getDb();
+  const rows = await db
+    .select()
+    .from(agencies)
+    .where(eq(agencies.slug, slug))
+    .limit(1);
+
+  return rows[0] ?? null;
+}
+
+export async function upsertAgencyForSubscription(input: {
+  clerkOrgId: string;
+  contactEmail?: string | null;
+  name: string;
+  planClientLimit?: number;
+  slug?: string | null;
+  stripeSubscriptionId: string;
+}) {
+  const db = getDb();
+  const values = {
+    clerkOrgId: input.clerkOrgId,
+    contactEmail: input.contactEmail ?? null,
+    name: input.name,
+    plan: "agency" as const,
+    planClientLimit: input.planClientLimit ?? 20,
+    ...(input.slug !== undefined ? { slug: input.slug } : {}),
+    status: "active",
+    stripeSubscriptionId: input.stripeSubscriptionId,
+    updatedAt: new Date(),
+  };
+  const [row] = await db
+    .insert(agencies)
+    .values(values)
+    .onConflictDoUpdate({
+      target: agencies.clerkOrgId,
+      set: values,
+    })
+    .returning({ id: agencies.id });
+
+  if (!row) {
+    throw new Error("Failed to upsert agency for subscription.");
+  }
+
+  return row.id;
+}
+
+export async function updateAgencySignupDetails(input: {
+  clerkOrgId: string;
+  name: string;
+  slug: string;
+}) {
+  const db = getDb();
+  const [row] = await db
+    .update(agencies)
+    .set({
+      name: input.name,
+      slug: input.slug,
+      updatedAt: new Date(),
+    })
+    .where(eq(agencies.clerkOrgId, input.clerkOrgId))
+    .returning({ id: agencies.id });
+
+  return row?.id ?? null;
+}
+
+export async function countAgencyClients(agencyId: string) {
+  const db = getDb();
+  const [row] = await db
+    .select({ value: count() })
+    .from(agencyClientOrgs)
+    .where(
+      and(
+        eq(agencyClientOrgs.agencyId, agencyId),
+        eq(agencyClientOrgs.status, "active"),
+      ),
+    );
+
+  return row?.value ?? 0;
 }
 
 export async function requireAgencyConsultant(userId: string) {
@@ -513,6 +606,101 @@ export async function recordAgencyConsultantMembership(input: {
   }
 
   return row.id;
+}
+
+export async function createAgencyConsultantInvite(input: {
+  agencyId: string;
+  createdByUserId: string;
+  email: string;
+  expiresAt?: Date;
+  role?: "admin" | "consultant";
+}) {
+  const db = getDb();
+  const token = randomBytes(32).toString("base64url");
+  const tokenHash = hashInviteToken(token);
+  const expiresAt = input.expiresAt ?? addDays(new Date(), 7);
+  const [row] = await db
+    .insert(agencyConsultantInvites)
+    .values({
+      agencyId: input.agencyId,
+      createdByUserId: input.createdByUserId,
+      email: input.email,
+      expiresAt,
+      role: input.role ?? "consultant",
+      tokenHash,
+    })
+    .returning({
+      id: agencyConsultantInvites.id,
+      expiresAt: agencyConsultantInvites.expiresAt,
+    });
+
+  if (!row) {
+    throw new Error("Failed to create agency consultant invite.");
+  }
+
+  return {
+    expiresAt: row.expiresAt,
+    id: row.id,
+    token,
+  };
+}
+
+export async function getAgencyConsultantInviteByToken(token: string) {
+  const db = getDb();
+  const [row] = await db
+    .select({
+      agency: agencies,
+      invite: agencyConsultantInvites,
+    })
+    .from(agencyConsultantInvites)
+    .innerJoin(agencies, eq(agencyConsultantInvites.agencyId, agencies.id))
+    .where(eq(agencyConsultantInvites.tokenHash, hashInviteToken(token)))
+    .limit(1);
+
+  return row ?? null;
+}
+
+export async function consumeAgencyConsultantInvite(input: {
+  acceptedByUserId: string;
+  token: string;
+}) {
+  const db = getDb();
+  const inviteRow = await getAgencyConsultantInviteByToken(input.token);
+
+  if (!inviteRow || inviteRow.invite.status !== "pending") {
+    throw new Error("Agency consultant invite is not valid.");
+  }
+
+  if (inviteRow.invite.expiresAt.getTime() <= Date.now()) {
+    await db
+      .update(agencyConsultantInvites)
+      .set({
+        status: "expired",
+        updatedAt: new Date(),
+      })
+      .where(eq(agencyConsultantInvites.id, inviteRow.invite.id));
+    throw new Error("Agency consultant invite has expired.");
+  }
+
+  const membershipId = await recordAgencyConsultantMembership({
+    agencyId: inviteRow.invite.agencyId,
+    clerkUserId: input.acceptedByUserId,
+    email: inviteRow.invite.email,
+    invitedByUserId: inviteRow.invite.createdByUserId,
+    role: inviteRow.invite.role,
+  });
+
+  await db
+    .update(agencyConsultantInvites)
+    .set({
+      acceptedAt: new Date(),
+      acceptedByUserId: input.acceptedByUserId,
+      status: "accepted",
+      updatedAt: new Date(),
+    })
+    .where(eq(agencyConsultantInvites.id, inviteRow.invite.id));
+
+  return membershipId;
 }
 
 export async function listControlCommentsForManagedClient(input: {

@@ -19,6 +19,10 @@
     {
       "path": "/api/cron/access-review-reminders",
       "schedule": "0 7 1 */3 *"
+    },
+    {
+      "path": "/api/cron/deadline-reminders",
+      "schedule": "0 8 * * *"
     }
   ]
 }

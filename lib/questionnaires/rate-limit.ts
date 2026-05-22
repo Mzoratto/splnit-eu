@@ -16,7 +16,7 @@ export async function enforceQuestionnaireRateLimit(input: {
 }): Promise<QuestionnaireRateLimit> {
   const plan = normalizePlanKey(input.plan);
 
-  if (plan === "business" || plan === "consultant") {
+  if (plan === "agency") {
     return {
       allowed: true,
       limit: null,

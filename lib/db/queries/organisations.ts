@@ -1,6 +1,6 @@
 import { eq } from "drizzle-orm";
 import { getDb } from "@/lib/db";
-import { organisations } from "@/lib/db/schema";
+import { organisations, profiles } from "@/lib/db/schema";
 
 export async function getOrganisationByClerkOrgId(clerkOrgId: string) {
   const db = getDb();
@@ -22,6 +22,17 @@ export async function getOrganisationByStripeCustomerId(stripeCustomerId: string
     .limit(1);
 
   return rows[0] ?? null;
+}
+
+export async function getPrimaryContactEmailForOrg(clerkOrgId: string) {
+  const db = getDb();
+  const rows = await db
+    .select({ email: profiles.email })
+    .from(profiles)
+    .where(eq(profiles.clerkOrgId, clerkOrgId))
+    .limit(1);
+
+  return rows[0]?.email ?? null;
 }
 
 export async function updateOrganisationBilling(input: {

@@ -8,14 +8,18 @@ import { z } from "zod";
 import { deleteBlobUrlsAfterFailedSave } from "@/lib/blob/cleanup";
 import {
   consumeAgencyClientInvite,
+  consumeAgencyConsultantInvite,
   createAgencyClientInvite,
+  createAgencyConsultantInvite,
   createControlComment,
+  getAgencyConsultantInviteByToken,
   recordAgencyConsultantMembership,
   requireAgencyConsultant,
   requireManagedClient,
   upsertAgencyBranding,
 } from "@/lib/db/queries/agencies";
 import { createAuditLog } from "@/lib/db/queries/audit-logs";
+import { sendConsultantInvite } from "@/lib/email/send";
 
 const MAX_LOGO_BYTES = 512 * 1024;
 const LOGO_CONTENT_TYPES = new Set(["image/png", "image/svg+xml"]);
@@ -197,6 +201,24 @@ export async function recordAgencyConsultantInviteAction(formData: FormData) {
     invitedByUserId: session.userId,
     role: parsed.role,
   });
+  let emailDelivery = parsed.email ? "sent" : "skipped";
+
+  if (parsed.email) {
+    const invite = await createAgencyConsultantInvite({
+      agencyId: session.agency.id,
+      createdByUserId: session.userId,
+      email: parsed.email,
+      role: parsed.role,
+    });
+    const appUrl = process.env.NEXT_PUBLIC_APP_URL ?? "https://splnit.eu";
+
+    await sendConsultantInvite(parsed.email, {
+      acceptUrl: `${appUrl}/agency-client-invites/${invite.token}`,
+      agencyName: session.agency.name,
+      inviterName: session.consultant.email || session.userId,
+    });
+    emailDelivery = "sent";
+  }
 
   await createAuditLog({
     action: "agency.consultant_invite_recorded",
@@ -208,8 +230,7 @@ export async function recordAgencyConsultantInviteAction(formData: FormData) {
       clerkUserId: parsed.clerkUserId || null,
       email: parsed.email || null,
       role: parsed.role,
-      // TODO: Wire Clerk organisation invitation email once the installed Clerk SDK exposes the desired invite semantics.
-      emailDelivery: "pending_manual",
+      emailDelivery,
     },
   });
 
@@ -252,6 +273,17 @@ export async function consumeAgencyClientInviteAction(token: string) {
 
   if (!session.userId || !session.orgId) {
     redirect("/sign-in");
+  }
+
+  const consultantInvite = await getAgencyConsultantInviteByToken(token);
+
+  if (consultantInvite) {
+    await consumeAgencyConsultantInvite({
+      acceptedByUserId: session.userId,
+      token,
+    });
+    revalidatePath("/agency/settings");
+    redirect("/agency/settings?tab=consultants");
   }
 
   await consumeAgencyClientInvite({

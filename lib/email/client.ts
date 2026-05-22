@@ -2,8 +2,11 @@ import { Resend } from "resend";
 
 let resend: Resend | null = null;
 
+export const FROM_ADDRESS = "noreply@splnit.eu";
+export const REPLY_TO = "podpora@splnit.eu";
+
 export function hasResendConfig() {
-  return Boolean(process.env.RESEND_API_KEY && process.env.RESEND_FROM);
+  return Boolean(process.env.RESEND_API_KEY);
 }
 
 export function getResend() {
@@ -19,9 +22,5 @@ export function getResend() {
 }
 
 export function getResendFrom() {
-  if (!process.env.RESEND_FROM) {
-    throw new Error("RESEND_FROM is required to send email.");
-  }
-
-  return process.env.RESEND_FROM;
+  return process.env.RESEND_FROM?.trim() || FROM_ADDRESS;
 }

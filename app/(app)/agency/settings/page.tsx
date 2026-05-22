@@ -50,6 +50,7 @@ export default async function AgencySettingsPage({ searchParams }: PageProps) {
   const resolvedSearchParams = searchParams ? await searchParams : {};
   const tab = normalizeTab(getParam(resolvedSearchParams, "tab"));
   const inviteToken = getParam(resolvedSearchParams, "inviteToken");
+  const setupSuccess = getParam(resolvedSearchParams, "setup") === "success";
   const requestLocale = normalizeLocale(await getLocale()) ?? "cs-CZ";
   const copy = getMessagesForLocale(requestLocale).agency.settings;
   const settings = await getAgencySettings(membership.agency.id);
@@ -72,6 +73,12 @@ export default async function AgencySettingsPage({ searchParams }: PageProps) {
           {copy.subtitle}
         </p>
       </div>
+
+      {setupSuccess ? (
+        <p className="rounded-md border border-border bg-surface p-3 text-sm text-foreground/72">
+          {copy.setupSuccess}
+        </p>
+      ) : null}
 
       <nav className="flex flex-wrap gap-2">
         {tabs.map((item) => (

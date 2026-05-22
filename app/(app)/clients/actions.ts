@@ -41,7 +41,7 @@ async function requireConsultantOrganisation() {
   }
 
   const organisation = await getOrganisationByClerkOrgId(session.orgId);
-  requirePlan(organisation?.plan, "consultant");
+  requirePlan(organisation?.plan, "agency");
 
   return {
     clerkOrgId: session.orgId,

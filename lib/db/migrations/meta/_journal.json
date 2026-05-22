@@ -148,6 +148,13 @@
       "when": 1779401945959,
       "tag": "0020_last_nightshade",
       "breakpoints": true
+    },
+    {
+      "idx": 21,
+      "version": "7",
+      "when": 1779432765474,
+      "tag": "0021_warm_vision",
+      "breakpoints": true
     }
   ]
 }

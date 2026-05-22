@@ -7,6 +7,7 @@ import {
 } from "@/lib/export/pdf";
 import { privateJson, withPrivateNoStore } from "@/lib/http/private-response";
 import { resolveAgencyBranding } from "@/lib/pdf/agency-branding";
+import { requireActiveSubscription } from "@/lib/stripe/subscriptions";
 
 export const dynamic = "force-dynamic";
 export const runtime = "nodejs";
@@ -56,6 +57,12 @@ export async function GET(request: Request) {
 
   if (orgId !== session.orgId) {
     return privateJson({ error: "K této organizaci nemáte přístup." }, { status: 403 });
+  }
+
+  const entitlement = await requireActiveSubscription(orgId);
+
+  if (!entitlement.subscribed) {
+    return privateJson({ error: "subscription_required" }, { status: 402 });
   }
 
   const now = Date.now();

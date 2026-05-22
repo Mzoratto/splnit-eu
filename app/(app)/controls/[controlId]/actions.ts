@@ -7,8 +7,16 @@ import { z } from "zod";
 import { deleteBlobUrlsAfterFailedSave } from "@/lib/blob/cleanup";
 import { recordActivationEvent } from "@/lib/activation/events";
 import { createAuditLog } from "@/lib/db/queries/audit-logs";
-import { updateControlStatus } from "@/lib/db/queries/controls";
+import {
+  getControlDetailByKey,
+  updateControlStatus,
+} from "@/lib/db/queries/controls";
 import { createManualEvidence } from "@/lib/db/queries/evidence";
+import {
+  getOrganisationByClerkOrgId,
+  getPrimaryContactEmailForOrg,
+} from "@/lib/db/queries/organisations";
+import { sendGapAlert } from "@/lib/email/send";
 
 const statusSchema = z.enum([
   "unknown",
@@ -92,6 +100,26 @@ export async function updateControlStatusAction(
       },
       name: "AssessmentChanged",
     });
+
+    if (["fail", "manual_review", "unknown"].includes(parsed.status)) {
+      const [detail, organisation, to] = await Promise.all([
+        getControlDetailByKey({
+          clerkOrgId: session.clerkOrgId,
+          controlKey,
+        }),
+        getOrganisationByClerkOrgId(session.clerkOrgId),
+        getPrimaryContactEmailForOrg(session.clerkOrgId),
+      ]);
+
+      if (detail && to) {
+        await sendGapAlert(to, {
+          controlKey,
+          controlTitle: detail.control.titleCs,
+          orgName: organisation?.name ?? session.clerkOrgId,
+          reference: detail.frameworks[0]?.articleRef ?? controlKey,
+        });
+      }
+    }
   }
 
   revalidatePath("/dashboard");

@@ -68,6 +68,13 @@ export const mappingReviewConfidenceEnum = pgEnum("mapping_review_confidence", [
 
 export type OrgTier = "standard" | "agency";
 export type ObligationRegime = "nizsi" | "vyssi";
+export type SubscriptionPlan = "sme" | "agency";
+export type SubscriptionStatus =
+  | "active"
+  | "trialing"
+  | "past_due"
+  | "canceled"
+  | "incomplete";
 
 export interface BrandingConfig {
   logoUrl: string | null;
@@ -103,6 +110,30 @@ export const organisations = pgTable("organisations", {
   createdAt: timestamp("created_at", { withTimezone: true }).defaultNow(),
   updatedAt: timestamp("updated_at", { withTimezone: true }).defaultNow(),
 });
+
+export const subscriptions = pgTable(
+  "subscriptions",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    clerkOrgId: text("clerk_org_id").notNull().unique(),
+    stripeCustomerId: text("stripe_customer_id").notNull().unique(),
+    stripeSubscriptionId: text("stripe_subscription_id"),
+    plan: text("plan").$type<SubscriptionPlan>().notNull(),
+    status: text("status").$type<SubscriptionStatus>().notNull(),
+    currentPeriodEnd: timestamp("current_period_end", { withTimezone: true }),
+    createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+    updatedAt: timestamp("updated_at", { withTimezone: true }).notNull().defaultNow(),
+  },
+  (table) => [
+    check("subscriptions_plan_check", sql`${table.plan} IN ('sme', 'agency')`),
+    check(
+      "subscriptions_status_check",
+      sql`${table.status} IN ('active', 'trialing', 'past_due', 'canceled', 'incomplete')`,
+    ),
+    index("idx_subscriptions_clerk_org_id").on(table.clerkOrgId),
+    index("idx_subscriptions_stripe_customer_id").on(table.stripeCustomerId),
+  ],
+);
 
 export type OrgIntakeAnswers = Record<string, unknown>;
 
@@ -669,13 +700,18 @@ export const agencies = pgTable(
     clerkOrgId: text("clerk_org_id").unique().references(() => organisations.clerkOrgId, {
       onDelete: "set null",
     }),
+    slug: text("slug").unique(),
     name: text("name").notNull(),
     contactEmail: text("contact_email"),
+    stripeSubscriptionId: text("stripe_subscription_id"),
+    plan: text("plan").$type<"agency">(),
+    planClientLimit: integer("plan_client_limit").default(20),
     status: text("status").notNull().default("active"),
     createdAt: timestamp("created_at", { withTimezone: true }).defaultNow(),
     updatedAt: timestamp("updated_at", { withTimezone: true }).defaultNow(),
   },
   (table) => [
+    check("agencies_plan_check", sql`${table.plan} IS NULL OR ${table.plan} = 'agency'`),
     index("idx_agencies_status").on(table.status),
   ],
 );
@@ -749,6 +785,38 @@ export const agencyConsultants = pgTable(
   ],
 );
 
+export const agencyConsultantInvites = pgTable(
+  "agency_consultant_invites",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    agencyId: uuid("agency_id")
+      .notNull()
+      .references(() => agencies.id, { onDelete: "cascade" }),
+    email: text("email").notNull(),
+    tokenHash: text("token_hash").notNull().unique(),
+    role: text("role").notNull().default("consultant"),
+    status: text("status").notNull().default("pending"),
+    createdByUserId: text("created_by_user_id").notNull(),
+    acceptedByUserId: text("accepted_by_user_id"),
+    expiresAt: timestamp("expires_at", { withTimezone: true }).notNull(),
+    acceptedAt: timestamp("accepted_at", { withTimezone: true }),
+    createdAt: timestamp("created_at", { withTimezone: true }).defaultNow(),
+    updatedAt: timestamp("updated_at", { withTimezone: true }).defaultNow(),
+  },
+  (table) => [
+    check("agency_consultant_invites_role_check", sql`${table.role} IN ('admin', 'consultant')`),
+    check(
+      "agency_consultant_invites_status_check",
+      sql`${table.status} IN ('pending', 'accepted', 'expired')`,
+    ),
+    index("idx_agency_consultant_invites_agency").on(table.agencyId),
+    index("idx_agency_consultant_invites_status_expires").on(
+      table.status,
+      table.expiresAt,
+    ),
+  ],
+);
+
 export const agencyClientInvites = pgTable(
   "agency_client_invites",
   {
@@ -813,6 +881,19 @@ export const trustCenterRequests = pgTable("trust_center_requests", {
   expiresAt: timestamp("expires_at", { withTimezone: true }),
   createdAt: timestamp("created_at", { withTimezone: true }).defaultNow(),
 });
+
+export const reminderLog = pgTable(
+  "reminder_log",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    clerkOrgId: text("clerk_org_id").notNull(),
+    reminderType: text("reminder_type").notNull(),
+    sentAt: timestamp("sent_at", { withTimezone: true }).notNull().defaultNow(),
+  },
+  (table) => [
+    unique().on(table.clerkOrgId, table.reminderType),
+  ],
+);
 
 export const accessReviews = pgTable("access_reviews", {
   id: uuid("id").primaryKey().defaultRandom(),

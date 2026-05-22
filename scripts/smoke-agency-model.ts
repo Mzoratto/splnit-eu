@@ -7,6 +7,7 @@ import {
   agencyBranding,
   agencyClientInvites,
   agencyClientOrgs,
+  agencyConsultantInvites,
   agencyConsultants,
   controlComments,
   organisations,
@@ -15,7 +16,9 @@ import {
 import {
   consumeAgencyClientInvite,
   createAgencyClientInvite,
+  createAgencyConsultantInvite,
   createControlComment,
+  consumeAgencyConsultantInvite,
   getAgencyForUser,
   groupCommentsByControlKey,
   listAgencyClients,
@@ -35,6 +38,7 @@ const agencyOrgB = `${runId}_agency_b`;
 const clientOrgA = `${runId}_client_a`;
 const clientOrgB = `${runId}_client_b`;
 const consultantUserA = `${runId}_consultant_a`;
+const consultantUserB = `${runId}_consultant_b`;
 const clientUserA = `${runId}_client_user_a`;
 
 async function cleanup() {
@@ -47,6 +51,9 @@ async function cleanup() {
   for (const agencyId of agencyIds) {
     await db.delete(controlComments).where(eq(controlComments.agencyId, agencyId));
     await db.delete(agencyClientInvites).where(eq(agencyClientInvites.agencyId, agencyId));
+    await db
+      .delete(agencyConsultantInvites)
+      .where(eq(agencyConsultantInvites.agencyId, agencyId));
     await db.delete(agencyClientOrgs).where(eq(agencyClientOrgs.agencyId, agencyId));
     await db.delete(agencyConsultants).where(eq(agencyConsultants.agencyId, agencyId));
     await db.delete(agencyBranding).where(eq(agencyBranding.agencyId, agencyId));
@@ -274,6 +281,24 @@ async function assertInvites(agencyAId: string) {
 
   assert.equal(invite?.status, "accepted");
   assert.equal(relationship?.id, relationshipId);
+
+  const consultantInvite = await createAgencyConsultantInvite({
+    agencyId: agencyAId,
+    createdByUserId: consultantUserA,
+    email: "consultant-b@example.com",
+    role: "consultant",
+  });
+  const membershipId = await consumeAgencyConsultantInvite({
+    acceptedByUserId: consultantUserB,
+    token: consultantInvite.token,
+  });
+  const [membership] = await db
+    .select({ id: agencyConsultants.id, status: agencyConsultants.status })
+    .from(agencyConsultants)
+    .where(eq(agencyConsultants.id, membershipId))
+    .limit(1);
+
+  assert.equal(membership?.status, "active");
 }
 
 async function main() {

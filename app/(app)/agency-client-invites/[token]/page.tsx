@@ -3,7 +3,10 @@ import { CheckCircle2 } from "lucide-react";
 import { consumeAgencyClientInviteAction } from "@/app/(app)/agency/actions";
 import { getMessagesForLocale } from "@/i18n/messages";
 import { normalizeLocale } from "@/i18n/routing";
-import { getAgencyClientInviteByToken } from "@/lib/db/queries/agencies";
+import {
+  getAgencyClientInviteByToken,
+  getAgencyConsultantInviteByToken,
+} from "@/lib/db/queries/agencies";
 
 export const dynamic = "force-dynamic";
 
@@ -15,7 +18,12 @@ export default async function AgencyClientInvitePage({ params }: PageProps) {
   const { token } = await params;
   const requestLocale = normalizeLocale(await getLocale()) ?? "cs-CZ";
   const copy = getMessagesForLocale(requestLocale).agency.invites;
-  const invite = await getAgencyClientInviteByToken(token);
+  const [clientInvite, consultantInvite] = await Promise.all([
+    getAgencyClientInviteByToken(token),
+    getAgencyConsultantInviteByToken(token),
+  ]);
+  const invite = clientInvite ?? consultantInvite;
+  const isConsultantInvite = Boolean(consultantInvite);
   const isExpired = invite
     ? invite.invite.expiresAt.getTime() <= Date.now()
     : false;
@@ -32,7 +40,10 @@ export default async function AgencyClientInvitePage({ params }: PageProps) {
         </h1>
         <p className="mt-2 text-sm leading-6 text-foreground/64">
           {invite
-            ? copy.body.replace("{agency}", invite.agency.name)
+            ? (isConsultantInvite ? copy.consultantBody : copy.body).replace(
+                "{agency}",
+                invite.agency.name,
+              )
             : copy.invalidBody}
         </p>
       </div>
@@ -41,7 +52,7 @@ export default async function AgencyClientInvitePage({ params }: PageProps) {
         {canAccept ? (
           <form action={consumeAgencyClientInviteAction.bind(null, token)} className="space-y-4">
             <p className="text-sm leading-6 text-foreground/64">
-              {copy.activeHelp}
+              {isConsultantInvite ? copy.consultantHelp : copy.activeHelp}
             </p>
             <button type="submit" className="btn btn-primary">
               <CheckCircle2 className="h-4 w-4" aria-hidden="true" strokeWidth={1.5} />

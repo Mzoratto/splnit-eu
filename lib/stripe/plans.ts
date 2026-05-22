@@ -1,110 +1,70 @@
 export const PLANS = {
   free: {
-    price: 0,
-    limits: { frameworks: 1, integrations: 1, users: 1, vendors: 3, policies: 3 },
-    features: ["framework_wizard", "manual_controls", "basic_policies"],
+    displayPrice: "0 Kč",
+    limits: { clients: 0, frameworks: 1, integrations: 1, users: 1 },
+    name: "Free",
   },
-  starter: {
-    priceMonthly: 147500,
-    priceAnnual: 122500,
-    limits: { frameworks: 2, integrations: 3, users: 5, vendors: 10, policies: 20 },
-    features: [
-      "starter_integrations",
-      "automated_tests",
-      "evidence_vault",
-      "policy_library",
-      "deadline_alerts",
-    ],
+  sme: {
+    displayPrice: "490 Kč/měsíc",
+    envPriceId: "STRIPE_SME_PRICE_ID",
+    limits: { clients: 1, frameworks: 999, integrations: 999, users: 25 },
+    name: "SME",
   },
-  business: {
-    priceMonthly: 372500,
-    priceAnnual: 310000,
-    limits: { frameworks: 5, integrations: 10, users: 25, vendors: 50, policies: 999 },
-    features: [
-      "trust_center",
-      "vendor_risk",
-      "access_reviews",
-      "incident_log",
-      "risk_register",
-      "questionnaire_ai",
-    ],
-  },
-  consultant: {
-    priceMonthly: 747500,
-    priceAnnual: 622500,
-    limits: {
-      frameworks: 999,
-      integrations: 999,
-      users: 999,
-      vendors: 999,
-      policies: 999,
-    },
-    features: ["multi_client_dashboard", "white_label", "partner_badge", "api_access"],
+  agency: {
+    displayPrice: "1 990 Kč/měsíc",
+    envPriceId: "STRIPE_AGENCY_PRICE_ID",
+    limits: { clients: 20, frameworks: 999, integrations: 999, users: 999 },
+    name: "Agency",
   },
 } as const;
 
 export type PlanKey = keyof typeof PLANS;
-export type BillingInterval = "monthly" | "annual";
+export const BILLABLE_PLANS = ["sme", "agency"] as const;
+export type BillablePlanKey = (typeof BILLABLE_PLANS)[number];
 
 export const PLAN_LIMITS: Record<PlanKey, {
+  clients: number;
   frameworks: number;
   integrations: number;
   users: number;
-  vendors: number;
-  policies: number;
 }> = {
+  agency: PLANS.agency.limits,
   free: PLANS.free.limits,
-  starter: PLANS.starter.limits,
-  business: PLANS.business.limits,
-  consultant: PLANS.consultant.limits,
+  sme: PLANS.sme.limits,
 };
-
-export const BILLABLE_PLANS = ["starter", "business", "consultant"] as const;
-export type BillablePlanKey = (typeof BILLABLE_PLANS)[number];
 
 const PLAN_ORDER: Record<PlanKey, number> = {
   free: 0,
-  starter: 1,
-  business: 2,
-  consultant: 3,
+  sme: 1,
+  agency: 2,
 };
 
-const PLAN_PRICE_LOOKUP_KEYS: Record<BillablePlanKey, Record<BillingInterval, string>> = {
-  starter: {
-    monthly:
-      process.env.STRIPE_STARTER_MONTHLY_LOOKUP_KEY ??
-      process.env.STRIPE_STARTER_PRICE_LOOKUP_KEY ??
-      "starter_monthly",
-    annual:
-      process.env.STRIPE_STARTER_ANNUAL_LOOKUP_KEY ??
-      "starter_annual",
-  },
-  business: {
-    monthly:
-      process.env.STRIPE_BUSINESS_MONTHLY_LOOKUP_KEY ??
-      process.env.STRIPE_BUSINESS_PRICE_LOOKUP_KEY ??
-      "business_monthly",
-    annual:
-      process.env.STRIPE_BUSINESS_ANNUAL_LOOKUP_KEY ??
-      "business_annual",
-  },
-  consultant: {
-    monthly:
-      process.env.STRIPE_CONSULTANT_MONTHLY_LOOKUP_KEY ??
-      process.env.STRIPE_CONSULTANT_PRICE_LOOKUP_KEY ??
-      "consultant_monthly",
-    annual:
-      process.env.STRIPE_CONSULTANT_ANNUAL_LOOKUP_KEY ??
-      "consultant_annual",
-  },
+const LEGACY_PLAN_ALIASES: Record<string, PlanKey> = {
+  business: "sme",
+  consultant: "agency",
+  starter: "sme",
 };
 
 export function isPlanKey(plan: string | null | undefined): plan is PlanKey {
   return Boolean(plan && plan in PLANS);
 }
 
+export function isBillablePlanKey(
+  plan: string | null | undefined,
+): plan is BillablePlanKey {
+  return plan === "sme" || plan === "agency";
+}
+
 export function normalizePlanKey(plan: string | null | undefined): PlanKey {
-  return isPlanKey(plan) ? plan : "free";
+  if (!plan) {
+    return "free";
+  }
+
+  if (isPlanKey(plan)) {
+    return plan;
+  }
+
+  return LEGACY_PLAN_ALIASES[plan] ?? "free";
 }
 
 export function hasPlanAccess(
@@ -123,22 +83,24 @@ export function requirePlan(
   }
 }
 
-export function getLookupKeyForPlan(
-  plan: BillablePlanKey,
-  interval: BillingInterval,
-) {
-  return PLAN_PRICE_LOOKUP_KEYS[plan][interval];
+export function getPriceIdForPlan(plan: BillablePlanKey) {
+  const envKey = PLANS[plan].envPriceId;
+  const priceId = process.env[envKey]?.trim();
+
+  if (!priceId) {
+    throw new Error(`${envKey} is required for ${plan} checkout.`);
+  }
+
+  return priceId;
 }
 
-export function getPlanFromLookupKey(lookupKey: string | null | undefined) {
-  if (!lookupKey) {
+export function getPlanFromPriceId(priceId: string | null | undefined) {
+  if (!priceId) {
     return null;
   }
 
   for (const plan of BILLABLE_PLANS) {
-    const intervalKeys = PLAN_PRICE_LOOKUP_KEYS[plan];
-
-    if (intervalKeys.monthly === lookupKey || intervalKeys.annual === lookupKey) {
+    if (process.env[PLANS[plan].envPriceId]?.trim() === priceId) {
       return plan;
     }
   }

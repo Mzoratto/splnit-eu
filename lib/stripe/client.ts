@@ -8,7 +8,10 @@ export function hasStripeSecretKey() {
 
 export function hasStripeBillingConfig() {
   return Boolean(
-    process.env.STRIPE_SECRET_KEY && process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY,
+    process.env.STRIPE_SECRET_KEY &&
+      process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY &&
+      process.env.STRIPE_SME_PRICE_ID &&
+      process.env.STRIPE_AGENCY_PRICE_ID,
   );
 }
 

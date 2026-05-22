@@ -60,6 +60,7 @@ function applyLocale(request: NextRequest) {
   const locale = prefixedRoute?.locale ?? routing.defaultLocale;
   const headers = new Headers(request.headers);
   headers.set("X-NEXT-INTL-LOCALE", locale);
+  headers.set("x-pathname", request.nextUrl.pathname);
 
   const internalPath = toInternalMarketingPath(request.nextUrl.pathname);
   const rewriteUrl =
