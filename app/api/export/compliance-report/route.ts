@@ -6,6 +6,7 @@ import {
   renderComplianceReportPdf,
 } from "@/lib/export/pdf";
 import { privateJson, withPrivateNoStore } from "@/lib/http/private-response";
+import { resolveAgencyBranding } from "@/lib/pdf/agency-branding";
 
 export const dynamic = "force-dynamic";
 export const runtime = "nodejs";
@@ -93,7 +94,11 @@ export async function GET(request: Request) {
       );
     }
 
-    const pdf = await renderComplianceReportPdf(ctx);
+    const agencyBranding = await resolveAgencyBranding(orgId);
+    const pdf = await renderComplianceReportPdf({
+      ...ctx,
+      agencyBranding,
+    });
     const filename = getComplianceReportFilename(ico, ctx.generatedAt);
 
     return new Response(new Uint8Array(pdf), {

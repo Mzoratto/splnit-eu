@@ -43,7 +43,7 @@ const navigation = [
     items: [
       { href: "/incidents", labelKey: "incidents", icon: AlertTriangle, lockedUntilIntake: true },
       { href: "/risks", labelKey: "risks", icon: BarChart3, lockedUntilIntake: true },
-      { href: "/clients", labelKey: "clients", icon: BriefcaseBusiness, lockedUntilIntake: true },
+      { href: "/agency/dashboard", labelKey: "clients", icon: BriefcaseBusiness, lockedUntilIntake: true },
       { href: "/team", labelKey: "team", icon: Users },
       { href: "/settings/organisation", labelKey: "settings", icon: Settings },
     ],

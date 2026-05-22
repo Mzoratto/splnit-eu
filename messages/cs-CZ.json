@@ -921,6 +921,140 @@
       }
     ]
   },
+  "agency": {
+    "dashboard": {
+      "eyebrow": "Agentura",
+      "title": "Spravovaní klienti",
+      "subtitle": "Sledujte skóre klientů, otevřené mezery a poslední aktivitu napříč organizacemi propojenými s agenturou.",
+      "settings": "Nastavení agentury",
+      "metrics": {
+        "clients": "Klienti",
+        "openGaps": "Otevřené mezery",
+        "averageScore": "Průměrné skóre"
+      },
+      "filters": {
+        "title": "Filtry",
+        "minScore": "Minimální skóre",
+        "maxScore": "Maximální skóre",
+        "minOpenGaps": "Minimum otevřených mezer",
+        "activity": "Poslední aktivita",
+        "activityOptions": {
+          "all": "Kdykoliv",
+          "sevenDays": "Posledních 7 dní",
+          "thirtyDays": "Posledních 30 dní",
+          "stale": "Starší než 30 dní"
+        },
+        "apply": "Použít filtry"
+      },
+      "clientsTitle": "Klientské organizace",
+      "lastActivity": "Poslední aktivita",
+      "never": "nikdy",
+      "openGaps": "{count} otevřených mezer",
+      "empty": "Žádní propojení klienti neodpovídají filtrům."
+    },
+    "client": {
+      "back": "Zpět na agenturní dashboard",
+      "eyebrow": "Klientský workspace",
+      "sectorEmpty": "sektor neuveden",
+      "score": "Skóre",
+      "openGaps": "Otevřené mezery",
+      "comments": "Komentáře",
+      "priorityControls": "Prioritní kontroly",
+      "emptyValue": "neuvedeno",
+      "noPriorityControls": "Pro tohoto klienta nejsou aktuálně otevřené prioritní kontroly.",
+      "workspaces": "Workspace jen pro čtení",
+      "banner": {
+        "title": "Konzultantský režim jen pro čtení",
+        "body": "Můžete kontrolovat stav důkazů a přidávat komentáře pro klienta. Čestná prohlášení, nahrávání souborů a aktivace konektorů zůstávají pro konzultanty vypnuté."
+      },
+      "statuses": {
+        "active": "aktivní",
+        "unknown": "neznámé",
+        "fail": "nesplněno",
+        "manual_review": "částečně",
+        "warning": "varování",
+        "pass": "splněno"
+      }
+    },
+    "settings": {
+      "never": "nikdy",
+      "eyebrow": "Agentura",
+      "title": "Nastavení",
+      "subtitle": "Správa brandingu agentury, klientských propojení a přístupů konzultantů.",
+      "tabs": {
+        "branding": "Branding",
+        "clients": "Klienti",
+        "consultants": "Konzultanti"
+      },
+      "branding": {
+        "displayName": "Zobrazovaný název",
+        "logo": "Soubor loga",
+        "logoHelp": "PNG nebo SVG, maximálně 512 KB.",
+        "logoAltText": "Alternativní text loga",
+        "primaryColour": "Primární barva",
+        "poweredByText": "Text v patičce PDF",
+        "save": "Uložit branding"
+      },
+      "clients": {
+        "inviteTitle": "Pozvat klienta",
+        "email": "Kontaktní e-mail klienta",
+        "createInvite": "Vytvořit pozvánku na 7 dní",
+        "inviteReady": "Odkaz pozvánky vytvořen",
+        "copyManually": "Zkopírujte tuto cestu a pošlete ji schváleným kanálem.",
+        "connectedTitle": "Propojení klienti",
+        "empty": "Zatím není propojena žádná klientská organizace."
+      },
+      "consultants": {
+        "inviteTitle": "Zapsat konzultanta",
+        "email": "E-mail konzultanta",
+        "clerkUserId": "Clerk user ID",
+        "role": "Role",
+        "recordInvite": "Zapsat členství",
+        "deliveryNote": "Doručení e-mailu je evidováno jako čekající, dokud nebude zapojené pozvání přes Clerk.",
+        "membersTitle": "Konzultanti",
+        "unknown": "Neznámý konzultant",
+        "empty": "Zatím nejsou zapsaní žádní konzultanti.",
+        "roles": {
+          "admin": "Admin",
+          "consultant": "Konzultant"
+        }
+      }
+    },
+    "invites": {
+      "eyebrow": "Agenturní pozvánka",
+      "title": "Propojit tuto organizaci",
+      "body": "{agency} pozvala tuto organizaci ke správě v agenturním portálu.",
+      "invalidBody": "Tuto pozvánku se nepodařilo najít.",
+      "activeHelp": "Přijetím se aktivní Clerk organizace propojí s agenturou. Pokud je potřeba, nejdřív přepněte organizaci.",
+      "accept": "Přijmout pozvánku",
+      "expired": "Tato pozvánka vypršela.",
+      "unavailable": "Tato pozvánka už není dostupná."
+    }
+  },
+  "workspace": {
+    "emptyLayers": "Pro tento workspace nejsou nakonfigurované žádné vrstvy.",
+    "workspaceTitle": "{platform} workspace",
+    "controlsCompleted": "{completed}/{total} kontrol dokončeno",
+    "readOnly": {
+      "title": "Konzultantský pohled jen pro čtení",
+      "body": "Ovládací prvky měnící důkazy jsou vypnuté. Pro vedení klienta použijte komentáře.",
+      "controlNotice": "Režim jen pro čtení: konzultanti mohou komentovat, ale nemohou odesílat čestná prohlášení ani nahrávat důkazy."
+    },
+    "comments": {
+      "title": "Komentáře",
+      "count": "{count} komentářů",
+      "consultant": "Konzultant",
+      "client": "Klient",
+      "gapFlag": "Označená mezera",
+      "empty": "Zatím bez komentářů.",
+      "placeholder": "Napište komentář ke kontrole",
+      "markGap": "Označit jako mezeru",
+      "missingClient": "Je vyžadována klientská organizace.",
+      "saveError": "Komentář se nepodařilo uložit.",
+      "saving": "Ukládám...",
+      "save": "Přidat komentář"
+    }
+  },
   "teamPage": {
     "eyebrow": "Tým",
     "title": "Přístupy a školení",

@@ -11,6 +11,7 @@ import type {
   FrameworkMapping,
   NukibControlTier,
 } from "@/lib/compliance/nukib/types";
+import type { AgencyBrandingContext } from "@/lib/pdf/agency-branding";
 import type { NukibControlBlock } from "@/lib/workspaces/types";
 
 export interface Org {
@@ -46,6 +47,7 @@ export interface EvidenceRecord {
 }
 
 export interface ReportContext {
+  agencyBranding?: AgencyBrandingContext | null;
   org: Org;
   evidenceRecords: EvidenceRecord[];
   workspaceNames: string[];
@@ -179,20 +181,43 @@ function formatLegalReference(record: EvidenceRecord, org: Org): string {
   );
 }
 
-function resolveBranding(org: Org) {
+function resolveBranding(ctx: ReportContext) {
+  const agencyBranding = ctx.agencyBranding;
+
+  if (agencyBranding) {
+    const displayName = agencyBranding.displayName;
+
+    return {
+      footerClassName: "footer agency-footer",
+      footerText: agencyBranding.poweredByText,
+      isAgency: true,
+      logoHtml: agencyBranding.logoUrl
+        ? `<img src="${escapeHtml(agencyBranding.logoUrl)}" class="org-logo" alt="${escapeHtml(agencyBranding.logoAltText ?? displayName)}" />`
+        : `<div class="agency-wordmark">${escapeHtml(displayName)}</div>`,
+      primaryColour: agencyBranding.primaryColour ?? "#0f766e",
+    };
+  }
+
+  const org = ctx.org;
   const hasAgencyLogo = org.tier === "agency" && Boolean(org.brandingConfig.logoUrl);
   const displayName = org.brandingConfig.displayName ?? org.name;
 
   if (hasAgencyLogo && org.brandingConfig.logoUrl) {
     return {
+      footerClassName: "footer",
       footerText: org.brandingConfig.footerText ?? "",
+      isAgency: false,
       logoHtml: `<img src="${escapeHtml(org.brandingConfig.logoUrl)}" class="org-logo" alt="${escapeHtml(displayName)}" />`,
+      primaryColour: "#0f766e",
     };
   }
 
   return {
+    footerClassName: "footer",
     footerText: "Powered by Splnit.eu",
+    isAgency: false,
     logoHtml: `<img src="${DEFAULT_LOGO_DATA_URI}" class="splnit-logo" alt="splnit.eu" />`,
+    primaryColour: "#0f766e",
   };
 }
 
@@ -361,7 +386,11 @@ function renderEvidenceSections(ctx: ReportContext): string {
     .join("");
 }
 
-function renderStyles(): string {
+function renderStyles(primaryColour = "#0f766e"): string {
+  const safePrimaryColour = /^#[0-9a-f]{6}$/i.test(primaryColour)
+    ? primaryColour
+    : "#0f766e";
+
   return `
     <style>
       @page {
@@ -425,6 +454,12 @@ function renderStyles(): string {
         object-fit: contain;
       }
 
+      .agency-wordmark {
+        color: #0f172a;
+        font-size: 18pt;
+        font-weight: 700;
+      }
+
       .subtitle {
         color: #475569;
         font-size: 12pt;
@@ -452,7 +487,7 @@ function renderStyles(): string {
 
       .scope {
         background: #f8fafc;
-        border-left: 4px solid #0f766e;
+        border-left: 4px solid ${safePrimaryColour};
         margin-top: 12mm;
         padding: 5mm;
       }
@@ -462,6 +497,10 @@ function renderStyles(): string {
         color: #64748b;
         font-size: 9pt;
         position: absolute;
+      }
+
+      .agency-footer {
+        font-size: 8pt;
       }
 
       .summary-table {
@@ -577,9 +616,9 @@ export function renderReportTemplate(ctx: ReportContext): string {
     ctx.org.rezimPovinnosti === "vyssi"
       ? "Vyšší povinnosti (vyhláška č. 409/2025 Sb.)"
       : "Nižší povinnosti (vyhláška č. 410/2025 Sb.)";
-  const branding = resolveBranding(ctx.org);
+  const branding = resolveBranding(ctx);
   const footer = branding.footerText
-    ? `<p class="footer">${escapeHtml(branding.footerText)}</p>`
+    ? `<p class="${branding.footerClassName}">${escapeHtml(branding.footerText)}</p>`
     : "";
 
   return `<!doctype html>
@@ -587,7 +626,7 @@ export function renderReportTemplate(ctx: ReportContext): string {
       <head>
         <meta charset="utf-8" />
         <title>Zpráva o hodnocení stavu kybernetické bezpečnosti (NIS2 / ZoKB)</title>
-        ${renderStyles()}
+        ${renderStyles(branding.primaryColour)}
       </head>
       <body>
         <section class="cover">

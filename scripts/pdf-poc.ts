@@ -1,6 +1,5 @@
-const { writeFile } = require("node:fs/promises");
-const { chromium } = require("playwright");
-
+import { writeFile } from "node:fs/promises";
+import { chromium } from "playwright";
 const html = `<!doctype html>
 <html lang="cs">
   <head>

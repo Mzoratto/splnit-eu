@@ -4,6 +4,10 @@ import { auth } from "@clerk/nextjs/server";
 import { revalidatePath } from "next/cache";
 import { z } from "zod";
 import { recordActivationEvent } from "@/lib/activation/events";
+import {
+  createControlComment,
+  getActiveAgencyClientLinkForOrg,
+} from "@/lib/db/queries/agencies";
 import { createAuditLog } from "@/lib/db/queries/audit-logs";
 import { createManualAttestationEvidence } from "@/lib/db/queries/evidence";
 import { deriveWorkspaceAttestationAssessmentResult } from "@/lib/workspaces/attestation";
@@ -26,6 +30,11 @@ const submitAttestationSchema = z.object({
   controlKey: z.string().min(1).max(128),
   layerId: z.string().min(1).max(128),
   platformId: z.string().min(1).max(128),
+});
+
+const createCommentSchema = z.object({
+  body: z.string().trim().min(1).max(2000),
+  controlKey: z.string().trim().min(1).max(128),
 });
 
 export async function submitWorkspaceAttestationAction(input: {
@@ -90,4 +99,32 @@ export async function submitWorkspaceAttestationAction(input: {
     controlId: result.controlId,
     evidenceId: result.evidenceId,
   };
+}
+
+export async function createClientControlCommentAction(input: {
+  body: string;
+  controlKey: string;
+}) {
+  const parsed = createCommentSchema.parse(input);
+  const session = await getActiveSession();
+  const link = await getActiveAgencyClientLinkForOrg(session.clerkOrgId);
+
+  if (!link) {
+    throw new Error("Agency client relationship is required for comments.");
+  }
+
+  await createControlComment({
+    agencyId: link.agencyId,
+    authorType: "client",
+    authorUserId: session.userId,
+    body: parsed.body,
+    controlKey: parsed.controlKey,
+    orgId: session.clerkOrgId,
+  });
+
+  revalidatePath("/workspaces/pohoda");
+  revalidatePath("/workspaces/money-s3");
+  revalidatePath("/workspaces/helios");
+  revalidatePath(`/agency/clients/${session.clerkOrgId}`);
+  revalidatePath("/dashboard");
 }

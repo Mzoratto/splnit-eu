@@ -921,6 +921,140 @@
       }
     ]
   },
+  "agency": {
+    "dashboard": {
+      "eyebrow": "Agenzia",
+      "title": "Clienti gestiti",
+      "subtitle": "Controlla punteggi, gap aperti e attività recente delle organizzazioni collegate all'agenzia.",
+      "settings": "Impostazioni agenzia",
+      "metrics": {
+        "clients": "Clienti",
+        "openGaps": "Gap aperti",
+        "averageScore": "Punteggio medio"
+      },
+      "filters": {
+        "title": "Filtri",
+        "minScore": "Punteggio minimo",
+        "maxScore": "Punteggio massimo",
+        "minOpenGaps": "Minimo gap aperti",
+        "activity": "Ultima attività",
+        "activityOptions": {
+          "all": "Qualsiasi data",
+          "sevenDays": "Ultimi 7 giorni",
+          "thirtyDays": "Ultimi 30 giorni",
+          "stale": "Oltre 30 giorni"
+        },
+        "apply": "Applica filtri"
+      },
+      "clientsTitle": "Organizzazioni cliente",
+      "lastActivity": "Ultima attività",
+      "never": "mai",
+      "openGaps": "{count} gap aperti",
+      "empty": "Nessun cliente collegato corrisponde ai filtri."
+    },
+    "client": {
+      "back": "Torna al dashboard agenzia",
+      "eyebrow": "Workspace cliente",
+      "sectorEmpty": "settore non indicato",
+      "score": "Punteggio",
+      "openGaps": "Gap aperti",
+      "comments": "Commenti",
+      "priorityControls": "Controlli prioritari",
+      "emptyValue": "n/d",
+      "noPriorityControls": "Non ci sono controlli prioritari aperti per questo cliente.",
+      "workspaces": "Workspace in sola lettura",
+      "banner": {
+        "title": "Modalità consulente in sola lettura",
+        "body": "Puoi esaminare lo stato delle evidenze e lasciare commenti per il cliente. Attestazioni, upload di file e attivazione dei connettori restano disabilitati per i consulenti."
+      },
+      "statuses": {
+        "active": "attivo",
+        "unknown": "sconosciuto",
+        "fail": "non superato",
+        "manual_review": "parziale",
+        "warning": "avviso",
+        "pass": "superato"
+      }
+    },
+    "settings": {
+      "never": "mai",
+      "eyebrow": "Agenzia",
+      "title": "Impostazioni",
+      "subtitle": "Gestisci branding dell'agenzia, collegamenti cliente e accessi dei consulenti.",
+      "tabs": {
+        "branding": "Branding",
+        "clients": "Clienti",
+        "consultants": "Consulenti"
+      },
+      "branding": {
+        "displayName": "Nome visualizzato",
+        "logo": "File logo",
+        "logoHelp": "PNG o SVG, massimo 512 KB.",
+        "logoAltText": "Testo alternativo logo",
+        "primaryColour": "Colore primario",
+        "poweredByText": "Testo footer PDF",
+        "save": "Salva branding"
+      },
+      "clients": {
+        "inviteTitle": "Invita cliente",
+        "email": "Email contatto cliente",
+        "createInvite": "Crea invito di 7 giorni",
+        "inviteReady": "Link di invito creato",
+        "copyManually": "Copia questo percorso e invialo tramite il canale approvato.",
+        "connectedTitle": "Clienti collegati",
+        "empty": "Nessuna organizzazione cliente è ancora collegata."
+      },
+      "consultants": {
+        "inviteTitle": "Registra consulente",
+        "email": "Email consulente",
+        "clerkUserId": "Clerk user ID",
+        "role": "Ruolo",
+        "recordInvite": "Registra membership",
+        "deliveryNote": "La consegna email resta in attesa finché non sarà collegata l'integrazione inviti Clerk.",
+        "membersTitle": "Consulenti",
+        "unknown": "Consulente sconosciuto",
+        "empty": "Nessun consulente registrato.",
+        "roles": {
+          "admin": "Admin",
+          "consultant": "Consulente"
+        }
+      }
+    },
+    "invites": {
+      "eyebrow": "Invito agenzia",
+      "title": "Collega questa organizzazione",
+      "body": "{agency} ha invitato questa organizzazione a essere gestita nel portale agenzia.",
+      "invalidBody": "Questo invito non è stato trovato.",
+      "activeHelp": "Accettando, l'organizzazione Clerk attiva viene collegata all'agenzia. Cambia organizzazione prima, se necessario.",
+      "accept": "Accetta invito",
+      "expired": "Questo invito è scaduto.",
+      "unavailable": "Questo invito non è più disponibile."
+    }
+  },
+  "workspace": {
+    "emptyLayers": "Nessun layer configurato per questo workspace.",
+    "workspaceTitle": "Workspace {platform}",
+    "controlsCompleted": "{completed}/{total} controlli completati",
+    "readOnly": {
+      "title": "Vista consulente in sola lettura",
+      "body": "I controlli che modificano le evidenze sono disabilitati. Usa i commenti per guidare il cliente.",
+      "controlNotice": "Modalità sola lettura: i consulenti possono commentare, ma non possono inviare attestazioni o caricare evidenze."
+    },
+    "comments": {
+      "title": "Commenti",
+      "count": "{count} commenti",
+      "consultant": "Consulente",
+      "client": "Cliente",
+      "gapFlag": "Gap segnalato",
+      "empty": "Nessun commento.",
+      "placeholder": "Scrivi un commento per questo controllo",
+      "markGap": "Segnala come gap",
+      "missingClient": "È richiesta l'organizzazione cliente.",
+      "saveError": "Impossibile salvare il commento.",
+      "saving": "Salvataggio...",
+      "save": "Aggiungi commento"
+    }
+  },
   "teamPage": {
     "eyebrow": "Team",
     "title": "Accessi e formazione",

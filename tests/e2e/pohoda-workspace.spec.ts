@@ -137,13 +137,11 @@ test.describe("Pohoda workspace", () => {
     // Server actions are identified by the `next-action` request header and POST
     // to the current page URL. We return a minimal RSC success payload so the
     // client-side form sets `submitted = true` without needing a real Clerk session.
-    let actionIntercepted = false;
     await page.route("**/workspaces/pohoda", async (route, request) => {
       if (
         request.method() === "POST" &&
         request.headers()["next-action"]
       ) {
-        actionIntercepted = true;
         await route.fulfill({
           status: 200,
           headers: {

@@ -1,6 +1,6 @@
 import { and, desc, eq, inArray } from "drizzle-orm";
 import { getDb } from "@/lib/db";
-import { controls, evidence, orgControlStatuses } from "@/lib/db/schema";
+import { controls, evidence } from "@/lib/db/schema";
 import type { EvidenceAssessmentResult, EvidenceCollectionStatus } from "@/lib/activation/evidence-state";
 import type { PlatformWorkspace } from "@/lib/workspaces/types";
 

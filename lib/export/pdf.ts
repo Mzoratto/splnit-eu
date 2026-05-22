@@ -4,6 +4,7 @@ import {
   renderReportTemplate,
   type ReportContext,
 } from "@/lib/export/report-template";
+import { resolveAgencyBranding } from "@/lib/pdf/agency-branding";
 
 export function getComplianceReportFilename(ico: string, date = new Date()): string {
   const isoDate = date.toISOString().slice(0, 10);
@@ -32,7 +33,13 @@ export async function renderComplianceReportPdf(ctx: ReportContext): Promise<Buf
 }
 
 export async function generateComplianceReport(orgId: string): Promise<Buffer> {
-  const ctx = await getOrgWithEvidence(orgId);
+  const [ctx, agencyBranding] = await Promise.all([
+    getOrgWithEvidence(orgId),
+    resolveAgencyBranding(orgId),
+  ]);
 
-  return renderComplianceReportPdf(ctx);
+  return renderComplianceReportPdf({
+    ...ctx,
+    agencyBranding,
+  });
 }

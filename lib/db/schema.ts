@@ -1,5 +1,7 @@
+import { sql } from "drizzle-orm";
 import {
   boolean,
+  check,
   date,
   index,
   integer,
@@ -655,6 +657,149 @@ export const consultantClients = pgTable(
     unique().on(table.consultantOrgId, table.clientOrgId),
     index("idx_consultant_clients_consultant").on(table.consultantOrgId),
     index("idx_consultant_clients_client").on(table.clientOrgId),
+  ],
+);
+
+export type ControlCommentAuthorType = "consultant" | "client";
+
+export const agencies = pgTable(
+  "agencies",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    clerkOrgId: text("clerk_org_id").unique().references(() => organisations.clerkOrgId, {
+      onDelete: "set null",
+    }),
+    name: text("name").notNull(),
+    contactEmail: text("contact_email"),
+    status: text("status").notNull().default("active"),
+    createdAt: timestamp("created_at", { withTimezone: true }).defaultNow(),
+    updatedAt: timestamp("updated_at", { withTimezone: true }).defaultNow(),
+  },
+  (table) => [
+    index("idx_agencies_status").on(table.status),
+  ],
+);
+
+export const agencyBranding = pgTable(
+  "agency_branding",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    agencyId: uuid("agency_id")
+      .notNull()
+      .references(() => agencies.id, { onDelete: "cascade" }),
+    displayName: text("display_name"),
+    logoUrl: text("logo_url"),
+    logoAltText: text("logo_alt_text"),
+    primaryColour: text("primary_colour"),
+    poweredByText: text("powered_by_text").notNull().default("Powered by Splnit.eu"),
+    createdAt: timestamp("created_at", { withTimezone: true }).defaultNow(),
+    updatedAt: timestamp("updated_at", { withTimezone: true }).defaultNow(),
+  },
+  (table) => [
+    unique().on(table.agencyId),
+    check(
+      "agency_branding_primary_colour_check",
+      sql`${table.primaryColour} IS NULL OR ${table.primaryColour} ~ '^#[0-9A-Fa-f]{6}$'`,
+    ),
+  ],
+);
+
+export const agencyClientOrgs = pgTable(
+  "agency_client_orgs",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    agencyId: uuid("agency_id")
+      .notNull()
+      .references(() => agencies.id, { onDelete: "cascade" }),
+    orgId: text("org_id")
+      .notNull()
+      .references(() => organisations.clerkOrgId, { onDelete: "cascade" }),
+    status: text("status").notNull().default("active"),
+    linkedByUserId: text("linked_by_user_id"),
+    createdAt: timestamp("created_at", { withTimezone: true }).defaultNow(),
+    updatedAt: timestamp("updated_at", { withTimezone: true }).defaultNow(),
+  },
+  (table) => [
+    unique().on(table.agencyId, table.orgId),
+    unique("agency_client_orgs_org_id_unique").on(table.orgId),
+    index("idx_agency_client_orgs_agency").on(table.agencyId),
+  ],
+);
+
+export const agencyConsultants = pgTable(
+  "agency_consultants",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    agencyId: uuid("agency_id")
+      .notNull()
+      .references(() => agencies.id, { onDelete: "cascade" }),
+    clerkUserId: text("clerk_user_id"),
+    email: text("email"),
+    role: text("role").notNull().default("consultant"),
+    status: text("status").notNull().default("active"),
+    invitedByUserId: text("invited_by_user_id"),
+    createdAt: timestamp("created_at", { withTimezone: true }).defaultNow(),
+    updatedAt: timestamp("updated_at", { withTimezone: true }).defaultNow(),
+  },
+  (table) => [
+    unique().on(table.agencyId, table.clerkUserId),
+    unique().on(table.agencyId, table.email),
+    index("idx_agency_consultants_user").on(table.clerkUserId),
+    index("idx_agency_consultants_agency").on(table.agencyId),
+  ],
+);
+
+export const agencyClientInvites = pgTable(
+  "agency_client_invites",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    agencyId: uuid("agency_id")
+      .notNull()
+      .references(() => agencies.id, { onDelete: "cascade" }),
+    email: text("email"),
+    tokenHash: text("token_hash").notNull().unique(),
+    status: text("status").notNull().default("pending"),
+    createdByUserId: text("created_by_user_id").notNull(),
+    acceptedByUserId: text("accepted_by_user_id"),
+    acceptedOrgId: text("accepted_org_id").references(() => organisations.clerkOrgId, {
+      onDelete: "set null",
+    }),
+    expiresAt: timestamp("expires_at", { withTimezone: true }).notNull(),
+    acceptedAt: timestamp("accepted_at", { withTimezone: true }),
+    createdAt: timestamp("created_at", { withTimezone: true }).defaultNow(),
+    updatedAt: timestamp("updated_at", { withTimezone: true }).defaultNow(),
+  },
+  (table) => [
+    index("idx_agency_client_invites_agency").on(table.agencyId),
+    index("idx_agency_client_invites_status_expires").on(table.status, table.expiresAt),
+  ],
+);
+
+export const controlComments = pgTable(
+  "control_comments",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    agencyId: uuid("agency_id")
+      .notNull()
+      .references(() => agencies.id, { onDelete: "cascade" }),
+    orgId: text("org_id")
+      .notNull()
+      .references(() => organisations.clerkOrgId, { onDelete: "cascade" }),
+    controlKey: text("control_key").notNull(),
+    authorUserId: text("author_user_id").notNull(),
+    authorType: text("author_type").$type<ControlCommentAuthorType>().notNull(),
+    body: text("body").notNull(),
+    isGapFlag: boolean("is_gap_flag").notNull().default(false),
+    createdAt: timestamp("created_at", { withTimezone: true }).defaultNow(),
+    updatedAt: timestamp("updated_at", { withTimezone: true }).defaultNow(),
+  },
+  (table) => [
+    check(
+      "control_comments_author_type_check",
+      sql`${table.authorType} IN ('consultant', 'client')`,
+    ),
+    index("idx_control_comments_org_control").on(table.orgId, table.controlKey),
+    index("idx_control_comments_agency").on(table.agencyId),
   ],
 );
 

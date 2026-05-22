@@ -921,6 +921,140 @@
       }
     ]
   },
+  "agency": {
+    "dashboard": {
+      "eyebrow": "Agency",
+      "title": "Managed clients",
+      "subtitle": "Review client scores, open gaps, and recent activity across organisations linked to this agency.",
+      "settings": "Agency settings",
+      "metrics": {
+        "clients": "Clients",
+        "openGaps": "Open gaps",
+        "averageScore": "Average score"
+      },
+      "filters": {
+        "title": "Filters",
+        "minScore": "Minimum score",
+        "maxScore": "Maximum score",
+        "minOpenGaps": "Minimum open gaps",
+        "activity": "Last activity",
+        "activityOptions": {
+          "all": "Any time",
+          "sevenDays": "Last 7 days",
+          "thirtyDays": "Last 30 days",
+          "stale": "Older than 30 days"
+        },
+        "apply": "Apply filters"
+      },
+      "clientsTitle": "Client organisations",
+      "lastActivity": "Last activity",
+      "never": "never",
+      "openGaps": "{count} open gaps",
+      "empty": "No linked clients match these filters."
+    },
+    "client": {
+      "back": "Back to agency dashboard",
+      "eyebrow": "Client workspace",
+      "sectorEmpty": "sector not provided",
+      "score": "Score",
+      "openGaps": "Open gaps",
+      "comments": "Comments",
+      "priorityControls": "Priority controls",
+      "emptyValue": "n/a",
+      "noPriorityControls": "No priority controls are currently open for this client.",
+      "workspaces": "Read-only workspaces",
+      "banner": {
+        "title": "Consultant read-only mode",
+        "body": "You can review evidence state and leave comments for this client. Attestations, file uploads, and connector activation remain disabled for consultants."
+      },
+      "statuses": {
+        "active": "active",
+        "unknown": "unknown",
+        "fail": "not passed",
+        "manual_review": "partial",
+        "warning": "warning",
+        "pass": "passed"
+      }
+    },
+    "settings": {
+      "never": "never",
+      "eyebrow": "Agency",
+      "title": "Settings",
+      "subtitle": "Manage agency branding, client links, and consultant access.",
+      "tabs": {
+        "branding": "Branding",
+        "clients": "Clients",
+        "consultants": "Consultants"
+      },
+      "branding": {
+        "displayName": "Display name",
+        "logo": "Logo file",
+        "logoHelp": "PNG or SVG, maximum 512 KB.",
+        "logoAltText": "Logo alt text",
+        "primaryColour": "Primary colour",
+        "poweredByText": "PDF footer text",
+        "save": "Save branding"
+      },
+      "clients": {
+        "inviteTitle": "Invite client",
+        "email": "Client contact email",
+        "createInvite": "Create 7-day invite",
+        "inviteReady": "Invite link created",
+        "copyManually": "Copy this path and send it through your approved channel.",
+        "connectedTitle": "Connected clients",
+        "empty": "No client organisations are linked yet."
+      },
+      "consultants": {
+        "inviteTitle": "Record consultant",
+        "email": "Consultant email",
+        "clerkUserId": "Clerk user ID",
+        "role": "Role",
+        "recordInvite": "Record membership",
+        "deliveryNote": "Email delivery is recorded as pending until Clerk invitation wiring is enabled.",
+        "membersTitle": "Consultants",
+        "unknown": "Unknown consultant",
+        "empty": "No consultants are recorded yet.",
+        "roles": {
+          "admin": "Admin",
+          "consultant": "Consultant"
+        }
+      }
+    },
+    "invites": {
+      "eyebrow": "Agency invite",
+      "title": "Connect this organisation",
+      "body": "{agency} invited this organisation to be managed in the agency portal.",
+      "invalidBody": "This invite could not be found.",
+      "activeHelp": "Accepting links your active Clerk organisation to the agency. Switch organisation first if needed.",
+      "accept": "Accept invite",
+      "expired": "This invite has expired.",
+      "unavailable": "This invite is no longer available."
+    }
+  },
+  "workspace": {
+    "emptyLayers": "No layers configured for this workspace.",
+    "workspaceTitle": "{platform} workspace",
+    "controlsCompleted": "{completed}/{total} controls completed",
+    "readOnly": {
+      "title": "Read-only consultant view",
+      "body": "Evidence-changing controls are disabled. Use comments to guide the client.",
+      "controlNotice": "Read-only mode: consultants can comment, but cannot submit attestations or upload evidence."
+    },
+    "comments": {
+      "title": "Comments",
+      "count": "{count} comments",
+      "consultant": "Consultant",
+      "client": "Client",
+      "gapFlag": "Gap flagged",
+      "empty": "No comments yet.",
+      "placeholder": "Write a comment for this control",
+      "markGap": "Flag this as a gap",
+      "missingClient": "Client organisation is required.",
+      "saveError": "Comment could not be saved.",
+      "saving": "Saving...",
+      "save": "Add comment"
+    }
+  },
   "teamPage": {
     "eyebrow": "Team",
     "title": "Access and training",

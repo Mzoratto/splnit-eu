@@ -14,7 +14,6 @@ import { getFrameworkDisplayName } from "@/lib/frameworks/localization";
 import { FRAMEWORK_LIBRARY } from "@/lib/frameworks/registry";
 
 type EvidenceRow = Awaited<ReturnType<typeof listEvidenceVault>>[number];
-type EvidenceCopy = ReturnType<typeof getMessagesForLocale>["evidence"];
 
 type SearchParams = {
   expiry?: string;
@@ -79,14 +78,6 @@ function getEvidenceFrameworkName(
     },
     locale,
   );
-}
-
-function formatDaysUntil(days: number, copy: EvidenceCopy) {
-  if (days < 0) {
-    return copy.expiry.daysOverdue.replace("{days}", String(Math.abs(days)));
-  }
-
-  return copy.expiry.daysUntil.replace("{days}", String(days));
 }
 
 async function loadEvidenceRows() {
@@ -226,7 +217,6 @@ export default async function EvidencePage({
         <div className="divide-y divide-border">
           {filteredRows.length > 0 ? (
             filteredRows.map((item) => {
-              const daysUntilExpiry = getDaysUntil(null);
               const controlTitle = getControlTitle(item, locale);
 
               return (

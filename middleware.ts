@@ -4,6 +4,8 @@ import { toInternalMarketingPath } from "./i18n/marketing-paths";
 import { localeCookieName, routing } from "./i18n/routing";
 
 const protectedRoutes = [
+  "/agency(.*)",
+  "/agency-client-invites(.*)",
   "/dashboard(.*)",
   "/onboarding(.*)",
   "/frameworks(.*)",

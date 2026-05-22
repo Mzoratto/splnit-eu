@@ -3,6 +3,11 @@ import { auth } from "@clerk/nextjs/server";
 import { ArrowLeft } from "lucide-react";
 import { WorkspaceRenderer } from "@/components/workspaces/workspace-renderer";
 import { hasDatabaseUrl } from "@/lib/db";
+import {
+  groupCommentsByControlKey,
+  listControlCommentsForOrg,
+  type ControlComment,
+} from "@/lib/db/queries/agencies";
 import { getWorkspaceProgress } from "@/lib/db/queries/workspaces";
 import { pohodaWorkspace } from "@/lib/workspaces/pohoda";
 import type { WorkspaceProgress } from "@/lib/db/queries/workspaces";
@@ -34,6 +39,7 @@ function buildDemoProgress(): WorkspaceProgress {
 }
 
 async function loadPohodaProgress(): Promise<{
+  commentsByControlKey: Record<string, ControlComment[]>;
   progress: WorkspaceProgress;
   mode: "live" | "demo";
 }> {
@@ -42,25 +48,32 @@ async function loadPohodaProgress(): Promise<{
     Boolean(process.env.CLERK_SECRET_KEY);
 
   if (!clerkConfigured || !hasDatabaseUrl()) {
-    return { progress: buildDemoProgress(), mode: "demo" };
+    return { commentsByControlKey: {}, progress: buildDemoProgress(), mode: "demo" };
   }
 
   const session = await auth();
 
   if (!session.orgId) {
-    return { progress: buildDemoProgress(), mode: "demo" };
+    return { commentsByControlKey: {}, progress: buildDemoProgress(), mode: "demo" };
   }
 
   try {
-    const progress = await getWorkspaceProgress(session.orgId, pohodaWorkspace);
-    return { progress, mode: "live" };
+    const [progress, comments] = await Promise.all([
+      getWorkspaceProgress(session.orgId, pohodaWorkspace),
+      listControlCommentsForOrg(session.orgId),
+    ]);
+    return {
+      commentsByControlKey: groupCommentsByControlKey(comments),
+      progress,
+      mode: "live",
+    };
   } catch {
-    return { progress: buildDemoProgress(), mode: "demo" };
+    return { commentsByControlKey: {}, progress: buildDemoProgress(), mode: "demo" };
   }
 }
 
 export default async function PohodaWorkspacePage() {
-  const { progress, mode } = await loadPohodaProgress();
+  const { commentsByControlKey, progress, mode } = await loadPohodaProgress();
 
   return (
     <section className="space-y-6">
@@ -93,7 +106,11 @@ export default async function PohodaWorkspacePage() {
         </div>
       ) : null}
 
-      <WorkspaceRenderer workspace={pohodaWorkspace} progress={progress} />
+      <WorkspaceRenderer
+        commentsByControlKey={commentsByControlKey}
+        workspace={pohodaWorkspace}
+        progress={progress}
+      />
     </section>
   );
 }

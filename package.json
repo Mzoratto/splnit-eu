@@ -73,6 +73,7 @@
     "smoke:public-module-seams": "tsx scripts/smoke-public-module-seams.ts",
     "smoke:export-endpoints-source": "tsx scripts/smoke-export-endpoints-source.ts",
     "smoke:org-boundaries": "tsx scripts/smoke-org-boundaries.ts",
+    "smoke:agency-model": "tsx scripts/smoke-agency-model.ts",
     "smoke:draft-extraction-sources": "tsx scripts/smoke-draft-extraction-sources.ts",
     "baseline:import": "tsx scripts/baseline-import.ts",
     "baseline:diff": "tsx scripts/baseline-diff.ts",

@@ -16,13 +16,22 @@ import {
   ActivationStatus,
   deriveActivationStatusState,
 } from "@/components/activation/activation-status";
-import { submitWorkspaceAttestationAction } from "@/app/(app)/workspaces/actions";
+import { createAgencyControlCommentAction } from "@/app/(app)/agency/actions";
+import {
+  createClientControlCommentAction,
+  submitWorkspaceAttestationAction,
+} from "@/app/(app)/workspaces/actions";
+import { useTranslations } from "next-intl";
+import type { ControlComment } from "@/lib/db/queries/agencies";
 import type { PlatformWorkspace, WorkspaceControl } from "@/lib/workspaces/types";
 import type { WorkspaceProgress, WorkspaceControlProgress } from "@/lib/db/queries/workspaces";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
 type WorkspaceRendererProps = {
+  clientOrgId?: string;
+  commentsByControlKey?: Record<string, ControlComment[]>;
+  mode?: "editable" | "consultant_readonly";
   workspace: PlatformWorkspace;
   progress: WorkspaceProgress;
 };
@@ -331,17 +340,195 @@ function FileUploadHint({ controlKey }: { controlKey: string }) {
   );
 }
 
+// ─── Comments ────────────────────────────────────────────────────────────────
+
+type CommentsPanelProps = {
+  clientOrgId?: string;
+  comments: ControlComment[];
+  controlKey: string;
+  mode: "editable" | "consultant_readonly";
+};
+
+function CommentAuthor({ authorType }: { authorType: ControlComment["authorType"] }) {
+  const t = useTranslations("workspace.comments");
+
+  return (
+    <span className="rounded-sm bg-surface-muted px-1.5 py-0.5 text-[11px] font-medium text-foreground/58">
+      {authorType === "consultant" ? t("consultant") : t("client")}
+    </span>
+  );
+}
+
+function formatCommentDate(value: Date | string | null) {
+  if (!value) {
+    return "";
+  }
+
+  return new Intl.DateTimeFormat(undefined, {
+    dateStyle: "medium",
+    timeStyle: "short",
+  }).format(new Date(value));
+}
+
+function CommentsPanel({
+  clientOrgId,
+  comments,
+  controlKey,
+  mode,
+}: CommentsPanelProps) {
+  const t = useTranslations("workspace.comments");
+  const [body, setBody] = React.useState("");
+  const [isGapFlag, setIsGapFlag] = React.useState(false);
+  const [pending, setPending] = React.useState(false);
+  const [error, setError] = React.useState<string | null>(null);
+
+  async function handleSubmit(event: React.FormEvent) {
+    event.preventDefault();
+    const trimmedBody = body.trim();
+
+    if (!trimmedBody || pending) {
+      return;
+    }
+
+    setPending(true);
+    setError(null);
+
+    try {
+      if (mode === "consultant_readonly") {
+        if (!clientOrgId) {
+          throw new Error(t("missingClient"));
+        }
+
+        await createAgencyControlCommentAction({
+          body: trimmedBody,
+          controlKey,
+          isGapFlag,
+          orgId: clientOrgId,
+        });
+      } else {
+        await createClientControlCommentAction({
+          body: trimmedBody,
+          controlKey,
+        });
+      }
+
+      setBody("");
+      setIsGapFlag(false);
+    } catch (commentError) {
+      setError(
+        commentError instanceof Error
+          ? commentError.message
+          : t("saveError"),
+      );
+    } finally {
+      setPending(false);
+    }
+  }
+
+  return (
+    <div className="space-y-3 rounded-md border border-border bg-background p-3">
+      <div className="flex flex-wrap items-center justify-between gap-2">
+        <p className="text-sm font-medium">{t("title")}</p>
+        {comments.length ? (
+          <span className="rounded-sm bg-surface-muted px-2 py-1 text-xs text-foreground/58">
+            {t("count", { count: comments.length })}
+          </span>
+        ) : null}
+      </div>
+
+      {comments.length ? (
+        <div className="space-y-2">
+          {comments.map((comment) => (
+            <article
+              key={comment.id}
+              className="rounded-md border border-border bg-surface px-3 py-2"
+            >
+              <div className="flex flex-wrap items-center gap-2">
+                <CommentAuthor authorType={comment.authorType} />
+                {comment.isGapFlag ? (
+                  <span className="rounded-sm bg-[var(--status-warn-subtle)] px-1.5 py-0.5 text-[11px] font-medium text-[var(--status-warn)]">
+                    {t("gapFlag")}
+                  </span>
+                ) : null}
+                <time className="text-[11px] text-foreground/44">
+                  {formatCommentDate(comment.createdAt)}
+                </time>
+              </div>
+              <p className="mt-2 whitespace-pre-wrap text-sm leading-6 text-foreground/72">
+                {comment.body}
+              </p>
+            </article>
+          ))}
+        </div>
+      ) : mode === "consultant_readonly" ? (
+        <p className="text-sm text-foreground/58">{t("empty")}</p>
+      ) : null}
+
+      <form onSubmit={handleSubmit} className="space-y-2">
+        <label className="grid gap-1.5 text-sm">
+          <span className="sr-only">{t("placeholder")}</span>
+          <textarea
+            rows={3}
+            value={body}
+            onChange={(event) => setBody(event.target.value)}
+            placeholder={t("placeholder")}
+            className="rounded-md border border-border bg-surface px-3 py-2 text-sm placeholder:text-foreground/40 focus:outline-none focus:ring-1 focus:ring-primary"
+          />
+        </label>
+
+        {mode === "consultant_readonly" ? (
+          <label className="inline-flex items-center gap-2 text-sm text-foreground/64">
+            <input
+              type="checkbox"
+              checked={isGapFlag}
+              onChange={(event) => setIsGapFlag(event.target.checked)}
+              className="h-4 w-4 rounded border-border"
+            />
+            {t("markGap")}
+          </label>
+        ) : null}
+
+        {error ? (
+          <p className="text-xs text-[var(--status-fail)]">{error}</p>
+        ) : null}
+
+        <button
+          type="submit"
+          disabled={!body.trim() || pending}
+          className="inline-flex items-center gap-2 rounded-md bg-primary px-3 py-2 text-sm font-medium text-primary-foreground disabled:cursor-not-allowed disabled:opacity-50"
+        >
+          {pending ? t("saving") : t("save")}
+          <CheckCircle2 className="h-4 w-4" aria-hidden="true" />
+        </button>
+      </form>
+    </div>
+  );
+}
+
 // ─── Control card ─────────────────────────────────────────────────────────────
 
 type ControlCardProps = {
+  clientOrgId?: string;
+  comments: ControlComment[];
   control: WorkspaceControl;
   controlProg: WorkspaceControlProgress | null;
   layerId: string;
+  mode: "editable" | "consultant_readonly";
   platformId: string;
 };
 
-function ControlCard({ control, controlProg, layerId, platformId }: ControlCardProps) {
+function ControlCard({
+  clientOrgId,
+  comments,
+  control,
+  controlProg,
+  layerId,
+  mode,
+  platformId,
+}: ControlCardProps) {
+  const t = useTranslations("workspace");
   const [open, setOpen] = React.useState(false);
+  const isConsultantReadonly = mode === "consultant_readonly";
 
   const activationState = controlProg?.hasEvidence
     ? deriveActivationStatusState({
@@ -375,6 +562,11 @@ function ControlCard({ control, controlProg, layerId, platformId }: ControlCardP
               />
             )}
             <span className="text-sm font-medium">{control.question}</span>
+            {comments.length ? (
+              <span className="rounded-sm bg-primary/10 px-1.5 py-0.5 text-[11px] font-medium text-primary">
+                {t("comments.count", { count: comments.length })}
+              </span>
+            ) : null}
           </div>
 
           {/* refs */}
@@ -426,33 +618,48 @@ function ControlCard({ control, controlProg, layerId, platformId }: ControlCardP
           ) : null}
 
           {/* Evidence collection */}
-          <div className="space-y-3">
-            <p className="text-xs font-medium uppercase tracking-[0.1em] text-foreground/48">
-              Submit evidence
-            </p>
+          {isConsultantReadonly || comments.length ? (
+            <CommentsPanel
+              clientOrgId={clientOrgId}
+              comments={comments}
+              controlKey={control.controlKey}
+              mode={mode}
+            />
+          ) : null}
 
-            {/* Attestation form for attestation or both */}
-            {control.evidenceType === "attestation" || control.evidenceType === "both" ? (
-              <AttestationForm
-                control={control}
-                layerId={layerId}
-                platformId={platformId}
-              />
-            ) : null}
+          {isConsultantReadonly ? (
+            <div className="rounded-md border border-border bg-surface-muted px-3 py-2.5 text-sm leading-6 text-foreground/64">
+              {t("readOnly.controlNotice")}
+            </div>
+          ) : (
+            <div className="space-y-3">
+              <p className="text-xs font-medium uppercase tracking-[0.1em] text-foreground/48">
+                Submit evidence
+              </p>
 
-            {/* File upload hint for file_upload or both */}
-            {control.evidenceType === "file_upload" || control.evidenceType === "both" ? (
-              <div className="space-y-1">
-                {control.evidenceType === "both" ? (
-                  <p className="flex items-center gap-1.5 text-xs text-foreground/52">
-                    <Upload className="h-3.5 w-3.5" aria-hidden="true" />
-                    You can also attach a supporting file:
-                  </p>
-                ) : null}
-                <FileUploadHint controlKey={control.controlKey} />
-              </div>
-            ) : null}
-          </div>
+              {/* Attestation form for attestation or both */}
+              {control.evidenceType === "attestation" || control.evidenceType === "both" ? (
+                <AttestationForm
+                  control={control}
+                  layerId={layerId}
+                  platformId={platformId}
+                />
+              ) : null}
+
+              {/* File upload hint for file_upload or both */}
+              {control.evidenceType === "file_upload" || control.evidenceType === "both" ? (
+                <div className="space-y-1">
+                  {control.evidenceType === "both" ? (
+                    <p className="flex items-center gap-1.5 text-xs text-foreground/52">
+                      <Upload className="h-3.5 w-3.5" aria-hidden="true" />
+                      You can also attach a supporting file:
+                    </p>
+                  ) : null}
+                  <FileUploadHint controlKey={control.controlKey} />
+                </div>
+              ) : null}
+            </div>
+          )}
         </div>
       ) : null}
     </article>
@@ -502,7 +709,14 @@ function LayerTab({ active, completedControls, onClick, title, totalControls }: 
 
 // ─── Main component ───────────────────────────────────────────────────────────
 
-export function WorkspaceRenderer({ workspace, progress }: WorkspaceRendererProps) {
+export function WorkspaceRenderer({
+  clientOrgId,
+  commentsByControlKey = {},
+  mode = "editable",
+  workspace,
+  progress,
+}: WorkspaceRendererProps) {
+  const t = useTranslations("workspace");
   const [activeLayerIndex, setActiveLayerIndex] = React.useState(0);
   const activeLayer = workspace.layers[activeLayerIndex];
   const activeLayerProg = activeLayer ? layerProgress(activeLayer.id, progress) : null;
@@ -511,13 +725,20 @@ export function WorkspaceRenderer({ workspace, progress }: WorkspaceRendererProp
     return (
       <div className="flex items-center gap-2 rounded-lg border border-border p-5 text-sm text-foreground/58">
         <HelpCircle className="h-4 w-4 shrink-0" aria-hidden="true" />
-        No layers configured for this workspace.
+        {t("emptyLayers")}
       </div>
     );
   }
 
   return (
     <div className="space-y-6">
+      {mode === "consultant_readonly" ? (
+        <div className="rounded-lg border border-primary/25 bg-primary/8 p-4 text-sm leading-6 text-foreground/72">
+          <p className="font-medium text-primary">{t("readOnly.title")}</p>
+          <p className="mt-1">{t("readOnly.body")}</p>
+        </div>
+      ) : null}
+
       {/* Overall progress header */}
       <div className="rounded-lg border border-border bg-surface p-5">
         <div className="flex flex-wrap items-center justify-between gap-3">
@@ -525,14 +746,19 @@ export function WorkspaceRenderer({ workspace, progress }: WorkspaceRendererProp
             <p className="text-xs font-medium uppercase tracking-[0.12em] text-foreground/48">
               {workspace.platformVendor}
             </p>
-            <h2 className="mt-0.5 text-lg font-semibold">{workspace.platformName} workspace</h2>
+            <h2 className="mt-0.5 text-lg font-semibold">
+              {t("workspaceTitle", { platform: workspace.platformName })}
+            </h2>
           </div>
           <div className="text-right">
             <p className="text-2xl font-semibold tabular-nums">
               {pct(progress.overallCompletionPct)}
             </p>
             <p className="text-xs text-foreground/52">
-              {progress.completedControls}/{progress.totalControls} controls completed
+              {t("controlsCompleted", {
+                completed: progress.completedControls,
+                total: progress.totalControls,
+              })}
             </p>
           </div>
         </div>
@@ -576,13 +802,16 @@ export function WorkspaceRenderer({ workspace, progress }: WorkspaceRendererProp
           {activeLayer.controls.map((control) => {
             const cp = controlProgress(control.controlKey, progress);
             return (
-              <ControlCard
-                key={control.controlKey}
-                control={control}
-                controlProg={cp}
-                layerId={activeLayer.id}
-                platformId={workspace.platformId}
-              />
+            <ControlCard
+              key={control.controlKey}
+              clientOrgId={clientOrgId}
+              comments={commentsByControlKey[control.controlKey] ?? []}
+              control={control}
+              controlProg={cp}
+              layerId={activeLayer.id}
+              mode={mode}
+              platformId={workspace.platformId}
+            />
             );
           })}
         </div>

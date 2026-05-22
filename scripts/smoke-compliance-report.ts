@@ -8,7 +8,6 @@ import {
   integrations,
   organisations,
 } from "@/lib/db/schema";
-import { getOrgWithEvidence } from "@/lib/db/queries/export";
 import {
   generateComplianceReport,
   getComplianceReportFilename,
@@ -368,6 +367,16 @@ async function main() {
 
     const nizsiHtml = renderReportTemplate(fixtureContext("nizsi"));
     const vyssiHtml = renderReportTemplate(fixtureContext("vyssi"));
+    const agencyBrandedHtml = renderReportTemplate({
+      ...fixtureContext("nizsi"),
+      agencyBranding: {
+        displayName: "Agency Smoke",
+        logoAltText: "Agency Smoke logo",
+        logoUrl: "https://example.com/agency-logo.svg",
+        poweredByText: "Powered by Agency Smoke",
+        primaryColour: "#123abc",
+      },
+    });
     const connectorWorkspaceScope = generateScopeStatement(
       ["Pohoda EKO"],
       ["Microsoft 365"],
@@ -385,6 +394,26 @@ async function main() {
       "Scope statement changes when active workspaces and connectors differ.",
     );
     assertHtml(nizsiHtml);
+    assert.match(
+      agencyBrandedHtml,
+      /https:\/\/example\.com\/agency-logo\.svg/,
+      "Agency-branded HTML uses the agency logo.",
+    );
+    assert.match(
+      agencyBrandedHtml,
+      /Powered by Agency Smoke/,
+      "Agency-branded HTML uses agency footer text.",
+    );
+    assert.match(
+      agencyBrandedHtml,
+      /border-left: 4px solid #123abc/,
+      "Agency-branded HTML uses agency primary colour.",
+    );
+    assert.doesNotMatch(
+      agencyBrandedHtml,
+      /Review this backup evidence|Komentář|Comment/,
+      "Compliance report HTML does not include control comments.",
+    );
     assert.match(
       nizsiHtml,
       /vyhláška č\. 410\/2025 Sb\./,
