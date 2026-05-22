@@ -3,7 +3,6 @@ import {
   AlertTriangle,
   ArrowRight,
   CalendarClock,
-  CheckCircle2,
   Factory,
   Plug,
   ShieldCheck,

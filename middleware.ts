@@ -123,6 +123,10 @@ export default function middleware(request: NextRequest, event: NextFetchEvent) 
     Boolean(process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY) &&
     Boolean(process.env.CLERK_SECRET_KEY);
 
+  if (isPublicRoute(request)) {
+    return applyLocale(request);
+  }
+
   if (!clerkConfigured) {
     if (
       process.env.NODE_ENV === "production" &&
