@@ -19,6 +19,17 @@ export type BlogPost = {
     heading: string;
     body: string[];
     bullets?: string[];
+    codeBlock?: string;
+    subsections?: {
+      heading: string;
+      body: string[];
+      bullets?: string[];
+      codeBlock?: string;
+    }[];
+    table?: {
+      headers: string[];
+      rows: string[][];
+    };
   }[];
 };
 
@@ -103,8 +114,443 @@ export const blogPageCopy: Record<Locale, BlogPageCopy> = {
   },
 };
 
+const czechNukibRegistrationPosts: BlogPost[] = [
+  {
+    slug: "co-splnit-do-12-mesicu-od-registrace-nukib",
+    title: "Co musíte splnit do 12 měsíců od registrace u NÚKIB",
+    description:
+      "Praktický plán pro firmu, která dostala rozhodnutí o registraci regulované služby od NÚKIB a spadá do režimu nižších povinností.",
+    category: "ZoKB",
+    publishedAt: "2026-05-22",
+    readTime: "8 min",
+    author: "Marco Zoratto",
+    authorRole: "zakladatel Splnit.eu",
+    regulationHref: "/predpisy/nis2",
+    ctaTitle: "Převést registraci NÚKIB na kontrolní plán",
+    ctaBody:
+      "Splnit.eu pomůže převést požadavky vyhlášky č. 410/2025 Sb. na opatření, vlastníky, důkazy a exportovatelný přehled pro režim nižších povinností.",
+    ctaButton: "Spustit analýzu zdarma",
+    ctaHref: "/sign-up?ref=blog",
+    summary:
+      "Po doručení rozhodnutí o registraci regulované služby běží lhůta pro zavedení bezpečnostních opatření. Začněte pěti neopominutelnými opatřeními a průběžně dokumentujte stav v přehledu bezpečnostních opatření.",
+    sections: [
+      {
+        heading: "Kdo patří do režimu nižších povinností",
+        body: [
+          "Vyhláška č. 410/2025 Sb. se vztahuje na poskytovatele regulovaných služeb v režimu nižších povinností. Typicky jde o střední podnik v regulovaném odvětví, menší firmu poskytující důležitější regulovanou službu nebo subjekt, který NÚKIB zaregistroval jako poskytovatele regulované služby.",
+          "Pokud jste obdrželi rozhodnutí o registraci, nečekejte na další výzvu. Prakticky to znamená začít zavádět a dokumentovat opatření v rozsahu regulované služby. Tento článek je praktický návod, nikoli právní stanovisko.",
+        ],
+      },
+      {
+        heading: "Co musíte zavést",
+        body: [
+          "Vyhláška v § 3 pracuje s přehledem bezpečnostních opatření: dokumentem, který ukazuje, která opatření jsou zavedena, která budou zavedena a která nebyla zavedena včetně zdůvodnění. Přehled musíte aktualizovat alespoň jednou ročně a jednotlivé verze uchovávat alespoň 4 roky.",
+          "V režimu nižších povinností nejde o formální certifikaci. Jde o schopnost ukázat, že máte minimální kybernetickou bezpečnost řízenou, doloženou a průběžně aktualizovanou.",
+        ],
+        bullets: [
+          "Vést přehled v listinné nebo elektronické podobě.",
+          "U každého opatření uvést stav, popis nebo odůvodnění a odpovědnou osobu.",
+          "Aktualizovat přehled alespoň jednou ročně.",
+          "Uchovávat verze přehledu alespoň 4 roky.",
+        ],
+      },
+      {
+        heading: "Neopominutelná opatření",
+        body: [
+          "Pět oblastí musíte řešit vždy. Neznamená to, že první verze musí být perfektní, ale nesmí zůstat prázdná bez vlastníka, termínu a důkazu.",
+        ],
+        subsections: [
+          {
+            heading: "1. Systém zajišťování minimální kybernetické bezpečnosti (§ 3)",
+            body: [
+              "Musíte vytvořit bezpečnostní politiku a vést přehled bezpečnostních opatření. Nemusí jít o rozsáhlý dokument. Důležité je, aby popisoval skutečný stav, pravidla a odpovědnosti ve vaší firmě.",
+              "Prakticky: vytvořte dokument nebo tabulku s výčtem opatření, stavem, vlastníkem a důkazem. Uveďte datum poslední aktualizace.",
+            ],
+          },
+          {
+            heading: "2. Pověřená osoba kybernetické bezpečnosti (§ 4)",
+            body: [
+              "Vrcholné vedení musí určit konkrétní osobu pověřenou kybernetickou bezpečností a dát jí pravomoci pro řízení a rozvoj kybernetické bezpečnosti, dohled nad stavem a komunikaci s vedením.",
+              "Prakticky: vydejte interní jmenovací dokument nebo zápis z porady vedení. Zaznamenejte jméno, datum jmenování a absolvované školení.",
+            ],
+          },
+          {
+            heading: "3. Školení zaměstnanců (§ 5)",
+            body: [
+              "Musíte stanovit pravidla bezpečného chování a zajistit vstupní i pravidelná školení. Vyhláška zároveň požaduje vedení přehledů o provedených školeních a seznamů školených osob.",
+              "Prakticky: vytvořte jednoduchou politiku bezpečného chování a evidujte, kdo školení absolvoval, kdy a podle jaké verze školení.",
+            ],
+          },
+          {
+            heading: "4. Zálohy a kontinuita (§ 6)",
+            body: [
+              "Musíte mít plán kontinuity a pravidla pro obnovu regulované služby. Pro běžnou firmu to znamená vědět, co se zálohuje, jak často, kde jsou zálohy a kdo obnovu provádí.",
+              "Prakticky: zdokumentujte zálohovací proces pro klíčové systémy, například účetnictví, e-mail, cloudové servery a sdílené soubory.",
+            ],
+          },
+          {
+            heading: "5. Řešení kybernetických incidentů (§ 10)",
+            body: [
+              "Musíte mít postup pro hlášení a řešení kybernetických bezpečnostních incidentů. Od 1. listopadu 2025 NÚKIB uvádí, že incidenty se hlásí přes formulář na Portálu NÚKIB v sekci Chci vyřídit.",
+              "Prakticky: sepište, kdo incident přijímá, kdo rozhoduje, kde se vede časová osa a kdy se kontaktuje NÚKIB, zákazník nebo dodavatel.",
+            ],
+          },
+        ],
+      },
+      {
+        heading: "Vyhodnotitelná opatření",
+        body: [
+          "Kromě pěti neopominutelných opatření musíte posoudit relevanci dalších oblastí. Pokud některé opatření nezavedete, nestačí ho přeskočit. Do přehledu napište důvod, proč pro danou regulovanou službu není relevantní nebo proč je řešeno jinak.",
+        ],
+        bullets: [
+          "§ 7 Řízení přístupu: správa účtů a deaktivace odcházejících zaměstnanců.",
+          "§ 8 Řízení identit: MFA, politika hesel a oprávnění.",
+          "§ 9 Detekce událostí: antivirus, firewall, logování a záznamy.",
+          "§ 11 Bezpečnost sítě: segmentace, perimetr a bezpečnost komunikace.",
+          "§ 12 Aplikační bezpečnost: aktualizace softwaru, zranitelnosti a bezpečný vývoj.",
+          "§ 13 Kryptografie: šifrování komunikace a aktuální kryptografické algoritmy.",
+        ],
+      },
+      {
+        heading: "Doporučené pořadí kroků",
+        body: [
+          "Neřešte vše najednou. Praktické pořadí je začít odpovědností a dokumentací, potom technickými opatřeními a nakonec interní kontrolou připravenosti.",
+        ],
+        subsections: [
+          {
+            heading: "Měsíc 1 až 2",
+            body: [
+              "Jmenujte pověřenou osobu, zaevidujte ji do přehledu bezpečnostních opatření a zajistěte vstupní školení.",
+            ],
+          },
+          {
+            heading: "Měsíc 2 až 4",
+            body: [
+              "Vytvořte první verzi přehledu bezpečnostních opatření, zdokumentujte zálohovací proces a připravte základní bezpečnostní politiku.",
+            ],
+          },
+          {
+            heading: "Měsíc 4 až 8",
+            body: [
+              "Nastavte školení zaměstnanců, vytvořte incidentní postup a posuďte vyhodnotitelná opatření.",
+            ],
+          },
+          {
+            heading: "Měsíc 8 až 12",
+            body: [
+              "Přezkoumejte přehled, zkontrolujte důkazy a ověřte, že každé opatření má stav, vlastníka a další krok.",
+            ],
+          },
+        ],
+      },
+      {
+        heading: "Časté chyby",
+        body: [
+          "Nejčastější problém není technická složitost, ale prázdná nebo nedoložená evidence. Vyhláška očekává, že stav opatření bude konkrétní a dohledatelný.",
+        ],
+        bullets: [
+          "Čekání na poslední chvíli. Dvanáct měsíců rychle uteče, když potřebujete školení, dokumentaci a důkazy z více systémů.",
+          "Záměna přehledu opatření za bezpečnostní audit. Přehled má být živý stav opatření, ne jednorázová složka pro kontrolu.",
+          "Ignorování vyhodnotitelných opatření. I nezavedené opatření potřebuje zdůvodnění.",
+          "Nezaznamenání školení. Nestačí školení provést, musíte ho také evidovat.",
+        ],
+      },
+      {
+        heading: "Jak pomůže Splnit.eu",
+        body: [
+          "Splnit.eu je česká compliance platforma pro firmy v režimu nižších povinností ZoKB. Po vstupním dotazníku pomáhá identifikovat mezery vůči vyhlášce č. 410/2025 Sb., přiřadit vlastníky a vést důkazy k opatřením.",
+          "Platforma podporuje pracovní prostory pro systémy jako Pohoda, Hetzner Cloud a Microsoft 365 a umí připravit export přehledu bezpečnostních opatření dle § 3 odst. 2 vyhlášky č. 410/2025 Sb.",
+        ],
+      },
+      {
+        heading: "Zdroje a poznámka",
+        body: [
+          "Právní základ: zákon č. 264/2025 Sb. o kybernetické bezpečnosti, vyhláška č. 410/2025 Sb. a podpůrné materiály NÚKIB pro režim nižších povinností.",
+          "Odkazy: https://www.zakonyprolidi.cz/cs/2025-410, https://nukib.gov.cz/cs/kyberneticka-bezpecnost/regulace-a-kontrola/podpurne-materialy/ a Portál NÚKIB.",
+          "Tento článek je praktický informační materiál. Nenahrazuje právní posouzení konkrétní regulované služby.",
+        ],
+      },
+    ],
+  },
+  {
+    slug: "prehled-bezpecnostnich-opatreni-410-2025",
+    title:
+      "Jak vytvořit přehled bezpečnostních opatření dle § 3 odst. 2 vyhl. č. 410/2025 Sb.",
+    description:
+      "Co musí obsahovat přehled bezpečnostních opatření, jak rozlišit zavedená, plánovaná a nezavedená opatření a jak ho udržovat aktuální.",
+    category: "ZoKB",
+    publishedAt: "2026-05-22",
+    readTime: "9 min",
+    author: "Marco Zoratto",
+    authorRole: "zakladatel Splnit.eu",
+    regulationHref: "/predpisy/nis2",
+    ctaTitle: "Vygenerujte přehled bezpečnostních opatření",
+    ctaBody:
+      "Splnit.eu převádí odpovědi, pracovní prostory a důkazy do exportu přehledu bezpečnostních opatření pro režim nižších povinností.",
+    ctaButton: "Vygenerovat přehled zdarma",
+    ctaHref: "/sign-up?ref=blog",
+    summary:
+      "Přehled bezpečnostních opatření je živý dokument podle § 3 odst. 2 vyhlášky č. 410/2025 Sb. Musí ukazovat zavedená, plánovaná i nezavedená opatření a být pravidelně aktualizovaný.",
+    sections: [
+      {
+        heading: "Co je přehled bezpečnostních opatření",
+        body: [
+          "Přehled bezpečnostních opatření je dokument, který zachycuje stav zavádění bezpečnostních opatření podle vyhlášky č. 410/2025 Sb. Není to jednorázový projekt. Musíte ho udržovat aktuální a jednotlivé verze uchovávat alespoň 4 roky.",
+          "NÚKIB ve svých podpůrných materiálech zdůrazňuje, že dokumentace má být přizpůsobena konkrétní organizaci. Mechanické přepsání požadavků vyhlášky bez vazby na praxi firmy nestačí.",
+        ],
+      },
+      {
+        heading: "Co musí přehled obsahovat",
+        body: [
+          "Vyhláška v § 3 odst. 2 stanoví tři skupiny informací: opatření zavedená, opatření plánovaná a opatření nezavedená. U každé skupiny je potřeba uvést konkrétní stav, nikoli jen obecné prohlášení.",
+        ],
+        subsections: [
+          {
+            heading: "Část 1: zavedená bezpečnostní opatření",
+            body: [
+              "Pro každé zavedené opatření uveďte název, odkaz na vyhlášku, popis zavedení a osobu odpovědnou za udržování.",
+              "Příklad: § 4 — Pověřená osoba kybernetické bezpečnosti. Jan Novák, IT manažer, jmenován rozhodnutím jednatele dne 15. 2. 2026. Školení NÚKIB absolvoval dne 20. 2. 2026. Pravomoci jsou uvedeny v bezpečnostní politice.",
+            ],
+          },
+          {
+            heading: "Část 2: plánovaná bezpečnostní opatření",
+            body: [
+              "Pro opatření, která ještě nejsou zavedena, ale plánujete je zavést, uveďte termín zavedení, prioritu a odpovědnou osobu.",
+              "Příklad: § 10 — Řešení kybernetických bezpečnostních incidentů. Termín zavedení 30. 6. 2026, priorita vysoká, odpovědný Jan Novák. Připravuje se interní směrnice pro hlášení incidentů.",
+            ],
+          },
+          {
+            heading: "Část 3: nezavedená bezpečnostní opatření",
+            body: [
+              "Tato část se týká vyhodnotitelných opatření, která jste se rozhodli nezavést. Uveďte zdůvodnění a vazbu na rozsah regulované služby.",
+              "Pozor: neopominutelná opatření jako § 3, § 4, § 5, § 6 a § 10 nelze jednoduše označit za nerelevantní. U nich potřebujete způsob zavedení nebo plán nápravy.",
+            ],
+          },
+        ],
+      },
+      {
+        heading: "Neopominutelná vs. vyhodnotitelná opatření",
+        body: [
+          "Toto rozlišení rozhoduje, jak s opatřením v přehledu pracovat. Neopominutelná opatření řešíte vždy. U vyhodnotitelných opatření posuzujete relevanci a zdůvodňujete případné nezavedení.",
+        ],
+        table: {
+          headers: ["Opatření", "Typ", "Může být vynecháno?"],
+          rows: [
+            ["§ 3 Systém zajišťování minimální KB", "Neopominutelné", "Ne"],
+            ["§ 4 Požadavky na vrcholné vedení", "Neopominutelné", "Ne"],
+            ["§ 5 Bezpečnost lidských zdrojů", "Neopominutelné", "Ne"],
+            ["§ 6 Řízení kontinuity", "Neopominutelné", "Ne"],
+            ["§ 10 Řešení incidentů", "Neopominutelné", "Ne"],
+            ["§ 7 Řízení přístupu", "Vyhodnotitelné", "Ano, se zdůvodněním"],
+            ["§ 8 Řízení identit", "Vyhodnotitelné", "Ano, se zdůvodněním"],
+            ["§ 9 Detekce událostí", "Vyhodnotitelné", "Ano, se zdůvodněním"],
+            ["§ 11 Bezpečnost sítě", "Vyhodnotitelné", "Ano, se zdůvodněním"],
+            ["§ 12 Aplikační bezpečnost", "Vyhodnotitelné", "Ano, se zdůvodněním"],
+            ["§ 13 Kryptografie", "Vyhodnotitelné", "Ano, se zdůvodněním"],
+          ],
+        },
+      },
+      {
+        heading: "Jak přehled formátovat",
+        body: [
+          "Zákon nestanovuje jediný povinný formát. Přehled může být tabulka, dokument, PDF export nebo interní wiki, pokud je přehledný, identifikovatelný a dohledatelný.",
+          "Doporučené sloupce: číslo a název opatření, typ opatření, stav, popis zavedení nebo zdůvodnění nezavedení, datum zavedení nebo plánovaný termín, priorita a odpovědná osoba.",
+        ],
+      },
+      {
+        heading: "Jak přehled udržovat aktuální",
+        body: [
+          "Vyhláška vyžaduje aktualizaci alespoň jednou ročně. V praxi je bezpečnější aktualizovat přehled pokaždé, když zavedete nové opatření, změníte technickou infrastrukturu, nastane incident nebo NÚKIB vydá relevantní podpůrný materiál.",
+          "Nastavte si roční přezkum přehledu a průběžně ukládejte verze. Vrcholné vedení by mělo být se stavem plnění bezpečnostních opatření prokazatelně seznámeno.",
+        ],
+      },
+      {
+        heading: "Zjednodušená ukázka struktury",
+        body: [
+          "Níže je zkrácená ukázka pro malou výrobní firmu. V reálném přehledu by každý řádek měl mít vazbu na konkrétní důkaz nebo zdroj informace.",
+        ],
+        codeBlock: `Organizace: Kovárna Novák s.r.o.
+Verze: 1.2
+Datum aktualizace: 22. 5. 2026
+Odpovědný: Jan Novák, pověřená osoba KB
+
+§ 3 — Systém zajišťování minimální KB
+Stav: ZAVEDENO
+Popis: Přehled bezpečnostních opatření veden v elektronické podobě.
+Bezpečnostní politika schválena jednatelem dne 1. 3. 2026.
+Odpovědný: Jan Novák
+
+§ 4 — Pověřená osoba KB
+Stav: ZAVEDENO
+Popis: Jan Novák, jmenován dne 15. 2. 2026.
+Školení NÚKIB absolvováno 20. 2. 2026.
+Odpovědný: Jednatel
+
+§ 8 — Řízení identit (MFA)
+Stav: PLÁNOVÁNO
+Termín: 30. 9. 2026
+Priorita: Vysoká
+Popis: MFA bude aktivováno pro všechny účty Microsoft 365.
+Odpovědný: Jan Novák`,
+      },
+      {
+        heading: "Nejčastější chyby",
+        body: [
+          "Přehled je užitečný jen tehdy, když je konkrétní. Prázdné řádky, obecné popisy a chybějící termíny z něj dělají dokument, který při kontrole nepomůže.",
+        ],
+        bullets: [
+          "Prázdné řádky bez stavu a odůvodnění.",
+          "Příliš obecné popisy typu MFA je zavedeno bez rozsahu a data.",
+          "Nezaznamenané změny po zavedení nového opatření.",
+          "Plánovaná opatření bez termínu, priority a odpovědné osoby.",
+        ],
+      },
+      {
+        heading: "Jak pomůže Splnit.eu",
+        body: [
+          "Splnit.eu generuje přehled bezpečnostních opatření dle § 3 odst. 2 vyhlášky č. 410/2025 Sb. z odpovědí, pracovních prostorů a doložených důkazů.",
+          "Automaticky ověřená opatření se zobrazují s datem ověření, manuálně deklarovaná opatření s popisem a nezavedená opatření s gapem nebo zdůvodněním. Výsledný export je připravený jako pracovní podklad pro interní kontrolu nebo komunikaci s poradcem.",
+        ],
+      },
+      {
+        heading: "Zdroje a poznámka",
+        body: [
+          "Právní základ: § 3 odst. 2 vyhlášky č. 410/2025 Sb., příloha č. 1 k vyhlášce a podpůrné materiály NÚKIB k bezpečnostní politice a dokumentaci.",
+          "Odkazy: https://www.zakonyprolidi.cz/cs/2025-410 a https://portal.nukib.gov.cz/storage/uploads/2026/03/31/rizeni-bezpecnostni-politiky-a-dokumentace-nizsi-rezim-v1_uid_69cbba7cdd71e.pdf.",
+          "Tento článek je praktický informační materiál. Nenahrazuje právní posouzení konkrétní regulované služby.",
+        ],
+      },
+    ],
+  },
+  {
+    slug: "poverena-osoba-kyberneticke-bezpecnosti-zokb",
+    title: "Kdo musí být pověřená osoba kybernetické bezpečnosti podle ZoKB?",
+    description:
+      "Koho může vedení jmenovat jako osobu pověřenou kybernetickou bezpečností, jaké znalosti musí mít a co doložit v přehledu opatření.",
+    category: "ZoKB",
+    publishedAt: "2026-05-22",
+    readTime: "7 min",
+    author: "Marco Zoratto",
+    authorRole: "zakladatel Splnit.eu",
+    regulationHref: "/predpisy/nis2",
+    ctaTitle: "Zaevidujte pověřenou osobu do přehledu opatření",
+    ctaBody:
+      "Splnit.eu vás provede jmenováním, školením, pravomocemi a exportem evidence pověřené osoby do přehledu bezpečnostních opatření.",
+    ctaButton: "Spustit analýzu zdarma",
+    ctaHref: "/sign-up?ref=blog",
+    summary:
+      "Jmenování osoby pověřené kybernetickou bezpečností je neopominutelné opatření podle § 4 vyhlášky č. 410/2025 Sb. Nemusí jít o certifikovaného experta, ale musí mít pravomoci, odborné školení nebo znalost a pravidelnou vazbu na vedení.",
+    sections: [
+      {
+        heading: "Co říká vyhláška",
+        body: [
+          "Vyhláška č. 410/2025 Sb. v § 4 ukládá vrcholnému vedení určit osobu pověřenou kybernetickou bezpečností. Této osobě má vedení svěřit pravomoci potřebné k řízení a rozvoji kybernetické bezpečnosti, dohledu nad stavem a komunikaci s vrcholným vedením.",
+          "Vyhláška zároveň počítá s tím, že tato osoba bez zbytečného odkladu absolvuje odborné školení podle § 5 odst. 2 písm. d), nebo prokáže odbornou znalost v kybernetické bezpečnosti.",
+        ],
+      },
+      {
+        heading: "Kdo může roli zastávat",
+        body: [
+          "Pro malé a střední firmy je důležité, že role nemusí automaticky znamenat nového plnoúvazkového bezpečnostního specialistu. Klíčové jsou reálné pravomoci, zapojení do procesů a schopnost komunikovat s vedením.",
+        ],
+        subsections: [
+          {
+            heading: "Interní zaměstnanec IT",
+            body: [
+              "Nejčastější řešení. IT technik nebo IT manažer zná firemní infrastrukturu a přirozeně řeší přístupy, zálohy, aktualizace a incidenty.",
+              "Nemusí být seniorní bezpečnostní expert, ale měl by absolvovat školení a mít podporu vedení pro prosazování opatření.",
+            ],
+          },
+          {
+            heading: "Jiný zaměstnanec s technickým přehledem",
+            body: [
+              "Pokud nemáte interní IT, může roli zastat například provozní manažer, office manager nebo jednatel. Důležité je, aby měl přehled o systémech a dostatečnou autoritu.",
+            ],
+          },
+          {
+            heading: "Externí dodavatel",
+            body: [
+              "Roli lze prakticky podpořit externím IT dodavatelem nebo bezpečnostním konzultantem. U externího řešení si pohlídejte smluvní pravomoci, pravidelný reporting vedení a znalost vaší infrastruktury.",
+              "I při outsourcingu by firma měla mít interního vlastníka, který rozumí dopadu opatření na provoz.",
+            ],
+          },
+        ],
+      },
+      {
+        heading: "Jaké znalosti musí mít",
+        body: [
+          "Vyhláška nevyjmenovává konkrétní certifikace. Pracuje s odborným školením nebo prokázáním odborné znalosti v kybernetické bezpečnosti.",
+        ],
+        bullets: [
+          "Absolvování odborného školení v kybernetické bezpečnosti, například přes dostupné vzdělávací materiály NÚKIB.",
+          "Doložitelná praxe v IT nebo bezpečnosti, případně relevantní certifikace.",
+          "Interní školení, pokud je konkrétní, evidované a odpovídá roli pověřené osoby.",
+        ],
+      },
+      {
+        heading: "Co musíte zdokumentovat",
+        body: [
+          "Pro přehled bezpečnostních opatření a případnou kontrolu potřebujete doložit, že role nebyla jen formální. Záznam by měl ukazovat jmenování, pravomoci, školení a vazbu na vedení.",
+        ],
+        bullets: [
+          "Jmenovací dokument: rozhodnutí jednatele, zápis z porady nebo samostatná listina.",
+          "Datum jmenování a identifikace osoby.",
+          "Doklad nebo záznam o školení či jiné odborné znalosti.",
+          "Popis pravomocí v jmenovacím dokumentu nebo bezpečnostní politice.",
+          "Způsob pravidelné komunikace s vrcholným vedením.",
+        ],
+      },
+      {
+        heading: "Jaké povinnosti má pověřená osoba",
+        body: [
+          "Po jmenování by pověřená osoba měla průběžně sledovat stav kybernetické bezpečnosti, koordinovat zavádění bezpečnostních opatření, udržovat přehled opatření a komunikovat s vedením.",
+          "V praxi nejde o to, aby sama provedla všechny technické úkoly. Má zajistit, že úkoly mají vlastníky, důkazy, termíny a že vedení ví, kde jsou otevřené mezery.",
+        ],
+      },
+      {
+        heading: "Praktický postup jmenování",
+        body: [
+          "Jmenování zvládnete v pěti krocích. Důležité je nezůstat u formálního podpisu, ale navázat roli na školení, pravomoci a přehled bezpečnostních opatření.",
+        ],
+        bullets: [
+          "Vyberte kandidáta s technickým přehledem a schopností komunikovat s vedením.",
+          "Vydejte jmenovací dokument podepsaný jednatelem nebo vedením.",
+          "Zajistěte vstupní odborné školení nebo doložení odborné znalosti.",
+          "Zaevidujte jméno, datum, školení a pravomoci do přehledu bezpečnostních opatření.",
+          "Nastavte čtvrtletní nebo alespoň pravidelný reporting stavu kybernetické bezpečnosti vedení.",
+        ],
+      },
+      {
+        heading: "Typické otázky",
+        body: [
+          "Může být pověřenou osobou jednatel? Ano, pokud reálně vykonává roli, absolvuje školení nebo prokáže znalost a má agendu kybernetické bezpečnosti pod kontrolou.",
+          "Co když nemáme žádného IT zaměstnance? Vyberte osobu s největším technickým přehledem a zajistěte jí školení a podporu externího IT dodavatele.",
+          "Musí být pověřená osoba plně uvolněna pro tuto roli? U menších firem v režimu nižších povinností může být role součástí stávající pracovní náplně, pokud má osoba dostatek času a pravomocí.",
+          "Co hrozí, když ji nejmenujeme? Jde o neopominutelné bezpečnostní opatření. Při kontrole by absence jmenování znamenala nedoložené plnění § 4 vyhlášky.",
+        ],
+      },
+      {
+        heading: "Jak pomůže Splnit.eu",
+        body: [
+          "Splnit.eu obsahuje pracovní postup pro evidenci pověřené osoby kybernetické bezpečnosti. Pomůže zaznamenat jméno, datum jmenování, školení, pravomoci a vazbu do přehledu bezpečnostních opatření.",
+          "Výstupem není jen interní poznámka, ale strukturovaný důkaz, který se promítne do přehledu podle § 3 odst. 2 vyhlášky č. 410/2025 Sb.",
+        ],
+      },
+      {
+        heading: "Zdroje a poznámka",
+        body: [
+          "Právní základ: § 4 a § 5 vyhlášky č. 410/2025 Sb. a podpůrné materiály NÚKIB pro režim nižších povinností.",
+          "Odkazy: https://www.zakonyprolidi.cz/cs/2025-410 a https://portal.nukib.gov.cz/storage/uploads/2026/01/12/videoprednaska_nizsi-rezim_uid_696502219e237.pdf.",
+          "Tento článek je praktický informační materiál. Nenahrazuje právní posouzení konkrétní regulované služby.",
+        ],
+      },
+    ],
+  },
+];
+
 const posts: Record<Locale, BlogPost[]> = {
   "cs-CZ": [
+    ...czechNukibRegistrationPosts,
     {
       slug: "nis2-pruvodce-pro-msp",
       title: "NIS2 pro české MSP: praktický průvodce",

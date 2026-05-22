@@ -22,6 +22,26 @@ function sectionId(heading: string) {
   return heading.toLowerCase().replaceAll(" ", "-");
 }
 
+function BlogBullets({ bullets }: { bullets: string[] }) {
+  return (
+    <ul className="mt-6 grid gap-3">
+      {bullets.map((bullet) => (
+        <li
+          key={bullet}
+          className="flex items-start gap-3 rounded-2xl border border-zinc-100 bg-zinc-50 p-4 text-sm leading-6 text-zinc-600"
+        >
+          <Icon
+            icon="solar:check-circle-linear"
+            className="mt-0.5 shrink-0 text-xl text-blue-600"
+            aria-hidden="true"
+          />
+          {bullet}
+        </li>
+      ))}
+    </ul>
+  );
+}
+
 export async function generateMetadata({
   params,
 }: {
@@ -149,22 +169,64 @@ export default async function BlogPostPage({
                       ))}
                     </div>
                     {section.bullets ? (
-                      <ul className="mt-6 grid gap-3">
-                        {section.bullets.map((bullet) => (
-                          <li
-                            key={bullet}
-                            className="flex items-start gap-3 rounded-2xl border border-zinc-100 bg-zinc-50 p-4 text-sm leading-6 text-zinc-600"
-                          >
-                            <Icon
-                              icon="solar:check-circle-linear"
-                              className="mt-0.5 shrink-0 text-xl text-blue-600"
-                              aria-hidden="true"
-                            />
-                            {bullet}
-                          </li>
-                        ))}
-                      </ul>
+                      <BlogBullets bullets={section.bullets} />
                     ) : null}
+                    {section.table ? (
+                      <div className="mt-6 overflow-x-auto rounded-2xl border border-zinc-200">
+                        <table className="w-full min-w-[620px] border-collapse text-left text-sm">
+                          <thead className="bg-zinc-50 text-xs uppercase tracking-[0.08em] text-zinc-500">
+                            <tr>
+                              {section.table.headers.map((header) => (
+                                <th key={header} className="px-4 py-3 font-semibold">
+                                  {header}
+                                </th>
+                              ))}
+                            </tr>
+                          </thead>
+                          <tbody className="divide-y divide-zinc-100">
+                            {section.table.rows.map((row) => (
+                              <tr key={row.join("|")}>
+                                {row.map((cell) => (
+                                  <td key={cell} className="px-4 py-3 leading-6 text-zinc-600">
+                                    {cell}
+                                  </td>
+                                ))}
+                              </tr>
+                            ))}
+                          </tbody>
+                        </table>
+                      </div>
+                    ) : null}
+                    {section.codeBlock ? (
+                      <pre className="mt-6 overflow-x-auto rounded-2xl border border-zinc-200 bg-zinc-950 p-5 text-sm leading-7 text-zinc-100">
+                        <code>{section.codeBlock}</code>
+                      </pre>
+                    ) : null}
+                    {section.subsections?.map((subsection) => (
+                      <div key={subsection.heading} className="mt-8">
+                        <h3 className="text-xl font-semibold tracking-[-0.02em] text-zinc-900">
+                          {subsection.heading}
+                        </h3>
+                        <div className="mt-4 space-y-4">
+                          {subsection.body.map((paragraph) => (
+                            <p
+                              key={paragraph}
+                              className="text-base leading-8 text-zinc-600"
+                            >
+                              {paragraph}
+                            </p>
+                          ))}
+                        </div>
+                        {subsection.bullets ? (
+                          <BlogBullets bullets={subsection.bullets} />
+                        ) : null}
+                        {subsection.codeBlock ? (
+                          <pre className="mt-6 overflow-x-auto rounded-2xl border border-zinc-200 bg-zinc-950 p-5 text-sm leading-7 text-zinc-100">
+                            <code>{subsection.codeBlock}</code>
+                          </pre>
+                        ) : null}
+                      </div>
+                    ))}
                   </section>
                 ))}
 
