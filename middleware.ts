@@ -125,8 +125,9 @@ export default function middleware(request: NextRequest, event: NextFetchEvent) 
     Boolean(process.env.CLERK_SECRET_KEY);
 
   if (isPublicRoute(request)) {
-    return applyLocale(request);
-  }
+  return NextResponse.next();
+}
+
 
   if (!clerkConfigured) {
     if (
