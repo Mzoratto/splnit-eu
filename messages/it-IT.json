@@ -89,7 +89,7 @@
     "plans": {
       "sme": {
         "name": "SME",
-        "price": "490 Kč/mese",
+        "price": "499 Kč/mese",
         "description": "Workspace compliance completo per una organizzazione.",
         "features": [
           "Tutti i connettori: Microsoft 365, Hetzner Cloud e OVHcloud",

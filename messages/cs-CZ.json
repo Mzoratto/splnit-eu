@@ -58,15 +58,16 @@
   "billingSettings": {
     "eyebrow": "Fakturace",
     "title": "Předplatné",
-    "subtitle": "Aktuální plán a stav Stripe zákazníka pro tuto organizaci.",
-    "customerPortal": "Zákaznický portál",
+    "subtitle": "Správa předplatného pro tuto organizaci. Stripe Price ID určuje skutečnou měnu a cenu účtování.",
+    "customerPortal": "Spravovat předplatné",
     "currentPlan": "Aktuální plán",
-    "frameworks": "Frameworky",
-    "integrations": "Integrace",
-    "users": "Uživatelé",
+    "status": "Stav",
+    "nextBillingDate": "Další období končí",
+    "clientUsage": "Klientské organizace",
+    "clients": "{used} / {limit} klientů",
     "stripeConnection": "Stripe připojení",
-    "stripeConfigured": "Fakturační klíče jsou nakonfigurované pro platby a portál.",
-    "stripeMissing": "Stripe klíče v tomto prostředí zatím nejsou nakonfigurované.",
+    "stripeConfigured": "Fakturační klíče a Price ID jsou nakonfigurované.",
+    "stripeMissing": "Stripe klíče nebo Price ID v tomto prostředí zatím nejsou nakonfigurované.",
     "customer": "Zákazník",
     "subscription": "Předplatné",
     "notCreated": "Nevytvořeno",
@@ -74,34 +75,41 @@
     "stripeSynced": "Synchronizováno se Stripe",
     "local": "Lokální",
     "monthSuffix": "/měsíc",
-    "annualMonthly": "{price}/měsíc při roční fakturaci",
-    "limitFrameworks": "Frameworky: {count}",
-    "limitIntegrations": "Integrace: {count}",
-    "limitUsers": "Uživatelé: {count}",
-    "currentPlanButton": "Aktuální plán",
-    "monthlyCheckout": "Měsíční platba",
-    "annualCheckout": "Roční platba",
+    "success": "Předplatné bylo aktivováno. Stav se může synchronizovat několik sekund.",
+    "canceled": "Platba byla zrušena. Můžete ji spustit znovu.",
+    "agencyRequired": "Pro konzultantský portál potřebujete plán Agency.",
+    "portalMissing": "Zákaznický portál bude dostupný po vytvoření Stripe zákazníka.",
+    "choosePlan": "Vyberte plán",
+    "subscribe": "Předplatit",
     "planNames": {
       "free": "Zdarma",
-      "starter": "Starter",
-      "business": "Business",
-      "consultant": "Consultant"
+      "sme": "SME",
+      "agency": "Agency"
     },
     "plans": {
-      "starter": {
-        "name": "Starter",
-        "description": "Automatizovaný sběr důkazů pro malý compliance tým."
+      "sme": {
+        "name": "SME",
+        "price": "499 Kč/měsíc",
+        "description": "Plný compliance workspace pro jednu organizaci.",
+        "features": [
+          "Všechny konektory: Microsoft 365, Hetzner Cloud a OVHcloud",
+          "PDF export Přehledu bezpečnostních opatření",
+          "Jedna organizace"
+        ]
       },
-      "business": {
-        "name": "Business",
-        "description": "Trust Center, rizika dodavatelů, incidenty a přezkumy přístupů."
-      },
-      "consultant": {
-        "name": "Consultant",
-        "description": "Neomezené klientské pracovní prostory a reporty pod vlastní značkou."
+      "agency": {
+        "name": "Agency",
+        "price": "1 990 Kč/měsíc",
+        "description": "Konzultantský portál pro správu klientských organizací.",
+        "features": [
+          "Vše v plánu SME",
+          "White-label konzultantský portál",
+          "Až 20 klientských organizací",
+          "Neomezený počet konzultantů"
+        ]
       }
     },
-    "billingUnavailable": "Checkout a zákaznický portál jsou v tomto prostředí vypnuté, dokud nejsou nastavené Stripe klíče. Lokální limity plánů zůstávají viditelné pro plánování."
+    "billingUnavailable": "Checkout a zákaznický portál jsou v tomto prostředí vypnuté, dokud nejsou nastavené Stripe klíče a Price ID."
   },
   "frameworkWizard": {
     "error": "Vyhodnocení se nepodařilo uložit.",
@@ -922,6 +930,27 @@
     ]
   },
   "agency": {
+    "signup": {
+      "eyebrow": "Agency",
+      "headline": "Spusťte svůj konzultantský portál",
+      "subtitle": "Vytvořte agenturní profil a pokračujte na platbu plánu Agency.",
+      "defaultName": "Moje agentura",
+      "canceled": "Platba byla zrušena. Údaje zůstávají připravené k opakování.",
+      "form": {
+        "name": "Název agentury",
+        "slug": "URL slug",
+        "continue": "Pokračovat k platbě",
+        "duplicateSlug": "Tento slug už používá jiná agentura.",
+        "invalid": "Zkontrolujte název a slug agentury.",
+        "genericError": "Registraci agentury se nepodařilo spustit."
+      }
+    },
+    "signupComplete": {
+      "eyebrow": "Agency",
+      "title": "Nastavujeme váš portál",
+      "body": "Čekáme na potvrzení platby ze Stripe a vytvoření agentury.",
+      "timeout": "Nastavení trvá déle než obvykle. Obnovte stránku za chvíli."
+    },
     "dashboard": {
       "eyebrow": "Agentura",
       "title": "Spravovaní klienti",
@@ -981,6 +1010,7 @@
       "eyebrow": "Agentura",
       "title": "Nastavení",
       "subtitle": "Správa brandingu agentury, klientských propojení a přístupů konzultantů.",
+      "setupSuccess": "Váš konzultantský portál je připraven.",
       "tabs": {
         "branding": "Branding",
         "clients": "Klienti",
@@ -1024,8 +1054,10 @@
       "eyebrow": "Agenturní pozvánka",
       "title": "Propojit tuto organizaci",
       "body": "{agency} pozvala tuto organizaci ke správě v agenturním portálu.",
+      "consultantBody": "{agency} vás pozvala jako konzultanta do agenturního portálu.",
       "invalidBody": "Tuto pozvánku se nepodařilo najít.",
       "activeHelp": "Přijetím se aktivní Clerk organizace propojí s agenturou. Pokud je potřeba, nejdřív přepněte organizaci.",
+      "consultantHelp": "Přijetím se váš uživatelský účet přidá mezi konzultanty agentury.",
       "accept": "Přijmout pozvánku",
       "expired": "Tato pozvánka vypršela.",
       "unavailable": "Tato pozvánka už není dostupná."

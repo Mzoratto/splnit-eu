@@ -58,15 +58,16 @@
   "billingSettings": {
     "eyebrow": "Billing",
     "title": "Subscription",
-    "subtitle": "Current plan and Stripe customer state for this organisation.",
-    "customerPortal": "Customer Portal",
+    "subtitle": "Manage the subscription for this organisation. The Stripe Price ID determines the actual billing currency and amount.",
+    "customerPortal": "Manage subscription",
     "currentPlan": "Current plan",
-    "frameworks": "Frameworks",
-    "integrations": "Integrations",
-    "users": "Users",
+    "status": "Status",
+    "nextBillingDate": "Current period ends",
+    "clientUsage": "Client organisations",
+    "clients": "{used} / {limit} clients",
     "stripeConnection": "Stripe connection",
-    "stripeConfigured": "Billing keys are configured for checkout and portal sessions.",
-    "stripeMissing": "Stripe keys are not configured in this environment yet.",
+    "stripeConfigured": "Billing keys and Price IDs are configured.",
+    "stripeMissing": "Stripe keys or Price IDs are not configured in this environment yet.",
     "customer": "Customer",
     "subscription": "Subscription",
     "notCreated": "Not created",
@@ -74,34 +75,41 @@
     "stripeSynced": "Stripe synced",
     "local": "Local",
     "monthSuffix": "/month",
-    "annualMonthly": "{price}/month when billed annually",
-    "limitFrameworks": "Frameworks: {count}",
-    "limitIntegrations": "Integrations: {count}",
-    "limitUsers": "Users: {count}",
-    "currentPlanButton": "Current plan",
-    "monthlyCheckout": "Monthly checkout",
-    "annualCheckout": "Annual checkout",
+    "success": "Your subscription was activated. Stripe status may take a few seconds to sync.",
+    "canceled": "Checkout was cancelled. You can start it again.",
+    "agencyRequired": "The consultant portal requires the Agency plan.",
+    "portalMissing": "The customer portal will be available after a Stripe customer is created.",
+    "choosePlan": "Choose a plan",
+    "subscribe": "Subscribe",
     "planNames": {
       "free": "Free",
-      "starter": "Starter",
-      "business": "Business",
-      "consultant": "Consultant"
+      "sme": "SME",
+      "agency": "Agency"
     },
     "plans": {
-      "starter": {
-        "name": "Starter",
-        "description": "Automated evidence collection for a small compliance team."
+      "sme": {
+        "name": "SME",
+        "price": "499 Kč/month",
+        "description": "Full compliance workspace for one organisation.",
+        "features": [
+          "All connectors: Microsoft 365, Hetzner Cloud, and OVHcloud",
+          "PDF export of the security-measures overview",
+          "One organisation"
+        ]
       },
-      "business": {
-        "name": "Business",
-        "description": "Trust Center, vendor risk, incidents, and access reviews."
-      },
-      "consultant": {
-        "name": "Consultant",
-        "description": "Unlimited client workspaces and white-label reporting."
+      "agency": {
+        "name": "Agency",
+        "price": "1 990 Kč/month",
+        "description": "Consultant portal for managing client organisations.",
+        "features": [
+          "Everything in SME",
+          "White-label consultant portal",
+          "Up to 20 managed client organisations",
+          "Unlimited consultant seats"
+        ]
       }
     },
-    "billingUnavailable": "Checkout and portal actions are disabled in this environment until Stripe billing keys are configured. Your local plan limits are still shown for planning."
+    "billingUnavailable": "Checkout and customer portal are disabled in this environment until Stripe keys and Price IDs are configured."
   },
   "frameworkWizard": {
     "error": "The assessment could not be saved.",
@@ -922,6 +930,27 @@
     ]
   },
   "agency": {
+    "signup": {
+      "eyebrow": "Agency",
+      "headline": "Launch your consultant portal",
+      "subtitle": "Create the agency profile and continue to the Agency plan payment.",
+      "defaultName": "My agency",
+      "canceled": "Checkout was cancelled. Your details are ready to try again.",
+      "form": {
+        "name": "Agency name",
+        "slug": "URL slug",
+        "continue": "Continue to payment",
+        "duplicateSlug": "This slug is already used by another agency.",
+        "invalid": "Check the agency name and slug.",
+        "genericError": "Agency signup could not be started."
+      }
+    },
+    "signupComplete": {
+      "eyebrow": "Agency",
+      "title": "Setting up your portal",
+      "body": "Waiting for Stripe payment confirmation and agency creation.",
+      "timeout": "Setup is taking longer than usual. Refresh this page in a moment."
+    },
     "dashboard": {
       "eyebrow": "Agency",
       "title": "Managed clients",
@@ -981,6 +1010,7 @@
       "eyebrow": "Agency",
       "title": "Settings",
       "subtitle": "Manage agency branding, client links, and consultant access.",
+      "setupSuccess": "Your consultant portal is ready.",
       "tabs": {
         "branding": "Branding",
         "clients": "Clients",
@@ -1024,8 +1054,10 @@
       "eyebrow": "Agency invite",
       "title": "Connect this organisation",
       "body": "{agency} invited this organisation to be managed in the agency portal.",
+      "consultantBody": "{agency} invited you as a consultant in the agency portal.",
       "invalidBody": "This invite could not be found.",
       "activeHelp": "Accepting links your active Clerk organisation to the agency. Switch organisation first if needed.",
+      "consultantHelp": "Accepting adds your user account to the agency consultants.",
       "accept": "Accept invite",
       "expired": "This invite has expired.",
       "unavailable": "This invite is no longer available."
