@@ -33,6 +33,8 @@ const isProtectedRoute = createRouteMatcher([
   ...localizedProtectedRoutes,
 ]);
 
+const isPublicRoute = createRouteMatcher(["/demo(.*)"]);
+
 const isApiRoute = createRouteMatcher(["/api(.*)", "/trpc(.*)"]);
 
 function getPrefixedLocaleRoute(request: NextRequest) {
@@ -105,7 +107,7 @@ const clerk = clerkMiddleware(async (auth, request) => {
     Boolean(process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY) &&
     Boolean(process.env.CLERK_SECRET_KEY);
 
-  if (clerkConfigured && isProtectedRoute(request)) {
+  if (clerkConfigured && isProtectedRoute(request) && !isPublicRoute(request)) {
     await auth.protect();
   }
 
@@ -122,7 +124,11 @@ export default function middleware(request: NextRequest, event: NextFetchEvent) 
     Boolean(process.env.CLERK_SECRET_KEY);
 
   if (!clerkConfigured) {
-    if (process.env.NODE_ENV === "production" && isProtectedRoute(request)) {
+    if (
+      process.env.NODE_ENV === "production" &&
+      isProtectedRoute(request) &&
+      !isPublicRoute(request)
+    ) {
       return authConfigurationError();
     }
 
