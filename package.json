@@ -48,6 +48,7 @@
     "smoke:vendor-questionnaire-delivery-status": "tsx scripts/smoke-vendor-questionnaire-delivery-status.ts",
     "smoke:seo": "tsx scripts/smoke-seo.ts",
     "smoke:copy-hygiene": "tsx scripts/smoke-copy-hygiene.ts",
+    "smoke:demo-routes": "tsx scripts/smoke-demo-routes.ts",
     "smoke:pohoda-workspace-config": "tsx scripts/smoke-pohoda-workspace-config.ts",
     "smoke:money-s3-workspace-config": "tsx scripts/smoke-money-s3-workspace-config.ts",
     "smoke:hetzner-workspace-config": "tsx scripts/smoke-hetzner-workspace-config.ts",
