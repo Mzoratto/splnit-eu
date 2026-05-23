@@ -56,6 +56,11 @@ async function getConnectorHealthProbe(platform: ConnectorPlatform) {
     return checks.abraFlexiHealthProbe;
   }
 
+  if (platform === "aws") {
+    const checks = await import("@/lib/connectors/aws/checks");
+    return checks.awsHealthProbe;
+  }
+
   return null;
 }
 

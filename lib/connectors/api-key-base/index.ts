@@ -24,6 +24,7 @@ export type {
   ConnectorPlatform,
   HealthCheckResult,
   AbraFlexiCredentialInput,
+  AwsCredentialInput,
   HetznerCredentialInput,
   OVHcloudCredentialInput,
   StoredConnectorCredential,

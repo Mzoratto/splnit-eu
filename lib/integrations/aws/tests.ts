@@ -1,274 +1,167 @@
-import {
-  CloudTrailClient,
-  DescribeTrailsCommand,
-  GetTrailStatusCommand,
-} from "@aws-sdk/client-cloudtrail";
-import {
-  DescribeFlowLogsCommand,
-  DescribeVpcsCommand,
-  EC2Client,
-} from "@aws-sdk/client-ec2";
-import {
-  GetAccountSummaryCommand,
-  IAMClient,
-  ListMFADevicesCommand,
-  ListUsersCommand,
-} from "@aws-sdk/client-iam";
-import {
-  GetBucketEncryptionCommand,
-  ListBucketsCommand,
-  S3Client,
-} from "@aws-sdk/client-s3";
+import { decryptSecret } from "@/lib/crypto";
 import type { Integration } from "@/lib/db/schema";
+import {
+  checkCloudTrailEnabled,
+  checkEc2Status,
+  checkS3BackupRecency,
+  checkSecurityGroupPresent,
+  type AwsCheckDeps,
+} from "@/lib/connectors/aws/checks";
+import type { StoredConnectorCredential } from "@/lib/connectors/api-key-base/types";
+import type { AwsCheckResult } from "@/lib/workspaces/aws-checks";
 import type { IntegrationAdapter, TestResult } from "../types";
-import { assumeAwsRole, getAwsConfig } from "./client";
 
-type AwsClients = {
-  cloudtrail: CloudTrailClient;
-  ec2: EC2Client;
-  iam: IAMClient;
-  s3: S3Client;
-};
+type AwsStoredCredential = StoredConnectorCredential & { platform: "aws" };
 
-function isAwsError(error: unknown, names: string[]) {
-  return (
-    error instanceof Error &&
-    names.some((name) => error.name === name || error.message.includes(name))
-  );
+function asRecord(value: unknown): Record<string, unknown> {
+  return typeof value === "object" && value !== null && !Array.isArray(value)
+    ? value as Record<string, unknown>
+    : {};
 }
 
-function summarize(values: string[]) {
-  return values.slice(0, 5).join(", ");
+function getConfigString(config: Record<string, unknown>, key: string) {
+  const value = config[key];
+  return typeof value === "string" && value.trim() ? value.trim() : null;
 }
 
-async function createAwsClients(integration: Integration): Promise<AwsClients> {
-  const config = getAwsConfig(integration);
-  const assumed = await assumeAwsRole(config);
-  const options = {
-    credentials: assumed.credentials,
-    region: assumed.region,
-  };
+function checkResultToTestResult(
+  result: AwsCheckResult,
+  passData: Record<string, unknown>,
+  gapReason: string,
+): TestResult {
+  if (result === "pass") {
+    return {
+      data: {
+        provider: "aws",
+        ...passData,
+      },
+      status: "pass",
+    };
+  }
+
+  if (result === "gap") {
+    return {
+      data: {
+        provider: "aws",
+      },
+      failureReason: gapReason,
+      status: "fail",
+    };
+  }
 
   return {
-    cloudtrail: new CloudTrailClient(options),
-    ec2: new EC2Client(options),
-    iam: new IAMClient(options),
-    s3: new S3Client(options),
+    data: {
+      blockedReason: "collection_failed",
+      provider: "aws",
+    },
+    failureReason:
+      "Automatická kontrola AWS selhala; pro toto opatření se má zobrazit manuální čestné prohlášení.",
+    status: "error",
   };
 }
 
-async function listIamUsers(iam: IAMClient) {
-  const users: { UserName?: string }[] = [];
-  let marker: string | undefined;
+function getAwsCredential(integration: Integration): AwsStoredCredential {
+  const config = asRecord(integration.config);
+  const region = getConfigString(config, "region");
 
-  do {
-    const response = await iam.send(new ListUsersCommand({ Marker: marker }));
-    users.push(...(response.Users ?? []));
-    marker = response.IsTruncated ? response.Marker : undefined;
-  } while (marker);
+  if (!integration.accessTokenEnc || !integration.refreshTokenEnc || !region) {
+    throw new Error("AWS IAM access key credentials are missing.");
+  }
 
-  return users;
+  return {
+    accessKeyId: decryptSecret(integration.accessTokenEnc, integration.clerkOrgId),
+    backupBucketName: getConfigString(config, "backupBucketName"),
+    platform: "aws",
+    region,
+    secretAccessKey: decryptSecret(integration.refreshTokenEnc, integration.clerkOrgId),
+  };
 }
 
-async function listVpcIds(ec2: EC2Client) {
-  const vpcIds: string[] = [];
-  let nextToken: string | undefined;
+export async function runAwsCheckWithCredential(
+  checkLogic: string,
+  credential: AwsStoredCredential,
+  deps: AwsCheckDeps = {},
+): Promise<TestResult> {
+  switch (checkLogic) {
+    case "aws_ec2_instance_running": {
+      const result = await checkEc2Status(credential, deps);
 
-  do {
-    const response = await ec2.send(new DescribeVpcsCommand({ NextToken: nextToken }));
-    vpcIds.push(
-      ...(response.Vpcs ?? [])
-        .map((vpc) => vpc.VpcId)
-        .filter((value): value is string => Boolean(value)),
-    );
-    nextToken = response.NextToken;
-  } while (nextToken);
+      return checkResultToTestResult(
+        result,
+        {
+          ec2InstanceState: "running",
+          region: credential.region,
+        },
+        "V AWS nebyla nalezena žádná běžící EC2 instance.",
+      );
+    }
+    case "aws_security_group_rules_present": {
+      const result = await checkSecurityGroupPresent(credential, deps);
 
-  return vpcIds;
+      return checkResultToTestResult(
+        result,
+        {
+          region: credential.region,
+          securityGroupRulesPresent: true,
+        },
+        "V AWS nebyla nalezena security group s příchozím nebo odchozím pravidlem.",
+      );
+    }
+    case "aws_s3_backup_recent": {
+      const backupBucketName = credential.backupBucketName?.trim();
+
+      if (!backupBucketName) {
+        return {
+          data: {
+            backupBucketName: null,
+            blockedReason: "collection_failed",
+            provider: "aws",
+          },
+          failureReason:
+            "AWS backupBucketName není nastavený; doplňte bucket v konektoru nebo nahrajte manuální důkaz.",
+          status: "error",
+        };
+      }
+
+      const result = await checkS3BackupRecency(credential, deps);
+
+      return checkResultToTestResult(
+        result,
+        {
+          backupBucketName,
+          backupObjectWithinWindow: true,
+          backupWindowDays: 7,
+        },
+        "V nakonfigurovaném S3 backup bucketu nebyl nalezen objekt změněný v posledních 7 dnech.",
+      );
+    }
+    case "aws_cloudtrail_logging_enabled": {
+      const result = await checkCloudTrailEnabled(credential, deps);
+
+      return checkResultToTestResult(
+        result,
+        {
+          cloudTrailLoggingEnabled: true,
+          region: credential.region,
+        },
+        "V AWS nebyl nalezen žádný CloudTrail trail s aktivním logováním.",
+      );
+    }
+    default:
+      return {
+        data: {},
+        failureReason: `Neznámá kontrola AWS: ${checkLogic}`,
+        status: "not_applicable",
+      };
+  }
 }
 
 export const awsAdapter: IntegrationAdapter = {
   provider: "aws",
 
-  async runTest(checkLogic, integration): Promise<TestResult> {
-    const clients = await createAwsClients(integration);
-
-    switch (checkLogic) {
-      case "check_cloudtrail_enabled": {
-        const trails = await clients.cloudtrail.send(
-          new DescribeTrailsCommand({ includeShadowTrails: true }),
-        );
-        const loggingTrails = [];
-
-        for (const trail of trails.trailList ?? []) {
-          if (!trail.Name) {
-            continue;
-          }
-
-          const status = await clients.cloudtrail.send(
-            new GetTrailStatusCommand({ Name: trail.TrailARN ?? trail.Name }),
-          );
-
-          if (trail.IsMultiRegionTrail && status.IsLogging) {
-            loggingTrails.push(trail.Name);
-          }
-        }
-
-        return loggingTrails.length > 0
-          ? {
-              data: { loggingTrails },
-              status: "pass",
-            }
-          : {
-              data: { trailCount: trails.trailList?.length ?? 0 },
-              failureReason: "No multi-region CloudTrail trail is actively logging.",
-              status: "fail",
-            };
-      }
-
-      case "check_s3_encryption": {
-        const buckets = await clients.s3.send(new ListBucketsCommand({}));
-        const unencrypted = [];
-
-        for (const bucket of (buckets.Buckets ?? []).slice(0, 50)) {
-          if (!bucket.Name) {
-            continue;
-          }
-
-          try {
-            await clients.s3.send(
-              new GetBucketEncryptionCommand({ Bucket: bucket.Name }),
-            );
-          } catch (error) {
-            if (
-              isAwsError(error, [
-                "ServerSideEncryptionConfigurationNotFoundError",
-                "NoSuchServerSideEncryptionConfiguration",
-              ])
-            ) {
-              unencrypted.push(bucket.Name);
-              continue;
-            }
-
-            throw error;
-          }
-        }
-
-        return unencrypted.length === 0
-          ? {
-              data: { checkedBuckets: Math.min(buckets.Buckets?.length ?? 0, 50) },
-              status: "pass",
-            }
-          : {
-              data: {
-                checkedBuckets: Math.min(buckets.Buckets?.length ?? 0, 50),
-                unencryptedCount: unencrypted.length,
-              },
-              failureReason: `S3 buckets without default encryption: ${summarize(
-                unencrypted,
-              )}`,
-              status: "fail",
-            };
-      }
-
-      case "check_iam_mfa": {
-        const users = await listIamUsers(clients.iam);
-        const withoutMfa = [];
-
-        for (const user of users.slice(0, 100)) {
-          if (!user.UserName) {
-            continue;
-          }
-
-          const mfaDevices = await clients.iam.send(
-            new ListMFADevicesCommand({ UserName: user.UserName }),
-          );
-
-          if ((mfaDevices.MFADevices ?? []).length === 0) {
-            withoutMfa.push(user.UserName);
-          }
-        }
-
-        return withoutMfa.length === 0
-          ? {
-              data: { checkedUsers: Math.min(users.length, 100) },
-              status: "pass",
-            }
-          : {
-              data: {
-                checkedUsers: Math.min(users.length, 100),
-                withoutMfaCount: withoutMfa.length,
-              },
-              failureReason: `IAM users without MFA: ${summarize(withoutMfa)}`,
-              status: "fail",
-            };
-      }
-
-      case "check_root_account_mfa": {
-        const summary = await clients.iam.send(new GetAccountSummaryCommand({}));
-        const enabled = summary.SummaryMap?.AccountMFAEnabled === 1;
-
-        return enabled
-          ? {
-              data: { accountMfaEnabled: true },
-              status: "pass",
-            }
-          : {
-              data: { accountMfaEnabled: false },
-              failureReason: "AWS root account MFA is not enabled.",
-              status: "fail",
-            };
-      }
-
-      case "check_vpc_flow_logs": {
-        const vpcIds = await listVpcIds(clients.ec2);
-
-        if (vpcIds.length === 0) {
-          return {
-            data: { vpcCount: 0 },
-            status: "not_applicable",
-          };
-        }
-
-        const flowLogs = await clients.ec2.send(
-          new DescribeFlowLogsCommand({
-            Filter: [
-              {
-                Name: "resource-id",
-                Values: vpcIds,
-              },
-            ],
-          }),
-        );
-        const loggedVpcIds = new Set(
-          (flowLogs.FlowLogs ?? [])
-            .filter((log) => log.FlowLogStatus === "ACTIVE")
-            .map((log) => log.ResourceId)
-            .filter((value): value is string => Boolean(value)),
-        );
-        const missing = vpcIds.filter((vpcId) => !loggedVpcIds.has(vpcId));
-
-        return missing.length === 0
-          ? {
-              data: { checkedVpcs: vpcIds.length },
-              status: "pass",
-            }
-          : {
-              data: {
-                checkedVpcs: vpcIds.length,
-                missingCount: missing.length,
-              },
-              failureReason: `VPCs without active flow logs: ${summarize(missing)}`,
-              status: "warning",
-            };
-      }
-
-      default:
-        return {
-          data: {},
-          failureReason: `Unknown check: ${checkLogic}`,
-          status: "not_applicable",
-        };
-    }
+  async runTest(checkLogic: string, integration: Integration): Promise<TestResult> {
+    // The per-org/provider execution lock is acquired by
+    // lib/integrations/runner.ts runTestsForOrg via acquireIntegrationRunLock.
+    return runAwsCheckWithCredential(checkLogic, getAwsCredential(integration));
   },
 };

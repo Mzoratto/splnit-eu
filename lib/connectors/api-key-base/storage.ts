@@ -16,6 +16,11 @@ function clean(value: string) {
   return value.trim();
 }
 
+function cleanOptional(value: string | null | undefined) {
+  const cleaned = value?.trim();
+  return cleaned ? cleaned : null;
+}
+
 function getConsumerKeyEnc(config: IntegrationConfig) {
   const value = config.consumerKeyEnc;
   return typeof value === "string" && value.trim() ? value : null;
@@ -58,6 +63,20 @@ export function encryptedValuesForCredential(
         usernameEnc: encryptSecret(clean(credential.username), clerkOrgId),
       },
       refreshTokenEnc: null,
+      tokenExpiresAt: null,
+    };
+  }
+
+  if (credential.platform === "aws") {
+    return {
+      accessTokenEnc: encryptSecret(clean(credential.accessKeyId), clerkOrgId),
+      config: {
+        backupBucketName: cleanOptional(credential.backupBucketName),
+        credentialType: "aws_iam_access_key",
+        region: clean(credential.region),
+        tokenType: "api_key",
+      },
+      refreshTokenEnc: encryptSecret(clean(credential.secretAccessKey), clerkOrgId),
       tokenExpiresAt: null,
     };
   }
@@ -167,6 +186,22 @@ export async function getStoredConnectorCredential(input: {
       password: decryptSecret(row.accessTokenEnc, input.clerkOrgId),
       platform: "abra-flexi",
       username: decryptSecret(usernameEnc, input.clerkOrgId),
+    };
+  }
+
+  if (input.platform === "aws") {
+    const region = getStringConfig(config, "region");
+
+    if (!row.refreshTokenEnc || !region) {
+      return null;
+    }
+
+    return {
+      accessKeyId: decryptSecret(row.accessTokenEnc, input.clerkOrgId),
+      backupBucketName: getStringConfig(config, "backupBucketName"),
+      platform: "aws",
+      region,
+      secretAccessKey: decryptSecret(row.refreshTokenEnc, input.clerkOrgId),
     };
   }
 

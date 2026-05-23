@@ -1,11 +1,12 @@
 import assert from "node:assert/strict";
+import { hasDatabaseUrl } from "@/lib/db";
 import {
   hasPlanAccess,
   planGateBypassIsEnabled,
   requirePlan,
 } from "@/lib/stripe/plans";
-import { hasDatabaseUrl } from "@/lib/db";
 import {
+  billingGracePeriodIsActive,
   orgHasPlan,
   orgIsSubscribed,
   requireActiveSubscription,
@@ -43,50 +44,46 @@ function setEnvValue(key: string, value: string) {
   env[key] = value;
 }
 
+async function assertMissingOrgIsBlocked() {
+  if (!hasDatabaseUrl()) {
+    return;
+  }
+
+  assert.equal(await orgHasPlan("org_missing_enforcement_smoke", "agency"), false);
+  assert.equal(await orgIsSubscribed("org_missing_enforcement_smoke"), false);
+  assert.deepEqual(await requireActiveSubscription("org_missing_enforcement_smoke"), {
+    subscribed: false,
+  });
+}
+
 async function main() {
   try {
+    delete process.env.BILLING_ENFORCEMENT_DATE;
     delete process.env.ENABLE_TEST_ROUTES;
     delete process.env.NEXT_PUBLIC_ENABLE_TEST_ROUTES;
     delete process.env.TEST_BYPASS_PLAN_GATE;
-    delete process.env.BILLING_ENFORCEMENT_DATE;
     setEnvValue("NODE_ENV", "test");
 
     assert.equal(planGateBypassIsEnabled(), false);
+    assert.equal(billingGracePeriodIsActive(), false);
     assert.equal(hasPlanAccess("free", "agency"), false);
     assert.throws(() => requirePlan("free", "agency"), /Plan agency is required/);
+    await assertMissingOrgIsBlocked();
 
-    setEnvValue("TEST_BYPASS_PLAN_GATE", "true");
-    assert.equal(planGateBypassIsEnabled(), true);
-    assert.equal(hasPlanAccess("free", "agency"), true);
-    assert.doesNotThrow(() => requirePlan("free", "agency"));
-    assert.equal(await orgHasPlan("org_missing_subscription_smoke", "agency"), true);
-    assert.equal(await orgIsSubscribed("org_missing_subscription_smoke"), true);
-    assert.deepEqual(
-      await requireActiveSubscription("org_missing_subscription_smoke"),
-      {
-        grandfathered: true,
-        plan: "agency",
-        subscribed: true,
-      },
-    );
+    setEnvValue("BILLING_ENFORCEMENT_DATE", "2999-01-01T00:00:00.000Z");
+    assert.equal(billingGracePeriodIsActive(), true);
 
     setEnvValue("NODE_ENV", "production");
+    setEnvValue("TEST_BYPASS_PLAN_GATE", "true");
     setEnvValue("ENABLE_TEST_ROUTES", "true");
     setEnvValue("NEXT_PUBLIC_ENABLE_TEST_ROUTES", "true");
-    setEnvValue("BILLING_ENFORCEMENT_DATE", "2999-01-01T00:00:00.000Z");
     assert.equal(planGateBypassIsEnabled(), false);
+    assert.equal(billingGracePeriodIsActive(), false);
     assert.equal(hasPlanAccess("free", "agency"), false);
     assert.throws(() => requirePlan("free", "agency"), /Plan agency is required/);
+    await assertMissingOrgIsBlocked();
 
-    if (hasDatabaseUrl()) {
-      assert.equal(await orgHasPlan("org_missing_subscription_smoke", "agency"), false);
-      assert.equal(await orgIsSubscribed("org_missing_subscription_smoke"), false);
-      assert.deepEqual(await requireActiveSubscription("org_missing_subscription_smoke"), {
-        subscribed: false,
-      });
-    }
-
-    console.log("plan gate bypass smoke passed");
+    console.log("plan gate enforcement smoke passed");
   } finally {
     restoreEnv();
   }

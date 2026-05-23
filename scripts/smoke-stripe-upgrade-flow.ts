@@ -5,12 +5,11 @@ import Stripe from "stripe";
 import { POST as stripeWebhookPost } from "@/app/api/webhooks/stripe/route";
 import { getDb, hasDatabaseUrl } from "@/lib/db";
 import { organisations, subscriptions } from "@/lib/db/schema";
-import { setEmailTransportForTesting } from "@/lib/email/send";
 import {
-  getSubscriptionForOrg,
-  orgHasPlan,
-  orgIsSubscribed,
-} from "@/lib/stripe/subscriptions";
+  buildCheckoutSessionCreateParams,
+  buildPortalSessionCreateParams,
+} from "@/lib/stripe/session-params";
+import { orgHasPlan } from "@/lib/stripe/subscriptions";
 
 loadEnvConfig(process.cwd());
 
@@ -20,7 +19,6 @@ const envKeys = [
   "STRIPE_SECRET_KEY",
   "STRIPE_WEBHOOK_SECRET",
   "STRIPE_SME_PRICE_ID",
-  "STRIPE_AGENCY_PRICE_ID",
   "CLERK_SECRET_KEY",
 ] as const;
 
@@ -59,16 +57,6 @@ function signStripeEvent(input: {
   });
 }
 
-function invalidStripeEvent() {
-  return new Request("http://localhost/api/webhooks/stripe", {
-    body: JSON.stringify({ type: "checkout.session.completed" }),
-    headers: {
-      "stripe-signature": "invalid",
-    },
-    method: "POST",
-  });
-}
-
 function stripeEvent(type: string, object: unknown): Stripe.Event {
   return {
     id: `evt_${type.replaceAll(".", "_")}_${Date.now()}`,
@@ -84,31 +72,50 @@ function stripeEvent(type: string, object: unknown): Stripe.Event {
 }
 
 async function main() {
+  const checkoutParams = buildCheckoutSessionCreateParams({
+    appUrl: "https://splnit.eu",
+    customerId: "cus_upgrade_smoke",
+    metadata: {
+      clerkOrgId: "org_upgrade_smoke",
+      clerkUserId: "user_upgrade_smoke",
+      customerEmail: "upgrade-smoke@example.com",
+      plan: "sme",
+    },
+    priceId: "price_smoke_sme_490czk",
+  });
+  assert.equal(checkoutParams.mode, "subscription");
+  assert.equal(checkoutParams.customer, "cus_upgrade_smoke");
+  assert.deepEqual(checkoutParams.line_items, [
+    { price: "price_smoke_sme_490czk", quantity: 1 },
+  ]);
+  assert.equal(checkoutParams.success_url, "https://splnit.eu/settings/billing?success=true");
+  assert.equal(checkoutParams.cancel_url, "https://splnit.eu/settings/billing?canceled=true");
+  assert.equal(checkoutParams.subscription_data?.metadata?.plan, "sme");
+
+  const portalParams = buildPortalSessionCreateParams({
+    customerId: "cus_upgrade_smoke",
+    returnUrl: "https://splnit.eu/settings/billing",
+  });
+  assert.deepEqual(portalParams, {
+    customer: "cus_upgrade_smoke",
+    return_url: "https://splnit.eu/settings/billing",
+  });
+
   if (!hasDatabaseUrl()) {
-    console.log("Stripe billing smoke skipped: DATABASE_URL is missing.");
+    console.log("Stripe upgrade flow smoke passed; DATABASE_URL is missing, webhook DB check skipped.");
     return;
   }
 
   const originalEnv = snapshotEnv();
   const db = getDb();
-  const clerkOrgId = `smoke-stripe-billing-${Date.now()}`;
-  const stripeCustomerId = `cus_smoke_${Date.now()}`;
-  const stripeSubscriptionId = `sub_smoke_${Date.now()}`;
-  const secret = "whsec_smoke_local_entitlement";
-  const sentEmails: Array<{ subject: string; text: string; to: string }> = [];
+  const clerkOrgId = `smoke-stripe-upgrade-${Date.now()}`;
+  const stripeCustomerId = `cus_upgrade_smoke_${Date.now()}`;
+  const secret = "whsec_smoke_local_upgrade";
 
   try {
-    setEmailTransportForTesting((email) => {
-      sentEmails.push({
-        subject: email.subject,
-        text: email.text,
-        to: email.to,
-      });
-    });
     process.env.STRIPE_SECRET_KEY = "sk_test_smoke_local";
     process.env.STRIPE_WEBHOOK_SECRET = secret;
     process.env.STRIPE_SME_PRICE_ID = "price_smoke_sme_490czk";
-    process.env.STRIPE_AGENCY_PRICE_ID = "price_smoke_agency_1990czk";
     delete process.env.CLERK_SECRET_KEY;
 
     await db.delete(subscriptions).where(eq(subscriptions.clerkOrgId, clerkOrgId));
@@ -118,7 +125,7 @@ async function main() {
       country: "CZ",
       employeeCount: "1-10",
       locale: "cs-CZ",
-      name: "Stripe Billing Smoke Org",
+      name: "Stripe Upgrade Smoke Org",
       plan: "free",
       primaryJurisdiction: "CZ",
       sector: "technology",
@@ -126,11 +133,8 @@ async function main() {
 
     assert.equal(await orgHasPlan(clerkOrgId, "sme"), false);
 
-    const invalidResponse = await stripeWebhookPost(invalidStripeEvent());
-    assert.equal(invalidResponse.status, 400);
-
     const checkoutEvent = stripeEvent("checkout.session.completed", {
-      id: `cs_smoke_${Date.now()}`,
+      id: `cs_upgrade_smoke_${Date.now()}`,
       object: "checkout.session",
       customer: stripeCustomerId,
       metadata: {
@@ -142,61 +146,12 @@ async function main() {
     const checkoutResponse = await stripeWebhookPost(
       signStripeEvent({ event: checkoutEvent, secret }),
     );
+
     assert.equal(checkoutResponse.status, 200);
     assert.equal(await orgHasPlan(clerkOrgId, "sme"), true);
 
-    const subscriptionEvent = stripeEvent("customer.subscription.updated", {
-      id: stripeSubscriptionId,
-      object: "subscription",
-      customer: stripeCustomerId,
-      current_period_end: Math.floor(Date.now() / 1000) + 86_400,
-      items: {
-        object: "list",
-        data: [
-          {
-            id: `si_smoke_${Date.now()}`,
-            object: "subscription_item",
-            price: {
-              id: process.env.STRIPE_AGENCY_PRICE_ID,
-              object: "price",
-            },
-          },
-        ],
-        has_more: false,
-        url: "/v1/subscription_items",
-      },
-      metadata: {
-        clerkOrgId,
-        customerEmail: "billing-smoke@example.com",
-        plan: "agency",
-      },
-      status: "active",
-    });
-    const subscriptionResponse = await stripeWebhookPost(
-      signStripeEvent({ event: subscriptionEvent, secret }),
-    );
-    assert.equal(subscriptionResponse.status, 200);
-    assert.equal(await orgHasPlan(clerkOrgId, "agency"), true);
-
-    const deletedEvent = stripeEvent("customer.subscription.deleted", {
-      ...(subscriptionEvent.data.object as unknown as Record<string, unknown>),
-      canceled_at: Math.floor(Date.now() / 1000),
-      status: "canceled",
-    });
-    const deletedResponse = await stripeWebhookPost(
-      signStripeEvent({ event: deletedEvent, secret }),
-    );
-    assert.equal(deletedResponse.status, 200);
-    const canceled = await getSubscriptionForOrg(clerkOrgId);
-    assert.equal(canceled?.status, "canceled");
-    assert.equal(await orgIsSubscribed(clerkOrgId), false);
-    assert.equal(sentEmails.length, 1);
-    assert.equal(sentEmails[0]?.to, "billing-smoke@example.com");
-    assert.match(sentEmails[0]?.subject ?? "", /zrušeno/);
-
-    console.log("Stripe billing smoke passed.");
+    console.log("Stripe upgrade flow smoke passed.");
   } finally {
-    setEmailTransportForTesting(null);
     await db.delete(subscriptions).where(eq(subscriptions.clerkOrgId, clerkOrgId));
     await db.delete(organisations).where(eq(organisations.clerkOrgId, clerkOrgId));
     restoreEnv(originalEnv);

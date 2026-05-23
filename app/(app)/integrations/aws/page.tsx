@@ -15,15 +15,14 @@ import { normalizeLocale, type Locale } from "@/i18n/routing";
 import { hasDatabaseUrl } from "@/lib/db";
 import { getIntegrationDetail } from "@/lib/db/queries/integrations";
 import { getOrganisationByClerkOrgId } from "@/lib/db/queries/organisations";
-import { getAwsCloudFormationTemplate } from "@/lib/integrations/aws/cloudformation";
-import {
-  type AwsIntegrationConfig,
-  getAwsExternalId,
-  getAwsRegion,
-} from "@/lib/integrations/aws/client";
-import { AWS_TEST_DEFINITIONS } from "@/lib/integrations/aws/test-definitions";
 import { disconnectIntegrationAction } from "../actions";
 import { connectAwsIntegrationAction } from "./actions";
+
+type AwsApiKeyConfig = {
+  backupBucketName?: unknown;
+  credentialType?: unknown;
+  region?: unknown;
+};
 
 function formatDate(
   value: Date | string | null | undefined,
@@ -59,6 +58,14 @@ function statusMeta(
     return { label: labels.statusConnecting, tone: "warn" };
   }
 
+  if (
+    status === "invalid_key" ||
+    status === "insufficient_scope" ||
+    status === "unreachable"
+  ) {
+    return { label: labels.statusActionNeeded, tone: "fail" };
+  }
+
   if (status === "manual_review" || status === "warning") {
     return { label: "WARN", tone: "warn" };
   }
@@ -74,6 +81,19 @@ function statusMeta(
   return { label: labels.statusNotConnected, tone: "neutral" };
 }
 
+function getConfigString(config: AwsApiKeyConfig, key: keyof AwsApiKeyConfig) {
+  const value = config[key];
+  return typeof value === "string" && value.trim() ? value : null;
+}
+
+function getQueryValue(
+  query: Record<string, string | string[] | undefined>,
+  key: string,
+) {
+  const value = query[key];
+  return Array.isArray(value) ? value[0] : value ?? null;
+}
+
 async function loadAwsData() {
   const clerkConfigured =
     Boolean(process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY) &&
@@ -83,7 +103,6 @@ async function loadAwsData() {
     return {
       canMutate: false,
       detail: null,
-      externalId: "splnit-preview",
       organisationLocale: null,
     };
   }
@@ -94,7 +113,6 @@ async function loadAwsData() {
     return {
       canMutate: false,
       detail: null,
-      externalId: "splnit-preview",
       organisationLocale: null,
     };
   }
@@ -112,26 +130,39 @@ async function loadAwsData() {
   return {
     canMutate: true,
     detail,
-    externalId: getAwsExternalId(session.orgId),
     organisationLocale: organisation?.locale ?? null,
   };
 }
 
-export default async function AwsIntegrationPage() {
+export default async function AwsIntegrationPage({
+  searchParams,
+}: {
+  searchParams?: Promise<Record<string, string | string[] | undefined>>;
+}) {
   const requestLocale = normalizeLocale(await getLocale()) ?? "cs-CZ";
-  const { canMutate, detail, externalId, organisationLocale } = await loadAwsData();
+  const query = searchParams ? await searchParams : {};
+  const { canMutate, detail, organisationLocale } = await loadAwsData();
   const locale = normalizeLocale(organisationLocale) ?? requestLocale;
   const copy = getMessagesForLocale(locale).integrations;
   const providerCopy = copy.providerPages;
-  const integration = detail?.integration ?? null;
-  const runs = detail?.runs ?? [];
-  const tests = detail?.tests.length ? detail.tests : AWS_TEST_DEFINITIONS;
-  const connected = integration?.status === "connected";
-  const connectionStatus = statusMeta(integration?.status, providerCopy.common);
-  const config = (integration?.config ?? {}) as AwsIntegrationConfig;
-  const selectedExternalId = config.externalId ?? externalId;
-  const selectedRegion = getAwsRegion(config);
-  const template = getAwsCloudFormationTemplate(selectedExternalId);
+  const rawIntegration = detail?.integration ?? null;
+  const config = (rawIntegration?.config ?? {}) as AwsApiKeyConfig;
+  const hasApiKeyCredential = config.credentialType === "aws_iam_access_key";
+  const tests = hasApiKeyCredential ? detail?.tests ?? [] : [];
+  const integration = hasApiKeyCredential ? rawIntegration : null;
+  const runs = hasApiKeyCredential ? detail?.runs ?? [] : [];
+  const connected = integration?.status === "connected" && hasApiKeyCredential;
+  const connectionStatus = statusMeta(
+    hasApiKeyCredential ? integration?.status : null,
+    providerCopy.common,
+  );
+  const selectedRegion = getConfigString(config, "region") ?? "eu-central-1";
+  const backupBucketName = getConfigString(config, "backupBucketName") ?? "";
+  const error = getQueryValue(query, "error");
+  const errorMessage =
+    error && error in providerCopy.aws.errors
+      ? providerCopy.aws.errors[error as keyof typeof providerCopy.aws.errors]
+      : null;
 
   return (
     <section className="space-y-8">
@@ -177,7 +208,8 @@ export default async function AwsIntegrationPage() {
             </StatusPill>
           </div>
           <p className="mt-2 text-sm text-foreground/58">
-            {config.accountId ?? providerCopy.aws.accountMissing} · {selectedRegion}
+            {connected ? providerCopy.aws.iamKeyConnected : providerCopy.aws.accountMissing} ·{" "}
+            {selectedRegion}
           </p>
         </article>
         <article className="card">
@@ -208,34 +240,49 @@ export default async function AwsIntegrationPage() {
         <section className="card">
           <div className="flex items-center gap-2">
             <KeyRound className="h-5 w-5 text-primary" aria-hidden="true" strokeWidth={1.5} />
-            <h2 className="text-lg font-medium">{providerCopy.aws.connectRole}</h2>
+            <h2 className="text-lg font-medium">{providerCopy.aws.connectAccessKey}</h2>
           </div>
           <form action={connectAwsIntegrationAction} className="mt-5 space-y-4">
-            <label className="grid gap-2 text-xs font-medium text-foreground/68">
-              Role ARN
-              <input
-                name="roleArn"
-                defaultValue={config.roleArn ?? ""}
-                disabled={!canMutate}
-                placeholder="arn:aws:iam::123456789012:role/splnit-security-audit"
-                className="h-9 rounded-md border border-border-default bg-[var(--bg-input)] px-3 font-mono text-sm text-foreground"
-              />
-            </label>
+            <input type="hidden" name="mode" value={connected ? "rotate" : "connect"} />
             <div className="grid gap-4 md:grid-cols-2">
               <label className="grid gap-2 text-xs font-medium text-foreground/68">
-                External ID
+                {providerCopy.aws.accessKeyId}
                 <input
-                  name="externalId"
-                  defaultValue={selectedExternalId}
+                  name="accessKeyId"
+                  autoComplete="off"
                   disabled={!canMutate}
+                  required
                   className="h-9 rounded-md border border-border-default bg-[var(--bg-input)] px-3 font-mono text-sm text-foreground"
                 />
               </label>
               <label className="grid gap-2 text-xs font-medium text-foreground/68">
-                Region
+                {providerCopy.aws.secretAccessKey}
+                <input
+                  name="secretAccessKey"
+                  type="password"
+                  autoComplete="new-password"
+                  disabled={!canMutate}
+                  required
+                  className="h-9 rounded-md border border-border-default bg-[var(--bg-input)] px-3 font-mono text-sm text-foreground"
+                />
+              </label>
+            </div>
+            <div className="grid gap-4 md:grid-cols-2">
+              <label className="grid gap-2 text-xs font-medium text-foreground/68">
+                {providerCopy.aws.region}
                 <input
                   name="region"
                   defaultValue={selectedRegion}
+                  disabled={!canMutate}
+                  required
+                  className="h-9 rounded-md border border-border-default bg-[var(--bg-input)] px-3 font-mono text-sm text-foreground"
+                />
+              </label>
+              <label className="grid gap-2 text-xs font-medium text-foreground/68">
+                {providerCopy.aws.backupBucketName}
+                <input
+                  name="backupBucketName"
+                  defaultValue={backupBucketName}
                   disabled={!canMutate}
                   className="h-9 rounded-md border border-border-default bg-[var(--bg-input)] px-3 font-mono text-sm text-foreground"
                 />
@@ -246,19 +293,41 @@ export default async function AwsIntegrationPage() {
               disabled={!canMutate}
               className="btn btn-primary disabled:cursor-not-allowed disabled:opacity-50"
             >
-              {connected ? providerCopy.aws.updateRole : providerCopy.aws.connectRoleAction}
+              {connected
+                ? providerCopy.aws.rotateAccessKey
+                : providerCopy.aws.connectAccessKeyAction}
               <CheckCircle2 className="h-4 w-4" aria-hidden="true" strokeWidth={1.5} />
             </button>
           </form>
+          {errorMessage ? (
+            <p className="mt-4 rounded-md border border-[var(--status-fail-border)] bg-[var(--status-fail-subtle)] p-3 text-sm text-[var(--status-fail)]">
+              {errorMessage}
+            </p>
+          ) : null}
         </section>
 
-        <section className="overflow-hidden rounded-lg border border-border bg-surface">
-          <div className="border-b border-border p-5">
-            <h2 className="text-lg font-medium">CloudFormation</h2>
-          </div>
-          <pre className="max-h-[420px] overflow-auto bg-background p-5 font-mono text-xs leading-5 text-foreground/70">
-            <code>{template}</code>
-          </pre>
+        <section className="card">
+          <h2 className="text-lg font-medium">{providerCopy.aws.permissionsTitle}</h2>
+          <p className="mt-2 text-sm leading-6 text-foreground/64">
+            {providerCopy.aws.permissionsBody}
+          </p>
+          <ul className="mt-4 grid gap-2 font-mono text-xs text-foreground/68">
+            {[
+              "sts:GetCallerIdentity",
+              "ec2:DescribeInstances",
+              "ec2:DescribeSecurityGroups",
+              "s3:ListBucket",
+              "cloudtrail:DescribeTrails",
+              "cloudtrail:GetTrailStatus",
+            ].map((permission) => (
+              <li
+                key={permission}
+                className="rounded-md border border-border bg-background px-3 py-2"
+              >
+                {permission}
+              </li>
+            ))}
+          </ul>
         </section>
       </div>
 
@@ -268,19 +337,25 @@ export default async function AwsIntegrationPage() {
             <h2 className="text-lg font-medium">{providerCopy.common.testSuite}</h2>
           </div>
           <div className="divide-y divide-border">
-            {tests.map((test) => (
-              <article key={test.checkLogic} className="p-4 hover:bg-bg-hover">
-                <p className="font-medium">{test.name}</p>
-                <p className="mt-1 font-mono text-xs text-foreground/52">
-                  {test.checkLogic}
-                </p>
-                {"passCriteria" in test ? (
-                  <p className="mt-2 text-sm leading-6 text-foreground/64">
-                    {test.passCriteria}
+            {tests.length > 0 ? (
+              tests.map((test) => (
+                <article key={test.checkLogic} className="p-4 hover:bg-bg-hover">
+                  <p className="font-medium">{test.name}</p>
+                  <p className="mt-1 font-mono text-xs text-foreground/52">
+                    {test.checkLogic}
                   </p>
-                ) : null}
-              </article>
-            ))}
+                  {"passCriteria" in test ? (
+                    <p className="mt-2 text-sm leading-6 text-foreground/64">
+                      {test.passCriteria}
+                    </p>
+                  ) : null}
+                </article>
+              ))
+            ) : (
+              <p className="p-5 text-sm text-foreground/58">
+                {providerCopy.aws.testsBody}
+              </p>
+            )}
           </div>
         </section>
 

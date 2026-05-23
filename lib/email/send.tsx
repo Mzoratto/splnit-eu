@@ -1,8 +1,8 @@
-import type { ReactElement } from "react";
+import React, { type ReactElement } from "react";
 import {
-  FROM_ADDRESS,
   REPLY_TO,
   getResend,
+  getResendFrom,
   hasResendConfig,
 } from "@/lib/email/client";
 import DeadlineReminderEmail, {
@@ -25,6 +25,37 @@ import SubscriptionConfirmationEmail, {
   subscriptionConfirmationSubject,
   type SubscriptionConfirmationProps,
 } from "@/lib/email/templates/subscription-confirmation";
+import InvoiceReceiptEmail, {
+  invoiceReceiptSubject,
+  plainText as invoiceReceiptText,
+  type InvoiceReceiptProps,
+} from "@/lib/email/templates/invoice-receipt";
+import SubscriptionCancellationEmail, {
+  plainText as subscriptionCancellationText,
+  subscriptionCancellationSubject,
+  type SubscriptionCancellationProps,
+} from "@/lib/email/templates/subscription-cancellation";
+
+type EmailPayload = {
+  from: string;
+  react: ReactElement;
+  replyTo: string;
+  subject: string;
+  text: string;
+  to: string;
+};
+
+type EmailTransport = (input: EmailPayload) => Promise<void> | void;
+
+let emailTransportForTesting: EmailTransport | null = null;
+
+export function setEmailTransportForTesting(transport: EmailTransport | null) {
+  if (process.env.NODE_ENV === "production") {
+    throw new Error("Test email transport cannot be set in production.");
+  }
+
+  emailTransportForTesting = transport;
+}
 
 async function sendEmail(input: {
   react: ReactElement;
@@ -32,20 +63,27 @@ async function sendEmail(input: {
   text: string;
   to: string;
 }) {
+  const payload = {
+    from: getResendFrom(),
+    react: input.react,
+    replyTo: REPLY_TO,
+    subject: input.subject,
+    text: input.text,
+    to: input.to,
+  };
+
+  if (emailTransportForTesting) {
+    await emailTransportForTesting(payload);
+    return;
+  }
+
   if (!hasResendConfig()) {
     console.warn("Email skipped: RESEND_API_KEY is not configured.");
     return;
   }
 
   try {
-    await getResend().emails.send({
-      from: FROM_ADDRESS,
-      react: input.react,
-      replyTo: REPLY_TO,
-      subject: input.subject,
-      text: input.text,
-      to: input.to,
-    });
+    await getResend().emails.send(payload);
   } catch (error) {
     console.error("Email delivery failed.", error);
   }
@@ -95,6 +133,30 @@ export async function sendSubscriptionConfirmation(
     react: <SubscriptionConfirmationEmail {...props} />,
     subject: subscriptionConfirmationSubject(),
     text: subscriptionConfirmationText(props),
+    to,
+  });
+}
+
+export async function sendInvoiceReceipt(
+  to: string,
+  props: InvoiceReceiptProps,
+): Promise<void> {
+  await sendEmail({
+    react: <InvoiceReceiptEmail {...props} />,
+    subject: invoiceReceiptSubject(props),
+    text: invoiceReceiptText(props),
+    to,
+  });
+}
+
+export async function sendSubscriptionCancellation(
+  to: string,
+  props: SubscriptionCancellationProps,
+): Promise<void> {
+  await sendEmail({
+    react: <SubscriptionCancellationEmail {...props} />,
+    subject: subscriptionCancellationSubject(),
+    text: subscriptionCancellationText(props),
     to,
   });
 }

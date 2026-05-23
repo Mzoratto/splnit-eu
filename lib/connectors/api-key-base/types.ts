@@ -1,4 +1,4 @@
-export type ConnectorPlatform = "hetzner" | "ovhcloud" | "abra-flexi";
+export type ConnectorPlatform = "hetzner" | "ovhcloud" | "abra-flexi" | "aws";
 
 export type HealthCheckResult =
   | "connected"
@@ -26,6 +26,13 @@ export type AbraFlexiCredentialInput = {
   username: string;
 };
 
+export type AwsCredentialInput = {
+  accessKeyId: string;
+  backupBucketName?: string | null;
+  region: string;
+  secretAccessKey: string;
+};
+
 export type ConnectorCredentialInput =
   | ({
       platform: "hetzner";
@@ -35,7 +42,10 @@ export type ConnectorCredentialInput =
     } & OVHcloudCredentialInput)
   | ({
       platform: "abra-flexi";
-    } & AbraFlexiCredentialInput);
+    } & AbraFlexiCredentialInput)
+  | ({
+      platform: "aws";
+    } & AwsCredentialInput);
 
 export type StoredConnectorCredential =
   | ({
@@ -46,7 +56,10 @@ export type StoredConnectorCredential =
     } & OVHcloudCredentialInput)
   | ({
       platform: "abra-flexi";
-    } & AbraFlexiCredentialInput);
+    } & AbraFlexiCredentialInput)
+  | ({
+      platform: "aws";
+    } & AwsCredentialInput);
 
 export type ConnectorHealthProbe = (input: {
   credentials: StoredConnectorCredential;

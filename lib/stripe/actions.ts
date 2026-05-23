@@ -11,6 +11,10 @@ import {
 } from "@/lib/stripe/billing";
 import { getStripe } from "@/lib/stripe/client";
 import { type BillablePlanKey } from "@/lib/stripe/plans";
+import {
+  buildCheckoutSessionCreateParams,
+  buildPortalSessionCreateParams,
+} from "@/lib/stripe/session-params";
 import { getSubscriptionForOrg } from "@/lib/stripe/subscriptions";
 
 type CheckoutMetadata = Record<string, string | null | undefined>;
@@ -57,18 +61,16 @@ export async function createCheckoutSessionForPlan(input: {
     plan: input.plan,
     ...(input.metadata ?? {}),
   });
-  const checkoutSession = await getStripe().checkout.sessions.create({
-    allow_promotion_codes: true,
-    customer: customerId,
-    line_items: [{ price: priceId, quantity: 1 }],
-    metadata,
-    mode: "subscription",
-    subscription_data: {
+  const checkoutSession = await getStripe().checkout.sessions.create(
+    buildCheckoutSessionCreateParams({
+      appUrl,
+      cancelPath: input.cancelPath,
+      customerId,
       metadata,
-    },
-    success_url: `${appUrl}${input.successPath ?? "/settings/billing?success=true"}`,
-    cancel_url: `${appUrl}${input.cancelPath ?? "/settings/billing?canceled=true"}`,
-  });
+      priceId,
+      successPath: input.successPath,
+    }),
+  );
 
   if (!checkoutSession.url) {
     throw new Error("Stripe did not return a checkout URL.");
@@ -94,10 +96,12 @@ export async function createPortalSession(): Promise<never> {
     redirect("/settings/billing?portal=missing_customer");
   }
 
-  const portalSession = await getStripe().billingPortal.sessions.create({
-    customer: stripeCustomerId,
-    return_url: `${getAppUrl()}/settings/billing`,
-  });
+  const portalSession = await getStripe().billingPortal.sessions.create(
+    buildPortalSessionCreateParams({
+      customerId: stripeCustomerId,
+      returnUrl: `${getAppUrl()}/settings/billing`,
+    }),
+  );
 
   redirect(portalSession.url);
 }

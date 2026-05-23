@@ -1,8 +1,16 @@
 import { clerkClient } from "@clerk/nextjs/server";
+import { revalidatePath } from "next/cache";
 import { NextResponse } from "next/server";
 import type Stripe from "stripe";
-import { getOrganisationByClerkOrgId } from "@/lib/db/queries/organisations";
-import { sendSubscriptionConfirmation } from "@/lib/email/send";
+import {
+  getOrganisationByClerkOrgId,
+  getPrimaryContactEmailForOrg,
+} from "@/lib/db/queries/organisations";
+import {
+  sendInvoiceReceipt,
+  sendSubscriptionCancellation,
+  sendSubscriptionConfirmation,
+} from "@/lib/email/send";
 import {
   getObjectId,
   getPrimaryEmail,
@@ -11,6 +19,7 @@ import {
 import { getStripe } from "@/lib/stripe/client";
 import { isBillablePlanKey } from "@/lib/stripe/plans";
 import {
+  findOrgIdForStripeCustomer,
   syncLegacyOrganisationBilling,
   updateSubscriptionStatus,
   upsertSubscription,
@@ -18,6 +27,40 @@ import {
 
 export const dynamic = "force-dynamic";
 export const runtime = "nodejs";
+
+function revalidateBillingPaths() {
+  try {
+    revalidatePath("/dashboard");
+    revalidatePath("/settings/billing");
+    revalidatePath("/agency/dashboard");
+    revalidatePath("/agency/settings");
+    revalidatePath("/clients");
+  } catch (error) {
+    if (process.env.NODE_ENV === "production") {
+      throw error;
+    }
+  }
+}
+
+function formatStripeAmount(amount: number, currency: string) {
+  return new Intl.NumberFormat("cs-CZ", {
+    currency: currency.toUpperCase(),
+    style: "currency",
+  }).format(amount / 100);
+}
+
+function formatStripeDate(timestampSeconds: number | null | undefined) {
+  const date =
+    typeof timestampSeconds === "number"
+      ? new Date(timestampSeconds * 1000)
+      : new Date();
+
+  return new Intl.DateTimeFormat("cs-CZ", {
+    day: "numeric",
+    month: "long",
+    year: "numeric",
+  }).format(date);
+}
 
 async function handleCheckoutSessionCompleted(session: Stripe.Checkout.Session) {
   const stripeSubscriptionId = getObjectId(session.subscription);
@@ -44,6 +87,7 @@ async function handleCheckoutSessionCompleted(session: Stripe.Checkout.Session) 
       stripeCustomerId,
       stripeSubscriptionId: null,
     });
+    revalidateBillingPaths();
 
     return {
       clerkOrgId,
@@ -77,6 +121,8 @@ async function handleCheckoutSessionCompleted(session: Stripe.Checkout.Session) 
     }
   }
 
+  revalidateBillingPaths();
+
   return result;
 }
 
@@ -88,6 +134,67 @@ async function handlePaymentFailed(invoice: Stripe.Invoice) {
       (invoice as { subscription?: string | { id: string } | null }).subscription ?? null,
     ),
   });
+  revalidateBillingPaths();
+}
+
+async function handleInvoicePaymentSucceeded(invoice: Stripe.Invoice) {
+  const stripeCustomerId = getObjectId(invoice.customer);
+
+  if (!stripeCustomerId) {
+    return null;
+  }
+
+  const clerkOrgId = await findOrgIdForStripeCustomer(stripeCustomerId);
+
+  if (!clerkOrgId) {
+    return null;
+  }
+
+  const [organisation, primaryContactEmail] = await Promise.all([
+    getOrganisationByClerkOrgId(clerkOrgId),
+    getPrimaryContactEmailForOrg(clerkOrgId),
+  ]);
+  const recipient = invoice.customer_email ?? primaryContactEmail;
+  const invoiceUrl = invoice.invoice_pdf ?? invoice.hosted_invoice_url ?? null;
+
+  if (!recipient || !invoiceUrl) {
+    revalidateBillingPaths();
+    return { clerkOrgId, sent: false };
+  }
+
+  await sendInvoiceReceipt(recipient, {
+    amountPaid: formatStripeAmount(invoice.amount_paid, invoice.currency),
+    invoiceNumber: invoice.number ?? invoice.id,
+    invoiceUrl,
+    orgName: organisation?.name ?? invoice.customer_name ?? clerkOrgId,
+    paidAt: formatStripeDate(invoice.status_transitions?.paid_at ?? invoice.created),
+  });
+  revalidateBillingPaths();
+
+  return { clerkOrgId, sent: true };
+}
+
+async function handleSubscriptionDeleted(subscription: Stripe.Subscription) {
+  const result = await syncSubscriptionToOrg(subscription);
+  const [organisation, primaryContactEmail] = await Promise.all([
+    getOrganisationByClerkOrgId(result.clerkOrgId),
+    getPrimaryContactEmailForOrg(result.clerkOrgId),
+  ]);
+  const recipient = subscription.metadata.customerEmail ?? primaryContactEmail;
+
+  if (recipient) {
+    await sendSubscriptionCancellation(recipient, {
+      canceledAt: formatStripeDate(
+        (subscription as { canceled_at?: number | null }).canceled_at ?? null,
+      ),
+      orgName: organisation?.name ?? result.clerkOrgId,
+      plan: result.plan,
+    });
+  }
+
+  revalidateBillingPaths();
+
+  return result;
 }
 
 export async function POST(request: Request) {
@@ -127,12 +234,20 @@ export async function POST(request: Request) {
 
     case "customer.subscription.created":
     case "customer.subscription.updated":
-    case "customer.subscription.deleted":
       await syncSubscriptionToOrg(event.data.object);
+      revalidateBillingPaths();
+      break;
+
+    case "customer.subscription.deleted":
+      await handleSubscriptionDeleted(event.data.object);
       break;
 
     case "invoice.payment_failed":
       await handlePaymentFailed(event.data.object);
+      break;
+
+    case "invoice.payment_succeeded":
+      await handleInvoicePaymentSucceeded(event.data.object);
       break;
   }
 

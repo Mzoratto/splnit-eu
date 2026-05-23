@@ -98,20 +98,20 @@ function getBillingEnforcementDate() {
   const raw = process.env.BILLING_ENFORCEMENT_DATE?.trim();
 
   if (!raw) {
-    return null;
+    return new Date(0);
   }
 
   const parsed = new Date(raw);
 
-  return Number.isNaN(parsed.getTime()) ? null : parsed;
+  return Number.isNaN(parsed.getTime()) ? new Date(0) : parsed;
 }
 
 export function billingGracePeriodIsActive(now = new Date()) {
-  const enforcementDate = getBillingEnforcementDate();
-
-  if (!enforcementDate) {
-    return true;
+  if (process.env.NODE_ENV === "production") {
+    return false;
   }
+
+  const enforcementDate = getBillingEnforcementDate();
 
   return now.getTime() < enforcementDate.getTime();
 }

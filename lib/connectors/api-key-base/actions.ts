@@ -49,13 +49,36 @@ const abraFlexiCredentialSchema = z.object({
   username: z.string().trim().min(1).max(256),
 });
 
+const optionalTrimmedString = (maxLength: number) =>
+  z
+    .string()
+    .trim()
+    .max(maxLength)
+    .optional()
+    .nullable()
+    .transform((value) => value?.trim() || null);
+
+const awsCredentialSchema = z.object({
+  accessKeyId: z.string().trim().min(1).max(256),
+  backupBucketName: optionalTrimmedString(255),
+  platform: z.literal("aws"),
+  region: z
+    .string()
+    .trim()
+    .min(1)
+    .max(32)
+    .regex(/^[a-z]{2}-[a-z-]+-\d$/, "Invalid AWS region."),
+  secretAccessKey: z.string().trim().min(1).max(4096),
+});
+
 const connectorCredentialSchema = z.discriminatedUnion("platform", [
   abraFlexiCredentialSchema,
+  awsCredentialSchema,
   hetznerCredentialSchema,
   ovhcloudCredentialSchema,
 ]);
 
-const platformSchema = z.enum(["hetzner", "ovhcloud", "abra-flexi"]);
+const platformSchema = z.enum(["hetzner", "ovhcloud", "abra-flexi", "aws"]);
 
 function requireActiveOrganisation(session: Awaited<ReturnType<typeof auth>>) {
   if (!session.userId || !session.orgId) {

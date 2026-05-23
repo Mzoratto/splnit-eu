@@ -1,31 +1,27 @@
 "use server";
 
-import { auth } from "@clerk/nextjs/server";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { z } from "zod";
-import { createAuditLog } from "@/lib/db/queries/audit-logs";
-import { upsertIntegrationConnection } from "@/lib/db/queries/integrations";
-import { validateAwsRoleConnection } from "@/lib/integrations/aws/client";
+import {
+  connectApiKeyConnectorAction,
+  rotateApiKeyConnectorAction,
+} from "@/lib/connectors/api-key-base";
 
 const awsConnectionSchema = z.object({
-  externalId: z
+  accessKeyId: z.string().trim().min(1).max(256),
+  backupBucketName: z
     .string()
     .trim()
-    .min(2)
-    .max(1224)
-    .regex(/^[\w+=,.@:/-]+$/, "Invalid AWS external ID."),
+    .max(255)
+    .optional()
+    .transform((value) => value || null),
+  mode: z.enum(["connect", "rotate"]).default("connect"),
   region: z
     .string()
     .trim()
-    .regex(/^[a-z]{2}-[a-z]+-\d$/, "Invalid AWS region."),
-  roleArn: z
-    .string()
-    .trim()
-    .regex(
-      /^arn:aws[a-z-]*:iam::\d{12}:role\/[\w+=,.@/-]{1,512}$/,
-      "Invalid IAM role ARN.",
-    ),
+    .regex(/^[a-z]{2}-[a-z-]+-\d$/, "Invalid AWS region."),
+  secretAccessKey: z.string().trim().min(1).max(4096),
 });
 
 function getStringValue(formData: FormData, key: string) {
@@ -33,52 +29,36 @@ function getStringValue(formData: FormData, key: string) {
   return typeof value === "string" ? value : "";
 }
 
-function requireActiveOrganisation(session: Awaited<ReturnType<typeof auth>>) {
-  if (!session.userId || !session.orgId) {
-    redirect("/sign-in");
+export async function connectAwsIntegrationAction(formData: FormData) {
+  const parsed = awsConnectionSchema.safeParse({
+    accessKeyId: getStringValue(formData, "accessKeyId"),
+    backupBucketName: getStringValue(formData, "backupBucketName"),
+    mode: getStringValue(formData, "mode") || "connect",
+    region: getStringValue(formData, "region"),
+    secretAccessKey: getStringValue(formData, "secretAccessKey"),
+  });
+
+  if (!parsed.success) {
+    redirect("/integrations/aws?error=validation");
   }
 
-  return {
-    clerkOrgId: session.orgId,
-    userId: session.userId,
-  };
-}
+  const action = parsed.data.mode === "rotate"
+    ? rotateApiKeyConnectorAction
+    : connectApiKeyConnectorAction;
+  const result = await action({
+    accessKeyId: parsed.data.accessKeyId,
+    backupBucketName: parsed.data.backupBucketName,
+    platform: "aws",
+    region: parsed.data.region,
+    secretAccessKey: parsed.data.secretAccessKey,
+  });
 
-export async function connectAwsIntegrationAction(formData: FormData) {
-  const session = requireActiveOrganisation(await auth());
-  const parsed = awsConnectionSchema.parse({
-    externalId: getStringValue(formData, "externalId"),
-    region: getStringValue(formData, "region"),
-    roleArn: getStringValue(formData, "roleArn"),
-  });
-  const identity = await validateAwsRoleConnection(parsed);
-
-  const integration = await upsertIntegrationConnection({
-    clerkOrgId: session.clerkOrgId,
-    config: {
-      accountId: identity.accountId,
-      assumedArn: identity.assumedArn,
-      externalId: parsed.externalId,
-      region: identity.region,
-      roleArn: parsed.roleArn,
-    },
-    provider: "aws",
-  });
-  await createAuditLog({
-    action: "integration.connected",
-    clerkOrgId: session.clerkOrgId,
-    clerkUserId: session.userId,
-    entityId: integration.id,
-    entityType: "integration",
-    metadata: {
-      accountId: identity.accountId,
-      provider: "aws",
-      region: identity.region,
-      roleArn: parsed.roleArn,
-    },
-  });
+  if (!result.ok) {
+    redirect(`/integrations/aws?error=${result.error}`);
+  }
 
   revalidatePath("/integrations");
-  revalidatePath("/settings/audit-log");
   revalidatePath("/integrations/aws");
+  revalidatePath("/settings/audit-log");
+  redirect(`/integrations/aws?status=${parsed.data.mode}`);
 }
