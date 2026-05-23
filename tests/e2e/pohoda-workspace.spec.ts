@@ -5,20 +5,11 @@
  * submit an attestation answer on Layer 3 (backup), ActivationStatus shows
  * confirmed pass/gap after submission, overall progress percentage increases.
  *
- * Runs on Chromium only. The server action POST is intercepted so the test
- * works without a live Clerk session or database (demo mode).
+ * Runs on Chromium only. The test-only attestation API is intercepted so the
+ * test works without a live Clerk session or database (demo mode).
  */
 
 import { expect, test } from "@playwright/test";
-
-// ─── Constants ────────────────────────────────────────────────────────────────
-
-// Minimal RSC payload for a successful server action response.
-// Next.js server actions require content-type: text/x-component.
-// The root chunk (id 0) carries { a: actionReturnValue, f: flightData }.
-// We return a "pass" assessment result and null flight data (no page refresh).
-const RSC_ACTION_SUCCESS =
-  '0:{"a":"$@1","f":null}\n1:{"assessmentResult":"pass","controlId":"ctrl_pohoda_backup_test","evidenceId":"ev_pohoda_backup_test"}\n';
 
 // ─── Tests ────────────────────────────────────────────────────────────────────
 
@@ -133,26 +124,18 @@ test.describe("Pohoda workspace", () => {
   test("attestation form: submit 'yes' answer on Layer 3 backup control, confirmed pass shown after success", async ({
     page,
   }) => {
-    // Intercept the Next.js server action POST.
-    // Server actions are identified by the `next-action` request header and POST
-    // to the current page URL. We return a minimal RSC success payload so the
-    // client-side form sets `submitted = true` without needing a real Clerk session.
-    await page.route("**/workspaces/pohoda", async (route, request) => {
-      if (
-        request.method() === "POST" &&
-        request.headers()["next-action"]
-      ) {
-        await route.fulfill({
-          status: 200,
-          headers: {
-            "content-type": "text/x-component",
-            "x-action-revalidated": "[[],0,0]",
-          },
-          body: RSC_ACTION_SUCCESS,
-        });
-        return;
-      }
-      await route.continue();
+    let routeIntercepted = false;
+    await page.route("**/api/test/workspace-attestation", async (route) => {
+      routeIntercepted = true;
+      await route.fulfill({
+        status: 200,
+        contentType: "application/json",
+        body: JSON.stringify({
+          assessmentResult: "pass",
+          controlId: "test",
+          evidenceId: "test",
+        }),
+      });
     });
 
     await page.goto("/workspaces/pohoda");
@@ -183,7 +166,7 @@ test.describe("Pohoda workspace", () => {
     await expandButton.click();
 
     // Attestation form is now visible
-    await expect(page.getByRole("group", { name: "Your answer" })).toBeVisible();
+    await expect(page.getByRole("group", { name: "Vaše odpověď" })).toBeVisible();
 
     // The radio input is sr-only; use force:true to bypass Playwright's
     // visibility/interception checks and click the label directly.
@@ -194,19 +177,20 @@ test.describe("Pohoda workspace", () => {
 
     // Verify the radio is checked
     await expect(
-      page.getByRole("radio", { name: "Yes / Done" }),
+      page.getByRole("radio", { name: "Ano / hotovo" }),
     ).toBeChecked();
 
     // Submit
-    await page.getByRole("button", { name: "Save attestation" }).click();
+    await page.getByRole("button", { name: "Uložit prohlášení" }).click();
 
     // Form shows the submission confirmation — this is the visual "confirmed pass" state
     // after a successful attestation submission. The ActivationStatus badge
     // (Confirmed pass / Confirmed gap) is shown in the ControlCard header on reload;
     // the "Attestation saved" message confirms the evidence was accepted by the server.
     await expect(
-      page.getByText("Attestation saved. Reload to see updated status."),
+      page.getByText("Čestné prohlášení uloženo. Obnovte stránku pro zobrazení aktualizovaného stavu."),
     ).toBeVisible({ timeout: 10_000 });
+    expect(routeIntercepted).toBe(true);
   });
 
   test("Layer 3 backup control shows NIS2 and ZoKB article references", async ({

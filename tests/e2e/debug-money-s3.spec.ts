@@ -27,7 +27,7 @@ test('debug intercept', async ({ page }) => {
     `label:has(input[value="yes"][name="attest-money-s3-backup-automated-daily"])`,
   );
   await yesLabel.click({ force: true });
-  await page.getByRole('button', { name: 'Save attestation' }).click();
+  await page.getByRole('button', { name: 'Uložit prohlášení' }).click();
   
   await page.waitForTimeout(5000);
   

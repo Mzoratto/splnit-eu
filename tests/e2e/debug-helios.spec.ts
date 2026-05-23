@@ -39,15 +39,15 @@ for (let i = 0; i < RSC_VARIANTS.length; i++) {
       .getByRole("button", { expanded: false })
       .filter({ hasText: /Jsou uživatelé Heliosu spravováni s individuálními účty/ });
     await expandButton.click();
-    await expect(page.getByRole("group", { name: "Your answer" })).toBeVisible();
+    await expect(page.getByRole("group", { name: "Vaše odpověď" })).toBeVisible();
 
     const yesLabel = page.locator('label:has(input[value="yes"][name="attest-helios-iam-user-accounts"])');
     await yesLabel.click({ force: true });
-    await page.getByRole("button", { name: "Save attestation" }).click();
+    await page.getByRole("button", { name: "Uložit prohlášení" }).click();
     
     await page.waitForTimeout(2000);
     
-    const savedVisible = await page.getByText("Attestation saved. Reload to see updated status.").isVisible();
+    const savedVisible = await page.getByText("Čestné prohlášení uloženo. Obnovte stránku pro zobrazení aktualizovaného stavu.").isVisible();
     const formText = await page.locator('form').first().textContent().catch(() => 'no form');
     console.log(`variant ${i} result - intercepted: ${actionIntercepted}, saved: ${savedVisible}, formSnippet: ${formText?.substring(0, 100)}`);
   });

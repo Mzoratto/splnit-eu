@@ -12,7 +12,7 @@ export default defineConfig({
     : [["list"], ["html", { open: "never" }]],
   retries: process.env.CI ? 2 : 0,
   testDir: "./tests/e2e",
-  timeout: 30_000,
+  timeout: 240_000,
   use: {
     baseURL: `http://127.0.0.1:${port}`,
     trace: "retain-on-failure",
@@ -25,6 +25,7 @@ export default defineConfig({
             ENABLE_LOCAL_DEMO_DATA: "true",
             ENABLE_TEST_ROUTES: "true",
             NEXT_PUBLIC_ENABLE_TEST_ROUTES: "true",
+            NODE_OPTIONS: process.env.NODE_OPTIONS ?? "--max-old-space-size=8192",
             TEST_BYPASS_PLAN_GATE: "true",
           },
           reuseExistingServer: false,

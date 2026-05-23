@@ -7,6 +7,7 @@ import {
   Building2,
   Cloud,
   FileArchive,
+  Home,
   LayoutDashboard,
 } from "lucide-react";
 
@@ -75,6 +76,14 @@ export function DemoSidebar() {
       </aside>
       <nav className="sticky top-[137px] z-30 border-b border-border bg-surface/95 px-4 py-2 backdrop-blur lg:hidden">
         <div className="flex gap-2 overflow-x-auto" aria-label="Demo navigace">
+          <Link
+            href="/"
+            aria-label="Zpět na homepage Splnit.eu"
+            className="inline-flex shrink-0 items-center gap-1.5 rounded-md border border-border bg-background px-3 py-2 text-xs font-medium text-foreground/68"
+          >
+            <Home className="h-3.5 w-3.5" aria-hidden="true" strokeWidth={1.6} />
+            Domů
+          </Link>
           {demoNavigation.map((item) => {
             const active = isActivePath(pathname, item.href);
 

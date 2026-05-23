@@ -15,6 +15,7 @@ jobs:
       NEXT_TELEMETRY_DISABLED: 1
       NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY: ""
       CLERK_SECRET_KEY: ""
+      NODE_OPTIONS: --max-old-space-size=8192
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -30,6 +31,9 @@ jobs:
 
       - name: Install Playwright
         run: npx playwright install --with-deps chromium
+
+      - name: Install PDF tooling
+        run: sudo apt-get update && sudo apt-get install -y poppler-utils
 
       - name: Intake prioritization copy lint
         run: npm run lint:copy:intake-prioritization

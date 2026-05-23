@@ -17,5 +17,5 @@ test("marks unfinished team modules as coming soon", async ({ page }) => {
   await expect(
     page.getByRole("heading", { exact: true, name: "Školení" }),
   ).toBeVisible();
-  await expect(page.getByText("Připravuje se")).toHaveCount(2);
+  await expect(page.getByText("Připravuje se")).toHaveCount(1);
 });

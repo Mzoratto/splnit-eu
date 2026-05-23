@@ -164,7 +164,7 @@ test.describe("Helios workspace", () => {
     await expandButton.click();
 
     // Attestation form is now visible
-    await expect(page.getByRole("group", { name: "Your answer" })).toBeVisible();
+    await expect(page.getByRole("group", { name: "Vaše odpověď" })).toBeVisible();
 
     // The radio input is sr-only; use force:true to bypass Playwright's
     // visibility/interception checks and click the label directly.
@@ -175,15 +175,15 @@ test.describe("Helios workspace", () => {
 
     // Verify the radio is checked
     await expect(
-      page.getByRole("radio", { name: "Yes / Done" }),
+      page.getByRole("radio", { name: "Ano / hotovo" }),
     ).toBeChecked();
 
     // Submit
-    await page.getByRole("button", { name: "Save attestation" }).click();
+    await page.getByRole("button", { name: "Uložit prohlášení" }).click();
 
     // Form shows the submission confirmation
     await expect(
-      page.getByText("Attestation saved. Reload to see updated status."),
+      page.getByText("Čestné prohlášení uloženo. Obnovte stránku pro zobrazení aktualizovaného stavu."),
     ).toBeVisible({ timeout: 10_000 });
 
     // Verify the test route was actually intercepted (not a no-op)

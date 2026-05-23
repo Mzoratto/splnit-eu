@@ -176,7 +176,7 @@ test.describe("Money S3 workspace", () => {
     await expandButton.click();
 
     // Attestation form is now visible
-    await expect(page.getByRole("group", { name: "Your answer" })).toBeVisible();
+    await expect(page.getByRole("group", { name: "Vaše odpověď" })).toBeVisible();
 
     // The radio input is sr-only; click its visible label directly.
     // Labels use input[value="yes"] with name matching the control key.
@@ -187,15 +187,15 @@ test.describe("Money S3 workspace", () => {
 
     // Verify the radio is checked
     await expect(
-      page.getByRole("radio", { name: "Yes / Done" }),
+      page.getByRole("radio", { name: "Ano / hotovo" }),
     ).toBeChecked();
 
     // Submit
-    await page.getByRole("button", { name: "Save attestation" }).click();
+    await page.getByRole("button", { name: "Uložit prohlášení" }).click();
 
     // "Attestation saved" confirmation is visible
     await expect(
-      page.getByText("Attestation saved. Reload to see updated status."),
+      page.getByText("Čestné prohlášení uloženo. Obnovte stránku pro zobrazení aktualizovaného stavu."),
     ).toBeVisible({ timeout: 10_000 });
 
     // Verify the server action was actually intercepted (not a no-op)

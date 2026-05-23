@@ -33,11 +33,11 @@ test("activation loop: intake completes and recommends a connector", async ({
   await page.getByRole("button", { name: /Pokračovat/ }).click();
 
   // Walk all intake sections
-  await expect(page.getByText("Intake · sekce 1 ze 7")).toBeVisible();
+  await expect(page.getByText("Intake · sekce 1 ze 8")).toBeVisible();
 
-  for (let section = 2; section <= 7; section += 1) {
+  for (let section = 2; section <= 8; section += 1) {
     await page.getByRole("button", { name: "Další sekce" }).click();
-    await expect(page.getByText(`Intake · sekce ${section} ze 7`)).toBeVisible();
+    await expect(page.getByText(`Intake · sekce ${section} ze 8`)).toBeVisible();
   }
 
   await page.getByRole("button", { name: "Dokončit intake" }).click();
@@ -100,8 +100,8 @@ test("activation loop: controls index shows confirmed activation status after fi
   ).toBeVisible({ timeout: 15_000 });
 
   // Demo evidence cycle includes assessmentResult: "gap" + collectionStatus: "collected"
-  // which renders as "Confirmed gap" — this is the "confirmed status visible" gate
-  await expect(page.getByText("Confirmed gap").first()).toBeVisible();
+  // which renders as the localized confirmed-gap status.
+  await expect(page.getByText("Potvrzená mezera").first()).toBeVisible();
 });
 
 test("activation loop: blocked-permission fallback is visible in controls index", async ({
@@ -115,9 +115,9 @@ test("activation loop: blocked-permission fallback is visible in controls index"
   ).toBeVisible({ timeout: 15_000 });
 
   // Demo evidence cycle includes blocked/missing_permission state in the first 5 priority controls
-  await expect(page.getByText("Blocked").first()).toBeVisible();
+  await expect(page.getByText("Blokováno").first()).toBeVisible();
   // In focus view showDetails=true — reason text is rendered by ActivationStatus
-  await expect(page.getByText("Reason: Permission missing.").first()).toBeVisible();
+  await expect(page.getByText("Důvod: Oprávnění chybí.").first()).toBeVisible();
 });
 
 test("activation loop: blocked state preserves last-known passing result in controls focus view", async ({
@@ -133,6 +133,6 @@ test("activation loop: blocked state preserves last-known passing result in cont
   // The activation status component renders the preserved last-known result
   // text when a control is blocked but had a previous passing assessment
   await expect(
-    page.getByText("Last confirmed result is still passing while collection is blocked.").first(),
+    page.getByText("Poslední potvrzený výsledek stále prochází, i když je sběr blokovaný.").first(),
   ).toBeVisible();
 });

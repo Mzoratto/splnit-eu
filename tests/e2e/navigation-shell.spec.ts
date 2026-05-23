@@ -39,14 +39,22 @@ for (const path of demoRoutes) {
 for (const path of appShellRoutes) {
   test(`authenticated app route ${path} keeps the shared navigation shell`, async ({
     page,
-  }) => {
+  }, testInfo) => {
     await page.goto(path, { waitUntil: "domcontentloaded" });
     const sidebar = page.locator("aside").filter({
       has: page.getByRole("link", { name: "Dashboard" }),
     });
 
     await expect(page.getByRole("banner")).toBeVisible();
-    await expect(sidebar).toContainText("Splnit.eu");
+    if (testInfo.project.name === "mobile-chrome") {
+      await expect(
+        page.locator("nav").filter({
+          has: page.getByRole("link", { name: "Dashboard" }),
+        }).last(),
+      ).toBeVisible();
+    } else {
+      await expect(sidebar).toContainText("Splnit.eu");
+    }
     await expect(page.getByRole("link", { name: "Dashboard" })).toBeVisible();
     await expect(page.getByRole("link", { name: "Kontroly" })).toBeVisible();
     await expect(page.getByRole("link", { name: "Nastavení" })).toBeVisible();

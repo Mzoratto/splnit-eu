@@ -15,22 +15,25 @@ test("walks the focused intake flow to the reveal modal", async ({ page }) => {
   await page.getByLabel("Počet zaměstnanců").selectOption("10-49");
   await page.getByRole("button", { name: /Pokračovat/ }).click();
 
-  await expect(page.getByText("Intake · sekce 1 ze 7")).toBeVisible();
+  await expect(page.getByText("Intake · sekce 1 ze 8")).toBeVisible();
   await expect(page.getByText("Postup intake")).toBeVisible();
-  await expect(page.getByText("~7 min zbývá")).toBeVisible();
+  await expect(page.getByText("~8 min zbývá")).toBeVisible();
   await expect(page.getByText(/Autosave: odpovědi se ukládají průběžně/)).toBeVisible();
   await expect(page.getByText("Který obchodní model organizaci nejlépe vystihuje?")).toBeVisible();
 
   await page.getByRole("radio").first().check();
   await expect(page.getByText(/Radio volba je výběr jedné odpovědi/)).toBeVisible();
 
-  for (let section = 2; section <= 7; section += 1) {
+  for (let section = 2; section <= 8; section += 1) {
     await page.getByRole("button", { name: "Další sekce" }).click();
-    await expect(page.getByText(`Intake · sekce ${section} ze 7`)).toBeVisible();
+    await expect(page.getByText(`Intake · sekce ${section} ze 8`)).toBeVisible();
+
+    if (section === 5) {
+      await expect(page.getByText(/Checkbox je nezávislý/).first()).toBeVisible();
+      await page.getByRole("checkbox").first().check();
+    }
   }
 
-  await expect(page.getByText(/Checkbox je nezávislý/).first()).toBeVisible();
-  await page.getByRole("checkbox").first().check();
   await expect(page.getByRole("button", { name: "Dokončit intake" })).toBeVisible();
   await page.getByRole("button", { name: "Dokončit intake" }).click();
 
@@ -82,12 +85,12 @@ test("restores intake draft and recommends the selected first integration", asyn
 
   await page.goto("/onboarding");
 
-  await expect(page.getByText("Intake · sekce 4 ze 7")).toBeVisible();
+  await expect(page.getByText("Intake · sekce 4 ze 8")).toBeVisible();
   await expect(page.getByText(/Autosave: odpovědi se ukládají průběžně/)).toBeVisible();
 
-  for (let section = 5; section <= 7; section += 1) {
+  for (let section = 5; section <= 8; section += 1) {
     await page.getByRole("button", { name: "Další sekce" }).click();
-    await expect(page.getByText(`Intake · sekce ${section} ze 7`)).toBeVisible();
+    await expect(page.getByText(`Intake · sekce ${section} ze 8`)).toBeVisible();
   }
 
   await page.getByRole("button", { name: "Dokončit intake" }).click();
