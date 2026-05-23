@@ -23,65 +23,45 @@ const planPrices: Record<
   Locale,
   {
     currency: string;
-    equivalentMonthly?: [number, number, number];
-    equivalentAnnual?: [number, number, number];
     monthly: [number, number, number];
-    annual: [number, number, number];
   }
 > = {
   "cs-CZ": {
-    annual: [0, 1225, 3100],
     currency: "CZK",
-    equivalentAnnual: [0, 49, 124],
-    equivalentMonthly: [0, 59, 149],
-    monthly: [0, 1475, 3725],
+    monthly: [0, 490, 1990],
   },
   "en-EU": {
-    annual: [0, 49, 124],
-    currency: "EUR",
-    monthly: [0, 59, 149],
+    currency: "CZK",
+    monthly: [0, 490, 1990],
   },
   "it-IT": {
-    annual: [0, 49, 124],
-    currency: "EUR",
-    monthly: [0, 59, 149],
+    currency: "CZK",
+    monthly: [0, 490, 1990],
   },
 };
 
 function formatPlanPrice(price: number, locale: Locale, currency: string) {
-  if (currency === "EUR") {
-    return `€${price}`;
+  if (currency === "CZK") {
+    return `${new Intl.NumberFormat(locale).format(price)} Kč`;
   }
 
-  return `${new Intl.NumberFormat(locale).format(price)} Kč`;
+  return new Intl.NumberFormat(locale, {
+    currency,
+    maximumFractionDigits: 0,
+    style: "currency",
+  }).format(price);
 }
 
 export function PricingCards() {
   const locale = useLocale() as Locale;
   const t = useTranslations("pricing.cards");
-  const [annual, setAnnual] = useState(false);
   const priceSet = planPrices[locale] ?? planPrices["cs-CZ"];
 
   return (
     <>
       <div className="mt-6 flex flex-wrap items-center justify-center gap-3">
-        <span className="text-sm font-medium text-zinc-600">{t("monthly")}</span>
-        <button
-          type="button"
-          className="relative flex h-[22px] w-10 items-center rounded-full bg-blue-600"
-          aria-label={t("billingToggle")}
-          aria-pressed={annual}
-          onClick={() => setAnnual((value) => !value)}
-        >
-          <span
-            className={`absolute left-0.5 h-4 w-4 rounded-full bg-white shadow-sm transition-transform duration-300 ${
-              annual ? "translate-x-[18px]" : ""
-            }`}
-          />
-        </button>
-        <span className="text-sm font-medium text-zinc-600">{t("annual")}</span>
-        <span className="rounded-full border border-emerald-100 bg-emerald-50 px-2 py-0.5 text-[11px] font-medium text-emerald-700">
-          {t("saving")}
+        <span className="rounded-full border border-zinc-200 bg-white px-3 py-1 text-xs font-medium text-zinc-600 shadow-sm">
+          {t("monthly")}
         </span>
       </div>
 
@@ -89,13 +69,7 @@ export function PricingCards() {
         {plans.map((plan, index) => {
           const planKey = plan.key;
           const planName = t(`${planKey}.name`);
-          const price = annual ? priceSet.annual[index] : priceSet.monthly[index];
-          const equivalentPrice =
-            locale === "cs-CZ" && price > 0
-              ? annual
-                ? priceSet.equivalentAnnual?.[index]
-                : priceSet.equivalentMonthly?.[index]
-              : null;
+          const price = priceSet.monthly[index];
           const features = t.raw(`${planKey}.features`) as string[];
           const card = (
             <div className="flex h-full flex-col rounded-[21px] bg-white p-7">
@@ -119,13 +93,8 @@ export function PricingCards() {
                     {formatPlanPrice(price, locale, priceSet.currency)}
                   </span>
                   <span className="text-sm text-zinc-400">
-                    {annual && price > 0 ? t("annualSuffix") : t("monthlySuffix")}
+                    {t("monthlySuffix")}
                   </span>
-                  {equivalentPrice ? (
-                    <span className="text-xs text-zinc-400">
-                      (€{equivalentPrice})
-                    </span>
-                  ) : null}
                 </div>
                 <p className="mt-2 text-xs text-zinc-500">
                   {t(`${planKey}.description`)}
@@ -151,6 +120,7 @@ export function PricingCards() {
                   <PricingCta
                     href={plan.href}
                     label={t(`${planKey}.cta`)}
+                    planKey={planKey}
                     planName={planName}
                     featured
                   />
@@ -159,6 +129,7 @@ export function PricingCards() {
                 <PricingCta
                   href={plan.href}
                   label={t(`${planKey}.cta`)}
+                  planKey={planKey}
                   planName={planName}
                 />
               )}
@@ -228,8 +199,8 @@ export function ComparisonTable() {
       <div className="grid grid-cols-[1.4fr_repeat(3,0.8fr)] border-b border-zinc-100 bg-zinc-50 px-4 py-3 text-xs font-semibold text-zinc-600 md:px-6">
         <span>{t("feature")}</span>
         <span>{cardT("free.name")}</span>
-        <span>{cardT("starter.name")}</span>
-        <span>{cardT("business.name")}</span>
+        <span>{cardT("sme.name")}</span>
+        <span>{cardT("agency.name")}</span>
       </div>
       {comparisonGroups.map((group) => {
         const open = openGroups.includes(group.key);

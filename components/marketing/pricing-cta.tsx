@@ -99,11 +99,13 @@ export function PricingCta({
   featured,
   href,
   label,
+  planKey,
   planName,
 }: {
   featured?: boolean;
   href: string;
   label: string;
+  planKey: string;
   planName: string;
 }) {
   const locale = normalizeLocale(useLocale()) ?? "cs-CZ";
@@ -112,7 +114,7 @@ export function PricingCta({
   useEffect(() => {
     setCopy(label);
 
-    if (planName !== "Starter") {
+    if (planKey !== "sme") {
       return;
     }
 
@@ -161,12 +163,12 @@ export function PricingCta({
       window.removeEventListener(cookieConsentChangedEvent, onConsentChange);
       unsubscribe?.();
     };
-  }, [label, locale, planName]);
+  }, [label, locale, planKey, planName]);
 
   return (
     <Link
       href={href.startsWith("/") ? getLocalizedMarketingPath(href, locale) : href}
-      data-attr={planName === "Starter" ? PRICING_CTA_FLAG : undefined}
+      data-attr={planKey === "sme" ? PRICING_CTA_FLAG : undefined}
       className={
         featured
           ? "block rounded-full bg-blue-600 py-2.5 text-center text-sm font-medium text-white transition-colors hover:bg-blue-500"

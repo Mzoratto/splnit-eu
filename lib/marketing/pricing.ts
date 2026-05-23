@@ -1,4 +1,4 @@
-export type PlanKey = "free" | "starter" | "business";
+export type PlanKey = "free" | "sme" | "agency";
 
 export type Plan = {
   featured?: boolean;
@@ -73,17 +73,17 @@ export type ComparisonGroup = {
 
 export const plans: Plan[] = [
   {
-    href: "/early-access",
+    href: "/sign-up",
     key: "free",
   },
   {
     featured: true,
-    href: "/early-access",
-    key: "starter",
+    href: "/settings/billing",
+    key: "sme",
   },
   {
-    href: "mailto:hello@splnit.eu",
-    key: "business",
+    href: "/agency/signup",
+    key: "agency",
   },
 ];
 
@@ -140,7 +140,7 @@ export const comparisonGroups: ComparisonGroup[] = [
   {
     key: "team",
     rows: [
-      { cells: ["1", "5", "25"], key: "userCount" },
+      { cells: ["1", "25", "unlimited"], key: "userCount" },
       { cells: ["-", "✓", "✓"], key: "rolesPermissions" },
       { cells: ["-", "-", "optional"], key: "ssoSaml" },
     ],

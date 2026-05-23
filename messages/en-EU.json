@@ -90,10 +90,10 @@
     "plans": {
       "sme": {
         "name": "SME",
-        "price": "499 Kč/month",
+        "price": "490 Kč/month",
         "description": "Full compliance workspace for one organisation.",
         "features": [
-          "All connectors: Microsoft 365, Hetzner Cloud, and OVHcloud",
+          "All current connectors and automated checks",
           "PDF export of the security-measures overview",
           "One organisation"
         ]
@@ -1711,27 +1711,27 @@
   },
   "pricing": {
     "title": "Transparent pricing. No surprises.",
-    "subtitle": "Early-access pricing for teams starting structured readiness work.",
-    "footnote": "Production setup is designed for EU regions · Early-access terms · Plan changes by request",
-    "partnerTitle": "Are you a consultant or MSP?",
-    "partnerBody": "Client workspaces, white-label option, and partner listing after approval.",
-    "partnerPrice": "€299 / month",
-    "partnerCta": "Learn more →",
+    "subtitle": "Monthly pricing matches the current Stripe plans used by production billing.",
+    "footnote": "Billed through Stripe · Monthly subscription · Plan changes in the app",
+    "partnerTitle": "Need a client portal?",
+    "partnerBody": "The Agency plan adds client workspaces, white-label outputs, and consultant management.",
+    "partnerPrice": "1,990 Kč/month",
+    "partnerCta": "Launch Agency →",
     "comparisonTag": "Feature comparison",
     "comparisonTitle": "Choose by automation depth.",
     "faqTag": "FAQ",
     "faqTitle": "Common questions",
-    "finalTitle": "Start preparing compliance work today.",
-    "finalBody": "Early access is open for the first design partners who want to use Splnit.eu on a real NIS2 or GDPR project.",
-    "primaryCta": "Become a design partner",
-    "secondaryCta": "View documentation",
+    "finalTitle": "Start free, then upgrade in the app.",
+    "finalBody": "The Free plan is enough for first orientation. When you need the full workspace or agency portal, move to a paid Stripe plan.",
+    "primaryCta": "Create free account",
+    "secondaryCta": "View platform",
     "cards": {
-      "monthly": "Monthly",
+      "monthly": "Monthly billing",
       "annual": "Annual",
       "billingToggle": "Toggle billing",
       "saving": "Annual option",
       "featured": "Highlighted",
-      "currency": "€",
+      "currency": "Kč",
       "monthlySuffix": "/month",
       "annualSuffix": "/month, billed annually",
       "free": {
@@ -1746,34 +1746,29 @@
           "Community support"
         ]
       },
-      "starter": {
-        "name": "Starter",
-        "description": "For companies starting structured compliance work.",
-        "cta": "Become a design partner",
+      "sme": {
+        "name": "SME",
+        "description": "Full compliance workspace for one organisation.",
+        "cta": "Upgrade to SME",
         "features": [
-          "2 regulations (NIS2 + 1 more)",
-          "3 integrations",
-          "Automated checks for Microsoft 365, AWS, and GitHub",
-          "Evidence vault",
-          "Document templates",
-          "Deadline alerts",
-          "5 users",
+          "One organisation",
+          "All supported frameworks",
+          "Current connectors and automated checks",
+          "Evidence archive and exports",
+          "Up to 25 users",
           "Email support"
         ]
       },
-      "business": {
-        "name": "Business",
-        "description": "For teams managing compliance across frameworks.",
-        "cta": "Contact sales",
+      "agency": {
+        "name": "Agency",
+        "description": "Consultant portal for managing client organisations.",
+        "cta": "Launch Agency",
         "features": [
-          "Up to 5 framework workstreams",
-          "Selected integrations, up to 10 sources",
-          "Trust Center",
-          "Vendor risk module",
-          "Access review workspace",
-          "Incident log",
-          "25 users",
-          "Priority founder/email support"
+          "Everything in SME",
+          "Up to 20 managed client organisations",
+          "White-label consultant portal",
+          "Unlimited consultant seats",
+          "Client invites and comments"
         ]
       }
     },

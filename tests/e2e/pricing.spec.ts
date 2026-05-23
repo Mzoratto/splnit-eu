@@ -3,13 +3,19 @@ import { expect, test } from "@playwright/test";
 test.describe("Marketing pricing", () => {
   test.use({ locale: "cs-CZ" });
 
-  test("shows partner pricing in CZK on Czech pricing page", async ({ page }) => {
+  test("shows Stripe-aligned pricing in CZK on Czech pricing page", async ({ page }) => {
     await page.goto("/cenik");
 
     await expect(
-      page.getByRole("heading", { name: "Jste poradce nebo MSP?" }),
+      page.getByRole("heading", { name: "Potřebujete klientský portál?" }),
     ).toBeVisible();
-    await expect(page.getByText("7 475 Kč/měsíc")).toBeVisible();
-    await expect(page.getByText("€299 / měsíc")).toHaveCount(0);
+    await expect(
+      page.getByRole("article").filter({ hasText: "SME" }).getByText("490 Kč"),
+    ).toBeVisible();
+    await expect(
+      page.getByRole("article").filter({ hasText: "Agency" }).getByText("1 990 Kč"),
+    ).toBeVisible();
+    await expect(page.getByText("Starter")).toHaveCount(0);
+    await expect(page.getByText("Business")).toHaveCount(0);
   });
 });

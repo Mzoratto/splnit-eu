@@ -15,24 +15,24 @@ import { createMarketingMetadata } from "@/lib/seo/metadata";
 const metadataByLocale: Record<Locale, Required<Pick<Metadata, "title" | "description">> & { locale: string }> = {
   "cs-CZ": {
     description:
-      "Transparentní ceny Splnit.eu pro české firmy: zdarma, Starter a Business s roční nebo měsíční fakturací.",
+      "Transparentní ceny Splnit.eu pro české firmy: Zdarma, SME a Agency s měsíční fakturací v Kč.",
     locale: "cs_CZ",
     title:
       "Ceník | Splnit.eu — od 0 Kč/měsíc, transparentní ceny, žádné závazky",
   },
   "en-EU": {
     description:
-      "Transparent Splnit.eu pricing for EU SMBs: Free, Starter, and Business with monthly or annual billing in euros.",
+      "Transparent Splnit.eu pricing for EU SMBs: Free, SME, and Agency with monthly billing in CZK.",
     locale: "en_EU",
     title:
-      "Pricing | Splnit.eu — from €0/month, transparent pricing, no lock-in",
+      "Pricing | Splnit.eu — from 0 Kč/month, transparent pricing, no lock-in",
   },
   "it-IT": {
     description:
-      "Prezzi trasparenti Splnit.eu per PMI europee: Gratis, Starter e Business con fatturazione mensile o annuale in euro.",
+      "Prezzi trasparenti Splnit.eu per PMI europee: Gratis, SME e Agency con fatturazione mensile in CZK.",
     locale: "it_IT",
     title:
-      "Prezzi | Splnit.eu — da €0/mese, prezzi trasparenti, nessun vincolo",
+      "Prezzi | Splnit.eu — da 0 Kč/mese, prezzi trasparenti, nessun vincolo",
   },
 };
 
@@ -90,7 +90,7 @@ export default async function PricingPage() {
             <div className="mt-6 shrink-0 md:mt-0 md:text-right">
               <p className="mono text-3xl font-semibold">{t("partnerPrice")}</p>
               <Link
-                href="mailto:hello@splnit.eu?subject=Partner%20Splnit.eu"
+                href={getLocalizedMarketingPath("/agency/signup", locale)}
                 className="mt-3 inline-flex text-sm font-medium text-blue-300 hover:text-blue-200"
               >
                 {t("partnerCta")}
@@ -140,7 +140,7 @@ export default async function PricingPage() {
             </p>
             <div className="mt-10 flex flex-col justify-center gap-3 sm:flex-row">
               <Link
-                href={getLocalizedMarketingPath("/early-access", locale)}
+                href={getLocalizedMarketingPath("/sign-up", locale)}
                 className="rounded-full bg-zinc-900 px-8 py-3 text-sm font-medium text-white transition-colors hover:bg-zinc-800"
               >
                 {t("primaryCta")}

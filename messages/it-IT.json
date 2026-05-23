@@ -90,10 +90,10 @@
     "plans": {
       "sme": {
         "name": "SME",
-        "price": "499 Kč/mese",
+        "price": "490 Kč/mese",
         "description": "Workspace compliance completo per una organizzazione.",
         "features": [
-          "Tutti i connettori: Microsoft 365, Hetzner Cloud e OVHcloud",
+          "Tutti i connettori attuali e controlli automatici",
           "Export PDF della panoramica delle misure di sicurezza",
           "Una organizzazione"
         ]
@@ -1711,27 +1711,27 @@
   },
   "pricing": {
     "title": "Prezzi trasparenti. Nessuna sorpresa.",
-    "subtitle": "Prezzi in accesso anticipato per team che iniziano un lavoro strutturato di preparazione.",
-    "footnote": "Configurazione progettata per regioni UE · Termini di accesso anticipato · Cambi piano su richiesta",
-    "partnerTitle": "Siete consulenti o MSP?",
-    "partnerBody": "Spazi di lavoro cliente, opzione white-label e scheda partner dopo approvazione.",
-    "partnerPrice": "€299 / mese",
-    "partnerCta": "Scoprite di più →",
+    "subtitle": "Prezzi mensili allineati ai piani Stripe usati dal billing di produzione.",
+    "footnote": "Fatturazione tramite Stripe · Abbonamento mensile · Cambi piano nell'app",
+    "partnerTitle": "Serve un portale clienti?",
+    "partnerBody": "Il piano Agency aggiunge workspace cliente, output white-label e gestione consulenti.",
+    "partnerPrice": "1.990 Kč/mese",
+    "partnerCta": "Lancia Agency →",
     "comparisonTag": "Confronto funzioni",
     "comparisonTitle": "Scegliete in base alla profondità di automazione.",
     "faqTag": "FAQ",
     "faqTitle": "Domande frequenti",
-    "finalTitle": "Iniziate oggi a preparare il lavoro di compliance.",
-    "finalBody": "L'accesso anticipato è aperto ai primi design partner che vogliono usare Splnit.eu su un progetto reale NIS2 o GDPR.",
-    "primaryCta": "Diventate design partner",
-    "secondaryCta": "Vedi la documentazione",
+    "finalTitle": "Iniziate gratis, poi fate upgrade nell'app.",
+    "finalBody": "Il piano Gratis basta per il primo orientamento. Quando serve il workspace completo o il portale Agency, passate a un piano Stripe a pagamento.",
+    "primaryCta": "Crea account gratis",
+    "secondaryCta": "Vedi la piattaforma",
     "cards": {
-      "monthly": "Mensile",
+      "monthly": "Fatturazione mensile",
       "annual": "Annuale",
       "billingToggle": "Cambia fatturazione",
       "saving": "Opzione annuale",
       "featured": "In evidenza",
-      "currency": "€",
+      "currency": "Kč",
       "monthlySuffix": "/ mese",
       "annualSuffix": "/mese con fatturazione annuale",
       "free": {
@@ -1746,34 +1746,29 @@
           "Supporto community"
         ]
       },
-      "starter": {
-        "name": "Starter",
-        "description": "Per aziende che iniziano un lavoro di compliance strutturato.",
-        "cta": "Diventa design partner",
+      "sme": {
+        "name": "SME",
+        "description": "Workspace compliance completo per una organizzazione.",
+        "cta": "Passa a SME",
         "features": [
-          "2 normative (NIS2 + 1 altra)",
-          "3 integrazioni",
-          "Controlli automatici per Microsoft 365, AWS e GitHub",
-          "Archivio evidenze",
-          "Modelli documento",
-          "Avvisi sulle scadenze",
-          "5 utenti",
+          "Una organizzazione",
+          "Tutti i framework supportati",
+          "Connettori attuali e controlli automatici",
+          "Archivio evidenze ed export",
+          "Fino a 25 utenti",
           "Supporto email"
         ]
       },
-      "business": {
-        "name": "Business",
-        "description": "Per team che gestiscono la compliance su più framework.",
-        "cta": "Contattateci",
+      "agency": {
+        "name": "Agency",
+        "description": "Portale consulente per gestire organizzazioni cliente.",
+        "cta": "Lancia Agency",
         "features": [
-          "Fino a 5 percorsi framework/normativi",
-          "Integrazioni selezionate, fino a 10 fonti",
-          "Trust Center",
-          "Modulo rischio fornitori",
-          "Spazio di lavoro per revisioni accessi",
-          "Registro incidenti",
-          "25 utenti",
-          "Supporto prioritario dal fondatore via email"
+          "Tutto il piano SME",
+          "Fino a 20 organizzazioni cliente gestite",
+          "Portale consulente white-label",
+          "Posti consulente illimitati",
+          "Inviti cliente e commenti"
         ]
       }
     },

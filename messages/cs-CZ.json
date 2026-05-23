@@ -90,10 +90,10 @@
     "plans": {
       "sme": {
         "name": "SME",
-        "price": "499 Kč/měsíc",
+        "price": "490 Kč/měsíc",
         "description": "Plný compliance workspace pro jednu organizaci.",
         "features": [
-          "Všechny konektory: Microsoft 365, Hetzner Cloud a OVHcloud",
+          "Všechny aktuální konektory a automatické kontroly",
           "PDF export Přehledu bezpečnostních opatření",
           "Jedna organizace"
         ]
@@ -1711,27 +1711,27 @@
   },
   "pricing": {
     "title": "Transparentní ceny. Žádná překvapení.",
-    "subtitle": "Ceny v předběžném přístupu pro týmy, které začínají se strukturovanou prací na připravenosti.",
-    "footnote": "Produkční nastavení je navržené pro EU regiony · Podmínky předběžného přístupu · Změny plánu na vyžádání",
-    "partnerTitle": "Jste poradce nebo MSP?",
-    "partnerBody": "Klientské pracovní prostory, možnost výstupů pod vlastní značkou a partnerský zápis po schválení.",
-    "partnerPrice": "7 475 Kč/měsíc",
-    "partnerCta": "Zjistit více →",
+    "subtitle": "Měsíční ceny odpovídají aktuálním Stripe plánům pro produkční billing.",
+    "footnote": "Účtování přes Stripe · Měsíční předplatné · Změny plánu v aplikaci",
+    "partnerTitle": "Potřebujete klientský portál?",
+    "partnerBody": "Plán Agency přidává klientské pracovní prostory, white-label výstupy a správu konzultantů.",
+    "partnerPrice": "1 990 Kč/měsíc",
+    "partnerCta": "Spustit Agency →",
     "comparisonTag": "Srovnání funkcí",
     "comparisonTitle": "Vyberte podle hloubky automatizace.",
     "faqTag": "FAQ",
     "faqTitle": "Časté otázky",
-    "finalTitle": "Začněte plnit předpisy ještě dnes.",
-    "finalBody": "Předběžný přístup je otevřený pro první design partnery, kteří chtějí použít Splnit.eu na reálném NIS2 nebo GDPR projektu.",
-    "primaryCta": "Stát se design partnerem",
-    "secondaryCta": "Prohlédnout dokumentaci",
+    "finalTitle": "Začněte zdarma, upgrade provedete v aplikaci.",
+    "finalBody": "Free plán je vhodný pro první orientaci. Jakmile budete potřebovat plný workspace nebo agenturní portál, přejdete na placený plán přes Stripe.",
+    "primaryCta": "Vytvořit účet zdarma",
+    "secondaryCta": "Prohlédnout platformu",
     "cards": {
-      "monthly": "Měsíčně",
+      "monthly": "Měsíční fakturace",
       "annual": "Ročně",
       "billingToggle": "Přepnout fakturaci",
       "saving": "Roční varianta",
       "featured": "Zvýrazněné",
-      "currency": "€",
+      "currency": "Kč",
       "monthlySuffix": "/měsíc",
       "annualSuffix": "/měsíc při roční fakturaci",
       "free": {
@@ -1746,34 +1746,29 @@
           "Komunitní podpora"
         ]
       },
-      "starter": {
-        "name": "Starter",
-        "description": "Pro firmy, které začínají se strukturovanou compliance.",
-        "cta": "Stát se design partnerem",
+      "sme": {
+        "name": "SME",
+        "description": "Plný compliance workspace pro jednu organizaci.",
+        "cta": "Upgradovat na SME",
         "features": [
-          "2 předpisy (NIS2 + 1 další)",
-          "3 integrace",
-          "Automatické kontroly pro Microsoft 365, AWS a GitHub",
-          "Archiv evidence",
-          "Šablony dokumentů",
-          "Upozornění na termíny",
-          "5 uživatelů",
+          "Jedna organizace",
+          "Všechny podporované frameworky",
+          "Aktuální konektory a automatické kontroly",
+          "Archiv evidence a exporty",
+          "Až 25 uživatelů",
           "Email podpora"
         ]
       },
-      "business": {
-        "name": "Business",
-        "description": "Pro týmy, které řídí compliance napříč frameworky.",
-        "cta": "Kontaktovat obchod",
+      "agency": {
+        "name": "Agency",
+        "description": "Konzultantský portál pro správu klientských organizací.",
+        "cta": "Spustit Agency",
         "features": [
-          "Až 5 frameworků/regulatorních oblastí",
-          "Vybrané integrace, až 10 zdrojů",
-          "Trust Center",
-          "Modul rizik dodavatelů",
-          "Pracovní prostor přístupových revizí",
-          "Log incidentů",
-          "25 uživatelů",
-          "Prioritní founder/email podpora"
+          "Vše v plánu SME",
+          "Až 20 klientských organizací",
+          "White-label konzultantský portál",
+          "Neomezený počet konzultantů",
+          "Klientské pozvánky a komentáře"
         ]
       }
     },
