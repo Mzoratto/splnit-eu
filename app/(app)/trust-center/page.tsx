@@ -152,8 +152,12 @@ export default async function TrustCenterSettingsPage() {
   const publicUrl = subdomain && trustCenter?.isPublic ? `/trust/${subdomain}` : null;
   const liveStats = {
     accessRequests: data?.requests.length ?? 0,
-    lastUpdatedLabel: formatDate(trustCenter?.lastUpdated, locale, "zatím nepublikováno"),
-    publishLabel: trustCenter?.isPublic ? "Publikováno" : "Soukromý náhled",
+    lastUpdatedLabel: formatDate(
+      trustCenter?.lastUpdated,
+      locale,
+      copy.notPublished,
+    ),
+    publishLabel: trustCenter?.isPublic ? copy.published : copy.privatePreview,
     evidenceCount: trustStats?.evidenceCount ?? 0,
     passedControls: trustStats?.passedControls ?? 0,
     totalControls: trustStats?.totalControls ?? 0,
@@ -193,7 +197,7 @@ export default async function TrustCenterSettingsPage() {
       {notice ? <DataModeNotice body={notice.body} title={notice.title} /> : null}
 
       <TrustCenterPreviewPanel
-        organisationName={organisationName ?? "Vaše firma"}
+        organisationName={organisationName ?? copy.organisationFallback}
         publicUrl={publicUrl}
         liveStats={liveStats}
       />

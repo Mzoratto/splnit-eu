@@ -30,7 +30,7 @@ export function DemoSidebar() {
 
   return (
     <>
-      <aside className="hidden border-r border-border bg-background lg:fixed lg:bottom-0 lg:left-0 lg:top-[76px] lg:block lg:w-[220px]">
+      <aside className="hidden border-r border-border bg-background lg:fixed lg:bottom-0 lg:left-0 lg:top-[140px] lg:block lg:w-[220px]">
         <Link
           href="/"
           className="flex h-14 items-center gap-2 border-b border-border px-4 text-sm font-medium transition-colors hover:text-primary"
@@ -73,7 +73,7 @@ export function DemoSidebar() {
           </div>
         </nav>
       </aside>
-      <nav className="sticky top-[73px] z-30 border-b border-border bg-surface/95 px-4 py-2 backdrop-blur lg:hidden">
+      <nav className="sticky top-[137px] z-30 border-b border-border bg-surface/95 px-4 py-2 backdrop-blur lg:hidden">
         <div className="flex gap-2 overflow-x-auto" aria-label="Demo navigace">
           {demoNavigation.map((item) => {
             const active = isActivePath(pathname, item.href);

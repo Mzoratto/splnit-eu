@@ -1,6 +1,7 @@
 import * as React from "react";
 import { CheckCircle2, CircleDashed, Clock3, ShieldAlert, XCircle } from "lucide-react";
 import clsx from "clsx";
+import { useTranslations } from "next-intl";
 import type {
   EvidenceAssessmentResult,
   EvidenceBlockedReason,
@@ -45,54 +46,40 @@ type ActivationStatusProps = {
   state: ActivationStatusState;
 };
 
-const BLOCKED_REASON_LABELS: Record<string, string> = {
-  collection_failed: "Collection failed",
-  insufficient_scope: "Chybí oprávnění",
-  invalid_key: "Neplatný klíč",
-  missing_integration: "Integration missing",
-  missing_permission: "Permission missing",
-  needs_manual_upload: "Manual upload needed",
-  not_connected: "Konektor není připojen",
-  not_applicable: "Not applicable",
-  unsupported_provider: "Provider unsupported",
-  unreachable: "Služba je nedostupná",
-};
+const BLOCKED_REASON_KEYS = new Set([
+  "collection_failed",
+  "insufficient_scope",
+  "invalid_key",
+  "missing_integration",
+  "missing_permission",
+  "needs_manual_upload",
+  "not_connected",
+  "not_applicable",
+  "unsupported_provider",
+  "unreachable",
+]);
 
-const API_KEY_BLOCKED_DETAILS: Record<string, string> = {
-  insufficient_scope:
-    "Uložený klíč nemá minimální potřebná oprávnění. Zkontrolujte rozsahy klíče a vložte nový klíč.",
-  invalid_key:
-    "Uložený klíč poskytovatel odmítl. Vložte nový nebo opravený API klíč.",
-  not_connected:
-    "API klíč zatím není připojen. Připojte konektor nebo doložte opatření manuálně.",
-  unreachable:
-    "Službu poskytovatele se nepodařilo kontaktovat. Zkuste kontrolu opakovat nebo doložte opatření manuálně.",
-};
+const API_KEY_BLOCKED_DETAIL_KEYS = new Set([
+  "insufficient_scope",
+  "invalid_key",
+  "not_connected",
+  "unreachable",
+]);
 
 const STATE_COPY = {
   queued: {
-    detail: "Waiting for the next collection run.",
-    label: "Queued",
     tone: "neutral",
   },
   running: {
-    detail: "Collection is running now.",
-    label: "Running",
     tone: "warn",
   },
   pass: {
-    detail: "Latest confirmed evidence passed this check.",
-    label: "Confirmed pass",
     tone: "pass",
   },
   gap: {
-    detail: "Latest confirmed evidence shows a gap.",
-    label: "Confirmed gap",
     tone: "fail",
   },
   blocked: {
-    detail: "Collection is blocked and needs attention.",
-    label: "Blocked",
     tone: "fail",
   },
 } as const;
@@ -136,8 +123,13 @@ function deriveManualReviewResult(input: ActivationStatusInput): ActivationConfi
   return null;
 }
 
-function formatBlockedReason(reason: string) {
-  return BLOCKED_REASON_LABELS[reason] ?? reason.replaceAll("_", " ");
+function formatBlockedReason(
+  reason: string,
+  t: ReturnType<typeof useTranslations>,
+) {
+  return BLOCKED_REASON_KEYS.has(reason)
+    ? t(`blockedReasons.${reason}`)
+    : reason.replaceAll("_", " ");
 }
 
 export function deriveActivationStatusState(input: ActivationStatusInput): ActivationStatusState {
@@ -180,13 +172,18 @@ export function ActivationStatus({
   showDetails = true,
   state,
 }: ActivationStatusProps) {
+  const t = useTranslations("activation");
   const key = state.status === "confirmed" ? state.result : state.status;
   const copy = STATE_COPY[key];
   const Icon = icons[key];
-  const blockedReason = state.status === "blocked" ? formatBlockedReason(state.blockedReason) : null;
-  const blockedDetail =
+  const blockedReason =
     state.status === "blocked"
-      ? API_KEY_BLOCKED_DETAILS[state.blockedReason]
+      ? formatBlockedReason(state.blockedReason, t)
+      : null;
+  const blockedDetail =
+    state.status === "blocked" &&
+    API_KEY_BLOCKED_DETAIL_KEYS.has(state.blockedReason)
+      ? t(`apiKeyBlockedDetails.${state.blockedReason}`)
       : null;
   const preservedResult = state.status === "blocked" && state.lastKnownResult === "pass";
 
@@ -201,7 +198,7 @@ export function ActivationStatus({
       <div className="flex flex-wrap items-center gap-2">
         <Icon className="h-4 w-4 shrink-0" aria-hidden="true" strokeWidth={1.75} />
         <span className="font-mono text-xs font-semibold uppercase tracking-[0.08em]">
-          {copy.label}
+          {t(`states.${key}.label`)}
         </span>
         {confidence ? (
           <span className="rounded-sm border border-current/20 px-1.5 py-0.5 font-mono text-[11px] uppercase opacity-80">
@@ -211,11 +208,13 @@ export function ActivationStatus({
       </div>
       {showDetails ? (
         <div className="mt-1 space-y-1 text-xs leading-5 opacity-85">
-          <p>{copy.detail}</p>
+          <p>{t(`states.${key}.detail`)}</p>
           {blockedDetail ? <p>{blockedDetail}</p> : null}
-          {blockedReason && !blockedDetail ? <p>Reason: {blockedReason}.</p> : null}
+          {blockedReason && !blockedDetail ? (
+            <p>{t("reason", { reason: blockedReason })}</p>
+          ) : null}
           {preservedResult ? (
-            <p>Last confirmed result is still passing while collection is blocked.</p>
+            <p>{t("preservedPass")}</p>
           ) : null}
         </div>
       ) : null}

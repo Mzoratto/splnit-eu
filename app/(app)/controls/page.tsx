@@ -364,6 +364,7 @@ export default async function ControlsPage({
   const locale = normalizeLocale(organisationLocale) ?? requestLocale;
   const messages = getMessagesForLocale(locale);
   const copy = messages.controlsPage;
+  const reportCopy = messages.complianceReport;
   const scopeFilter = normalizeScopeFilter(resolvedSearchParams.scope);
   const viewMode = normalizeViewMode(resolvedSearchParams.view);
   const visibleCount = normalizeVisibleCount(resolvedSearchParams.limit);
@@ -398,9 +399,9 @@ export default async function ControlsPage({
   };
 
   const reportMissingFields = [
-    !demoExportIdentity.ico && "IČO",
-    !demoExportIdentity.dic && "DIČ",
-    !demoExportIdentity.sidlo && "Sídlo",
+    !demoExportIdentity.ico && reportCopy.fields.ico,
+    !demoExportIdentity.dic && reportCopy.fields.dic,
+    !demoExportIdentity.sidlo && reportCopy.fields.sidlo,
   ].filter((f): f is string => Boolean(f));
 
   return (
@@ -419,9 +420,9 @@ export default async function ControlsPage({
 
       <div className="card flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <h2 className="text-base font-medium">Zpráva o hodnocení stavu kybernetické bezpečnosti</h2>
+          <h2 className="text-base font-medium">{copy.report.title}</h2>
           <p className="mt-1 text-sm text-foreground/58">
-            Exportujte aktuální stav opatření a důkazů do PDF pro auditora nebo NÚKIB.
+            {copy.report.body}
           </p>
         </div>
         <ComplianceReportButton
@@ -445,12 +446,14 @@ export default async function ControlsPage({
           <div className="flex-1">
             <p className="text-sm font-medium">Pohoda (Stormware) — compliance workspace</p>
             <p className="mt-0.5 text-xs text-foreground/60">
-              Projděte kontrolní vrstvy pro Pohodu: infrastruktura, přístupy, zálohy a API.
-              Dokládejte důkazy a sledujte postup shody.
+              {copy.workspaceCallouts.workspaceDescription.replace("{platform}", "Pohoda")}
             </p>
             {pohodaCompletionPct !== null ? (
               <p className="mt-1.5 text-xs font-medium text-primary">
-                {Math.round(pohodaCompletionPct * 100)}% dokončeno
+                {copy.workspaceCallouts.workspaceCompletion.replace(
+                  "{progress}",
+                  String(Math.round(pohodaCompletionPct * 100)),
+                )}
               </p>
             ) : null}
           </div>
@@ -467,12 +470,14 @@ export default async function ControlsPage({
           <div className="flex-1">
             <p className="text-sm font-medium">Helios (Asseco) — compliance workspace</p>
             <p className="mt-0.5 text-xs text-foreground/60">
-              Projděte kontrolní vrstvy pro Helios: infrastruktura, přístupy, zálohy a API.
-              Dokládejte důkazy a sledujte postup shody.
+              {copy.workspaceCallouts.workspaceDescription.replace("{platform}", "Helios")}
             </p>
             {heliosCompletionPct !== null ? (
               <p className="mt-1.5 text-xs font-medium text-primary">
-                {Math.round(heliosCompletionPct * 100)}% dokončeno
+                {copy.workspaceCallouts.workspaceCompletion.replace(
+                  "{progress}",
+                  String(Math.round(heliosCompletionPct * 100)),
+                )}
               </p>
             ) : null}
           </div>
@@ -489,12 +494,14 @@ export default async function ControlsPage({
           <div className="flex-1">
             <p className="text-sm font-medium">Money S3 / S4 (Seyfor) — compliance workspace</p>
             <p className="mt-0.5 text-xs text-foreground/60">
-              Projděte kontrolní vrstvy pro Money S3: infrastruktura, přístupy, zálohy a API.
-              Dokládejte důkazy a sledujte postup shody.
+              {copy.workspaceCallouts.workspaceDescription.replace("{platform}", "Money S3")}
             </p>
             {moneyS3CompletionPct !== null ? (
               <p className="mt-1.5 text-xs font-medium text-primary">
-                {Math.round(moneyS3CompletionPct * 100)}% dokončeno
+                {copy.workspaceCallouts.workspaceCompletion.replace(
+                  "{progress}",
+                  String(Math.round(moneyS3CompletionPct * 100)),
+                )}
               </p>
             ) : null}
           </div>
@@ -511,12 +518,14 @@ export default async function ControlsPage({
           <div className="flex-1">
             <p className="text-sm font-medium">ABRA Flexi — compliance workspace</p>
             <p className="mt-0.5 text-xs text-foreground/60">
-              Projděte kontrolní vrstvy pro ABRA Flexi: infrastruktura, přístupy, zálohy a REST API.
-              Dokládejte důkazy a sledujte postup shody.
+              {copy.workspaceCallouts.workspaceDescription.replace("{platform}", "ABRA Flexi")}
             </p>
             {abraFlexiCompletionPct !== null ? (
               <p className="mt-1.5 text-xs font-medium text-primary">
-                {Math.round(abraFlexiCompletionPct * 100)}% dokončeno
+                {copy.workspaceCallouts.workspaceCompletion.replace(
+                  "{progress}",
+                  String(Math.round(abraFlexiCompletionPct * 100)),
+                )}
               </p>
             ) : null}
           </div>

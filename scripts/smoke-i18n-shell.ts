@@ -20,10 +20,12 @@ const requiredNamespaces = [
   "navigation",
   "shell",
   "accessReviews",
+  "activation",
   "appError",
   "auditLogPage",
   "billingSettings",
   "clientDetailPage",
+  "complianceReport",
   "controlsPage",
   "dashboard",
   "clientsPage",
@@ -37,8 +39,10 @@ const requiredNamespaces = [
   "questionnairePage",
   "risks",
   "teamPage",
+  "trustCenterPreview",
   "trustCenterSettings",
   "vendorsPage",
+  "workspace",
 ] as const;
 const locales: Locale[] = ["cs-CZ", "en-EU", "it-IT"];
 
@@ -76,9 +80,11 @@ for (const locale of locales) {
     messages.accessReviews.form.start,
     `${locale} should label access reviews`,
   );
+  assert.ok(messages.activation.states.pass.label, `${locale} should label activation state`);
   assert.ok(messages.auditLogPage.filters.apply, `${locale} should label audit log`);
   assert.ok(messages.billingSettings.monthSuffix, `${locale} should label billing`);
   assert.ok(messages.clientDetailPage.back, `${locale} should label client detail`);
+  assert.ok(messages.complianceReport.download, `${locale} should label compliance report download`);
   assert.ok(messages.controlsPage.index.openControl, `${locale} should label controls`);
   assert.ok(messages.dashboard.metrics.scoreTitle, `${locale} should label dashboard score`);
   assert.ok(messages.clientsPage.form.save, `${locale} should label clients page`);
@@ -108,7 +114,9 @@ for (const locale of locales) {
     messages.trustCenterSettings.saveSettings,
     `${locale} should label Trust Center settings save`,
   );
+  assert.ok(messages.trustCenterPreview.previewTab, `${locale} should label Trust Center preview`);
   assert.ok(messages.vendorsPage.form.create, `${locale} should label vendors`);
+  assert.ok(messages.workspace.backToControls, `${locale} should label workspace navigation`);
 }
 
 const en = getMessagesForLocale("en-EU");
@@ -120,11 +128,16 @@ assert.equal(en.shell.trustCenter, "Trust Center");
 assert.equal(en.appError.retry, "Try again");
 assert.equal(en.accessReviews.title, "Access reviews");
 assert.equal(en.accessReviews.form.start, "Load users");
+assert.equal(en.activation.blockedReasons.invalid_key, "Invalid key");
 assert.equal(en.auditLogPage.records.title, "Records");
 assert.equal(en.billingSettings.monthSuffix, "/month");
 assert.equal(en.clientDetailPage.back, "Back to clients");
 assert.equal(en.clientDetailPage.eyebrow, "Client view");
+assert.equal(en.complianceReport.title, "Cybersecurity posture assessment report");
+assert.equal(en.complianceReport.download, "Download compliance report (PDF)");
+assert.equal(en.complianceReport.fields.sidlo, "Registered address");
 assert.equal(en.controlsPage.index.title, "Control library");
+assert.equal(en.controlsPage.report.title, "Cybersecurity posture assessment report");
 assert.equal(en.controlsPage.detail.saveStatus, "Save status");
 assert.equal(en.controlsPage.statuses.fail, "Not passed");
 assert.equal(en.dashboard.metrics.scoreTitle, "Compliance score");
@@ -161,6 +174,8 @@ assert.doesNotMatch(
 );
 assert.doesNotMatch(en.incidents.checklist.markDataProtection, /NÚKIB|ÚOOÚ/);
 assert.equal(en.integrations.index.title, "Automated tests");
+assert.equal(en.integrations.index.recommendationTitle, "Connect the first evidence source");
+assert.equal(en.integrations.index.manualUpload, "Upload evidence manually");
 assert.equal(en.integrations.providerPages.aws.title, "AWS integration");
 assert.equal(en.integrations.providerPages.github.repositories, "Repositories");
 assert.equal(en.integrations.providerPages.microsoft365.connect, "Connect Microsoft 365");
@@ -179,8 +194,11 @@ assert.equal(en.teamPage.title, "Access and training");
 assert.equal(en.teamPage.open, "Open");
 assert.equal(en.trustCenterSettings.title, "Public compliance center");
 assert.equal(en.trustCenterSettings.saveSettings, "Save settings");
+assert.equal(en.trustCenterPreview.previewTab, "Preview");
 assert.equal(en.vendorsPage.title, "Vendor risk");
 assert.equal(en.vendorsPage.form.create, "Create");
+assert.equal(en.workspace.backToControls, "Back to controls overview");
+assert.equal(en.workspace.attestation.save, "Save attestation");
 assert.notEqual(en.shell.freePlanBanner, getMessagesForLocale("cs-CZ").shell.freePlanBanner);
 assert.equal(
   "pendingEntity" in en.marketing.footer,
@@ -193,10 +211,17 @@ assert.equal(it.shell.upgradePlan, "Aggiorna piano");
 assert.equal(it.appError.retry, "Riprova");
 assert.equal(it.accessReviews.title, "Revisioni accessi");
 assert.equal(it.accessReviews.form.start, "Carica utenti");
+assert.equal(it.activation.blockedReasons.invalid_key, "Chiave non valida");
 assert.equal(it.auditLogPage.records.title, "Voci del log");
 assert.equal(it.billingSettings.monthSuffix, "/mese");
 assert.equal(it.clientDetailPage.back, "Torna ai clienti");
+assert.equal(it.complianceReport.title, "Report di valutazione della postura cybersecurity");
+assert.equal(it.complianceReport.download, "Scarica report compliance (PDF)");
+assert.equal(it.complianceReport.fields.sidlo, "Sede legale");
+assert.doesNotMatch(it.complianceReport.title, /Zpráva|hodnocení|kybernetické/);
+assert.doesNotMatch(it.complianceReport.download, /Stáhnout|zprávu|shodě/);
 assert.equal(it.controlsPage.index.title, "Libreria controlli");
+assert.equal(it.controlsPage.report.title, "Report di valutazione della postura cybersecurity");
 assert.equal(it.controlsPage.index.focusStartTitle, "Iniziate qui");
 assert.equal(
   it.controlsPage.index.focusStartSubtitle,
@@ -255,6 +280,9 @@ assert.doesNotMatch(
 );
 assert.doesNotMatch(it.incidents.checklist.markDataProtection, /NÚKIB|ÚOOÚ/);
 assert.equal(it.integrations.index.title, "Test automatici");
+assert.equal(it.integrations.index.recommendationTitle, "Collegate la prima fonte di evidenze");
+assert.equal(it.integrations.index.manualUpload, "Carica evidenza manualmente");
+assert.doesNotMatch(it.integrations.index.manualUpload, /Ruční|nahrání/);
 assert.equal(it.integrations.providerPages.aws.title, "Integrazione AWS");
 assert.equal(it.integrations.providerPages.github.repositories, "Repository");
 assert.equal(it.integrations.providerPages.microsoft365.connect, "Collega Microsoft 365");
@@ -273,8 +301,13 @@ assert.equal(it.teamPage.title, "Accessi e formazione");
 assert.equal(it.teamPage.open, "Apri");
 assert.equal(it.trustCenterSettings.title, "Centro compliance pubblico");
 assert.equal(it.trustCenterSettings.saveSettings, "Salva impostazioni");
+assert.equal(it.trustCenterPreview.previewTab, "Anteprima");
+assert.doesNotMatch(it.trustCenterPreview.unlockNote, /Každá|zamčená|důkaz/);
 assert.equal(it.vendorsPage.title, "Rischio fornitori");
 assert.equal(it.vendorsPage.form.create, "Crea");
+assert.equal(it.workspace.backToControls, "Torna alla panoramica controlli");
+assert.equal(it.workspace.attestation.save, "Salva attestazione");
+assert.doesNotMatch(it.workspace.platformGuide, /Průvodce|projděte|důkazy/);
 assert.notEqual(it.shell.freePlanBanner, getMessagesForLocale("cs-CZ").shell.freePlanBanner);
 assert.equal(
   "pendingEntity" in it.marketing.footer,

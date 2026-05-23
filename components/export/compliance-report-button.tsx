@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useState } from "react";
 import { Download, Loader2 } from "lucide-react";
+import { useTranslations } from "next-intl";
 
 type ComplianceReportButtonProps = {
   missingFields: string[];
@@ -13,7 +14,7 @@ type ComplianceReportButtonProps = {
 function filenameFromDisposition(disposition: string | null) {
   const match = disposition?.match(/filename="([^"]+)"/);
 
-  return match?.[1] ?? "zprava-kyberneticka-bezpecnost.pdf";
+  return match?.[1] ?? null;
 }
 
 export function ComplianceReportButton({
@@ -21,11 +22,12 @@ export function ComplianceReportButton({
   orgId,
   settingsHref = "/settings/profile",
 }: ComplianceReportButtonProps) {
+  const t = useTranslations("complianceReport");
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const isDisabled = missingFields.length > 0 || isLoading;
   const disabledTooltip = missingFields.length
-    ? `Před exportem vyplňte: ${missingFields.join(", ")}`
+    ? t("missingFields", { fields: missingFields.join(", ") })
     : undefined;
 
   async function downloadReport() {
@@ -43,7 +45,7 @@ export function ComplianceReportButton({
 
       if (!response.ok) {
         const body = await response.json().catch(() => null) as { error?: string } | null;
-        throw new Error(body?.error ?? "Zprávu se nepodařilo připravit.");
+        throw new Error(body?.error ?? t("error"));
       }
 
       const blob = await response.blob();
@@ -51,7 +53,9 @@ export function ComplianceReportButton({
       const link = document.createElement("a");
 
       link.href = url;
-      link.download = filenameFromDisposition(response.headers.get("Content-Disposition"));
+      link.download =
+        filenameFromDisposition(response.headers.get("Content-Disposition")) ??
+        t("fallbackFileName");
       document.body.append(link);
       link.click();
       link.remove();
@@ -60,7 +64,7 @@ export function ComplianceReportButton({
       setError(
         downloadError instanceof Error
           ? downloadError.message
-          : "Zprávu se nepodařilo připravit.",
+          : t("error"),
       );
     } finally {
       setIsLoading(false);
@@ -81,15 +85,15 @@ export function ComplianceReportButton({
           ) : (
             <Download className="h-4 w-4" aria-hidden="true" strokeWidth={1.7} />
           )}
-          {isLoading ? "Připravuji PDF..." : "Stáhnout zprávu o shodě (PDF)"}
+          {isLoading ? t("preparing") : t("download")}
         </button>
       </span>
 
       {missingFields.length > 0 ? (
         <p className="text-xs leading-5 text-foreground/58">
-          Před exportem vyplňte: {missingFields.join(", ")}.{" "}
+          {t("missingFields", { fields: missingFields.join(", ") })}{" "}
           <Link href={settingsHref} className="font-medium text-primary hover:underline">
-            Upravit profil společnosti
+            {t("editProfile")}
           </Link>
         </p>
       ) : null}

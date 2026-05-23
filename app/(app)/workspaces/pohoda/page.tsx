@@ -1,7 +1,10 @@
 import Link from "next/link";
 import { auth } from "@clerk/nextjs/server";
+import { getLocale } from "next-intl/server";
 import { ArrowLeft } from "lucide-react";
 import { WorkspaceRenderer } from "@/components/workspaces/workspace-renderer";
+import { getMessagesForLocale } from "@/i18n/messages";
+import { normalizeLocale } from "@/i18n/routing";
 import { hasDatabaseUrl } from "@/lib/db";
 import {
   groupCommentsByControlKey,
@@ -73,6 +76,8 @@ async function loadPohodaProgress(): Promise<{
 }
 
 export default async function PohodaWorkspacePage() {
+  const requestLocale = normalizeLocale(await getLocale()) ?? "cs-CZ";
+  const copy = getMessagesForLocale(requestLocale).workspace;
   const { commentsByControlKey, progress, mode } = await loadPohodaProgress();
 
   return (
@@ -83,26 +88,25 @@ export default async function PohodaWorkspacePage() {
         className="inline-flex items-center gap-1.5 text-sm text-foreground/58 hover:text-foreground"
       >
         <ArrowLeft className="h-4 w-4" aria-hidden="true" />
-        Zpět na přehled kontrol
+        {copy.backToControls}
       </Link>
 
       {/* Page heading */}
       <div>
         <p className="text-xs font-medium uppercase tracking-[0.14em] text-primary">
-          Workspace
+          {copy.pageEyebrow}
         </p>
         <h1 className="mt-1 text-2xl font-semibold">
           Pohoda (Stormware)
         </h1>
         <p className="mt-2 max-w-2xl text-sm leading-6 text-foreground/64">
-          Průvodce shody pro Pohodu — projděte čtyřmi vrstvami (infrastruktura,
-          přístupy, zálohy, API) a dokládejte důkazy přímo zde.
+          {copy.platformGuide.replace("{platform}", "Pohoda")}
         </p>
       </div>
 
       {mode === "demo" ? (
         <div className="inline-flex w-fit items-center gap-2 rounded-full border border-border bg-surface px-3 py-1.5 text-xs font-medium text-foreground/64">
-          Demo — přihlaste se s organizací pro ukládání skutečných důkazů
+          {copy.demoNotice}
         </div>
       ) : null}
 

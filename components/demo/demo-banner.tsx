@@ -5,7 +5,7 @@ import { DEMO_ORG } from "@/lib/demo/data";
 
 export function DemoBanner() {
   return (
-    <div className="sticky top-0 z-50 border-b border-amber-300 bg-amber-50/95 px-4 py-3 text-amber-950 shadow-sm backdrop-blur sm:px-6">
+    <div className="sticky top-16 z-40 border-b border-amber-300 bg-amber-50/95 px-4 py-3 text-amber-950 shadow-sm backdrop-blur sm:px-6">
       <div className="mx-auto flex max-w-7xl flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
         <div className="flex min-w-0 gap-3">
           <span className="mt-0.5 grid h-8 w-8 shrink-0 place-items-center rounded-md border border-amber-300 bg-amber-100 text-amber-800">

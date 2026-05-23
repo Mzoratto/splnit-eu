@@ -127,6 +127,7 @@ function structuredFieldAnswers(
 }
 
 function AttestationForm({ control, layerId, platformId }: AttestationFormProps) {
+  const t = useTranslations("workspace.attestation");
   const [answer, setAnswer] = React.useState<"yes" | "no" | "partial" | "">("");
   const [fieldValues, setFieldValues] = React.useState<Record<string, StructuredFieldValue>>(
     () => initialStructuredFieldValues(control),
@@ -166,7 +167,7 @@ function AttestationForm({ control, layerId, platformId }: AttestationFormProps)
         });
         if (!res.ok) {
           const data = await res.json().catch(() => ({}));
-          throw new Error((data as { error?: string }).error ?? "Submission failed.");
+          throw new Error((data as { error?: string }).error ?? t("submissionFailed"));
         }
       } else {
         await submitWorkspaceAttestationAction({
@@ -178,7 +179,7 @@ function AttestationForm({ control, layerId, platformId }: AttestationFormProps)
       }
       setSubmitted(true);
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Submission failed.");
+      setError(err instanceof Error ? err.message : t("submissionFailed"));
     } finally {
       setPending(false);
     }
@@ -188,7 +189,7 @@ function AttestationForm({ control, layerId, platformId }: AttestationFormProps)
     return (
       <div className="flex items-center gap-2 rounded-md border border-[var(--status-pass-border)] bg-[var(--status-pass-subtle)] px-3 py-2 text-sm text-[var(--status-pass)]">
         <CheckCircle2 className="h-4 w-4 shrink-0" aria-hidden="true" />
-        Attestation saved. Reload to see updated status.
+        {t("saved")}
       </div>
     );
   }
@@ -196,7 +197,7 @@ function AttestationForm({ control, layerId, platformId }: AttestationFormProps)
   return (
     <form onSubmit={handleSubmit} className="space-y-3">
       <fieldset className="space-y-2">
-        <legend className="text-sm font-medium">Your answer</legend>
+        <legend className="text-sm font-medium">{t("answer")}</legend>
         <div className="flex flex-wrap gap-2">
           {(["yes", "no", "partial"] as const).map((value) => (
             <label
@@ -216,7 +217,7 @@ function AttestationForm({ control, layerId, platformId }: AttestationFormProps)
                 onChange={() => setAnswer(value)}
                 className="sr-only"
               />
-              {value === "yes" ? "Yes / Done" : value === "no" ? "No / Gap" : "Partial"}
+              {value === "yes" ? t("yes") : value === "no" ? t("no") : t("partial")}
             </label>
           ))}
         </div>
@@ -224,7 +225,7 @@ function AttestationForm({ control, layerId, platformId }: AttestationFormProps)
 
       {control.evidenceFields?.length ? (
         <fieldset className="space-y-2 rounded-md border border-border bg-surface-muted p-3">
-          <legend className="px-1 text-sm font-medium">Doplňující údaje</legend>
+          <legend className="px-1 text-sm font-medium">{t("additionalFields")}</legend>
           <div className="grid gap-3">
             {control.evidenceFields.map((field) => {
               const inputId = `${control.controlKey}-${field.key}`;
@@ -236,8 +237,8 @@ function AttestationForm({ control, layerId, platformId }: AttestationFormProps)
                     <span className="font-medium text-foreground/72">{field.label}</span>
                     <div className="flex flex-wrap gap-2">
                       {[
-                        { key: "true", label: "Ano", value: true },
-                        { key: "false", label: "Ne", value: false },
+                        { key: "true", label: t("booleanYes"), value: true },
+                        { key: "false", label: t("booleanNo"), value: false },
                       ].map((option) => (
                         <label
                           key={option.key}
@@ -294,12 +295,12 @@ function AttestationForm({ control, layerId, platformId }: AttestationFormProps)
       ) : null}
 
       <label className="grid gap-1.5 text-sm">
-        <span className="font-medium text-foreground/72">Notes (optional)</span>
+        <span className="font-medium text-foreground/72">{t("notes")}</span>
         <textarea
           rows={3}
           value={notes}
           onChange={(e) => setNotes(e.target.value)}
-          placeholder="Document your approach, steps taken, or caveats…"
+          placeholder={t("notesPlaceholder")}
           className="rounded-md border border-border bg-background px-3 py-2 text-sm placeholder:text-foreground/40 focus:outline-none focus:ring-1 focus:ring-primary"
         />
       </label>
@@ -313,7 +314,7 @@ function AttestationForm({ control, layerId, platformId }: AttestationFormProps)
         disabled={!answer || missingRequiredFields || pending}
         className="inline-flex items-center gap-2 rounded-md bg-primary px-4 py-2.5 text-sm font-medium text-primary-foreground disabled:cursor-not-allowed disabled:opacity-50"
       >
-        {pending ? "Saving…" : "Save attestation"}
+        {pending ? t("saving") : t("save")}
         <CheckCircle2 className="h-4 w-4" aria-hidden="true" />
       </button>
     </form>
@@ -323,16 +324,18 @@ function AttestationForm({ control, layerId, platformId }: AttestationFormProps)
 // ─── File upload hint ─────────────────────────────────────────────────────────
 
 function FileUploadHint({ controlKey }: { controlKey: string }) {
+  const t = useTranslations("workspace");
+
   return (
     <div className="flex items-start gap-2 rounded-md border border-border bg-surface-muted px-3 py-2.5 text-sm text-foreground/64">
       <FileUp className="mt-0.5 h-4 w-4 shrink-0 text-primary" aria-hidden="true" />
       <span>
-        Upload evidence files via the{" "}
+        {t("fileUploadPrefix")}{" "}
         <a
           href={`/controls/${controlKey}`}
           className="font-medium text-primary underline underline-offset-2 hover:opacity-80"
         >
-          control detail page
+          {t("fileUploadLink")}
         </a>
         .
       </span>
@@ -611,7 +614,7 @@ function ControlCard({
           {controlProg?.hasEvidence && activationState ? (
             <div className="space-y-1">
               <p className="text-xs font-medium uppercase tracking-[0.1em] text-foreground/48">
-                Current evidence state
+                {t("currentEvidenceState")}
               </p>
               <ActivationStatus state={activationState} showDetails />
             </div>
@@ -634,7 +637,7 @@ function ControlCard({
           ) : (
             <div className="space-y-3">
               <p className="text-xs font-medium uppercase tracking-[0.1em] text-foreground/48">
-                Submit evidence
+                {t("submitEvidence")}
               </p>
 
               {/* Attestation form for attestation or both */}
@@ -652,7 +655,7 @@ function ControlCard({
                   {control.evidenceType === "both" ? (
                     <p className="flex items-center gap-1.5 text-xs text-foreground/52">
                       <Upload className="h-3.5 w-3.5" aria-hidden="true" />
-                      You can also attach a supporting file:
+                      {t("canAttachFile")}
                     </p>
                   ) : null}
                   <FileUploadHint controlKey={control.controlKey} />
@@ -789,7 +792,7 @@ export function WorkspaceRenderer({
           <h3 className="font-semibold">{activeLayer.title}</h3>
           {activeLayerProg ? (
             <span className="text-sm text-foreground/52">
-              {pct(activeLayerProg.completionPct)} complete
+              {t("layerComplete", { progress: pct(activeLayerProg.completionPct) })}
             </span>
           ) : null}
         </div>

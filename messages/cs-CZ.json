@@ -630,7 +630,21 @@
       "disconnect": "Odpojit",
       "statusAvailable": "Dostupné",
       "statusConnected": "Připojeno",
-      "statusConnecting": "Připojování"
+      "statusConnecting": "Připojování",
+      "recommendationEyebrow": "Doporučeno na základě vašeho intake",
+      "recommendationTitle": "Připojte první zdroj důkazů",
+      "recommendationBody": "Začněte integrací, kterou už podle intake pravděpodobně používáte. Splnit z ní vytvoří první automatické testy a důkazy; pokud váš stack není v seznamu, použijte ruční upload dole.",
+      "statusPass": "pass",
+      "statusFail": "fail",
+      "statusWarning": "varování",
+      "statusManual": "ruční",
+      "statusError": "error",
+      "recommended": "Doporučeno",
+      "resultsAria": "Výsledky za 24 hodin: pass, fail, warning, ruční review, error",
+      "manualReviewTitle": "Ruční review",
+      "stackMissingTitle": "Nemáte svůj stack v seznamu?",
+      "stackMissingBody": "Ruční upload udrží aktivační loop průchodný: vyberte prioritní kontrolu, nahrajte screenshot, export nebo dokument a vraťte se k integracím později.",
+      "manualUpload": "Nahrát důkaz ručně"
     },
     "planned": {
       "eyebrow": "Plánovaná integrace",
@@ -1143,6 +1157,32 @@
       "saveError": "Komentář se nepodařilo uložit.",
       "saving": "Ukládám...",
       "save": "Přidat komentář"
+    },
+    "backToControls": "Zpět na přehled kontrol",
+    "pageEyebrow": "Workspace",
+    "platformGuide": "Průvodce shody pro {platform} — projděte čtyřmi vrstvami (infrastruktura, přístupy, zálohy, API) a dokládejte důkazy přímo zde.",
+    "demoNotice": "Demo — přihlaste se s organizací pro ukládání skutečných důkazů",
+    "additionalFields": "Doplňující údaje",
+    "layerComplete": "{progress} dokončeno",
+    "currentEvidenceState": "Aktuální stav důkazu",
+    "submitEvidence": "Doložit důkaz",
+    "canAttachFile": "Můžete přiložit také podpůrný soubor:",
+    "fileUploadPrefix": "Soubory důkazů nahrávejte přes",
+    "fileUploadLink": "detail kontroly",
+    "attestation": {
+      "saved": "Čestné prohlášení uloženo. Obnovte stránku pro zobrazení aktualizovaného stavu.",
+      "answer": "Vaše odpověď",
+      "yes": "Ano / hotovo",
+      "no": "Ne / mezera",
+      "partial": "Částečně",
+      "booleanYes": "Ano",
+      "booleanNo": "Ne",
+      "notes": "Poznámky (volitelné)",
+      "notesPlaceholder": "Popište postup, provedené kroky nebo výhrady...",
+      "save": "Uložit prohlášení",
+      "saving": "Ukládám...",
+      "submissionFailed": "Odeslání se nezdařilo.",
+      "additionalFields": "Doplňující údaje"
     }
   },
   "abraFlexiWorkspace": {
@@ -1420,6 +1460,14 @@
       "esg_environment": "ESG prostředí",
       "esg_social": "ESG sociální oblast",
       "esg_governance": "ESG řízení"
+    },
+    "report": {
+      "title": "Zpráva o hodnocení stavu kybernetické bezpečnosti",
+      "body": "Exportujte aktuální stav opatření a důkazů do PDF pro auditora nebo NÚKIB."
+    },
+    "workspaceCallouts": {
+      "workspaceDescription": "Projděte kontrolní vrstvy pro {platform}: infrastruktura, přístupy, zálohy a API. Dokládejte důkazy a sledujte postup shody.",
+      "workspaceCompletion": "{progress}% dokončeno"
     }
   },
   "auditLogPage": {
@@ -1599,6 +1647,58 @@
       "approved": "schváleno",
       "declined": "zamítnuto",
       "pending": "čeká"
+    },
+    "notPublished": "zatím nepublikováno",
+    "published": "Publikováno",
+    "privatePreview": "Soukromý náhled",
+    "organisationFallback": "Vaše firma"
+  },
+  "trustCenterPreview": {
+    "eyebrow": "Trust Center preview",
+    "title": "Ukažte cíl ještě před první splněnou kontrolou",
+    "description": "Nový uživatel nevidí prázdnou stránku. Vidí tvar budoucího Trust Centeru, zamčené sekce a přesnou akci, která každou sekci odemkne.",
+    "viewToggleAria": "Přepnout Trust Center zobrazení",
+    "previewTab": "Náhled",
+    "liveTab": "Živý stav",
+    "prePublishPreview": "Preview před publikací",
+    "publicSummaryTitle": "Veřejný buyer-ready přehled",
+    "publicSummaryBody": "Kategorie se zveřejňují postupně podle splněných kontrol a dostupných důkazů.",
+    "viewTrustCenter": "Zobrazit Trust Center",
+    "publishingDisabled": "Publikace zatím vypnutá",
+    "unlockNote": "Každá zamčená sekce má vlastní podmínku odemčení. Uživatel přesně ví, jestli má splnit první kontrolu, připojit systém, nebo nahrát důkaz.",
+    "sections": {
+      "frameworks": {
+        "title": "Přehled rámců",
+        "preview": "NIS2 · GDPR · ISO 27001",
+        "unlock": "Potvrďte automaticky určené rámce v onboarding wizardu."
+      },
+      "verified": {
+        "title": "Ověřené oblasti",
+        "preview": "Identity · Zálohy · Dodavatelé · Incidenty",
+        "unlock": "Splňte první kontrolu a tato sekce se zveřejní."
+      },
+      "documents": {
+        "title": "Dokumenty pro zákazníky",
+        "preview": "Bezpečnostní přehled · DPA · Vendor response pack",
+        "unlock": "Nahrajte nebo vygenerujte první sdílitelný důkaz."
+      }
+    },
+    "liveSections": {
+      "controls": {
+        "label": "Splněné kontroly",
+        "detail": "{count} relevantních kontrol celkem"
+      },
+      "evidence": {
+        "label": "Důkazy",
+        "detail": "nahrané nebo automaticky sesbírané důkazy"
+      },
+      "access": {
+        "label": "Přístupy",
+        "detail": "čekající nebo zpracované žádosti"
+      },
+      "updated": {
+        "label": "Poslední aktualizace"
+      }
     }
   },
   "marketing": {
@@ -2219,7 +2319,12 @@
       "country": "Země",
       "primaryJurisdiction": "Primární jurisdikce",
       "locale": "Jazyk",
-      "save": "Uložit změny"
+      "save": "Uložit změny",
+      "ico": "IČO",
+      "icoTitle": "IČO musí mít přesně 8 číslic.",
+      "dic": "DIČ",
+      "dicTitle": "DIČ musí být ve formátu CZ12345678.",
+      "sidlo": "Sídlo"
     },
     "nis2": {
       "title": "NIS2 kategorizace",
@@ -2316,5 +2421,65 @@
       "answer": "Z aktuálních dat organizace ve Splnit.eu není dostupná žádná doložitelná odpověď.",
       "notes": "Před externím použitím doplňte splněné kontroly, evidenci, aktivní politiky nebo zkontrolované právní citace."
     }
+  },
+  "complianceReport": {
+    "title": "Zpráva o hodnocení stavu kybernetické bezpečnosti",
+    "dashboardBody": "Exportujte aktuální stav opatření, důkazů a mezer do PDF pro auditora nebo kontrolu NÚKIB.",
+    "controlsBody": "Exportujte aktuální stav opatření a důkazů do PDF pro auditora nebo NÚKIB.",
+    "download": "Stáhnout zprávu o shodě (PDF)",
+    "preparing": "Připravuji PDF...",
+    "missingFields": "Před exportem vyplňte: {fields}.",
+    "editProfile": "Upravit profil společnosti",
+    "error": "Zprávu se nepodařilo připravit.",
+    "fallbackFileName": "zprava-kyberneticka-bezpecnost.pdf",
+    "fields": {
+      "ico": "IČO",
+      "dic": "DIČ",
+      "sidlo": "Sídlo"
+    }
+  },
+  "activation": {
+    "blockedReasons": {
+      "collection_failed": "Sběr selhal",
+      "insufficient_scope": "Chybí oprávnění",
+      "invalid_key": "Neplatný klíč",
+      "missing_integration": "Integrace chybí",
+      "missing_permission": "Oprávnění chybí",
+      "needs_manual_upload": "Je potřeba ruční nahrání",
+      "not_connected": "Konektor není připojen",
+      "not_applicable": "Nerelevantní",
+      "unsupported_provider": "Poskytovatel není podporován",
+      "unreachable": "Služba je nedostupná"
+    },
+    "apiKeyBlockedDetails": {
+      "insufficient_scope": "Uložený klíč nemá minimální potřebná oprávnění. Zkontrolujte rozsahy klíče a vložte nový klíč.",
+      "invalid_key": "Uložený klíč poskytovatel odmítl. Vložte nový nebo opravený API klíč.",
+      "not_connected": "API klíč zatím není připojen. Připojte konektor nebo doložte opatření manuálně.",
+      "unreachable": "Službu poskytovatele se nepodařilo kontaktovat. Zkuste kontrolu opakovat nebo doložte opatření manuálně."
+    },
+    "states": {
+      "queued": {
+        "label": "Ve frontě",
+        "detail": "Čeká na další běh sběru."
+      },
+      "running": {
+        "label": "Probíhá",
+        "detail": "Sběr právě běží."
+      },
+      "pass": {
+        "label": "Potvrzeno splnění",
+        "detail": "Poslední potvrzený důkaz touto kontrolou prošel."
+      },
+      "gap": {
+        "label": "Potvrzená mezera",
+        "detail": "Poslední potvrzený důkaz ukazuje mezeru."
+      },
+      "blocked": {
+        "label": "Blokováno",
+        "detail": "Sběr je blokovaný a vyžaduje pozornost."
+      }
+    },
+    "reason": "Důvod: {reason}.",
+    "preservedPass": "Poslední potvrzený výsledek stále prochází, i když je sběr blokovaný."
   }
 }

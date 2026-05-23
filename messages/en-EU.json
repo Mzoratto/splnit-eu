@@ -630,7 +630,21 @@
       "disconnect": "Disconnect",
       "statusAvailable": "Available",
       "statusConnected": "Connected",
-      "statusConnecting": "Connecting"
+      "statusConnecting": "Connecting",
+      "recommendationEyebrow": "Recommended from your intake",
+      "recommendationTitle": "Connect the first evidence source",
+      "recommendationBody": "Start with the integration your intake says you probably already use. Splnit will turn it into the first automated checks and evidence; if your stack is not listed, use manual upload below.",
+      "statusPass": "pass",
+      "statusFail": "fail",
+      "statusWarning": "warning",
+      "statusManual": "manual",
+      "statusError": "error",
+      "recommended": "Recommended",
+      "resultsAria": "Results over 24 hours: pass, fail, warning, manual review, error",
+      "manualReviewTitle": "Manual review",
+      "stackMissingTitle": "Do not see your stack?",
+      "stackMissingBody": "Manual upload keeps the activation loop usable: choose a priority control, upload a screenshot, export, or document, and return to integrations later.",
+      "manualUpload": "Upload evidence manually"
     },
     "planned": {
       "eyebrow": "Planned integration",
@@ -1143,6 +1157,32 @@
       "saveError": "Comment could not be saved.",
       "saving": "Saving...",
       "save": "Add comment"
+    },
+    "backToControls": "Back to controls overview",
+    "pageEyebrow": "Workspace",
+    "platformGuide": "Compliance guide for {platform} — review four layers (infrastructure, access, backups, API) and attach evidence here.",
+    "demoNotice": "Demo — sign in with an organisation to save real evidence",
+    "additionalFields": "Additional fields",
+    "layerComplete": "{progress} complete",
+    "currentEvidenceState": "Current evidence state",
+    "submitEvidence": "Submit evidence",
+    "canAttachFile": "You can also attach a supporting file:",
+    "fileUploadPrefix": "Upload evidence files via the",
+    "fileUploadLink": "control detail page",
+    "attestation": {
+      "saved": "Attestation saved. Reload to see updated status.",
+      "answer": "Your answer",
+      "yes": "Yes / done",
+      "no": "No / gap",
+      "partial": "Partial",
+      "booleanYes": "Yes",
+      "booleanNo": "No",
+      "notes": "Notes (optional)",
+      "notesPlaceholder": "Document your approach, steps taken, or caveats...",
+      "save": "Save attestation",
+      "saving": "Saving...",
+      "submissionFailed": "Submission failed.",
+      "additionalFields": "Additional fields"
     }
   },
   "abraFlexiWorkspace": {
@@ -1420,6 +1460,14 @@
       "esg_environment": "ESG environment",
       "esg_social": "ESG social",
       "esg_governance": "ESG governance"
+    },
+    "report": {
+      "title": "Cybersecurity posture assessment report",
+      "body": "Export the current state of measures and evidence to a PDF for an auditor or regulatory review."
+    },
+    "workspaceCallouts": {
+      "workspaceDescription": "Review control layers for {platform}: infrastructure, access, backups, and API. Attach evidence and track compliance progress.",
+      "workspaceCompletion": "{progress}% complete"
     }
   },
   "auditLogPage": {
@@ -1599,6 +1647,58 @@
       "approved": "approved",
       "declined": "declined",
       "pending": "pending"
+    },
+    "notPublished": "not published yet",
+    "published": "Published",
+    "privatePreview": "Private preview",
+    "organisationFallback": "Your company"
+  },
+  "trustCenterPreview": {
+    "eyebrow": "Trust Center preview",
+    "title": "Show the target state before the first control is complete",
+    "description": "New users do not land on an empty page. They see the shape of the future Trust Center, locked sections, and the exact action that unlocks each section.",
+    "viewToggleAria": "Switch Trust Center view",
+    "previewTab": "Preview",
+    "liveTab": "Live status",
+    "prePublishPreview": "Pre-publication preview",
+    "publicSummaryTitle": "Public buyer-ready overview",
+    "publicSummaryBody": "Categories are published gradually based on completed controls and available evidence.",
+    "viewTrustCenter": "View Trust Center",
+    "publishingDisabled": "Publishing is currently off",
+    "unlockNote": "Each locked section has its own unlock condition. The user knows exactly whether to complete the first control, connect a system, or upload evidence.",
+    "sections": {
+      "frameworks": {
+        "title": "Framework overview",
+        "preview": "NIS2 · GDPR · ISO 27001",
+        "unlock": "Confirm the automatically selected frameworks in the onboarding wizard."
+      },
+      "verified": {
+        "title": "Verified areas",
+        "preview": "Identity · Backups · Suppliers · Incidents",
+        "unlock": "Complete the first control and this section will be published."
+      },
+      "documents": {
+        "title": "Customer documents",
+        "preview": "Security overview · DPA · Vendor response pack",
+        "unlock": "Upload or generate the first shareable evidence item."
+      }
+    },
+    "liveSections": {
+      "controls": {
+        "label": "Passed controls",
+        "detail": "{count} relevant controls in total"
+      },
+      "evidence": {
+        "label": "Evidence",
+        "detail": "uploaded or automatically collected evidence"
+      },
+      "access": {
+        "label": "Access",
+        "detail": "pending or processed requests"
+      },
+      "updated": {
+        "label": "Last updated"
+      }
     }
   },
   "marketing": {
@@ -2219,7 +2319,12 @@
       "country": "Country",
       "primaryJurisdiction": "Primary jurisdiction",
       "locale": "Locale",
-      "save": "Save changes"
+      "save": "Save changes",
+      "ico": "Company ID",
+      "icoTitle": "Company ID must contain exactly 8 digits.",
+      "dic": "VAT ID",
+      "dicTitle": "VAT ID must use the CZ12345678 format.",
+      "sidlo": "Registered address"
     },
     "nis2": {
       "title": "NIS2 classification",
@@ -2316,5 +2421,65 @@
       "answer": "No answer can be generated from the current Splnit.eu organisation data.",
       "notes": "Add passing controls, evidence, active policies, or reviewed legal citations before using this answer externally."
     }
+  },
+  "complianceReport": {
+    "title": "Cybersecurity posture assessment report",
+    "dashboardBody": "Export the current state of measures, evidence, and gaps to a PDF for an auditor or regulatory review.",
+    "controlsBody": "Export the current state of measures and evidence to a PDF for an auditor or regulatory review.",
+    "download": "Download compliance report (PDF)",
+    "preparing": "Preparing PDF...",
+    "missingFields": "Complete before export: {fields}.",
+    "editProfile": "Edit company profile",
+    "error": "The report could not be prepared.",
+    "fallbackFileName": "cybersecurity-posture-report.pdf",
+    "fields": {
+      "ico": "Company ID",
+      "dic": "VAT ID",
+      "sidlo": "Registered address"
+    }
+  },
+  "activation": {
+    "blockedReasons": {
+      "collection_failed": "Collection failed",
+      "insufficient_scope": "Permission missing",
+      "invalid_key": "Invalid key",
+      "missing_integration": "Integration missing",
+      "missing_permission": "Permission missing",
+      "needs_manual_upload": "Manual upload needed",
+      "not_connected": "Connector not connected",
+      "not_applicable": "Not applicable",
+      "unsupported_provider": "Provider unsupported",
+      "unreachable": "Service unavailable"
+    },
+    "apiKeyBlockedDetails": {
+      "insufficient_scope": "The saved key does not have the minimum required permissions. Check the key scopes and enter a new key.",
+      "invalid_key": "The provider rejected the saved key. Enter a new or corrected API key.",
+      "not_connected": "The API key is not connected yet. Connect the connector or document the measure manually.",
+      "unreachable": "The provider service could not be reached. Retry the check or document the measure manually."
+    },
+    "states": {
+      "queued": {
+        "label": "Queued",
+        "detail": "Waiting for the next collection run."
+      },
+      "running": {
+        "label": "Running",
+        "detail": "Collection is running now."
+      },
+      "pass": {
+        "label": "Confirmed pass",
+        "detail": "Latest confirmed evidence passed this check."
+      },
+      "gap": {
+        "label": "Confirmed gap",
+        "detail": "Latest confirmed evidence shows a gap."
+      },
+      "blocked": {
+        "label": "Blocked",
+        "detail": "Collection is blocked and needs attention."
+      }
+    },
+    "reason": "Reason: {reason}.",
+    "preservedPass": "Last confirmed result is still passing while collection is blocked."
   }
 }

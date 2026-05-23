@@ -630,7 +630,21 @@
       "disconnect": "Scollega",
       "statusAvailable": "Disponibile",
       "statusConnected": "Collegato",
-      "statusConnecting": "Collegamento in corso"
+      "statusConnecting": "Collegamento in corso",
+      "recommendationEyebrow": "Consigliato in base al vostro intake",
+      "recommendationTitle": "Collegate la prima fonte di evidenze",
+      "recommendationBody": "Iniziate dall’integrazione che, secondo l’intake, probabilmente usate già. Splnit la trasformerà nei primi test automatici e nelle prime evidenze; se il vostro stack non è nell’elenco, usate il caricamento manuale sotto.",
+      "statusPass": "superato",
+      "statusFail": "fallito",
+      "statusWarning": "avviso",
+      "statusManual": "manuale",
+      "statusError": "errore",
+      "recommended": "Consigliato",
+      "resultsAria": "Risultati in 24 ore: superato, fallito, avviso, revisione manuale, errore",
+      "manualReviewTitle": "Revisione manuale",
+      "stackMissingTitle": "Non trovate il vostro stack?",
+      "stackMissingBody": "Il caricamento manuale mantiene utilizzabile il ciclo di attivazione: scegliete un controllo prioritario, caricate uno screenshot, un export o un documento e tornate alle integrazioni più tardi.",
+      "manualUpload": "Carica evidenza manualmente"
     },
     "planned": {
       "eyebrow": "Integrazione pianificata",
@@ -1143,6 +1157,32 @@
       "saveError": "Impossibile salvare il commento.",
       "saving": "Salvataggio...",
       "save": "Aggiungi commento"
+    },
+    "backToControls": "Torna alla panoramica controlli",
+    "pageEyebrow": "Workspace",
+    "platformGuide": "Guida compliance per {platform}: rivedete quattro layer (infrastruttura, accessi, backup, API) e allegate le evidenze direttamente qui.",
+    "demoNotice": "Demo — accedi con un’organizzazione per salvare evidenze reali",
+    "additionalFields": "Dati aggiuntivi",
+    "layerComplete": "{progress} completato",
+    "currentEvidenceState": "Stato evidenza attuale",
+    "submitEvidence": "Invia evidenza",
+    "canAttachFile": "Potete allegare anche un file di supporto:",
+    "fileUploadPrefix": "Caricate i file evidenza dalla",
+    "fileUploadLink": "pagina dettaglio controllo",
+    "attestation": {
+      "saved": "Attestazione salvata. Ricaricate per vedere lo stato aggiornato.",
+      "answer": "La vostra risposta",
+      "yes": "Sì / fatto",
+      "no": "No / gap",
+      "partial": "Parziale",
+      "booleanYes": "Sì",
+      "booleanNo": "No",
+      "notes": "Note (facoltative)",
+      "notesPlaceholder": "Documentate approccio, passaggi eseguiti o riserve...",
+      "save": "Salva attestazione",
+      "saving": "Salvataggio...",
+      "submissionFailed": "Invio non riuscito.",
+      "additionalFields": "Dati aggiuntivi"
     }
   },
   "abraFlexiWorkspace": {
@@ -1420,6 +1460,14 @@
       "esg_environment": "ESG ambiente",
       "esg_social": "ESG sociale",
       "esg_governance": "ESG governance"
+    },
+    "report": {
+      "title": "Report di valutazione della postura cybersecurity",
+      "body": "Esporta in PDF lo stato attuale di misure ed evidenze per un auditor o una revisione regolatoria."
+    },
+    "workspaceCallouts": {
+      "workspaceDescription": "Rivedete i layer di controllo per {platform}: infrastruttura, accessi, backup e API. Allegate evidenze e seguite l’avanzamento compliance.",
+      "workspaceCompletion": "{progress}% completato"
     }
   },
   "auditLogPage": {
@@ -1599,6 +1647,58 @@
       "approved": "approvata",
       "declined": "rifiutata",
       "pending": "in attesa"
+    },
+    "notPublished": "non ancora pubblicato",
+    "published": "Pubblicato",
+    "privatePreview": "Anteprima privata",
+    "organisationFallback": "La vostra azienda"
+  },
+  "trustCenterPreview": {
+    "eyebrow": "Anteprima Trust Center",
+    "title": "Mostrate lo stato obiettivo prima del primo controllo completato",
+    "description": "I nuovi utenti non arrivano su una pagina vuota. Vedono la forma del futuro Trust Center, le sezioni bloccate e l'azione precisa che sblocca ogni sezione.",
+    "viewToggleAria": "Cambia vista Trust Center",
+    "previewTab": "Anteprima",
+    "liveTab": "Stato live",
+    "prePublishPreview": "Anteprima pre-pubblicazione",
+    "publicSummaryTitle": "Panoramica pubblica pronta per i buyer",
+    "publicSummaryBody": "Le categorie vengono pubblicate gradualmente in base ai controlli completati e alle evidenze disponibili.",
+    "viewTrustCenter": "Visualizza Trust Center",
+    "publishingDisabled": "Pubblicazione attualmente disattivata",
+    "unlockNote": "Ogni sezione bloccata ha una propria condizione di sblocco. L'utente sa esattamente se deve completare il primo controllo, collegare un sistema o caricare un'evidenza.",
+    "sections": {
+      "frameworks": {
+        "title": "Panoramica framework",
+        "preview": "NIS2 · GDPR · ISO 27001",
+        "unlock": "Confermate i framework selezionati automaticamente nell'onboarding."
+      },
+      "verified": {
+        "title": "Aree verificate",
+        "preview": "Identità · Backup · Fornitori · Incidenti",
+        "unlock": "Completate il primo controllo e questa sezione verrà pubblicata."
+      },
+      "documents": {
+        "title": "Documenti per clienti",
+        "preview": "Panoramica sicurezza · DPA · Vendor response pack",
+        "unlock": "Caricate o generate la prima evidenza condivisibile."
+      }
+    },
+    "liveSections": {
+      "controls": {
+        "label": "Controlli superati",
+        "detail": "{count} controlli rilevanti in totale"
+      },
+      "evidence": {
+        "label": "Evidenze",
+        "detail": "evidenze caricate o raccolte automaticamente"
+      },
+      "access": {
+        "label": "Accessi",
+        "detail": "richieste in attesa o elaborate"
+      },
+      "updated": {
+        "label": "Ultimo aggiornamento"
+      }
     }
   },
   "marketing": {
@@ -2219,7 +2319,12 @@
       "country": "Paese",
       "primaryJurisdiction": "Giurisdizione primaria",
       "locale": "Lingua",
-      "save": "Salva modifiche"
+      "save": "Salva modifiche",
+      "ico": "ID aziendale",
+      "icoTitle": "L’ID aziendale deve contenere esattamente 8 cifre.",
+      "dic": "Partita IVA",
+      "dicTitle": "La partita IVA deve usare il formato CZ12345678.",
+      "sidlo": "Sede legale"
     },
     "nis2": {
       "title": "Classificazione NIS2",
@@ -2316,5 +2421,65 @@
       "answer": "Dai dati attuali dell'organizzazione in Splnit.eu non è disponibile una risposta documentabile.",
       "notes": "Aggiungi controlli superati, evidenze, politiche attive o citazioni normative verificate prima di usare questa risposta verso l’esterno."
     }
+  },
+  "complianceReport": {
+    "title": "Report di valutazione della postura cybersecurity",
+    "dashboardBody": "Esporta in PDF lo stato attuale di misure, evidenze e gap per un auditor o una revisione regolatoria.",
+    "controlsBody": "Esporta in PDF lo stato attuale di misure ed evidenze per un auditor o una revisione regolatoria.",
+    "download": "Scarica report compliance (PDF)",
+    "preparing": "Preparazione PDF...",
+    "missingFields": "Completa prima dell’export: {fields}.",
+    "editProfile": "Modifica profilo aziendale",
+    "error": "Non è stato possibile preparare il report.",
+    "fallbackFileName": "report-postura-cybersecurity.pdf",
+    "fields": {
+      "ico": "ID aziendale",
+      "dic": "Partita IVA",
+      "sidlo": "Sede legale"
+    }
+  },
+  "activation": {
+    "blockedReasons": {
+      "collection_failed": "Raccolta non riuscita",
+      "insufficient_scope": "Permessi mancanti",
+      "invalid_key": "Chiave non valida",
+      "missing_integration": "Integrazione mancante",
+      "missing_permission": "Permesso mancante",
+      "needs_manual_upload": "Caricamento manuale necessario",
+      "not_connected": "Connettore non collegato",
+      "not_applicable": "Non applicabile",
+      "unsupported_provider": "Provider non supportato",
+      "unreachable": "Servizio non disponibile"
+    },
+    "apiKeyBlockedDetails": {
+      "insufficient_scope": "La chiave salvata non ha i permessi minimi richiesti. Controlla gli ambiti della chiave e inserisci una nuova chiave.",
+      "invalid_key": "Il provider ha rifiutato la chiave salvata. Inserisci una chiave API nuova o corretta.",
+      "not_connected": "La chiave API non è ancora collegata. Collega il connettore o documenta manualmente la misura.",
+      "unreachable": "Non è stato possibile raggiungere il servizio del provider. Ripeti il controllo o documenta manualmente la misura."
+    },
+    "states": {
+      "queued": {
+        "label": "In coda",
+        "detail": "In attesa della prossima raccolta."
+      },
+      "running": {
+        "label": "In esecuzione",
+        "detail": "La raccolta è in corso."
+      },
+      "pass": {
+        "label": "Superato confermato",
+        "detail": "L’ultima evidenza confermata ha superato questo controllo."
+      },
+      "gap": {
+        "label": "Gap confermato",
+        "detail": "L’ultima evidenza confermata mostra un gap."
+      },
+      "blocked": {
+        "label": "Bloccato",
+        "detail": "La raccolta è bloccata e richiede attenzione."
+      }
+    },
+    "reason": "Motivo: {reason}.",
+    "preservedPass": "L’ultimo risultato confermato resta superato mentre la raccolta è bloccata."
   }
 }

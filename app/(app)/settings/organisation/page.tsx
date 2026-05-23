@@ -235,7 +235,7 @@ export default async function OrganisationSettingsPage({
 
             <div className="grid gap-4 md:grid-cols-2">
               <label className="grid gap-2 text-sm">
-                IČO
+                {copy.profile.ico}
                 <input
                   name="ico"
                   defaultValue={data.ico}
@@ -244,12 +244,12 @@ export default async function OrganisationSettingsPage({
                   maxLength={8}
                   pattern="[0-9]{8}"
                   required
-                  title="IČO musí mít přesně 8 číslic."
+                  title={copy.profile.icoTitle}
                   className="rounded-md border border-border bg-background px-3 py-2"
                 />
               </label>
               <label className="grid gap-2 text-sm">
-                DIČ
+                {copy.profile.dic}
                 <input
                   name="dic"
                   defaultValue={data.dic}
@@ -257,14 +257,14 @@ export default async function OrganisationSettingsPage({
                   maxLength={12}
                   pattern="CZ[0-9]{8,10}"
                   required
-                  title="DIČ musí být ve formátu CZ12345678."
+                  title={copy.profile.dicTitle}
                   className="rounded-md border border-border bg-background px-3 py-2"
                 />
               </label>
             </div>
 
             <label className="grid gap-2 text-sm">
-              Sídlo
+              {copy.profile.sidlo}
               <textarea
                 name="sidlo"
                 defaultValue={data.sidlo}

@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useTranslations } from "next-intl";
 import {
   ArrowRight,
   CheckCircle2,
@@ -24,50 +25,52 @@ type TrustCenterPreviewPanelProps = {
   };
 };
 
-const previewSections = [
-  {
-    title: "Přehled rámců",
-    preview: "NIS2 · GDPR · ISO 27001",
-    unlock: "Potvrďte automaticky určené rámce v onboarding wizardu.",
-  },
-  {
-    title: "Ověřené oblasti",
-    preview: "Identity · Zálohy · Dodavatelé · Incidenty",
-    unlock: "Splňte první kontrolu a tato sekce se zveřejní.",
-  },
-  {
-    title: "Dokumenty pro zákazníky",
-    preview: "Bezpečnostní přehled · DPA · Vendor response pack",
-    unlock: "Nahrajte nebo vygenerujte první sdílitelný důkaz.",
-  },
-];
-
 export function TrustCenterPreviewPanel({
   organisationName,
   publicUrl,
   liveStats,
 }: TrustCenterPreviewPanelProps) {
+  const t = useTranslations("trustCenterPreview");
   const [view, setView] = useState<"preview" | "live">("preview");
   const isPreview = view === "preview";
+  const previewSections = [
+    {
+      title: t("sections.frameworks.title"),
+      preview: t("sections.frameworks.preview"),
+      unlock: t("sections.frameworks.unlock"),
+    },
+    {
+      title: t("sections.verified.title"),
+      preview: t("sections.verified.preview"),
+      unlock: t("sections.verified.unlock"),
+    },
+    {
+      title: t("sections.documents.title"),
+      preview: t("sections.documents.preview"),
+      unlock: t("sections.documents.unlock"),
+    },
+  ];
   const liveSections = [
     {
-      detail: `${liveStats.totalControls} relevantních kontrol celkem`,
-      label: "Splněné kontroly",
+      detail: t("liveSections.controls.detail", {
+        count: liveStats.totalControls,
+      }),
+      label: t("liveSections.controls.label"),
       value: String(liveStats.passedControls),
     },
     {
-      detail: "nahrané nebo automaticky sesbírané důkazy",
-      label: "Důkazy",
+      detail: t("liveSections.evidence.detail"),
+      label: t("liveSections.evidence.label"),
       value: String(liveStats.evidenceCount),
     },
     {
-      detail: "čekající nebo zpracované žádosti",
-      label: "Přístupy",
+      detail: t("liveSections.access.detail"),
+      label: t("liveSections.access.label"),
       value: String(liveStats.accessRequests),
     },
     {
       detail: liveStats.publishLabel,
-      label: "Poslední aktualizace",
+      label: t("liveSections.updated.label"),
       value: liveStats.lastUpdatedLabel,
     },
   ];
@@ -78,18 +81,17 @@ export function TrustCenterPreviewPanel({
         <div>
           <p className="inline-flex items-center gap-2 rounded-full bg-primary/10 px-3 py-1 text-xs font-semibold uppercase tracking-[0.14em] text-primary">
             <Sparkles className="h-3.5 w-3.5" aria-hidden="true" />
-            Trust Center preview
+            {t("eyebrow")}
           </p>
           <h2 className="mt-3 text-2xl font-semibold tracking-normal">
-            Ukažte cíl ještě před první splněnou kontrolou
+            {t("title")}
           </h2>
           <p className="mt-2 max-w-3xl text-sm leading-6 text-foreground/64">
-            Nový uživatel nevidí prázdnou stránku. Vidí tvar budoucího Trust Centeru,
-            zamčené sekce a přesnou akci, která každou sekci odemkne.
+            {t("description")}
           </p>
         </div>
         <div
-          aria-label="Přepnout Trust Center zobrazení"
+          aria-label={t("viewToggleAria")}
           className="inline-flex rounded-full border border-border bg-background p-1 text-sm font-medium"
           role="tablist"
         >
@@ -102,7 +104,7 @@ export function TrustCenterPreviewPanel({
               isPreview ? "bg-primary text-primary-foreground" : "text-foreground/62 hover:text-foreground"
             }`}
           >
-            Náhled
+            {t("previewTab")}
           </button>
           <button
             aria-selected={!isPreview}
@@ -113,7 +115,7 @@ export function TrustCenterPreviewPanel({
               !isPreview ? "bg-primary text-primary-foreground" : "text-foreground/62 hover:text-foreground"
             }`}
           >
-            Živý stav
+            {t("liveTab")}
           </button>
         </div>
       </div>
@@ -135,7 +137,7 @@ export function TrustCenterPreviewPanel({
               }`}
             >
               {isPreview ? <Eye className="h-3.5 w-3.5" /> : <ShieldCheck className="h-3.5 w-3.5" />}
-              {isPreview ? "Preview před publikací" : liveStats.publishLabel}
+              {isPreview ? t("prePublishPreview") : liveStats.publishLabel}
             </span>
           </div>
         </div>
@@ -180,19 +182,19 @@ export function TrustCenterPreviewPanel({
             <div className="mt-4 rounded-lg border border-border bg-surface p-4">
               <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
                 <div>
-                  <p className="font-medium">Veřejný buyer-ready přehled</p>
+                  <p className="font-medium">{t("publicSummaryTitle")}</p>
                   <p className="mt-1 text-sm text-foreground/58">
-                    Kategorie se zveřejňují postupně podle splněných kontrol a dostupných důkazů.
+                    {t("publicSummaryBody")}
                   </p>
                 </div>
                 {publicUrl ? (
                   <a className="inline-flex items-center gap-2 text-sm font-medium text-primary" href={publicUrl}>
-                    Zobrazit Trust Center
+                    {t("viewTrustCenter")}
                     <ArrowRight className="h-4 w-4" aria-hidden="true" />
                   </a>
                 ) : (
                   <span className="inline-flex items-center gap-2 text-sm font-medium text-foreground/46">
-                    Publikace zatím vypnutá
+                    {t("publishingDisabled")}
                     <ArrowRight className="h-4 w-4" aria-hidden="true" />
                   </span>
                 )}
@@ -204,10 +206,7 @@ export function TrustCenterPreviewPanel({
 
       <div className="mt-4 flex items-start gap-2 rounded-lg border border-border bg-background p-4 text-sm text-foreground/64">
         <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-primary" aria-hidden="true" />
-        <p>
-          Každá zamčená sekce má vlastní podmínku odemčení. Uživatel přesně ví, jestli má splnit
-          první kontrolu, připojit systém, nebo nahrát důkaz.
-        </p>
+        <p>{t("unlockNote")}</p>
       </div>
     </section>
   );

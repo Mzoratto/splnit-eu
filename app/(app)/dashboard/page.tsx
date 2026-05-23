@@ -300,6 +300,7 @@ export default async function DashboardPage({
   );
   const messages = getMessagesForLocale(locale);
   const copy = messages.dashboard;
+  const reportCopy = messages.complianceReport;
   const frameworkCopy = messages.frameworks;
   const fallbackUpdates = getFallbackUpdates(copy);
   const useDemoData = !data && isLocalDemoDataEnabled();
@@ -425,9 +426,9 @@ export default async function DashboardPage({
   const reportExportIdentity = data?.organisationExportIdentity ?? demoReportExportIdentity;
   const reportMissingFields = reportExportIdentity
     ? [
-        !reportExportIdentity.ico && "IČO",
-        !reportExportIdentity.dic && "DIČ",
-        !reportExportIdentity.sidlo && "Sídlo",
+        !reportExportIdentity.ico && reportCopy.fields.ico,
+        !reportExportIdentity.dic && reportCopy.fields.dic,
+        !reportExportIdentity.sidlo && reportCopy.fields.sidlo,
       ].filter((field): field is string => Boolean(field))
     : [];
   const deadlines = FRAMEWORK_LIBRARY.filter(
@@ -569,9 +570,9 @@ export default async function DashboardPage({
                 <FileArchive className="h-5 w-5" aria-hidden="true" strokeWidth={1.6} />
               </div>
               <div>
-                <h2 className="text-lg font-medium">Zpráva o hodnocení stavu kybernetické bezpečnosti</h2>
+                <h2 className="text-lg font-medium">{reportCopy.title}</h2>
                 <p className="mt-1 max-w-2xl text-sm leading-6 text-foreground/58">
-                  Exportujte aktuální stav opatření, důkazů a mezer do PDF pro auditora nebo kontrolu NÚKIB.
+                  {reportCopy.dashboardBody}
                 </p>
               </div>
             </div>
