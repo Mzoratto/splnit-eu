@@ -1859,7 +1859,16 @@
   "leadCapture": {
     "tag": "Indicative overview",
     "title": "Which EU regulations may matter for your company?",
-    "subtitle": "Get a short indicative starting point after submitting the form.",
+    "subtitle": "Select your company profile — we'll highlight which EU regulations apply to you.",
+    "companySize": "Company size",
+    "industry": "Industry",
+    "matchingRegulations": "Matching regulations",
+    "industries": {
+      "it": "IT",
+      "manufacturing": "Manufacturing",
+      "finance": "Finance",
+      "other": "Other"
+    },
     "cta": "Get overview",
     "success": "Sent. Your overview will arrive shortly.",
     "placeholder": "work@company.eu",

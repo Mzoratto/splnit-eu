@@ -1859,7 +1859,16 @@
   "leadCapture": {
     "tag": "Panoramica indicativa",
     "title": "Quali normative UE possono essere rilevanti per la vostra azienda?",
-    "subtitle": "Ricevete un breve punto di partenza indicativo dopo l’invio del modulo.",
+    "subtitle": "Selezionate il profilo aziendale — evidenzieremo quali normative UE possono essere rilevanti.",
+    "companySize": "Dimensione azienda",
+    "industry": "Settore",
+    "matchingRegulations": "Normative rilevanti",
+    "industries": {
+      "it": "IT",
+      "manufacturing": "Manifattura",
+      "finance": "Finanza",
+      "other": "Altro"
+    },
     "cta": "Ricevete la panoramica",
     "success": "Inviato. La panoramica arriverà a breve.",
     "placeholder": "lavoro@azienda.it",

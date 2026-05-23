@@ -8,6 +8,7 @@ import { Icon } from "@/components/marketing/local-icon";
 export function StickyCta() {
   const t = useTranslations("marketing");
   const [visible, setVisible] = useState(false);
+  const [footerVisible, setFooterVisible] = useState(false);
 
   useEffect(() => {
     function handleScroll() {
@@ -22,18 +23,35 @@ export function StickyCta() {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
+  useEffect(() => {
+    const footer = document.querySelector("footer");
+
+    if (!footer) {
+      return;
+    }
+
+    const observer = new IntersectionObserver(
+      ([entry]) => setFooterVisible(entry.isIntersecting),
+      { threshold: 0.05 },
+    );
+
+    observer.observe(footer);
+
+    return () => observer.disconnect();
+  }, []);
+
   return (
     <div
       className={`fixed bottom-6 right-6 z-40 transition-[opacity,transform] duration-200 ${
-        visible
+        visible && !footerVisible
           ? "translate-y-0 opacity-100"
           : "pointer-events-none translate-y-8 opacity-0"
       }`}
     >
-      <div className="rounded-full bg-gradient-to-b from-blue-400 to-blue-700 p-px shadow-xl shadow-blue-200/50">
+      <div className="rounded-full bg-[var(--color-brand-400)] p-px shadow-xl shadow-[rgb(15_31_61_/_0.18)]">
         <Link
           href="/early-access"
-          className="flex items-center gap-2 rounded-full bg-blue-600 px-5 py-2.5 text-sm font-medium text-white transition-colors hover:bg-blue-500"
+          className="flex items-center gap-2 rounded-full bg-[var(--color-brand-700)] px-5 py-2.5 text-sm font-medium text-white transition-colors hover:bg-[var(--color-brand-600)]"
         >
           <Icon
             icon="solar:shield-keyhole-linear"

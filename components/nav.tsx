@@ -33,7 +33,7 @@ export function Nav() {
     internalPathname === "/early-access" ||
     internalPathname.startsWith("/early-access/");
   const ctaClassName =
-    "flex min-h-11 items-center gap-1.5 rounded-lg bg-primary px-5 py-2.5 text-sm font-semibold text-white shadow-[0_10px_20px_rgba(37,99,235,0.22)] transition-colors hover:bg-[var(--accent-hover)]";
+    "flex min-h-11 items-center gap-1.5 rounded-lg bg-[var(--color-brand-700)] px-5 py-2.5 text-sm font-semibold text-white shadow-[var(--shadow-sm)] transition-colors duration-[var(--duration-base)] hover:bg-[var(--color-brand-600)] focus-visible:ring-2 focus-visible:ring-[var(--color-brand-400)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--color-brand-800)]";
   const ctaContent = (
     <>
       {t("cta")}
@@ -46,7 +46,7 @@ export function Nav() {
   );
 
   return (
-    <nav className="nav-blur fixed left-0 right-0 top-0 z-50 h-20 border-b border-border transition-all duration-300">
+    <nav className="nav-blur fixed left-0 right-0 top-0 z-50 h-20 border-b transition-all duration-300">
       <div className="mx-auto flex h-full max-w-7xl items-center justify-between gap-4 px-5">
         <Link
           href={getLocalizedMarketingPath("/", locale)}
@@ -54,8 +54,8 @@ export function Nav() {
           onClick={() => setOpen(false)}
         >
           <LogoMark priority className="h-8 w-8" />
-          <span className="text-xl font-bold tracking-normal text-foreground">
-            Splnit<span className="text-blue-600">.eu</span>
+          <span className="text-xl font-bold tracking-normal text-white">
+            Splnit<span className="text-[var(--color-logo-green)]">.eu</span>
           </span>
         </Link>
 
@@ -73,10 +73,10 @@ export function Nav() {
               <Link
                 key={link.href}
                 href={href}
-                className={`rounded-lg px-3 py-2 text-sm transition-colors hover:bg-surface-muted hover:text-foreground ${
+                className={`rounded-lg px-3 py-2 text-sm transition-colors hover:bg-white/[0.08] hover:text-white ${
                   active
-                    ? "font-semibold text-foreground"
-                    : "font-semibold text-foreground/62"
+                    ? "font-semibold text-white"
+                    : "font-semibold text-white/62"
                 }`}
               >
                 {t(link.labelKey)}
@@ -87,11 +87,11 @@ export function Nav() {
 
         <div className="flex items-center gap-3">
           <div className="hidden md:block">
-            <LocaleSwitcher compact />
+            <LocaleSwitcher compact tone="dark" />
           </div>
           <Link
             href="/sign-in"
-            className="hidden text-sm font-semibold text-foreground/70 transition-colors hover:text-foreground md:block"
+            className="hidden text-sm font-semibold text-white/70 transition-colors hover:text-white md:block"
           >
             {t("signIn")}
           </Link>
@@ -114,7 +114,7 @@ export function Nav() {
           </div>
           <button
             type="button"
-            className="grid h-11 w-11 place-items-center rounded-lg border border-border bg-white text-foreground/70 transition-colors hover:text-foreground md:hidden"
+            className="grid h-11 w-11 place-items-center rounded-lg border border-white/15 bg-white/10 text-white/75 transition-colors hover:text-white md:hidden"
             aria-label={t("menu")}
             aria-expanded={open}
             onClick={() => setOpen((value) => !value)}
@@ -129,7 +129,7 @@ export function Nav() {
       </div>
 
       {open ? (
-        <div className="border-b border-border bg-white px-5 py-4 shadow-lg shadow-slate-200/50 backdrop-blur md:hidden">
+        <div className="border-b border-white/10 bg-[var(--color-brand-800)] px-5 py-4 shadow-lg shadow-slate-950/20 backdrop-blur md:hidden">
           <div className="mx-auto grid max-w-7xl gap-1">
             {links.map((link) => {
               const href =
@@ -146,8 +146,8 @@ export function Nav() {
                   href={href}
                   className={`rounded-lg px-3 py-3 text-sm ${
                     active
-                      ? "bg-blue-50 font-semibold text-blue-700"
-                      : "font-medium text-foreground/70 hover:bg-surface-muted"
+                      ? "bg-white/10 font-semibold text-white"
+                      : "font-medium text-white/70 hover:bg-white/[0.08] hover:text-white"
                   }`}
                   onClick={() => setOpen(false)}
                 >
@@ -155,16 +155,16 @@ export function Nav() {
                 </Link>
               );
             })}
-            <div className="px-3 py-2">
-              <LocaleSwitcher />
-            </div>
             <Link
               href="/sign-in"
-              className="rounded-lg px-3 py-3 text-sm font-medium text-foreground/70 hover:bg-surface-muted"
+              className="rounded-lg px-3 py-3 text-sm font-medium text-white/70 hover:bg-white/[0.08] hover:text-white"
               onClick={() => setOpen(false)}
             >
               {t("signIn")}
             </Link>
+            <div className="mt-3 border-t border-white/10 px-3 pt-4">
+              <LocaleSwitcher pill tone="dark" />
+            </div>
           </div>
         </div>
       ) : null}

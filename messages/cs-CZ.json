@@ -1859,7 +1859,16 @@
   "leadCapture": {
     "tag": "Orientační přehled",
     "title": "Které EU předpisy pro vás mohou být relevantní?",
-    "subtitle": "Po odeslání formuláře získáte krátký orientační výchozí přehled.",
+    "subtitle": "Vyberte profil firmy — zvýrazníme, které EU předpisy pro vás mohou být relevantní.",
+    "companySize": "Velikost firmy",
+    "industry": "Odvětví",
+    "matchingRegulations": "Relevantní předpisy",
+    "industries": {
+      "it": "IT",
+      "manufacturing": "Výroba",
+      "finance": "Finance",
+      "other": "Jiné"
+    },
     "cta": "Získat přehled",
     "success": "Odesláno. Přehled vám přijde brzy.",
     "placeholder": "pracovni@firma.cz",

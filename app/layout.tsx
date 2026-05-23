@@ -34,6 +34,13 @@ const themeScript = `
     const theme = stored === "dark" ? "dark" : "light";
     document.documentElement.dataset.theme = theme;
     document.documentElement.style.colorScheme = theme;
+
+    const savedLocale = window.localStorage.getItem("splnit_locale");
+    const supportedLocales = new Set(["cs-CZ", "en-EU", "it-IT"]);
+    const hasLocaleCookie = /(?:^|; )NEXT_LOCALE=/.test(document.cookie);
+    if (savedLocale && supportedLocales.has(savedLocale) && !hasLocaleCookie) {
+      document.cookie = "NEXT_LOCALE=" + savedLocale + "; path=/; max-age=31536000; SameSite=Lax";
+    }
   } catch {
     document.documentElement.dataset.theme = "light";
   }

@@ -140,7 +140,7 @@ export default async function HomePage() {
                 <div>
                   <Link
                     href={getLocalizedMarketingPath("/early-access", locale)}
-                    className="flex min-h-14 items-center justify-center gap-2 rounded-lg bg-primary px-8 py-3 font-semibold text-white shadow-[0_14px_24px_rgba(37,99,235,0.22)] transition-colors hover:bg-[var(--accent-hover)]"
+                    className="flex min-h-14 items-center justify-center gap-2 rounded-lg bg-[var(--color-brand-700)] px-8 py-3 font-semibold text-white shadow-[var(--shadow-sm)] transition-colors duration-[var(--duration-base)] hover:bg-[var(--color-brand-600)] focus-visible:ring-2 focus-visible:ring-[var(--color-brand-400)] focus-visible:ring-offset-2"
                   >
                     {t("primaryCta")}
                     <Icon
@@ -209,29 +209,30 @@ export default async function HomePage() {
             </div>
 
             <div className="relative grid gap-6 md:grid-cols-3">
-              <div className="pointer-events-none absolute left-[16.666%] right-[16.666%] top-5 hidden h-px bg-gradient-to-r from-blue-100 via-blue-300 to-blue-100 md:block" />
               {steps.map((step, index) => (
-                <div
+                <article
                   key={step.key}
-                  className="scroll-animate relative z-10 flex flex-col items-center gap-4"
+                  className="scroll-animate relative rounded-lg border border-[var(--color-border)] bg-white p-6 shadow-[var(--shadow-sm)]"
                 >
-                  <div className="flex h-10 w-10 items-center justify-center rounded-full bg-blue-600 text-sm font-semibold text-white shadow-md shadow-blue-200">
-                    {index + 1}
-                  </div>
-                  <div className={`w-full rounded-lg border bg-white shadow-sm ${index === 1 ? "border-primary" : "border-border"}`}>
-                    <div className="h-full rounded-lg bg-white p-6">
-                      <div className="mb-5 flex h-10 w-10 items-center justify-center rounded-lg bg-blue-50 text-blue-600">
-                        <Icon icon={step.icon} className="text-xl" aria-hidden="true" />
-                      </div>
-                      <h3 className="mb-2 text-base font-semibold text-zinc-900">
-                        {t(`steps.${step.key}Title`)}
-                      </h3>
-                      <p className="text-sm leading-relaxed text-zinc-500">
-                        {t(`steps.${step.key}Body`)}
-                      </p>
+                  {index < steps.length - 1 ? (
+                    <div className="pointer-events-none absolute right-[-24px] top-1/2 hidden w-12 border-t-2 border-dashed border-[var(--color-border)] md:block" />
+                  ) : null}
+                  <div className="mb-5 flex items-center justify-between">
+                    <div className="flex h-9 w-9 items-center justify-center rounded-full bg-[var(--color-brand-800)] text-sm font-semibold text-white shadow-[var(--shadow-sm)]">
+                      {index + 1}
                     </div>
+                    <span className="text-xs font-bold uppercase text-foreground/38">
+                      0{index + 1}
+                    </span>
                   </div>
-                </div>
+                  <StepVisual index={index} />
+                  <h3 className="mt-6 mb-2 text-base font-semibold text-zinc-900">
+                    {t(`steps.${step.key}Title`)}
+                  </h3>
+                  <p className="text-sm leading-relaxed text-zinc-500">
+                    {t(`steps.${step.key}Body`)}
+                  </p>
+                </article>
               ))}
             </div>
           </div>
@@ -385,6 +386,95 @@ function TrustBar({
         ))}
       </div>
     </section>
+  );
+}
+
+function StepVisual({ index }: { index: number }) {
+  if (index === 0) {
+    return (
+      <div className="flex min-h-32 items-center justify-between gap-4 rounded-lg bg-[var(--color-brand-050)] px-4 py-5">
+        <div className="grid gap-2 text-sm font-bold">
+          <span className="inline-flex items-center gap-2 text-[#2563eb]">
+            <span className="grid h-6 w-6 place-items-center rounded-md bg-[#2563eb] text-[10px] text-white">
+              M
+            </span>
+            M365
+          </span>
+          <span className="text-[var(--color-brand-700)]">Pohoda</span>
+          <span className="text-[#f59e0b]">aws</span>
+        </div>
+        <div className="h-px flex-1 border-t-2 border-dashed border-[var(--color-brand-400)]" />
+        <div className="grid h-14 w-14 place-items-center rounded-xl border border-[var(--color-brand-400)] bg-white text-[var(--color-brand-700)] shadow-[var(--shadow-sm)]">
+          <Icon icon="solar:shield-check-linear" className="text-3xl" aria-hidden="true" />
+        </div>
+      </div>
+    );
+  }
+
+  if (index === 1) {
+    return (
+      <div className="relative grid min-h-32 place-items-center overflow-hidden rounded-lg bg-[var(--color-brand-050)]">
+        <div
+          className="scan-line absolute left-8 right-8 h-px"
+          style={{ backgroundColor: "rgb(202 138 4 / 0.3)" }}
+        />
+        <svg
+          viewBox="0 0 100 100"
+          className="h-24 w-24 text-[var(--color-warn)]"
+          aria-hidden="true"
+        >
+          <circle
+            cx="50"
+            cy="50"
+            fill="none"
+            r="36"
+            stroke="currentColor"
+            strokeOpacity="0.18"
+            strokeWidth="8"
+          />
+          <circle
+            className="scan-arc"
+            cx="50"
+            cy="50"
+            fill="none"
+            r="36"
+            stroke="currentColor"
+            strokeDasharray="82 226"
+            strokeLinecap="round"
+            strokeWidth="8"
+          />
+        </svg>
+      </div>
+    );
+  }
+
+  return (
+    <div className="grid min-h-32 gap-2 rounded-lg bg-[var(--color-brand-050)] p-4">
+      {[
+        ["GDPR", "PASS", "w-10/12", "var(--color-pass)", "var(--color-pass-bg)"],
+        ["NIS2", "WARN", "w-8/12", "var(--color-warn)", "var(--color-warn-bg)"],
+        ["27001", "PASS", "w-10/12", "var(--color-pass)", "var(--color-pass-bg)"],
+      ].map(([label, status, width, color, background]) => (
+        <div
+          key={label}
+          className="grid grid-cols-[44px_1fr_auto] items-center gap-2 rounded-md bg-white px-3 py-2 text-[11px] font-bold shadow-[var(--shadow-sm)]"
+        >
+          <span className="text-foreground/72">{label}</span>
+          <span className="h-2 rounded-full bg-gray-100">
+            <span
+              className={`block h-full rounded-full ${width}`}
+              style={{ backgroundColor: color }}
+            />
+          </span>
+          <span
+            className="rounded px-1.5 py-0.5"
+            style={{ backgroundColor: background, color }}
+          >
+            {status}
+          </span>
+        </div>
+      ))}
+    </div>
   );
 }
 

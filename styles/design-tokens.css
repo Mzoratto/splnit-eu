@@ -1,5 +1,38 @@
 :root,
 [data-theme="light"] {
+  --color-brand-900: #0f1f3d;
+  --color-brand-800: #162c55;
+  --color-brand-700: #1e3a6e;
+  --color-brand-600: #2952a3;
+  --color-brand-400: #5b8dd9;
+  --color-brand-100: #e8eff9;
+  --color-brand-050: #f3f7fd;
+  --color-logo-green: #3daa5c;
+
+  --color-pass: #16a34a;
+  --color-pass-bg: #dcfce7;
+  --color-warn: #ca8a04;
+  --color-warn-bg: #fef9c3;
+  --color-fail: #dc2626;
+  --color-fail-bg: #fee2e2;
+
+  --color-surface: #ffffff;
+  --color-surface-2: #f8fafc;
+  --color-border: #e2e8f0;
+  --color-border-active: var(--color-brand-700);
+  --color-text-primary: #0f172a;
+  --color-text-muted: #64748b;
+  --color-text-inverse: #ffffff;
+
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+  --duration-fast: 120ms;
+  --duration-base: 220ms;
+  --duration-slow: 400ms;
+
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 16px;
+
   --bg-canvas: #f8fafc;
   --bg-surface: #ffffff;
   --bg-subtle: #f1f5f9;
@@ -9,22 +42,22 @@
   --bg-active: rgba(37, 99, 235, 0.08);
   --bg-modal-overlay: rgba(15, 23, 42, 0.4);
 
-  --accent: #2563eb;
-  --accent-hover: #1d4ed8;
-  --accent-pressed: #1e40af;
-  --accent-subtle: #eff6ff;
-  --accent-border: #bfdbfe;
+  --accent: var(--color-brand-700);
+  --accent-hover: var(--color-brand-600);
+  --accent-pressed: var(--color-brand-800);
+  --accent-subtle: var(--color-brand-100);
+  --accent-border: var(--color-brand-400);
 
-  --status-pass: #16a34a;
-  --status-pass-subtle: #f0fdf4;
+  --status-pass: var(--color-pass);
+  --status-pass-subtle: var(--color-pass-bg);
   --status-pass-border: #bbf7d0;
 
-  --status-warn: #ea580c;
-  --status-warn-subtle: #fff7ed;
-  --status-warn-border: #fed7aa;
+  --status-warn: var(--color-warn);
+  --status-warn-subtle: var(--color-warn-bg);
+  --status-warn-border: #fde68a;
 
-  --status-fail: #dc2626;
-  --status-fail-subtle: #fef2f2;
+  --status-fail: var(--color-fail);
+  --status-fail-subtle: var(--color-fail-bg);
   --status-fail-border: #fecaca;
 
   --status-neutral: #64748b;
@@ -107,9 +140,9 @@
   --danger: var(--status-fail);
 
   --shadow-xs: 0 1px 2px rgba(0, 0, 0, 0.04);
-  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.08), 0 1px 2px rgba(0, 0, 0, 0.04);
-  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.08), 0 2px 4px -1px rgba(0, 0, 0, 0.04);
-  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.08), 0 4px 6px -2px rgba(0, 0, 0, 0.04);
+  --shadow-sm: 0 1px 3px 0 rgb(15 31 61 / 0.08);
+  --shadow-md: 0 4px 16px 0 rgb(15 31 61 / 0.10);
+  --shadow-lg: 0 12px 40px 0 rgb(15 31 61 / 0.14);
   --shadow-modal: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
 
   --ring-accent: 0 0 0 3px rgba(29, 78, 216, 0.18);

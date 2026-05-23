@@ -13,6 +13,7 @@ export function Footer() {
   const locale = normalizeLocale(useLocale()) ?? "cs-CZ";
   const t = useTranslations("marketing.footer");
   const navT = useTranslations("marketing.nav");
+  const currentYear = new Date().getFullYear();
   const [email, setEmail] = useState("");
   const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">(
     "idle",
@@ -40,21 +41,21 @@ export function Footer() {
   }
 
   return (
-    <footer className="border-t border-border bg-white px-5 pb-10 pt-16">
+    <footer className="border-t border-white/10 bg-[var(--color-brand-900)] px-5 pb-10 pt-16 text-white">
       <div className="mx-auto max-w-7xl">
         <div className="mb-14 grid grid-cols-2 gap-10 md:grid-cols-6">
           <div className="col-span-2">
             <div className="mb-4 flex items-center gap-2">
               <LogoMark className="h-8 w-8" />
-              <span className="text-xl font-bold tracking-normal text-foreground">
-                Splnit<span className="text-blue-600">.eu</span>
+              <span className="text-xl font-bold tracking-normal text-white">
+                Splnit<span className="text-[var(--color-logo-green)]">.eu</span>
               </span>
             </div>
-            <p className="mb-5 max-w-xs text-sm leading-6 text-foreground/62">
+            <p className="mb-5 max-w-xs text-sm leading-6 text-white/62">
               {t("tagline")}
             </p>
             <div>
-              <p className="mb-2 text-xs font-bold uppercase text-foreground">
+              <p className="mb-2 text-xs font-bold uppercase text-white">
                 {t("newsletterTitle")}
               </p>
               {status === "success" ? (
@@ -76,12 +77,12 @@ export function Footer() {
                           setStatus("idle");
                         }
                       }}
-                      className="min-h-10 min-w-0 flex-1 rounded-lg border border-border px-3.5 py-2 text-sm text-foreground placeholder:text-foreground/38 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      className="min-h-10 min-w-0 flex-1 rounded-lg border border-white/15 bg-white/10 px-3.5 py-2 text-sm text-white placeholder:text-white/38 focus:outline-none focus:ring-2 focus:ring-[var(--color-brand-400)]"
                     />
                     <button
                       type="submit"
                       disabled={status === "loading"}
-                      className="min-h-10 shrink-0 rounded-lg bg-primary px-4 py-2 text-xs font-semibold text-white transition-colors hover:bg-[var(--accent-hover)] disabled:cursor-not-allowed disabled:opacity-60"
+                      className="min-h-10 shrink-0 rounded-lg bg-[var(--color-brand-700)] px-4 py-2 text-xs font-semibold text-white transition-colors hover:bg-[var(--color-brand-600)] disabled:cursor-not-allowed disabled:opacity-60"
                     >
                       {status === "loading"
                         ? t("newsletterLoading")
@@ -89,7 +90,7 @@ export function Footer() {
                     </button>
                   </form>
                   {status === "error" ? (
-                    <p className="text-xs text-status-fail">
+                    <p className="text-xs text-red-300">
                       {t("newsletterError")}
                     </p>
                   ) : null}
@@ -124,17 +125,17 @@ export function Footer() {
           />
 
           <div className="col-span-2 md:pl-4">
-            <h4 className="mb-4 text-xs font-bold uppercase tracking-normal text-foreground">
+            <h4 className="mb-4 text-xs font-bold uppercase tracking-normal text-white">
               {t("contact")}
             </h4>
-            <address className="space-y-1.5 text-sm text-foreground/58 not-italic">
-              <p className="font-semibold text-foreground/78">
+            <address className="space-y-1.5 text-sm text-white/58 not-italic">
+              <p className="font-semibold text-white/78">
                 {t("operator")}
               </p>
               <p>{t("location")}</p>
               <Link
                 href="mailto:hello@splnit.eu"
-                className="mt-2 inline-block font-semibold text-primary transition-colors hover:text-[var(--accent-hover)]"
+                className="mt-2 inline-block font-semibold text-[var(--color-brand-400)] transition-colors hover:text-white"
               >
                 hello@splnit.eu
               </Link>
@@ -142,25 +143,37 @@ export function Footer() {
           </div>
         </div>
 
-        <div className="flex flex-col items-center justify-between gap-4 border-t border-border pt-8 md:flex-row">
-          <p className="text-xs text-foreground/45">
-            {t("copyright")}
-          </p>
-          <div className="flex flex-wrap items-center justify-center gap-5 text-xs text-foreground/50">
-            <Link href="/soukromi" className="transition-colors hover:text-foreground">
-              {t("privacy")}
-            </Link>
-            <Link href="/podminky" className="transition-colors hover:text-foreground">
-              {t("terms")}
-            </Link>
-            <Link href="/cookies" className="transition-colors hover:text-foreground">
-              Cookies
-            </Link>
-            <Link href="/dpa" className="transition-colors hover:text-foreground">
-              DPA
-            </Link>
-            <div className="h-3 w-px bg-border" />
-            <LocaleSwitcher compact />
+        <div className="border-t border-white/10 pt-8">
+          <div className="mb-5 flex flex-wrap justify-center gap-2 md:justify-start">
+            {["GDPR", "NIS2", "ISO 27001", "Vyhl. č. 410/2025 Sb."].map((label) => (
+              <span
+                key={label}
+                className="rounded border border-white/20 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-normal text-white/40"
+              >
+                {label}
+              </span>
+            ))}
+          </div>
+          <div className="flex flex-col items-center justify-between gap-4 md:flex-row">
+            <p className="text-xs text-white/45">
+              © {currentYear} Splnit · Všechna práva vyhrazena
+            </p>
+            <div className="flex flex-wrap items-center justify-center gap-5 text-xs text-white/50">
+              <Link href="/soukromi" className="transition-colors hover:text-white">
+                {t("privacy")}
+              </Link>
+              <Link href="/podminky" className="transition-colors hover:text-white">
+                {t("terms")}
+              </Link>
+              <Link href="/cookies" className="transition-colors hover:text-white">
+                Cookies
+              </Link>
+              <Link href="/dpa" className="transition-colors hover:text-white">
+                DPA
+              </Link>
+              <div className="h-3 w-px bg-white/15" />
+              <LocaleSwitcher compact tone="dark" />
+            </div>
           </div>
         </div>
       </div>
@@ -179,15 +192,15 @@ function FooterColumn({
 }) {
   return (
     <div>
-      <h4 className="mb-4 text-xs font-bold uppercase tracking-normal text-foreground">
+      <h4 className="mb-4 text-xs font-bold uppercase tracking-normal text-white">
         {title}
       </h4>
-      <ul className="space-y-2.5 text-sm text-foreground/58">
+      <ul className="space-y-2.5 text-sm text-white/58">
         {links.map(([label, href]) => (
           <li key={href}>
             <Link
               href={getLocalizedMarketingPath(href, locale)}
-              className="transition-colors hover:text-foreground"
+              className="transition-colors hover:text-white"
             >
               {label}
             </Link>

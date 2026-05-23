@@ -4,13 +4,68 @@ import { useTranslations } from "next-intl";
 import { FormEvent, useState } from "react";
 import { Icon } from "@/components/marketing/local-icon";
 
-const options = [
-  ["GDPR", "solar:shield-user-linear"],
-  ["NIS2", "solar:server-square-linear"],
-  ["ISO 27001", "solar:document-text-linear"],
-  ["EU AI Act", "solar:cpu-bolt-linear"],
-  ["CSRD", "solar:leaf-linear"],
-] as const;
+type CompanySize = "under50" | "mid" | "large";
+type Industry = "it" | "manufacturing" | "finance" | "other";
+type BadgeState = "active" | "secondary" | "dimmed" | "idle";
+
+const companySizes: Array<{ label: string; value: CompanySize }> = [
+  { label: "<50", value: "under50" },
+  { label: "50-250", value: "mid" },
+  { label: "250+", value: "large" },
+];
+
+const industries: Industry[] = ["it", "manufacturing", "finance", "other"];
+
+const regulationBadges: Array<{
+  id: string;
+  label: string;
+  state: (size: CompanySize, industries: Industry[]) => BadgeState;
+}> = [
+  {
+    id: "nis2",
+    label: "NIS2",
+    state: (size, selectedIndustries) =>
+      size !== "under50" ||
+      selectedIndustries.some((item) => item === "it" || item === "finance")
+        ? "active"
+        : "idle",
+  },
+  {
+    id: "gdpr",
+    label: "GDPR",
+    state: () => "active",
+  },
+  {
+    id: "csrd",
+    label: "CSRD",
+    state: (size) =>
+      size === "large" ? "active" : size === "mid" ? "secondary" : "dimmed",
+  },
+  {
+    id: "iso27001",
+    label: "ISO 27001",
+    state: (_size, selectedIndustries) =>
+      selectedIndustries.some((item) => item === "it" || item === "finance")
+        ? "secondary"
+        : "idle",
+  },
+  {
+    id: "euAiAct",
+    label: "EU AI Act",
+    state: (_size, selectedIndustries) =>
+      selectedIndustries.includes("it") ? "secondary" : "dimmed",
+  },
+];
+
+const badgeClass: Record<BadgeState, string> = {
+  active:
+    "border-[var(--color-brand-700)] bg-[var(--color-brand-700)] text-white ring-2 ring-[var(--color-brand-400)] scale-105",
+  secondary:
+    "border-[var(--color-brand-400)] bg-[var(--color-brand-100)] text-[var(--color-brand-700)]",
+  dimmed:
+    "border-gray-200 bg-gray-100 text-gray-400 opacity-40 grayscale pointer-events-none",
+  idle: "border-gray-200 bg-gray-100 text-gray-600",
+};
 
 export function LeadCapture({
   title,
@@ -24,18 +79,34 @@ export function LeadCapture({
   resources?: string[];
 }) {
   const t = useTranslations("leadCapture");
-  const [selected, setSelected] = useState<string[]>(["GDPR", "NIS2"]);
+  const [companySize, setCompanySize] = useState<CompanySize>("mid");
+  const [selectedIndustries, setSelectedIndustries] = useState<Industry[]>([
+    "it",
+  ]);
+  const [activatedBadge, setActivatedBadge] = useState<string | null>("nis2");
   const [submitted, setSubmitted] = useState(false);
   const resolvedTitle = title ?? t("title");
   const resolvedSubtitle = subtitle ?? t("subtitle");
   const resolvedCta = cta ?? t("cta");
 
-  function toggle(value: string) {
-    setSelected((current) =>
-      current.includes(value)
-        ? current.filter((item) => item !== value)
-        : [...current, value],
+  function chooseCompanySize(size: CompanySize) {
+    setCompanySize(size);
+    const firstActive = regulationBadges.find(
+      (badge) => badge.state(size, selectedIndustries) === "active",
     );
+    setActivatedBadge(firstActive?.id ?? null);
+  }
+
+  function toggleIndustry(industry: Industry) {
+    const next = selectedIndustries.includes(industry)
+      ? selectedIndustries.filter((item) => item !== industry)
+      : [...selectedIndustries, industry];
+    const firstActive = regulationBadges.find(
+      (badge) => badge.state(companySize, next) === "active",
+    );
+
+    setSelectedIndustries(next);
+    setActivatedBadge(firstActive?.id ?? null);
   }
 
   function handleSubmit(event: FormEvent<HTMLFormElement>) {
@@ -66,26 +137,102 @@ export function LeadCapture({
           ))}
         </div>
       ) : (
-        <div className="mb-8 flex flex-wrap justify-center gap-2.5">
-          {options.map(([label, icon]) => {
-            const active = selected.includes(label);
+        <div className="mx-auto mb-8 grid max-w-4xl gap-4 text-left lg:grid-cols-[minmax(0,1fr)_minmax(280px,0.8fr)]">
+          <div className="rounded-lg border border-[var(--color-border)] bg-white p-4 shadow-[var(--shadow-sm)]">
+            <fieldset
+              className="grid gap-3"
+              role="radiogroup"
+              aria-label={t("companySize")}
+            >
+              <legend className="text-xs font-bold uppercase text-foreground/60">
+                {t("companySize")}
+              </legend>
+              <div className="grid grid-cols-3 rounded-lg border border-[var(--color-border)] bg-[var(--color-surface-2)] p-1">
+                {companySizes.map((size) => {
+                  const active = companySize === size.value;
 
-            return (
-              <button
-                key={label}
-                type="button"
-                className={`inline-flex min-h-11 items-center gap-1.5 rounded-full border px-4 py-2 text-sm font-semibold transition-all ${
-                  active
-                    ? "border-blue-600 bg-blue-600 text-white"
-                    : "border-border bg-white text-foreground/68 hover:border-blue-200"
-                }`}
-                onClick={() => toggle(label)}
-              >
-                <Icon icon={icon} className="text-sm" aria-hidden="true" />
-                {label}
-              </button>
-            );
-          })}
+                  return (
+                    <button
+                      key={size.value}
+                      type="button"
+                      role="radio"
+                      aria-checked={active}
+                      onClick={() => chooseCompanySize(size.value)}
+                      className={`min-h-10 rounded-md px-3 text-sm font-semibold transition-all duration-[var(--duration-base)] ${
+                        active
+                          ? "bg-[var(--color-brand-700)] text-white shadow-[var(--shadow-sm)]"
+                          : "text-foreground/62 hover:bg-white hover:text-foreground"
+                      }`}
+                    >
+                      {size.label}
+                    </button>
+                  );
+                })}
+              </div>
+            </fieldset>
+
+            <div className="mt-5">
+              <p className="mb-3 text-xs font-bold uppercase text-foreground/60">
+                {t("industry")}
+              </p>
+              <div className="grid gap-2 sm:grid-cols-2">
+                {industries.map((industry) => {
+                  const active = selectedIndustries.includes(industry);
+
+                  return (
+                    <button
+                      key={industry}
+                      type="button"
+                      aria-pressed={active}
+                      onClick={() => toggleIndustry(industry)}
+                      className={`flex min-h-10 items-center justify-between rounded-lg border px-3 text-sm font-semibold transition-all duration-[var(--duration-base)] ${
+                        active
+                          ? "border-[var(--color-brand-700)] bg-[var(--color-brand-100)] text-[var(--color-brand-700)]"
+                          : "border-[var(--color-border)] bg-white text-foreground/62 hover:border-[var(--color-brand-400)] hover:text-foreground"
+                      }`}
+                    >
+                      {t(`industries.${industry}`)}
+                      <span
+                        className={`h-2.5 w-2.5 rounded-full ${
+                          active ? "bg-[var(--color-logo-green)]" : "bg-gray-300"
+                        }`}
+                        aria-hidden="true"
+                      />
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+          </div>
+
+          <div className="rounded-lg border border-[var(--color-border)] bg-white p-4 shadow-[var(--shadow-sm)]">
+            <p className="mb-3 text-xs font-bold uppercase text-foreground/60">
+              {t("matchingRegulations")}
+            </p>
+            <div
+              className="flex flex-wrap gap-2"
+              aria-live="polite"
+              aria-label={t("matchingRegulations")}
+            >
+              {regulationBadges.map((badge) => {
+                const state = badge.state(companySize, selectedIndustries);
+
+                return (
+                  <span
+                    key={badge.id}
+                    className={`inline-flex min-h-9 items-center rounded-lg border px-3 text-xs font-bold transition-all duration-[var(--duration-base)] ease-[var(--ease-out-expo)] ${badgeClass[state]} ${
+                      activatedBadge === badge.id && state === "active"
+                        ? "badge-just-activated"
+                        : ""
+                    }`}
+                    onAnimationEnd={() => setActivatedBadge(null)}
+                  >
+                    {badge.label}
+                  </span>
+                );
+              })}
+            </div>
+          </div>
         </div>
       )}
 
