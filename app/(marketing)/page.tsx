@@ -112,7 +112,7 @@ export default async function HomePage() {
             }}
           />
           <div className="relative z-10 mx-auto max-w-7xl px-5">
-            <div className="grid items-center gap-12 lg:grid-cols-[minmax(0,1fr)_minmax(440px,0.86fr)]">
+            <div className="grid items-center gap-12 lg:grid-cols-[minmax(0,1fr)_minmax(440px,0.86fr)] xl:grid-cols-[minmax(0,0.9fr)_minmax(600px,1fr)]">
               <div>
                 <div className="mb-8 inline-flex items-center gap-2 rounded-full border border-blue-100 bg-blue-50/80 px-3.5 py-1.5 text-blue-700">
                 <span className="pulse-dot h-1.5 w-1.5 rounded-full bg-blue-500" />

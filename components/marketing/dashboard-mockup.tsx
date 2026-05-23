@@ -114,7 +114,7 @@ export function DashboardMockup({ locale = "cs-CZ" }: { locale?: Locale }) {
 
   return (
     <div
-      className="relative mx-auto hidden w-full max-w-none md:block"
+      className="relative mx-auto hidden w-full max-w-[680px] md:block"
       id="dashboard-wrap"
     >
       <div className="dash-glow relative rounded-2xl border border-border bg-white shadow-2xl shadow-slate-300/50">
@@ -126,25 +126,25 @@ export function DashboardMockup({ locale = "cs-CZ" }: { locale?: Locale }) {
               <div className="h-2.5 w-2.5 rounded-full bg-zinc-200" />
             </div>
             <div className="flex flex-1 justify-center">
-              <div className="flex items-center gap-1.5 rounded-md border border-zinc-200 bg-white px-4 py-1 text-xs font-medium text-zinc-400">
+              <div className="flex min-w-0 max-w-[280px] items-center gap-1.5 rounded-md border border-zinc-200 bg-white px-4 py-1 text-xs font-medium text-zinc-400">
                 <Icon
                   icon="solar:lock-keyhole-minimalistic-linear"
                   className="text-xs text-zinc-300"
                   aria-hidden="true"
                 />
-                {t.urlPath}
+                <span className="truncate">{t.urlPath}</span>
               </div>
             </div>
-            <div className="flex items-center gap-2">
+            <div className="flex shrink-0 items-center gap-2">
               <div className="pulse-dot h-1.5 w-1.5 rounded-full bg-emerald-400" />
-              <span className="mono text-[10px] text-zinc-400">
+              <span className="mono text-[10px] text-zinc-400 whitespace-nowrap">
                 {t.sampleOverview}
               </span>
             </div>
           </div>
 
-          <div className="flex h-[420px] bg-slate-50">
-            <aside className="hidden w-52 shrink-0 flex-col gap-0.5 border-r border-slate-800 bg-slate-900 p-4 text-white md:flex">
+          <div className="flex h-[560px] bg-slate-50">
+            <aside className="hidden w-40 shrink-0 flex-col gap-0.5 border-r border-slate-800 bg-slate-900 p-4 text-white md:flex">
               <div className="mb-3 px-2 py-1.5">
                 <div className="flex items-center gap-2">
                   <LogoMark className="h-5 w-5" />
@@ -178,14 +178,14 @@ export function DashboardMockup({ locale = "cs-CZ" }: { locale?: Locale }) {
               </div>
             </aside>
 
-            <div className="grid flex-1 gap-4 overflow-auto p-5 md:grid-cols-2">
+            <div className="grid min-w-0 flex-1 gap-3 overflow-hidden p-4 md:grid-cols-[minmax(0,1fr)_minmax(0,0.95fr)]">
               <div className="flex flex-col gap-3">
                 <div className="flex items-center justify-between">
-                  <div>
+                  <div className="min-w-0">
                     <h3 className="text-sm font-semibold text-zinc-900">
                       {t.regulationsStatus}
                     </h3>
-                    <p className="mt-0.5 text-[11px] text-zinc-400">
+                    <p className="mt-0.5 truncate text-[11px] text-zinc-400">
                       {t.demoWorkspace}
                     </p>
                   </div>
@@ -195,9 +195,9 @@ export function DashboardMockup({ locale = "cs-CZ" }: { locale?: Locale }) {
                   </div>
                 </div>
 
-                <div className="rounded-xl border border-zinc-100 bg-white p-4 shadow-sm">
-                  <div className="flex items-center gap-4">
-                    <div className="relative h-16 w-16 shrink-0">
+                <div className="rounded-xl border border-zinc-100 bg-white p-3 shadow-sm">
+                  <div className="flex flex-col items-start gap-3">
+                    <div className="relative h-14 w-14 shrink-0">
                       <svg className="h-full w-full -rotate-90" viewBox="0 0 56 56">
                         <circle
                           cx="28"
@@ -230,14 +230,14 @@ export function DashboardMockup({ locale = "cs-CZ" }: { locale?: Locale }) {
                         </span>
                       </div>
                     </div>
-                    <div className="flex-1">
-                      <p className="mb-0.5 text-xs font-medium text-zinc-900">
+                    <div className="min-w-0 flex-1">
+                      <p className="mb-0.5 text-xs font-semibold text-zinc-900">
                         {t.auditReadiness}
                       </p>
-                      <p className="text-[10px] text-zinc-400">
+                      <p className="text-[10px] leading-relaxed text-zinc-400">
                         {t.auditReadinessBody}
                       </p>
-                      <div className="mt-2 flex gap-1">
+                      <div className="mt-2 flex flex-wrap gap-1">
                         <span className="rounded-full border border-emerald-100 bg-emerald-50 px-1.5 py-0.5 text-[10px] font-medium text-emerald-700">
                           PASS
                         </span>
@@ -284,13 +284,13 @@ export function DashboardMockup({ locale = "cs-CZ" }: { locale?: Locale }) {
               </div>
 
               <div className="flex flex-col gap-3">
-                <div className="rounded-xl border border-zinc-100 bg-white p-4 shadow-sm">
+                <div className="rounded-xl border border-zinc-100 bg-white p-3 shadow-sm">
                   <div className="mb-3 flex items-start justify-between">
-                    <div>
+                    <div className="min-w-0">
                       <h4 className="text-xs font-semibold text-zinc-900">
                         {t.latestTesting}
                       </h4>
-                      <p className="mono mt-0.5 text-[10px] text-zinc-400">
+                      <p className="mono mt-0.5 truncate text-[10px] text-zinc-400">
                         {t.checkRun}
                       </p>
                     </div>
@@ -310,24 +310,24 @@ export function DashboardMockup({ locale = "cs-CZ" }: { locale?: Locale }) {
                   ].map(([check, state, color]) => (
                     <div
                       key={check}
-                      className="flex items-center justify-between border-b border-zinc-50 py-1 text-[11px] last:border-b-0"
+                      className="grid grid-cols-[minmax(0,1fr)_auto] items-center gap-2 border-b border-zinc-50 py-1 text-[11px] last:border-b-0"
                     >
-                      <span className="mono text-zinc-600">{check}</span>
-                      <span className={`font-semibold ${color}`}>{state}</span>
+                      <span className="mono min-w-0 truncate text-zinc-600">{check}</span>
+                      <span className={`shrink-0 font-semibold ${color}`}>{state}</span>
                     </div>
                   ))}
                   <div className="mt-2 flex items-center gap-1 text-[10px] text-zinc-400">
                     <Icon icon="solar:link-circle-linear" aria-hidden="true" />
-                    {t.microsoftControls}
+                    <span className="truncate">{t.microsoftControls}</span>
                   </div>
                 </div>
 
-                <div className="flex items-center justify-between gap-3 rounded-xl border border-zinc-100 bg-white p-4 shadow-sm">
-                  <div>
+                <div className="flex items-center justify-between gap-3 rounded-xl border border-zinc-100 bg-white p-3 shadow-sm">
+                  <div className="min-w-0">
                     <h4 className="text-xs font-semibold text-zinc-900">
                       {t.dataResidencyTitle}
                     </h4>
-                    <p className="mt-0.5 text-[10px] text-zinc-400">
+                    <p className="mt-0.5 text-[10px] leading-relaxed text-zinc-400">
                       {t.dataResidencyBody}
                     </p>
                   </div>
@@ -342,7 +342,7 @@ export function DashboardMockup({ locale = "cs-CZ" }: { locale?: Locale }) {
                   </div>
                 </div>
 
-                <div className="rounded-xl border border-emerald-900/50 bg-emerald-950 p-4 shadow-sm">
+                <div className="rounded-xl border border-emerald-900/50 bg-emerald-950 p-3 shadow-sm">
                   <div className="flex items-start gap-3">
                     <div className="shrink-0 rounded-lg bg-emerald-900/50 p-1.5">
                       <Icon
@@ -352,8 +352,8 @@ export function DashboardMockup({ locale = "cs-CZ" }: { locale?: Locale }) {
                       />
                     </div>
                     <div className="min-w-0 flex-1">
-                      <div className="mb-0.5 flex items-center gap-1.5">
-                        <h4 className="text-xs font-semibold text-emerald-100">
+                      <div className="mb-0.5 flex flex-wrap items-center gap-1.5">
+                        <h4 className="text-xs font-semibold leading-snug text-emerald-100">
                           {t.supplierRisk}
                         </h4>
                         <span className="nukib-chip">{t.demoBadge}</span>
@@ -417,7 +417,7 @@ function FrameworkRow({
       </div>
       <div className="min-w-0 flex-1">
         <div className="mb-1 flex items-center justify-between">
-          <span className="text-xs font-semibold text-zinc-900">{name}</span>
+          <span className="truncate text-xs font-semibold text-zinc-900">{name}</span>
           <span className={`text-[10px] font-semibold ${tone === "zinc" ? "text-zinc-500" : tone === "amber" ? "text-amber-600" : "text-emerald-600"}`}>
             {score}
           </span>
