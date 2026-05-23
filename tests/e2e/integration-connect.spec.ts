@@ -33,7 +33,7 @@ test("renders the integrations hub with clear available and coming-soon states",
     page.getByRole("heading", { name: "Automatické testy" }),
   ).toBeVisible();
 
-  for (const provider of ["Microsoft 365", "GitHub", "AWS"]) {
+  for (const provider of ["Microsoft 365", "GitHub", "AWS", "Hetzner Cloud", "OVHcloud"]) {
     const card = page.locator("article", {
       has: page.getByRole("heading", { name: provider }),
     });
@@ -68,8 +68,26 @@ test("renders GitHub and AWS integration surfaces without dead connection states
   await expect(page.getByRole("heading", { name: "AWS integrace" })).toBeVisible();
   await expect(page.getByText("Akce připojení jsou vypnuté", { exact: false })).toBeVisible();
   await expect(page.getByText("Nepřipojeno")).toBeVisible();
-  await expect(page.getByRole("button", { name: "Připojit AWS roli" })).toBeDisabled();
-  await expect(page.getByText("CloudFormation")).toBeVisible();
+  await expect(page.getByRole("button", { name: "Připojit AWS IAM klíč" })).toBeDisabled();
+  await expect(page.getByText("Minimální oprávnění")).toBeVisible();
+});
+
+test("renders Hetzner and OVHcloud integration surfaces without dead connection states", async ({
+  page,
+}) => {
+  await page.goto("/integrations/hetzner");
+  await expect(page.getByRole("heading", { name: "Hetzner Cloud integrace" })).toBeVisible();
+  await expect(page.getByText("Akce připojení jsou vypnuté", { exact: false })).toBeVisible();
+  await expect(page.getByText("Nepřipojeno")).toBeVisible();
+  await expect(page.getByRole("button", { name: "Připojit Hetzner" })).toBeDisabled();
+  await expect(page.getByText("Hetzner Cloud: server běží")).toBeVisible();
+
+  await page.goto("/integrations/ovhcloud");
+  await expect(page.getByRole("heading", { name: "OVHcloud integrace" })).toBeVisible();
+  await expect(page.getByText("Akce připojení jsou vypnuté", { exact: false })).toBeVisible();
+  await expect(page.getByText("Nepřipojeno")).toBeVisible();
+  await expect(page.getByRole("button", { name: "Připojit OVHcloud" })).toBeDisabled();
+  await expect(page.getByText("OVHcloud: server je provozní")).toBeVisible();
 });
 
 test("renders planned integration details without enabling OAuth", async ({
@@ -83,7 +101,7 @@ test("renders planned integration details without enabling OAuth", async ({
   await expect(page.getByText("Připravuje se")).toBeVisible();
   await expect(
     page.getByText(
-      "OAuth tok ani ukládání tokenů pro tohoto poskytovatele zatím nejsou aktivní.",
+      "Tok OAuth a ukládání tokenů pro tohoto poskytovatele zatím nejsou aktivní.",
     ),
   ).toBeVisible();
   await expect(page.getByRole("link", { name: /Zpět na integrace/ })).toHaveAttribute(

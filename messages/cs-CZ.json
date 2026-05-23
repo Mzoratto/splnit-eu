@@ -418,7 +418,7 @@
         },
         {
           "title": "Připojte první integraci",
-          "description": "Propojte Microsoft 365, GitHub nebo AWS, aby se důkazy začaly sbírat automaticky.",
+          "description": "Propojte Microsoft 365, GitHub, AWS, Hetzner Cloud, OVHcloud nebo ABRA Flexi, aby se důkazy začaly sbírat automaticky.",
           "time": "~10 minut",
           "unlocks": "Odemkne: automatické testy",
           "button": "Připojit integraci"
@@ -609,7 +609,9 @@
     "providers": {
       "microsoft365": "MFA, Conditional Access, hosté, privilegované role a sensitivity labels.",
       "github": "Branch protection, secret scanning, 2FA enforcement a dependency alerts.",
-      "aws": "CloudTrail, S3 šifrování, IAM MFA, root MFA a VPC Flow Logs.",
+      "aws": "EC2, security groups, S3 zálohy a CloudTrail přes IAM klíč jen pro čtení.",
+      "hetzner": "Servery, firewally a snapshoty v Hetzner Cloud přes read-only API token.",
+      "ovhcloud": "Dedikované servery, firewall a backup storage v OVHcloud přes read-only API klíče.",
       "abra-flexi": "REST API připojení pro ABRA Flexi: uživatelé, transport, konfigurace a ruční fallback pro zálohy.",
       "google_workspace": "Protokoly auditu Workspace, sdílení na Disku a administrátorské účty."
     },
@@ -643,7 +645,7 @@
       "scopeTitle": "Rozsah",
       "scopeItemStatus": "Plánováno. Produkční kontroly zatím nejsou zapnuté.",
       "googleWorkspace": {
-        "description": "Protokoly auditu Google Workspace, sdílení na Disku a kontrola administrátorských účtů jsou naplánované po ověření integrací Microsoft 365, GitHub a AWS.",
+        "description": "Protokoly auditu Google Workspace, sdílení na Disku a kontrola administrátorských účtů jsou naplánované po ověření aktuální sady konektorů.",
         "checks": [
           "MFA administrátorů a revize privilegovaných účtů",
           "Externí sdílení v Google Drive",
@@ -669,12 +671,66 @@
       },
       "aws": {
         "title": "AWS integrace",
-        "subtitle": "Role jen pro čtení napříč účty kontroluje CloudTrail, šifrování S3, IAM MFA, MFA root účtu a VPC Flow Logs.",
-        "accountMissing": "bez AWS účtu",
-        "testsBody": "Mapované na audit logy, šifrování, MFA a monitoring sítě.",
-        "connectRole": "Připojit AWS roli",
-        "connectRoleAction": "Připojit AWS roli",
-        "updateRole": "Aktualizovat AWS roli"
+        "subtitle": "IAM klíč jen pro čtení ověří základní stav EC2, security groups, S3 záloh a CloudTrail.",
+        "accountMissing": "bez IAM klíče",
+        "iamKeyConnected": "IAM klíč připojen",
+        "testsBody": "Kontroly pracovního prostoru AWS budou spuštěné po připojení klíče.",
+        "connectAccessKey": "Připojit AWS IAM klíč",
+        "connectAccessKeyAction": "Připojit AWS IAM klíč",
+        "rotateAccessKey": "Rotovat AWS IAM klíč",
+        "accessKeyId": "Access Key ID",
+        "secretAccessKey": "Secret Access Key",
+        "region": "Region",
+        "backupBucketName": "S3 bucket se zálohami",
+        "permissionsTitle": "Minimální oprávnění",
+        "permissionsBody": "Použijte samostatného IAM uživatele s read-only policy. Tajný klíč se ukládá šifrovaně a nikdy se nezobrazuje zpět.",
+        "errors": {
+          "validation": "Zkontrolujte Access Key ID, Secret Access Key, region a volitelné údaje o S3 bucketu.",
+          "invalid_key": "AWS odmítlo IAM klíč. Vložte nový nebo opravený klíč.",
+          "insufficient_scope": "IAM klíč nemá minimální potřebná čtecí oprávnění.",
+          "unreachable": "AWS se nepodařilo kontaktovat. Zkuste to znovu nebo doložte opatření manuálně."
+        }
+      },
+      "hetzner": {
+        "title": "Hetzner Cloud integrace",
+        "subtitle": "Read-only API token ověří běžící servery, firewall pravidla a aktuální snapshoty.",
+        "accountMissing": "bez API tokenu",
+        "apiKeyConnected": "API token připojen",
+        "testsBody": "Kontroly Hetzner Cloud běží po připojení API tokenu.",
+        "connectApiKey": "Připojit Hetzner API token",
+        "connectApiKeyAction": "Připojit Hetzner",
+        "rotateApiKey": "Rotovat Hetzner API token",
+        "apiKey": "API token",
+        "permissionsTitle": "Minimální oprávnění",
+        "permissionsBody": "Použijte projektový token pouze pro čtení. Token se ukládá šifrovaně a nikdy se nezobrazuje zpět.",
+        "errors": {
+          "validation": "Zkontrolujte API token.",
+          "invalid_key": "Hetzner Cloud odmítl API token. Vložte nový nebo opravený token.",
+          "insufficient_scope": "API token nemá minimální potřebná čtecí oprávnění.",
+          "unreachable": "Hetzner Cloud se nepodařilo kontaktovat. Zkuste to znovu nebo doložte opatření manuálně."
+        }
+      },
+      "ovhcloud": {
+        "title": "OVHcloud integrace",
+        "subtitle": "Read-only API klíče ověří dedikovaný server, firewall a backup storage.",
+        "accountMissing": "bez API klíčů",
+        "apiKeyConnected": "API klíče připojené",
+        "testsBody": "Kontroly OVHcloud běží po připojení aplikačního a consumer klíče.",
+        "connectApiKey": "Připojit OVHcloud API klíče",
+        "connectApiKeyAction": "Připojit OVHcloud",
+        "rotateApiKey": "Rotovat OVHcloud API klíče",
+        "appKey": "Application key",
+        "appSecret": "Application secret",
+        "consumerKey": "Consumer key",
+        "serviceName": "Service name dedikovaného serveru",
+        "permissionsTitle": "Minimální oprávnění",
+        "permissionsBody": "Použijte read-only pravidla pro dedikované servery, firewall a backup storage. Tajné hodnoty se ukládají šifrovaně.",
+        "errors": {
+          "validation": "Zkontrolujte application key, application secret, consumer key a volitelný service name.",
+          "invalid_key": "OVHcloud odmítl API klíče. Vložte nové nebo opravené hodnoty.",
+          "insufficient_scope": "API klíče nemají minimální potřebná čtecí oprávnění.",
+          "unreachable": "OVHcloud se nepodařilo kontaktovat. Zkuste to znovu nebo doložte opatření manuálně."
+        }
       },
       "github": {
         "title": "GitHub integrace",
@@ -897,8 +953,8 @@
     "lock": {
       "demoTitle": "Demo režim",
       "demoBody": "Clerk nebo databáze nejsou dostupné, proto je formulář zamčený a stránka používá ukázková klientská data.",
-      "planTitle": "Vyžaduje Consultant plán",
-      "planBody": "Produkční propojení klientských organizací je dostupné pouze pro consultant plán."
+      "planTitle": "Vyžaduje Agency plán",
+      "planBody": "Produkční propojení klientských organizací je dostupné pouze pro Agency plán."
     },
     "form": {
       "title": "Připojit klienta",
@@ -1603,7 +1659,7 @@
       "onboardingTitle": "Tři týdny práce se skutečným projektem.",
       "onboardingBody": "Cílem není demo účet. Cílem je použít Splnit.eu na reálný NIS2 nebo GDPR problém a zjistit, co v produktu chybí.",
       "benefits": {
-        "businessFree": "12 měsíců zdarma na Business plánu",
+        "businessFree": "12 měsíců zdarma na SME plánu",
         "guidedOnboarding": "3 týdny řízeného onboardingu přímo se zakladatelem",
         "sectorFeatures": "Funkce prioritizované podle vašeho odvětví",
         "directContact": "Přímý kontakt bez ticketovací fronty"
@@ -1619,7 +1675,7 @@
         "week1Body": "Potvrdíme jurisdikci, projdeme NIS2 aplikovatelnost a připravíme první seznam priorit.",
         "week2Title": "2. týden",
         "week2Heading": "Integrace a evidence",
-        "week2Body": "Připojíme Microsoft 365, AWS nebo GitHub a nastavíme první automatické kontroly.",
+        "week2Body": "Připojíme Microsoft 365, GitHub, AWS, Hetzner Cloud, OVHcloud nebo ERP workspace a nastavíme první automatické kontroly.",
         "week3Title": "3. týden",
         "week3Heading": "Dokumenty a auditní balíček",
         "week3Body": "Vygenerujeme první sadu dokumentů a připravíme formát důkazů pro auditora."
@@ -1660,7 +1716,7 @@
     "trustLine": "Předběžný přístup · Přímý kontakt se zakladatelem · Infrastruktura Vercel + Neon",
     "partnerTag": "Otevřená zakládající skupina",
     "partnerFilled": "10 míst pro design partnery",
-    "partnerFree": "12 měsíců Business plánu zdarma",
+    "partnerFree": "12 měsíců SME plánu zdarma",
     "partnerOnboarding": "Tři týdny onboardingu se zakladatelem",
     "stepsTag": "Jak to funguje",
     "stepsTitle": "Začněte základním nastavením a postupně zlepšujte.",
@@ -1669,7 +1725,7 @@
     "featuresTitle": "Compliance pro IT a compliance týmy.",
     "featuresBody": "Kontroly jsou mapované na lokální i mezinárodní standardy.",
     "offerTitle": "Nabídka pro prvních 10 firem.",
-    "offerBody": "Splnit.eu je v předběžném přístupu. První design partneři získají Business plán na 12 měsíců zdarma a tři týdny řízeného onboardingu přímo se zakladatelem.",
+    "offerBody": "Splnit.eu je v předběžném přístupu. První design partneři získají SME plán na 12 měsíců zdarma a tři týdny řízeného onboardingu přímo se zakladatelem.",
     "offerCta": "Zobrazit předběžný přístup",
     "referencePlaceholder": "Reference zákazníků budou publikovány s výslovným souhlasem po dokončení onboardingu design partnerů.",
     "referenceCount": "Reference pouze se souhlasem",
@@ -1799,7 +1855,10 @@
         "microsoft365": "Microsoft 365",
         "github": "GitHub",
         "aws": "AWS",
-        "azure": "Azure",
+        "hetznerCloud": "Hetzner Cloud",
+        "ovhcloud": "OVHcloud",
+        "abraFlexi": "ABRA Flexi",
+        "czechErpWorkspaces": "Pohoda, Money S3/S4 a Helios",
         "googleWorkspace": "Google Workspace",
         "nukibFeed": "Regulatorní feed",
         "automatedChecks": "Automatické kontroly",
@@ -2216,7 +2275,7 @@
       "uploadLabel": "Nahrát textový soubor",
       "generate": "Vygenerovat odpovědi",
       "rateLimitTitle": "Limit použití",
-      "rateLimitBody": "Starter: 5/měsíc. Business a Consultant: bez limitu.",
+      "rateLimitBody": "Free: 5/měsíc. SME a Agency: bez limitu.",
       "remaining": "Zbývá",
       "reset": "obnovení",
       "notAvailable": "n/a",

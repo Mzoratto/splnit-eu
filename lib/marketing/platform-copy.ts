@@ -62,21 +62,21 @@ const copy: Record<Locale, PlatformCopy> = {
         "Technická platforma Splnit.eu pro automatické kontroly, evidence vault a dokumenty pro NIS2, GDPR a ISO 27001.",
       locale: "cs_CZ",
       title:
-        "Platforma | Splnit.eu — automatické kontroly pro Microsoft 365, AWS a GitHub",
+        "Platforma | Splnit.eu — automatické kontroly pro cloud, identity a ERP",
     },
     jsonLdDescription:
       "Platforma Splnit.eu automatizuje compliance testy, evidence vault a Trust Center pro NIS2, EU AI Act, GDPR a ISO 27001.",
     pageName: "Splnit.eu Platforma",
     hero: {
       body:
-        "Připojte Microsoft 365, GitHub nebo AWS podle dostupné integrace. Splnit.eu pomáhá průběžně kontrolovat bezpečnostní nastavení a ukládat auditní záznamy.",
+        "Připojte Microsoft 365, GitHub, AWS, Hetzner Cloud, OVHcloud nebo český ERP workspace. Splnit.eu pomáhá průběžně kontrolovat bezpečnostní nastavení a ukládat auditní záznamy.",
       cta: "Rezervovat demo",
       tag: "Pro vývojáře",
       title: "Automatické kontroly pro systémy, které už používáte.",
     },
     steps: [
       {
-        body: "Microsoft 365, GitHub, AWS nebo Google Workspace podle dostupnosti a oprávnění.",
+        body: "Microsoft 365, GitHub, AWS, Hetzner Cloud, OVHcloud a české ERP workspaces podle dostupnosti a oprávnění.",
         icon: "solar:plug-linear",
         title: "Připojte nástroje",
       },
@@ -98,8 +98,8 @@ const copy: Record<Locale, PlatformCopy> = {
       body:
         "Nevěříme na ruční sběr důkazů. Splnit.eu se nativně připojuje k vašim identity providerům, cloudovým platformám a interním systémům.",
       bullets: [
-        "Cloudové integrace: Microsoft 365, GitHub a AWS",
-        "Infrastrukturní konektory: Hetzner Cloud a OVHcloud (automatické kontroly serveru, firewallu a záloh)",
+        "Cloudové a identity integrace: Microsoft 365, GitHub a AWS",
+        "Infrastrukturní konektory: Hetzner Cloud a OVHcloud",
         "České ERP pracovní prostory: Pohoda, Money S3 / S4, Helios a ABRA Flexi s mapováním na ZoKB",
         "Upozornění na selhání kontrol v aplikaci",
         "Lokální regulatorní zdroje tam, kde jsou ověřené",
@@ -163,21 +163,21 @@ const copy: Record<Locale, PlatformCopy> = {
         "The Splnit.eu platform for automated checks, evidence vault, and documents for NIS2, GDPR, and ISO 27001.",
       locale: "en_EU",
       title:
-        "Platform | Splnit.eu — automated checks for Microsoft 365, AWS, and GitHub",
+        "Platform | Splnit.eu — automated checks for cloud, identity, and ERP",
     },
     jsonLdDescription:
       "Splnit.eu automates compliance checks, evidence collection, and Trust Center workflows for NIS2, EU AI Act, GDPR, and ISO 27001.",
     pageName: "Splnit.eu Platform",
     hero: {
       body:
-        "Connect Microsoft 365, GitHub, or AWS where the integration is available. Splnit.eu helps check security settings over time and store audit records.",
+        "Connect Microsoft 365, GitHub, AWS, Hetzner Cloud, OVHcloud, or a Czech ERP workspace. Splnit.eu helps check security settings over time and store audit records.",
       cta: "Book a demo",
       tag: "Developer First",
       title: "Automated checks for the systems you already use.",
     },
     steps: [
       {
-        body: "Microsoft 365, GitHub, AWS, or Google Workspace, depending on available integrations and permissions.",
+        body: "Microsoft 365, GitHub, AWS, Hetzner Cloud, OVHcloud, and Czech ERP workspaces, depending on available integrations and permissions.",
         icon: "solar:plug-linear",
         title: "Connect tools",
       },
@@ -199,8 +199,8 @@ const copy: Record<Locale, PlatformCopy> = {
       body:
         "Manual evidence collection does not scale. Splnit.eu connects directly to identity providers, cloud platforms, and internal systems.",
       bullets: [
-        "Cloud integrations: Microsoft 365, GitHub and AWS",
-        "Infrastructure connectors: Hetzner Cloud and OVHcloud (automated server, firewall and backup checks)",
+        "Cloud and identity integrations: Microsoft 365, GitHub and AWS",
+        "Infrastructure connectors: Hetzner Cloud and OVHcloud",
         "Czech ERP workspaces: Pohoda, Money S3 / S4, Helios, and ABRA Flexi mapped to ZoKB obligations",
         "In-app alerts on failed controls",
         "Local regulatory sources where verified",
@@ -264,21 +264,21 @@ const copy: Record<Locale, PlatformCopy> = {
         "La piattaforma Splnit.eu per controlli automatici, archivio evidenze e documenti per NIS2, GDPR e ISO 27001. Le fonti normative locali vengono aggiunte solo dopo verifica.",
       locale: "it_IT",
       title:
-        "Piattaforma | Splnit.eu — controlli automatici per Microsoft 365, AWS e GitHub",
+        "Piattaforma | Splnit.eu — controlli automatici per cloud, identity ed ERP",
     },
     jsonLdDescription:
       "Splnit.eu automatizza controlli di compliance, raccolta evidenze e workflow Trust Center per NIS2, EU AI Act, GDPR e ISO 27001. Le fonti locali vengono mostrate solo quando verificate.",
     pageName: "Splnit.eu Piattaforma",
     hero: {
       body:
-        "Collegate Microsoft 365, GitHub o AWS quando l’integrazione è disponibile. Splnit.eu aiuta a controllare le impostazioni di sicurezza nel tempo e a conservare evidenze di audit, con riferimenti normativi aggiunti solo quando verificati.",
+        "Collegate Microsoft 365, GitHub, AWS, Hetzner Cloud, OVHcloud o un workspace ERP ceco. Splnit.eu aiuta a controllare le impostazioni di sicurezza nel tempo e a conservare evidenze di audit, con riferimenti normativi aggiunti solo quando verificati.",
       cta: "Prenota demo",
       tag: "Pensato per sviluppatori",
       title: "Controlli automatici per i sistemi che usate già.",
     },
     steps: [
       {
-        body: "Microsoft 365, GitHub, AWS o Google Workspace, in base alle integrazioni e ai permessi disponibili.",
+        body: "Microsoft 365, GitHub, AWS, Hetzner Cloud, OVHcloud e workspace ERP cechi, in base alle integrazioni e ai permessi disponibili.",
         icon: "solar:plug-linear",
         title: "Collegate gli strumenti",
       },
@@ -300,8 +300,8 @@ const copy: Record<Locale, PlatformCopy> = {
       body:
         "La raccolta manuale delle evidenze non scala. Splnit.eu si collega direttamente a identity provider, piattaforme cloud e sistemi interni.",
       bullets: [
-        "Integrazioni cloud: Microsoft 365, GitHub e AWS",
-        "Connettori infrastrutturali: Hetzner Cloud e OVHcloud (controlli automatici di server, firewall e backup)",
+        "Integrazioni cloud e identity: Microsoft 365, GitHub e AWS",
+        "Connettori infrastrutturali: Hetzner Cloud e OVHcloud",
         "Spazi di lavoro ERP cechi: Pohoda, Money S3 / S4, Helios e ABRA Flexi mappati sugli obblighi ZoKB",
         "Avvisi in-app per controlli falliti",
         "Fonti normative locali dove verificate",

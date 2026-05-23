@@ -70,7 +70,7 @@ const englishDetails: Record<string, FrameworkDetailCopy> = {
       {
         icon: "solar:bolt-circle-linear",
         title: "Automated checks",
-        description: "Collect evidence from Microsoft 365, AWS, and GitHub where automation is available.",
+        description: "Collect evidence from Microsoft 365, GitHub, AWS, Hetzner Cloud, OVHcloud, and supported ERP workspaces where automation is available.",
       },
       {
         icon: "solar:document-check-linear",
@@ -522,7 +522,7 @@ const italianDetails: Record<string, FrameworkDetailCopy> = {
       {
         icon: "solar:bolt-circle-linear",
         title: "Controlli automatici",
-        description: "Raccoglie evidenze da Microsoft 365, AWS e GitHub dove l'automazione è disponibile.",
+        description: "Raccoglie evidenze da Microsoft 365, GitHub, AWS, Hetzner Cloud, OVHcloud e workspace ERP supportati dove l'automazione è disponibile.",
       },
       {
         icon: "solar:document-check-linear",

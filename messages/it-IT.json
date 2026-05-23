@@ -418,7 +418,7 @@
         },
         {
           "title": "Collega la prima integrazione",
-          "description": "Collega Microsoft 365, GitHub o AWS per iniziare a raccogliere evidenze automaticamente.",
+          "description": "Collega Microsoft 365, GitHub, AWS, Hetzner Cloud, OVHcloud o ABRA Flexi per iniziare a raccogliere evidenze automaticamente.",
           "time": "~10 minuti",
           "unlocks": "Sblocca: test automatici",
           "button": "Collega integrazione"
@@ -609,7 +609,9 @@
     "providers": {
       "microsoft365": "MFA, Conditional Access, ospiti, ruoli privilegiati e sensitivity labels.",
       "github": "Branch protection, secret scanning, enforcement 2FA e dependency alerts.",
-      "aws": "CloudTrail, crittografia S3, IAM MFA, root MFA e VPC Flow Logs.",
+      "aws": "EC2, security group, backup S3 e CloudTrail tramite chiave IAM in sola lettura.",
+      "hetzner": "Server, firewall e snapshot in Hetzner Cloud tramite token API in sola lettura.",
+      "ovhcloud": "Server dedicati, firewall e backup storage in OVHcloud tramite chiavi API in sola lettura.",
       "abra-flexi": "Connessione REST API per utenti, trasporto, configurazione e fallback manuale backup di ABRA Flexi.",
       "google_workspace": "Log di audit Workspace, condivisione Drive e account amministratore."
     },
@@ -643,7 +645,7 @@
       "scopeTitle": "Ambito",
       "scopeItemStatus": "Pianificato. L'esecuzione in produzione non è ancora abilitata.",
       "googleWorkspace": {
-        "description": "Log di audit Google Workspace, condivisione Drive e controlli sugli account amministratore sono pianificati dopo la validazione delle integrazioni Microsoft 365, GitHub e AWS.",
+        "description": "Log di audit Google Workspace, condivisione Drive e controlli sugli account amministratore sono pianificati dopo la validazione del set attuale di connettori.",
         "checks": [
           "MFA admin e revisione degli account privilegiati",
           "Condivisione esterna in Google Drive",
@@ -669,12 +671,66 @@
       },
       "aws": {
         "title": "Integrazione AWS",
-        "subtitle": "Un ruolo in sola lettura tra account controlla CloudTrail, crittografia S3, MFA IAM, MFA sull'account root e VPC Flow Logs.",
-        "accountMissing": "nessun account AWS",
-        "testsBody": "Mappato su audit log, crittografia, MFA e monitoraggio di rete.",
-        "connectRole": "Collega ruolo AWS",
-        "connectRoleAction": "Collega ruolo AWS",
-        "updateRole": "Aggiorna ruolo AWS"
+        "subtitle": "Una chiave IAM in sola lettura verifica lo stato base di EC2, security group, backup S3 e CloudTrail.",
+        "accountMissing": "nessuna chiave IAM",
+        "iamKeyConnected": "Chiave IAM collegata",
+        "testsBody": "I controlli dell'area di lavoro AWS verranno eseguiti dopo il collegamento della chiave.",
+        "connectAccessKey": "Collega chiave IAM AWS",
+        "connectAccessKeyAction": "Collega chiave IAM AWS",
+        "rotateAccessKey": "Ruota chiave IAM AWS",
+        "accessKeyId": "Access Key ID",
+        "secretAccessKey": "Secret Access Key",
+        "region": "Regione",
+        "backupBucketName": "Bucket S3 dei backup",
+        "permissionsTitle": "Permessi minimi",
+        "permissionsBody": "Usa un utente IAM dedicato con policy in sola lettura. La Secret Access Key viene cifrata a riposo e non viene mai mostrata di nuovo.",
+        "errors": {
+          "validation": "Controlla Access Key ID, Secret Access Key, regione e dati opzionali del bucket S3.",
+          "invalid_key": "AWS ha rifiutato la chiave IAM. Inserisci una chiave nuova o corretta.",
+          "insufficient_scope": "La chiave IAM non ha i permessi minimi di lettura richiesti.",
+          "unreachable": "Impossibile contattare AWS. Riprova o fornisci evidenze manuali."
+        }
+      },
+      "hetzner": {
+        "title": "Integrazione Hetzner Cloud",
+        "subtitle": "Un token API in sola lettura verifica server in esecuzione, regole firewall e snapshot recenti.",
+        "accountMissing": "nessun token API",
+        "apiKeyConnected": "Token API collegato",
+        "testsBody": "I controlli Hetzner Cloud girano dopo il collegamento del token API.",
+        "connectApiKey": "Collega token API Hetzner",
+        "connectApiKeyAction": "Collega Hetzner",
+        "rotateApiKey": "Ruota token API Hetzner",
+        "apiKey": "Token API",
+        "permissionsTitle": "Permessi minimi",
+        "permissionsBody": "Usa un token progetto in sola lettura. Il token viene cifrato a riposo e non viene mai mostrato di nuovo.",
+        "errors": {
+          "validation": "Controlla il token API.",
+          "invalid_key": "Hetzner Cloud ha rifiutato il token API. Inserisci un token nuovo o corretto.",
+          "insufficient_scope": "Il token API non ha i permessi minimi di lettura richiesti.",
+          "unreachable": "Impossibile contattare Hetzner Cloud. Riprova o fornisci evidenze manuali."
+        }
+      },
+      "ovhcloud": {
+        "title": "Integrazione OVHcloud",
+        "subtitle": "Chiavi API in sola lettura verificano server dedicato, firewall e backup storage.",
+        "accountMissing": "nessuna chiave API",
+        "apiKeyConnected": "Chiavi API collegate",
+        "testsBody": "I controlli OVHcloud girano dopo il collegamento delle chiavi application e consumer.",
+        "connectApiKey": "Collega chiavi API OVHcloud",
+        "connectApiKeyAction": "Collega OVHcloud",
+        "rotateApiKey": "Ruota chiavi API OVHcloud",
+        "appKey": "Application key",
+        "appSecret": "Application secret",
+        "consumerKey": "Consumer key",
+        "serviceName": "Service name del server dedicato",
+        "permissionsTitle": "Permessi minimi",
+        "permissionsBody": "Usa regole in sola lettura per server dedicati, firewall e backup storage. I valori segreti vengono cifrati a riposo.",
+        "errors": {
+          "validation": "Controlla application key, application secret, consumer key e service name opzionale.",
+          "invalid_key": "OVHcloud ha rifiutato le chiavi API. Inserisci valori nuovi o corretti.",
+          "insufficient_scope": "Le chiavi API non hanno i permessi minimi di lettura richiesti.",
+          "unreachable": "Impossibile contattare OVHcloud. Riprova o fornisci evidenze manuali."
+        }
       },
       "github": {
         "title": "Integrazione GitHub",
@@ -897,8 +953,8 @@
     "lock": {
       "demoTitle": "Modalità demo",
       "demoBody": "Clerk o il database non sono disponibili, quindi il modulo è bloccato e la pagina usa dati cliente demo.",
-      "planTitle": "Serve il piano Consultant",
-      "planBody": "Il collegamento in produzione delle organizzazioni cliente è disponibile solo con il piano consultant."
+      "planTitle": "Serve il piano Agency",
+      "planBody": "Il collegamento in produzione delle organizzazioni cliente è disponibile solo con il piano Agency."
     },
     "form": {
       "title": "Collega cliente",
@@ -1603,7 +1659,7 @@
       "onboardingTitle": "Tre settimane su un progetto reale.",
       "onboardingBody": "L'obiettivo non è un account demo. L'obiettivo è usare Splnit.eu su un problema reale NIS2 o GDPR e capire cosa manca ancora al prodotto.",
       "benefits": {
-        "businessFree": "12 mesi gratis sul piano Business",
+        "businessFree": "12 mesi gratis sul piano SME",
         "sectorFeatures": "Funzionalità prioritarie in base al vostro settore",
         "directContact": "Contatto diretto senza coda ticket",
         "guidedOnboarding": "3 settimane di onboarding guidato direttamente con il fondatore"
@@ -1619,7 +1675,7 @@
         "week1Body": "Confermiamo la giurisdizione, analizziamo l'applicabilità NIS2 e prepariamo la prima lista di priorità.",
         "week2Title": "Settimana 2",
         "week2Heading": "Integrazioni ed evidenze",
-        "week2Body": "Colleghiamo Microsoft 365, AWS o GitHub e configuriamo i primi controlli automatici.",
+        "week2Body": "Colleghiamo Microsoft 365, GitHub, AWS, Hetzner Cloud, OVHcloud o un workspace ERP e configuriamo i primi controlli automatici.",
         "week3Title": "Settimana 3",
         "week3Heading": "Documenti e pacchetto audit",
         "week3Body": "Generiamo il primo set di documenti e prepariamo il formato delle evidenze per il revisore."
@@ -1660,7 +1716,7 @@
     "trustLine": "Accesso anticipato · Contatto diretto con il fondatore · Infrastruttura Vercel + Neon",
     "partnerTag": "Gruppo iniziale aperto",
     "partnerFilled": "10 posti disponibili per design partner",
-    "partnerFree": "12 mesi Business gratuito",
+    "partnerFree": "12 mesi SME gratuito",
     "stepsTag": "Come funziona",
     "stepsTitle": "Iniziate dalla configurazione di base e migliorate nel tempo.",
     "stepsBody": "Tre passaggi dal primo collegamento di sistema a un pacchetto di evidenze utilizzabile.",
@@ -1668,7 +1724,7 @@
     "featuresTitle": "Compliance costruita per team IT e compliance.",
     "featuresBody": "Collegate infrastrutture locali e globali. I controlli vengono mappati agli standard locali e internazionali.",
     "offerTitle": "Offerta per le prime 10 aziende.",
-    "offerBody": "Splnit.eu è in accesso anticipato. I primi design partner ricevono il piano Business gratis per 12 mesi e tre settimane di onboarding guidato direttamente col fondatore.",
+    "offerBody": "Splnit.eu è in accesso anticipato. I primi design partner ricevono il piano SME gratis per 12 mesi e tre settimane di onboarding guidato direttamente col fondatore.",
     "offerCta": "Scoprite l'accesso anticipato",
     "referencePlaceholder": "Le referenze dei clienti saranno pubblicate con consenso esplicito man mano che i design partner completano l'onboarding.",
     "referenceCount": "Referenze solo con consenso",
@@ -1799,7 +1855,10 @@
         "microsoft365": "Microsoft 365",
         "github": "GitHub",
         "aws": "AWS",
-        "azure": "Azure",
+        "hetznerCloud": "Hetzner Cloud",
+        "ovhcloud": "OVHcloud",
+        "abraFlexi": "ABRA Flexi",
+        "czechErpWorkspaces": "Pohoda, Money S3/S4 e Helios",
         "googleWorkspace": "Google Workspace",
         "nukibFeed": "Feed normativo",
         "automatedChecks": "Controlli automatici",
@@ -2216,7 +2275,7 @@
       "uploadLabel": "Carica file di testo",
       "generate": "Genera risposte",
       "rateLimitTitle": "Limite utilizzo",
-      "rateLimitBody": "Starter: 5/mese. Business e Consultant: illimitati.",
+      "rateLimitBody": "Free: 5/mese. SME e Agency: illimitati.",
       "remaining": "Rimanenti",
       "reset": "ripristino",
       "notAvailable": "n/d",

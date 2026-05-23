@@ -418,7 +418,7 @@
         },
         {
           "title": "Connect the first integration",
-          "description": "Connect Microsoft 365, GitHub, or AWS so evidence can start collecting automatically.",
+          "description": "Connect Microsoft 365, GitHub, AWS, Hetzner Cloud, OVHcloud, or ABRA Flexi so evidence can start collecting automatically.",
           "time": "~10 minutes",
           "unlocks": "Unlocks: automated checks",
           "button": "Connect integration"
@@ -609,7 +609,9 @@
     "providers": {
       "microsoft365": "MFA, Conditional Access, guests, privileged roles, and sensitivity labels.",
       "github": "Branch protection, secret scanning, 2FA enforcement, and dependency alerts.",
-      "aws": "CloudTrail, S3 encryption, IAM MFA, root MFA, and VPC Flow Logs.",
+      "aws": "EC2, security groups, S3 backups, and CloudTrail through a read-only IAM key.",
+      "hetzner": "Servers, firewalls, and snapshots in Hetzner Cloud through a read-only API token.",
+      "ovhcloud": "Dedicated servers, firewall, and backup storage in OVHcloud through read-only API keys.",
       "abra-flexi": "REST API connection for ABRA Flexi users, transport, configuration, and manual backup fallback.",
       "google_workspace": "Workspace audit logs, Drive sharing, and administrator accounts."
     },
@@ -643,7 +645,7 @@
       "scopeTitle": "Scope",
       "scopeItemStatus": "Planned. Production checks are not enabled yet.",
       "googleWorkspace": {
-        "description": "Google Workspace audit logs, Drive sharing, and administrator account checks are planned after Microsoft 365, GitHub, and AWS integrations are validated.",
+        "description": "Google Workspace audit logs, Drive sharing, and administrator account checks are planned after the current connector set is validated.",
         "checks": [
           "Admin MFA and privileged account review",
           "External sharing in Google Drive",
@@ -669,12 +671,66 @@
       },
       "aws": {
         "title": "AWS integration",
-        "subtitle": "A cross-account read-only role checks CloudTrail, S3 encryption, IAM MFA, root MFA, and VPC Flow Logs.",
-        "accountMissing": "no AWS account",
-        "testsBody": "Mapped to audit logs, encryption, MFA, and network monitoring.",
-        "connectRole": "Connect AWS role",
-        "connectRoleAction": "Connect AWS role",
-        "updateRole": "Update AWS role"
+        "subtitle": "A read-only IAM access key checks the baseline state of EC2, security groups, S3 backups, and CloudTrail.",
+        "accountMissing": "no IAM key",
+        "iamKeyConnected": "IAM key connected",
+        "testsBody": "AWS workspace checks will run after the key is connected.",
+        "connectAccessKey": "Connect AWS IAM key",
+        "connectAccessKeyAction": "Connect AWS IAM key",
+        "rotateAccessKey": "Rotate AWS IAM key",
+        "accessKeyId": "Access Key ID",
+        "secretAccessKey": "Secret Access Key",
+        "region": "Region",
+        "backupBucketName": "S3 backup bucket",
+        "permissionsTitle": "Minimum permissions",
+        "permissionsBody": "Use a dedicated IAM user with a read-only policy. The secret access key is encrypted at rest and is never displayed back.",
+        "errors": {
+          "validation": "Check the Access Key ID, Secret Access Key, region, and optional S3 bucket details.",
+          "invalid_key": "AWS rejected the IAM key. Enter a new or corrected key.",
+          "insufficient_scope": "The IAM key does not have the minimum required read permissions.",
+          "unreachable": "AWS could not be reached. Try again or provide manual evidence."
+        }
+      },
+      "hetzner": {
+        "title": "Hetzner Cloud integration",
+        "subtitle": "A read-only API token checks running servers, firewall rules, and recent snapshots.",
+        "accountMissing": "no API token",
+        "apiKeyConnected": "API token connected",
+        "testsBody": "Hetzner Cloud checks run after the API token is connected.",
+        "connectApiKey": "Connect Hetzner API token",
+        "connectApiKeyAction": "Connect Hetzner",
+        "rotateApiKey": "Rotate Hetzner API token",
+        "apiKey": "API token",
+        "permissionsTitle": "Minimum permissions",
+        "permissionsBody": "Use a read-only project token. The token is encrypted at rest and is never displayed back.",
+        "errors": {
+          "validation": "Check the API token.",
+          "invalid_key": "Hetzner Cloud rejected the API token. Enter a new or corrected token.",
+          "insufficient_scope": "The API token does not have the minimum required read permissions.",
+          "unreachable": "Hetzner Cloud could not be reached. Try again or provide manual evidence."
+        }
+      },
+      "ovhcloud": {
+        "title": "OVHcloud integration",
+        "subtitle": "Read-only API keys check the dedicated server, firewall, and backup storage.",
+        "accountMissing": "no API keys",
+        "apiKeyConnected": "API keys connected",
+        "testsBody": "OVHcloud checks run after the application and consumer keys are connected.",
+        "connectApiKey": "Connect OVHcloud API keys",
+        "connectApiKeyAction": "Connect OVHcloud",
+        "rotateApiKey": "Rotate OVHcloud API keys",
+        "appKey": "Application key",
+        "appSecret": "Application secret",
+        "consumerKey": "Consumer key",
+        "serviceName": "Dedicated server service name",
+        "permissionsTitle": "Minimum permissions",
+        "permissionsBody": "Use read-only rules for dedicated servers, firewall, and backup storage. Secret values are encrypted at rest.",
+        "errors": {
+          "validation": "Check the application key, application secret, consumer key, and optional service name.",
+          "invalid_key": "OVHcloud rejected the API keys. Enter new or corrected values.",
+          "insufficient_scope": "The API keys do not have the minimum required read permissions.",
+          "unreachable": "OVHcloud could not be reached. Try again or provide manual evidence."
+        }
       },
       "github": {
         "title": "GitHub integration",
@@ -897,8 +953,8 @@
     "lock": {
       "demoTitle": "Demo mode",
       "demoBody": "Clerk or the database is not available, so the form is locked and the page uses demo client data.",
-      "planTitle": "Consultant plan required",
-      "planBody": "Production client organisation linking is available only on the consultant plan."
+      "planTitle": "Agency plan required",
+      "planBody": "Production client organisation linking is available only on the Agency plan."
     },
     "form": {
       "title": "Connect client",
@@ -1603,7 +1659,7 @@
       "onboardingTitle": "Three weeks on a real project.",
       "onboardingBody": "The goal is not a demo account. The goal is to use Splnit.eu on a real NIS2 or GDPR problem and find what the product still misses.",
       "benefits": {
-        "businessFree": "12 months free on the Business plan",
+        "businessFree": "12 months free on the SME plan",
         "guidedOnboarding": "3 weeks of guided onboarding directly with the founder",
         "sectorFeatures": "Features prioritised around your sector",
         "directContact": "Direct contact without a ticket queue"
@@ -1619,7 +1675,7 @@
         "week1Body": "We confirm jurisdiction, walk through NIS2 applicability, and prepare the first priority list.",
         "week2Title": "Week 2",
         "week2Heading": "Integrations and evidence",
-        "week2Body": "We connect Microsoft 365, AWS, or GitHub and configure the first automated checks.",
+        "week2Body": "We connect Microsoft 365, GitHub, AWS, Hetzner Cloud, OVHcloud, or an ERP workspace and configure the first automated checks.",
         "week3Title": "Week 3",
         "week3Heading": "Documents and audit pack",
         "week3Body": "We generate the first document set and prepare an evidence format for your auditor."
@@ -1660,7 +1716,7 @@
     "trustLine": "Early access · Direct founder contact · Vercel + Neon infrastructure",
     "partnerTag": "Initial group open",
     "partnerFilled": "10 design partner spots available",
-    "partnerFree": "12 months Business plan free",
+    "partnerFree": "12 months SME plan free",
     "partnerOnboarding": "Three weeks of founder-led onboarding",
     "stepsTag": "How it works",
     "stepsTitle": "Start with the core setup, then keep improving.",
@@ -1669,7 +1725,7 @@
     "featuresTitle": "Compliance built for IT and compliance teams.",
     "featuresBody": "Connect local and global infrastructure. Controls are mapped to local and international standards.",
     "offerTitle": "Offer for the first 10 companies.",
-    "offerBody": "Splnit.eu is in early access. The first design partners get the Business plan free for 12 months and three weeks of guided onboarding directly with the founder.",
+    "offerBody": "Splnit.eu is in early access. The first design partners get the SME plan free for 12 months and three weeks of guided onboarding directly with the founder.",
     "offerCta": "View early access",
     "referencePlaceholder": "Customer references will be published with explicit consent as design partners complete onboarding.",
     "referenceCount": "References only with consent",
@@ -1799,7 +1855,10 @@
         "microsoft365": "Microsoft 365",
         "github": "GitHub",
         "aws": "AWS",
-        "azure": "Azure",
+        "hetznerCloud": "Hetzner Cloud",
+        "ovhcloud": "OVHcloud",
+        "abraFlexi": "ABRA Flexi",
+        "czechErpWorkspaces": "Pohoda, Money S3/S4, and Helios",
         "googleWorkspace": "Google Workspace",
         "nukibFeed": "Regulatory feed",
         "automatedChecks": "Automated checks",
@@ -2216,7 +2275,7 @@
       "uploadLabel": "Upload text file",
       "generate": "Generate answers",
       "rateLimitTitle": "Rate limit",
-      "rateLimitBody": "Starter: 5/month. Business and Consultant: unlimited.",
+      "rateLimitBody": "Free: 5/month. SME and Agency: unlimited.",
       "remaining": "Remaining",
       "reset": "reset",
       "notAvailable": "n/a",

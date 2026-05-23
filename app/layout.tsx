@@ -56,19 +56,19 @@ const metadataCopy: Record<
 > = {
   "cs-CZ": {
     description:
-      "Splnit.eu propojí Microsoft 365, AWS nebo GitHub a pomůže připravit auditní důkazy pro NIS2, GDPR a ISO 27001.",
+      "Splnit.eu propojí Microsoft 365, GitHub, AWS, Hetzner Cloud, OVHcloud a české ERP workspaces pro auditní důkazy NIS2, GDPR a ISO 27001.",
     locale: "cs_CZ",
     title: "Splnit.eu — Compliance automatizace pro evropské SMB týmy",
   },
   "en-EU": {
     description:
-      "Connect Microsoft 365, AWS, or GitHub and prepare audit evidence for NIS2, GDPR, and ISO 27001.",
+      "Connect Microsoft 365, GitHub, AWS, Hetzner Cloud, OVHcloud, and Czech ERP workspaces to prepare audit evidence for NIS2, GDPR, and ISO 27001.",
     locale: "en_EU",
     title: "Splnit.eu — Compliance automation for European SMB teams",
   },
   "it-IT": {
     description:
-      "Collega Microsoft 365, AWS o GitHub e prepara evidenze audit per NIS2, GDPR e ISO 27001.",
+      "Collega Microsoft 365, GitHub, AWS, Hetzner Cloud, OVHcloud e workspace ERP cechi per preparare evidenze audit per NIS2, GDPR e ISO 27001.",
     locale: "it_IT",
     title: "Splnit.eu — Automazione compliance per PMI europee",
   },

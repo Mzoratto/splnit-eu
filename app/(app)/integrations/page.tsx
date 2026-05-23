@@ -8,6 +8,7 @@ import {
   Cloud,
   DatabaseZap,
   GitBranch,
+  ServerCog,
   MonitorCog,
   PlugZap,
   XCircle,
@@ -45,7 +46,23 @@ const providers = [
     key: "aws",
     name: "AWS",
     planned: false,
-    testCount: 5,
+    testCount: 4,
+  },
+  {
+    href: "/integrations/hetzner",
+    icon: ServerCog,
+    key: "hetzner",
+    name: "Hetzner Cloud",
+    planned: false,
+    testCount: 3,
+  },
+  {
+    href: "/integrations/ovhcloud",
+    icon: DatabaseZap,
+    key: "ovhcloud",
+    name: "OVHcloud",
+    planned: false,
+    testCount: 3,
   },
   {
     href: "/workspaces/abra-flexi",
@@ -168,6 +185,10 @@ function getTestCount(provider: string, fallback: number, data: HubData | null) 
   return data.tests.filter((test) => test.provider === provider).length;
 }
 
+function hasAwsApiKeyCredential(integration: HubData["integrations"][number] | undefined) {
+  const config = integration?.config as Record<string, unknown> | null | undefined;
+  return config?.credentialType === "aws_iam_access_key";
+}
 
 function getRecommendedProvider(toolInventory: string[]) {
   if (toolInventory.includes("microsoft-copilot")) {
@@ -239,10 +260,14 @@ export default async function IntegrationsPage() {
         <span className="inline-flex items-center gap-1"><span className="h-2 w-2 rounded-full bg-foreground/40" aria-hidden="true" />error</span>
       </div>
 
-      <div className="grid items-stretch gap-4 md:grid-cols-2 xl:grid-cols-5">
+      <div className="grid items-stretch gap-4 md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4">
         {providers.map((provider) => {
           const Icon = provider.icon;
-          const integration = integrationMap.get(provider.key);
+          const rawIntegration = integrationMap.get(provider.key);
+          const integration =
+            provider.key === "aws" && !hasAwsApiKeyCredential(rawIntegration)
+              ? undefined
+              : rawIntegration;
           const rawStatus =
             integration?.status ?? (provider.planned ? "coming_soon" : "available");
           const connected = rawStatus === "connected";

@@ -82,6 +82,35 @@ const italianControlTitles: Record<string, string> = {
   ctrl_media_disposal: "Supporti e dispositivi smaltiti in modo sicuro",
   ctrl_cryptography_policy: "Policy crittografica approvata",
   ctrl_network_segmentation: "Rete segmentata per criticita",
+  "hetzner-infra-server-running": "Server Hetzner Cloud in esecuzione",
+  "hetzner-infra-firewall-present":
+    "Regole firewall Hetzner Cloud presenti",
+  "hetzner-infra-snapshot-recent": "Snapshot Hetzner Cloud recente",
+  "ovhcloud-infra-server-operational": "Server OVHcloud operativo",
+  "ovhcloud-infra-firewall-enabled": "Firewall OVHcloud abilitato",
+  "ovhcloud-infra-backup-present": "Backup storage OVHcloud presente",
+  "abra-flexi-infra-deployment-secured":
+    "Distribuzione ABRA Flexi documentata e protetta",
+  "abra-flexi-infra-database-protected":
+    "Database ABRA Flexi protetto a riposo",
+  "abra-flexi-infra-network-restricted":
+    "Accesso ad ABRA Flexi limitato dalla rete",
+  "abra-flexi-iam-user-accounts":
+    "ABRA Flexi usa account utente individuali",
+  "abra-flexi-iam-least-privilege":
+    "Ruoli ABRA Flexi basati sul minimo privilegio",
+  "abra-flexi-iam-offboarding":
+    "Offboarding dipendenti revoca l'accesso ad ABRA Flexi",
+  "abra-flexi-backup-api": "Backup ABRA Flexi documentati",
+  "abra-flexi-backup-schedule":
+    "ABRA Flexi ha un piano di backup regolare",
+  "abra-flexi-backup-restore-test":
+    "Ripristino ABRA Flexi testato regolarmente",
+  "abra-flexi-api-https": "API ABRA Flexi usa trasporto sicuro",
+  "abra-flexi-api-config-readable":
+    "Utente REST API ABRA Flexi con accesso minimo in lettura",
+  "abra-flexi-api-credential-rotation":
+    "Credenziali API ABRA Flexi ruotate periodicamente",
   ctrl_cloudtrail_enabled: "CloudTrail o audit log equivalente abilitato",
   ctrl_s3_encryption: "Bucket object storage cifrano i dati",
   ctrl_root_account_mfa: "Account root o break-glass protetti da MFA",

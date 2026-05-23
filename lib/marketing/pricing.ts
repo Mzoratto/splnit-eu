@@ -38,7 +38,10 @@ export type ComparisonFeatureKey =
   | "microsoft365"
   | "github"
   | "aws"
-  | "azure"
+  | "hetznerCloud"
+  | "ovhcloud"
+  | "abraFlexi"
+  | "czechErpWorkspaces"
   | "googleWorkspace"
   | "nukibFeed"
   | "automatedChecks"
@@ -105,7 +108,10 @@ export const comparisonGroups: ComparisonGroup[] = [
       { cells: ["-", "✓", "✓"], key: "microsoft365" },
       { cells: ["-", "✓", "✓"], key: "github" },
       { cells: ["-", "✓", "✓"], key: "aws" },
-      { cells: ["-", "-", "soon"], key: "azure" },
+      { cells: ["-", "✓", "✓"], key: "hetznerCloud" },
+      { cells: ["-", "✓", "✓"], key: "ovhcloud" },
+      { cells: ["-", "✓", "✓"], key: "abraFlexi" },
+      { cells: ["-", "✓", "✓"], key: "czechErpWorkspaces" },
       { cells: ["-", "-", "soon"], key: "googleWorkspace" },
       { cells: ["-", "✓", "✓"], key: "nukibFeed" },
     ],
