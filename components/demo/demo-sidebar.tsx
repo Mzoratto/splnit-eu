@@ -31,10 +31,14 @@ export function DemoSidebar() {
   return (
     <>
       <aside className="hidden border-r border-border bg-background lg:fixed lg:bottom-0 lg:left-0 lg:top-[76px] lg:block lg:w-[220px]">
-        <div className="flex h-14 items-center gap-2 border-b border-border px-4 text-sm font-medium">
+        <Link
+          href="/"
+          className="flex h-14 items-center gap-2 border-b border-border px-4 text-sm font-medium transition-colors hover:text-primary"
+          aria-label="Zpět na homepage Splnit.eu"
+        >
           <LogoMark className="h-5 w-5" />
           Splnit.eu
-        </div>
+        </Link>
         <div className="border-b border-border px-4 py-4">
           <p className="truncate text-sm font-medium">{DEMO_ORG.name}</p>
           <p className="mt-1 text-xs text-foreground/58">

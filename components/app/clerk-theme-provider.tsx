@@ -25,6 +25,8 @@ export function ClerkThemeProvider({ children }: { children: React.ReactNode }) 
 
   return (
     <ClerkProvider
+      afterMultiSessionSingleSignOutUrl="/"
+      afterSignOutUrl="/"
       appearance={theme === "dark" ? clerkDarkAppearance : clerkLightAppearance}
     >
       {children}

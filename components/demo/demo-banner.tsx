@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { ArrowRight, LogIn, Search } from "lucide-react";
+import { ArrowRight, Home, LogIn, Search } from "lucide-react";
 
 import { DEMO_ORG } from "@/lib/demo/data";
 
@@ -22,6 +22,13 @@ export function DemoBanner() {
           </div>
         </div>
         <div className="flex shrink-0 flex-wrap gap-2">
+          <Link
+            href="/"
+            className="inline-flex items-center gap-1.5 rounded-md border border-amber-300 bg-white/70 px-3 py-2 text-sm font-medium text-amber-950 transition-colors hover:bg-white"
+          >
+            <Home className="h-4 w-4" aria-hidden="true" strokeWidth={1.7} />
+            Domů
+          </Link>
           <Link
             href="/sign-up?ref=demo"
             className="inline-flex items-center gap-1.5 rounded-md bg-amber-900 px-3 py-2 text-sm font-medium text-white transition-colors hover:bg-amber-800"
