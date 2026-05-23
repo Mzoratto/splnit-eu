@@ -40,25 +40,25 @@ export function Footer() {
   }
 
   return (
-    <footer className="border-t border-zinc-200 bg-white px-5 pb-10 pt-16">
+    <footer className="border-t border-border bg-white px-5 pb-10 pt-16">
       <div className="mx-auto max-w-7xl">
-        <div className="mb-14 grid grid-cols-2 gap-8 md:grid-cols-6">
+        <div className="mb-14 grid grid-cols-2 gap-10 md:grid-cols-6">
           <div className="col-span-2">
             <div className="mb-4 flex items-center gap-2">
-              <LogoMark />
-              <span className="font-semibold tracking-tight text-zinc-900">
+              <LogoMark className="h-8 w-8" />
+              <span className="text-xl font-bold tracking-normal text-foreground">
                 Splnit<span className="text-blue-600">.eu</span>
               </span>
             </div>
-            <p className="mb-5 max-w-xs text-xs leading-relaxed text-zinc-500">
+            <p className="mb-5 max-w-xs text-sm leading-6 text-foreground/62">
               {t("tagline")}
             </p>
             <div>
-              <p className="mb-2 text-xs font-semibold text-zinc-900">
+              <p className="mb-2 text-xs font-bold uppercase text-foreground">
                 {t("newsletterTitle")}
               </p>
               {status === "success" ? (
-                <p className="inline-flex items-center gap-1.5 rounded-full bg-emerald-50 px-3 py-1.5 text-xs font-medium text-emerald-700">
+                <p className="inline-flex items-center gap-1.5 rounded-full border border-[var(--status-pass-border)] bg-[var(--status-pass-subtle)] px-3 py-1.5 text-xs font-semibold text-[var(--status-pass)]">
                   <Icon icon="solar:check-circle-linear" aria-hidden="true" />
                   {t("newsletterSuccess")}
                 </p>
@@ -76,12 +76,12 @@ export function Footer() {
                           setStatus("idle");
                         }
                       }}
-                      className="min-w-0 flex-1 rounded-full border border-zinc-200 px-3.5 py-1.5 text-xs text-zinc-900 placeholder:text-zinc-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      className="min-h-10 min-w-0 flex-1 rounded-lg border border-border px-3.5 py-2 text-sm text-foreground placeholder:text-foreground/38 focus:outline-none focus:ring-2 focus:ring-blue-500"
                     />
                     <button
                       type="submit"
                       disabled={status === "loading"}
-                      className="shrink-0 rounded-full bg-zinc-900 px-4 py-1.5 text-xs font-medium text-white transition-colors hover:bg-zinc-800 disabled:cursor-not-allowed disabled:opacity-60"
+                      className="min-h-10 shrink-0 rounded-lg bg-primary px-4 py-2 text-xs font-semibold text-white transition-colors hover:bg-[var(--accent-hover)] disabled:cursor-not-allowed disabled:opacity-60"
                     >
                       {status === "loading"
                         ? t("newsletterLoading")
@@ -89,7 +89,7 @@ export function Footer() {
                     </button>
                   </form>
                   {status === "error" ? (
-                    <p className="text-xs text-red-600">
+                    <p className="text-xs text-status-fail">
                       {t("newsletterError")}
                     </p>
                   ) : null}
@@ -124,17 +124,17 @@ export function Footer() {
           />
 
           <div className="col-span-2 md:pl-4">
-            <h4 className="mb-4 text-xs font-semibold uppercase tracking-wider text-zinc-900">
+            <h4 className="mb-4 text-xs font-bold uppercase tracking-normal text-foreground">
               {t("contact")}
             </h4>
-            <address className="space-y-1.5 text-xs text-zinc-500 not-italic">
-              <p className="font-medium text-zinc-700">
+            <address className="space-y-1.5 text-sm text-foreground/58 not-italic">
+              <p className="font-semibold text-foreground/78">
                 {t("operator")}
               </p>
               <p>{t("location")}</p>
               <Link
                 href="mailto:hello@splnit.eu"
-                className="mt-2 inline-block font-medium text-blue-600 transition-colors hover:text-blue-700"
+                className="mt-2 inline-block font-semibold text-primary transition-colors hover:text-[var(--accent-hover)]"
               >
                 hello@splnit.eu
               </Link>
@@ -142,24 +142,24 @@ export function Footer() {
           </div>
         </div>
 
-        <div className="flex flex-col items-center justify-between gap-4 border-t border-zinc-100 pt-8 md:flex-row">
-          <p className="text-xs text-zinc-400">
+        <div className="flex flex-col items-center justify-between gap-4 border-t border-border pt-8 md:flex-row">
+          <p className="text-xs text-foreground/45">
             {t("copyright")}
           </p>
-          <div className="flex items-center gap-5 text-xs text-zinc-400">
-            <Link href="/soukromi" className="transition-colors hover:text-zinc-700">
+          <div className="flex flex-wrap items-center justify-center gap-5 text-xs text-foreground/50">
+            <Link href="/soukromi" className="transition-colors hover:text-foreground">
               {t("privacy")}
             </Link>
-            <Link href="/podminky" className="transition-colors hover:text-zinc-700">
+            <Link href="/podminky" className="transition-colors hover:text-foreground">
               {t("terms")}
             </Link>
-            <Link href="/cookies" className="transition-colors hover:text-zinc-700">
+            <Link href="/cookies" className="transition-colors hover:text-foreground">
               Cookies
             </Link>
-            <Link href="/dpa" className="transition-colors hover:text-zinc-700">
+            <Link href="/dpa" className="transition-colors hover:text-foreground">
               DPA
             </Link>
-            <div className="h-3 w-px bg-zinc-200" />
+            <div className="h-3 w-px bg-border" />
             <LocaleSwitcher compact />
           </div>
         </div>
@@ -179,15 +179,15 @@ function FooterColumn({
 }) {
   return (
     <div>
-      <h4 className="mb-4 text-xs font-semibold uppercase tracking-wider text-zinc-900">
+      <h4 className="mb-4 text-xs font-bold uppercase tracking-normal text-foreground">
         {title}
       </h4>
-      <ul className="space-y-2.5 text-xs text-zinc-500">
+      <ul className="space-y-2.5 text-sm text-foreground/58">
         {links.map(([label, href]) => (
           <li key={href}>
             <Link
               href={getLocalizedMarketingPath(href, locale)}
-              className="transition-colors hover:text-zinc-900"
+              className="transition-colors hover:text-foreground"
             >
               {label}
             </Link>

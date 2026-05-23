@@ -33,7 +33,7 @@ export function Nav() {
     internalPathname === "/early-access" ||
     internalPathname.startsWith("/early-access/");
   const ctaClassName =
-    "flex items-center gap-1.5 rounded-full bg-blue-600 px-4 py-1.5 text-sm font-medium text-white transition-colors hover:bg-blue-500";
+    "flex min-h-11 items-center gap-1.5 rounded-lg bg-primary px-5 py-2.5 text-sm font-semibold text-white shadow-[0_10px_20px_rgba(37,99,235,0.22)] transition-colors hover:bg-[var(--accent-hover)]";
   const ctaContent = (
     <>
       {t("cta")}
@@ -46,20 +46,20 @@ export function Nav() {
   );
 
   return (
-    <nav className="nav-blur fixed left-0 right-0 top-0 z-50 h-16 border-b border-zinc-200/60 transition-all duration-300">
+    <nav className="nav-blur fixed left-0 right-0 top-0 z-50 h-20 border-b border-border transition-all duration-300">
       <div className="mx-auto flex h-full max-w-7xl items-center justify-between gap-4 px-5">
         <Link
           href={getLocalizedMarketingPath("/", locale)}
           className="flex shrink-0 items-center gap-2"
           onClick={() => setOpen(false)}
         >
-          <LogoMark priority />
-          <span className="font-semibold tracking-tight text-zinc-900">
+          <LogoMark priority className="h-8 w-8" />
+          <span className="text-xl font-bold tracking-normal text-foreground">
             Splnit<span className="text-blue-600">.eu</span>
           </span>
         </Link>
 
-        <div className="hidden items-center gap-1 md:flex">
+        <div className="hidden items-center gap-2 md:flex">
           {links.map((link) => {
             const href =
               link.href === "/demo"
@@ -73,10 +73,10 @@ export function Nav() {
               <Link
                 key={link.href}
                 href={href}
-                className={`nav-link rounded-md px-3 py-1.5 text-sm transition-colors hover:bg-zinc-100/70 hover:text-zinc-900 ${
+                className={`rounded-lg px-3 py-2 text-sm transition-colors hover:bg-surface-muted hover:text-foreground ${
                   active
-                    ? "font-medium text-zinc-900"
-                    : "font-medium text-zinc-500"
+                    ? "font-semibold text-foreground"
+                    : "font-semibold text-foreground/62"
                 }`}
               >
                 {t(link.labelKey)}
@@ -91,11 +91,11 @@ export function Nav() {
           </div>
           <Link
             href="/sign-in"
-            className="hidden text-sm font-medium text-zinc-600 transition-colors hover:text-zinc-900 md:block"
+            className="hidden text-sm font-semibold text-foreground/70 transition-colors hover:text-foreground md:block"
           >
             {t("signIn")}
           </Link>
-          <div className="rounded-full bg-gradient-to-b from-blue-400 to-blue-700 p-px shadow-sm shadow-blue-200/60 transition-shadow hover:shadow-blue-200">
+          <div>
             {onEarlyAccessPage ? (
               <a
                 href="mailto:hello@splnit.eu?subject=Design%20partner%20Splnit.eu"
@@ -114,7 +114,7 @@ export function Nav() {
           </div>
           <button
             type="button"
-            className="p-1 text-zinc-600 transition-colors hover:text-zinc-900 md:hidden"
+            className="grid h-11 w-11 place-items-center rounded-lg border border-border bg-white text-foreground/70 transition-colors hover:text-foreground md:hidden"
             aria-label={t("menu")}
             aria-expanded={open}
             onClick={() => setOpen((value) => !value)}
@@ -129,7 +129,7 @@ export function Nav() {
       </div>
 
       {open ? (
-        <div className="border-b border-zinc-200/70 bg-stone-50/95 px-5 py-4 shadow-lg shadow-zinc-200/40 backdrop-blur md:hidden">
+        <div className="border-b border-border bg-white px-5 py-4 shadow-lg shadow-slate-200/50 backdrop-blur md:hidden">
           <div className="mx-auto grid max-w-7xl gap-1">
             {links.map((link) => {
               const href =
@@ -144,10 +144,10 @@ export function Nav() {
                 <Link
                   key={link.href}
                   href={href}
-                  className={`rounded-xl px-3 py-3 text-sm ${
+                  className={`rounded-lg px-3 py-3 text-sm ${
                     active
-                      ? "bg-blue-50 font-medium text-blue-700"
-                      : "text-zinc-600 hover:bg-white"
+                      ? "bg-blue-50 font-semibold text-blue-700"
+                      : "font-medium text-foreground/70 hover:bg-surface-muted"
                   }`}
                   onClick={() => setOpen(false)}
                 >
@@ -160,7 +160,7 @@ export function Nav() {
             </div>
             <Link
               href="/sign-in"
-              className="rounded-xl px-3 py-3 text-sm text-zinc-600 hover:bg-white"
+              className="rounded-lg px-3 py-3 text-sm font-medium text-foreground/70 hover:bg-surface-muted"
               onClick={() => setOpen(false)}
             >
               {t("signIn")}

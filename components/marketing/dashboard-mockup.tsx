@@ -114,11 +114,11 @@ export function DashboardMockup({ locale = "cs-CZ" }: { locale?: Locale }) {
 
   return (
     <div
-      className="relative mx-auto mt-16 hidden max-w-5xl md:block"
+      className="relative mx-auto hidden w-full max-w-none md:block"
       id="dashboard-wrap"
     >
-      <div className="dash-glow relative rounded-[28px] p-px grad-border">
-        <div className="overflow-hidden rounded-[27px] bg-white">
+      <div className="dash-glow relative rounded-2xl border border-border bg-white shadow-2xl shadow-slate-300/50">
+        <div className="overflow-hidden rounded-2xl bg-white">
           <div className="flex h-11 items-center gap-3 border-b border-zinc-100 bg-zinc-50 px-4">
             <div className="flex gap-1.5">
               <div className="h-2.5 w-2.5 rounded-full bg-zinc-200" />
@@ -143,12 +143,12 @@ export function DashboardMockup({ locale = "cs-CZ" }: { locale?: Locale }) {
             </div>
           </div>
 
-          <div className="flex h-[420px] bg-zinc-50/40">
-            <aside className="hidden w-52 shrink-0 flex-col gap-0.5 border-r border-zinc-100 bg-white p-4 md:flex">
+          <div className="flex h-[420px] bg-slate-50">
+            <aside className="hidden w-52 shrink-0 flex-col gap-0.5 border-r border-slate-800 bg-slate-900 p-4 text-white md:flex">
               <div className="mb-3 px-2 py-1.5">
                 <div className="flex items-center gap-2">
                   <LogoMark className="h-5 w-5" />
-                  <span className="text-xs font-semibold text-zinc-700">
+                  <span className="text-xs font-semibold text-white">
                     Splnit.eu
                   </span>
                 </div>
@@ -164,15 +164,15 @@ export function DashboardMockup({ locale = "cs-CZ" }: { locale?: Locale }) {
                   key={label}
                   className={`sidebar-item flex cursor-pointer items-center gap-2.5 rounded-lg px-2.5 py-2 text-xs font-medium transition-colors ${
                     index === 0
-                      ? "bg-blue-50 text-blue-700"
-                      : "text-zinc-500 hover:bg-zinc-50"
+                      ? "bg-blue-600 text-white"
+                      : "text-slate-300 hover:bg-white/10"
                   }`}
                 >
                   <Icon icon={icon} aria-hidden="true" />
                   {label}
                 </div>
               ))}
-              <div className="mt-auto flex cursor-pointer items-center gap-2.5 rounded-lg px-2.5 py-2 text-xs font-medium text-zinc-500 transition-colors hover:bg-zinc-50">
+              <div className="mt-auto flex cursor-pointer items-center gap-2.5 rounded-lg px-2.5 py-2 text-xs font-medium text-slate-300 transition-colors hover:bg-white/10">
                 <Icon icon="solar:users-group-rounded-linear" aria-hidden="true" />
                 {t.team}
               </div>

@@ -44,22 +44,22 @@ export function LeadCapture({
   }
 
   return (
-    <div className="rounded-[2rem] border border-blue-100 bg-blue-50/40 p-8 text-center md:p-14">
+    <div className="rounded-lg border border-blue-100 bg-blue-50/60 p-8 text-center md:p-14">
       <div className="section-tag mx-auto mb-5 w-fit">
         <Icon icon="solar:clipboard-check-linear" aria-hidden="true" />
         {t("tag")}
       </div>
-      <h3 className="mb-2 text-2xl font-semibold tracking-[-0.03em] text-zinc-900 md:text-3xl">
+      <h3 className="mb-2 text-2xl font-bold tracking-normal text-foreground md:text-3xl">
         {resolvedTitle}
       </h3>
-      <p className="mb-8 text-sm text-zinc-500">{resolvedSubtitle}</p>
+      <p className="mb-8 text-sm text-foreground/62">{resolvedSubtitle}</p>
 
       {resources ? (
         <div className="mb-8 flex flex-wrap justify-center gap-2.5">
           {resources.map((resource) => (
             <span
               key={resource}
-              className="rounded-full border border-blue-100 bg-white px-4 py-2 text-sm font-medium text-zinc-700"
+              className="rounded-full border border-blue-100 bg-white px-4 py-2 text-sm font-semibold text-foreground/70"
             >
               {resource}
             </span>
@@ -74,10 +74,10 @@ export function LeadCapture({
               <button
                 key={label}
                 type="button"
-                className={`inline-flex items-center gap-1.5 rounded-full border px-4 py-2 text-sm font-medium transition-all ${
+                className={`inline-flex min-h-11 items-center gap-1.5 rounded-full border px-4 py-2 text-sm font-semibold transition-all ${
                   active
                     ? "border-blue-600 bg-blue-600 text-white"
-                    : "border-zinc-200 bg-white text-zinc-600 hover:border-blue-200"
+                    : "border-border bg-white text-foreground/68 hover:border-blue-200"
                 }`}
                 onClick={() => toggle(label)}
               >
@@ -90,7 +90,7 @@ export function LeadCapture({
       )}
 
       {submitted ? (
-        <div className="mx-auto flex max-w-md items-center justify-center gap-1.5 rounded-full bg-emerald-50 px-4 py-2 text-sm font-medium text-emerald-700">
+        <div className="mx-auto flex max-w-md items-center justify-center gap-1.5 rounded-full border border-[var(--status-pass-border)] bg-[var(--status-pass-subtle)] px-4 py-2 text-sm font-semibold text-[var(--status-pass)]">
           <Icon icon="solar:check-circle-linear" aria-hidden="true" />
           {t("success")}
         </div>
@@ -103,17 +103,17 @@ export function LeadCapture({
             type="email"
             required
             placeholder={t("placeholder")}
-            className="min-w-0 flex-1 rounded-full border border-zinc-200 bg-white px-5 py-2.5 text-sm text-zinc-900 shadow-sm placeholder:text-zinc-400 focus:border-transparent focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="min-h-11 min-w-0 flex-1 rounded-lg border border-border bg-white px-5 py-2.5 text-sm text-foreground shadow-sm placeholder:text-foreground/38 focus:border-transparent focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
           <button
             type="submit"
-            className="rounded-full bg-blue-600 px-6 py-2.5 text-sm font-medium text-white shadow-sm transition-all hover:scale-[1.02] hover:bg-blue-500 hover:shadow-md active:scale-[0.98]"
+            className="min-h-11 rounded-lg bg-primary px-6 py-2.5 text-sm font-semibold text-white shadow-sm transition-colors hover:bg-[var(--accent-hover)]"
           >
             {resolvedCta}
           </button>
         </form>
       )}
-      <p className="mt-3 text-xs text-zinc-400">
+      <p className="mt-3 text-xs text-foreground/42">
         {t("footnote")}
       </p>
     </div>

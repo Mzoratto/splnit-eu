@@ -34,12 +34,18 @@ export function AppShell({
 
   return (
     <div className="min-h-screen bg-background pb-[calc(5.5rem+env(safe-area-inset-bottom))] text-foreground lg:pb-0">
-      <Sidebar isPreIntake={isPreIntake} regulationUpdateCount={regulationUpdateCount} />
+      <Sidebar
+        clerkEnabled={clerkEnabled}
+        isPreIntake={isPreIntake}
+        organisationName={organisationName}
+        plan={plan}
+        regulationUpdateCount={regulationUpdateCount}
+      />
       <div className="lg:pl-[220px]">
-        <header className="sticky top-0 z-[var(--z-sticky)] flex h-14 items-center justify-between border-b border-border bg-surface/85 px-4 backdrop-blur-xl sm:px-5">
+        <header className="sticky top-0 z-[var(--z-sticky)] flex h-20 items-center justify-between border-b border-border bg-white/90 px-4 backdrop-blur-xl sm:px-6">
           <div className="flex min-w-0 items-center gap-3 pr-3">
             <div className="min-w-0">
-              <p className="truncate text-sm font-medium">{organisationName}</p>
+              <p className="truncate text-base font-semibold">{organisationName}</p>
               <p className="text-xs capitalize text-foreground/58">
                 {t("plan")}: {plan}
               </p>
@@ -48,20 +54,20 @@ export function AppShell({
               <OrgSwitcher enabled={clerkEnabled} />
             </div>
           </div>
-          <label className="mx-4 hidden h-9 w-full max-w-80 items-center gap-2 rounded-md border border-border bg-background px-3 text-sm text-foreground/52 lg:flex">
+          <label className="mx-4 hidden h-11 w-full max-w-md items-center gap-2 rounded-lg border border-border bg-background px-4 text-sm text-foreground/52 lg:flex">
             <Search className="h-4 w-4" aria-hidden="true" strokeWidth={1.5} />
             <span>{t("search")}</span>
           </label>
           <div className="flex items-center gap-2">
             <Link
               href={trustCenterHref}
-              className="btn btn-secondary hidden h-9 px-3 sm:inline-flex"
+              className="btn btn-secondary hidden h-11 px-4 sm:inline-flex"
             >
               {t("trustCenter")}
             </Link>
             <button
               type="button"
-              className="btn btn-ghost h-9 w-9 px-0"
+              className="btn btn-ghost h-11 w-11 px-0"
               aria-label={t("notifications")}
             >
               <Bell className="h-4 w-4" aria-hidden="true" strokeWidth={1.5} />
@@ -71,7 +77,7 @@ export function AppShell({
           </div>
         </header>
         {plan === "free" && freePlanBannerVisible ? (
-          <div className="border-b border-border bg-background px-5 py-1.5 text-xs text-foreground/58">
+          <div className="border-b border-border bg-blue-50 px-5 py-2 text-xs text-foreground/68">
             <div className="flex w-full items-center gap-3">
               <span className="min-w-0 flex-1 truncate">
                 {t("freePlanBanner")}

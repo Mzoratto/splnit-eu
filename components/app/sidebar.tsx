@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { SignOutButton } from "@clerk/nextjs";
 import { useTranslations } from "next-intl";
 import { LogoMark } from "@/components/brand/logo-mark";
 import {
@@ -15,11 +16,13 @@ import {
   GraduationCap,
   Landmark,
   LayoutDashboard,
+  LogOut,
   Plug,
   ScrollText,
   Settings,
   Users,
 } from "lucide-react";
+import type { PlanKey } from "@/lib/stripe/plans";
 
 const navigation = [
   {
@@ -78,25 +81,31 @@ function Badge({ count }: { count: number }) {
 }
 
 export function Sidebar({
+  clerkEnabled,
+  organisationName,
   isPreIntake = false,
+  plan,
   regulationUpdateCount = 0,
 }: {
+  clerkEnabled: boolean;
+  organisationName: string;
   isPreIntake?: boolean;
+  plan: PlanKey;
   regulationUpdateCount?: number;
 }) {
   const pathname = usePathname();
   const t = useTranslations("navigation");
 
   return (
-    <aside className="fixed inset-y-0 left-0 hidden w-[220px] border-r border-border bg-background lg:block">
-      <div className="flex h-14 items-center gap-2 border-b border-border px-4 text-sm font-medium">
-        <LogoMark className="h-5 w-5" />
-        Splnit.eu
+    <aside className="fixed inset-y-0 left-0 hidden w-[220px] border-r border-slate-800 bg-slate-900 text-white lg:flex lg:flex-col">
+      <div className="flex h-20 items-center gap-3 border-b border-white/10 px-5 text-lg font-bold">
+        <LogoMark className="h-9 w-9" />
+        <span>Splnit.eu</span>
       </div>
-      <nav className="grid gap-3 p-3 text-sm">
+      <nav className="grid flex-1 content-start gap-5 p-4 text-sm">
         {navigation.map((group) => (
           <div key={group.sectionKey}>
-            <p className="px-3 pb-2 pt-2 text-[11px] font-medium text-foreground/48">
+            <p className="px-3 pb-2 pt-2 text-[11px] font-semibold text-slate-500">
               {t(`sections.${group.sectionKey}`)}
             </p>
             <div className="grid gap-1">
@@ -111,12 +120,12 @@ export function Sidebar({
                     aria-disabled={locked}
                     title={locked ? t("lockedUntilIntake") : undefined}
                     tabIndex={locked ? -1 : undefined}
-                    className={`flex items-center gap-2.5 rounded-md px-3 py-2 text-[13px] ${
+                    className={`flex min-h-10 items-center gap-2.5 rounded-lg px-3 py-2 text-[13px] transition-colors ${
                       locked
-                        ? "pointer-events-none cursor-not-allowed text-foreground/35 opacity-45"
+                        ? "pointer-events-none cursor-not-allowed text-slate-500 opacity-50"
                         : active
-                        ? "bg-[var(--accent-subtle)] font-medium text-primary"
-                        : "text-foreground/70 hover:bg-bg-hover hover:text-foreground"
+                        ? "bg-blue-600 font-semibold text-white shadow-sm shadow-blue-950/30"
+                        : "text-slate-300 hover:bg-white/10 hover:text-white"
                     }`}
                     >
                     <item.icon className="h-4 w-4" aria-hidden="true" strokeWidth={1.5} />
@@ -131,6 +140,36 @@ export function Sidebar({
           </div>
         ))}
       </nav>
+      <div className="border-t border-white/10 p-4">
+        <div className="flex min-w-0 items-center gap-3 rounded-lg px-2 py-2 text-left">
+          <span className="grid h-10 w-10 shrink-0 place-items-center rounded-full bg-blue-600 text-sm font-bold text-white">
+            {organisationName.slice(0, 1).toUpperCase()}
+          </span>
+          <Link href="/settings/organisation" className="min-w-0 flex-1">
+            <span className="block truncate text-sm font-semibold text-white">
+              {organisationName}
+            </span>
+            <span className="block truncate text-xs capitalize text-slate-400">
+              {plan}
+            </span>
+          </Link>
+          {clerkEnabled ? (
+            <SignOutButton>
+              <button
+                type="button"
+                className="grid h-9 w-9 shrink-0 place-items-center rounded-lg text-slate-400 transition-colors hover:bg-white/10 hover:text-white"
+                aria-label="Sign out"
+              >
+                <LogOut className="h-4 w-4" aria-hidden="true" strokeWidth={1.6} />
+              </button>
+            </SignOutButton>
+          ) : (
+            <span className="grid h-9 w-9 shrink-0 place-items-center rounded-lg text-slate-600">
+              <LogOut className="h-4 w-4" aria-hidden="true" strokeWidth={1.6} />
+            </span>
+          )}
+        </div>
+      </div>
     </aside>
   );
 }

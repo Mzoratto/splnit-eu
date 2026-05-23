@@ -92,16 +92,23 @@ export default async function PohodaWorkspacePage() {
       </Link>
 
       {/* Page heading */}
-      <div>
-        <p className="text-xs font-medium uppercase tracking-[0.14em] text-primary">
-          {copy.pageEyebrow}
-        </p>
-        <h1 className="mt-1 text-2xl font-semibold">
-          Pohoda (Stormware)
-        </h1>
-        <p className="mt-2 max-w-2xl text-sm leading-6 text-foreground/64">
-          {copy.platformGuide.replace("{platform}", "Pohoda")}
-        </p>
+      <div className="rounded-lg border border-border bg-white p-5 shadow-xs">
+        <div className="flex flex-col gap-4 md:flex-row md:items-center">
+          <span className="grid h-14 w-14 place-items-center rounded-lg bg-red-600 text-sm font-bold text-white">
+            PO
+          </span>
+          <div>
+            <p className="text-xs font-medium uppercase tracking-[0.14em] text-primary">
+              {copy.pageEyebrow}
+            </p>
+            <h1 className="mt-1 text-2xl font-semibold">
+              Pohoda (Stormware)
+            </h1>
+            <p className="mt-2 max-w-2xl text-sm leading-6 text-foreground/64">
+              {copy.platformGuide.replace("{platform}", "Pohoda")}
+            </p>
+          </div>
+        </div>
       </div>
 
       {mode === "demo" ? (

@@ -55,12 +55,12 @@ export default async function PricingPage() {
   return (
     <MarketingShell>
       <main>
-        <section data-hero className="px-5 pb-16 pt-32 text-center">
+        <section data-hero className="border-b border-border bg-white px-5 pb-16 pt-36 text-center">
           <div className="mx-auto max-w-4xl">
-            <h1 className="text-5xl font-semibold leading-[1.05] tracking-[-0.04em] text-zinc-900 md:text-[68px]">
+            <h1 className="text-5xl font-bold leading-[1.05] tracking-normal text-foreground md:text-[68px]">
               {t("title")}
             </h1>
-            <p className="mx-auto mt-5 max-w-2xl text-lg leading-8 text-zinc-500">
+            <p className="mx-auto mt-5 max-w-2xl text-lg leading-8 text-foreground/62">
               {t("subtitle")}
             </p>
             <PricingCards />
@@ -70,8 +70,8 @@ export default async function PricingPage() {
           </div>
         </section>
 
-        <section className="border-t border-zinc-200/50 px-5 py-12">
-          <div className="mx-auto max-w-5xl rounded-[28px] bg-zinc-950 p-8 text-white md:flex md:items-center md:justify-between md:gap-8">
+        <section className="px-5 py-12">
+          <div className="mx-auto max-w-5xl rounded-lg bg-slate-900 p-8 text-white md:flex md:items-center md:justify-between md:gap-8">
             <div className="flex items-start gap-4">
               <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-white/10 text-blue-300">
                 <Icon
@@ -99,11 +99,11 @@ export default async function PricingPage() {
           </div>
         </section>
 
-        <section className="border-t border-zinc-200/50 bg-white py-20">
+        <section className="border-t border-border bg-white py-20">
           <div className="mx-auto max-w-7xl px-5">
             <div className="mb-10 text-center">
               <span className="section-tag mb-5">{t("comparisonTag")}</span>
-              <h2 className="text-4xl font-semibold tracking-[-0.04em] text-zinc-900">
+              <h2 className="text-4xl font-bold tracking-normal text-foreground">
                 {t("comparisonTitle")}
               </h2>
             </div>
@@ -111,11 +111,11 @@ export default async function PricingPage() {
           </div>
         </section>
 
-        <section className="border-t border-zinc-200/50 bg-white py-20">
+        <section className="border-t border-border bg-white py-20">
           <div className="mx-auto max-w-3xl px-5">
             <div className="mb-10 text-center">
               <span className="section-tag mb-5">{t("faqTag")}</span>
-              <h2 className="text-4xl font-semibold tracking-[-0.04em] text-zinc-900">
+              <h2 className="text-4xl font-bold tracking-normal text-foreground">
                 {t("faqTitle")}
               </h2>
             </div>
@@ -132,22 +132,22 @@ export default async function PricingPage() {
             }}
           />
           <div className="relative z-10 mx-auto max-w-3xl px-5 text-center">
-            <h2 className="text-4xl font-semibold leading-[1.05] tracking-[-0.04em] text-zinc-900 md:text-5xl">
+            <h2 className="text-4xl font-bold leading-[1.05] tracking-normal text-foreground md:text-5xl">
               {t("finalTitle")}
             </h2>
-            <p className="mx-auto mt-5 max-w-xl text-base leading-7 text-zinc-500">
+            <p className="mx-auto mt-5 max-w-xl text-base leading-7 text-foreground/62">
               {t("finalBody")}
             </p>
             <div className="mt-10 flex flex-col justify-center gap-3 sm:flex-row">
               <Link
                 href={getLocalizedMarketingPath("/sign-up", locale)}
-                className="rounded-full bg-zinc-900 px-8 py-3 text-sm font-medium text-white transition-colors hover:bg-zinc-800"
+                className="rounded-lg bg-primary px-8 py-3 text-sm font-semibold text-white transition-colors hover:bg-[var(--accent-hover)]"
               >
                 {t("primaryCta")}
               </Link>
               <Link
                 href={getLocalizedMarketingPath("/platform", locale)}
-                className="rounded-full border border-zinc-200 bg-white px-8 py-3 text-sm font-medium text-zinc-800 shadow-sm transition-colors hover:bg-zinc-50"
+                className="rounded-lg border border-border bg-white px-8 py-3 text-sm font-semibold text-foreground shadow-sm transition-colors hover:bg-surface-muted"
               >
                 {t("secondaryCta")}
               </Link>

@@ -127,7 +127,7 @@ export default async function BillingSettingsPage({ searchParams }: PageProps) {
           <button
             type="submit"
             disabled={!canOpenPortal}
-            className="inline-flex items-center gap-2 rounded-md border border-border px-4 py-3 text-sm font-medium text-foreground enabled:hover:bg-surface-muted disabled:cursor-not-allowed disabled:opacity-45"
+          className="btn btn-secondary min-h-11 disabled:cursor-not-allowed disabled:opacity-45"
           >
             {copy.customerPortal}
             <ExternalLink className="h-4 w-4" aria-hidden="true" />
@@ -145,13 +145,13 @@ export default async function BillingSettingsPage({ searchParams }: PageProps) {
 
       {activeSubscription ? (
         <div className="grid gap-4 lg:grid-cols-[1fr_1.2fr]">
-          <article className="rounded-lg border border-border bg-surface p-5">
+          <article className="rounded-lg border border-primary bg-white p-5 shadow-sm shadow-blue-100">
             <div className="flex items-start justify-between gap-4">
               <div>
                 <p className="text-sm text-foreground/58">{copy.currentPlan}</p>
                 <h2 className="mt-1 text-2xl font-semibold">{currentPlanLabel}</h2>
               </div>
-              <span className="inline-flex items-center gap-1 rounded-md bg-surface-muted px-2 py-1 text-xs">
+              <span className="inline-flex items-center gap-1 rounded-full border border-[var(--status-pass-border)] bg-[var(--status-pass-subtle)] px-2 py-1 text-xs font-semibold text-[var(--status-pass)]">
                 <ShieldCheck className="h-3.5 w-3.5" aria-hidden="true" />
                 {copy.stripeSynced}
               </span>
@@ -178,7 +178,7 @@ export default async function BillingSettingsPage({ searchParams }: PageProps) {
             </dl>
           </article>
 
-          <article className="rounded-lg border border-border bg-surface p-5">
+          <article className="rounded-lg border border-border bg-white p-5 shadow-xs">
             <div className="flex items-start gap-3">
               <CreditCard className="mt-1 h-5 w-5 text-primary" aria-hidden="true" />
               <div>
@@ -211,7 +211,7 @@ export default async function BillingSettingsPage({ searchParams }: PageProps) {
             {BILLABLE_PLANS.map((plan) => (
               <article
                 key={plan}
-                className="flex min-h-[340px] flex-col rounded-lg border border-border bg-surface p-5"
+                className="flex min-h-[340px] flex-col rounded-lg border border-border bg-white p-5 shadow-xs"
               >
                 <div>
                   <h3 className="text-xl font-semibold">{planCopy[plan].name}</h3>
@@ -239,7 +239,7 @@ export default async function BillingSettingsPage({ searchParams }: PageProps) {
                   <button
                     type="submit"
                     disabled={!canManageBilling}
-                    className="w-full rounded-md bg-primary px-4 py-3 text-sm font-medium text-primary-foreground enabled:hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-45"
+                    className="btn btn-primary w-full min-h-11 disabled:cursor-not-allowed disabled:opacity-45"
                   >
                     {copy.subscribe}
                   </button>

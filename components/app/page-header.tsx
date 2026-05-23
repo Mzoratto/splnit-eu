@@ -28,12 +28,12 @@ export function PageHeader({
     >
       <div className="max-w-3xl">
         {breadcrumb ? (
-          <p className="mb-2 text-xs text-foreground/48">{breadcrumb}</p>
+          <p className="mb-2 text-xs font-medium text-foreground/48">{breadcrumb}</p>
         ) : null}
         {eyebrow ? (
-          <p className="text-sm font-medium text-primary">{eyebrow}</p>
+          <p className="text-sm font-semibold text-primary">{eyebrow}</p>
         ) : null}
-        <h1 className="mt-2 text-[22px] font-medium tracking-normal">{title}</h1>
+        <h1 className="mt-2 text-[28px] font-bold tracking-normal">{title}</h1>
         {subtitle ? (
           <p className="mt-2 text-sm leading-6 text-foreground/64">{subtitle}</p>
         ) : null}

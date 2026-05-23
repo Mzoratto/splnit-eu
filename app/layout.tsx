@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { DM_Sans, JetBrains_Mono } from "next/font/google";
+import { Inter, JetBrains_Mono } from "next/font/google";
 import { cookies } from "next/headers";
 import { NextIntlClientProvider } from "next-intl";
 import { getLocale, getMessages } from "next-intl/server";
@@ -12,8 +12,8 @@ import {
 } from "@/lib/privacy/cookie-consent";
 import "./globals.css";
 
-const dmSans = DM_Sans({
-  variable: "--font-dm-sans",
+const inter = Inter({
+  variable: "--font-inter",
   subsets: ["latin"],
   display: "optional",
   preload: true,
@@ -139,7 +139,7 @@ export default async function RootLayout({
       lang={locale}
       data-theme="light"
       suppressHydrationWarning
-      className={`${dmSans.variable} ${jetBrainsMono.variable} h-full scroll-smooth`}
+      className={`${inter.variable} ${jetBrainsMono.variable} h-full scroll-smooth`}
     >
       <head>
         <script dangerouslySetInnerHTML={{ __html: themeScript }} />

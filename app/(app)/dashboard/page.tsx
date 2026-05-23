@@ -633,7 +633,7 @@ export default async function DashboardPage({
         </section>
       ) : null}
 
-      <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
+      <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-[1.35fr_repeat(3,minmax(0,1fr))]">
         <article className={`metric-card ${shouldShowScore ? "flex items-center gap-5" : "flex flex-col items-start gap-3"}`}>
           {shouldShowScore ? (
             <AnimatedScoreRing label={copy.scoreLabel} locale={locale} score={score} />
@@ -927,6 +927,13 @@ export default async function DashboardPage({
           ))}
         </div>
       </section>
+      <Link
+        href={setupCta.href}
+        className="btn btn-primary fixed inset-x-4 bottom-[calc(5.25rem+env(safe-area-inset-bottom))] z-40 min-h-12 lg:hidden"
+      >
+        {setupCta.label}
+        <ArrowRight className="h-4 w-4" aria-hidden="true" strokeWidth={1.5} />
+      </Link>
     </section>
   );
 }

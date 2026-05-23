@@ -47,15 +47,15 @@ export async function generateMetadata(): Promise<Metadata> {
 
 const features = [
   {
-    icon: "solar:shield-network-linear",
+    icon: "solar:magnifer-linear",
     key: "residency",
   },
   {
-    icon: "solar:bolt-circle-linear",
+    icon: "solar:chart-2-linear",
     key: "monitoring",
   },
   {
-    icon: "solar:documents-linear",
+    icon: "solar:bell-linear",
     key: "documents",
   },
 ];
@@ -82,6 +82,16 @@ const trustBadges = [
   ["solar:document-check-linear", "onboarding"],
 ] as const;
 
+const connectorBadges = [
+  ["PO", "Pohoda", "bg-red-600"],
+  ["AB", "ABRA Flexi", "bg-purple-600"],
+  ["MI", "Microsoft 365", "bg-sky-500"],
+  ["HE", "Hetzner Cloud", "bg-orange-500"],
+  ["AW", "AWS", "bg-amber-500"],
+  ["HL", "Helios", "bg-teal-600"],
+  ["MS", "Money S3", "bg-indigo-600"],
+] as const;
+
 export default async function HomePage() {
   const locale = normalizeLocale(await getLocale()) ?? "cs-CZ";
   const t = await getTranslations("home");
@@ -92,7 +102,7 @@ export default async function HomePage() {
       <main>
         <header
           data-hero
-          className="relative overflow-hidden pb-20 pt-28 md:pb-28 md:pt-36"
+          className="relative overflow-hidden border-b border-border bg-white pb-20 pt-32 md:pb-24 md:pt-40"
         >
           <div
             className="bg-grid pointer-events-none absolute inset-0 z-0"
@@ -102,34 +112,35 @@ export default async function HomePage() {
             }}
           />
           <div className="relative z-10 mx-auto max-w-7xl px-5">
-            <div className="mx-auto max-w-4xl text-center">
-              <div className="mb-8 inline-flex items-center gap-2 rounded-full border border-blue-100 bg-blue-50/80 px-3.5 py-1.5 text-blue-700">
+            <div className="grid items-center gap-12 lg:grid-cols-[minmax(0,1fr)_minmax(440px,0.86fr)]">
+              <div>
+                <div className="mb-8 inline-flex items-center gap-2 rounded-full border border-blue-100 bg-blue-50/80 px-3.5 py-1.5 text-blue-700">
                 <span className="pulse-dot h-1.5 w-1.5 rounded-full bg-blue-500" />
-                <span className="text-xs font-medium">
+                <span className="text-xs font-bold">
                   {t("badge")}
                 </span>
               </div>
 
-              <h1 className="mb-6 text-5xl font-semibold leading-[1.05] tracking-[-0.04em] [font-family:ui-sans-serif,system-ui,sans-serif] md:text-[72px]">
-                <span className="block text-zinc-900">
+              <h1 className="mb-6 max-w-3xl text-5xl font-bold leading-[1.02] tracking-normal text-foreground md:text-[72px]">
+                <span className="block">
                   {t("titleLine1")}
                 </span>
                 {titleLine2 ? (
-                  <span className="mt-1 block text-zinc-400">
+                  <span className="mt-1 block text-primary">
                     {titleLine2}
                   </span>
                 ) : null}
               </h1>
 
-              <p className="mx-auto mb-10 max-w-lg text-sm leading-6 text-zinc-600 md:max-w-2xl md:text-xl md:leading-relaxed">
+              <p className="mb-10 max-w-2xl text-lg leading-8 text-foreground/68 md:text-xl">
                 {t("lead")}
               </p>
 
-              <div className="mb-6 flex flex-col items-center justify-center gap-3 sm:flex-row">
-                <div className="rounded-full bg-gradient-to-b from-blue-400 to-blue-700 p-px shadow-md shadow-blue-200/50 transition-all hover:scale-[1.02] hover:shadow-lg hover:shadow-blue-200/70">
+              <div className="mb-6 flex flex-col gap-3 sm:flex-row">
+                <div>
                   <Link
                     href={getLocalizedMarketingPath("/early-access", locale)}
-                    className="flex items-center gap-2 rounded-full bg-blue-600 px-7 py-3 font-medium text-white transition-colors hover:bg-blue-500"
+                    className="flex min-h-14 items-center justify-center gap-2 rounded-lg bg-primary px-8 py-3 font-semibold text-white shadow-[0_14px_24px_rgba(37,99,235,0.22)] transition-colors hover:bg-[var(--accent-hover)]"
                   >
                     {t("primaryCta")}
                     <Icon
@@ -141,7 +152,7 @@ export default async function HomePage() {
                 </div>
                 <Link
                   href="/demo"
-                  className="flex items-center gap-2 rounded-full border border-zinc-200 bg-white px-7 py-3 font-medium text-zinc-800 shadow-sm transition-all hover:scale-[1.02] hover:bg-zinc-50 hover:shadow-md"
+                  className="flex min-h-14 items-center justify-center gap-2 rounded-lg border border-border bg-white px-8 py-3 font-semibold text-foreground shadow-sm transition-colors hover:bg-surface-muted"
                 >
                   <Icon
                     icon="solar:play-circle-linear"
@@ -151,27 +162,32 @@ export default async function HomePage() {
                   {t("secondaryCta")}
                 </Link>
               </div>
-              <p className="text-xs text-zinc-400">
+              <p className="text-sm font-medium text-foreground/50">
                 {t("trustLine")}
               </p>
             </div>
 
-            <DashboardMockup locale={locale} />
+              <DashboardMockup locale={locale} />
+            </div>
 
-            <div className="fade-up mt-12 text-center">
-              <p className="mb-6 text-xs font-medium uppercase tracking-widest text-zinc-400">
+            <div className="fade-up mt-20 text-center">
+              <p className="mb-6 text-xs font-bold uppercase tracking-normal text-foreground/38">
                 {t("partnerTag")}
               </p>
-              <div className="mx-auto grid max-w-3xl gap-3 text-sm text-zinc-500 sm:grid-cols-3">
-                <span className="rounded-full border border-zinc-200 bg-white px-4 py-2">
-                  {t("partnerFilled")}
-                </span>
-                <span className="rounded-full border border-zinc-200 bg-white px-4 py-2">
-                  {t("partnerFree")}
-                </span>
-                <span className="rounded-full border border-zinc-200 bg-white px-4 py-2">
-                  {t("partnerOnboarding")}
-                </span>
+              <div className="mx-auto grid max-w-5xl gap-3 sm:grid-cols-2 lg:grid-cols-7">
+                {connectorBadges.map(([abbr, name, color]) => (
+                  <div
+                    key={name}
+                    className="flex min-h-28 flex-col items-center justify-center rounded-lg border border-border bg-white p-4 shadow-xs"
+                  >
+                    <span className={`grid h-10 w-10 place-items-center rounded-lg text-sm font-bold text-white ${color}`}>
+                      {abbr}
+                    </span>
+                    <span className="mt-3 text-sm font-semibold text-foreground/72">
+                      {name}
+                    </span>
+                  </div>
+                ))}
               </div>
             </div>
           </div>
@@ -184,10 +200,10 @@ export default async function HomePage() {
                 <Icon icon="solar:bolt-circle-linear" aria-hidden="true" />
                 {t("stepsTag")}
               </div>
-              <h2 className="mb-4 text-3xl font-semibold tracking-[-0.03em] text-zinc-900 md:text-4xl">
+              <h2 className="mb-4 text-3xl font-bold tracking-normal text-foreground md:text-4xl">
                 {t("stepsTitle")}
               </h2>
-              <p className="mx-auto max-w-xl text-base leading-relaxed text-zinc-500">
+              <p className="mx-auto max-w-xl text-base leading-relaxed text-foreground/62">
                 {t("stepsBody")}
               </p>
             </div>
@@ -202,9 +218,9 @@ export default async function HomePage() {
                   <div className="flex h-10 w-10 items-center justify-center rounded-full bg-blue-600 text-sm font-semibold text-white shadow-md shadow-blue-200">
                     {index + 1}
                   </div>
-                  <div className={`w-full rounded-2xl p-px ${index === 1 ? "grad-border-blue" : "grad-border"}`}>
-                    <div className="h-full rounded-[15px] bg-white p-6">
-                      <div className="mb-5 flex h-10 w-10 items-center justify-center rounded-xl bg-blue-50 text-blue-600">
+                  <div className={`w-full rounded-lg border bg-white shadow-sm ${index === 1 ? "border-primary" : "border-border"}`}>
+                    <div className="h-full rounded-lg bg-white p-6">
+                      <div className="mb-5 flex h-10 w-10 items-center justify-center rounded-lg bg-blue-50 text-blue-600">
                         <Icon icon={step.icon} className="text-xl" aria-hidden="true" />
                       </div>
                       <h3 className="mb-2 text-base font-semibold text-zinc-900">
@@ -228,10 +244,10 @@ export default async function HomePage() {
                 <Icon icon="solar:star-linear" aria-hidden="true" />
                 {t("featuresTag")}
               </div>
-              <h2 className="mb-4 text-3xl font-semibold tracking-[-0.03em] text-zinc-900 md:text-4xl">
+              <h2 className="mb-4 text-3xl font-bold tracking-normal text-foreground md:text-4xl">
                 {t("featuresTitle")}
               </h2>
-              <p className="mx-auto max-w-2xl text-base leading-relaxed text-zinc-500">
+              <p className="mx-auto max-w-2xl text-base leading-relaxed text-foreground/62">
                 {t("featuresBody")}
               </p>
             </div>
@@ -240,16 +256,16 @@ export default async function HomePage() {
               {features.map((feature) => (
                 <article
                   key={feature.key}
-                  className="scroll-animate group rounded-[22px] p-px grad-border shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-lg"
+                  className="scroll-animate group rounded-lg border border-border bg-white shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-lg"
                 >
-                  <div className="flex h-full flex-col rounded-[21px] bg-white p-7">
-                    <div className="mb-5 flex h-11 w-11 items-center justify-center rounded-xl bg-blue-50 text-blue-600 transition-colors group-hover:bg-blue-100">
+                  <div className="flex h-full flex-col rounded-lg bg-white p-7">
+                    <div className="mb-5 flex h-11 w-11 items-center justify-center rounded-lg bg-blue-50 text-blue-600 transition-colors group-hover:bg-blue-100">
                       <Icon icon={feature.icon} className="text-2xl" aria-hidden="true" />
                     </div>
-                    <h3 className="mb-2.5 text-base font-semibold text-zinc-900">
+                    <h3 className="mb-2.5 text-base font-semibold text-foreground">
                       {t(`features.${feature.key}Title`)}
                     </h3>
-                    <p className="flex-1 text-sm leading-relaxed text-zinc-500">
+                    <p className="flex-1 text-sm leading-relaxed text-foreground/62">
                       {t(`features.${feature.key}Body`)}
                     </p>
                   </div>
@@ -275,10 +291,6 @@ export default async function HomePage() {
                 "radial-gradient(ellipse 80% 80% at 50% 50%, white, transparent)",
             }}
           />
-          <div
-            className="pointer-events-none absolute left-1/4 top-0 h-96 w-96 rounded-full opacity-[0.06] blur-[80px]"
-            style={{ background: "#3B82F6" }}
-          />
           <div className="relative z-10 mx-auto max-w-7xl px-5">
             <div className="flex flex-col items-start gap-16 md:flex-row">
               <div className="scroll-animate flex-1">
@@ -287,7 +299,7 @@ export default async function HomePage() {
                   className="mb-7 block text-5xl text-zinc-700"
                   aria-hidden="true"
                 />
-                <h2 className="mb-8 text-3xl font-semibold leading-snug tracking-normal text-white md:text-[44px]">
+                <h2 className="mb-8 text-3xl font-bold leading-snug tracking-normal text-white md:text-[44px]">
                   {t("offerTitle")}
                 </h2>
                 <p className="mb-8 max-w-xl text-base leading-7 text-zinc-400">
@@ -304,10 +316,10 @@ export default async function HomePage() {
 
               <div className="reference-float scroll-animate w-full shrink-0 md:w-[360px]">
                 <div
-                  className="rounded-[26px] p-px"
+                  className="rounded-lg border border-zinc-800"
                   style={{ background: "linear-gradient(180deg,#3F3F46,#18181B)" }}
                 >
-                  <div className="relative aspect-[4/5] overflow-hidden rounded-[25px] bg-zinc-900 grayscale transition-all hover:grayscale-0">
+                  <div className="relative aspect-[4/5] overflow-hidden rounded-lg bg-zinc-900 grayscale transition-all hover:grayscale-0">
                     <div className="absolute inset-0 flex flex-col items-center justify-center gap-4 px-8 text-center">
                       <div className="flex h-20 w-20 items-center justify-center rounded-full bg-zinc-800">
                         <Icon
@@ -408,17 +420,17 @@ function FinalCta({
         }}
       />
       <div className="scroll-animate relative z-10 mx-auto max-w-3xl px-5 text-center">
-        <h2 className="mb-5 text-4xl font-semibold leading-[1.05] tracking-[-0.04em] text-zinc-900 md:text-5xl">
+        <h2 className="mb-5 text-4xl font-bold leading-[1.05] tracking-normal text-foreground md:text-5xl">
           {title}
         </h2>
-        <p className="mx-auto mb-10 max-w-xl text-base leading-relaxed text-zinc-500">
+        <p className="mx-auto mb-10 max-w-xl text-base leading-relaxed text-foreground/62">
           {body}
         </p>
         <div className="flex flex-col items-center justify-center gap-3 sm:flex-row">
-          <div className="rounded-full bg-gradient-to-b from-zinc-600 to-zinc-900 p-px shadow-md transition-all hover:scale-[1.02] hover:shadow-lg">
+          <div>
             <Link
               href={primaryHref}
-              className="flex items-center gap-2 rounded-full bg-zinc-900 px-8 py-3 font-medium text-white transition-colors hover:bg-zinc-800"
+              className="flex min-h-12 items-center gap-2 rounded-lg bg-primary px-8 py-3 font-semibold text-white transition-colors hover:bg-[var(--accent-hover)]"
             >
               {primaryCta}
               <Icon
@@ -430,7 +442,7 @@ function FinalCta({
           </div>
           <Link
             href={secondaryHref}
-            className="flex items-center gap-2 rounded-full border border-zinc-200 bg-white px-8 py-3 font-medium text-zinc-800 shadow-sm transition-all hover:scale-[1.02] hover:bg-zinc-50 hover:shadow-md"
+            className="flex min-h-12 items-center gap-2 rounded-lg border border-border bg-white px-8 py-3 font-semibold text-foreground shadow-sm transition-colors hover:bg-surface-muted"
           >
             <Icon icon="solar:book-linear" className="text-zinc-400" aria-hidden="true" />
             {secondaryCta}

@@ -82,6 +82,16 @@ const providers = [
   },
 ] as const;
 
+const providerBadges: Record<string, { abbreviation: string; className: string }> = {
+  "abra-flexi": { abbreviation: "AB", className: "bg-purple-600" },
+  aws: { abbreviation: "AW", className: "bg-amber-500" },
+  github: { abbreviation: "GH", className: "bg-slate-800" },
+  google_workspace: { abbreviation: "GW", className: "bg-slate-400" },
+  hetzner: { abbreviation: "HE", className: "bg-orange-500" },
+  microsoft365: { abbreviation: "MI", className: "bg-sky-500" },
+  ovhcloud: { abbreviation: "OV", className: "bg-indigo-600" },
+};
+
 type HubData = Awaited<ReturnType<typeof getIntegrationsHubData>>;
 type IntegrationProviderKey = (typeof providers)[number]["key"];
 type IntegrationsCopy = ReturnType<typeof getMessagesForLocale>["integrations"];
@@ -253,7 +263,7 @@ export default async function IntegrationsPage() {
         </section>
       ) : null}
 
-      <div className="flex flex-wrap items-center gap-x-3 gap-y-2 rounded-lg border border-border bg-surface px-4 py-3 text-xs text-foreground/62">
+      <div className="flex flex-wrap items-center gap-x-3 gap-y-2 rounded-lg border border-border bg-white px-4 py-3 text-xs text-foreground/62 shadow-xs">
         <span className="font-medium text-foreground/78">{copy.index.results24h}</span>
         <span className="inline-flex items-center gap-1"><span className="h-2 w-2 rounded-full bg-status-pass" aria-hidden="true" />{copy.index.statusPass}</span>
         <span className="inline-flex items-center gap-1"><span className="h-2 w-2 rounded-full bg-danger" aria-hidden="true" />{copy.index.statusFail}</span>
@@ -283,11 +293,18 @@ export default async function IntegrationsPage() {
               className={
                 !hasConnectedIntegration && provider.key === recommendedProvider
                   ? "card interactive-card flex h-full flex-col border-primary/50 ring-1 ring-primary/20"
-                  : "card interactive-card flex h-full flex-col"
+                  : rawStatus === "available" || rawStatus === "coming_soon"
+                    ? "card interactive-card flex h-full flex-col border-dashed"
+                    : "card interactive-card flex h-full flex-col"
               }
             >
               <div className="flex items-start justify-between gap-4">
                 <div>
+                  <span
+                    className={`mb-4 grid h-11 w-11 place-items-center rounded-lg text-sm font-bold text-white ${providerBadges[provider.key]?.className ?? "bg-slate-500"}`}
+                  >
+                    {providerBadges[provider.key]?.abbreviation ?? provider.name.slice(0, 2)}
+                  </span>
                   <div className="flex flex-wrap gap-2">
                     <StatusPill tone={providerStatus.tone}>
                       {providerStatus.label}
@@ -296,7 +313,7 @@ export default async function IntegrationsPage() {
                       <StatusPill tone="warn">{copy.index.recommended}</StatusPill>
                     ) : null}
                   </div>
-                  <h2 className="mt-3 text-lg font-medium">{provider.name}</h2>
+                  <h2 className="mt-3 text-lg font-semibold">{provider.name}</h2>
                 </div>
                 {connected ? (
                   <CheckCircle2
@@ -338,7 +355,7 @@ export default async function IntegrationsPage() {
                 </div>
               </dl>
 
-              <div className="mt-4 rounded-md bg-surface-muted p-3">
+              <div className="mt-4 rounded-lg bg-surface-muted p-3">
                 <p className="text-xs font-medium text-foreground/60">
                   {copy.index.results24h}
                 </p>
@@ -373,7 +390,7 @@ export default async function IntegrationsPage() {
                 ) : (
                   <Link
                     href={provider.href}
-                    className="btn btn-secondary"
+                    className={connected ? "btn btn-secondary" : "btn btn-primary"}
                   >
                     {connected ? copy.index.manage : copy.index.connect}
                     <ArrowRight className="h-4 w-4" aria-hidden="true" strokeWidth={1.5} />

@@ -42,6 +42,16 @@ function pct(value: number): string {
   return `${Math.round(value * 100)}%`;
 }
 
+function workspaceBadgeClass(platformId: string) {
+  if (platformId.includes("pohoda")) return "bg-red-600";
+  if (platformId.includes("abra")) return "bg-purple-600";
+  if (platformId.includes("hetzner")) return "bg-orange-500";
+  if (platformId.includes("aws")) return "bg-amber-500";
+  if (platformId.includes("helios")) return "bg-teal-600";
+  if (platformId.includes("money")) return "bg-indigo-600";
+  return "bg-blue-600";
+}
+
 function controlProgress(
   controlKey: string,
   progress: WorkspaceProgress,
@@ -542,7 +552,7 @@ function ControlCard({
     : null;
 
   return (
-    <article className="rounded-lg border border-border bg-surface">
+    <article className="overflow-hidden rounded-lg border border-border bg-white shadow-xs">
       {/* Header row — always visible */}
       <button
         type="button"
@@ -603,7 +613,7 @@ function ControlCard({
 
       {/* Expanded detail */}
       {open ? (
-        <div className="border-t border-border p-4 space-y-4">
+        <div className="space-y-4 border-t border-border bg-slate-50/60 p-4">
           {/* Guidance */}
           <div className="flex gap-2 rounded-md border border-border bg-surface-muted p-3 text-sm leading-6 text-foreground/72">
             <Info className="mt-0.5 h-4 w-4 shrink-0 text-primary" aria-hidden="true" />
@@ -743,15 +753,20 @@ export function WorkspaceRenderer({
       ) : null}
 
       {/* Overall progress header */}
-      <div className="rounded-lg border border-border bg-surface p-5">
+      <div className="rounded-lg border border-border bg-white p-5 shadow-xs">
         <div className="flex flex-wrap items-center justify-between gap-3">
-          <div>
+          <div className="flex items-center gap-4">
+            <span className={`grid h-12 w-12 place-items-center rounded-lg text-sm font-bold text-white ${workspaceBadgeClass(workspace.platformId)}`}>
+              {workspace.platformName.slice(0, 2).toUpperCase()}
+            </span>
+            <div>
             <p className="text-xs font-medium uppercase tracking-[0.12em] text-foreground/48">
               {workspace.platformVendor}
             </p>
             <h2 className="mt-0.5 text-lg font-semibold">
               {t("workspaceTitle", { platform: workspace.platformName })}
             </h2>
+            </div>
           </div>
           <div className="text-right">
             <p className="text-2xl font-semibold tabular-nums">

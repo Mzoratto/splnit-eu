@@ -18,7 +18,7 @@ export default function DemoLayout({
   return (
     <>
       <Nav />
-      <div className="min-h-screen bg-background pt-16 text-foreground">
+      <div className="min-h-screen bg-background pt-20 text-foreground">
         <DemoBanner />
         <DemoSidebar />
         <div className="lg:pl-[220px]">

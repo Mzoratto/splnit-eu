@@ -28,11 +28,11 @@ function BlogBullets({ bullets }: { bullets: string[] }) {
       {bullets.map((bullet) => (
         <li
           key={bullet}
-          className="flex items-start gap-3 rounded-2xl border border-zinc-100 bg-zinc-50 p-4 text-sm leading-6 text-zinc-600"
+          className="flex items-start gap-3 rounded-lg border border-border bg-surface-muted p-4 text-sm leading-6 text-foreground/68"
         >
           <Icon
             icon="solar:check-circle-linear"
-            className="mt-0.5 shrink-0 text-xl text-blue-600"
+            className="mt-0.5 shrink-0 text-xl text-primary"
             aria-hidden="true"
           />
           {bullet}
@@ -89,24 +89,24 @@ export default async function BlogPostPage({
       />
       <main>
         <article>
-          <section data-hero className="px-5 pb-12 pt-32">
-            <div className="mx-auto max-w-4xl">
+          <section data-hero className="border-b border-border bg-white px-5 pb-12 pt-36">
+            <div className="mx-auto max-w-3xl">
               <Link
                 href="/blog"
-                className="mb-8 inline-flex text-sm font-medium text-blue-600 hover:text-blue-700"
+                className="mb-8 inline-flex text-sm font-semibold text-primary hover:text-[var(--accent-hover)]"
               >
                 {pageCopy.allArticles}
               </Link>
               <div className="flex flex-wrap items-center gap-2">
-                <span className="rounded-full border border-blue-100 bg-blue-50 px-3 py-1 text-xs font-medium text-blue-700">
+                <span className="rounded-full border border-blue-100 bg-blue-50 px-3 py-1 text-xs font-semibold text-blue-700">
                   {post.category}
                 </span>
-                <span className="rounded-full border border-zinc-200 bg-white px-3 py-1 text-xs font-medium text-zinc-600">
+                <span className="rounded-full border border-border bg-white px-3 py-1 text-xs font-semibold text-foreground/62">
                   {post.readTime}
                 </span>
                 <time
                   dateTime={post.publishedAt}
-                  className="rounded-full border border-zinc-200 bg-white px-3 py-1 text-xs font-medium text-zinc-600"
+                  className="rounded-full border border-border bg-white px-3 py-1 text-xs font-semibold text-foreground/62"
                 >
                   {new Intl.DateTimeFormat(locale, {
                     day: "numeric",
@@ -115,11 +115,11 @@ export default async function BlogPostPage({
                   }).format(new Date(post.publishedAt))}
                 </time>
               </div>
-              <h1 className="mt-6 text-5xl font-semibold leading-[1.05] tracking-[-0.04em] text-zinc-900 md:text-[68px]">
+              <h1 className="mt-6 text-5xl font-bold leading-[1.05] tracking-normal text-foreground md:text-[68px]">
                 {post.title}
               </h1>
-              <p className="mt-6 text-lg leading-8 text-zinc-500">{post.summary}</p>
-              <p className="mt-4 text-sm font-medium text-zinc-500">
+              <p className="mt-6 text-lg leading-8 text-foreground/62">{post.summary}</p>
+              <p className="mt-4 text-sm font-medium text-foreground/58">
                 {post.author && post.authorRole
                   ? `Autor: ${post.author}, ${post.authorRole}`
                   : pageCopy.articleAuthorFallback}
@@ -127,11 +127,11 @@ export default async function BlogPostPage({
             </div>
           </section>
 
-          <section className="border-t border-zinc-200/50 bg-white px-5 py-16">
-            <div className="mx-auto grid max-w-5xl gap-12 lg:grid-cols-[220px_1fr]">
+          <section className="bg-white px-5 py-16">
+            <div className="mx-auto grid max-w-5xl gap-12 lg:grid-cols-[220px_minmax(0,680px)]">
               <aside className="hidden lg:block">
-                <div className="sticky top-24 rounded-2xl border border-zinc-200 bg-zinc-50 p-5">
-                  <p className="mono text-xs font-medium uppercase text-zinc-400">
+                <div className="sticky top-24 rounded-lg border border-border bg-surface-muted p-5">
+                  <p className="mono text-xs font-semibold uppercase text-foreground/45">
                     {pageCopy.articleNavTitle}
                   </p>
                   <nav className="mt-4 grid gap-3">
@@ -139,7 +139,7 @@ export default async function BlogPostPage({
                       <a
                         key={section.heading}
                         href={`#${sectionId(section.heading)}`}
-                        className="text-sm font-medium text-zinc-600 hover:text-blue-700"
+                        className="text-sm font-semibold text-foreground/62 hover:text-primary"
                       >
                         {section.heading}
                       </a>
@@ -155,14 +155,14 @@ export default async function BlogPostPage({
                     id={sectionId(section.heading)}
                     className="scroll-mt-24"
                   >
-                    <h2 className="text-3xl font-semibold tracking-[-0.03em] text-zinc-900">
+                    <h2 className="text-3xl font-bold tracking-normal text-foreground">
                       {section.heading}
                     </h2>
                     <div className="mt-5 space-y-4">
                       {section.body.map((paragraph) => (
                         <p
                           key={paragraph}
-                          className="text-base leading-8 text-zinc-600"
+                          className="text-base leading-8 text-foreground/68"
                         >
                           {paragraph}
                         </p>
@@ -204,14 +204,14 @@ export default async function BlogPostPage({
                     ) : null}
                     {section.subsections?.map((subsection) => (
                       <div key={subsection.heading} className="mt-8">
-                        <h3 className="text-xl font-semibold tracking-[-0.02em] text-zinc-900">
+                        <h3 className="text-xl font-bold tracking-normal text-foreground">
                           {subsection.heading}
                         </h3>
                         <div className="mt-4 space-y-4">
                           {subsection.body.map((paragraph) => (
                             <p
                               key={paragraph}
-                              className="text-base leading-8 text-zinc-600"
+                              className="text-base leading-8 text-foreground/68"
                             >
                               {paragraph}
                             </p>
@@ -244,16 +244,16 @@ export default async function BlogPostPage({
                   </div>
                 ) : null}
 
-                <div className="rounded-[2rem] border border-blue-100 bg-blue-50/40 p-8">
-                  <h2 className="text-2xl font-semibold tracking-[-0.03em] text-zinc-900">
+                <div className="rounded-lg border border-blue-100 bg-blue-50/60 p-8">
+                  <h2 className="text-2xl font-bold tracking-normal text-foreground">
                     {post.ctaTitle ?? pageCopy.articleCtaTitle}
                   </h2>
-                  <p className="mt-3 max-w-2xl text-sm leading-6 text-zinc-500">
+                  <p className="mt-3 max-w-2xl text-sm leading-6 text-foreground/62">
                     {post.ctaBody ?? pageCopy.articleCtaBody}
                   </p>
                   <Link
                     href={getLocalizedMarketingPath(post.ctaHref ?? "/platform", locale)}
-                    className="mt-6 inline-flex rounded-full bg-blue-600 px-6 py-2.5 text-sm font-medium text-white transition-colors hover:bg-blue-500"
+                    className="mt-6 inline-flex rounded-lg bg-primary px-6 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-[var(--accent-hover)]"
                   >
                     {post.ctaButton ?? pageCopy.articleCtaButton}
                   </Link>

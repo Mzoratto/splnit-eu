@@ -60,7 +60,7 @@ export function PricingCards() {
   return (
     <>
       <div className="mt-6 flex flex-wrap items-center justify-center gap-3">
-        <span className="rounded-full border border-zinc-200 bg-white px-3 py-1 text-xs font-medium text-zinc-600 shadow-sm">
+        <span className="rounded-full border border-border bg-white px-3 py-1 text-xs font-semibold text-foreground/62 shadow-sm">
           {t("monthly")}
         </span>
       </div>
@@ -72,10 +72,10 @@ export function PricingCards() {
           const price = priceSet.monthly[index];
           const features = t.raw(`${planKey}.features`) as string[];
           const card = (
-            <div className="flex h-full flex-col rounded-[21px] bg-white p-7">
+            <div className="flex h-full flex-col rounded-lg bg-white p-7">
               {plan.featured ? (
                 <div className="absolute left-1/2 top-0 -translate-x-1/2 -translate-y-1/2">
-                  <span className="rounded-full bg-blue-600 px-3 py-1 text-[10px] font-semibold text-white shadow-md shadow-blue-200">
+                  <span className="rounded-full bg-primary px-3 py-1 text-[10px] font-bold text-white shadow-md shadow-blue-200">
                     {t("featured")}
                   </span>
                 </div>
@@ -83,20 +83,20 @@ export function PricingCards() {
               <div className="mb-6">
                 <p
                   className={`mb-2 text-xs font-semibold uppercase tracking-wider ${
-                    plan.featured ? "text-blue-500" : "text-zinc-400"
+                    plan.featured ? "text-primary" : "text-foreground/42"
                   }`}
                 >
                   {planName}
                 </p>
                 <div className="flex items-baseline gap-1">
-                  <span className="text-4xl font-semibold tracking-tight text-zinc-900 transition-opacity">
+                  <span className="text-4xl font-bold tracking-normal text-foreground transition-opacity">
                     {formatPlanPrice(price, locale, priceSet.currency)}
                   </span>
-                  <span className="text-sm text-zinc-400">
+                  <span className="text-sm text-foreground/45">
                     {t("monthlySuffix")}
                   </span>
                 </div>
-                <p className="mt-2 text-xs text-zinc-500">
+                <p className="mt-2 text-xs text-foreground/58">
                   {t(`${planKey}.description`)}
                 </p>
               </div>
@@ -104,11 +104,11 @@ export function PricingCards() {
                 {features.map((feature) => (
                   <li
                     key={feature}
-                    className="flex items-center gap-2 text-xs text-zinc-600"
+                    className="flex items-center gap-2 text-sm text-foreground/68"
                   >
                     <Icon
                       icon="solar:check-circle-linear"
-                      className="shrink-0 text-emerald-500"
+                      className="shrink-0 text-status-pass"
                       aria-hidden="true"
                     />
                     {feature}
@@ -116,7 +116,7 @@ export function PricingCards() {
                 ))}
               </ul>
               {plan.featured ? (
-                <div className="rounded-full bg-gradient-to-b from-blue-400 to-blue-700 p-px">
+                <div>
                   <PricingCta
                     href={plan.href}
                     label={t(`${planKey}.cta`)}
@@ -139,19 +139,11 @@ export function PricingCards() {
           return (
             <article
               key={plan.key}
-              className={`plan-card relative rounded-[22px] p-px shadow-sm ${
+              className={`plan-card relative rounded-lg border bg-white shadow-sm ${
                 plan.featured
-                  ? "shadow-xl"
-                  : "grad-border"
+                  ? "border-primary shadow-xl shadow-blue-100"
+                  : "border-border"
               }`}
-              style={
-                plan.featured
-                  ? {
-                      background:
-                        "linear-gradient(180deg,#93C5FD,#3B82F6,#1D4ED8)",
-                    }
-                  : undefined
-              }
             >
               {card}
             </article>
@@ -195,8 +187,8 @@ export function ComparisonTable() {
   }
 
   return (
-    <div className="overflow-hidden rounded-[24px] border border-zinc-200 bg-white shadow-sm">
-      <div className="grid grid-cols-[1.4fr_repeat(3,0.8fr)] border-b border-zinc-100 bg-zinc-50 px-4 py-3 text-xs font-semibold text-zinc-600 md:px-6">
+    <div className="overflow-hidden rounded-lg border border-border bg-white shadow-sm">
+      <div className="grid grid-cols-[1.4fr_repeat(3,0.8fr)] border-b border-border bg-surface-muted px-4 py-3 text-xs font-bold text-foreground/68 md:px-6">
         <span>{t("feature")}</span>
         <span>{cardT("free.name")}</span>
         <span>{cardT("sme.name")}</span>
@@ -209,7 +201,7 @@ export function ComparisonTable() {
           <div key={group.key} className="border-b border-zinc-100 last:border-b-0">
             <button
               type="button"
-              className="flex w-full items-center justify-between px-4 py-4 text-left text-sm font-semibold text-zinc-900 md:px-6"
+              className="flex w-full items-center justify-between px-4 py-4 text-left text-sm font-semibold text-foreground md:px-6"
               onClick={() => toggle(group.key)}
             >
               {t(`groups.${group.key}`)}
@@ -228,14 +220,14 @@ export function ComparisonTable() {
                 {group.rows.map((row) => (
                   <div
                     key={row.key}
-                    className="grid grid-cols-[1.4fr_repeat(3,0.8fr)] px-4 py-3 text-xs text-zinc-600 md:px-6"
+                    className="grid grid-cols-[1.4fr_repeat(3,0.8fr)] px-4 py-3 text-xs text-foreground/62 md:px-6"
                   >
                     <span>{t(`features.${row.key}`)}</span>
                     {row.cells.map((cell, index) => (
                       <span
                         key={`${row.key}-${index}`}
                         className={
-                          cell === "✓" ? "font-semibold text-emerald-600" : ""
+                          cell === "✓" ? "font-semibold text-status-pass" : ""
                         }
                       >
                         {translateCell(cell)}
@@ -257,7 +249,7 @@ export function FaqAccordion() {
   const [open, setOpen] = useState(0);
 
   return (
-    <div className="divide-y divide-zinc-200 rounded-[24px] border border-zinc-200 bg-white">
+    <div className="divide-y divide-border rounded-lg border border-border bg-white">
       {faqKeys.map((faqKey, index) => {
         const active = open === index;
 
@@ -265,13 +257,13 @@ export function FaqAccordion() {
           <div key={faqKey}>
             <button
               type="button"
-              className="flex w-full items-center justify-between gap-4 px-5 py-5 text-left text-sm font-semibold text-zinc-900"
+              className="flex w-full items-center justify-between gap-4 px-5 py-5 text-left text-sm font-semibold text-foreground"
               onClick={() => setOpen(active ? -1 : index)}
             >
               {t(`${faqKey}Question`)}
               <Icon
                 icon="solar:add-circle-linear"
-                className={`shrink-0 text-xl text-zinc-400 transition-transform ${
+                className={`shrink-0 text-xl text-foreground/40 transition-transform ${
                   active ? "rotate-45" : ""
                 }`}
                 aria-hidden="true"
@@ -283,7 +275,7 @@ export function FaqAccordion() {
               }`}
             >
               <div className="overflow-hidden">
-                <p className="px-5 pb-5 text-sm leading-6 text-zinc-500">
+                <p className="px-5 pb-5 text-sm leading-6 text-foreground/62">
                   {t(`${faqKey}Answer`)}
                 </p>
               </div>
