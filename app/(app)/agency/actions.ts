@@ -6,7 +6,9 @@ import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { z } from "zod";
 import { deleteBlobUrlsAfterFailedSave } from "@/lib/blob/cleanup";
+import { selectAgencyInvite } from "@/lib/agency/invite-selection";
 import {
+  getAgencyClientInviteByToken,
   consumeAgencyClientInvite,
   consumeAgencyConsultantInvite,
   createAgencyClientInvite,
@@ -275,9 +277,17 @@ export async function consumeAgencyClientInviteAction(token: string) {
     redirect("/sign-in");
   }
 
-  const consultantInvite = await getAgencyConsultantInviteByToken(token);
+  const [clientInvite, consultantInvite] = await Promise.all([
+    getAgencyClientInviteByToken(token),
+    getAgencyConsultantInviteByToken(token),
+  ]);
+  const inviteSelection = selectAgencyInvite(clientInvite, consultantInvite);
 
-  if (consultantInvite) {
+  if (inviteSelection.status === "ambiguous") {
+    throw new Error("Agency invite token is ambiguous.");
+  }
+
+  if (inviteSelection.status === "selected" && inviteSelection.inviteType === "consultant") {
     await consumeAgencyConsultantInvite({
       acceptedByUserId: session.userId,
       token,
@@ -286,12 +296,17 @@ export async function consumeAgencyClientInviteAction(token: string) {
     redirect("/agency/settings?tab=consultants");
   }
 
+  if (inviteSelection.status !== "selected") {
+    throw new Error("Agency invite token is not valid.");
+  }
+
   await consumeAgencyClientInvite({
     acceptedByUserId: session.userId,
     orgId: session.orgId,
     token,
   });
 
+  revalidatePath("/agency/dashboard");
   revalidatePath("/dashboard");
   redirect("/dashboard");
 }

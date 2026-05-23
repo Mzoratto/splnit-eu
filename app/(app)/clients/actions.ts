@@ -33,6 +33,18 @@ function getStringValue(formData: FormData, key: string) {
   return typeof value === "string" ? value : "";
 }
 
+function revalidateClientPaths(clientOrgId?: string) {
+  revalidatePath("/clients");
+  revalidatePath("/agency/dashboard");
+
+  if (clientOrgId) {
+    const encodedClientOrgId = encodeURIComponent(clientOrgId);
+
+    revalidatePath(`/clients/${encodedClientOrgId}`);
+    revalidatePath(`/agency/clients/${encodedClientOrgId}`);
+  }
+}
+
 async function requireConsultantOrganisation() {
   const session = await auth();
 
@@ -76,7 +88,7 @@ export async function linkClientAction(formData: FormData) {
     },
   });
 
-  revalidatePath("/clients");
+  revalidateClientPaths(parsed.clientOrgId);
   revalidatePath("/settings/audit-log");
 }
 
@@ -97,6 +109,5 @@ export async function updateClientBrandingAction(
     logoUrl: parsed.logoUrl || null,
   });
 
-  revalidatePath("/clients");
-  revalidatePath(`/clients/${clientOrgId}`);
+  revalidateClientPaths(clientOrgId);
 }

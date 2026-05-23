@@ -3,6 +3,7 @@ import { CheckCircle2 } from "lucide-react";
 import { consumeAgencyClientInviteAction } from "@/app/(app)/agency/actions";
 import { getMessagesForLocale } from "@/i18n/messages";
 import { normalizeLocale } from "@/i18n/routing";
+import { selectAgencyInvite } from "@/lib/agency/invite-selection";
 import {
   getAgencyClientInviteByToken,
   getAgencyConsultantInviteByToken,
@@ -22,8 +23,10 @@ export default async function AgencyClientInvitePage({ params }: PageProps) {
     getAgencyClientInviteByToken(token),
     getAgencyConsultantInviteByToken(token),
   ]);
-  const invite = clientInvite ?? consultantInvite;
-  const isConsultantInvite = Boolean(consultantInvite);
+  const inviteSelection = selectAgencyInvite(clientInvite, consultantInvite);
+  const invite = inviteSelection.status === "selected" ? inviteSelection.invite : null;
+  const isConsultantInvite =
+    inviteSelection.status === "selected" && inviteSelection.inviteType === "consultant";
   const isExpired = invite
     ? invite.invite.expiresAt.getTime() <= Date.now()
     : false;
