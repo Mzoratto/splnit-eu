@@ -29,6 +29,8 @@
 /agent-skills/
 /.worktrees/
 /tmp/
+.clawpatch/
+.understand-anything/
 
 # debug
 npm-debug.log*
