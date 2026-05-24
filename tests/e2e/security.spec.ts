@@ -33,6 +33,9 @@ test("rejects unsupported manual integration run providers", async ({
       clerkOrgId: "org_test",
       provider: "unsupported",
     },
+    headers: {
+      authorization: "Bearer test-cron-secret",
+    },
   });
 
   expect(response.status()).toBe(400);

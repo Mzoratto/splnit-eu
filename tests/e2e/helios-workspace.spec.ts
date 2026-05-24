@@ -11,6 +11,7 @@
 // NEXT_PUBLIC_ENABLE_TEST_ROUTES=true (set in playwright.config.ts webServer env).
 
 import { expect, test } from "@playwright/test";
+import { checkRadio } from "./helpers";
 
 // ─── Tests ────────────────────────────────────────────────────────────────────
 
@@ -166,17 +167,11 @@ test.describe("Helios workspace", () => {
     // Attestation form is now visible
     await expect(page.getByRole("group", { name: "Vaše odpověď" })).toBeVisible();
 
-    // The radio input is sr-only; use force:true to bypass Playwright's
-    // visibility/interception checks and click the label directly.
-    const yesLabel = page.locator(
-      `label:has(input[value="yes"][name="attest-helios-iam-user-accounts"])`,
-    );
-    await yesLabel.click({ force: true });
+    const yesRadio = page.getByRole("radio", { name: "Ano / hotovo" });
+    await checkRadio(yesRadio);
 
     // Verify the radio is checked
-    await expect(
-      page.getByRole("radio", { name: "Ano / hotovo" }),
-    ).toBeChecked();
+    await expect(yesRadio).toBeChecked();
 
     // Submit
     await page.getByRole("button", { name: "Uložit prohlášení" }).click();

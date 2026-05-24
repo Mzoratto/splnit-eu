@@ -1,4 +1,5 @@
 import { test, expect } from '@playwright/test';
+import { checkRadio } from "./helpers";
 
 // Try different RSC payload formats to find one that doesn't crash
 const RSC_VARIANTS = [
@@ -41,8 +42,9 @@ for (let i = 0; i < RSC_VARIANTS.length; i++) {
     await expandButton.click();
     await expect(page.getByRole("group", { name: "Vaše odpověď" })).toBeVisible();
 
-    const yesLabel = page.locator('label:has(input[value="yes"][name="attest-helios-iam-user-accounts"])');
-    await yesLabel.click({ force: true });
+    const yesRadio = page.getByRole("radio", { name: "Ano / hotovo" });
+    await checkRadio(yesRadio);
+    await expect(yesRadio).toBeChecked();
     await page.getByRole("button", { name: "Uložit prohlášení" }).click();
     
     await page.waitForTimeout(2000);

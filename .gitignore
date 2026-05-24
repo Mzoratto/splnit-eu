@@ -27,6 +27,7 @@
 .DS_Store
 *.pem
 /agent-skills/
+.agents/
 /.worktrees/
 /tmp/
 .clawpatch/
