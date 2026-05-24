@@ -209,27 +209,33 @@ function AttestationForm({ control, layerId, platformId }: AttestationFormProps)
       <fieldset className="space-y-2">
         <legend className="text-sm font-medium">{t("answer")}</legend>
         <div className="flex flex-wrap gap-2">
-          {(["yes", "no", "partial"] as const).map((value) => (
-            <label
-              key={value}
-              className={clsx(
-                "flex cursor-pointer items-center gap-2 rounded-md border px-3 py-2 text-sm capitalize transition-colors",
-                answer === value
-                  ? "border-primary bg-primary/8 text-primary"
-                  : "border-border bg-surface-muted text-foreground/68 hover:bg-surface",
-              )}
-            >
-              <input
-                type="radio"
-                name={`attest-${control.controlKey}`}
-                value={value}
-                checked={answer === value}
-                onChange={() => setAnswer(value)}
-                className="sr-only"
-              />
-              {value === "yes" ? t("yes") : value === "no" ? t("no") : t("partial")}
-            </label>
-          ))}
+          {(["yes", "no", "partial"] as const).map((value) => {
+            const inputId = `attest-${control.controlKey}-${value}`;
+
+            return (
+              <label
+                key={value}
+                htmlFor={inputId}
+                className={clsx(
+                  "relative flex cursor-pointer items-center gap-2 rounded-md border px-3 py-2 text-sm capitalize transition-colors",
+                  answer === value
+                    ? "border-primary bg-primary/8 text-primary"
+                    : "border-border bg-surface-muted text-foreground/68 hover:bg-surface",
+                )}
+              >
+                <input
+                  id={inputId}
+                  type="radio"
+                  name={`attest-${control.controlKey}`}
+                  value={value}
+                  checked={answer === value}
+                  onChange={() => setAnswer(value)}
+                  className="absolute inset-0 cursor-pointer opacity-0"
+                />
+                {value === "yes" ? t("yes") : value === "no" ? t("no") : t("partial")}
+              </label>
+            );
+          })}
         </div>
       </fieldset>
 
@@ -249,33 +255,39 @@ function AttestationForm({ control, layerId, platformId }: AttestationFormProps)
                       {[
                         { key: "true", label: t("booleanYes"), value: true },
                         { key: "false", label: t("booleanNo"), value: false },
-                      ].map((option) => (
-                        <label
-                          key={option.key}
-                          className={clsx(
-                            "flex cursor-pointer items-center gap-2 rounded-md border px-3 py-2 text-sm transition-colors",
-                            value === option.value
-                              ? "border-primary bg-primary/8 text-primary"
-                              : "border-border bg-background text-foreground/68 hover:bg-surface",
-                          )}
-                        >
-                          <input
-                            type="radio"
-                            name={inputId}
-                            value={option.key}
-                            checked={value === option.value}
-                            onChange={() =>
-                              setFieldValues((current) => ({
-                                ...current,
-                                [field.key]: option.value,
-                              }))
-                            }
-                            className="sr-only"
-                            required={field.required}
-                          />
-                          {option.label}
-                        </label>
-                      ))}
+                      ].map((option) => {
+                        const optionInputId = `${inputId}-${option.key}`;
+
+                        return (
+                          <label
+                            key={option.key}
+                            htmlFor={optionInputId}
+                            className={clsx(
+                              "relative flex cursor-pointer items-center gap-2 rounded-md border px-3 py-2 text-sm transition-colors",
+                              value === option.value
+                                ? "border-primary bg-primary/8 text-primary"
+                                : "border-border bg-background text-foreground/68 hover:bg-surface",
+                            )}
+                          >
+                            <input
+                              id={optionInputId}
+                              type="radio"
+                              name={inputId}
+                              value={option.key}
+                              checked={value === option.value}
+                              onChange={() =>
+                                setFieldValues((current) => ({
+                                  ...current,
+                                  [field.key]: option.value,
+                                }))
+                              }
+                              className="absolute inset-0 cursor-pointer opacity-0"
+                              required={field.required}
+                            />
+                            {option.label}
+                          </label>
+                        );
+                      })}
                     </div>
                   </div>
                 );

@@ -1,4 +1,5 @@
 import { expect, test } from "@playwright/test";
+import { gotoWithRetry } from "./helpers";
 
 test.use({ locale: "en-US" });
 
@@ -31,7 +32,7 @@ const appPages = [
 
 for (const appPage of appPages) {
   test(`labels local demo data on ${appPage.path}`, async ({ page }) => {
-    await page.goto(appPage.path, { waitUntil: "domcontentloaded" });
+    await gotoWithRetry(page, appPage.path);
 
     await expect(page.getByText(appPage.notice)).toBeVisible();
   });

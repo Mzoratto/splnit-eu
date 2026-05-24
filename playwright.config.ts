@@ -20,8 +20,9 @@ export default defineConfig({
   ...(process.env.CI
     ? {
         webServer: {
-          command: `npm run dev -- --hostname 127.0.0.1 -p ${port}`,
+          command: `npm run start -- -p ${port}`,
           env: {
+            CRON_SECRET: "test-cron-secret",
             ENABLE_LOCAL_DEMO_DATA: "true",
             ENABLE_TEST_ROUTES: "true",
             NEXT_PUBLIC_ENABLE_TEST_ROUTES: "true",

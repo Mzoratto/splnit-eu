@@ -103,6 +103,17 @@ function authConfigurationError() {
   });
 }
 
+function localDemoDataEnabled() {
+  const testRoutesEnabled =
+    process.env.ENABLE_TEST_ROUTES === "true" ||
+    process.env.NEXT_PUBLIC_ENABLE_TEST_ROUTES === "true";
+
+  return (
+    process.env.ENABLE_LOCAL_DEMO_DATA === "true" &&
+    (process.env.NODE_ENV !== "production" || testRoutesEnabled)
+  );
+}
+
 const clerk = clerkMiddleware(async (auth, request) => {
   const clerkConfigured =
     Boolean(process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY) &&
@@ -125,15 +136,15 @@ export default function middleware(request: NextRequest, event: NextFetchEvent) 
     Boolean(process.env.CLERK_SECRET_KEY);
 
   if (isPublicRoute(request)) {
-  return NextResponse.next();
-}
-
+    return NextResponse.next();
+  }
 
   if (!clerkConfigured) {
     if (
       process.env.NODE_ENV === "production" &&
       isProtectedRoute(request) &&
-      !isPublicRoute(request)
+      !isPublicRoute(request) &&
+      !localDemoDataEnabled()
     ) {
       return authConfigurationError();
     }

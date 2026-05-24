@@ -20,6 +20,7 @@
  */
 
 import { expect, test } from "@playwright/test";
+import { checkRadio, gotoWithRetry } from "./helpers";
 
 // ─── Tests ────────────────────────────────────────────────────────────────────
 
@@ -30,7 +31,7 @@ test.describe("Money S3 workspace", () => {
   test("page loads with heading, back link, and demo badge", async ({
     page,
   }) => {
-    await page.goto("/workspaces/money-s3");
+    await gotoWithRetry(page, "/workspaces/money-s3");
 
     // Page heading
     await expect(
@@ -51,7 +52,7 @@ test.describe("Money S3 workspace", () => {
   test("all four layer tabs are visible and initial progress is 0%", async ({
     page,
   }) => {
-    await page.goto("/workspaces/money-s3");
+    await gotoWithRetry(page, "/workspaces/money-s3");
 
     await expect(
       page.getByRole("heading", { name: "Money S3 / S4 (Seyfor)" }),
@@ -79,7 +80,7 @@ test.describe("Money S3 workspace", () => {
   });
 
   test("Layer 1 (infrastructure) is active by default", async ({ page }) => {
-    await page.goto("/workspaces/money-s3");
+    await gotoWithRetry(page, "/workspaces/money-s3");
 
     await expect(
       page.getByRole("heading", { name: "Money S3 / S4 (Seyfor)" }),
@@ -96,7 +97,7 @@ test.describe("Money S3 workspace", () => {
   test("clicking Layer 3 (backup) tab makes it active and shows backup controls", async ({
     page,
   }) => {
-    await page.goto("/workspaces/money-s3");
+    await gotoWithRetry(page, "/workspaces/money-s3");
 
     await expect(
       page.getByRole("heading", { name: "Money S3 / S4 (Seyfor)" }),
@@ -148,7 +149,7 @@ test.describe("Money S3 workspace", () => {
       });
     });
 
-    await page.goto("/workspaces/money-s3");
+    await gotoWithRetry(page, "/workspaces/money-s3");
 
     await expect(
       page.getByRole("heading", { name: "Money S3 / S4 (Seyfor)" }),
@@ -178,17 +179,11 @@ test.describe("Money S3 workspace", () => {
     // Attestation form is now visible
     await expect(page.getByRole("group", { name: "Vaše odpověď" })).toBeVisible();
 
-    // The radio input is sr-only; click its visible label directly.
-    // Labels use input[value="yes"] with name matching the control key.
-    const yesLabel = page.locator(
-      `label:has(input[value="yes"][name="attest-money-s3-backup-automated-daily"])`,
-    );
-    await yesLabel.click({ force: true });
+    const yesRadio = page.getByRole("radio", { name: "Ano / hotovo" });
+    await checkRadio(yesRadio);
 
     // Verify the radio is checked
-    await expect(
-      page.getByRole("radio", { name: "Ano / hotovo" }),
-    ).toBeChecked();
+    await expect(yesRadio).toBeChecked();
 
     // Submit
     await page.getByRole("button", { name: "Uložit prohlášení" }).click();

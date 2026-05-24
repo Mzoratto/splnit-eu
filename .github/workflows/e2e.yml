@@ -15,7 +15,11 @@ jobs:
       NEXT_TELEMETRY_DISABLED: 1
       NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY: ""
       CLERK_SECRET_KEY: ""
+      ENABLE_LOCAL_DEMO_DATA: "true"
+      ENABLE_TEST_ROUTES: "true"
+      NEXT_PUBLIC_ENABLE_TEST_ROUTES: "true"
       NODE_OPTIONS: --max-old-space-size=8192
+      TEST_BYPASS_PLAN_GATE: "true"
     steps:
       - name: Checkout
         uses: actions/checkout@v4
