@@ -2510,10 +2510,1200 @@ const importedCzechBlogPosts: BlogPost[] = [
   }
 ];
 
+const importedMspBlogPosts: BlogPost[] = [
+  {
+    slug: "msp-regulovana-sluzba-nzkb-povinnosti",
+    title: "MSP jako regulovaná služba: co přesně vás povinuje nZKB",
+    description: "Mnoho MSP neví, jestli se na ně nZKB vztahuje — a pokud ano, v jakém rozsahu. Tady je jasná odpověď: které služby spouští regulaci, jaký režim vás čeká a co to znamená v praxi.",
+    category: "ZoKB / NIS2",
+    publishedAt: "2026-05-24",
+    readTime: "8 min",
+    author: "Splnit.eu",
+    authorRole: "Redakce Splnit.eu",
+    regulationHref: "https://www.e-sbirka.cz/sb/2025/264",
+    ctaTitle: "Splňte požadavky bez zbytečné byrokracie",
+    ctaBody: "Splnit.eu automatizuje compliance pro NIS2, GDPR, ISO 27001 a EU AI Act. Sledujte svůj stav v reálném čase.",
+    ctaButton: "Začít zdarma",
+    ctaHref: "/early-access",
+    summary: "Zákon o kybernetické bezpečnosti (nZKB, zákon č. 264/2025 Sb.) se nevztahuje na každou IT firmu automaticky. Ale pro MSP — poskytovatele spravovaných IT služeb — je situace specifická: pravděpodobnost, že alespoň část vašich služeb spouští regulaci, je vysoká. A přitom spousta MSP stále neví,...",
+    sections: [
+      {
+        heading: "Proč MSP musí nZKB věnovat pozornost víc než jiné firmy",
+        body: [
+          "MSP je v unikátní pozici: spravujete IT infrastrukturu, sítě a systémy pro jiné firmy. Mnohé z vašich zákazníků jsou samy regulovanými subjekty — ať už pod nZKB, GDPR nebo sektorovými předpisy. Pokud dojde k incidentu u vás nebo skrz váš přístup k zákazníkovi, dopad se šíří dál.",
+          "To je přesně typ rizika, který nZKB sleduje."
+        ]
+      },
+      {
+        heading: "Které MSP služby spouštějí regulaci",
+        body: [
+          "nZKB reguluje tzv. regulované služby — tedy konkrétní typy digitálních nebo síťových služeb, jejichž narušení by mělo závažný dopad. Pro MSP jsou nejrelevantnější tyto kategorie:"
+        ],
+        subsections: [
+          {
+            heading: "Poskytovatelé spravovaných služeb (Managed Service Providers)",
+            body: [
+              "Pokud spravujete IT infrastrukturu, sítě, servery nebo bezpečnostní systémy pro zákazníky — a děláte to jako svou hlavní službu — jste pravděpodobně poskytovatelem spravovaných služeb ve smyslu nZKB.",
+              "Klíčové znaky:"
+            ],
+            bullets: [
+              "Vzdálená správa IT systémů zákazníka",
+              "Správa sítí, firewallu, VPN nebo koncových zařízení",
+              "Provoz nebo monitorování bezpečnostní infrastruktury (SIEM, SOC)",
+              "Poskytování zálohovacích nebo DR služeb jako spravované služby"
+            ]
+          },
+          {
+            heading: "Poskytovatelé cloudových služeb",
+            body: [
+              "Pokud provozujete vlastní cloudovou platformu nebo infrastructure-as-a-service pro zákazníky — IaaS, PaaS nebo privátní cloud — jste poskytovatelem cloudových služeb pod nZKB."
+            ]
+          },
+          {
+            heading: "Poskytovatelé datových center",
+            body: [
+              "Pokud provozujete fyzické nebo virtuální datové centrum jako komerční službu."
+            ]
+          },
+          {
+            heading: "Poskytovatelé spravovaných bezpečnostních služeb (MSSP)",
+            body: [
+              "SOC, monitoring, správa SIEM, incident response jako služba — tyto aktivity jsou pod přímou regulací."
+            ]
+          }
+        ]
+      },
+      {
+        heading: "Jak zjistit, jestli konkrétně vy jste regulovaní",
+        body: [
+          "nZKB nereguluje všechny MSP plošně — závisí na velikosti a dopadu vašich služeb. Projděte si tyto otázky:",
+          "Otázka 1: Poskytujete některou z výše uvedených služeb jako svou hlavní podnikatelskou aktivitu? Pokud jen příležitostně pomáháte zákazníkovi s IT — nejste regulováni. Pokud je to vaše byznys model — pravděpodobně ano.",
+          "Otázka 2: Kolik zákazníků spravujete a jak velké jsou? nZKB pracuje s prahovou hodnotou dopadu. Čím více zákazníků a čím větší jsou, tím spíše jste nad prahem regulace.",
+          "Otázka 3: Jsou vaši zákazníci sami regulovanými subjekty? Pokud spravujete IT pro banky, nemocnice, energetické firmy nebo velké průmyslové podniky — váš dopad na jejich bezpečnost je přímý.",
+          "Otázka 4: Provedli jste samoidentifikaci přes Portál NÚKIB? nZKB vyžaduje samoidentifikaci. Pokud jste tak ještě neučinili, začněte tam — portál vás provede tím, zda a jak se na vás zákon vztahuje."
+        ]
+      },
+      {
+        heading: "Nižší vs. vyšší režim: co to pro MSP znamená",
+        body: [
+          "Pokud jste regulovaní, zákon vám přiřadí jeden ze dvou režimů:"
+        ],
+        subsections: [
+          {
+            heading: "Nižší režim (important entities)",
+            body: [
+              "Typicky zde padají: menší MSP s regionálním záběrem, MSP spravující převážně nekritické zákazníky"
+            ],
+            bullets: [
+              "13 bezpečnostních opatření dle vyhl. č. 410/2025 Sb.",
+              "Incidenty hlásíte Národnímu CERT",
+              "Méně přísné požadavky na dokumentaci a technická opatření"
+            ]
+          },
+          {
+            heading: "Vyšší režim (essential entities)",
+            body: [
+              "Typicky zde padají: MSSP, MSP spravující kritickou infrastrukturu, MSP s velkým počtem regulovaných zákazníků",
+              "Důležité: Pokud máte jednu službu v nižším a jednu ve vyšším režimu, vyšší režim platí pro celou organizaci."
+            ],
+            bullets: [
+              "25 bezpečnostních opatření dle vyhl. č. 409/2025 Sb.",
+              "Incidenty hlásíte přímo NÚKIB",
+              "Přísnější požadavky: hodnocení dodavatelů, kontinuita, interní audit",
+              "Výstupní audit po zavedení opatření"
+            ]
+          }
+        ]
+      },
+      {
+        heading: "Co vás čeká, pokud jste regulovaní: přehled povinností",
+        body: [],
+        table: {
+          headers: [
+            "Povinnost",
+            "Termín"
+          ],
+          rows: [
+            [
+              "Samoidentifikace a registrace regulované služby",
+              "Do 60 dnů od naplnění kritérií"
+            ],
+            [
+              "Nahlášení kontaktních a doplňujících údajů",
+              "Do 30 dnů od rozhodnutí NÚKIB"
+            ],
+            [
+              "Stanovení rozsahu řízení kyberbezpečnosti",
+              "Co nejdříve po registraci"
+            ],
+            [
+              "Zavedení bezpečnostních opatření",
+              "Do 12 měsíců od potvrzení registrace"
+            ],
+            [
+              "Hlášení kybernetických incidentů",
+              "Od 12 měsíců po potvrzení registrace"
+            ],
+            [
+              "Provádění protiopatření NÚKIB",
+              "Okamžitě od vydání"
+            ]
+          ]
+        }
+      },
+      {
+        heading: "Specifická výzva MSP: vy jste regulovaní a zároveň pomáháte regulovaným zákazníkům",
+        body: [
+          "Tady se situace MSP liší od jiných firem. Nejde jen o to, splnit zákon pro sebe. Zákazníci vás budou ptát:",
+          "Firma, která na tyto otázky odpovídá sebejistě a s dokumentací v ruce, vyhraje tendry. Firma, která odpovídá „to ještě řešíme,\" je konkurenční nevýhodou sama sobě."
+        ],
+        bullets: [
+          "„Jste vy sami regulovaní pod nZKB?\"",
+          "„Jak zabezpečujete přístupy do našich systémů?\"",
+          "„Co se stane, pokud dojde k incidentu na vaší straně?\"",
+          "„Můžete nám pomoct splnit nZKB?\""
+        ]
+      },
+      {
+        heading: "Co dělat jako první krok",
+        body: [],
+        bullets: [
+          "1. Proveďte samoidentifikaci na Portálu NÚKIB — zjistíte, jestli a v jakém režimu jste regulovaní",
+          "2. Pokud ano: registrujte regulovanou službu co nejdříve — lhůty běží od naplnění kritérií, ne od okamžiku, kdy se o tom dozvíte",
+          "3. Stanovte rozsah řízení KB — klíčové rozhodnutí, které ovlivní náklady na celou implementaci (viz samostatný článek na tomto blogu)",
+          "4. Proveďte gap analýzu — zjistěte, co máte a co chybí",
+          "5. Informujte zákazníky — transparentnost o vašem compliance stavu je konkurenční výhoda"
+        ]
+      },
+      {
+        heading: "TL;DR",
+        body: [],
+        bullets: [
+          "Pokud spravujete IT, sítě nebo bezpečnostní systémy pro zákazníky jako svou hlavní službu, nZKB se na vás pravděpodobně vztahuje.",
+          "Samoidentifikace přes Portál NÚKIB je první povinný krok — a zároveň způsob, jak zjistit váš konkrétní režim.",
+          "MSP jsou regulovaní jako poskytovatelé spravovaných služeb, cloudových služeb nebo MSSP.",
+          "Nižší režim: 13 opatření. Vyšší režim: 25 opatření. Jedno z nich platí pro celou organizaci.",
+          "Vaši zákazníci se budou ptát na váš compliance stav — mít jasnou odpověď je byznysová výhoda."
+        ]
+      }
+    ]
+  },
+  {
+    slug: "msp-rozsah-rizeni-kb-nzkb",
+    title: "Jak MSP stanoví rozsah řízení KB bez toho, aby zahrnul celou firmu",
+    description: "Stanovení rozsahu řízení kyberbezpečnosti je nejdůležitější rozhodnutí po registraci u NÚKIB. Pro MSP je zvlášť složité — spravujete prostředí zákazníků, ne jen vlastní. Jak na to správně.",
+    category: "ZoKB / NIS2",
+    publishedAt: "2026-05-24",
+    readTime: "7 min",
+    author: "Splnit.eu",
+    authorRole: "Redakce Splnit.eu",
+    regulationHref: "https://www.e-sbirka.cz/sb/2025/264",
+    ctaTitle: "Splňte požadavky bez zbytečné byrokracie",
+    ctaBody: "Splnit.eu automatizuje compliance pro NIS2, GDPR, ISO 27001 a EU AI Act. Sledujte svůj stav v reálném čase.",
+    ctaButton: "Začít zdarma",
+    ctaHref: "/early-access",
+    summary: "Po obdržení rozhodnutí o registraci od NÚKIB přijde chvíle, kdy musíte zodpovědět klíčovou otázku: Na co přesně se opatření vztahují? Pokud rozsah nestanovíte, zákon automaticky předpokládá, že opatření aplikujete na veškerá aktiva celé organizace. Pro firmu s 10 zaměstnanci a jedním produktem...",
+    sections: [
+      {
+        heading: "Proč je rozsah pro MSP složitější než pro jiné firmy",
+        body: [
+          "Většina firem řídí jen svá vlastní aktiva. MSP řídí:",
+          "Právě ten třetí bod je zdroj nejčastějšího zmatku: Patří zákaznická prostředí do vašeho rozsahu?",
+          "Krátká odpověď: Patří tam vaše systémy a přístupy, přes které zákaznická prostředí spravujete. Zákaznická prostředí samotná jsou v rozsahu zákazníka, ne vašem — pokud zákazník není součástí vaší regulované služby z pohledu nZKB."
+        ],
+        bullets: [
+          "Vlastní interní infrastrukturu (kancelář, vývojové systémy, interní komunikace)",
+          "Vlastní provozní systémy pro dodávku služeb (RMM nástroje, PSA, monitorovací platformy)",
+          "Zákaznická prostředí — sítě, servery, koncová zařízení zákazníků, ke kterým máte privilegovaný přístup"
+        ]
+      },
+      {
+        heading: "Co do rozsahu MSP patří",
+        body: [
+          "Rozsah vychází z regulované služby — tedy z toho, co jste ohlásili NÚKIB. Typicky pro MSP zahrnuje:"
+        ],
+        subsections: [
+          {
+            heading: "1. Systémy pro dodávku regulované služby",
+            body: [
+              "Tato aktiva patří do rozsahu bezpodmínečně — kompromitace těchto systémů přímo ohrožuje všechny vaše zákazníky najednou."
+            ],
+            bullets: [
+              "RMM platforma (např. NinjaRMM, ConnectWise, Datto) — přes ni spravujete zákazníky",
+              "PSA systém — správa tiketů, SLA, fakturace",
+              "Monitoring a alerting systémy",
+              "Zálohovací infrastruktura (pokud je součástí spravované služby)",
+              "SIEM nebo SOC platforma (pokud provozujete MSSP)"
+            ]
+          },
+          {
+            heading: "2. Přístupové systémy a identity management",
+            body: [
+              "Tyto systémy jsou kritické: útočník, který kompromituje váš přístupový systém, má automaticky přístup ke všem vašim zákazníkům."
+            ],
+            bullets: [
+              "VPN infrastruktura pro vzdálený přístup do zákaznických prostředí",
+              "Privileged Access Management (PAM) nebo správa servisních účtů",
+              "MFA systémy",
+              "Adresářové služby (Active Directory, Entra ID) používané pro přístupy k zákazníkům"
+            ]
+          },
+          {
+            heading: "3. Komunikační a orchestrační systémy",
+            body: [],
+            bullets: [
+              "E-mailové systémy používané pro komunikaci se zákazníky a pro automatizované alerty",
+              "Skriptovací a automatizační nástroje nasazované do zákaznických prostředí"
+            ]
+          },
+          {
+            heading: "4. Lidé s přístupem k výše uvedeným systémům",
+            body: [],
+            bullets: [
+              "Technici a administrátoři s přístupy do zákaznických prostředí",
+              "Externisté a subdodavatelé s privilegovanými přístupy",
+              "IT administrátoři vašich vlastních systémů"
+            ]
+          }
+        ]
+      },
+      {
+        heading: "Co do rozsahu nemusí patřit",
+        body: [
+          "Tato aktiva jsou legitimně mimo rozsah, pokud nemají přístup k regulovaným systémům nebo zákaznickým prostředím:",
+          "Klíčový test: Mohl by útočník, který kompromituje toto aktivum, dostat se ke zákaznickým prostředím nebo k systémům pro dodávku regulované služby? Pokud ano — patří do rozsahu."
+        ],
+        bullets: [
+          "Marketingové systémy a web",
+          "Účetnictví a fakturace (pokud jsou odděleny od PSA s přístupy)",
+          "HR systémy",
+          "Interní komunikační nástroje zaměstnanců bez přístupu k zákaznickým prostředím",
+          "Vývojové systémy (pokud nevyvíjíte nástroje nasazované do zákaznických prostředí)"
+        ]
+      },
+      {
+        heading: "Jak rozsah dokumentovat",
+        body: [
+          "Rozsah musí být formálně zdokumentován — jako interní dokument schválený vedením firmy. Tento dokument je první věc, kterou NÚKIB nebo zákaznický auditor při kontrole vyžaduje."
+        ],
+        subsections: [
+          {
+            heading: "Co dokument o rozsahu musí obsahovat",
+            body: [
+              "1. Definice regulované služby Přesný popis toho, jakou regulovanou službu poskytujete a komu. Příklad:",
+              "„Poskytování spravovaných IT služeb zahrnujících vzdálenou správu sítí, serverů a koncových zařízení zákazníků, provoz zálohovací infrastruktury a bezpečnostní monitoring pro zákazníky v segmentu SMB.\"",
+              "2. Soupis aktiv v rozsahu Tabulka nebo seznam:",
+              "3. Explicitní vyjmutí Vyjmenujte, co je mimo rozsah a proč:",
+              "„Z rozsahu jsou vyjmuty: marketingový web, HR systém Bamboo HR (bez přístupu k zákaznickým prostředím), interní Slack workspace zaměstnanců bez technického přístupu.\"",
+              "4. Schválení a verze Datum, verze dokumentu, podpis odpovědné osoby (CEO, CTO nebo pověřená osoba kyberbezpečnosti)."
+            ],
+            bullets: [
+              "Typ aktiva: RMM platforma; Konkrétní aktivum: NinjaRMM; Proč je v rozsahu: Přímý přístup ke všem zákaznickým prostředím",
+              "Typ aktiva: Přístupový systém; Konkrétní aktivum: Privileged Access Management; Proč je v rozsahu: Správa servisních účtů u zákazníků",
+              "Typ aktiva: Identita; Konkrétní aktivum: Azure AD (interní tenant); Proč je v rozsahu: Autentizace techniků do zákaznických prostředí",
+              "Typ aktiva: Monitoring; Konkrétní aktivum: Zabbix instance; Proč je v rozsahu: Monitoruje zákaznická prostředí",
+              "Typ aktiva: Zálohy; Konkrétní aktivum: Veeam + off-site storage; Proč je v rozsahu: Zálohovací služba zákazníkům"
+            ]
+          }
+        ]
+      },
+      {
+        heading: "Specifický problém MSP: subdodavatelé a technici třetích stran",
+        body: [
+          "Mnoho MSP využívá externisty nebo subdodavatelské techniky. Pokud mají přístupy do zákaznických prostředí přes vaše systémy — patří do vašeho rozsahu a musejí splňovat vaše bezpečnostní požadavky.",
+          "To konkrétně znamená:",
+          "Pokud subdodavatel není schopen nebo ochoten tato pravidla splnit — je to bezpečnostní riziko, které musíte zdokumentovat a řešit."
+        ],
+        bullets: [
+          "Musejí mít přidělen individuální přístupový účet (žádné sdílené přihlašovací údaje)",
+          "MFA musí být povinné i pro ně",
+          "Jejich přístupy musejí být auditovány a logovány",
+          "Při ukončení spolupráce musejí být přístupy okamžitě odebrány"
+        ]
+      },
+      {
+        heading: "Jak rozsah nezaměnit s odpovědností zákazníka",
+        body: [
+          "Tady MSP nejčastěji chybují: rozsah vašeho řízení KB neznamená, že přebíráte právní odpovědnost za kybernetickou bezpečnost zákazníka.",
+          "Zákazník, který je sám regulovanou entitou pod nZKB, má své vlastní povinnosti. Vy za ně neplníte zákon — vy spravujete systémy, přes které zákazník svůj zákon plní.",
+          "Toto rozlišení musí být jasné:"
+        ],
+        bullets: [
+          "Ve smlouvě se zákazníkem",
+          "Ve vašich interních dokumentech",
+          "V komunikaci se zákazníkem, když se ptá „co za nás vyřídíte\""
+        ]
+      },
+      {
+        heading: "Praktický postup: jak rozsah stanovit krok za krokem",
+        body: [
+          "Krok 1: Vypište všechny systémy, přes které spravujete zákazníky nebo dodáváte regulovanou službu.",
+          "Krok 2: Pro každý systém: Mohl by útočník, který ho kompromituje, dostat se k zákaznickým prostředím? → Ano = do rozsahu.",
+          "Krok 3: Vypište všechny osoby (interní + externisté) s přístupy k výše uvedeným systémům.",
+          "Krok 4: Vypište co je explicitně mimo rozsah — a zdůvodněte proč.",
+          "Krok 5: Nechte dokument schválit vedením a naplánujte roční přezkum."
+        ]
+      },
+      {
+        heading: "TL;DR",
+        body: [],
+        bullets: [
+          "Bez definovaného rozsahu platí opatření pro celou firmu — pro MSP to může být disproportionálně nákladné.",
+          "Do rozsahu patří: RMM, PAM, monitorovací systémy, přístupová infrastruktura, technici s privilegovanými přístupy.",
+          "Zákaznická prostředí samotná nejsou ve vašem rozsahu — ale vaše přístupy do nich ano.",
+          "Subdodavatelé s přístupy do zákaznických prostředí patří do vašeho rozsahu a musejí splňovat vaše pravidla.",
+          "Rozsah zdokumentujte formálně — je to první dokument, který auditor vyžaduje."
+        ]
+      }
+    ]
+  },
+  {
+    slug: "msp-priprava-zakaznicky-audit",
+    title: "Co musí mít MSP připraveno před zákaznickým auditem",
+    description: "Enterprise zákazníci a regulované organizace auditují své MSP dodavatele čím dál důkladněji. Tady je přesně to, co budou chtít vidět — a jak mít vše připraveno dřív, než přijde dotazník.",
+    category: "ZoKB / NIS2",
+    publishedAt: "2026-05-24",
+    readTime: "7 min",
+    author: "Splnit.eu",
+    authorRole: "Redakce Splnit.eu",
+    regulationHref: "https://www.e-sbirka.cz/sb/2025/264",
+    ctaTitle: "Splňte požadavky bez zbytečné byrokracie",
+    ctaBody: "Splnit.eu automatizuje compliance pro NIS2, GDPR, ISO 27001 a EU AI Act. Sledujte svůj stav v reálném čase.",
+    ctaButton: "Začít zdarma",
+    ctaHref: "/early-access",
+    summary: "Přišel e-mail od zákazníka: „Před prodloužením smlouvy budeme potřebovat vyplnit bezpečnostní dotazník a doložit dokumentaci.\" Pro MSP, kteří spravují IT zákazníků z regulovaných sektorů — bankovnictví, zdravotnictví, energetika — jsou zákaznické bezpečnostní audity realitou roku 2026. Firmy s...",
+    sections: [
+      {
+        heading: "Co zákaznický audit testuje",
+        body: [
+          "Zákazník při auditu MSP chce zjistit jednu věc: Pokud dojde k incidentu na vaší straně, jak moc to ohrozí nás?",
+          "Z toho vyplývají konkrétní oblasti:"
+        ],
+        bullets: [
+          "1. Jak zabezpečujete přístupy do našich systémů?",
+          "2. Co se stane, když váš zaměstnanec nebo subdodavatel způsobí incident?",
+          "3. Jak rychle nás informujete, pokud dojde k bezpečnostní události?",
+          "4. Máte zavedené kontroly, které to dokazují?",
+          "5. Jste sami regulovaní pod nZKB?"
+        ]
+      },
+      {
+        heading: "Dokumenty, které auditor nejčastěji žádá",
+        body: [],
+        subsections: [
+          {
+            heading: "1. Certifikace nebo bezpečnostní přehled",
+            body: [
+              "Platný ISO 27001 certifikát nebo SOC 2 Type II zpráva jsou ideální. Pokud certifikaci nemáte, připravte stručný dokument (2–4 strany) popisující vaše klíčová bezpečnostní opatření. Potvrzení o registraci pod nZKB zákazníci z regulovaného sektoru vnímají pozitivně."
+            ]
+          },
+          {
+            heading: "2. Přehled správy přístupů do zákaznických prostředí",
+            body: [
+              "Toto je oblast s největšími obavami zákazníků. Připravte:"
+            ],
+            bullets: [
+              "Politiku řízení přístupů — jak se přístupy udělují, mění a odebírají",
+              "Potvrzení povinného MFA pro všechny přístupy do zákaznických prostředí",
+              "Popis offboarding procesu — jak rychle jsou odebrány přístupy při odchodu technika",
+              "Přehled osob s přístupem k jejich prostředí (seznam rolí nebo jmen)"
+            ]
+          },
+          {
+            heading: "3. Smlouva o zpracování osobních údajů (DPA)",
+            body: [
+              "Pokud přistupujete k systémům se zákaznickými osobními daty, zákazník potřebuje DPA. Mějte připravenou standardní šablonu k podpisu a přehled sub-zpracovatelů s přístupy."
+            ]
+          },
+          {
+            heading: "4. Incident response postup a notifikační lhůty",
+            body: [
+              "Zákazník potřebuje vědět: co děláte při incidentu a jak rychle ho informujete. Smluvně zavažte lhůtu pro notifikaci (doporučeno 24–48 hodin). Připravte zkrácenou verzi incident response plánu a kontaktní list pro bezpečnostní záležitosti."
+            ]
+          },
+          {
+            heading: "5. Seznam subdodavatelů s přístupy",
+            body: [
+              "Kdo kromě vašich zaměstnanců může mít přístup k jejich systémům? Připravte seznam a potvrzení, že na ně uplatňujete stejné bezpečnostní požadavky."
+            ]
+          },
+          {
+            heading: "6. Plán kontinuity a SLA",
+            body: [
+              "Zkrácený BCP, SLA parametry pro dostupnost vaší služby a popis zálohovací architektury s RTO/RPO pro vaše vlastní systémy."
+            ]
+          }
+        ]
+      },
+      {
+        heading: "Audit balíček: jak se připravit jednou a být připraveni vždy",
+        body: [
+          "Sestavte složku s připravenými dokumenty. Při příchodu dotazníku nebudete hledat — jen zkontrolujete aktuálnost.",
+          "Jmenujte jednu zodpovědnou osobu, která dotazníky koordinuje. Bez toho dotazníky uvíznou v e-mailech. Aktualizujte balíček jednou ročně a při každé změně klíčových systémů nebo subdodavatelů."
+        ],
+        codeBlock: "/audit-balicek\n  /certifikace\n    - ISO-27001-certifikat.pdf nebo bezpecnostni-prehled.pdf\n    - NUKIB-registrace.pdf (pokud relevantní)\n  /pristupy\n    - politika-rizeni-pristupu.pdf\n    - onboarding-offboarding-proces.pdf\n  /gdpr\n    - dpa-sablona.docx\n    - seznam-sub-zpracovatelu.pdf\n  /incident-response\n    - ir-plan-zkraceny.pdf\n    - kontaktni-list-bezpecnost.pdf\n  /kontinuita\n    - bcp-zkraceny.pdf\n    - sla-parametry.pdf"
+      },
+      {
+        heading: "Nejčastější situace, kdy MSP audit nezvládne",
+        body: [
+          "„Nemáme ISO 27001, zákazník to vyžaduje.\" Krátkodobě: stručný bezpečnostní přehled prokazující zavedené kontroly zákazníci mimo nejpřísnější sektory akceptují. Pro banky a pojišťovny certifikaci potřebujete.",
+          "„Zákazník se ptá, kdo má přístup k jejich systémům, a my to nevíme přesně.\" Toto je vážný problém — nejen pro audit, ale pro vaši vlastní bezpečnost. Okamžitě revidujte přístupové účty ve vašem RMM nástroji.",
+          "„Nemáme nic zdokumentované — přitom všechno děláme správně.\" Nejčastější situace. Audit neohodnocuje, co děláte — hodnotí, co dokážete doložit."
+        ]
+      },
+      {
+        heading: "TL;DR",
+        body: [],
+        bullets: [
+          "Zákaznické bezpečnostní audity MSP jsou v roce 2026 standardem pro regulované sektory.",
+          "Klíčové dokumenty: certifikace nebo bezpečnostní přehled, politika přístupů, DPA šablona, IR kontakt, seznam subdodavatelů, plán kontinuity.",
+          "Sestavte audit balíček jednou — pak jen aktualizujte. Ušetříte hodiny při každém dotazníku.",
+          "Dokumentace je stejně důležitá jako samotná opatření — bez ní audit ani tendr nevyhrajete."
+        ]
+      }
+    ]
+  },
+  {
+    slug: "msp-jak-vysvetlit-nzkb-zakaznikovi",
+    title: "Jak MSP vysvětlí nZKB zákazníkovi, který o tom neslyšel",
+    description: "Zákazník neví, co je nZKB, proč se ho to týká a co má dělat. Vy to víte — ale jak to vysvětlit srozumitelně, bez strachu a bez toho, abyste přebrali jeho odpovědnost? Průvodce rozhovorem.",
+    category: "ZoKB / NIS2",
+    publishedAt: "2026-05-24",
+    readTime: "7 min",
+    author: "Splnit.eu",
+    authorRole: "Redakce Splnit.eu",
+    regulationHref: "https://www.e-sbirka.cz/sb/2025/264",
+    ctaTitle: "Splňte požadavky bez zbytečné byrokracie",
+    ctaBody: "Splnit.eu automatizuje compliance pro NIS2, GDPR, ISO 27001 a EU AI Act. Sledujte svůj stav v reálném čase.",
+    ctaButton: "Začít zdarma",
+    ctaHref: "/early-access",
+    summary: "„Co je to nZKB? My přece jen provozujeme e-shop.\" Nebo: „To se týká jen velkých firem, ne?\" Nebo, nejčastěji: mlčení a přesunutí tématu. Většina zákazníků MSP — majitelé středních firem, ředitelé provozu, IT manažeři bez právního zázemí — o nZKB buď neslyšeli, nebo o něm slyšeli a nevědí, co s...",
+    sections: [
+      {
+        heading: "Proč je ten rozhovor důležitý pro vás jako MSP",
+        body: [
+          "Nejde jen o pomoc zákazníkovi. Jde o váš byznys:",
+          "Zákazník, který plní nZKB, potřebuje od vás víc. Bezpečnostní opatření, dokumentaci, monitoring, incident response — to jsou přidané služby, které zákazník bez vašeho vedení sám nevyřeší.",
+          "Zákazník, který neplní nZKB a dostane pokutu nebo incident, bude hledat viníka. Pokud jste spravovali jeho IT a neupozornili jste ho na zákonné povinnosti, bude ten rozhovor obtížnější, než byl původní.",
+          "Zákazník, který díky vám compliance zvládne, je loajálnější a platí víc. Compliance poradenství a implementace jsou vyšší marže než samotná správa infrastruktury."
+        ]
+      },
+      {
+        heading: "Koho se nZKB týká — přehled pro zákazníka",
+        body: [
+          "Než začnete rozhovor, zjistěte, jestli se zákon na zákazníka vůbec vztahuje. Pokud ano — ve kterém sektoru podniká a jak velký je.",
+          "nZKB se vztahuje na firmy v těchto sektorech (výběr nejrelevantnějších pro MSP zákazníky):",
+          "Zákazník, který podniká v jiném sektoru a je menší firma — pravděpodobně regulovaný není. Ale ověřte to přes samoidentifikaci na Portálu NÚKIB, ne odhadem."
+        ],
+        table: {
+          headers: [
+            "Sektor",
+            "Příklady"
+          ],
+          rows: [
+            [
+              "Digitální infrastruktura",
+              "Cloudoví provideři, datacentra, DNS, CDN"
+            ],
+            [
+              "Digitální služby",
+              "E-commerce platformy nad prahem, online tržiště"
+            ],
+            [
+              "Výroba",
+              "Výrobci kritických produktů (zdravotnické přístroje, chemikálie, automobily)"
+            ],
+            [
+              "Energie",
+              "Elektřina, plyn, teplo, ropa"
+            ],
+            [
+              "Doprava",
+              "Letectví, železnice, lodní a silniční doprava"
+            ],
+            [
+              "Zdravotnictví",
+              "Nemocnice, laboratoře, farmaceutika"
+            ],
+            [
+              "Vodohospodářství",
+              "Pitná voda, odpadní vody"
+            ],
+            [
+              "Veřejná správa",
+              "Státní a krajské orgány"
+            ],
+            [
+              "Finance",
+              "Banky, pojišťovny, finanční infrastruktura"
+            ]
+          ]
+        }
+      },
+      {
+        heading: "Rámec rozhovoru: čtyři kroky",
+        body: [],
+        subsections: [
+          {
+            heading: "Krok 1: Zjistěte, co zákazník ví",
+            body: [
+              "Nezačínejte přednáškou. Začněte otázkou:",
+              "*„Slyšeli jste o novém zákoně o kybernetické bezpečnosti? Víte, jestli se na vás vztahuje?\"*",
+              "Odpovědi jsou typicky tři:"
+            ],
+            bullets: [
+              "„Ne, vůbec nevím, co to je\" → jděte na Krok 2",
+              "„Slyšeli jsme, ale nevíme, co s tím\" → jděte rovnou na Krok 3",
+              "„Ano, řešíme to\" → zjistěte, co konkrétně řeší, a nabídněte pomoc tam, kde mají mezery"
+            ]
+          },
+          {
+            heading: "Krok 2: Vysvětlete zákon jednoduše",
+            body: [
+              "Nepotřebují znát číslo paragrafu. Potřebují pochopit podstatu.",
+              "Doporučené znění:",
+              "„Od listopadu 2025 platí v Česku zákon o kybernetické bezpečnosti, který vychází z evropské směrnice NIS2. Týká se firem, které poskytují služby nebo provozují systémy, jejichž výpadek by měl závažný dopad na ekonomiku nebo společnost. Pokud do této kategorie patříte, máte povinnost zavést bezpečnostní opatření, hlásit kybernetické incidenty a registrovat se u NÚKIB — Národního úřadu pro kybernetickou bezpečnost. Sankce za neplnění jsou vysoké — až 250 milionů korun.\"",
+              "Pak přidejte konkrétnost pro jejich situaci:",
+              "„V případě vaší firmy — vy poskytujete [typ služby] zákazníkům z [sektoru]. To znamená, že pravděpodobně regulaci podléháte. Chcete, abychom to společně prověřili?\""
+            ]
+          },
+          {
+            heading: "Krok 3: Zjistěte jejich aktuální stav",
+            body: [
+              "Než cokoliv doporučíte, zjistěte kde jsou. Tři otázky, které vám dají přesný obrázek:",
+              "Odpovědi vám ukáží, jestli jsou na začátku (nic neudělali), uprostřed (udělali registraci, neví co dál) nebo blízko cíle (mají základ, chybí doladění)."
+            ],
+            bullets: [
+              "1. *„Provedli jste samoidentifikaci na Portálu NÚKIB? Dostali jste rozhodnutí o registraci?\"*",
+              "2. *„Máte nějakou dokumentaci k bezpečnosti — politiky, plány, záznamy?\"*",
+              "3. *„Kdo u vás za kybernetickou bezpečnost odpovídá?\"*"
+            ]
+          },
+          {
+            heading: "Krok 4: Navrhněte konkrétní první krok — ne celý projekt",
+            body: [
+              "Zákazník, který právě slyší o nZKB poprvé, nerozhodne o roční compliance zakázce na místě. Navrhněte malý, konkrétní a bezrizikový první krok:",
+              "„Jako první bychom mohli společně projít samoidentifikaci na Portálu NÚKIB — zjistíme, jestli a v jakém režimu jste regulovaní. Trvá to hodinu a dáme vám jasnou odpověď na otázku, co musíte řešit a co ne. Chcete to naplánovat?\"",
+              "Malý první krok snižuje rozhodovací bariéru a zároveň otevírá dveře k dalším službám."
+            ]
+          }
+        ]
+      },
+      {
+        heading: "Jak reagovat na nejčastější námitky",
+        body: [
+          "„My jsme malá firma, tohle se nás netýká.\"",
+          "„Zákon nereguluje podle velikosti firmy, ale podle typu služby a sektoru. Pokud poskytujete [typ služby] — a vy ano — regulace se na vás může vztahovat i přes menší velikost. Ověřit to přes samoidentifikaci nám zabere hodinu.\"",
+          "„To je pro nás příliš složité a drahé.\"",
+          "„Záleží na vašem režimu. Firmy v nižším režimu mají 13 opatření — část z nich pravděpodobně už dělají, jen to není zdokumentované. Nejdřív zjistíme, kde jste. Teprve pak budeme mluvit o nákladech.\"",
+          "„To vyřeší náš IT tým sám.\"",
+          "„Technická opatření váš IT tým zvládne. Ale nZKB vyžaduje také dokumentaci, politiky, formální hodnocení rizik a hlášení incidentů — to je nad rámec běžné IT správy. Právě tam vám můžeme pomoct.\"",
+          "„Počkáme, jak to dopadne s ostatními firmami.\"",
+          "„Lhůty jsou zákonné a nevztahují se na to, jestli ostatní plní nebo ne. Pokud jste regulovaní a neregistrujete se, sankce mohou přijít bez ohledu na to, co dělají konkurenti. Navíc firmy, které compliance zvládnou dřív, mají výhodu v tendrech.\""
+        ]
+      },
+      {
+        heading: "Co zákazníkovi říct o vaší roli — a co ne",
+        body: [
+          "Říkejte:",
+          "Neříkejte:",
+          "Toto rozlišení je důležité nejen eticky — je důležité pro váš vlastní právní základ. Viz také článek o tom, jak nabídnout compliance jako službu bez převzetí právní odpovědnosti."
+        ],
+        bullets: [
+          "„Pomůžeme vám s implementací technických opatření\"",
+          "„Připravíme dokumentaci a politiky\"",
+          "„Budeme monitorovat a hlásit incidenty za vás\"",
+          "„Provázíme vás celým procesem registrace a přípravy\"",
+          "„Vyřídíme to za vás\" — zákon ukládá povinnosti zákazníkovi, ne vám",
+          "„Vy za nic neodpovídáte\" — odpovídá, jen vám může delegovat technické provádění",
+          "„Garantujeme soulad s nZKB\" — garanci zákonného souladu nesmíte dávat, pokud nejste certifikovaný právník nebo auditor"
+        ]
+      },
+      {
+        heading: "TL;DR",
+        body: [],
+        bullets: [
+          "Zákazník, který o nZKB neslyšel, potřebuje jednoduché vysvětlení, ne přednášku o paragrafech.",
+          "Rámec rozhovoru: zjistěte co ví → vysvětlete zákon jednoduše → zmapujte jejich stav → navrhněte malý první krok.",
+          "Nejsilnější první krok: „Udělejme spolu samoidentifikaci — hodina práce, jasná odpověď.\"",
+          "Mějte připravené odpovědi na typické námitky — zákazník vždy hledá důvod proč čekat.",
+          "Jasně rozlišujte, co děláte za zákazníka a za co on sám odpovídá — chrání vás to i zákazníka."
+        ]
+      }
+    ]
+  },
+  {
+    slug: "msp-delegovani-compliance-zakaznik",
+    title: "Co zákazník může delegovat na MSP a co musí řešit sám",
+    description: "MSP může zákazníkovi s nZKB hodně pomoct — ale ne všechno. Jasná hranice mezi tím, co lze delegovat a co musí zákazník vlastnit sám, chrání obě strany. Praktická mapa odpovědností.",
+    category: "ZoKB / NIS2",
+    publishedAt: "2026-05-24",
+    readTime: "7 min",
+    author: "Splnit.eu",
+    authorRole: "Redakce Splnit.eu",
+    regulationHref: "https://www.e-sbirka.cz/sb/2025/264",
+    ctaTitle: "Splňte požadavky bez zbytečné byrokracie",
+    ctaBody: "Splnit.eu automatizuje compliance pro NIS2, GDPR, ISO 27001 a EU AI Act. Sledujte svůj stav v reálném čase.",
+    ctaButton: "Začít zdarma",
+    ctaHref: "/early-access",
+    summary: "Zákazník, který zjistí, že podléhá nZKB, se přímo zeptá: „Tak to vyřídíte za nás, ne? Vy přece spravujete naše IT.\" Je to pochopitelná reakce. A odpověď zní: hodně věcí ano — ale ne všechno. nZKB ukládá povinnosti zákazníkovi jako regulované entitě — a část z nich nemůže delegovat na nikoho, ani...",
+    sections: [
+      {
+        heading: "Základní princip: zákazník odpovídá, MSP implementuje",
+        body: [
+          "nZKB ukládá povinnosti poskytovateli regulované služby — tedy zákazníkovi. NÚKIB nekomunikuje s MSP zákazníka, komunikuje přímo se zákazníkem. Pokutu nedostanete vy — dostane ji zákazník.",
+          "To neznamená, že MSP nemůže dělat většinu práce. Ale vždy jde o práci jménem zákazníka a pod jeho dohledem — ne o převzetí jeho zákonné odpovědnosti."
+        ]
+      },
+      {
+        heading: "Mapa delegování: co patří kam",
+        body: [],
+        subsections: [
+          {
+            heading: "Co zákazník musí vlastnit sám — nelze delegovat",
+            body: [
+              "Samoidentifikace a registrace u NÚKIB Ohlášení regulované služby musí provést statutární orgán zákazníka nebo jím pověřený zástupce. MSP nemůže udělat toto za zákazníka — může ho provést a navigovat, ale zákazník musí mít aktivní roli.",
+              "Pověření zástupce a přístup na Portál NÚKIB Zákazník musí aktivně pověřit osoby, které za firmu jednají s NÚKIB. Toto je zákonný úkon, který vyžaduje identitu a datovou schránku zákazníka.",
+              "Odpovědnost vedení za kyberbezpečnost nZKB výslovně stanoví odpovědnost vedoucích osob — členů statutárního orgánu — za zavedení bezpečnostních opatření. Tato odpovědnost je osobní a nepřenosná.",
+              "Schválení rozsahu řízení kyberbezpečnosti Dokument definující rozsah musí schválit vedení zákazníka. MSP může dokument připravit — zákazník ho musí schválit a vlastnit.",
+              "Hlášení incidentů NÚKIB Hlášení probíhá přes Portál NÚKIB z účtu zákazníka. MSP může připravit podklady a asistovat — zákazník musí hlášení odeslat nebo k tomu výslovně pověřit zástupce.",
+              "Rozhodnutí o akceptaci rizik Kde zákazník rozhoduje, že určité riziko akceptuje a nepřijímá opatření — toto rozhodnutí musí formálně učinit a podepsat zákazník, ne MSP."
+            ]
+          },
+          {
+            heading: "Co MSP může dělat jménem zákazníka — plně delegovatelné",
+            body: [
+              "Technická implementace bezpečnostních opatření Zavedení MFA, správa přístupů, nastavení záloh, konfigurace firewallu, patch management, monitoring — toto je jádro MSP práce a plně delegovatelné.",
+              "Příprava bezpečnostní dokumentace MSP může připravit politiky, plány, záznamy a šablony. Zákazník je schvaluje a podepisuje — ale psaní a strukturování je práce MSP.",
+              "Správa a aktualizace registru aktiv Inventura systémů, dat a procesů v rozsahu řízení KB.",
+              "Provádění hodnocení rizik MSP může provést hodnocení, připravit registr rizik a plán zvládání. Zákazník výsledky schvaluje.",
+              "Monitoring a alerting Průběžné sledování bezpečnostních událostí, správa SIEM, alerting.",
+              "Příprava podkladů pro hlášení incidentů MSP detekuje incident, připraví podklady a návrh hlášení — zákazník odešle nebo MSP odesílá jako pověřený zástupce.",
+              "Zálohovací služby a DR Provoz záloh, testování obnovy, disaster recovery plán.",
+              "Bezpečnostní školení zaměstnanců zákazníka Organizace a vedení školení, záznamy o účasti.",
+              "Vendor management Hodnocení dodavatelů zákazníka, příprava DPA šablon, vedení vendor registru."
+            ]
+          },
+          {
+            heading: "Šedá zóna — závisí na smlouvě a dohodě",
+            body: [
+              "Pověřená osoba kyberbezpečnosti nZKB nevyžaduje, aby to byl zaměstnanec zákazníka — může to být externě zajištěno. MSP nebo konzultant může tuto roli zastávat jako outsourcovaná bezpečnostní role (virtual CISO). Toto musí být explicitně sjednáno ve smlouvě.",
+              "Komunikace s NÚKIB při incidentu Pokud je MSP pověřen jako zástupce zákazníka na Portálu NÚKIB, může komunikovat jménem zákazníka. Bez formálního pověření toto dělat nemůže.",
+              "Výběr a schválení dodavatelů MSP může doporučovat — ale finální schválení dodavatelů je rozhodnutí zákazníka."
+            ]
+          }
+        ]
+      },
+      {
+        heading: "Jak tuto hranici zakotvit ve smlouvě",
+        body: [
+          "Nejčastější příčina konfliktů mezi MSP a zákazníkem v oblasti compliance je mlhavá smlouva. Zákazník si myslel, že MSP „to vyřídí\" — MSP si myslel, že jen implementuje. Výsledek: nedokončená compliance a spor o odpovědnost.",
+          "Minimální smluvní ujednání:"
+        ],
+        codeBlock: "MSP zajišťuje:\n- Implementaci technických bezpečnostních opatření dle specifikace\n- Přípravu bezpečnostní dokumentace ke schválení zákazníkem\n- Monitoring, alerting a přípravu podkladů pro hlášení incidentů\n- [Seznam dalších konkrétních služeb]\n\nZákazník zajišťuje:\n- Registraci regulované služby a komunikaci s NÚKIB\n- Schválení a podpis interních politik a dokumentů\n- Rozhodnutí o rozsahu řízení KB a akceptaci rizik\n- Odeslání hlášení incidentů NÚKIB (nebo pověření MSP jako zástupce)\n- Proškolení zaměstnanců a dodržování interních politik\n\nMSP nepřebírá zákonnou odpovědnost zákazníka jako poskytovatele\nregulované služby. Zákazník zůstává odpovědným subjektem\ndle zákona č. 264/2025 Sb."
+      },
+      {
+        heading: "Jak toto zákazníkovi vysvětlit, aniž ho odradíte",
+        body: [
+          "Zákazník může slyšet „to musíte dělat sami\" jako „nepomůžeme vám.\" Není to pravda — jen je důležité nastavit správná očekávání.",
+          "Doporučené znění:",
+          "„Velkou část práce uděláme za vás — techniku, dokumentaci, monitoring, školení. Ale zákon ukládá odpovědnost vám jako firmě, ne nám. Proto potřebujeme, abyste nás informovali, schvalovali klíčová rozhodnutí a komunikovali s NÚKIB svým jménem. My vás celým procesem provázíme — ale nemohu za vás podepsat to, co musíte podepsat vy.\""
+        ]
+      },
+      {
+        heading: "TL;DR",
+        body: [],
+        bullets: [
+          "nZKB ukládá povinnosti zákazníkovi, ne MSP. MSP implementuje — zákazník odpovídá.",
+          "Nelze delegovat: registrace u NÚKIB, odpovědnost vedení, schválení rozsahu, hlášení incidentů (bez pověření), rozhodnutí o akceptaci rizik.",
+          "Plně delegovatelné: technická implementace, příprava dokumentace, monitoring, školení, vendor management, zálohy.",
+          "Šedá zóna: role pověřené osoby KB, komunikace s NÚKIB při incidentu — to závisí na formálním pověření.",
+          "Zapište hranici do smlouvy explicitně — vyhne se to konfliktům při auditu nebo incidentu."
+        ]
+      }
+    ]
+  },
+  {
+    slug: "msp-compliance-jako-sluzba-bez-odpovednosti",
+    title: "Jak MSP nabídne compliance jako službu bez toho, aby přebral právní odpovědnost",
+    description: "Compliance poradenství a implementace jsou pro MSP příležitost s vyšší marží. Ale špatně nastavená smlouva může z MSP udělat odpovědnou stranu za zákazníkův zákonný soulad. Jak nabídnout tuto službu správně.",
+    category: "ZoKB / NIS2",
+    publishedAt: "2026-05-24",
+    readTime: "8 min",
+    author: "Splnit.eu",
+    authorRole: "Redakce Splnit.eu",
+    regulationHref: "https://www.e-sbirka.cz/sb/2025/264",
+    ctaTitle: "Splňte požadavky bez zbytečné byrokracie",
+    ctaBody: "Splnit.eu automatizuje compliance pro NIS2, GDPR, ISO 27001 a EU AI Act. Sledujte svůj stav v reálném čase.",
+    ctaButton: "Začít zdarma",
+    ctaHref: "/early-access",
+    summary: "nZKB compliance je pro MSP reálná příležitost. Zákazníci to nezvládnou sami — potřebují technickou implementaci, dokumentaci a průvodce procesem. Zákazníci za to platí. A marže jsou vyšší než u samotné správy infrastruktury. Ale jsou MSP, kteří tuto příležitost nevyužijí správně — protože se...",
+    sections: [
+      {
+        heading: "Proč compliance jako služba dává smysl pro MSP",
+        body: [
+          "Zákazníci to potřebují a nehledají SI firmu. Zákazník, který s vámi má vztah v oblasti správy IT, vám důvěřuje. Nechtějí si najímat neznámou poradenskou firmu pro compliance — chtějí, aby to vyřešil jejich MSP. Vy znáte jejich prostředí.",
+          "Jde o opakující se příjem. Compliance není jednorázový projekt. Politiky se revidují, audity se opakují, opatření se testují, školení se každoročně aktualizují. To je model opakujícího se měsíčního příjmu.",
+          "Odlišuje vás to od konkurence. MSP, který říká „spravujeme vám IT a zároveň vás provázíme compliance,\" hraje v jiné lize než MSP, který říká jen „spravujeme vám IT.\""
+        ]
+      },
+      {
+        heading: "Tři modely compliance služby pro MSP",
+        body: [],
+        subsections: [
+          {
+            heading: "Model 1: Implementační projekt",
+            body: [
+              "Jednorázový projekt s jasně definovaným scope:",
+              "Výhoda: zákazník snáze schválí jednorázovou investici. Nevýhoda: po dokončení přijdete o příjem, pokud nemáte navazující model."
+            ],
+            bullets: [
+              "Gap analýza",
+              "Příprava dokumentace a politik",
+              "Implementace technických opatření",
+              "Příprava na audit nebo registraci"
+            ]
+          },
+          {
+            heading: "Model 2: Compliance retainer",
+            body: [
+              "Měsíční paušál za průběžnou péči:",
+              "Výhoda: opakující se příjem, dlouhodobý vztah. Nevýhoda: zákazník musí vidět hodnotu průběžně — musíte reportovat, co děláte."
+            ],
+            bullets: [
+              "Aktualizace dokumentace při změnách",
+              "Čtvrtletní přezkum politik",
+              "Roční revize rozsahu a rizik",
+              "Příprava záznámů ze školení",
+              "Podpora při zákaznických auditech"
+            ]
+          },
+          {
+            heading: "Model 3: Bundled v managed service",
+            body: [
+              "Compliance je součástí základního MSP balíčku nebo prémiového tieru:",
+              "Výhoda: zákazník to vnímá jako kompletní řešení, switching cost je vyšší. Nevýhoda: musíte přesně kalkulovat, aby to nebylo prodělečné."
+            ],
+            bullets: [
+              "Bezpečnostní monitoring + compliance dokumentace v jednom",
+              "Zákazník neplatí zvlášť — je to součást ceny za spravované služby"
+            ]
+          }
+        ]
+      },
+      {
+        heading: "Jak navrhovat scope, který nepřebírá odpovědnost",
+        body: [],
+        subsections: [
+          {
+            heading: "Rozlište „compliance implementace\" od „compliance garantování\"",
+            body: [
+              "Co nabízíte (správně):",
+              "Co nenabízíte (a nesmíte slibovat):",
+              "Rozdíl je zásadní: nabízíte implementaci a podporu — ne garanci výsledku. Výsledek závisí na zákazníkovi (schvaluje dokumenty, odpovídá za vedení, komunikuje s NÚKIB)."
+            ],
+            bullets: [
+              "Implementace technických bezpečnostních opatření dle specifikace",
+              "Příprava dokumentace a politik ke schválení zákazníkem",
+              "Metodická podpora při registraci a komunikaci s NÚKIB",
+              "Průběžná údržba a aktualizace dokumentace",
+              "Organizace školení a vedení záznamů",
+              "Garanci zákonného souladu zákazníka s nZKB",
+              "Garanci, že zákazník projde auditem bez nálezu",
+              "Přijetí zákonné odpovědnosti zákazníka jako regulované entity",
+              "Právní poradenství (pokud nejste právník)"
+            ]
+          }
+        ]
+      },
+      {
+        heading: "Smluvní jazyk, který vás chrání",
+        body: [
+          "Toto jsou klíčové klauzule, které musí vaše compliance smlouva nebo její dodatek obsahovat:"
+        ],
+        subsections: [
+          {
+            heading: "Vymezení rozsahu",
+            body: [],
+            codeBlock: "MSP poskytuje následující služby v oblasti kybernetické bezpečnosti\na regulatory compliance:\n[explicitní seznam — co konkrétně děláte]\n\nSlužby MSP nepředstavují právní poradenství ani audit\nkybernetické bezpečnosti. MSP nezaručuje, že implementovaná\nopatření budou shledána jako dostatečná jakýmkoli regulátorem\nnebo auditorem."
+          },
+          {
+            heading: "Odpovědnost zákazníka",
+            body: [],
+            codeBlock: "Zákazník bere na vědomí, že:\na) Zákazník je poskytovatelem regulované služby ve smyslu\n   zákona č. 264/2025 Sb. a nese plnou zákonnou odpovědnost\n   za soulad s tímto zákonem.\nb) MSP jedná jako technický a metodický poskytovatel\n   — nepřebírá zákonnou odpovědnost zákazníka.\nc) Zákazník je povinen schvalovat klíčové dokumenty, rozhodnutí\n   a komunikaci s NÚKIB.\nd) Zákazník je povinen poskytnout MSP přesné a úplné informace\n   nezbytné pro výkon smluvených služeb."
+          },
+          {
+            heading: "Omezení liability",
+            body: [
+              "Doporučení: Nechte smlouvu projít právníkem. Výše uvedené klauzule jsou ilustrativní — konkrétní formulace závisí na vašem obchodním modelu a právní formě."
+            ],
+            codeBlock: "Celková odpovědnost MSP za škodu vzniklou v souvislosti\ns poskytováním compliance služeb je omezena na výši\nsmluvní odměny za posledních 12 měsíců. MSP neodpovídá\nza škody vzniklé v důsledku rozhodnutí zákazníka,\nneposkytnutí součinnosti zákazníkem nebo za sankce\nuložené regulátorem zákazníkovi."
+          }
+        ]
+      },
+      {
+        heading: "Jak nastavit součinnost zákazníka jako podmínku",
+        body: [
+          "Největší riziko compliance projektu pro MSP není právní odpovědnost — je to situace, kdy zákazník nespolupracuje, ale chce výsledek. Politiky čekají na schválení. Školení se zákazník nechce zúčastnit. Dokumenty nikdo nepodepisuje.",
+          "Ošetřete to ve smlouvě a procesem:",
+          "Ve smlouvě:",
+          "Procesem:"
+        ],
+        codeBlock: "Zákazník se zavazuje:\n- Poskytovat MSP součinnost v dohodnutých termínech\n- Schvalovat předložené dokumenty do [X] pracovních dnů\n- Nominovat interní kontaktní osobu odpovědnou za compliance\n- Zúčastnit se alespoň [X] hodin ročně na přezkumech a školeních\n\nPokud zákazník neposkytne součinnost ve stanoveném termínu,\nMSP není v prodlení a termíny se posouvají o dobu prodlení zákazníka.",
+        bullets: [
+          "Každý dokument zasílejte s jasnou lhůtou pro schválení a jménem zodpovědné osoby",
+          "Vedete log schválení — kdy byl dokument zaslán, kdy schválen, kým",
+          "Měsíční nebo čtvrtletní status report zákazníkovi — co bylo hotovo, co čeká na jeho akci"
+        ]
+      },
+      {
+        heading: "Jak compliance službu prezentovat zákazníkovi",
+        body: [
+          "Zákazník nekupuje „compliance\". Zákazník kupuje:",
+          "Přizpůsobte komunikaci tomu, co zákazníka motivuje:"
+        ],
+        bullets: [
+          "Klid — „Nebudeme mít problém s NÚKIB ani s kontrolou\"",
+          "Tendr — „Budeme moci doložit soulad s nZKB a vyhrávat zakázky\"",
+          "Ochranu — „Když dojde k incidentu, budeme vědět, co dělat\"",
+          "Čas — „Nebudeme to muset řešit sami\""
+        ],
+        table: {
+          headers: [
+            "Profil zákazníka",
+            "Co ho motivuje",
+            "Jak prezentovat"
+          ],
+          rows: [
+            [
+              "Výrobní firma ve vyšším režimu",
+              "Vyhnout se pokutám",
+              "„Bez zavedených opatření riskujete pokutu až 250 mil. Kč. Pomůžeme vám to splnit v zákonné lhůtě.\""
+            ],
+            [
+              "IT firma usilující o enterprise",
+              "Vyhrávat tendry",
+              "„Zákazníci z regulovaného sektoru budou vyžadovat doložení nZKB souladu. Budete připraveni.\""
+            ],
+            [
+              "Rodinná firma s obavami z administrativy",
+              "Jednoduchost",
+              "„Uděláme maximum práce za vás. Vy jen schvalujete a podepisujete.\""
+            ]
+          ]
+        }
+      },
+      {
+        heading: "TL;DR",
+        body: [],
+        bullets: [
+          "Compliance jako služba je pro MSP příležitost s vyšší marží a opakujícím se příjmem.",
+          "Nabízíte implementaci a podporu — ne garanci zákonného souladu. Toto rozlišení musí být explicitní ve smlouvě.",
+          "Klíčové smluvní prvky: vymezení scope, odpovědnost zákazníka, omezení liability MSP.",
+          "Součinnost zákazníka musí být smluvní povinností — ne dobrým přáním.",
+          "Zákazník nekupuje compliance — kupuje klid, tendry, ochranu a čas. Komunikujte podle toho."
+        ]
+      }
+    ]
+  },
+  {
+    slug: "msp-compliance-prodejni-argument-tender",
+    title: "Compliance jako prodejní argument: jak MSP vyhraje tender díky nZKB připravenosti",
+    description: "Firmy v regulovaných sektorech hodnotí své MSP dodavatele nově. Kyberbezpečnost a nZKB soulad jsou součástí výběrových kritérií. Jak MSP využít compliance připravenost jako konkurenční výhodu v tendru.",
+    category: "ZoKB / NIS2",
+    publishedAt: "2026-05-24",
+    readTime: "7 min",
+    author: "Splnit.eu",
+    authorRole: "Redakce Splnit.eu",
+    regulationHref: "https://www.e-sbirka.cz/sb/2025/264",
+    ctaTitle: "Splňte požadavky bez zbytečné byrokracie",
+    ctaBody: "Splnit.eu automatizuje compliance pro NIS2, GDPR, ISO 27001 a EU AI Act. Sledujte svůj stav v reálném čase.",
+    ctaButton: "Začít zdarma",
+    ctaHref: "/early-access",
+    summary: "„Vybíráme nového MSP poskytovatele. Součástí hodnocení je bezpečnostní dotazník a doložení souladu s nZKB.\" Tato věta se v tendrech pro IT služby objevuje čím dál pravidelněji. Firmy v regulovaných sektorech — výroba, energie, zdravotnictví, finance — jsou samy pod tlakem nZKB a hledají MSP,...",
+    sections: [
+      {
+        heading: "Proč compliance vstoupila do výběrových kritérií MSP",
+        body: [
+          "Před nZKB byl výběr MSP primárně o ceně, referencích a technické způsobilosti. Dnes přibyl čtvrtý rozměr: bezpečnostní způsobilost a regulatory compliance.",
+          "Důvody jsou přímé:",
+          "Regulovaný zákazník ručí za své dodavatele. nZKB vyžaduje hodnocení bezpečnostně významných dodavatelů pro vyšší režim. MSP, který spravuje IT zákazníka, je bezpečnostně významným dodavatelem. Zákazník musí doložit, že vás prověřil.",
+          "Incident přes MSP je incident zákazníka. Pokud útočník kompromituje váš RMM přístup a dostane se přes něj k zákazníkovi, zákazník hlásí incident NÚKIB — a zdůvodňuje, proč nevybral bezpečného MSP.",
+          "Enterprise procurement týmy mají nové checklisty. Bezpečnostní dotazníky pro dodavatele se v roce 2026 staly standardem. Bez uspokojivých odpovědí se k finančnímu vyjednávání nedostanete."
+        ]
+      },
+      {
+        heading: "Co zákazník v tendru konkrétně hodnotí",
+        body: [
+          "Bezpečnostní část tendru typicky testuje těchto 6 oblastí:"
+        ],
+        subsections: [
+          {
+            heading: "1. Jste sami regulovaní pod nZKB?",
+            body: [
+              "Zákazník chce vědět, jestli vy sami máte zákonnou povinnost zavést bezpečnostní opatření — a jestli ji plníte. MSP, který je sám registrován u NÚKIB a má zavedená opatření, dává zákazníkovi silnější signál než MSP, který říká „my regulovaní nejsme.\"",
+              "Připravte: Potvrzení o registraci nebo výsledek samoidentifikace + stručný přehled zavedených opatření."
+            ]
+          },
+          {
+            heading: "2. Jak zabezpečujete přístupy do zákaznických prostředí?",
+            body: [
+              "Toto je oblast s nejvyšším zájmem. Zákazník chce vidět, že přístupy jeho techniků jsou pod kontrolou.",
+              "Připravte: Politiku řízení přístupů, potvrzení povinného MFA, popis offboarding procesu, přehled nástrojů pro správu privilegovaných přístupů (PAM)."
+            ]
+          },
+          {
+            heading: "3. Certifikace nebo bezpečnostní audit",
+            body: [
+              "ISO 27001 nebo SOC 2 jsou nejsilnější signály. Pokud je nemáte, připravte alternativu.",
+              "Připravte: Certifikát (s platným datem a scope pokrývajícím MSP operace), nebo bezpečnostní přehled + výsledky posledního externího bezpečnostního auditu nebo penetračního testu."
+            ]
+          },
+          {
+            heading: "4. Jak řešíte incidenty a jak nás informujete?",
+            body: [
+              "Připravte: Incident response plán (zkrácená verze), smluvní lhůtu pro notifikaci zákazníka (24–48 hodin), kontaktní list pro bezpečnostní záležitosti."
+            ]
+          },
+          {
+            heading: "5. Jak hodnotíte vlastní dodavatele?",
+            body: [
+              "Připravte: Vendor risk registr nebo přehled klíčových subdodavatelů s jejich bezpečnostní způsobilostí."
+            ]
+          },
+          {
+            heading: "6. Školení a bezpečnostní kultura",
+            body: [
+              "Připravte: Záznamy o bezpečnostním školení zaměstnanců, přehled témat a frekvence."
+            ]
+          }
+        ]
+      },
+      {
+        heading: "Jak compliance prezentovat v tendru — ne jen doložit",
+        body: [
+          "Doložit dokumenty je minimum. Vítězové tendrů dokáží compliance vypravovat jako příběh, který buduje důvěru."
+        ],
+        subsections: [
+          {
+            heading: "Místo: „Přikládáme certifikát ISO 27001\"",
+            body: [
+              "Říkejte: „Máme platnou certifikaci ISO 27001 se scope pokrývajícím naše MSP operace. To znamená, že každoročně procházíme nezávislým auditem, který ověřuje naše bezpečnostní kontroly. Přikládáme certifikát, SoA a výsledky posledního dozorového auditu.\""
+            ]
+          },
+          {
+            heading: "Místo: „Máme MFA na přístupech\"",
+            body: [
+              "Říkejte: „Každý přístup do zákaznického prostředí je chráněn MFA a logován. Při odchodu technika jsou přístupy odebrány do 4 hodin. Záznamy o přístupech uchováváme 12 měsíců a jsou dostupné zákazníkovi na vyžádání.\""
+            ]
+          },
+          {
+            heading: "Místo: „Řešíme incidenty dle plánu\"",
+            body: [
+              "Říkejte: „Náš incident response plán testujeme dvakrát ročně tabletop cvičením. Zákazníky informujeme o incidentech do 24 hodin od zjištění — to je smluvní závazek, ne jen interní politika.\"",
+              "Každá odpověď má tři části: co máte, proč to funguje, jak to zákazník pozná."
+            ]
+          }
+        ]
+      },
+      {
+        heading: "Compliance pitch: jak ho zakomponovat do prezentace",
+        body: [
+          "Pokud máte možnost prezentovat před výběrovou komisí, věnujte compliance jednu samostatnou sekci — ne ji rozptýlit do technického přehledu.",
+          "Struktura compliance sekce (5–8 minut):"
+        ],
+        bullets: [
+          "1. Naše vlastní bezpečnostní způsobilost — jsme sami regulovaní / certifikovaní. Tady je doklad.",
+          "2. Jak chráníme přístupy do vašeho prostředí — konkrétní popis: MFA, PAM, offboarding, logování.",
+          "3. Co se stane, když dojde k incidentu — kdo volá komu, do kdy, co děláme.",
+          "4. Jak vám pomůžeme s vaší vlastní nZKB compliance — pokud tuto službu nabízíte.",
+          "5. Reference — zákazník z regulovaného sektoru, pro kterého jste compliance řešili."
+        ]
+      },
+      {
+        heading: "Jak reagovat, když nemáte certifikaci",
+        body: [
+          "Mnoho MSP ISO 27001 nemá — a přitom tendry vyhrává. Klíčem je transparentnost a kompenzace:",
+          "„ISO 27001 certifikaci nemáme, plánujeme certifikační audit v [datum]. Místo toho přikládáme přehled našich bezpečnostních opatření, výsledky posledního externího penetračního testu z [datum] a náš registr rizik. Jsme připraveni odpovědět na jakékoli detailní otázky vašeho security týmu.\"",
+          "Zákazníci z méně přísně regulovaného sektoru toto přijmou. Pro banky a pojišťovny certifikaci většinou potřebujete — nebo potřebujete partnera, který ji má."
+        ]
+      },
+      {
+        heading: "Jak compliance zvyšuje cenu vaší nabídky",
+        body: [
+          "Compliance připravenost vám umožňuje obhájit vyšší cenu:",
+          "V tendru, kde cena je jedním z kritérií, ale ne jediným, je bezpečnostní způsobilost argument pro to, proč stojíte víc než nejlevnější nabídka."
+        ],
+        bullets: [
+          "Snižuje riziko zákazníka (a zákazník to ví)",
+          "Snižuje zákazníkovy náklady na vendor management (nemusí vás složitě prověřovat)",
+          "Umožňuje zákazníkovi ve svých vlastních auditech doložit prověřeného dodavatele"
+        ]
+      },
+      {
+        heading: "TL;DR",
+        body: [],
+        bullets: [
+          "Compliance připravenost je v roce 2026 součástí výběrových kritérií MSP v regulovaných sektorech.",
+          "Zákazník hodnotí 6 oblastí: regulační status, správu přístupů, certifikace, incident response, vendor management, školení.",
+          "Nestačí dokumenty doložit — musíte je umět vypravovat jako příběh, který buduje důvěru.",
+          "Pokud nemáte ISO 27001: buďte transparentní, doložte alternativy a ukažte plán.",
+          "Compliance způsobilost obhajuje vyšší cenu a snižuje switching pressure od zákazníka."
+        ]
+      }
+    ]
+  },
+  {
+    slug: "msp-ceny-compliance-sluzby",
+    title: "Jak MSP nastaví ceny za compliance služby",
+    description: "Compliance je pro MSP příležitost s vyšší marží — ale jen pokud je správně oceněna. Tady jsou modely, kalkulační logika a nejčastější chyby při nastavování cen za nZKB a bezpečnostní služby.",
+    category: "ZoKB / NIS2",
+    publishedAt: "2026-05-24",
+    readTime: "7 min",
+    author: "Splnit.eu",
+    authorRole: "Redakce Splnit.eu",
+    regulationHref: "https://www.e-sbirka.cz/sb/2025/264",
+    ctaTitle: "Splňte požadavky bez zbytečné byrokracie",
+    ctaBody: "Splnit.eu automatizuje compliance pro NIS2, GDPR, ISO 27001 a EU AI Act. Sledujte svůj stav v reálném čase.",
+    ctaButton: "Začít zdarma",
+    ctaHref: "/early-access",
+    summary: "Zákazník souhlasí, že potřebuje nZKB compliance. Ptá se: „A co to bude stát?\" Tato otázka zastaví mnoho MSP. Buď odpoví příliš nízko ze strachu ztratit zákazníka — a pak projekt prodělá. Nebo odpoví příliš vysokou paušální částkou bez zdůvodnění — a zákazník řekne, že si to rozmyslí. Správné...",
+    sections: [
+      {
+        heading: "Proč compliance nelze oceňovat jako helpdesk",
+        body: [
+          "U klasické IT správy je logika jednoduchá: počet zařízení × cena za zařízení, nebo počet uživatelů × cena za uživatele. Rozsah je definovatelný, práce je opakující se a předvídatelná.",
+          "Compliance má jinou logiku:",
+          "Rozsah závisí na stavu zákazníka. Zákazník, který nemá nic, potřebuje jiný objem práce než zákazník, který má základ a potřebuje jen doladit. Bez gap analýzy nevíte, co vás čeká.",
+          "Hodnota není v hodinách, ale ve výsledku. Zákazník neplatí za „15 hodin psaní politik\" — platí za „budu připraven na audit\" nebo „nebudu mít problém s NÚKIB.\" Hodinová sazba podceňuje tuto hodnotu.",
+          "Zákazník má omezené porozumění scope. „Udělejte nám to NIS2\" je pro zákazníka jeden úkol. Ve skutečnosti jde o desítky aktivit. Musíte scope vysvětlit, ne ho jen ocenit."
+        ]
+      },
+      {
+        heading: "Čtyři fáze compliance projektu a jejich oceňování",
+        body: [],
+        subsections: [
+          {
+            heading: "Fáze 1: Gap analýza",
+            body: [
+              "Co zahrnuje: Zmapování aktuálního stavu zákazníka vůči požadavkům nZKB, identifikace chybějících opatření a dokumentace, prioritizovaný plán nápravy s odhadem náročnosti.",
+              "Proč oceňovat samostatně: Gap analýza je vstupem pro veškeré další práce. Bez ní nevíte, kolik bude stát zbytek projektu. Zákazník platí za jasnost, ne za papír.",
+              "Orientační cena (ČR, 2026):",
+              "Tip: Výsledek gap analýzy použijte jako podklad pro nabídku na implementaci. Zákazník vidí, za co platí, a váš odhad implementace je podložený."
+            ],
+            bullets: [
+              "Malý MSP zákazník (nižší režim, do 50 zaměstnanců): 15 000 – 30 000 Kč",
+              "Střední zákazník (vyšší nebo nižší režim, 50–200 zaměstnanců): 30 000 – 70 000 Kč",
+              "Větší zákazník (vyšší režim, komplexní prostředí): 70 000 – 150 000 Kč"
+            ]
+          },
+          {
+            heading: "Fáze 2: Implementační projekt",
+            body: [
+              "Co zahrnuje: Příprava dokumentace a politik, implementace technických opatření, školení zaměstnanců, příprava na registraci a komunikaci s NÚKIB.",
+              "Jak ocenit: Vyjděte z výsledků gap analýzy. Pro každou položku odhadněte počet hodin × vaše sazba. Přidejte buffer 15–20 % za koordinaci a neočekávané komplikace.",
+              "Orientační rozsahy:",
+              "Toto jsou hrubé orientační čísla — skutečná cena závisí na výsledcích gap analýzy a vašich sazbách.",
+              "Jak prezentovat zákazníkovi: Rozložte projekt na milníky s dílčími platbami. Zákazník snadněji schválí 4× 50 000 Kč než jednorázových 200 000 Kč."
+            ],
+            bullets: [
+              "Typ zákazníka: Nižší režim, základ v pořádku; Přibližný rozsah: 80 000 – 150 000 Kč",
+              "Typ zákazníka: Nižší režim, vše od nuly; Přibližný rozsah: 150 000 – 250 000 Kč",
+              "Typ zákazníka: Vyšší režim, základ v pořádku; Přibližný rozsah: 200 000 – 400 000 Kč",
+              "Typ zákazníka: Vyšší režim, vše od nuly; Přibližný rozsah: 400 000 – 800 000 Kč"
+            ]
+          },
+          {
+            heading: "Fáze 3: Compliance retainer (průběžná péče)",
+            body: [
+              "Co zahrnuje: Roční aktualizace dokumentace a politik, čtvrtletní přezkumy, příprava záznámů ze školení, podpora při zákaznických auditech, alerting na změny legislativy.",
+              "Jak ocenit: Odhadněte reálný počet hodin ročně — typicky 20–60 hodin podle velikosti zákazníka. Vydělte 12 pro měsíční paušál. Přidejte marži za dostupnost a jistotu pro zákazníka.",
+              "Orientační ceny:",
+              "Tip: Compliance retainer se lépe prodává jako součást nebo nadstavba existující MSP smlouvy, ne jako samostatná položka. „K vašemu stávajícímu balíčku přidáváme compliance care za X Kč/měsíc.\""
+            ],
+            bullets: [
+              "Malý zákazník: 3 000 – 8 000 Kč / měsíc",
+              "Střední zákazník: 8 000 – 20 000 Kč / měsíc",
+              "Větší zákazník: 20 000 – 50 000 Kč / měsíc"
+            ]
+          },
+          {
+            heading: "Fáze 4: Ad hoc podpora",
+            body: [
+              "Incidentální podpora mimo retainer — pomoc při zákaznickém auditu, reakce na varování NÚKIB, aktualizace při legislativní změně.",
+              "Jak ocenit: Hodinová sazba nebo denní sazba. Pro compliance práci doporučujeme sazbu o 20–30 % vyšší než pro standardní IT práce — jde o specializovanou znalost."
+            ]
+          }
+        ]
+      },
+      {
+        heading: "Tři modely pro různé zákazníky",
+        body: [],
+        subsections: [
+          {
+            heading: "Model A: Projektový (jednorázový)",
+            body: [
+              "Vhodný pro zákazníka, který chce compliance udělat a nechce průběžný závazek.",
+              "Struktura: Gap analýza → Nabídka na implementaci → Implementační projekt → Předání dokumentace",
+              "Nevýhoda: po dokončení nemáte opakující se příjem. Nabídněte alespoň roční přezkumné sezení za fixní cenu jako follow-up."
+            ]
+          },
+          {
+            heading: "Model B: Projekt + retainer",
+            body: [
+              "Vhodný pro zákazníka, který chce compliance udělat a udržovat.",
+              "Struktura: Implementační projekt (jednorázový) → Přechod na retainer po dokončení",
+              "Výhoda: zákazník vidí jasný přechod od „budujeme\" k „udržujeme.\" Retainer po dokončení projektu se prodává snáze."
+            ]
+          },
+          {
+            heading: "Model C: Bundled v MSP balíčku",
+            body: [
+              "Vhodný pro zákazníky, kteří již mají MSP smlouvu.",
+              "Struktura: Compliance care je součástí prémiového MSP tieru nebo jako add-on k existující smlouvě.",
+              "Výhoda: zákazník to vnímá jako kompletní péči, ne jako další fakturu."
+            ]
+          }
+        ]
+      },
+      {
+        heading: "Nejčastější chyby při oceňování compliance",
+        body: [
+          "Oceňování bez gap analýzy „Uděláme vám to za 100 000 Kč\" — bez toho, abyste věděli, v jakém stavu zákazník je. Výsledkem je buď prodělečný projekt, nebo storno po zjištění skutečného rozsahu.",
+          "Podcenění dokumentační práce Příprava bezpečnostních politik, jejich revize se zákazníkem, zapracování připomínek, finalizace — to je typicky 30–40 % celého projektu. Při odhadech se na dokumentaci nezapomínejte.",
+          "Žádný buffer na součinnost zákazníka Zákazník neschvaluje dokumenty včas, mění se v jejich obsahu, nemá čas na schůzky. Bez 20% bufferu budete doplácet z vlastní marže.",
+          "Neoceňování přípravy na audit Pokud zákazník dostane zákaznický audit nebo kontrolu NÚKIB — budete u toho. To jsou hodiny, které nejsou v retaineru. Buď je zahrňte, nebo si rezervujte prostor pro fakturaci ad hoc.",
+          "Hodinová sazba stejná jako pro helpdesk Compliance práce je specializovaná znalost s nízkou zastupitelností. Váš compliance sazba by měla být min. 20–30 % nad standardní MSP sazbu."
+        ]
+      },
+      {
+        heading: "Jak zákazníkovi zdůvodnit cenu",
+        body: [
+          "Zákazník, který slyší „200 000 Kč za dokumenty\", bude protestovat. Zákazník, který slyší toto, bude uvažovat:",
+          "„Pokuta za neplnění nZKB je až 250 milionů korun. Zákazníci z regulovaného sektoru budou vyžadovat doložení souladu. Jeden ztracený tendr kvůli chybějící compliance dokumentaci vás přijde víc než naše projekt. Za 200 000 Kč dostanete kompletní přípravu, která vás chrání před pokutami, pomáhá vyhrávat zakázky a je hotová v zákonné lhůtě.\"",
+          "Dejte zákazníkovi souřadnice ROI. Compliance není náklad — je to investice s jasnou alternativní cenou (pokuta, ztracený kontrakt)."
+        ]
+      },
+      {
+        heading: "TL;DR",
+        body: [],
+        bullets: [
+          "Compliance nelze oceňovat jako helpdesk — závisí na stavu zákazníka, hodnota je ve výsledku, ne v hodinách.",
+          "Čtyři fáze s oddělenou logiku oceňování: gap analýza, implementační projekt, compliance retainer, ad hoc podpora.",
+          "Gap analýzu vždy oceňujte a fakturujte samostatně — bez ní nevíte, co budete dělat.",
+          "Nejčastější chyby: oceňování bez gap analýzy, podcenění dokumentace, žádný buffer na součinnost zákazníka.",
+          "Zdůvodňujte cenu ROI logikou: pokuta, ztracený tendr, zákaznický audit — to jsou alternativní náklady."
+        ]
+      }
+    ]
+  }
+];
+
 const posts: Record<Locale, BlogPost[]> = {
   "cs-CZ": [
     ...czechNukibRegistrationPosts,
     ...importedCzechBlogPosts,
+    ...importedMspBlogPosts,
     {
       slug: "nis2-pruvodce-pro-msp",
       title: "NIS2 pro české MSP: praktický průvodce",
