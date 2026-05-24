@@ -8,18 +8,43 @@ export function MarketingAnimations() {
 
     const sidebarItems = document.querySelectorAll<HTMLElement>(".sidebar-item");
     let currentSidebar = 0;
+    const sidebarStateClasses = [
+      "bg-blue-600",
+      "bg-blue-50",
+      "text-white",
+      "text-slate-900",
+      "text-slate-300",
+      "text-zinc-500",
+      "text-blue-700",
+    ];
+
+    const renderSidebarState = () => {
+      sidebarItems.forEach((item, index) => {
+        item.classList.remove(...sidebarStateClasses);
+
+        if (index === 0) {
+          item.classList.add("bg-blue-600", "text-white");
+          return;
+        }
+
+        if (index === currentSidebar) {
+          item.classList.add("bg-blue-50", "text-slate-900");
+          return;
+        }
+
+        item.classList.add("text-slate-300");
+      });
+    };
+
+    renderSidebarState();
+
     const sidebarInterval = window.setInterval(() => {
       if (!sidebarItems.length) {
         return;
       }
 
-      sidebarItems.forEach((item) => {
-        item.classList.remove("bg-blue-50", "text-blue-700");
-        item.classList.add("text-zinc-500");
-      });
       currentSidebar = (currentSidebar + 1) % sidebarItems.length;
-      sidebarItems[currentSidebar]?.classList.add("bg-blue-50", "text-blue-700");
-      sidebarItems[currentSidebar]?.classList.remove("text-zinc-500");
+      renderSidebarState();
     }, 3500);
 
     const knob = document.querySelector<HTMLElement>("#toggle-knob");
