@@ -6,13 +6,13 @@ import { Icon } from "@/components/marketing/local-icon";
 import { MarketingShell } from "@/components/marketing/marketing-shell";
 import { BlogPostingJsonLd } from "@/components/marketing/structured-data";
 import { getLocalizedMarketingPath } from "@/i18n/marketing-paths";
-import { normalizeLocale } from "@/i18n/routing";
+import { locales, normalizeLocale, type Locale } from "@/i18n/routing";
 import {
   getBlogPageCopy,
   getBlogPost,
   getBlogPosts,
 } from "@/lib/marketing/blog";
-import { createMarketingMetadata } from "@/lib/seo/metadata";
+import { absoluteUrl, createMarketingMetadata } from "@/lib/seo/metadata";
 
 export function generateStaticParams() {
   return getBlogPosts().map((post) => ({ slug: post.slug }));
@@ -20,6 +20,31 @@ export function generateStaticParams() {
 
 function sectionId(heading: string) {
   return heading.toLowerCase().replaceAll(" ", "-");
+}
+
+const blogHreflangLocales: Record<Locale, string> = {
+  "cs-CZ": "cs-CZ",
+  "en-EU": "en",
+  "it-IT": "it-IT",
+};
+
+function getBlogPostAlternates(slug: string) {
+  const languages: Record<string, string> = {};
+
+  for (const locale of locales) {
+    if (!getBlogPost(slug, locale)) {
+      continue;
+    }
+
+    languages[blogHreflangLocales[locale]] = absoluteUrl(
+      getLocalizedMarketingPath(`/blog/${slug}`, locale),
+    );
+  }
+
+  languages["x-default"] =
+    languages[blogHreflangLocales["cs-CZ"]] ?? languages[blogHreflangLocales["en-EU"]];
+
+  return languages;
 }
 
 function BlogBullets({ bullets }: { bullets: string[] }) {
@@ -55,7 +80,7 @@ export async function generateMetadata({
     return {};
   }
 
-  return createMarketingMetadata({
+  const metadata = createMarketingMetadata({
     description: post.description,
     locale,
     path: `/blog/${post.slug}`,
@@ -63,6 +88,13 @@ export async function generateMetadata({
     title: `${post.title} | Splnit.eu Blog`,
     type: "article",
   });
+
+  metadata.alternates = {
+    ...metadata.alternates,
+    languages: getBlogPostAlternates(post.slug),
+  };
+
+  return metadata;
 }
 
 export default async function BlogPostPage({
@@ -92,7 +124,7 @@ export default async function BlogPostPage({
           <section data-hero className="border-b border-border bg-white px-5 pb-12 pt-36">
             <div className="mx-auto max-w-3xl">
               <Link
-                href="/blog"
+                href={getLocalizedMarketingPath("/blog", locale)}
                 className="mb-8 inline-flex text-sm font-semibold text-primary hover:text-[var(--accent-hover)]"
               >
                 {pageCopy.allArticles}

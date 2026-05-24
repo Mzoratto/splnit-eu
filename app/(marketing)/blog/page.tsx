@@ -48,41 +48,50 @@ export default async function BlogPage() {
 
         <section className="bg-background py-20">
           <div className="mx-auto grid max-w-7xl gap-5 px-5 md:grid-cols-3">
-            {posts.map((post) => (
-              <article
-                key={post.slug}
-                className="scroll-animate translate-y-6 rounded-lg border border-border bg-white opacity-0 shadow-sm"
-              >
-                <div className="h-28 border-b border-border bg-surface-muted" />
-                <div className="flex h-full flex-col p-7">
-                  <div className="mb-5 flex items-center justify-between gap-3">
-                    <span className="rounded-full border border-blue-100 bg-blue-50 px-3 py-1 text-xs font-semibold text-blue-700">
-                      {post.category}
-                    </span>
-                    <span className="text-xs font-medium text-foreground/42">
-                      {post.readTime}
-                    </span>
-                  </div>
-                  <h2 className="text-xl font-bold leading-7 text-foreground">
-                    {post.title}
-                  </h2>
-                  <p className="mt-4 flex-1 text-sm leading-6 text-foreground/62">
-                    {post.description}
-                  </p>
-                  <Link
-                    href={getLocalizedMarketingPath(`/blog/${post.slug}`, locale)}
-                    className="mt-7 inline-flex items-center gap-2 text-sm font-semibold text-primary hover:text-[var(--accent-hover)]"
-                  >
-                    {copy.readArticle}
-                    <Icon
-                      icon="solar:arrow-right-linear"
-                      className="text-base"
-                      aria-hidden="true"
-                    />
-                  </Link>
-                </div>
-              </article>
-            ))}
+            {posts.map((post) => {
+              const postHref = getLocalizedMarketingPath(`/blog/${post.slug}`, locale);
+              const titleId = `blog-post-${post.slug}`;
+
+              return (
+                <Link
+                  key={post.slug}
+                  href={postHref}
+                  aria-labelledby={titleId}
+                  className="scroll-animate group flex h-full translate-y-6 rounded-lg border border-border bg-white opacity-0 shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:border-[var(--accent)] hover:shadow-md focus-visible:ring-2 focus-visible:ring-[var(--accent)] focus-visible:ring-offset-2"
+                >
+                  <article className="flex min-h-[420px] w-full flex-col">
+                    <div className="h-28 border-b border-border bg-surface-muted" />
+                    <div className="flex flex-1 flex-col p-7">
+                      <div className="mb-5 flex items-center justify-between gap-3">
+                        <span className="rounded-full border border-blue-100 bg-blue-50 px-3 py-1 text-xs font-semibold text-blue-700">
+                          {post.category}
+                        </span>
+                        <span className="text-xs font-medium text-foreground/42">
+                          {post.readTime}
+                        </span>
+                      </div>
+                      <h2
+                        id={titleId}
+                        className="text-xl font-bold leading-7 text-foreground"
+                      >
+                        {post.title}
+                      </h2>
+                      <p className="mt-4 flex-1 text-sm leading-6 text-foreground/62">
+                        {post.description}
+                      </p>
+                      <span className="mt-7 inline-flex items-center gap-2 text-sm font-semibold text-primary transition-colors group-hover:text-[var(--accent-hover)]">
+                        {copy.readArticle}
+                        <Icon
+                          icon="solar:arrow-right-linear"
+                          className="text-base transition-transform group-hover:translate-x-0.5"
+                          aria-hidden="true"
+                        />
+                      </span>
+                    </div>
+                  </article>
+                </Link>
+              );
+            })}
           </div>
         </section>
       </main>
