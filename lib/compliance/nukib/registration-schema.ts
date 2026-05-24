@@ -44,6 +44,29 @@ export const NukibRegistrationSchema = z
     geographicScope: z.enum(["cz_only", "cross_border"]),
     affectedMemberStates: z.array(z.string().regex(/^[A-Z]{2}$/)).optional(),
 
+    serviceNetworkScope: z
+      .object({
+        ipRanges: z
+          .array(
+            z.string().regex(
+              /^(\d{1,3}\.){3}\d{1,3}(\/\d{1,2})?$/,
+              "Musí být platná IPv4 adresa nebo rozsah CIDR",
+            ),
+          )
+          .optional()
+          .default([]),
+        domainNames: z
+          .array(
+            z.string().regex(
+              /^([a-zA-Z0-9-]+\.)+[a-zA-Z]{2,}$/,
+              "Musí být platné doménové jméno",
+            ),
+          )
+          .optional()
+          .default([]),
+      })
+      .optional(),
+
     contacts: z
       .array(
         z.object({
@@ -67,9 +90,11 @@ export const NukibRegistrationSchema = z
   .refine(
     (registration) =>
       registration.contacts.some((contact) => contact.role === "primary") &&
-      registration.contacts.some((contact) => contact.role === "technical"),
+      registration.contacts.some((contact) => contact.role === "technical") &&
+      registration.contacts.some((contact) => contact.role === "statutory"),
     {
-      message: "At least one primary and one technical contact are required",
+      message:
+        "Alespoň jeden kontakt musí mít roli primary, technical a statutory",
       path: ["contacts"],
     },
   );

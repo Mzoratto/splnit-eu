@@ -82,3 +82,20 @@ export const GEOGRAPHIC_SCOPE_OPTIONS = Object.entries(GEOGRAPHIC_SCOPE_LABELS).
     value,
   }),
 ) as LabelOption<NukibRegistration["geographicScope"]>[];
+
+export const NETWORK_SCOPE_FIELD_META = {
+  ipRanges: {
+    label: "IP adresy / rozsahy (CIDR)",
+    placeholder: "např. 192.0.2.0/24",
+    hint: "IP adresy nebo rozsahy CIDR využívané regulovanou službou.",
+  },
+  domainNames: {
+    label: "Doménová jména",
+    placeholder: "např. splnit.eu",
+    hint: "Doménová jména využívaná regulovanou službou.",
+  },
+  sectionLabel: "Síťový rozsah služby",
+  sectionHint:
+    "Povinná součást hlášení dle § 11 zákona č. 264/2025 Sb. " +
+    "Vyplňte při prvním ohlášení nebo do 30 dnů od rozhodnutí o registraci.",
+} as const;

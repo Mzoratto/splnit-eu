@@ -14,12 +14,21 @@ import {
   CONTACT_ROLE_OPTIONS,
   ENTITY_SIZE_OPTIONS,
   GEOGRAPHIC_SCOPE_OPTIONS,
+  NETWORK_SCOPE_FIELD_META,
   REGIME_OPTIONS,
   SERVICE_CATEGORY_OPTIONS,
 } from "@/lib/compliance/nukib/registration-labels";
-import type { NukibRegistration } from "@/lib/compliance/nukib/registration-schema";
+import {
+  NUKIB_REGISTRATION_LEGAL_BASIS,
+  NukibRegistrationSchema,
+  type NukibRegistration,
+} from "@/lib/compliance/nukib/registration-schema";
 
 type ContactForm = NukibRegistration["contacts"][number];
+type NetworkScopeForm = {
+  domainNames: string[];
+  ipRanges: string[];
+};
 
 type RegistrationFormState = Omit<
   NukibRegistration,
@@ -28,9 +37,11 @@ type RegistrationFormState = Omit<
   | "legalBasis"
   | "preparedAt"
   | "preparedBy"
+  | "serviceNetworkScope"
 > & {
   affectedMemberStates: string;
   cyberSecurityManagerAppointed: "" | "false" | "true";
+  serviceNetworkScope: NetworkScopeForm;
 };
 
 type RegistrationArtifact = {
@@ -48,9 +59,18 @@ const emptyContact = (role: ContactForm["role"]): ContactForm => ({
   role,
 });
 
+const emptyNetworkScope = (): NetworkScopeForm => ({
+  domainNames: [""],
+  ipRanges: [""],
+});
+
 const initialFormState: RegistrationFormState = {
   affectedMemberStates: "",
-  contacts: [emptyContact("primary"), emptyContact("technical")],
+  contacts: [
+    emptyContact("primary"),
+    emptyContact("technical"),
+    emptyContact("statutory"),
+  ],
   crossBorderDependencies: "",
   cyberSecurityManagerAppointed: "",
   dataBoxId: "",
@@ -62,6 +82,7 @@ const initialFormState: RegistrationFormState = {
   regime: "nizsi",
   serviceCategory: "energetika",
   serviceDescription: "",
+  serviceNetworkScope: emptyNetworkScope(),
 };
 
 function fieldClass(extra = "") {
@@ -78,7 +99,29 @@ function optionalString(value: string) {
   return trimmed.length > 0 ? trimmed : undefined;
 }
 
+function compactFormArray(values: string[]) {
+  const indexes: number[] = [];
+  const compactValues: string[] = [];
+
+  values.forEach((value, index) => {
+    const trimmed = value.trim();
+
+    if (trimmed.length > 0) {
+      indexes.push(index);
+      compactValues.push(trimmed);
+    }
+  });
+
+  return {
+    indexes,
+    values: compactValues,
+  };
+}
+
 function formFromRegistration(registration: NukibRegistration): RegistrationFormState {
+  const ipRanges = registration.serviceNetworkScope?.ipRanges ?? [];
+  const domainNames = registration.serviceNetworkScope?.domainNames ?? [];
+
   return {
     ...registration,
     affectedMemberStates: registration.affectedMemberStates?.join(", ") ?? "",
@@ -95,6 +138,10 @@ function formFromRegistration(registration: NukibRegistration): RegistrationForm
           : "false",
     dataBoxId: registration.dataBoxId ?? "",
     ownershipChain: registration.ownershipChain ?? "",
+    serviceNetworkScope: {
+      domainNames: domainNames.length > 0 ? domainNames : [""],
+      ipRanges: ipRanges.length > 0 ? ipRanges : [""],
+    },
   };
 }
 
@@ -103,6 +150,8 @@ function payloadFromForm(form: RegistrationFormState) {
     .split(",")
     .map((state) => state.trim().toUpperCase())
     .filter(Boolean);
+  const ipRanges = compactFormArray(form.serviceNetworkScope.ipRanges).values;
+  const domainNames = compactFormArray(form.serviceNetworkScope.domainNames).values;
 
   return {
     contacts: form.contacts.map((contact) => ({
@@ -126,10 +175,58 @@ function payloadFromForm(form: RegistrationFormState) {
     regime: form.regime,
     serviceCategory: form.serviceCategory,
     serviceDescription: form.serviceDescription.trim(),
+    ...(ipRanges.length > 0 || domainNames.length > 0
+      ? {
+          serviceNetworkScope: {
+            domainNames,
+            ipRanges,
+          },
+        }
+      : {}),
     ...(form.geographicScope === "cross_border" && affectedMemberStates.length > 0
       ? { affectedMemberStates }
       : {}),
   };
+}
+
+function validationPayloadFromForm(form: RegistrationFormState) {
+  return {
+    ...payloadFromForm(form),
+    legalBasis: NUKIB_REGISTRATION_LEGAL_BASIS,
+    preparedAt: new Date().toISOString(),
+    preparedBy: "client_validation",
+  };
+}
+
+function formErrorsFromIssues(
+  issues: { message: string; path: PropertyKey[] }[],
+  networkScopeIndexMap: Record<keyof NetworkScopeForm, number[]>,
+) {
+  const errors: Record<string, string> = {};
+
+  for (const issue of issues) {
+    const [first, second, third] = issue.path;
+
+    if (
+      first === "serviceNetworkScope" &&
+      (second === "ipRanges" || second === "domainNames") &&
+      typeof third === "number"
+    ) {
+      const originalIndex = networkScopeIndexMap[second][third] ?? third;
+
+      errors[`serviceNetworkScope.${second}.${originalIndex}`] = issue.message;
+      continue;
+    }
+
+    if (first === "contacts") {
+      errors.contacts = issue.message;
+      continue;
+    }
+
+    errors[issue.path.join(".")] = issue.message;
+  }
+
+  return errors;
 }
 
 function formatDate(value: string | null) {
@@ -156,6 +253,7 @@ export default function NukibRegistrationPage() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isDownloading, setIsDownloading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [formErrors, setFormErrors] = useState<Record<string, string>>({});
 
   const pdfHref = artifact
     ? `/api/compliance/nukib-registration/${artifact.id}/pdf`
@@ -163,7 +261,8 @@ export default function NukibRegistrationPage() {
   const hasRequiredContacts = useMemo(
     () =>
       form.contacts.some((contact) => contact.role === "primary") &&
-      form.contacts.some((contact) => contact.role === "technical"),
+      form.contacts.some((contact) => contact.role === "technical") &&
+      form.contacts.some((contact) => contact.role === "statutory"),
     [form.contacts],
   );
 
@@ -188,6 +287,7 @@ export default function NukibRegistrationPage() {
       const nextArtifact = (await response.json()) as RegistrationArtifact;
 
       setArtifact(nextArtifact);
+      setFormErrors({});
       setForm(formFromRegistration(nextArtifact.content));
     } catch (loadError) {
       setError(
@@ -239,16 +339,69 @@ export default function NukibRegistrationPage() {
     }));
   }
 
+  function updateNetworkScopeField(
+    field: keyof NetworkScopeForm,
+    index: number,
+    value: string,
+  ) {
+    setForm((current) => ({
+      ...current,
+      serviceNetworkScope: {
+        ...current.serviceNetworkScope,
+        [field]: current.serviceNetworkScope[field].map((item, itemIndex) =>
+          itemIndex === index ? value : item,
+        ),
+      },
+    }));
+  }
+
+  function addNetworkScopeRow(field: keyof NetworkScopeForm) {
+    setForm((current) => ({
+      ...current,
+      serviceNetworkScope: {
+        ...current.serviceNetworkScope,
+        [field]: [...current.serviceNetworkScope[field], ""],
+      },
+    }));
+  }
+
+  function removeNetworkScopeRow(field: keyof NetworkScopeForm, index: number) {
+    setForm((current) => ({
+      ...current,
+      serviceNetworkScope: {
+        ...current.serviceNetworkScope,
+        [field]:
+          current.serviceNetworkScope[field].length <= 1
+            ? current.serviceNetworkScope[field]
+            : current.serviceNetworkScope[field].filter(
+                (_, itemIndex) => itemIndex !== index,
+              ),
+      },
+    }));
+  }
+
   async function submitRegistration(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
 
-    if (!hasRequiredContacts) {
-      setError("Vyplňte alespoň jeden primární a jeden technický kontakt.");
+    const validation = NukibRegistrationSchema.safeParse(
+      validationPayloadFromForm(form),
+    );
+
+    if (!validation.success) {
+      setFormErrors(
+        formErrorsFromIssues(validation.error.issues, {
+          domainNames: compactFormArray(form.serviceNetworkScope.domainNames)
+            .indexes,
+          ipRanges: compactFormArray(form.serviceNetworkScope.ipRanges).indexes,
+        }),
+      );
+      setError(null);
       return;
     }
 
     setIsSubmitting(true);
     setError(null);
+    setFormErrors({});
 
     try {
       const response = await fetch("/api/compliance/nukib-registration", {
@@ -533,8 +686,141 @@ export default function NukibRegistrationPage() {
         </section>
 
         <section className="rounded-lg border border-border bg-surface p-5">
+          <h2 className="text-lg font-semibold">
+            {NETWORK_SCOPE_FIELD_META.sectionLabel}
+          </h2>
+          <p className="mt-3 rounded-md border border-amber-200 bg-amber-50 p-3 text-sm leading-6 text-amber-950">
+            {NETWORK_SCOPE_FIELD_META.sectionHint}
+          </p>
+
+          <div className="mt-5 grid gap-6 lg:grid-cols-2">
+            <div className="space-y-3">
+              <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
+                <div>
+                  <h3 className="text-sm font-semibold">
+                    {NETWORK_SCOPE_FIELD_META.ipRanges.label}
+                  </h3>
+                  <p className="mt-1 text-xs leading-5 text-foreground/58">
+                    {NETWORK_SCOPE_FIELD_META.ipRanges.hint}
+                  </p>
+                </div>
+                <button
+                  type="button"
+                  className="btn btn-secondary w-full sm:w-auto"
+                  onClick={() => addNetworkScopeRow("ipRanges")}
+                >
+                  <Plus className="h-4 w-4" aria-hidden="true" />
+                  Přidat IP
+                </button>
+              </div>
+
+              {form.serviceNetworkScope.ipRanges.map((value, index) => {
+                const errorKey = `serviceNetworkScope.ipRanges.${index}`;
+
+                return (
+                  <div key={index} className="space-y-2">
+                    <div className="flex gap-2">
+                      <input
+                        className={fieldClass("w-full font-mono")}
+                        placeholder={NETWORK_SCOPE_FIELD_META.ipRanges.placeholder}
+                        value={value}
+                        onChange={(event) =>
+                          updateNetworkScopeField(
+                            "ipRanges",
+                            index,
+                            event.target.value,
+                          )
+                        }
+                      />
+                      <button
+                        type="button"
+                        className="btn btn-ghost h-10 w-10 shrink-0 px-0 text-[var(--status-fail)]"
+                        disabled={form.serviceNetworkScope.ipRanges.length <= 1}
+                        title="Odebrat IP adresu nebo rozsah"
+                        onClick={() => removeNetworkScopeRow("ipRanges", index)}
+                      >
+                        <Trash2 className="h-4 w-4" aria-hidden="true" />
+                      </button>
+                    </div>
+                    {formErrors[errorKey] ? (
+                      <p className="text-xs leading-5 text-[var(--status-fail)]">
+                        {formErrors[errorKey]}
+                      </p>
+                    ) : null}
+                  </div>
+                );
+              })}
+            </div>
+
+            <div className="space-y-3">
+              <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
+                <div>
+                  <h3 className="text-sm font-semibold">
+                    {NETWORK_SCOPE_FIELD_META.domainNames.label}
+                  </h3>
+                  <p className="mt-1 text-xs leading-5 text-foreground/58">
+                    {NETWORK_SCOPE_FIELD_META.domainNames.hint}
+                  </p>
+                </div>
+                <button
+                  type="button"
+                  className="btn btn-secondary w-full sm:w-auto"
+                  onClick={() => addNetworkScopeRow("domainNames")}
+                >
+                  <Plus className="h-4 w-4" aria-hidden="true" />
+                  Přidat doménu
+                </button>
+              </div>
+
+              {form.serviceNetworkScope.domainNames.map((value, index) => {
+                const errorKey = `serviceNetworkScope.domainNames.${index}`;
+
+                return (
+                  <div key={index} className="space-y-2">
+                    <div className="flex gap-2">
+                      <input
+                        className={fieldClass("w-full font-mono")}
+                        placeholder={NETWORK_SCOPE_FIELD_META.domainNames.placeholder}
+                        value={value}
+                        onChange={(event) =>
+                          updateNetworkScopeField(
+                            "domainNames",
+                            index,
+                            event.target.value,
+                          )
+                        }
+                      />
+                      <button
+                        type="button"
+                        className="btn btn-ghost h-10 w-10 shrink-0 px-0 text-[var(--status-fail)]"
+                        disabled={form.serviceNetworkScope.domainNames.length <= 1}
+                        title="Odebrat doménové jméno"
+                        onClick={() => removeNetworkScopeRow("domainNames", index)}
+                      >
+                        <Trash2 className="h-4 w-4" aria-hidden="true" />
+                      </button>
+                    </div>
+                    {formErrors[errorKey] ? (
+                      <p className="text-xs leading-5 text-[var(--status-fail)]">
+                        {formErrors[errorKey]}
+                      </p>
+                    ) : null}
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        </section>
+
+        <section className="rounded-lg border border-border bg-surface p-5">
           <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-            <h2 className="text-lg font-semibold">Kontaktní osoby</h2>
+            <div>
+              <h2 className="text-lg font-semibold">Kontaktní osoby</h2>
+              <p className="mt-2 text-sm leading-6 text-foreground/62">
+                Vyžaduje se alespoň jeden primární, technický a statutární
+                kontakt.
+              </p>
+            </div>
             <button
               type="button"
               className="btn btn-secondary w-full sm:w-auto"
@@ -544,6 +830,12 @@ export default function NukibRegistrationPage() {
               Přidat kontakt
             </button>
           </div>
+
+          {formErrors.contacts ? (
+            <p className="mt-4 rounded-md border border-[var(--status-fail-border)] bg-[var(--status-fail-subtle)] p-3 text-sm text-[var(--status-fail)]">
+              {formErrors.contacts}
+            </p>
+          ) : null}
 
           <div className="mt-5 space-y-4">
             {form.contacts.map((contact, index) => (
@@ -635,7 +927,7 @@ export default function NukibRegistrationPage() {
 
           {!hasRequiredContacts ? (
             <p className="mt-3 text-sm text-[var(--status-fail)]">
-              Vyžaduje se alespoň jeden primární a jeden technický kontakt.
+              Chybí některá z povinných rolí: primární, technická, statutární.
             </p>
           ) : null}
         </section>

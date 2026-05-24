@@ -7,6 +7,10 @@
   "regime": "vyssi",
   "entitySize": "medium",
   "geographicScope": "cz_only",
+  "serviceNetworkScope": {
+    "ipRanges": ["192.0.2.0/24"],
+    "domainNames": ["example-firma.cz", "app.example-firma.cz"]
+  },
   "contacts": [
     {
       "role": "primary",
@@ -21,6 +25,13 @@
       "email": "petr.dvorak@example.test",
       "phone": "+420 222 111 444",
       "position": "Správce infrastruktury"
+    },
+    {
+      "role": "statutory",
+      "name": "Jana Nováková",
+      "email": "jana.novakova@example-firma.cz",
+      "phone": "+420123456789",
+      "position": "Jednatelka"
     }
   ],
   "ownershipChain": "Společnost je vlastněna městem Beroun a okolními obcemi.",

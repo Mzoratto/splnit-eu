@@ -12,6 +12,7 @@ import {
   CONTACT_ROLE_LABELS,
   ENTITY_SIZE_LABELS,
   GEOGRAPHIC_SCOPE_LABELS,
+  NETWORK_SCOPE_FIELD_META,
   REGIME_LABELS,
   SERVICE_CATEGORY_LABELS,
 } from "@/lib/compliance/nukib/registration-labels";
@@ -116,6 +117,10 @@ function valueOrDash(value: string | undefined | null) {
   return value?.trim() ? value : "-";
 }
 
+function networkScopeValue(values: string[] | undefined) {
+  return values && values.length > 0 ? values.join(", ") : "— nevyplněno —";
+}
+
 function booleanLabel(value: boolean | undefined) {
   if (value === undefined) {
     return "-";
@@ -175,6 +180,20 @@ function NukibRegistrationDocument({ registration }: { registration: NukibRegist
           <FieldRow
             label="Dotčené členské státy"
             value={registration.affectedMemberStates?.join(", ") ?? "-"}
+          />
+        </View>
+
+        <View style={styles.section}>
+          <Text style={styles.sectionTitle}>
+            3b. Síťový rozsah služby (§ 11 zákona č. 264/2025 Sb.)
+          </Text>
+          <FieldRow
+            label="IP adresy / rozsahy"
+            value={networkScopeValue(registration.serviceNetworkScope?.ipRanges)}
+          />
+          <FieldRow
+            label={NETWORK_SCOPE_FIELD_META.domainNames.label}
+            value={networkScopeValue(registration.serviceNetworkScope?.domainNames)}
           />
         </View>
 
