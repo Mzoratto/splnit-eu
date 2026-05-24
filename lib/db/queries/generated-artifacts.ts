@@ -3,7 +3,10 @@ import { getDb } from "@/lib/db";
 import { evidence, generatedArtifacts } from "@/lib/db/schema";
 import { and, desc, eq } from "drizzle-orm";
 
-export type GeneratedArtifactKind = "questionnaire_answers" | "gap_analysis";
+export type GeneratedArtifactKind =
+  | "questionnaire_answers"
+  | "gap_analysis"
+  | "nukib_registration";
 
 export const GENERATED_ARTIFACT_ENTITY_TYPE = "generated_artifact";
 export const GENERATED_ARTIFACT_CREATED_ACTION = "generated_artifact.created";
