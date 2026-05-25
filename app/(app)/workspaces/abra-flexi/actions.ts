@@ -3,7 +3,10 @@
 import { redirect } from "next/navigation";
 import { z } from "zod";
 import { connectApiKeyConnectorAction } from "@/lib/connectors/api-key-base";
-import { normalizeAbraFlexiBaseUrl } from "@/lib/connectors/abra-flexi/url";
+import {
+  normalizeAbraFlexiBaseUrl,
+  validateAbraBaseUrl,
+} from "@/lib/connectors/abra-flexi/url";
 import type { HealthCheckResult } from "@/lib/connectors/api-key-base/types";
 
 export type AbraFlexiConnectionState = {
@@ -49,8 +52,16 @@ export async function connectAbraFlexiAction(
     return { error: "validation" };
   }
 
+  const baseUrl = normalizeAbraFlexiBaseUrl(parsed.data.baseUrl);
+
+  try {
+    await validateAbraBaseUrl(baseUrl);
+  } catch {
+    return { error: "validation" };
+  }
+
   const result = await connectApiKeyConnectorAction({
-    baseUrl: normalizeAbraFlexiBaseUrl(parsed.data.baseUrl),
+    baseUrl,
     companyName: parsed.data.companyName,
     password: parsed.data.password,
     platform: "abra-flexi",

@@ -660,6 +660,7 @@ export const vendorAssessments = pgTable("vendor_assessments", {
   answers: jsonb("answers").$type<Record<string, unknown>>().default({}),
   score: integer("score"),
   status: text("status").notNull().default("draft"),
+  expiresAt: timestamp("expires_at", { withTimezone: true }),
   assessedBy: text("assessed_by"),
   assessedAt: timestamp("assessed_at", { withTimezone: true }).defaultNow(),
 });

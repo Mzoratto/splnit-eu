@@ -3,6 +3,7 @@ import { verifyWebhook } from "@clerk/nextjs/webhooks";
 import {
   deleteOrganisationFromClerk,
   deleteProfileFromClerk,
+  deleteProfileFromOrg,
   upsertOrganisationFromClerk,
   upsertProfileFromClerk,
 } from "@/lib/clerk/sync";
@@ -93,7 +94,12 @@ export async function POST(request: NextRequest) {
       break;
 
     case "organizationMembership.deleted":
-      await deleteProfileFromClerk(event.data.public_user_data.user_id);
+      // Uses org-scoped deletion to avoid removing the user's
+      // profiles in other organisations they still belong to.
+      await deleteProfileFromOrg(
+        event.data.public_user_data.user_id,
+        event.data.organization.id,
+      );
       break;
 
     case "user.deleted":

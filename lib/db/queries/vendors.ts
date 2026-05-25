@@ -7,6 +7,30 @@ import {
 } from "@/lib/vendors/questions";
 import { verifyVendorAssessmentToken } from "@/lib/vendors/access";
 
+const VENDOR_ASSESSMENT_EXPIRY_DAYS = 30;
+
+type VendorAssessmentTokenError =
+  | "invalid"
+  | "expired"
+  | "already_submitted";
+
+export type VendorAssessmentTokenResult =
+  | {
+      ok: true;
+      data: {
+        assessment: typeof vendorAssessments.$inferSelect;
+        organisation: typeof organisations.$inferSelect;
+        vendor: typeof vendors.$inferSelect;
+      };
+    }
+  | { ok: false; reason: VendorAssessmentTokenError };
+
+function getVendorAssessmentExpiryDate() {
+  const expiresAt = new Date();
+  expiresAt.setUTCDate(expiresAt.getUTCDate() + VENDOR_ASSESSMENT_EXPIRY_DAYS);
+  return expiresAt;
+}
+
 export async function listVendorsForOrg(clerkOrgId: string) {
   const db = getDb();
 
@@ -113,6 +137,7 @@ export async function saveVendorAssessment(input: {
       assessedAt,
       assessedBy: input.assessedBy ?? null,
       clerkOrgId: input.clerkOrgId,
+      expiresAt: getVendorAssessmentExpiryDate(),
       score,
       status: input.status ?? "completed",
       vendorId: input.vendorId,
@@ -163,6 +188,7 @@ export async function createVendorQuestionnaire(input: {
     .values({
       answers: { vendorEmail: input.vendorEmail },
       clerkOrgId: input.clerkOrgId,
+      expiresAt: getVendorAssessmentExpiryDate(),
       status: "sent",
       vendorId: input.vendorId,
     })
@@ -223,11 +249,13 @@ export async function updateVendorQuestionnaireDelivery(input: {
   return assessment;
 }
 
-export async function getVendorAssessmentByToken(token: string) {
+export async function getVendorAssessmentByToken(
+  token: string,
+): Promise<VendorAssessmentTokenResult> {
   const assessmentId = token.split(".")[0];
 
   if (!assessmentId) {
-    return null;
+    return { ok: false, reason: "invalid" };
   }
 
   const db = getDb();
@@ -245,7 +273,7 @@ export async function getVendorAssessmentByToken(token: string) {
   const row = rows[0] ?? null;
 
   if (!row) {
-    return null;
+    return { ok: false, reason: "invalid" };
   }
 
   const valid = verifyVendorAssessmentToken(token, {
@@ -254,18 +282,32 @@ export async function getVendorAssessmentByToken(token: string) {
     vendorId: row.assessment.vendorId,
   });
 
-  return valid ? row : null;
+  if (!valid) {
+    return { ok: false, reason: "invalid" };
+  }
+
+  if (row.assessment.status !== "sent") {
+    return { ok: false, reason: "already_submitted" };
+  }
+
+  if (!row.assessment.expiresAt || row.assessment.expiresAt <= new Date()) {
+    return { ok: false, reason: "expired" };
+  }
+
+  return { ok: true, data: row };
 }
 
 export async function submitVendorAssessmentByToken(input: {
   answers: Record<string, unknown>;
   token: string;
 }) {
-  const data = await getVendorAssessmentByToken(input.token);
+  const result = await getVendorAssessmentByToken(input.token);
 
-  if (!data) {
+  if (!result.ok) {
     throw new Error("Invalid vendor assessment token.");
   }
+
+  const data = result.data;
 
   const score = scoreVendorAnswers(input.answers);
   const riskTier = getVendorRiskTier(score);
@@ -274,7 +316,7 @@ export async function submitVendorAssessmentByToken(input: {
   nextReviewAt.setUTCMonth(nextReviewAt.getUTCMonth() + 12);
 
   const db = getDb();
-  await db
+  const [assessment] = await db
     .update(vendorAssessments)
     .set({
       answers: input.answers,
@@ -282,7 +324,19 @@ export async function submitVendorAssessmentByToken(input: {
       score,
       status: "submitted",
     })
-    .where(eq(vendorAssessments.id, data.assessment.id));
+    .where(
+      and(
+        eq(vendorAssessments.id, data.assessment.id),
+        eq(vendorAssessments.clerkOrgId, data.assessment.clerkOrgId),
+        eq(vendorAssessments.vendorId, data.assessment.vendorId),
+        eq(vendorAssessments.status, "sent"),
+      ),
+    )
+    .returning({ id: vendorAssessments.id });
+
+  if (!assessment) {
+    throw new Error("Vendor assessment token has already been used.");
+  }
 
   await db
     .update(vendors)

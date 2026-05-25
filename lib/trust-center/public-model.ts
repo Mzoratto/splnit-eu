@@ -47,6 +47,10 @@ type ControlStatusRow = {
   status: string | null;
 };
 
+function coarsenTimestamp(date: Date): string {
+  return date.toISOString().slice(0, 7);
+}
+
 const CATEGORY_META_IT: Record<
   PublicControlCategory,
   { desc: string; name: string }
@@ -566,7 +570,9 @@ function withFrameworkMeta(input: {
     effectiveDate: meta.effectiveDate,
     framework: input.framework,
     inProgress: input.inProgress,
-    lastAssessedAt: input.lastAssessedAt,
+    lastAssessedAt: input.lastAssessedAt
+      ? coarsenTimestamp(input.lastAssessedAt)
+      : null,
     law: meta.law,
     maxPenalty: meta.maxPenalty,
     notApplicable: input.notApplicable,
@@ -774,14 +780,14 @@ function calculateUptime(successful: number | undefined, total: number | undefin
 
 function buildTrustSignals(
   frameworks: TrustFramework[],
-  lastTestedAt: Date | null,
+  lastTestedAt: string | null,
   uptimePct: number | null,
   locale: Locale,
 ): TrustSignal[] {
   const gdpr = frameworks.find((item) => item.framework.slug === "gdpr");
   const iso = frameworks.find((item) => item.framework.slug === "iso27001");
   const nis2 = frameworks.find((item) => item.framework.slug === "nis2");
-  const gdprYear = gdpr?.lastAssessedAt?.getFullYear() ?? 2026;
+  const gdprYear = getCoarsenedYear(gdpr?.lastAssessedAt) ?? 2026;
 
   const copy = trustSignalCopy(locale);
 
@@ -808,6 +814,11 @@ function buildTrustSignals(
       value: uptimePct == null ? `n/a · ${copy.ninetyDays}` : `${uptimePct}% · ${copy.ninetyDays}`,
     },
   ];
+}
+
+function getCoarsenedYear(value: string | null | undefined) {
+  const year = Number(value?.slice(0, 4));
+  return Number.isFinite(year) ? year : null;
 }
 
 function trustSignalCopy(locale: Locale) {

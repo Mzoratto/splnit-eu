@@ -43,7 +43,7 @@ export type TrustFramework = {
   effectiveDate: string;
   framework: PublicFrameworkRecord;
   inProgress: number;
-  lastAssessedAt: Date | null;
+  lastAssessedAt: string | null;
   law: string;
   maxPenalty: string;
   notApplicable: number;
@@ -68,7 +68,7 @@ export type PublicTrustCenterModel = {
   heroEyebrowOverride?: string;
   heroTitleOverride?: string;
   isDemo?: boolean;
-  lastTestedAt: Date | null;
+  lastTestedAt: string | null;
   logoUrl: string | null;
   nextTestAt: Date | null;
   organisationName: string;
@@ -81,4 +81,3 @@ export type PublicTrustCenterModel = {
   trustSignals: TrustSignal[];
   uptimePct: number | null;
 };
-
