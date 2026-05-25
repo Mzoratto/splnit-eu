@@ -15,6 +15,7 @@ import { AnimatedScoreRing } from "@/components/app/animated-score-ring";
 import { DataModeNotice } from "@/components/app/data-mode-notice";
 import { PageHeader } from "@/components/app/page-header";
 import { StatusPill, type StatusPillTone } from "@/components/app/status-pill";
+import { TemplateSection } from "@/components/templates/template-section";
 import { getMessagesForLocale } from "@/i18n/messages";
 import { normalizeLocale, type Locale } from "@/i18n/routing";
 import { getControlDisplayTitle } from "@/lib/controls/localization";
@@ -404,6 +405,8 @@ export default async function FrameworkDetailPage({
           </article>
         </section>
       ) : null}
+
+      <TemplateSection frameworkSlug={frameworkSlug} variant="app" />
 
       {isCsrd ? (
         <section className="overflow-hidden rounded-lg border border-border bg-surface">
