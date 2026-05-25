@@ -5,6 +5,7 @@ import { getLocale, getTranslations } from "next-intl/server";
 import { Icon } from "@/components/marketing/local-icon";
 import { MarketingShell } from "@/components/marketing/marketing-shell";
 import { WebPageJsonLd } from "@/components/marketing/structured-data";
+import { TemplateSection } from "@/components/templates/template-section";
 import { getLocalizedMarketingPath } from "@/i18n/marketing-paths";
 import { normalizeLocale } from "@/i18n/routing";
 import { localizeFrameworkDetail } from "@/lib/marketing/framework-detail-copy";
@@ -277,6 +278,8 @@ export default async function RegulationDetailPage({
             </div>
           </section>
         ) : null}
+
+        <TemplateSection regulationSlug={slug} variant="public" />
 
         <section className="border-t border-zinc-200/50 bg-white py-16">
           <div className="mx-auto max-w-5xl px-5">
