@@ -7,6 +7,7 @@ import {
   Download,
   ExternalLink,
   FileText,
+  FileSpreadsheet,
   Gauge,
   ShieldCheck,
 } from "lucide-react";
@@ -15,6 +16,7 @@ import { AnimatedScoreRing } from "@/components/app/animated-score-ring";
 import { DataModeNotice } from "@/components/app/data-mode-notice";
 import { PageHeader } from "@/components/app/page-header";
 import { StatusPill, type StatusPillTone } from "@/components/app/status-pill";
+import { DocumentDownloadButton } from "@/components/documents/document-download-button";
 import { TemplateSection } from "@/components/templates/template-section";
 import { getMessagesForLocale } from "@/i18n/messages";
 import { normalizeLocale, type Locale } from "@/i18n/routing";
@@ -24,6 +26,7 @@ import { hasDatabaseUrl } from "@/lib/db";
 import { getFrameworkDetail } from "@/lib/db/queries/framework-assessment";
 import { getOrganisationByClerkOrgId } from "@/lib/db/queries/organisations";
 import { isLocalDemoDataEnabled } from "@/lib/demo-mode";
+import { FLAGS, isFeatureEnabled } from "@/lib/features/flags";
 import { CSRD_SUPPLY_CHAIN_QUESTIONNAIRE } from "@/lib/frameworks/csrd";
 import {
   ISO27001_ANNEX_A_MAPPINGS,
@@ -195,17 +198,19 @@ async function loadFrameworkData(frameworkSlug: string) {
   }
 
   try {
-    const [detail, organisation] = await Promise.all([
+    const [detail, organisation, smartDocumentsEnabled] = await Promise.all([
       getFrameworkDetail({
         clerkOrgId: session.orgId,
         frameworkSlug,
       }),
       getOrganisationByClerkOrgId(session.orgId),
+      isFeatureEnabled(session.orgId, FLAGS.SMART_DOCUMENT_GENERATION),
     ]);
 
     return {
       detail,
       organisationLocale: organisation?.locale ?? null,
+      smartDocumentsEnabled,
     };
   } catch {
     return null;
@@ -258,6 +263,11 @@ export default async function FrameworkDetailPage({
     Boolean(detail?.orgFramework) && Boolean(process.env.BLOB_READ_WRITE_TOKEN);
   const isIso27001 = seedFramework.slug === "iso27001";
   const isCsrd = seedFramework.slug === "csrd";
+  const supportsSmartDocuments = ["nis2", "gdpr", "ai-act", "iso27001"].includes(
+    seedFramework.slug,
+  );
+  const canGenerateSmartDocuments =
+    Boolean(frameworkData?.smartDocumentsEnabled) && supportsSmartDocuments;
 
   return (
     <section className="space-y-8">
@@ -358,6 +368,30 @@ export default async function FrameworkDetailPage({
             </button>
           </form>
         </article>
+
+        {canGenerateSmartDocuments ? (
+          <article className="card">
+            <div className="flex items-center gap-2">
+              <FileSpreadsheet className="h-5 w-5 text-primary" aria-hidden="true" strokeWidth={1.5} />
+              <h2 className="text-lg font-medium">Generovat dokumenty</h2>
+            </div>
+            <div className="mt-5 flex flex-wrap gap-3">
+              <DocumentDownloadButton
+                href={`/api/documents/generate/gap-analysis?framework=${encodeURIComponent(seedFramework.slug)}`}
+                label="Stáhnout GAP analýzu"
+              />
+              {isIso27001 ? (
+                <DocumentDownloadButton
+                  href="/api/documents/generate/soa-iso27001"
+                  label="Stáhnout SoA (ISO 27001)"
+                />
+              ) : null}
+            </div>
+            <p className="mt-4 text-sm leading-6 text-foreground/64">
+              Dokument je předvyplněn daty z vaší platformy. Zkontrolujte obsah před sdílením s auditory.
+            </p>
+          </article>
+        ) : null}
       </div>
 
       {isIso27001 ? (
