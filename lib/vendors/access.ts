@@ -1,29 +1,28 @@
 import { createHmac, timingSafeEqual } from "node:crypto";
 
-function getSigningSecret() {
-  if (process.env.ENCRYPTION_KEY) {
-    return process.env.ENCRYPTION_KEY;
+export function getEncryptionKey(): string {
+  const key = process.env.ENCRYPTION_KEY;
+
+  if (!key && process.env.NODE_ENV !== "test") {
+    throw new Error(
+      "ENCRYPTION_KEY must be set in production and " +
+        "staging. Refusing to use insecure fallback secret.",
+    );
   }
 
-  if (process.env.NODE_ENV === "test") {
+  if (!key) {
     console.warn("ENCRYPTION_KEY missing; using test-only vendor token secret.");
-    return "test-secret-do-not-use";
   }
 
-  throw new Error(
-    "ENCRYPTION_KEY must be set in production and " +
-      "staging. Refusing to use insecure fallback secret.",
-  );
+  return key ?? "test-secret-do-not-use";
 }
-
-const signingSecret = getSigningSecret();
 
 function signAssessment(input: {
   assessmentId: string;
   clerkOrgId: string;
   vendorId: string;
 }) {
-  return createHmac("sha256", signingSecret)
+  return createHmac("sha256", getEncryptionKey())
     .update(input.assessmentId)
     .update(":")
     .update(input.clerkOrgId)
