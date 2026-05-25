@@ -93,12 +93,15 @@ const withBundleAnalyzer = createBundleAnalyzer({
 });
 const configured = withBundleAnalyzer(withNextIntl(nextConfig));
 
-export default process.env.SENTRY_DSN || process.env.NEXT_PUBLIC_SENTRY_DSN
-  ? withSentryConfig(configured, {
-      authToken: process.env.SENTRY_AUTH_TOKEN,
-      org: process.env.SENTRY_ORG,
-      project: process.env.SENTRY_PROJECT,
-      silent: !process.env.CI,
-      widenClientFileUpload: true,
-    })
-  : configured;
+export default withSentryConfig(configured, {
+  org: "splnit-eu",
+  project: "splnit-eu",
+  silent: !process.env.CI,
+  authToken: process.env.SENTRY_AUTH_TOKEN,
+  widenClientFileUpload: true,
+  tunnelRoute: "/sentry-tunnel",
+  sourcemaps: {
+    deleteSourcemapsAfterUpload: true,
+  },
+  disableLogger: true,
+});

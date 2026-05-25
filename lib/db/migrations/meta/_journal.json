@@ -169,6 +169,13 @@
       "when": 1779690168105,
       "tag": "0023_worried_viper",
       "breakpoints": true
+    },
+    {
+      "idx": 24,
+      "version": "7",
+      "when": 1779742915796,
+      "tag": "0024_greedy_captain_midlands",
+      "breakpoints": true
     }
   ]
 }
