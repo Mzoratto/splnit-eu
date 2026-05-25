@@ -5,7 +5,6 @@ import {
   getVendorRiskTier,
   scoreVendorAnswers,
 } from "@/lib/vendors/questions";
-import { verifyVendorAssessmentToken } from "@/lib/vendors/access";
 
 const VENDOR_ASSESSMENT_EXPIRY_DAYS = 30;
 
@@ -276,6 +275,7 @@ export async function getVendorAssessmentByToken(
     return { ok: false, reason: "invalid" };
   }
 
+  const { verifyVendorAssessmentToken } = await import("@/lib/vendors/access");
   const valid = verifyVendorAssessmentToken(token, {
     assessmentId: row.assessment.id,
     clerkOrgId: row.assessment.clerkOrgId,
