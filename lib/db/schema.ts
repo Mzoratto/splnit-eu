@@ -111,6 +111,20 @@ export const organisations = pgTable("organisations", {
   updatedAt: timestamp("updated_at", { withTimezone: true }).defaultNow(),
 });
 
+export const featureFlags = pgTable(
+  "feature_flags",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    orgId: text("org_id")
+      .notNull()
+      .references(() => organisations.clerkOrgId, { onDelete: "cascade" }),
+    flag: text("flag").notNull(),
+    enabled: boolean("enabled").notNull().default(false),
+    createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+  },
+  (table) => [unique().on(table.orgId, table.flag)],
+);
+
 export const subscriptions = pgTable(
   "subscriptions",
   {
@@ -1039,6 +1053,7 @@ export type Integration = typeof integrations.$inferSelect;
 export type IntegrationRun = typeof integrationRuns.$inferSelect;
 export type Evidence = typeof evidence.$inferSelect;
 export type EmployeeTrainingRecord = typeof employeeTrainingRecords.$inferSelect;
+export type FeatureFlag = typeof featureFlags.$inferSelect;
 export type GeneratedArtifact = typeof generatedArtifacts.$inferSelect;
 export type MappingReviewQueueItem = typeof mappingReviewQueue.$inferSelect;
 export type MappingPromotionAudit = typeof mappingPromotionAudit.$inferSelect;
