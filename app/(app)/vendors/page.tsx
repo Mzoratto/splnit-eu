@@ -3,12 +3,14 @@ import { auth } from "@clerk/nextjs/server";
 import { getLocale } from "next-intl/server";
 import { ArrowRight, FileText, Plus, ShieldAlert } from "lucide-react";
 import { DataModeNotice } from "@/components/app/data-mode-notice";
+import { DocumentDownloadButton } from "@/components/documents/document-download-button";
 import { getMessagesForLocale } from "@/i18n/messages";
 import { normalizeLocale, type Locale } from "@/i18n/routing";
 import { hasDatabaseUrl } from "@/lib/db";
 import { getOrganisationByClerkOrgId } from "@/lib/db/queries/organisations";
 import { listVendorsForOrg } from "@/lib/db/queries/vendors";
 import { isLocalDemoDataEnabled } from "@/lib/demo-mode";
+import { FLAGS, isFeatureEnabled } from "@/lib/features/flags";
 import { createVendorAction } from "./actions";
 
 export const dynamic = "force-dynamic";
@@ -27,6 +29,7 @@ async function loadVendors() {
     return {
       mode: getFallbackMode(),
       organisationLocale: null,
+      smartDocumentsEnabled: false,
       vendors: null,
     };
   }
@@ -37,18 +40,21 @@ async function loadVendors() {
     return {
       mode: getFallbackMode(),
       organisationLocale: null,
+      smartDocumentsEnabled: false,
       vendors: null,
     };
   }
 
-  const [organisation, vendors] = await Promise.all([
+  const [organisation, vendors, smartDocumentsEnabled] = await Promise.all([
     getOrganisationByClerkOrgId(session.orgId).catch(() => null),
     listVendorsForOrg(session.orgId).catch(() => null),
+    isFeatureEnabled(session.orgId, FLAGS.SMART_DOCUMENT_GENERATION),
   ]);
 
   return {
     mode: vendors ? "live" : "unavailable",
     organisationLocale: organisation?.locale ?? null,
+    smartDocumentsEnabled,
     vendors,
   };
 }
@@ -93,6 +99,7 @@ export default async function VendorsPage() {
   const copy = messages.vendorsPage;
   const vendors = data?.vendors ?? null;
   const mode = data?.mode ?? "unavailable";
+  const smartDocumentsEnabled = data?.smartDocumentsEnabled ?? false;
   const notice =
     mode === "demo"
       ? {
@@ -139,14 +146,29 @@ export default async function VendorsPage() {
             {copy.subtitle}
           </p>
         </div>
-        <a
-          href="/api/vendors/supply-chain-report"
-          className="inline-flex items-center gap-2 rounded-md border border-border px-4 py-3 text-sm font-medium hover:bg-surface-muted"
-        >
-          {copy.exportReport}
-          <FileText className="h-4 w-4" aria-hidden="true" />
-        </a>
+        <div className="flex flex-wrap gap-2">
+          {smartDocumentsEnabled ? (
+            <DocumentDownloadButton
+              className="inline-flex items-center gap-2 rounded-md border border-border px-4 py-3 text-sm font-medium hover:bg-surface-muted"
+              href="/api/documents/generate/vendor-report"
+              label="Stáhnout vendor report"
+            />
+          ) : null}
+          <a
+            href="/api/vendors/supply-chain-report"
+            className="inline-flex items-center gap-2 rounded-md border border-border px-4 py-3 text-sm font-medium hover:bg-surface-muted"
+          >
+            {copy.exportReport}
+            <FileText className="h-4 w-4" aria-hidden="true" />
+          </a>
+        </div>
       </div>
+
+      {smartDocumentsEnabled ? (
+        <p className="max-w-2xl text-sm leading-6 text-foreground/64">
+          Dokument je předvyplněn daty z vaší platformy. Zkontrolujte obsah před sdílením s auditory.
+        </p>
+      ) : null}
 
       {notice ? <DataModeNotice body={notice.body} title={notice.title} /> : null}
 
