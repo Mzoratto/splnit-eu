@@ -76,6 +76,7 @@ export default async function TrustFrameworkPage({
   const copy = getPublicTrustCopy(locale);
   const data = await getPublicFrameworkDetailModel({
     accessToken: query?.access ?? null,
+    clientAccessToken: query?.access ?? null,
     frameworkSlug,
     locale,
     orgSlug,

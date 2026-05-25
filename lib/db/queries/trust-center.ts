@@ -1,4 +1,5 @@
-import { and, desc, eq, inArray } from "drizzle-orm";
+import { randomBytes } from "crypto";
+import { and, desc, eq, inArray, sql } from "drizzle-orm";
 import { getDb } from "@/lib/db";
 import {
   frameworks,
@@ -7,6 +8,7 @@ import {
   organisations,
   orgFrameworks,
   profiles,
+  trustCenterClients,
   trustCenterRequests,
   trustCenters,
 } from "@/lib/db/schema";
@@ -63,6 +65,75 @@ export async function getTrustCenterSettings(clerkOrgId: string) {
     requests: requestRows,
     trustCenter: trustRows[0] ?? null,
   };
+}
+
+export async function getTrustCenterClients(trustCenterId: string) {
+  const db = getDb();
+
+  return db
+    .select()
+    .from(trustCenterClients)
+    .where(eq(trustCenterClients.trustCenterId, trustCenterId))
+    .orderBy(desc(trustCenterClients.createdAt));
+}
+
+export async function getTrustCenterClientByToken(accessToken: string) {
+  const db = getDb();
+  const rows = await db
+    .select()
+    .from(trustCenterClients)
+    .where(eq(trustCenterClients.accessToken, accessToken))
+    .limit(1);
+
+  return rows[0] ?? null;
+}
+
+export async function createTrustCenterClient(data: {
+  clientName: string;
+  trustCenterId: string;
+  visibleFrameworks: string[];
+}) {
+  const db = getDb();
+  const [client] = await db
+    .insert(trustCenterClients)
+    .values({
+      accessToken: randomBytes(32).toString("hex"),
+      clientName: data.clientName,
+      trustCenterId: data.trustCenterId,
+      visibleFrameworks: data.visibleFrameworks,
+    })
+    .returning();
+
+  if (!client) {
+    throw new Error("Trust Center client access could not be created.");
+  }
+
+  return client;
+}
+
+export async function deleteTrustCenterClient(id: string, trustCenterId: string) {
+  const db = getDb();
+
+  await db
+    .delete(trustCenterClients)
+    .where(
+      and(
+        eq(trustCenterClients.id, id),
+        eq(trustCenterClients.trustCenterId, trustCenterId),
+      ),
+    );
+}
+
+export async function recordTrustCenterClientView(accessToken: string) {
+  const db = getDb();
+
+  await db
+    .update(trustCenterClients)
+    .set({
+      lastViewedAt: new Date(),
+      viewCount: sql`${trustCenterClients.viewCount} + 1`,
+    })
+    .where(eq(trustCenterClients.accessToken, accessToken));
 }
 
 export async function getPublicTrustCenterSlugByClerkOrgId(clerkOrgId: string) {
@@ -210,6 +281,7 @@ export async function declineTrustCenterRequest(input: {
 
 export async function getPublicTrustCenter(input: {
   accessToken?: string | null;
+  clientAccessToken?: string | null;
   orgSlug: string;
 }) {
   const db = getDb();
@@ -232,7 +304,22 @@ export async function getPublicTrustCenter(input: {
     accessToken: input.accessToken,
     clerkOrgId: row.trustCenter.clerkOrgId,
   });
-  const visibleSlugs = row.trustCenter.visibleFrameworks ?? [];
+  const clientAccess = input.clientAccessToken
+    ? await getTrustCenterClientByToken(input.clientAccessToken)
+    : null;
+  const clientVisibleSlugs =
+    clientAccess?.trustCenterId === row.trustCenter.id
+      ? clientAccess.visibleFrameworks
+      : null;
+  const visibleSlugs =
+    clientVisibleSlugs && clientVisibleSlugs.length > 0
+      ? clientVisibleSlugs
+      : row.trustCenter.visibleFrameworks ?? [];
+
+  if (clientAccess?.trustCenterId === row.trustCenter.id && input.clientAccessToken) {
+    void recordTrustCenterClientView(input.clientAccessToken).catch(() => undefined);
+  }
+
   const where =
     visibleSlugs.length > 0
       ? and(

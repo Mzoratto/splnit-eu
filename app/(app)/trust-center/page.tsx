@@ -16,15 +16,20 @@ import { normalizeLocale, type Locale } from "@/i18n/routing";
 import { getDb, hasDatabaseUrl } from "@/lib/db";
 import { listOrgControlsForIndex } from "@/lib/db/queries/controls";
 import { getOrganisationByClerkOrgId } from "@/lib/db/queries/organisations";
-import { getTrustCenterSettings } from "@/lib/db/queries/trust-center";
+import {
+  getTrustCenterClients,
+  getTrustCenterSettings,
+} from "@/lib/db/queries/trust-center";
 import { evidence } from "@/lib/db/schema";
 import { isLocalDemoDataEnabled } from "@/lib/demo-mode";
+import { FLAGS, isFeatureEnabled } from "@/lib/features/flags";
 import { FRAMEWORK_LIBRARY } from "@/lib/frameworks/registry";
 import {
   approveTrustCenterRequestAction,
   declineTrustCenterRequestAction,
   updateTrustCenterSettingsAction,
 } from "./actions";
+import { ClientAccessSection } from "./client-access-section";
 
 export const dynamic = "force-dynamic";
 type DataMode = "demo" | "live" | "unavailable";
@@ -40,6 +45,8 @@ async function loadSettings() {
 
   if (!clerkConfigured || !hasDatabaseUrl()) {
     return {
+      clientAccessClients: [],
+      clientAccessEnabled: false,
       data: null,
       mode: getFallbackMode(),
       organisationLocale: null,
@@ -52,6 +59,8 @@ async function loadSettings() {
 
   if (!session.orgId) {
     return {
+      clientAccessClients: [],
+      clientAccessEnabled: false,
       data: null,
       mode: getFallbackMode(),
       organisationLocale: null,
@@ -62,7 +71,7 @@ async function loadSettings() {
 
   try {
     const db = getDb();
-    const [data, organisation, controls, evidenceRows] = await Promise.all([
+    const [data, organisation, controls, evidenceRows, clientAccessEnabled] = await Promise.all([
       getTrustCenterSettings(session.orgId),
       getOrganisationByClerkOrgId(session.orgId),
       listOrgControlsForIndex(session.orgId),
@@ -70,7 +79,12 @@ async function loadSettings() {
         .select({ value: sql<number>`count(*)::int` })
         .from(evidence)
         .where(eq(evidence.clerkOrgId, session.orgId)),
+      isFeatureEnabled(session.orgId, FLAGS.CLIENT_TRUST_DASHBOARD),
     ]);
+    const clientAccessClients =
+      clientAccessEnabled && data.trustCenter
+        ? await getTrustCenterClients(data.trustCenter.id)
+        : [];
     const trustRelevantControls = controls.filter(
       (control) =>
         control.scopeStatus !== "out_of_scope" &&
@@ -78,6 +92,8 @@ async function loadSettings() {
     );
 
     return {
+      clientAccessClients,
+      clientAccessEnabled,
       data,
       mode: "live" as const,
       organisationLocale: organisation?.locale ?? null,
@@ -90,6 +106,8 @@ async function loadSettings() {
     };
   } catch {
     return {
+      clientAccessClients: [],
+      clientAccessEnabled: false,
       data: null,
       mode: "unavailable" as const,
       organisationLocale: null,
@@ -116,7 +134,15 @@ function formatDate(
 
 export default async function TrustCenterSettingsPage() {
   const requestLocale = normalizeLocale(await getLocale()) ?? "cs-CZ";
-  const { data, mode, organisationLocale, organisationName, trustStats } = await loadSettings();
+  const {
+    clientAccessClients,
+    clientAccessEnabled,
+    data,
+    mode,
+    organisationLocale,
+    organisationName,
+    trustStats,
+  } = await loadSettings();
   const locale = normalizeLocale(organisationLocale) ?? requestLocale;
   const messages = getMessagesForLocale(locale);
   const copy = messages.trustCenterSettings;
@@ -150,6 +176,9 @@ export default async function TrustCenterSettingsPage() {
         : [];
   const subdomain = trustCenter?.subdomain ?? (mode === "demo" ? "demo" : "");
   const publicUrl = subdomain && trustCenter?.isPublic ? `/trust/${subdomain}` : null;
+  const clientAccessPublicUrl = subdomain && trustCenter?.isPublic
+    ? `https://splnit.eu/trust/${subdomain}`
+    : null;
   const liveStats = {
     accessRequests: data?.requests.length ?? 0,
     lastUpdatedLabel: formatDate(
@@ -381,6 +410,27 @@ export default async function TrustCenterSettingsPage() {
           </div>
         </section>
       </div>
+
+      {clientAccessEnabled ? (
+        <ClientAccessSection
+          clients={clientAccessClients.map((client) => ({
+            accessToken: client.accessToken,
+            clientName: client.clientName,
+            id: client.id,
+            lastViewedAt: client.lastViewedAt?.toISOString() ?? null,
+            viewCount: client.viewCount,
+            visibleFrameworks: client.visibleFrameworks,
+          }))}
+          enabled={Boolean(trustCenter?.isPublic)}
+          frameworks={enrolledFrameworks.map((framework) => ({
+            name: locale === "cs-CZ" ? framework.nameCs : framework.nameEn,
+            regulator: framework.regulator,
+            score: framework.score,
+            slug: framework.slug,
+          }))}
+          publicUrl={clientAccessPublicUrl}
+        />
+      ) : null}
     </section>
   );
 }

@@ -176,6 +176,13 @@
       "when": 1779742915796,
       "tag": "0024_greedy_captain_midlands",
       "breakpoints": true
+    },
+    {
+      "idx": 25,
+      "version": "7",
+      "when": 1779745805301,
+      "tag": "0025_jittery_black_queen",
+      "breakpoints": true
     }
   ]
 }
