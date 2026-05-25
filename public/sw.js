@@ -1,11 +1,13 @@
-const CACHE_NAME = "splnit-offline-v3";
+const CACHE_NAME = "splnit-offline-v4";
 const APP_SHELL = [
   "/",
   "/icon.svg",
   "/icon-192x192.png",
   "/icon-512x512.png",
 ];
-const PRIVATE_ROUTE_PREFIXES = [
+const PRIVATE_BASE_ROUTE_PREFIXES = [
+  "/agency",
+  "/agency-client-invites",
   "/clients",
   "/controls",
   "/dashboard",
@@ -22,6 +24,12 @@ const PRIVATE_ROUTE_PREFIXES = [
   "/trust-center",
   "/vendors",
 ];
+const PRIVATE_ROUTE_PREFIXES = PRIVATE_BASE_ROUTE_PREFIXES.flatMap((prefix) => [
+  prefix,
+  `/en${prefix}`,
+  `/cs${prefix}`,
+  `/it${prefix}`,
+]);
 
 self.addEventListener("install", (event) => {
   event.waitUntil(

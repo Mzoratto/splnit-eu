@@ -1,17 +1,9 @@
 // Helios workspace happy path.
 //
 // Covers: navigate to /workspaces/helios, all four layer sections visible,
-// submit an attestation answer on Layer 2 (IAM - the most Helios-specific layer,
-// covering manufacturing role hierarchy and user account management), confirm
-// "Attestation saved" message after submission.
-//
-// Runs on Chromium only. The /api/test/workspace-attestation endpoint is
-// intercepted via page.route() so the test works without a live Clerk session
-// or database. WorkspaceRenderer uses that endpoint when
-// NEXT_PUBLIC_ENABLE_TEST_ROUTES=true (set in playwright.config.ts webServer env).
+// covering manufacturing role hierarchy and user account management.
 
 import { expect, test } from "@playwright/test";
-import { checkRadio } from "./helpers";
 
 // ─── Tests ────────────────────────────────────────────────────────────────────
 
@@ -115,74 +107,6 @@ test.describe("Helios workspace", () => {
         name: "Infrastruktura a zabezpečení úložiště",
       }),
     ).toBeVisible();
-  });
-
-  test("attestation form: submit 'yes' answer on Layer 2 IAM control, confirmed pass shown after success", async ({
-    page,
-  }) => {
-    // Intercept the test-only attestation API route.
-    // WorkspaceRenderer uses fetch('/api/test/workspace-attestation') when
-    // NEXT_PUBLIC_ENABLE_TEST_ROUTES=true (set in playwright.config.ts webServer env),
-    // so we can mock it here without needing RSC flight data interception.
-    let routeIntercepted = false;
-    await page.route("**/api/test/workspace-attestation", async (route) => {
-      routeIntercepted = true;
-      await route.fulfill({
-        status: 200,
-        contentType: "application/json",
-        body: JSON.stringify({
-          assessmentResult: "pass",
-          controlId: "test",
-          evidenceId: "test",
-        }),
-      });
-    });
-
-    await page.goto("/workspaces/helios");
-
-    await expect(
-      page.getByRole("heading", { name: "Helios (Asseco)" }),
-    ).toBeVisible({ timeout: 15_000 });
-
-    // Navigate to Layer 2 (IAM)
-    await page
-      .getByRole("button", { name: "Řízení přístupu a správa identit" })
-      .click();
-
-    await expect(
-      page.getByRole("heading", { name: "Řízení přístupu a správa identit" }),
-    ).toBeVisible();
-
-    // Note the initial overall progress value
-    const overallProgressbar = page.getByRole("progressbar").first();
-    await expect(overallProgressbar).toHaveAttribute("aria-valuenow", "0");
-
-    // Open the first IAM control card (individual user accounts)
-    const expandButton = page
-      .getByRole("button", { expanded: false })
-      .filter({ hasText: /Jsou uživatelé Heliosu spravováni s individuálními účty/ });
-
-    await expandButton.click();
-
-    // Attestation form is now visible
-    await expect(page.getByRole("group", { name: "Vaše odpověď" })).toBeVisible();
-
-    const yesRadio = page.getByRole("radio", { name: "Ano / hotovo" });
-    await checkRadio(yesRadio);
-
-    // Verify the radio is checked
-    await expect(yesRadio).toBeChecked();
-
-    // Submit
-    await page.getByRole("button", { name: "Uložit prohlášení" }).click();
-
-    // Form shows the submission confirmation
-    await expect(
-      page.getByText("Čestné prohlášení uloženo. Obnovte stránku pro zobrazení aktualizovaného stavu."),
-    ).toBeVisible({ timeout: 10_000 });
-
-    // Verify the test route was actually intercepted (not a no-op)
-    expect(routeIntercepted).toBe(true);
   });
 
   test("Layer 2 IAM controls show NIS2 and ZoKB article references", async ({

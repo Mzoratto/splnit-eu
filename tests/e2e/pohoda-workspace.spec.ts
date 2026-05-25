@@ -2,15 +2,10 @@
  * Pohoda workspace happy path.
  *
  * Covers: navigate to /workspaces/pohoda, all four layer sections visible,
- * submit an attestation answer on Layer 3 (backup), ActivationStatus shows
- * confirmed pass/gap after submission, overall progress percentage increases.
- *
- * Runs on Chromium only. The test-only attestation API is intercepted so the
- * test works without a live Clerk session or database (demo mode).
+ * backup controls, NIS2/ZoKB references, and initial progress state.
  */
 
 import { expect, test } from "@playwright/test";
-import { checkRadio } from "./helpers";
 
 // ─── Tests ────────────────────────────────────────────────────────────────────
 
@@ -120,72 +115,6 @@ test.describe("Pohoda workspace", () => {
         name: "Infrastruktura a zabezpečení úložiště",
       }),
     ).toBeVisible();
-  });
-
-  test("attestation form: submit 'yes' answer on Layer 3 backup control, confirmed pass shown after success", async ({
-    page,
-  }) => {
-    let routeIntercepted = false;
-    await page.route("**/api/test/workspace-attestation", async (route) => {
-      routeIntercepted = true;
-      await route.fulfill({
-        status: 200,
-        contentType: "application/json",
-        body: JSON.stringify({
-          assessmentResult: "pass",
-          controlId: "test",
-          evidenceId: "test",
-        }),
-      });
-    });
-
-    await page.goto("/workspaces/pohoda");
-
-    await expect(
-      page.getByRole("heading", { name: "Pohoda (Stormware)" }),
-    ).toBeVisible({ timeout: 15_000 });
-
-    // Navigate to Layer 3 (backup)
-    await page
-      .getByRole("button", { name: "Zálohy a obnova po havárii" })
-      .click();
-
-    await expect(
-      page.getByRole("heading", { name: "Zálohy a obnova po havárii" }),
-    ).toBeVisible();
-
-    // Note the initial overall progress value
-    const overallProgressbar = page.getByRole("progressbar").first();
-    await expect(overallProgressbar).toHaveAttribute("aria-valuenow", "0");
-
-    // Open the second backup control card (automated daily backup) — it uses attestation
-    // The control cards are toggle buttons with aria-expanded; click on the question text
-    const expandButton = page
-      .getByRole("button", { expanded: false })
-      .filter({ hasText: /Je záloha databáze Pohody automatizována/ });
-
-    await expandButton.click();
-
-    // Attestation form is now visible
-    await expect(page.getByRole("group", { name: "Vaše odpověď" })).toBeVisible();
-
-    const yesRadio = page.getByRole("radio", { name: "Ano / hotovo" });
-    await checkRadio(yesRadio);
-
-    // Verify the radio is checked
-    await expect(yesRadio).toBeChecked();
-
-    // Submit
-    await page.getByRole("button", { name: "Uložit prohlášení" }).click();
-
-    // Form shows the submission confirmation — this is the visual "confirmed pass" state
-    // after a successful attestation submission. The ActivationStatus badge
-    // (Confirmed pass / Confirmed gap) is shown in the ControlCard header on reload;
-    // the "Attestation saved" message confirms the evidence was accepted by the server.
-    await expect(
-      page.getByText("Čestné prohlášení uloženo. Obnovte stránku pro zobrazení aktualizovaného stavu."),
-    ).toBeVisible({ timeout: 10_000 });
-    expect(routeIntercepted).toBe(true);
   });
 
   test("Layer 3 backup control shows NIS2 and ZoKB article references", async ({

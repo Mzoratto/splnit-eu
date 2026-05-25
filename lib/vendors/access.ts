@@ -1,15 +1,29 @@
 import { createHmac, timingSafeEqual } from "node:crypto";
 
 function getSigningSecret() {
-  return process.env.ENCRYPTION_KEY ?? "splnit-local-vendor-secret";
+  if (process.env.ENCRYPTION_KEY) {
+    return process.env.ENCRYPTION_KEY;
+  }
+
+  if (process.env.NODE_ENV === "test") {
+    console.warn("ENCRYPTION_KEY missing; using test-only vendor token secret.");
+    return "test-secret-do-not-use";
+  }
+
+  throw new Error(
+    "ENCRYPTION_KEY must be set in production and " +
+      "staging. Refusing to use insecure fallback secret.",
+  );
 }
+
+const signingSecret = getSigningSecret();
 
 function signAssessment(input: {
   assessmentId: string;
   clerkOrgId: string;
   vendorId: string;
 }) {
-  return createHmac("sha256", getSigningSecret())
+  return createHmac("sha256", signingSecret)
     .update(input.assessmentId)
     .update(":")
     .update(input.clerkOrgId)

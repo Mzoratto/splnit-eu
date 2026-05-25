@@ -28,6 +28,27 @@ function formatMessage(template: string, values: Record<string, string>) {
   );
 }
 
+function VendorAssessmentUnavailable({ message }: { message: string }) {
+  return (
+    <main className="min-h-screen bg-background px-5 py-10 text-foreground">
+      <section className="mx-auto max-w-4xl space-y-6">
+        <div className="rounded-lg border border-border bg-surface p-6">
+          <div className="flex items-center gap-2">
+            <Building2 className="h-5 w-5 text-primary" aria-hidden="true" />
+            <p className="text-sm font-medium uppercase tracking-[0.14em] text-primary">
+              Vendor assessment
+            </p>
+          </div>
+          <h1 className="mt-3 text-3xl font-semibold tracking-normal">
+            Assessment unavailable
+          </h1>
+          <p className="mt-2 text-sm text-foreground/64">{message}</p>
+        </div>
+      </section>
+    </main>
+  );
+}
+
 export default async function VendorAssessmentPage({
   params,
   searchParams,
@@ -36,13 +57,31 @@ export default async function VendorAssessmentPage({
   searchParams: Promise<{ submitted?: string }>;
 }) {
   const [{ token }, query] = await Promise.all([params, searchParams]);
-  const data = hasDatabaseUrl()
+  const result = hasDatabaseUrl()
     ? await getVendorAssessmentByToken(token).catch(() => null)
     : null;
 
-  if (!data) {
+  if (!result) {
     notFound();
   }
+
+  if (!result.ok) {
+    if (result.reason === "expired") {
+      return (
+        <VendorAssessmentUnavailable message="This assessment link has expired. Contact your vendor manager for a new link." />
+      );
+    }
+
+    if (result.reason === "already_submitted") {
+      return (
+        <VendorAssessmentUnavailable message="This assessment has already been submitted." />
+      );
+    }
+
+    notFound();
+  }
+
+  const data = result.data;
 
   const requestLocale = normalizeLocale(await getLocale()) ?? "cs-CZ";
   const locale = normalizeLocale(data.organisation.locale) ?? requestLocale;

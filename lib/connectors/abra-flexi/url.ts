@@ -1,4 +1,13 @@
+import dns from "node:dns";
+import ipaddr from "ipaddr.js";
 import type { AbraFlexiCredentialInput } from "@/lib/connectors/api-key-base/types";
+
+const BLOCKED_IP_RANGES = new Set([
+  "loopback",
+  "private",
+  "linkLocal",
+  "uniqueLocal",
+]);
 
 export function normalizeAbraFlexiBaseUrl(value: string) {
   const url = new URL(value.trim());
@@ -11,6 +20,23 @@ export function normalizeAbraFlexiBaseUrl(value: string) {
   url.search = "";
 
   return url.toString().replace(/\/$/, "");
+}
+
+export async function validateAbraBaseUrl(url: string): Promise<void> {
+  const parsed = new URL(url.trim());
+
+  if (parsed.protocol !== "https:") {
+    throw new Error("ABRA Flexi URL must use HTTPS");
+  }
+
+  const { address } = await dns.promises.lookup(parsed.hostname);
+  const addr = ipaddr.parse(address);
+
+  if (BLOCKED_IP_RANGES.has(addr.range())) {
+    throw new Error(
+      "ABRA Flexi URL resolves to a private or reserved address and cannot be used",
+    );
+  }
 }
 
 export function buildAbraFlexiUrl(

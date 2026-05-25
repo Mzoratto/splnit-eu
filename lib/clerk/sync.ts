@@ -8,7 +8,7 @@ import {
   profiles,
   trustCenterRequests,
 } from "@/lib/db/schema";
-import { eq } from "drizzle-orm";
+import { and, eq } from "drizzle-orm";
 
 export async function upsertOrganisationFromClerk(input: {
   clerkOrgId: string;
@@ -100,4 +100,17 @@ export async function deleteProfileFromClerk(clerkUserId: string) {
   const db = getDb();
 
   await db.delete(profiles).where(eq(profiles.clerkUserId, clerkUserId));
+}
+
+// Scoped deletion: removes profile for ONE org only.
+// Do NOT call this from user.deleted — use
+// deleteProfileFromClerk(userId) for full user removal.
+export async function deleteProfileFromOrg(userId: string, orgId: string) {
+  const db = getDb();
+
+  await db
+    .delete(profiles)
+    .where(
+      and(eq(profiles.clerkUserId, userId), eq(profiles.clerkOrgId, orgId)),
+    );
 }

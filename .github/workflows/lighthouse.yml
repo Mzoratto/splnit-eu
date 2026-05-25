@@ -33,7 +33,7 @@ jobs:
         run: npm run build
 
       - name: Run Lighthouse CI
-        run: npx @lhci/cli@latest autorun
+        run: npx lhci autorun
 
       - name: Upload Lighthouse reports
         if: always()

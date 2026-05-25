@@ -22,6 +22,10 @@ const requestSchema = z.object({
 });
 
 export async function POST(request: NextRequest) {
+  if (process.env.NODE_ENV === "production") {
+    return new Response(null, { status: 404 });
+  }
+
   // Double guard: hard-stop in production; require explicit test opt-in elsewhere.
   if (process.env.NODE_ENV !== "test" && process.env.ENABLE_TEST_ROUTES !== "true") {
     return NextResponse.json({ error: "Not found" }, { status: 404 });

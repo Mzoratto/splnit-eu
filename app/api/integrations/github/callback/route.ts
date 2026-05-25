@@ -2,7 +2,11 @@ import { auth } from "@clerk/nextjs/server";
 import { NextResponse } from "next/server";
 import { createAuditLog } from "@/lib/db/queries/audit-logs";
 import { upsertIntegrationConnection } from "@/lib/db/queries/integrations";
-import { getGitHubInstallation } from "@/lib/integrations/github/app";
+import {
+  consumeGitHubInstallNonce,
+  getGitHubInstallation,
+  getGitHubInstallNonceFromState,
+} from "@/lib/integrations/github/app";
 import { verifyOAuthState } from "@/lib/integrations/oauth-state";
 
 function hasClerkConfig() {
@@ -38,6 +42,27 @@ export async function GET(request: Request) {
     return NextResponse.json(
       { error: "OAuth state does not match the active organisation." },
       { status: 403 },
+    );
+  }
+
+  const nonce = getGitHubInstallNonceFromState(state);
+
+  if (!nonce) {
+    return NextResponse.json(
+      { error: "Missing GitHub installation nonce." },
+      { status: 400 },
+    );
+  }
+
+  const nonceValid = await consumeGitHubInstallNonce(nonce, {
+    clerkOrgId: session.orgId,
+    clerkUserId: session.userId,
+  });
+
+  if (!nonceValid) {
+    return NextResponse.json(
+      { error: "GitHub installation nonce is invalid or expired." },
+      { status: 400 },
     );
   }
 

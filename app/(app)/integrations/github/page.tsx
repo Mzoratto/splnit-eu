@@ -82,7 +82,7 @@ async function loadGitHubData() {
 
   const session = await auth();
 
-  if (!session.orgId) {
+  if (!session.orgId || !session.userId) {
     return {
       detail: null,
       installUrl: null,
@@ -106,7 +106,9 @@ async function loadGitHubData() {
 
   return {
     detail,
-    installUrl: hasGitHubAppConfig() ? getGitHubAppInstallUrl(session.orgId) : null,
+    installUrl: hasGitHubAppConfig()
+      ? await getGitHubAppInstallUrl(session.orgId, session.userId)
+      : null,
     organisationLocale: organisation?.locale ?? null,
     repositories,
   };
