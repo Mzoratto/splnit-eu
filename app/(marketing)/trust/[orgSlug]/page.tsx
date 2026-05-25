@@ -61,6 +61,7 @@ export default async function TrustCenterPage({
   const copy = getPublicTrustCopy(locale);
   const trustCenter = await getPublicTrustCenterModel({
     accessToken: query.access ?? null,
+    clientAccessToken: query.access ?? null,
     locale,
     orgSlug,
   });
