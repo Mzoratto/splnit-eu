@@ -204,6 +204,7 @@ const REGULATION_META: Record<
 
 export async function getPublicTrustCenterModel(input: {
   accessToken?: string | null;
+  clientAccessToken?: string | null;
   locale?: Locale;
   orgSlug: string;
 }): Promise<PublicTrustCenterModel | null> {
@@ -228,6 +229,7 @@ export async function getPublicTrustCenterModel(input: {
 
 export async function getPublicFrameworkDetailModel(input: {
   accessToken?: string | null;
+  clientAccessToken?: string | null;
   frameworkSlug: string;
   locale?: Locale;
   orgSlug: string;
@@ -237,6 +239,7 @@ export async function getPublicFrameworkDetailModel(input: {
 } | null> {
   const trustCenter = await getPublicTrustCenterModel({
     accessToken: input.accessToken,
+    clientAccessToken: input.clientAccessToken,
     locale: input.locale,
     orgSlug: input.orgSlug,
   });
@@ -254,6 +257,7 @@ export async function getPublicFrameworkDetailModel(input: {
 
 async function loadDatabaseTrustCenter(input: {
   accessToken?: string | null;
+  clientAccessToken?: string | null;
   locale: Locale;
   orgSlug: string;
 }): Promise<PublicTrustCenterModel | null> {

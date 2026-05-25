@@ -735,6 +735,19 @@ export const trustCenters = pgTable("trust_centers", {
   lastUpdated: timestamp("last_updated", { withTimezone: true }).defaultNow(),
 });
 
+export const trustCenterClients = pgTable("trust_center_clients", {
+  id: uuid("id").primaryKey().defaultRandom(),
+  trustCenterId: uuid("trust_center_id")
+    .notNull()
+    .references(() => trustCenters.id, { onDelete: "cascade" }),
+  clientName: varchar("client_name", { length: 200 }).notNull(),
+  accessToken: text("access_token").notNull().unique(),
+  visibleFrameworks: jsonb("visible_frameworks").$type<string[]>().notNull().default([]),
+  createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+  lastViewedAt: timestamp("last_viewed_at", { withTimezone: true }),
+  viewCount: integer("view_count").notNull().default(0),
+});
+
 export const consultantClients = pgTable(
   "consultant_clients",
   {
