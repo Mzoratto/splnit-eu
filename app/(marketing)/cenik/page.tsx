@@ -114,13 +114,11 @@ export default async function PricingPage() {
             <div className="mt-6 text-center">
               <Link
                 href={getLocalizedMarketingPath("/srovnani", locale)}
-                className="inline-flex items-center gap-2 text-sm font-semibold text-primary hover:text-[var(--accent-hover)]"
+                className="text-sm text-foreground/64 underline underline-offset-4 hover:text-foreground"
               >
                 {t("comparisonPageCta")}
-                <Icon icon="solar:arrow-right-linear" aria-hidden="true" />
               </Link>
             </div>
-          </div>
         </section>
 
         <section className="border-t border-border bg-white py-20">
