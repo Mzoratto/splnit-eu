@@ -226,6 +226,21 @@ export default async function PlatformPage() {
                 </article>
               ))}
             </div>
+            <div className="mt-5 grid gap-5 md:grid-cols-3">
+              {copy.evidence.extraSections.map((item) => (
+                <article
+                  key={item.title}
+                  className="rounded-[22px] border border-zinc-100 bg-zinc-50 p-7 md:col-span-2"
+                >
+                  <h3 className="text-lg font-semibold text-zinc-900">
+                    {item.title}
+                  </h3>
+                  <p className="mt-2 text-sm leading-6 text-zinc-500">
+                    {item.body}
+                  </p>
+                </article>
+              ))}
+            </div>
           </div>
         </section>
 
@@ -238,6 +253,21 @@ export default async function PlatformPage() {
               <p className="mt-3 max-w-2xl text-sm leading-6 text-zinc-500">
                 {copy.trustCenter.body}
               </p>
+              <div className="mt-6 grid gap-3">
+                {copy.trustCenter.extraSections.map((item) => (
+                  <div
+                    key={item.title}
+                    className="rounded-2xl border border-blue-100 bg-white p-5"
+                  >
+                    <h4 className="text-base font-semibold text-zinc-900">
+                      {item.title}
+                    </h4>
+                    <p className="mt-2 text-sm leading-6 text-zinc-500">
+                      {item.body}
+                    </p>
+                  </div>
+                ))}
+              </div>
               <div className="mono mt-6 w-fit rounded-full border border-blue-100 bg-white px-4 py-2 text-xs text-blue-700">
                 splnit.eu/trust/demo
               </div>

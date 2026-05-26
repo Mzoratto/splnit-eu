@@ -1847,7 +1847,14 @@
       "monitoringTitle": "Monitoring konfigurace",
       "monitoringBody": "Zviditelněte konfigurační odchylky v propojených systémech, aby je tým mohl zkontrolovat.",
       "documentsTitle": "Automatické dokumenty",
-      "documentsBody": "Exportujte Zprávu o hodnocení stavu kybernetické bezpečnosti — dokument mapovaný na vyhlášku č. 410/2025 Sb., připravený pro auditora nebo NÚKIB inspekci. Automaticky ověřená opatření se zobrazí jako zelené bloky, manuálně deklarovaná jako šedé."
+      "documentsBody": "Exportujte Zprávu o hodnocení stavu kybernetické bezpečnosti — dokument mapovaný na vyhlášku č. 410/2025 Sb., připravený pro auditora nebo NÚKIB inspekci. Automaticky ověřená opatření se zobrazí jako zelené bloky, manuálně deklarovaná jako šedé.",
+      "templatesTitle": "Šablony ke stažení — zdarma",
+      "templatesBody": "Základní politiky, ROPA, BCP, DPIA a GAP analýzy ke stažení jako DOCX a XLSX. Bez registrace, pro každého.",
+      "templatesLink": "Zobrazit šablony →",
+      "smartDocumentsTitle": "Předvyplněné dokumenty z vašich dat",
+      "smartDocumentsBody": "Platforma generuje GAP analýzu, prohlášení o aplikovatelnosti a vendor report přímo z vašich živých dat — ne z prázdné tabulky.",
+      "clientAccessTitle": "Klientské přístupy pro MSP",
+      "clientAccessBody": "Sdílejte stav compliance s každým zákazníkem zvlášť. Vlastní odkaz, vlastní výběr předpisů, sledování otevření."
     },
     "trustBadges": {
       "early": "Předběžný přístup",
@@ -1884,6 +1891,7 @@
     "partnerCta": "Spustit Agency →",
     "comparisonTag": "Srovnání funkcí",
     "comparisonTitle": "Vyberte podle hloubky automatizace.",
+    "comparisonDocumentsNote": "Základní šablony jsou zdarma pro všechny na stránkách předpisů. Generování předvyplněných dokumentů z dat platformy je součástí placených plánů.",
     "faqTag": "FAQ",
     "faqTitle": "Časté otázky",
     "finalTitle": "Začněte zdarma, upgrade provedete v aplikaci.",
@@ -1906,7 +1914,8 @@
         "features": [
           "1 předpis",
           "Manuální kontroly",
-          "3 vzory dokumentů",
+          "Šablony ke stažení (11 dokumentů)",
+          "— Generování předvyplněných dokumentů",
           "1 uživatel",
           "Komunitní podpora"
         ]
@@ -1920,6 +1929,8 @@
           "Všechny podporované frameworky",
           "Aktuální konektory a automatické kontroly",
           "Archiv evidence a exporty",
+          "Šablony ke stažení (11 dokumentů)",
+          "✓ Generování předvyplněných dokumentů",
           "Až 25 uživatelů",
           "Email podpora"
         ]
@@ -1932,6 +1943,8 @@
           "Vše v plánu SME",
           "Až 20 klientských organizací",
           "White-label konzultantský portál",
+          "Šablony ke stažení (11 dokumentů)",
+          "✓ Generování předvyplněných dokumentů",
           "Neomezený počet konzultantů",
           "Klientské pozvánky a komentáře"
         ]
@@ -1974,7 +1987,8 @@
         "automatedEvidence": "Automatický sběr důkazů",
         "failureAlerts": "Upozornění na selhání",
         "scheduler": "Plánovač",
-        "policyTemplates": "Vzory politik",
+        "downloadableTemplates": "Šablony ke stažení (DOCX/XLSX)",
+        "prefilledDocumentGeneration": "Generování předvyplněných dokumentů",
         "pdfGeneration": "Generování PDF",
         "trainingTemplates": "Šablony školení",
         "auditorExport": "Export pro auditora",

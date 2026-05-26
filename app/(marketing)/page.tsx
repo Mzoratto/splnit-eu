@@ -58,6 +58,19 @@ const features = [
     icon: "solar:bell-linear",
     key: "documents",
   },
+  {
+    href: "/predpisy/nis2",
+    icon: "solar:download-minimalistic-linear",
+    key: "templates",
+  },
+  {
+    icon: "solar:document-add-linear",
+    key: "smartDocuments",
+  },
+  {
+    icon: "solar:link-round-angle-linear",
+    key: "clientAccess",
+  },
 ];
 
 const steps = [
@@ -269,6 +282,14 @@ export default async function HomePage() {
                     <p className="flex-1 text-sm leading-relaxed text-foreground/62">
                       {t(`features.${feature.key}Body`)}
                     </p>
+                    {feature.href ? (
+                      <Link
+                        href={feature.href}
+                        className="mt-5 inline-flex text-sm font-medium text-blue-600 hover:text-blue-700"
+                      >
+                        {t(`features.${feature.key}Link`)}
+                      </Link>
+                    ) : null}
                   </div>
                 </article>
               ))}

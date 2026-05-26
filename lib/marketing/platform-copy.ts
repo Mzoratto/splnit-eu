@@ -44,12 +44,20 @@ export type PlatformCopy = {
       title: string;
       body: string;
     }[];
+    extraSections: {
+      title: string;
+      body: string;
+    }[];
   };
   trustCenter: {
     title: string;
     body: string;
     cta: string;
     badges: string[];
+    extraSections: {
+      title: string;
+      body: string;
+    }[];
   };
   trustBadges: string[];
   finalNote: string;
@@ -138,6 +146,13 @@ const copy: Record<Locale, PlatformCopy> = {
           title: "Hlídání vypršení",
         },
       ],
+      extraSections: [
+        {
+          body:
+            "GAP analýza, prohlášení o aplikovatelnosti (SoA) a vendor report se generují přímo z dat, která platforma průběžně sbírá. Výsledný XLSX je předvyplněný a připravený pro auditora.",
+          title: "Generování dokumentů z dat platformy",
+        },
+      ],
       tag: "Úložiště evidencí",
       title: "Auditní záznamy. Automaticky.",
     },
@@ -146,6 +161,13 @@ const copy: Record<Locale, PlatformCopy> = {
       body:
         "Zákazníci a partneři mohou vidět vámi publikovaný přehled stavu kontrol. Odkaz níže otevírá pouze ukázkový Trust Center.",
       cta: "Zobrazit ukázkový Trust Center →",
+      extraSections: [
+        {
+          body:
+            "Vytvořte pojmenovaný odkaz pro každého zákazníka nebo auditora. Každý přístup má vlastní výběr viditelných předpisů a sledování počtu otevření. Odkaz lze kdykoli zrušit.",
+          title: "Klientské přístupy",
+        },
+      ],
       title: "Trust Center — zveřejněte přehled stavu svých kontrol.",
     },
     finalNote:
@@ -239,6 +261,13 @@ const copy: Record<Locale, PlatformCopy> = {
           title: "Expiry tracking",
         },
       ],
+      extraSections: [
+        {
+          body:
+            "GAP analysis, Statement of Applicability (SoA), and vendor reports are generated directly from data the platform continuously collects. The resulting XLSX is pre-filled and ready for auditor review.",
+          title: "Document generation from platform data",
+        },
+      ],
       tag: "Evidence vault",
       title: "Audit records. Automatically.",
     },
@@ -247,6 +276,13 @@ const copy: Record<Locale, PlatformCopy> = {
       body:
         "Customers and partners can see the control-status summary you choose to publish. The link below opens a sample Trust Center only.",
       cta: "View sample Trust Center →",
+      extraSections: [
+        {
+          body:
+            "Create a named link for each customer or auditor. Each access has its own visible-regulation selection and open-count tracking. The link can be revoked at any time.",
+          title: "Client access links",
+        },
+      ],
       title: "Trust Center — publish a control-posture summary.",
     },
     finalNote:
@@ -340,6 +376,13 @@ const copy: Record<Locale, PlatformCopy> = {
           title: "Controllo scadenze",
         },
       ],
+      extraSections: [
+        {
+          body:
+            "GAP analysis, dichiarazione di applicabilità (SoA) e vendor report vengono generati direttamente dai dati che la piattaforma raccoglie nel tempo. Il file XLSX risultante è precompilato e pronto per il revisore.",
+          title: "Generazione documenti dai dati della piattaforma",
+        },
+      ],
       tag: "Archivio evidenze",
       title: "Evidenze per audit. Automatiche.",
     },
@@ -348,6 +391,13 @@ const copy: Record<Locale, PlatformCopy> = {
       body:
         "Clienti e partner possono vedere il riepilogo dello stato controlli che scegliete di pubblicare. Il link sotto apre solo un Trust Center di esempio.",
       cta: "Vedi Trust Center di esempio →",
+      extraSections: [
+        {
+          body:
+            "Create un link nominativo per ogni cliente o revisore. Ogni accesso ha una propria selezione di normative visibili e il conteggio delle aperture. Il link può essere revocato in qualsiasi momento.",
+          title: "Accessi cliente",
+        },
+      ],
       title: "Trust Center — pubblicate un riepilogo dello stato dei controlli.",
     },
     finalNote:
