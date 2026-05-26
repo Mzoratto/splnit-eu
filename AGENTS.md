@@ -10,7 +10,7 @@ Canonical operating instructions for AI coding agents in this repository. Read t
 
 ## 0. Project Reality
 
-Splnit.eu is a solo-developer EU compliance automation product for NIS2, GDPR, ISO 27001, and related workflows. The current strategy is Italy first, English-EU second, Czech tertiary.
+Splnit.eu is a solo-developer EU compliance automation product for NIS2, GDPR, ISO 27001, and related workflows. The current strategy is Czech first (cs-CZ default), English-EU second, Italian tertiary.
 
 Hard truth rules:
 
@@ -20,6 +20,7 @@ Hard truth rules:
 - Never ship public legal text, privacy text, T&Cs, DPA wording, or entity identifiers with placeholders or wrong party names.
 - Trust Center pages must never expose individual control IDs, evidence filenames, test timing details, or attacker-useful implementation details publicly.
 - If proof is missing, say it is missing and build the honest smaller version.
+- Czech market context: NIS2 transposed via Act 264/2025 Coll. (in force Nov 2025). Czech-specific document output is mapped to Vyhláška č. 410/2025 Sb. Native integrations with Pohoda, Money S3, Helios, ABRA Flexi are the primary competitive moat. NÚKIB is the Czech cybersecurity authority; ÚOOÚ is the Czech data protection authority.
 
 ---
 
@@ -143,6 +144,8 @@ Conventions:
 - Text must not overflow or overlap on mobile or desktop.
 - Public Trust Center pages show category-level aggregates only, never individual controls.
 - Public copy must be honest, jurisdiction-aware, and free of fake proof.
+- Default locale is cs-CZ (no URL prefix). Never set it-IT or en-EU as the default locale. Language switcher must be present in nav on all public pages.
+- Never hardcode Stripe plan names or prices in UI components — read them from lib/stripe/plans.ts PLANS constant.
 
 ---
 

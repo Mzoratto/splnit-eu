@@ -3,6 +3,7 @@ import { z } from "zod";
 
 const newsletterSchema = z.object({
   email: z.string().email().max(254),
+  source: z.string().trim().max(120).optional(),
 });
 
 export async function POST(request: Request) {
@@ -21,6 +22,10 @@ export async function POST(request: Request) {
   }
 
   if (!process.env.LOOPS_API_KEY) {
+    if (process.env.NODE_ENV !== "production") {
+      return NextResponse.json({ ok: true, skipped: "provider_not_configured" });
+    }
+
     return NextResponse.json(
       { error: "Newsletter provider is not configured." },
       { status: 503 },
@@ -29,7 +34,7 @@ export async function POST(request: Request) {
 
   const loopsPayload: Record<string, unknown> = {
     email: parsed.data.email,
-    source: "splnit.eu footer",
+    source: parsed.data.source ?? "splnit.eu footer",
     subscribed: true,
   };
 

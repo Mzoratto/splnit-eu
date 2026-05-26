@@ -294,6 +294,15 @@ export default async function HomePage() {
                 </article>
               ))}
             </div>
+            <div className="mt-10 text-center">
+              <Link
+                href={getLocalizedMarketingPath("/srovnani", locale)}
+                className="inline-flex items-center gap-2 text-sm font-semibold text-primary hover:text-[var(--accent-hover)]"
+              >
+                {t("compareCta")}
+                <Icon icon="solar:arrow-right-linear" aria-hidden="true" />
+              </Link>
+            </div>
           </div>
         </section>
 
@@ -301,6 +310,15 @@ export default async function HomePage() {
           <div className="mx-auto max-w-3xl px-5">
             <div className="scroll-animate">
               <LeadCapture />
+              <div className="mt-6 text-center">
+                <Link
+                  href={getLocalizedMarketingPath("/nastroje/nis2-kalkulator", locale)}
+                  className="inline-flex items-center gap-2 text-sm font-semibold text-primary hover:text-[var(--accent-hover)]"
+                >
+                  {t("regulatoryProfileCta")}
+                  <Icon icon="solar:arrow-right-linear" aria-hidden="true" />
+                </Link>
+              </div>
             </div>
           </div>
         </section>

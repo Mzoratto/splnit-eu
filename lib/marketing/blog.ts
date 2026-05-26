@@ -114,6 +114,152 @@ export const blogPageCopy: Record<Locale, BlogPageCopy> = {
   },
 };
 
+const requestedCzechBlogPosts: BlogPost[] = [
+  {
+    slug: "kdo-se-musi-registrovat-u-nukib-a-do-kdy",
+    title: "Kdo se musí registrovat u NÚKIB a do kdy",
+    description:
+      "Praktický přehled samoidentifikace podle zákona č. 264/2025 Sb.: 60 dní na ohlášení regulované služby, 30 dní na údaje po registraci a rok na plné zavedení vybraných povinností.",
+    category: "ZoKB / NIS2",
+    publishedAt: "2026-05-26",
+    readTime: "6 min",
+    author: "Marco Zoratto",
+    authorRole: "zakladatel Splnit.eu",
+    regulationHref: "/predpisy/nis2",
+    ctaTitle: "Začněte gap analýzou nižšího režimu",
+    ctaBody:
+      "Stáhněte si pracovní XLSX šablonu pro první posouzení proti vyhlášce č. 410/2025 Sb. bez registrace.",
+    ctaButton: "Stáhnout GAP analýzu",
+    ctaHref: "/templates/gap-analyza-nizsi-rezim.xlsx",
+    summary:
+      "Nový zákon o kybernetické bezpečnosti je účinný od 1. listopadu 2025. Organizace, které splní podmínky regulované služby, řeší nejdřív ohlášení služby, následně kontaktní a doplňující údaje a potom bezpečnostní opatření.",
+    sections: [
+      {
+        heading: "Začíná se samoidentifikací",
+        body: [
+          "NÚKIB ve FAQ k novému zákonu uvádí, že zákon č. 264/2025 Sb. je účinný od 1. listopadu 2025 a že povinnost ohlášení běží do 60 dnů od naplnění podmínek pro registraci. U většiny organizací, které podmínky splňovaly už v den účinnosti zákona, to prakticky znamenalo konec roku 2025.",
+          "Nejde jen o velikost firmy. Rozhoduje také typ regulované služby, sektor, role v dodavatelském řetězci a režim povinností. První krok proto není nákup nástroje, ale věcné posouzení, zda konkrétní služba spadá do regulace.",
+        ],
+        bullets: [
+          "Ohlášení regulované služby: do 60 dnů od naplnění podmínek pro registraci.",
+          "Kontaktní a doplňující údaje: do 30 dnů od doručení rozhodnutí o registraci, pokud nebyly doplněny už dříve.",
+          "Bezpečnostní opatření a incidentní povinnosti pro nově regulované subjekty mají přechodné období podle pokynů NÚKIB; prakticky plánujte rok od registrace.",
+        ],
+      },
+      {
+        heading: "Kdo by měl posouzení udělat hned",
+        body: [
+          "Prioritně se podívejte na služby v sektorech pokrytých NIS2 a novým ZoKB: digitální infrastruktura, řízené IT služby, výroba s významnou závislostí na IT, zdravotnictví, doprava, energetika, finance a další regulované oblasti.",
+          "MSP nebo dodavatel IT služeb často zjistí, že i když není největším subjektem v odvětví, zákazníci v regulovaných sektorech budou vyžadovat doložitelnou bezpečnostní praxi.",
+        ],
+      },
+      {
+        heading: "Co připravit před formulářem",
+        body: [
+          "Před ohlášením si připravte seznam služeb, jejich vlastníky, systémy a kontaktní osoby. Po registraci budete řešit kontaktní a doplňující údaje k regulované službě přes Portál NÚKIB.",
+          "Zdroje: Portál NÚKIB FAQ k novému zákonu, formulář Hlášení údajů k regulovaným službám a zákon č. 264/2025 Sb. v e-Sbírce.",
+        ],
+      },
+    ],
+  },
+  {
+    slug: "nis2-a-gdpr-kde-se-povinnosti-prekryvaji",
+    title: "NIS2 a GDPR: kde se povinnosti překrývají a kde ne",
+    description:
+      "Praktická mapa společných důkazů: incidenty, dodavatelé, přístupy, školení a dokumentace. A také hranice, kde NIS2 a GDPR řeší odlišný problém.",
+    category: "NIS2 + GDPR",
+    publishedAt: "2026-05-26",
+    readTime: "7 min",
+    author: "Marco Zoratto",
+    authorRole: "zakladatel Splnit.eu",
+    regulationHref: "/predpisy/gdpr",
+    ctaTitle: "Použijte společné šablony pro GDPR a NIS2",
+    ctaBody:
+      "Začněte ROPA, incident response plánem a politikou dodavatelů. Všechny šablony jsou dostupné bez registrace.",
+    ctaButton: "Stáhnout ROPA šablonu",
+    ctaHref: "/templates/ropa-gdpr.docx",
+    summary:
+      "NIS2 a GDPR nejsou totéž. Přesto se v praxi potkávají u incidentů, dodavatelů, přístupů a evidence bezpečnostních opatření. Dobrá dokumentační páteř šetří práci v obou režimech.",
+    sections: [
+      {
+        heading: "Společné jádro: bezpečnost a důkazy",
+        body: [
+          "GDPR chrání osobní údaje a práva fyzických osob. NIS2 a český ZoKB řeší kybernetickou bezpečnost regulovaných služeb. Pokud ale provozní incident zasáhne osobní data, oba světy se potkají.",
+          "Jedna kvalitní evidence může sloužit oběma režimům: kdo má přístup, jak se školí zaměstnanci, kteří dodavatelé jsou kritičtí, jak se hlásí incidenty a kde jsou uložené důkazy.",
+        ],
+        bullets: [
+          "Incident response plán: jeden proces, různé rozhodovací větve pro NÚKIB/Národní CERT a ÚOOÚ.",
+          "Dodavatelé: bezpečnostní význam u NIS2, zpracovatelský vztah a DPA u GDPR.",
+          "Přístupy: řízení identit chrání dostupnost služby i osobní údaje.",
+          "Školení: bezpečnostní povědomí a ochrana osobních údajů se dají evidovat společně.",
+        ],
+      },
+      {
+        heading: "Kde se povinnosti nerozmazávají",
+        body: [
+          "GDPR stále potřebuje vlastní právní základy, informační povinnosti, ROPA, práva subjektů údajů a posouzení dopadu tam, kde je potřeba. To za vás NIS2 evidence nenahradí.",
+          "NIS2 naopak vyžaduje posouzení regulované služby, kontaktní a doplňující údaje, bezpečnostní opatření podle příslušného režimu a incidentní workflow vůči kybernetické autoritě.",
+        ],
+      },
+      {
+        heading: "Praktický minimální balík",
+        body: [
+          "Začněte pěti dokumenty: ROPA, politika dodavatelů, incident response plán, přístupová politika a gap analýza. Nejsou to hotová právní stanoviska, ale dobrý pracovní základ pro poradce, auditora nebo interní review.",
+          "Relevantní šablony v public/templates: ropa-gdpr.docx, politika-dodavatelu.docx, incident-response-plan.docx, pristupova-politika-nzkb.docx a gap-analyza-nizsi-rezim.xlsx.",
+        ],
+      },
+    ],
+  },
+  {
+    slug: "zprava-o-hodnoceni-stavu-kyberneticke-bezpecnosti",
+    title: "Zpráva o hodnocení stavu kybernetické bezpečnosti: co má obsahovat",
+    description:
+      "Pozor na přesnost: pro nižší režim vyhláška č. 410/2025 Sb. pracuje hlavně s přehledem bezpečnostních opatření. Zpráva může být užitečný interní export, ale nesmí slibovat víc než zákon říká.",
+    category: "ZoKB",
+    publishedAt: "2026-05-26",
+    readTime: "6 min",
+    author: "Marco Zoratto",
+    authorRole: "zakladatel Splnit.eu",
+    regulationHref: "/predpisy/nis2",
+    ctaTitle: "Stáhněte si podklad pro přehled opatření",
+    ctaBody:
+      "Pro nižší režim začněte přehledem a gap analýzou podle vyhlášky č. 410/2025 Sb.; zprávu používejte jako pracovní export, ne jako certifikaci.",
+    ctaButton: "Stáhnout GAP analýzu",
+    ctaHref: "/templates/gap-analyza-nizsi-rezim.xlsx",
+    summary:
+      "Název „zpráva o hodnocení stavu kybernetické bezpečnosti“ zní oficiálně, ale u nižšího režimu je potřeba držet se vyhlášky č. 410/2025 Sb. Povinným jádrem je přehled bezpečnostních opatření, jeho aktualizace a uchování verzí.",
+    sections: [
+      {
+        heading: "Nejdřív opravme premisu",
+        body: [
+          "Pro poskytovatele v režimu nižších povinností vyhláška č. 410/2025 Sb. v § 3 popisuje přehled bezpečnostních opatření a jeho pravidelnou aktualizaci. Neznamená to, že každá firma musí mít dokument s přesným názvem „Zpráva o hodnocení stavu kybernetické bezpečnosti“.",
+          "Taková zpráva ale může být praktický export pro vedení, poradce nebo kontrolu, pokud jasně ukazuje, z čeho vychází a nenahrazuje právní posouzení.",
+        ],
+      },
+      {
+        heading: "Co by měl pracovní export obsahovat",
+        body: [
+          "Užitečná zpráva má být dohledatelná a konkrétní. Nestačí seznam obecných prohlášení. Každá oblast by měla mít stav, vlastníka, důkaz nebo zdůvodnění a další krok.",
+        ],
+        bullets: [
+          "Identifikace organizace, regulované služby a režimu povinností.",
+          "Přehled opatření podle vyhlášky č. 410/2025 Sb. včetně zavedených, plánovaných a nezavedených opatření.",
+          "Odpovědné osoby, datum poslední aktualizace a zdroj důkazu.",
+          "Otevřené mezery, priorita a termín nápravy.",
+          "Záznam, že vedení bylo se stavem seznámeno.",
+        ],
+      },
+      {
+        heading: "Co do zprávy nepatří",
+        body: [
+          "Neuvádějte tvrzení o certifikaci, auditu nebo schválení NÚKIB, pokud skutečně neexistují. Interní export není certifikát ani stanovisko úřadu.",
+          "Zdroje: vyhláška č. 410/2025 Sb. v e-Sbírce a podpůrné materiály NÚKIB pro režim nižších povinností.",
+        ],
+      },
+    ],
+  },
+];
+
 const czechNukibRegistrationPosts: BlogPost[] = [
   {
     slug: "co-splnit-do-12-mesicu-od-registrace-nukib",
@@ -3701,6 +3847,7 @@ const importedMspBlogPosts: BlogPost[] = [
 
 const posts: Record<Locale, BlogPost[]> = {
   "cs-CZ": [
+    ...requestedCzechBlogPosts,
     ...czechNukibRegistrationPosts,
     ...importedCzechBlogPosts,
     ...importedMspBlogPosts,

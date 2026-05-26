@@ -4,6 +4,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { SignOutButton } from "@clerk/nextjs";
 import { useTranslations } from "next-intl";
+import { useState } from "react";
 import { LogoMark } from "@/components/brand/logo-mark";
 import {
   AlertTriangle,
@@ -17,6 +18,7 @@ import {
   Landmark,
   LayoutDashboard,
   LogOut,
+  MoreHorizontal,
   Plug,
   ScrollText,
   Settings,
@@ -60,8 +62,7 @@ const mobileNavigation = [
   navigation[0].items[0],
   navigation[0].items[1],
   navigation[0].items[2],
-  navigation[1].items[0],
-  navigation[2].items[4],
+  navigation[2].items[0],
 ];
 
 function isActivePath(pathname: string, href: string) {
@@ -183,37 +184,102 @@ export function MobileTabBar({
 }) {
   const pathname = usePathname();
   const t = useTranslations("navigation");
+  const [moreOpen, setMoreOpen] = useState(false);
 
   return (
-    <nav className="fixed inset-x-0 bottom-0 z-30 grid grid-cols-5 border-t border-border bg-surface/95 px-2 pb-[calc(0.5rem+env(safe-area-inset-bottom))] pt-1 backdrop-blur-xl lg:hidden">
-      {mobileNavigation.map((item) => {
-        const active = isActivePath(pathname, item.href);
-        const locked = isPreIntake && Boolean(item.lockedUntilIntake);
+    <>
+      <nav className="fixed inset-x-0 bottom-0 z-30 grid grid-cols-5 border-t border-border bg-surface/95 px-2 pb-[calc(0.5rem+env(safe-area-inset-bottom))] pt-1 backdrop-blur-xl lg:hidden">
+        {mobileNavigation.map((item) => {
+          const active = isActivePath(pathname, item.href);
+          const locked = isPreIntake && Boolean(item.lockedUntilIntake);
 
-        return (
-          <Link
-            key={item.href}
-            href={locked ? "#" : item.href}
-            aria-disabled={locked}
-            tabIndex={locked ? -1 : undefined}
-            className={`flex min-h-12 min-w-0 flex-col items-center justify-center gap-1 rounded-md px-1 text-[11px] ${
-              locked
-                ? "pointer-events-none cursor-not-allowed text-foreground/35 opacity-45"
-                : active
-                ? "bg-[var(--accent-subtle)] font-medium text-primary"
-                : "text-foreground/62"
-            }`}
+          return (
+            <Link
+              key={item.href}
+              href={locked ? "#" : item.href}
+              aria-disabled={locked}
+              tabIndex={locked ? -1 : undefined}
+              className={`flex min-h-12 min-w-0 flex-col items-center justify-center gap-1 rounded-md px-1 text-[11px] ${
+                locked
+                  ? "pointer-events-none cursor-not-allowed text-foreground/35 opacity-45"
+                  : active
+                  ? "bg-[var(--accent-subtle)] font-medium text-primary"
+                  : "text-foreground/62"
+              }`}
+            >
+              <span className="relative">
+                <item.icon className="h-4 w-4" aria-hidden="true" strokeWidth={1.5} />
+                {item.href === "/dashboard" && regulationUpdateCount > 0 ? (
+                  <span className="absolute -right-2 -top-2 h-2 w-2 rounded-full bg-danger" />
+                ) : null}
+              </span>
+              <span className="max-w-full truncate">{t(item.labelKey)}</span>
+            </Link>
+          );
+        })}
+
+        <button
+          type="button"
+          aria-controls="mobile-more-drawer"
+          aria-expanded={moreOpen}
+          onClick={() => setMoreOpen(true)}
+          className="flex min-h-12 min-w-0 flex-col items-center justify-center gap-1 rounded-md px-1 text-[11px] text-foreground/62"
+        >
+          <MoreHorizontal className="h-4 w-4" aria-hidden="true" strokeWidth={1.5} />
+          <span className="max-w-full truncate">{t("more")}</span>
+        </button>
+      </nav>
+
+      {moreOpen ? (
+        <div
+          className="fixed inset-0 z-40 bg-black/40 lg:hidden"
+          data-mobile-more-backdrop
+          onClick={() => setMoreOpen(false)}
+        >
+          <div
+            id="mobile-more-drawer"
+            className="absolute inset-x-0 bottom-0 max-h-[82vh] overflow-y-auto rounded-t-2xl bg-surface pb-[calc(1rem+env(safe-area-inset-bottom))] pt-4 shadow-2xl"
+            onClick={(event) => event.stopPropagation()}
           >
-            <span className="relative">
-              <item.icon className="h-4 w-4" aria-hidden="true" strokeWidth={1.5} />
-              {item.href === "/dashboard" && regulationUpdateCount > 0 ? (
-                <span className="absolute -right-2 -top-2 h-2 w-2 rounded-full bg-danger" />
-              ) : null}
-            </span>
-            <span className="max-w-full truncate">{t(item.labelKey)}</span>
-          </Link>
-        );
-      })}
-    </nav>
+            <div className="mx-auto mb-4 h-1 w-10 rounded-full bg-border" />
+            {navigation.map((group) => (
+              <div key={group.sectionKey} className="mb-2">
+                <p className="px-5 pb-1 pt-2 text-[11px] font-semibold uppercase text-foreground/40">
+                  {t(`sections.${group.sectionKey}`)}
+                </p>
+                {group.items.map((item) => {
+                  const active = isActivePath(pathname, item.href);
+                  const locked = isPreIntake && Boolean(item.lockedUntilIntake);
+
+                  return (
+                    <Link
+                      key={item.href}
+                      href={locked ? "#" : item.href}
+                      aria-disabled={locked}
+                      tabIndex={locked ? -1 : undefined}
+                      onClick={() => setMoreOpen(false)}
+                      className={`flex h-12 items-center gap-3 px-5 text-sm ${
+                        locked
+                          ? "pointer-events-none text-foreground/35 opacity-45"
+                          : active
+                          ? "font-medium text-primary"
+                          : "text-foreground"
+                      }`}
+                    >
+                      <item.icon
+                        className="h-4 w-4 shrink-0"
+                        aria-hidden="true"
+                        strokeWidth={1.5}
+                      />
+                      <span className="min-w-0 truncate">{t(item.labelKey)}</span>
+                    </Link>
+                  );
+                })}
+              </div>
+            ))}
+          </div>
+        </div>
+      ) : null}
+    </>
   );
 }

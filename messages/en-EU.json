@@ -23,6 +23,7 @@
     "clients": "Clients",
     "team": "Team",
     "settings": "Settings",
+    "more": "More",
     "lockedUntilIntake": "Available after intake"
   },
   "shell": {
@@ -1707,6 +1708,7 @@
       "demo": "Demo",
       "regulations": "EU Regulations",
       "blog": "Blog",
+      "compare": "Compare",
       "earlyAccess": "Early access",
       "about": "About",
       "pricing": "Pricing",
@@ -1824,6 +1826,8 @@
     "featuresTag": "Key features",
     "featuresTitle": "Compliance built for IT and compliance teams.",
     "featuresBody": "Connect local and global infrastructure. Controls are mapped to local and international standards.",
+    "regulatoryProfileCta": "Find your regulatory profile →",
+    "compareCta": "Compare Splnit.eu with alternatives",
     "offerTitle": "Offer for the first 10 companies.",
     "offerBody": "Splnit.eu is in early access. The first design partners get the SME plan free for 12 months and three weeks of guided onboarding directly with the founder.",
     "offerCta": "View early access",
@@ -1877,7 +1881,9 @@
       "other": "Other"
     },
     "cta": "Get overview",
+    "loading": "Sending",
     "success": "Sent. Your overview will arrive shortly.",
+    "error": "The email could not be saved. Please try again.",
     "placeholder": "work@company.eu",
     "footnote": "No credit card · Preview results · Unsubscribe anytime"
   },
@@ -1892,6 +1898,7 @@
     "comparisonTag": "Feature comparison",
     "comparisonTitle": "Choose by automation depth.",
     "comparisonDocumentsNote": "Core templates are free for everyone on the regulation pages. Generating pre-filled documents from platform data is included in paid plans.",
+    "comparisonPageCta": "Compare with alternatives →",
     "faqTag": "FAQ",
     "faqTitle": "Common questions",
     "finalTitle": "Start free, then upgrade in the app.",
@@ -2020,6 +2027,137 @@
       "cancelDataAnswer": "You have 30 days to export all data. After that, it is permanently deleted."
     }
   },
+  "compare": {
+    "metadata": {
+      "title": "Comparison | Splnit.eu vs regfor.cz, cybreg.cz, Vanta/Drata, and Excel",
+      "description": "Comparison of Splnit.eu with regfor.cz, cybreg.cz, Vanta/Drata, and manual Excel workflows for Czech NIS2, GDPR, and ISO 27001 work."
+    },
+    "jsonLdName": "Splnit.eu compliance tool comparison",
+    "eyebrow": "Tool comparison",
+    "title": "Where Splnit.eu makes sense next to general GRC tools.",
+    "subtitle": "This page compares publicly verifiable capabilities and real product features only. For competitors, missing public evidence is labelled as such instead of being treated as proof that a feature does not exist.",
+    "primaryCta": "View pricing",
+    "secondaryCta": "Open NIS2 resources",
+    "featureColumn": "Capability",
+    "columns": {
+      "splnit": "Splnit.eu",
+      "regfor": "regfor.cz",
+      "cybreg": "cybreg.cz",
+      "vantaDrata": "Vanta / Drata",
+      "manual": "Excel / manual"
+    },
+    "evidenceNote": "Competitor status is based on public product pages reviewed in May 2026. Where public evidence is missing, we say “not publicly documented” instead of claiming the feature is absent.",
+    "whyTag": "Czech-first moat",
+    "whyTitle": "Splnit.eu is built for Czech regulation and accounting reality.",
+    "whyBody": "The difference is not generic GRC tracking. It is the combination of Czech NIS2 outputs, local ERP workspaces, CZK self-serve pricing, and a client portal for advisors.",
+    "proofPoints": [
+      "Pohoda, Money S3, Helios, and ABRA Flexi are first-class product scope.",
+      "Lower-obligation outputs are mapped to Decree No. 410/2025 Coll.",
+      "Pricing is monthly, in CZK, and tied to production Stripe plans.",
+      "DOCX/XLSX templates are available without registration."
+    ],
+    "rows": [
+      {
+        "feature": "Czech ERP integrations (Pohoda, Money S3, Helios, ABRA Flexi)",
+        "splnit": { "status": "yes", "text": "Workspaces for Czech ERP systems" },
+        "regfor": { "status": "notPublic", "text": "Not publicly documented for these ERPs" },
+        "cybreg": { "status": "notPublic", "text": "Not publicly documented for these ERPs" },
+        "vantaDrata": { "status": "notPublic", "text": "Czech ERP connectors are not publicly listed" },
+        "manual": { "status": "manual", "text": "Manual export/import" }
+      },
+      {
+        "feature": "Czech NIS2 output for Decree No. 410/2025 Coll.",
+        "splnit": { "status": "yes", "text": "Outputs mapped to 410/2025 Coll." },
+        "regfor": { "status": "partial", "text": "NIS2/ZKB public; 410 export not verified" },
+        "cybreg": { "status": "partial", "text": "ZKB/NIS2 public; 410 export not verified" },
+        "vantaDrata": { "status": "notPublic", "text": "General frameworks, not Czech 410 output" },
+        "manual": { "status": "manual", "text": "Depends on your template or advisor" }
+      },
+      {
+        "feature": "SMB self-serve pricing in CZK",
+        "splnit": { "status": "yes", "text": "0 Kč, 490 Kč/month, 1,990 Kč/month" },
+        "regfor": { "status": "notPublic", "text": "Public CZK self-serve pricing not found" },
+        "cybreg": { "status": "notPublic", "text": "Public CZK self-serve pricing not found" },
+        "vantaDrata": { "status": "notPublic", "text": "Usually quote-based" },
+        "manual": { "status": "partial", "text": "Low tool cost, high internal time" }
+      },
+      {
+        "feature": "MSP/Agency portal for client organisations",
+        "splnit": { "status": "yes", "text": "Agency model, client organisations, and invites" },
+        "regfor": { "status": "notPublic", "text": "Not publicly documented" },
+        "cybreg": { "status": "notPublic", "text": "Not publicly documented" },
+        "vantaDrata": { "status": "notPublic", "text": "Czech MSP client portal not verified" },
+        "manual": { "status": "manual", "text": "Separate folders and sheets per client" }
+      },
+      {
+        "feature": "Automated evidence collection",
+        "splnit": { "status": "yes", "text": "Connectors, checks, and evidence archive" },
+        "regfor": { "status": "partial", "text": "Tasks/risks public; connector evidence not verified" },
+        "cybreg": { "status": "partial", "text": "Process automation public; connector evidence not verified" },
+        "vantaDrata": { "status": "yes", "text": "Broad cloud/SaaS evidence automation" },
+        "manual": { "status": "manual", "text": "Screenshots and files by hand" }
+      },
+      {
+        "feature": "Free templates without registration",
+        "splnit": { "status": "yes", "text": "DOCX/XLSX templates in a public pack" },
+        "regfor": { "status": "notPublic", "text": "Not publicly documented" },
+        "cybreg": { "status": "notPublic", "text": "Not publicly documented" },
+        "vantaDrata": { "status": "notPublic", "text": "Public Czech template pack not verified" },
+        "manual": { "status": "manual", "text": "Own templates without maintenance" }
+      }
+    ]
+  },
+  "blog": {
+    "eyebrow": "Blog",
+    "title": "EU compliance guides for Czech companies",
+    "subtitle": "Practical articles about NIS2, GDPR, the EU AI Act, and ISO 27001.",
+    "readMore": "Read more →",
+    "empty": "No articles have been published yet."
+  },
+  "partners": {
+    "metadata": {
+      "title": "Agency plan for MSPs and compliance advisors | Splnit.eu",
+      "description": "Splnit.eu Agency plan for MSPs, advisors, and agencies managing compliance across multiple client workspaces."
+    },
+    "jsonLdName": "Splnit.eu Agency plan",
+    "eyebrow": "For MSPs and advisors",
+    "title": "Manage client compliance workspaces from one portal.",
+    "subtitle": "The Agency plan is for advisory and MSP teams that need separate client organisations, white-label outputs, and client invites without copying evidence by hand.",
+    "primaryCta": "Start Agency",
+    "secondaryCta": "Compare plans",
+    "planSummary": "Up to {clients} client organisations, unlimited consultants, and white-label branding for the client portal.",
+    "benefits": [
+      {
+        "icon": "solar:buildings-3-linear",
+        "title": "Separate client organisations",
+        "body": "Each client has its own workspace, regulation status, evidence, vendors, incidents, and exports. Advisors see the portfolio from the agency dashboard."
+      },
+      {
+        "icon": "solar:palette-linear",
+        "title": "White-label branding",
+        "body": "Agency settings support logo, display name, colours, and client invites so the portal fits the advisory service."
+      },
+      {
+        "icon": "solar:user-check-linear",
+        "title": "Client and consultant invites",
+        "body": "Client invites and consultant roles support collaboration without sharing one account or sending files manually."
+      },
+      {
+        "icon": "solar:file-check-linear",
+        "title": "Evidence and exports in one flow",
+        "body": "The same scope as the SME plan: frameworks, controls, evidence, templates, and exports for customer or regulatory proof."
+      }
+    ],
+    "workflowTag": "How it works",
+    "workflowTitle": "The agency creates clients, the client fills data, Splnit.eu keeps the evidence trail.",
+    "workflowBody": "This page describes the existing Agency portal. It does not claim certifications, customers, or integration capabilities that are not in the product.",
+    "workflow": [
+      "Create an Agency workspace and set advisory brand settings.",
+      "Invite a client organisation or create the client workspace yourself.",
+      "The client completes intake and you select relevant frameworks.",
+      "Evidence, tasks, incidents, and exports stay separated by client."
+    ]
+  },
   "regulations": {
     "pageName": "Splnit.eu EU Regulations",
     "jsonLdDescription": "Overview of EU regulations and compliance automation in Splnit.eu.",
@@ -2032,6 +2170,7 @@
     "downloadTitle": "Review free resources",
     "downloadSubtitle": "Indicative overviews, draft templates, and checklists for review.",
     "downloadCta": "Open resource pack",
+    "profileCta": "Find your regulatory profile →",
     "resources": [
       "NIS2 checklist",
       "EU AI Act overview",
