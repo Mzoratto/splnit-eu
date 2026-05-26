@@ -23,6 +23,7 @@
     "clients": "Klienti",
     "team": "Tým",
     "settings": "Nastavení",
+    "more": "Více",
     "lockedUntilIntake": "Dostupné po intake"
   },
   "shell": {
@@ -1707,6 +1708,7 @@
       "demo": "Demo",
       "regulations": "EU Předpisy",
       "blog": "Blog",
+      "compare": "Srovnání",
       "earlyAccess": "Předběžný přístup",
       "about": "O nás",
       "pricing": "Ceník",
@@ -1824,6 +1826,8 @@
     "featuresTag": "Klíčové funkce",
     "featuresTitle": "Compliance pro IT a compliance týmy.",
     "featuresBody": "Kontroly jsou mapované na lokální i mezinárodní standardy.",
+    "regulatoryProfileCta": "Zjistit svůj regulatorní profil →",
+    "compareCta": "Porovnat Splnit.eu s alternativami",
     "offerTitle": "Nabídka pro prvních 10 firem.",
     "offerBody": "Splnit.eu je v předběžném přístupu. První design partneři získají SME plán na 12 měsíců zdarma a tři týdny řízeného onboardingu přímo se zakladatelem.",
     "offerCta": "Zobrazit předběžný přístup",
@@ -1877,7 +1881,9 @@
       "other": "Jiné"
     },
     "cta": "Získat přehled",
+    "loading": "Odesílám",
     "success": "Odesláno. Přehled vám přijde brzy.",
+    "error": "E-mail se nepodařilo uložit. Zkuste to prosím znovu.",
     "placeholder": "pracovni@firma.cz",
     "footnote": "Žádná kreditní karta · Náhled výsledků · Odhlášení kdykoliv"
   },
@@ -1892,6 +1898,7 @@
     "comparisonTag": "Srovnání funkcí",
     "comparisonTitle": "Vyberte podle hloubky automatizace.",
     "comparisonDocumentsNote": "Základní šablony jsou zdarma pro všechny na stránkách předpisů. Generování předvyplněných dokumentů z dat platformy je součástí placených plánů.",
+    "comparisonPageCta": "Porovnat s alternativami →",
     "faqTag": "FAQ",
     "faqTitle": "Časté otázky",
     "finalTitle": "Začněte zdarma, upgrade provedete v aplikaci.",
@@ -2020,6 +2027,137 @@
       "cancelDataAnswer": "Máte 30 dní na export veškerých dat. Poté jsou trvale smazána."
     }
   },
+  "compare": {
+    "metadata": {
+      "title": "Srovnání | Splnit.eu vs regfor.cz, cybreg.cz, Vanta/Drata a Excel",
+      "description": "Srovnání Splnit.eu s regfor.cz, cybreg.cz, Vanta/Drata a ručním Excelem pro české NIS2, GDPR a ISO 27001 workflow."
+    },
+    "jsonLdName": "Srovnání compliance nástrojů Splnit.eu",
+    "eyebrow": "Srovnání nástrojů",
+    "title": "Kde Splnit.eu dává smysl oproti obecným GRC nástrojům.",
+    "subtitle": "Porovnáváme jen veřejně ověřitelné schopnosti a reálné funkce produktu. U konkurence neoznačujeme chybějící funkci jako fakt, pokud není veřejně doložitelná.",
+    "primaryCta": "Zobrazit ceník",
+    "secondaryCta": "Otevřít NIS2 zdroje",
+    "featureColumn": "Schopnost",
+    "columns": {
+      "splnit": "Splnit.eu",
+      "regfor": "regfor.cz",
+      "cybreg": "cybreg.cz",
+      "vantaDrata": "Vanta / Drata",
+      "manual": "Excel / ručně"
+    },
+    "evidenceNote": "Stav konkurence vychází z veřejných produktových stránek zkontrolovaných v květnu 2026. Kde není veřejný důkaz, uvádíme „veřejně nedoloženo“ místo tvrzení o absenci funkce.",
+    "whyTag": "Czech-first moat",
+    "whyTitle": "Splnit.eu je stavěné pro českou regulaci a účetní realitu.",
+    "whyBody": "Hlavní rozdíl není obecná GRC evidence. Je to kombinace českých NIS2 výstupů, lokálních ERP pracovních prostorů, CZK self-serve ceníku a klientského portálu pro poradce.",
+    "proofPoints": [
+      "Pohoda, Money S3, Helios a ABRA Flexi jsou první třída produktového rozsahu.",
+      "Výstupy pro nižší režim jsou mapované na vyhlášku č. 410/2025 Sb.",
+      "Ceník je měsíční, v Kč a navázaný na produkční Stripe plány.",
+      "Šablony v DOCX/XLSX jsou dostupné bez registrace."
+    ],
+    "rows": [
+      {
+        "feature": "České ERP integrace (Pohoda, Money S3, Helios, ABRA Flexi)",
+        "splnit": { "status": "yes", "text": "Pracovní prostory pro české ERP" },
+        "regfor": { "status": "notPublic", "text": "Veřejně nedoloženo pro tyto ERP" },
+        "cybreg": { "status": "notPublic", "text": "Veřejně nedoloženo pro tyto ERP" },
+        "vantaDrata": { "status": "notPublic", "text": "České ERP konektory nejsou veřejně uvedené" },
+        "manual": { "status": "manual", "text": "Ruční export/import" }
+      },
+      {
+        "feature": "Český NIS2 výstup podle vyhlášky č. 410/2025 Sb.",
+        "splnit": { "status": "yes", "text": "Výstupy mapované na 410/2025 Sb." },
+        "regfor": { "status": "partial", "text": "NIS2/ZKB veřejně, export 410 nedoložen" },
+        "cybreg": { "status": "partial", "text": "ZKB/NIS2 veřejně, export 410 nedoložen" },
+        "vantaDrata": { "status": "notPublic", "text": "Obecné frameworky, ne český 410 výstup" },
+        "manual": { "status": "manual", "text": "Podle vlastní šablony nebo poradce" }
+      },
+      {
+        "feature": "SMB self-serve ceník v Kč",
+        "splnit": { "status": "yes", "text": "0 Kč, 490 Kč/měsíc, 1 990 Kč/měsíc" },
+        "regfor": { "status": "notPublic", "text": "Veřejný CZK self-serve ceník nenalezen" },
+        "cybreg": { "status": "notPublic", "text": "Veřejný CZK self-serve ceník nenalezen" },
+        "vantaDrata": { "status": "notPublic", "text": "Typicky nabídka na míru" },
+        "manual": { "status": "partial", "text": "Nízký náklad nástroje, vysoký interní čas" }
+      },
+      {
+        "feature": "MSP/Agency portál pro klientské organizace",
+        "splnit": { "status": "yes", "text": "Agency model, klientské organizace a pozvánky" },
+        "regfor": { "status": "notPublic", "text": "Veřejně nedoloženo" },
+        "cybreg": { "status": "notPublic", "text": "Veřejně nedoloženo" },
+        "vantaDrata": { "status": "notPublic", "text": "Český MSP klientský portál nedoložen" },
+        "manual": { "status": "manual", "text": "Oddělené složky a tabulky pro každého klienta" }
+      },
+      {
+        "feature": "Automatizovaný sběr důkazů",
+        "splnit": { "status": "yes", "text": "Konektory, kontroly a archiv evidence" },
+        "regfor": { "status": "partial", "text": "Veřejně popsané úkoly/rizika; konektorová evidence nedoložena" },
+        "cybreg": { "status": "partial", "text": "Veřejně popsaná procesní automatizace; konektorová evidence nedoložena" },
+        "vantaDrata": { "status": "yes", "text": "Široká cloud/SaaS evidence automatizace" },
+        "manual": { "status": "manual", "text": "Screenshoty a soubory ručně" }
+      },
+      {
+        "feature": "Bezplatné šablony bez registrace",
+        "splnit": { "status": "yes", "text": "DOCX/XLSX šablony ve veřejném balíku" },
+        "regfor": { "status": "notPublic", "text": "Veřejně nedoloženo" },
+        "cybreg": { "status": "notPublic", "text": "Veřejně nedoloženo" },
+        "vantaDrata": { "status": "notPublic", "text": "Veřejný CZ balík šablon nedoložen" },
+        "manual": { "status": "manual", "text": "Vlastní šablony bez údržby" }
+      }
+    ]
+  },
+  "blog": {
+    "eyebrow": "Blog",
+    "title": "Průvodce EU compliance pro české firmy",
+    "subtitle": "Praktické články o NIS2, GDPR, EU AI Act a ISO 27001.",
+    "readMore": "Číst dál →",
+    "empty": "Zatím nejsou publikované žádné články."
+  },
+  "partners": {
+    "metadata": {
+      "title": "Agency plán pro MSP a compliance poradce | Splnit.eu",
+      "description": "Agency plán Splnit.eu pro MSP, poradce a agentury, které spravují compliance více klientů v jednom portálu."
+    },
+    "jsonLdName": "Splnit.eu Agency plán",
+    "eyebrow": "Pro MSP a poradce",
+    "title": "Spravujte klientské compliance workspace z jednoho portálu.",
+    "subtitle": "Agency plán je určený pro poradce a MSP týmy, které potřebují oddělené klientské organizace, white-label výstupy a pozvánky pro klienty bez ručního kopírování evidence.",
+    "primaryCta": "Spustit Agency",
+    "secondaryCta": "Porovnat plány",
+    "planSummary": "Až {clients} klientských organizací, neomezený počet konzultantů a white-label branding pro klientský portál.",
+    "benefits": [
+      {
+        "icon": "solar:buildings-3-linear",
+        "title": "Klientské organizace odděleně",
+        "body": "Každý klient má vlastní workspace, stav předpisů, evidenci, dodavatele, incidenty a exporty. Poradce vidí portfolio z agenturního dashboardu."
+      },
+      {
+        "icon": "solar:palette-linear",
+        "title": "White-label branding",
+        "body": "Agenturní nastavení podporuje logo, zobrazovaný název, barvy a klientské pozvánky, aby výstup působil jako součást poradenské služby."
+      },
+      {
+        "icon": "solar:user-check-linear",
+        "title": "Pozvánky pro klienty a konzultanty",
+        "body": "Klientské pozvánky a konzultantské role umožňují spolupráci bez sdílení jednoho účtu nebo ručního předávání souborů."
+      },
+      {
+        "icon": "solar:file-check-linear",
+        "title": "Evidence a exporty v jednom toku",
+        "body": "Stejný produktový rozsah jako SME plán: frameworky, kontroly, důkazy, šablony a exporty pro zákaznické nebo regulatorní doložení."
+      }
+    ],
+    "workflowTag": "Jak to funguje",
+    "workflowTitle": "Agentura zakládá klienty, klient doplňuje data, Splnit.eu drží evidence trail.",
+    "workflowBody": "Stránka popisuje existující Agency portál. Netvrdí certifikace, zákazníky ani integrační kapacity, které nejsou v produktu.",
+    "workflow": [
+      "Založíte Agency workspace a nastavíte branding poradenské značky.",
+      "Pozvete klientskou organizaci nebo založíte klientský workspace sami.",
+      "Klient vyplní intake a vyberete relevantní frameworky.",
+      "Evidence, úkoly, incidenty a exporty zůstávají oddělené podle klienta."
+    ]
+  },
   "regulations": {
     "pageName": "Splnit.eu EU Předpisy",
     "jsonLdDescription": "Přehled EU předpisů pro české firmy a automatizace souladu v platformě Splnit.eu.",
@@ -2032,6 +2170,7 @@
     "downloadTitle": "Projděte si bezplatné zdroje",
     "downloadSubtitle": "Orientační přehledy, pracovní šablony a checklisty ke kontrole.",
     "downloadCta": "Otevřít balík zdrojů",
+    "profileCta": "Zjistit svůj regulatorní profil →",
     "resources": [
       "NIS2 checklist",
       "EU AI Act přehled",

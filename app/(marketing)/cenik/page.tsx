@@ -111,7 +111,14 @@ export default async function PricingPage() {
             <p className="mx-auto mt-4 max-w-3xl text-center text-sm leading-6 text-foreground/58">
               {t("comparisonDocumentsNote")}
             </p>
-          </div>
+            <div className="mt-6 text-center">
+              <Link
+                href={getLocalizedMarketingPath("/srovnani", locale)}
+                className="text-sm text-foreground/64 underline underline-offset-4 hover:text-foreground"
+              >
+                {t("comparisonPageCta")}
+              </Link>
+            </div>
         </section>
 
         <section className="border-t border-border bg-white py-20">

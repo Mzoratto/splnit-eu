@@ -68,11 +68,13 @@ const badgeClass: Record<BadgeState, string> = {
 };
 
 export function LeadCapture({
+  source = "splnit.eu lead capture",
   title,
   subtitle,
   cta,
   resources,
 }: {
+  source?: string;
   title?: string;
   subtitle?: string;
   cta?: string;
@@ -84,7 +86,10 @@ export function LeadCapture({
     "it",
   ]);
   const [activatedBadge, setActivatedBadge] = useState<string | null>("nis2");
-  const [submitted, setSubmitted] = useState(false);
+  const [email, setEmail] = useState("");
+  const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">(
+    "idle",
+  );
   const resolvedTitle = title ?? t("title");
   const resolvedSubtitle = subtitle ?? t("subtitle");
   const resolvedCta = cta ?? t("cta");
@@ -109,9 +114,25 @@ export function LeadCapture({
     setActivatedBadge(firstActive?.id ?? null);
   }
 
-  function handleSubmit(event: FormEvent<HTMLFormElement>) {
+  async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    setSubmitted(true);
+    setStatus("loading");
+
+    const response = await fetch("/api/newsletter", {
+      body: JSON.stringify({ email, source }),
+      headers: {
+        "Content-Type": "application/json",
+      },
+      method: "POST",
+    });
+
+    if (response.ok) {
+      setEmail("");
+      setStatus("success");
+      return;
+    }
+
+    setStatus("error");
   }
 
   return (
@@ -236,7 +257,7 @@ export function LeadCapture({
         </div>
       )}
 
-      {submitted ? (
+      {status === "success" ? (
         <div className="mx-auto flex max-w-md items-center justify-center gap-1.5 rounded-full border border-[var(--status-pass-border)] bg-[var(--status-pass-subtle)] px-4 py-2 text-sm font-semibold text-[var(--status-pass)]">
           <Icon icon="solar:check-circle-linear" aria-hidden="true" />
           {t("success")}
@@ -249,17 +270,30 @@ export function LeadCapture({
           <input
             type="email"
             required
+            value={email}
+            onChange={(event) => {
+              setEmail(event.target.value);
+              if (status === "error") {
+                setStatus("idle");
+              }
+            }}
             placeholder={t("placeholder")}
             className="min-h-11 min-w-0 flex-1 rounded-lg border border-border bg-white px-5 py-2.5 text-sm text-foreground shadow-sm placeholder:text-foreground/38 focus:border-transparent focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
           <button
             type="submit"
+            disabled={status === "loading"}
             className="min-h-11 rounded-lg bg-primary px-6 py-2.5 text-sm font-semibold text-white shadow-sm transition-colors hover:bg-[var(--accent-hover)]"
           >
-            {resolvedCta}
+            {status === "loading" ? t("loading") : resolvedCta}
           </button>
         </form>
       )}
+      {status === "error" ? (
+        <p className="mt-3 text-xs font-semibold text-[var(--status-fail)]">
+          {t("error")}
+        </p>
+      ) : null}
       <p className="mt-3 text-xs text-foreground/42">
         {t("footnote")}
       </p>

@@ -39,6 +39,8 @@ npm run db:generate
 
 For database-backed work, set `DATABASE_URL` in `.env.local` before running migrations, seeds, or knowledge-import scripts.
 
+Production Drizzle migrations must use a direct, unpooled database connection. Connection poolers such as PgBouncer do not support the DDL transactions that migrations need. When running `npx drizzle-kit migrate` against production, use the production `DATABASE_URL_UNPOOLED` value as `DATABASE_URL`.
+
 ## Project Shape
 
 Core modules:

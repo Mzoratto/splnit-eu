@@ -190,6 +190,15 @@ export default async function RegulationsPage() {
               cta={t("downloadCta")}
               resources={resources}
             />
+            <div className="mt-6 text-center">
+              <Link
+                href={getLocalizedMarketingPath("/nastroje/nis2-kalkulator", locale)}
+                className="inline-flex items-center gap-2 text-sm font-semibold text-primary hover:text-[var(--accent-hover)]"
+              >
+                {t("profileCta")}
+                <Icon icon="solar:arrow-right-linear" aria-hidden="true" />
+              </Link>
+            </div>
           </div>
         </section>
       </main>

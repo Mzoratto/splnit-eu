@@ -42,7 +42,7 @@ export function AppShell({
         regulationUpdateCount={regulationUpdateCount}
       />
       <div className="lg:pl-[220px]">
-        <header className="sticky top-0 z-[var(--z-sticky)] flex h-20 items-center justify-between border-b border-border bg-white/90 px-4 backdrop-blur-xl sm:px-6">
+        <header className="sticky top-0 z-[var(--z-sticky)] flex h-20 items-center justify-between border-b border-border bg-surface/90 px-4 backdrop-blur-xl sm:px-6">
           <div className="flex min-w-0 items-center gap-3 pr-3">
             <div className="min-w-0">
               <p className="truncate text-base font-semibold">{organisationName}</p>
@@ -77,7 +77,7 @@ export function AppShell({
           </div>
         </header>
         {plan === "free" && freePlanBannerVisible ? (
-          <div className="border-b border-border bg-blue-50 px-5 py-2 text-xs text-foreground/68">
+          <div className="border-b border-[var(--accent-border)] bg-[var(--accent-subtle)] px-5 py-2 text-xs text-foreground/68">
             <div className="flex w-full items-center gap-3">
               <span className="min-w-0 flex-1 truncate">
                 {t("freePlanBanner")}
@@ -99,7 +99,7 @@ export function AppShell({
             </div>
           </div>
         ) : null}
-        <main className="w-full px-4 py-6 sm:px-6 sm:py-8 lg:px-8 lg:pb-20">
+        <main className="w-full overflow-x-clip px-4 py-6 sm:px-6 sm:py-8 lg:px-8 lg:pb-20">
           {children}
         </main>
       </div>

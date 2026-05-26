@@ -33,6 +33,9 @@
 .clawpatch/
 .understand-anything/
 
+# generated review documents
+/docs/review/text-review-*.docx
+
 # debug
 npm-debug.log*
 yarn-debug.log*

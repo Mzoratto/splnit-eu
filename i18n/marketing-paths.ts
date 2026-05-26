@@ -45,6 +45,33 @@ export function toInternalMarketingPath(path: string) {
     return unprefixed.replace("/regulations", "/predpisy") + hash;
   }
 
+  if (unprefixed === "/compare" || unprefixed.startsWith("/compare/")) {
+    return unprefixed.replace("/compare", "/srovnani") + hash;
+  }
+
+  if (unprefixed === "/confronto" || unprefixed.startsWith("/confronto/")) {
+    return unprefixed.replace("/confronto", "/srovnani") + hash;
+  }
+
+  if (unprefixed === "/partners" || unprefixed.startsWith("/partners/")) {
+    return unprefixed.replace("/partners", "/partneri") + hash;
+  }
+
+  if (unprefixed === "/partner" || unprefixed.startsWith("/partner/")) {
+    return unprefixed.replace("/partner", "/partneri") + hash;
+  }
+
+  if (unprefixed === "/nis2-check" || unprefixed.startsWith("/nis2-check/")) {
+    return unprefixed.replace("/nis2-check", "/nastroje/nis2-kalkulator") + hash;
+  }
+
+  if (
+    unprefixed === "/nis2-calcolatore" ||
+    unprefixed.startsWith("/nis2-calcolatore/")
+  ) {
+    return unprefixed.replace("/nis2-calcolatore", "/nastroje/nis2-kalkulator") + hash;
+  }
+
   if (unprefixed === "/prezzi" || unprefixed.startsWith("/prezzi/")) {
     return unprefixed.replace("/prezzi", "/cenik") + hash;
   }
@@ -68,7 +95,11 @@ export function toInternalMarketingPath(path: string) {
     return unprefixed.replace("/strumenti", "/tools") + hash;
   }
 
-  if (unprefixed === "/nastroje" || unprefixed.startsWith("/nastroje/")) {
+  if (
+    unprefixed !== "/nastroje/nis2-kalkulator" &&
+    !unprefixed.startsWith("/nastroje/nis2-kalkulator/") &&
+    (unprefixed === "/nastroje" || unprefixed.startsWith("/nastroje/"))
+  ) {
     return unprefixed.replace("/nastroje", "/tools") + hash;
   }
 
@@ -94,6 +125,21 @@ export function getLocalizedMarketingPath(path: string, locale: Locale) {
 
     if (base === "/cenik" || base.startsWith("/cenik/")) {
       return `${prefix}${base.replace("/cenik", "/prezzi")}${hash}`;
+    }
+
+    if (base === "/srovnani" || base.startsWith("/srovnani/")) {
+      return `${prefix}${base.replace("/srovnani", "/confronto")}${hash}`;
+    }
+
+    if (base === "/partneri" || base.startsWith("/partneri/")) {
+      return `${prefix}${base.replace("/partneri", "/partner")}${hash}`;
+    }
+
+    if (
+      base === "/nastroje/nis2-kalkulator" ||
+      base.startsWith("/nastroje/nis2-kalkulator/")
+    ) {
+      return `${prefix}${base.replace("/nastroje/nis2-kalkulator", "/nis2-calcolatore")}${hash}`;
     }
 
     if (base === "/about" || base.startsWith("/about/")) {
@@ -126,6 +172,21 @@ export function getLocalizedMarketingPath(path: string, locale: Locale) {
 
     if (base === "/cenik" || base.startsWith("/cenik/")) {
       return `${prefix}${base.replace("/cenik", "/pricing")}${hash}`;
+    }
+
+    if (base === "/srovnani" || base.startsWith("/srovnani/")) {
+      return `${prefix}${base.replace("/srovnani", "/compare")}${hash}`;
+    }
+
+    if (base === "/partneri" || base.startsWith("/partneri/")) {
+      return `${prefix}${base.replace("/partneri", "/partners")}${hash}`;
+    }
+
+    if (
+      base === "/nastroje/nis2-kalkulator" ||
+      base.startsWith("/nastroje/nis2-kalkulator/")
+    ) {
+      return `${prefix}${base.replace("/nastroje/nis2-kalkulator", "/nis2-check")}${hash}`;
     }
 
     return `${prefix}${base}${hash}`;
