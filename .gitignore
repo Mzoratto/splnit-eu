@@ -35,6 +35,7 @@
 
 # generated review documents
 /docs/review/text-review-*.docx
+/scripts/generate-text-review-docx.py
 
 # debug
 npm-debug.log*
