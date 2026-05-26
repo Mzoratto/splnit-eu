@@ -108,6 +108,9 @@ export default async function PricingPage() {
               </h2>
             </div>
             <ComparisonTable />
+            <p className="mx-auto mt-4 max-w-3xl text-center text-sm leading-6 text-foreground/58">
+              {t("comparisonDocumentsNote")}
+            </p>
           </div>
         </section>
 

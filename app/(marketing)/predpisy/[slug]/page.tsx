@@ -280,27 +280,6 @@ export default async function RegulationDetailPage({
         ) : null}
 
         <TemplateSection regulationSlug={slug} variant="public" />
-
-        <section className="border-t border-zinc-200/50 bg-white py-16">
-          <div className="mx-auto max-w-5xl px-5">
-            <div className="rounded-[2rem] border border-blue-100 bg-blue-50/40 p-8 md:p-10">
-              <h2 className="text-2xl font-semibold tracking-[-0.03em] text-zinc-900">
-                {t("resourcesTitle")}
-              </h2>
-              <div className="mt-6 flex flex-wrap gap-2">
-                {framework.resources.map((resource) => (
-                  <Link
-                    key={resource}
-                    href={`mailto:hello@splnit.eu?subject=${encodeURIComponent(resource)}`}
-                    className="rounded-full border border-blue-100 bg-white px-4 py-2 text-sm font-medium text-zinc-700 transition-colors hover:border-blue-200 hover:text-blue-700"
-                  >
-                    {resource}
-                  </Link>
-                ))}
-              </div>
-            </div>
-          </div>
-        </section>
       </main>
     </MarketingShell>
   );
