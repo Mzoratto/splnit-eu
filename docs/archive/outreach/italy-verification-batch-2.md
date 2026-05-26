@@ -2,7 +2,7 @@
 
 Status: verification worksheet, not a send list.
 Date: 2026-05-05.
-Scope: priorities 11-20 from `docs/outreach/italy-outreach-verification-queue.md`.
+Scope: priorities 11-20 from `docs/archive/outreach/italy-outreach-verification-queue.md`.
 
 Result: 0 / 10 send-ready.
 

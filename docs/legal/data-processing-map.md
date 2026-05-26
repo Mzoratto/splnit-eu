@@ -48,6 +48,6 @@ Regulatory anchor:
 - Final legal entity details and DPO status.
 - Final controller/processor role matrix by operation.
 - Exact subprocessor list, locations, transfer mechanisms, and vendor DPA links.
-- Exact retention schedule and deletion/export process, using `docs/offboarding-runbook.md` as the current operational draft.
+- Exact retention schedule and deletion/export process, using `docs/operations/offboarding-runbook.md` as the current operational draft.
 - Production analytics decision: Vercel analytics only, PostHog, both, or neither.
 - Customer-facing DPA wording for audit, deletion/return, subprocessor changes, incident notification, and liability/SLA/payment terms.

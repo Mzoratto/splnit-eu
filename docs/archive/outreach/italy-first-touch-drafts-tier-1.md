@@ -2,13 +2,13 @@
 
 Status: draft copy only, not sent.
 Date: 2026-05-05.
-Source: `docs/outreach/italy-tier-1-contact-pass.md`.
+Source: `docs/archive/outreach/italy-tier-1-contact-pass.md`.
 
 These drafts are written for manual review. Do not send until:
 
 1. The exact recipient and route are verified.
 2. The sender block contains the real OSVČ name, IČO, phone and LinkedIn URL.
-3. The `docs/outreach/italy-target-tracker.csv` row is updated with the verified contact, while keeping `status=not_sent`.
+3. The `docs/archive/outreach/paused-italy-2026-05/italy-target-tracker.csv` row is updated with the verified contact, while keeping `status=not_sent`.
 
 ## Cubbit
 
@@ -108,4 +108,4 @@ Splnit.eu - [Your Name], OSVČ, IČO [number]
 - Replace `[Your Name]`, `[Telefono]`, `[LinkedIn]`, `IČO [number]`, `[Cognome]`.
 - Decide whether to keep `OSVČ / IČO` in the sender block or localize with a short parenthetical explanation after sender details are finalized.
 - If the recipient is contacted through LinkedIn instead of email, shorten the first paragraph and keep the same company-specific hook.
-- After sending, update only that row in `docs/outreach/italy-target-tracker.csv` with `status=sent`, `first_touch_date`, and contact metadata.
+- After sending, update only that row in `docs/archive/outreach/paused-italy-2026-05/italy-target-tracker.csv` with `status=sent`, `first_touch_date`, and contact metadata.

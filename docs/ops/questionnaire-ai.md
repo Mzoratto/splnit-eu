@@ -48,7 +48,7 @@ As of 2026-05-14, production closeout checks show:
 - Vercel Production has `OPENAI_API_KEY` present.
 - `/api/readiness` reports `questionnaires=configured`.
 - The provider registry in `lib/questionnaires/provider.ts` supports OpenAI only; Anthropic is not a production provider unless code/config changes.
-- Prior production smoke evidence in `docs/questionnaire-flow-audit.md` proves one controlled live OpenAI questionnaire generation/review path with model `gpt-4.1-mini-2025-04-14`.
+- Prior production smoke evidence in `docs/audits/questionnaire-flow-audit.md` proves one controlled live OpenAI questionnaire generation/review path with model `gpt-4.1-mini-2025-04-14`.
 
 Do not expose API keys, prompt payloads, database URLs, generated artifact IDs, or customer workspace content in public proof. Reporting the model name and high-level result is acceptable.
 

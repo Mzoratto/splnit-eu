@@ -25,16 +25,16 @@ Public legal copy source, intentionally not edited in this pass:
 
 Counsel handoff/supporting docs:
 
-- `docs/legal-review.md`
-- `docs/operator-identity-dpo-closeout.md`
-- `docs/subprocessors.md`
-- `docs/retention-policy.md`
-- `docs/data-processing-map.md`
-- `docs/offboarding-runbook.md`
-- `docs/audit-log-export-sop.md`
+- `docs/legal/legal-review.md`
+- `docs/legal/operator-identity-dpo-closeout.md`
+- `docs/legal/subprocessors.md`
+- `docs/legal/retention-policy.md`
+- `docs/legal/data-processing-map.md`
+- `docs/operations/offboarding-runbook.md`
+- `docs/operations/audit-log-export-sop.md`
 - `docs/ops/questionnaire-ai.md`
-- `docs/questionnaire-flow-audit.md`
-- `docs/launch-checklist.md`
+- `docs/audits/questionnaire-flow-audit.md`
+- `docs/operations/launch-checklist.md`
 
 Automated copy checks run during the closeout work:
 
@@ -59,15 +59,15 @@ Public page update order after approval:
 
 | Area | Current evidence/status | Required owner/counsel decision | Public-page impact |
 | --- | --- | --- | --- |
-| Operator identity | ARES search for `Marco Zoratto` returned one economic subject; `docs/operator-identity-dpo-closeout.md` records ARES-verified name, IČO, ARES URL, seat, registration status, and VAT-source status. Owner accepted the ARES-verified operator identity/address for public/contract use, subject to counsel/public-copy wording. | Counsel should approve exact legal-page wording and VAT/DIČ treatment. | Replace draft operator-completion wording in `/soukromi`, `/dpa`, and `/podminky`. |
+| Operator identity | ARES search for `Marco Zoratto` returned one economic subject; `docs/legal/operator-identity-dpo-closeout.md` records ARES-verified name, IČO, ARES URL, seat, registration status, and VAT-source status. Owner accepted the ARES-verified operator identity/address for public/contract use, subject to counsel/public-copy wording. | Counsel should approve exact legal-page wording and VAT/DIČ treatment. | Replace draft operator-completion wording in `/soukromi`, `/dpa`, and `/podminky`. |
 | DPO / privacy contact | DPO status remains under Czech-law legal review. Owner accepted `hello@splnit.eu` as the privacy/support/security contact, subject to counsel/public-copy wording. | Decide whether a DPO is required, voluntarily appointed, or not appointed; confirm final contact wording. | Add final DPO/contact wording to privacy and DPA pages. |
-| Production subprocessors | `docs/subprocessors.md` has concrete evidence links and production facts, but enabled vendors remain `owner check`, `owner + counsel check`, or `counsel check`, not `approved`. | Approve or replace evidence for Vercel/Blob, Neon, Clerk, Stripe, Resend, Inngest, and OpenAI; confirm transfer mechanisms and subprocessor-change notice handling. | Publish a short customer-readable active subprocessor list; do not copy internal env names, branch IDs, or security details. |
+| Production subprocessors | `docs/legal/subprocessors.md` has concrete evidence links and production facts, but enabled vendors remain `owner check`, `owner + counsel check`, or `counsel check`, not `approved`. | Approve or replace evidence for Vercel/Blob, Neon, Clerk, Stripe, Resend, Inngest, and OpenAI; confirm transfer mechanisms and subprocessor-change notice handling. | Publish a short customer-readable active subprocessor list; do not copy internal env names, branch IDs, or security details. |
 | Neon backups/PITR | Neon production branch/region/history retention are confirmed, but interpretation of `history_retention_seconds=86400` and separate backup commitments remains open. | Confirm PITR/backup retention, backup/storage location, restore commitment, and deletion/backups effect. | Finalize retention and DPA backup wording. |
 | Vercel logs/analytics/Speed Insights retention | Live consent-gated Web Analytics and Speed Insights collection endpoints returned HTTP 200, but account-level runtime log/analytics/speed retention/export settings still need confirmation. | Confirm Vercel runtime log retention, analytics retention/export windows, Speed Insights retention/export windows, and whether public cookie wording fully matches the enabled setup. | Update `/cookies`, `/soukromi`, and subprocessor wording for optional analytics. |
 | OpenAI questionnaire AI | Production env/readiness confirms OpenAI enabled; internal docs now restrict broad use pending terms/notice approval. OpenAI policy URLs returned HTTP 403 from this environment and require browser/account verification. | Confirm OpenAI DPA/business terms, API data retention, training/use-of-inputs settings, support/log retention, subprocessors, transfer mechanism, and customer opt-in/human-review wording. | Add/adjust privacy, DPA, and product notice wording before customer use beyond controlled/approved accounts. |
 | Inngest event retention/DPA | Security/privacy docs are linked; public DPA and event-retention docs were not found. | Confirm signed/account DPA, processing region, event retention, payload minimisation, and transfer mechanism. | Finalize active subprocessor and retention wording. |
 | Clerk, Stripe, Resend account terms/retention | Public evidence links are attached, but account/product retention and role details remain open. | Confirm Clerk processing/log/session retention; Stripe role split, tax/invoice retention, refunds/cancellation terms; Resend sending region, log/suppression/bounce retention. | Finalize privacy, DPA, terms, and subprocessor list. |
-| Terms commercial terms | Owner decided customer scope is B2B-only: companies, entrepreneurs, and organisations. `docs/legal-review.md` still flags liability cap, SLA, refund/cancellation, governing law, jurisdiction, and exact consumer-exclusion wording. | Decide Czech-first governing law/jurisdiction, cancellation/refund handling, liability cap, SLA/support commitments, and counsel-approved B2B/consumer-exclusion wording. | Finalize `/podminky`; do not publish vague draft terms as final customer contract. |
+| Terms commercial terms | Owner decided customer scope is B2B-only: companies, entrepreneurs, and organisations. `docs/legal/legal-review.md` still flags liability cap, SLA, refund/cancellation, governing law, jurisdiction, and exact consumer-exclusion wording. | Decide Czech-first governing law/jurisdiction, cancellation/refund handling, liability cap, SLA/support commitments, and counsel-approved B2B/consumer-exclusion wording. | Finalize `/podminky`; do not publish vague draft terms as final customer contract. |
 | Special-category evidence policy | Legal review still asks whether customer-uploaded evidence may include special categories of personal data. | Decide whether to prohibit special-category data in uploads, require customer responsibility controls, or support it under additional terms. | Add acceptable-use/privacy/DPA restrictions and product notices if needed. |
 | Incident/support timelines | Legal review still flags notification commitments and support timelines. | Confirm incident-notification promise, support route, severity handling, and whether any SLA exists. | Update privacy/DPA/terms and support wording. |
 
@@ -75,8 +75,8 @@ Public page update order after approval:
 
 | Area | Current evidence/status | Closeout needed |
 | --- | --- | --- |
-| Offboarding/deletion runbook | `docs/offboarding-runbook.md` exists and maps export/deletion/residual vendor tasks; AI residual vendor wording is aligned to the current OpenAI provider. | Have counsel/support owner approve the process, including residual vendor-retention steps. |
-| Audit log export SOP | `docs/audit-log-export-sop.md` exists and covers pagination and support access constraints. | Confirm support-access policy, retention of exported CSVs, and evidence handling for customer requests. |
+| Offboarding/deletion runbook | `docs/operations/offboarding-runbook.md` exists and maps export/deletion/residual vendor tasks; AI residual vendor wording is aligned to the current OpenAI provider. | Have counsel/support owner approve the process, including residual vendor-retention steps. |
+| Audit log export SOP | `docs/operations/audit-log-export-sop.md` exists and covers pagination and support access constraints. | Confirm support-access policy, retention of exported CSVs, and evidence handling for customer requests. |
 | Public disabled-vendor wording | Loops, Upstash, Sentry, PostHog, Anthropic, Cloudflare, BetterStack, and external backup storage are not active production subprocessors unless enabled later. | Ensure public legal pages do not describe disabled vendors as active production processing. Use conditional wording only if counsel approves. |
 | Italy-specific policy templates | Italian policy template readiness remains blocked until human/legal review promotes draft templates. | Keep Italy as localized/secondary legal layer until advisor decisions are recorded. |
 | Czech legal route smoke | Copy hygiene checks pass, but final public legal routes should be browser-checked after approved edits. | After edits, verify the actual Czech pages render approved text and no draft wording remains. |
@@ -104,28 +104,28 @@ Do not claim:
 Recommended handoff bundle:
 
 1. `lib/legal/legal-page-copy.ts` - current public legal draft copy for Czech/English/Italian.
-2. `docs/legal-review.md` - original counsel handoff checklist.
-3. `docs/operator-identity-dpo-closeout.md` - exact owner/counsel decision packet for OSVČ identity, privacy contact, and DPO status.
-4. `docs/final-czech-legal-review-checklist.md` - final Czech-first publication gate and P0/P1 blockers.
-5. `docs/subprocessors.md` - production vendor facts, evidence links, and remaining DPA/retention gaps.
-6. `docs/data-processing-map.md` - working processing map / Article 30 input.
-7. `docs/retention-policy.md` - proposed retention schedule and open retention decisions.
-8. `docs/offboarding-runbook.md` - export/deletion and residual vendor-retention runbook.
-9. `docs/audit-log-export-sop.md` - audit export support procedure.
-10. `docs/ops/questionnaire-ai.md` and `docs/questionnaire-flow-audit.md` - OpenAI questionnaire proof boundary and AI review policy.
+2. `docs/legal/legal-review.md` - original counsel handoff checklist.
+3. `docs/legal/operator-identity-dpo-closeout.md` - exact owner/counsel decision packet for OSVČ identity, privacy contact, and DPO status.
+4. `docs/legal/final-czech-legal-review-checklist.md` - final Czech-first publication gate and P0/P1 blockers.
+5. `docs/legal/subprocessors.md` - production vendor facts, evidence links, and remaining DPA/retention gaps.
+6. `docs/legal/data-processing-map.md` - working processing map / Article 30 input.
+7. `docs/legal/retention-policy.md` - proposed retention schedule and open retention decisions.
+8. `docs/operations/offboarding-runbook.md` - export/deletion and residual vendor-retention runbook.
+9. `docs/operations/audit-log-export-sop.md` - audit export support procedure.
+10. `docs/ops/questionnaire-ai.md` and `docs/audits/questionnaire-flow-audit.md` - OpenAI questionnaire proof boundary and AI review policy.
 
 ## Final Pre-Publication Checklist
 
 Before editing public legal pages:
 
-- [x] ARES verified operator identity fields and `docs/operator-identity-dpo-closeout.md` records them.
+- [x] ARES verified operator identity fields and `docs/legal/operator-identity-dpo-closeout.md` records them.
 - [x] Owner accepted ARES-verified OSVČ identity/address for public/contract use, subject to counsel/public-copy wording.
 - [x] Owner accepted `hello@splnit.eu` as privacy/support/security contact, subject to counsel/public-copy wording.
 - [ ] Confirm VAT/DIČ wording.
 - [ ] Confirm DPO/privacy contact decision; DPO status is under Czech-law legal review.
 - [x] Confirm B2B customer scope: companies, entrepreneurs, and organisations only, subject to counsel-approved consumer-exclusion wording.
 - [ ] Confirm remaining Terms commercial positions: liability, refunds, cancellation, SLA/support, governing law, jurisdiction.
-- [ ] Move required production vendor rows in `docs/subprocessors.md` to approved, or document why a row remains conditional/not production.
+- [ ] Move required production vendor rows in `docs/legal/subprocessors.md` to approved, or document why a row remains conditional/not production.
 - [ ] Confirm OpenAI DPA/data-retention/training settings and customer opt-in/human-review wording.
 - [ ] Confirm Vercel, Neon, Inngest, Clerk, Stripe, and Resend retention/account settings.
 - [ ] Confirm special-category uploaded evidence policy.

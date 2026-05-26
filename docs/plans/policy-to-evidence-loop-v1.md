@@ -337,7 +337,7 @@ Verification:
 
 Likely files:
 
-- `docs/app-readiness-audit.md`
+- `docs/audits/app-readiness-audit.md`
 - `docs/reviews/policy-to-evidence-loop-v1.md` after implementation/smoke
 
 ## Checkpoints

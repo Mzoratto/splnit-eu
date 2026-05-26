@@ -3,7 +3,7 @@
 Status: candidate research, not a send list.
 Date: 2026-05-05.
 
-These companies were added to `docs/outreach/italy-target-tracker.csv` as `not_sent`.
+These companies were added to `docs/archive/outreach/paused-italy-2026-05/italy-target-tracker.csv` as `not_sent`.
 
 Do not email this batch until:
 

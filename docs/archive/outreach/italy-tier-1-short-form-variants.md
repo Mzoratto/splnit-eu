@@ -2,7 +2,7 @@
 
 Status: draft copy only, not sent.
 Date: 2026-05-06.
-Source: `docs/outreach/italy-tier-1-send-prep.md`.
+Source: `docs/archive/outreach/italy-tier-1-send-prep.md`.
 
 Use these when the route is a contact form, LinkedIn connection note, or generic inbox where a full cold email is too long. Replace all placeholders before use.
 

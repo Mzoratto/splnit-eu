@@ -18,29 +18,29 @@ This is an engineering legal-readiness checklist, not legal advice. Counsel must
 - Expanded `/cookies` to distinguish necessary cookies from optional analytics, clarify consent, and add a button to reopen cookie settings.
 - Expanded `/dpa` to better mirror GDPR Article 28 processor terms and subprocessors.
 - Expanded `/podminky` with stronger service disclaimers, account responsibility, acceptable use, billing, confidentiality, data protection, and termination notes.
-- Added `docs/subprocessors.md`, `docs/retention-policy.md`, and `docs/data-processing-map.md` as counsel handoff annexes.
-- Added `docs/offboarding-runbook.md` for customer export, deletion sequencing, and residual vendor-retention checks.
-- Added `docs/operator-identity-dpo-closeout.md` as the P0 owner/counsel decision packet for final OSVČ/operator identity and DPO/privacy-contact wording.
-- Added `docs/final-czech-legal-review-checklist.md` as the Czech-first publication gate before public legal page updates.
+- Added `docs/legal/subprocessors.md`, `docs/legal/retention-policy.md`, and `docs/legal/data-processing-map.md` as counsel handoff annexes.
+- Added `docs/operations/offboarding-runbook.md` for customer export, deletion sequencing, and residual vendor-retention checks.
+- Added `docs/legal/operator-identity-dpo-closeout.md` as the P0 owner/counsel decision packet for final OSVČ/operator identity and DPO/privacy-contact wording.
+- Added `docs/legal/final-czech-legal-review-checklist.md` as the Czech-first publication gate before public legal page updates.
 - Gated optional PostHog feature-flag analytics behind accepted cookie consent and removed the unsupported fixed-region claim from pricing FAQ copy.
 
 ## Counsel Handoff Annexes
 
-- `docs/operator-identity-dpo-closeout.md` - owner/counsel decision packet for final OSVČ/operator identity, privacy contact, DPO status, and Czech-first public copy replacement targets.
-- `docs/subprocessors.md` - vendor/subprocessor register with approval criteria and unresolved production-location/transfer items.
-- `docs/retention-policy.md` - proposed data retention schedule, current code enforcement, and deletion/export gaps.
-- `docs/data-processing-map.md` - working processing map for purposes, roles, data categories, recipients, retention criteria, and open decisions.
-- `docs/offboarding-runbook.md` - manual customer export and offboarding sequence.
-- `docs/final-czech-legal-review-checklist.md` - Czech-first publication gate and final P0/P1 blockers before public legal page updates.
+- `docs/legal/operator-identity-dpo-closeout.md` - owner/counsel decision packet for final OSVČ/operator identity, privacy contact, DPO status, and Czech-first public copy replacement targets.
+- `docs/legal/subprocessors.md` - vendor/subprocessor register with approval criteria and unresolved production-location/transfer items.
+- `docs/legal/retention-policy.md` - proposed data retention schedule, current code enforcement, and deletion/export gaps.
+- `docs/legal/data-processing-map.md` - working processing map for purposes, roles, data categories, recipients, retention criteria, and open decisions.
+- `docs/operations/offboarding-runbook.md` - manual customer export and offboarding sequence.
+- `docs/legal/final-czech-legal-review-checklist.md` - Czech-first publication gate and final P0/P1 blockers before public legal page updates.
 
 ## Counsel Must Confirm Before Launch
 
 - Final legal entity name, registered seat, company ID, VAT ID, and contact channels.
 - Whether a DPO is legally required or voluntarily appointed.
-- Exact production subprocessors, processing locations, transfer mechanisms, and links to each vendor DPA using `docs/subprocessors.md`.
-- Final retention schedule for account data, logs, evidence, policies, uploaded files, billing data, and backups using `docs/retention-policy.md`.
-- Final export, return, deletion, legal-hold, and residual vendor-retention workflow using `docs/offboarding-runbook.md`.
-- Final role matrix and record-of-processing inputs using `docs/data-processing-map.md`.
+- Exact production subprocessors, processing locations, transfer mechanisms, and links to each vendor DPA using `docs/legal/subprocessors.md`.
+- Final retention schedule for account data, logs, evidence, policies, uploaded files, billing data, and backups using `docs/legal/retention-policy.md`.
+- Final export, return, deletion, legal-hold, and residual vendor-retention workflow using `docs/operations/offboarding-runbook.md`.
+- Final role matrix and record-of-processing inputs using `docs/legal/data-processing-map.md`.
 - Whether product analytics such as PostHog are enabled in production and whether the cookie banner/cookie page fully reflect that setup.
 - Final Terms of Service liability cap, SLA language, refund/cancellation rules, governing law, jurisdiction, and consumer/business scope.
 - Whether customer-uploaded compliance evidence could include special categories of personal data and what contractual controls are needed.

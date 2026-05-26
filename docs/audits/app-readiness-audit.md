@@ -135,7 +135,7 @@ Readiness statuses:
 | Client detail | `/clients/[clientOrgId]` | partial | Consultant client detail; demo only for demo IDs | Demo read-only | Localized | Plan-gated for consultant; visibility and branding mutation are org-boundary smoked | Demo clients are still secondary-surface shaping work for non-consultant/no-DB modes. |
 | Trust Center admin | `/trust-center` | partial | `getTrustCenterSettings`; local-only fallback demo frameworks | Empty/unavailable state unless `ENABLE_LOCAL_DEMO_DATA=true` outside production | Localized | Layout handles auth | Signed-out production redirect, public demo, Splnit built-in Trust Center, unknown-slug 404, and demo framework detail category-only exposure were browser-verified on 2026-05-09. Authenticated production smoke rendered the Trust Center admin and public approved access URL on 2026-05-11. Saved slug, visibility toggles, NDA request approval, and framework-detail flags are covered for the smoke path; broader UX polish remains secondary-surface work. |
 | Organisation settings | `/settings/organisation` | partial | Organisation query; fallback demo org | Demo read-only | Uses stored locale | Layout handles auth | Country list includes DE even though no German marketing strategy; verify OSVČ/legal identifier labels by jurisdiction. |
-| Billing settings | `/settings/billing` | partial | Organisation + Stripe env | No demo list, buttons disabled without Stripe | Localized; EUR for EN/IT, CZK for CS | Layout handles auth | Missing-config page and local webhook entitlement smoke are verified in `docs/billing-stripe-runtime-audit.md`; real Stripe checkout/portal/test-card flow still needs Stripe test keys and authenticated org smoke. |
+| Billing settings | `/settings/billing` | partial | Organisation + Stripe env | No demo list, buttons disabled without Stripe | Localized; EUR for EN/IT, CZK for CS | Layout handles auth | Missing-config page and local webhook entitlement smoke are verified in `docs/audits/billing-stripe-runtime-audit.md`; real Stripe checkout/portal/test-card flow still needs Stripe test keys and authenticated org smoke. |
 | Audit log | `/settings/audit-log` | partial | `listAuditLogs` | Empty list when no DB/session/error | Localized | Layout handles auth; export query is org-scoped and smoked | Pagination/limit behavior still needs secondary-surface verification. |
 
 ## Immediate Fix Queue
@@ -149,8 +149,8 @@ Readiness statuses:
 
 - Optional submit-and-status smoke for `/vendor-assessment/[token]` if Splnit wants to claim external vendor submission completion, not just token generation/rendering and email link delivery.
 - Provider-configured integration runtime smokes for Microsoft 365, GitHub, and AWS when production credentials are available.
-- Questionnaire evidence-save smoke; current provider-backed production generation/review status is documented in `docs/questionnaire-flow-audit.md`.
-- Audit/vendor/risk/incident export status is documented in `docs/export-endpoint-audit.md`; remaining work is authenticated real-tenant export smokes and large audit-page verification.
-- Stripe checkout/customer-portal test-mode end-to-end smoke; current status is documented in `docs/billing-stripe-runtime-audit.md`.
+- Questionnaire evidence-save smoke; current provider-backed production generation/review status is documented in `docs/audits/questionnaire-flow-audit.md`.
+- Audit/vendor/risk/incident export status is documented in `docs/audits/export-endpoint-audit.md`; remaining work is authenticated real-tenant export smokes and large audit-page verification.
+- Stripe checkout/customer-portal test-mode end-to-end smoke; current status is documented in `docs/audits/billing-stripe-runtime-audit.md`.
 - Legal review and promotion decision for Italian policy templates.
 - Legal identity/public legal-page closeout when the real operator details are supplied.

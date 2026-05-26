@@ -2,7 +2,7 @@
 
 Status: contact-quality pass, not a send list.
 Date: 2026-05-05.
-Source: `docs/outreach/italy-contact-verification-shortlist.md`.
+Source: `docs/archive/outreach/italy-contact-verification-shortlist.md`.
 
 This pass converts the six Tier 1 companies into owner-candidate rows. The goal is to stop broad research and move toward one human-verifiable first-touch route per company.
 
@@ -49,4 +49,4 @@ Keep Netalia and Cyber Guru / LibraCyber as second-wave drafts because they are 
 
 Second-wave packet:
 
-- `docs/outreach/italy-second-wave-send-packet.md` prepares Netalia and Cyber Guru / LibraCyber for owner review and keeps ReeVo blocked until a durable named owner is verified.
+- `docs/archive/outreach/italy-second-wave-send-packet.md` prepares Netalia and Cyber Guru / LibraCyber for owner review and keeps ReeVo blocked until a durable named owner is verified.

@@ -16,9 +16,9 @@ Sources checked in the repo:
 - `lib/readiness.ts`
 - `package.json`
 - `lib/legal/legal-page-copy.ts`
-- `docs/data-processing-map.md`
-- `docs/retention-policy.md`
-- `docs/questionnaire-flow-audit.md`
+- `docs/legal/data-processing-map.md`
+- `docs/legal/retention-policy.md`
+- `docs/audits/questionnaire-flow-audit.md`
 - integration code under `lib/integrations/`
 - email, billing, Redis, Blob, Sentry, and questionnaire provider clients
 - Vercel Production env metadata and redacted env presence checks on 2026-05-14

@@ -1,13 +1,14 @@
-# Outreach Status
+# Paused Italy Outreach Packet
 
-Status: ready for owner decision on the first three manual messages. Core app readiness is closed; sender identity and exact manual route choice still need owner confirmation before sending.
+Status: archived after the Czech-first strategy correction on 2026-05-26. These files are preserved for context and must not drive current work unless `PROJECT_PLAN.md` explicitly revives Italian outreach.
 
-The active outreach files are:
+Archived files:
 
 - `italy-target-tracker.csv`
 - `italy-first-three-send-packet.md`
+- `italy-first-three-ready-copy.md`
 
-All other outreach worksheets and draft playbooks remain archived under `docs/archive/outreach/`.
+Related older worksheets and draft playbooks remain one directory up under `docs/archive/outreach/`.
 
 ## Current Facts
 
@@ -18,11 +19,12 @@ All other outreach worksheets and draft playbooks remain archived under `docs/ar
 - Second-wave draft candidates were prepared before this cleanup: Netalia, Cyber Guru / LibraCyber.
 - ReeVo remains blocked until a durable named owner is verified.
 
-## Before Any Sending
+## Before Any Revival
 
+- Confirm that Italian outreach has been explicitly revived in `PROJECT_PLAN.md`.
+- Refresh route/contact facts; the packet is stale by default.
 - Insert real sender details: founder name, OSVČ identity, IČO, ARES link, phone/LinkedIn if used.
 - Use `italy-first-three-send-packet.md` as the current send packet.
-- Refresh route/contact facts if the packet is more than 7 days old.
 - Send manually and update `italy-target-tracker.csv` only after the message is actually sent.
 
 ## Archived Context

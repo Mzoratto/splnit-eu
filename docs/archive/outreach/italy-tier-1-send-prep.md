@@ -2,9 +2,9 @@
 
 Status: manual send-prep, not sent.
 Date: 2026-05-06.
-Source: `docs/outreach/italy-first-touch-drafts-tier-1.md`.
+Source: `docs/archive/outreach/italy-first-touch-drafts-tier-1.md`.
 
-This file records the current public route for the first three Tier 1 outreach drafts. It is not a sending log. Update `docs/outreach/italy-target-tracker.csv` only after the owner chooses the exact route and sends the message.
+This file records the current public route for the first three Tier 1 outreach drafts. It is not a sending log. Update `docs/archive/outreach/paused-italy-2026-05/italy-target-tracker.csv` only after the owner chooses the exact route and sends the message.
 
 ## Send-Prep Rows
 
@@ -30,7 +30,7 @@ This file records the current public route for the first three Tier 1 outreach d
 
 Before sending any of the three:
 
-1. Replace all placeholders in `docs/outreach/italy-first-touch-drafts-tier-1.md`.
+1. Replace all placeholders in `docs/archive/outreach/italy-first-touch-drafts-tier-1.md`.
 2. Confirm whether the sender block should use `OSVČ / IČO` or an Italian parenthetical explanation.
 3. If using a generic inbox/form, put the named owner in the first line and keep the email short.
 4. Update only the exact tracker row after sending:

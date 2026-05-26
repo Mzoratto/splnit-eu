@@ -8,7 +8,7 @@ These three messages are the first manual outreach test. Do not mark any target 
 ## Required Before Sending
 
 - Replace all sender placeholders: founder name, phone, LinkedIn, OSVČ name, IČO.
-- Confirm the exact route used in `docs/outreach/italy-target-tracker.csv`.
+- Confirm the exact route used in `docs/archive/outreach/paused-italy-2026-05/italy-target-tracker.csv`.
 - Send manually, one at a time.
 - After sending, set `status=sent`, `first_touch_date=2026-05-06` or the actual date, and preserve the route used.
 - Do not send more first-touch emails until these three route choices and any replies have been reviewed.
@@ -19,7 +19,7 @@ Recommended route:
 
 - Email `hello@cubbit.io`.
 - Opening attention line: `Alla cortese attenzione di Enrico Signoretti / Marco Moschettini`.
-- Use the full email in `docs/outreach/italy-first-touch-drafts-tier-1.md` unless the form/inbox context requires the short variant in `docs/outreach/italy-tier-1-short-form-variants.md`.
+- Use the full email in `docs/archive/outreach/italy-first-touch-drafts-tier-1.md` unless the form/inbox context requires the short variant in `docs/archive/outreach/italy-tier-1-short-form-variants.md`.
 
 Verified public basis:
 
@@ -38,7 +38,7 @@ Recommended route:
 
 - Use Cleafy's official contact form: `https://www.cleafy.com/get-in-touch`.
 - Opening attention line: `Alla cortese attenzione di Nicolò Pastore / Carmine Giangregorio`.
-- Use the short contact-form variant in `docs/outreach/italy-tier-1-short-form-variants.md`.
+- Use the short contact-form variant in `docs/archive/outreach/italy-tier-1-short-form-variants.md`.
 - Do not use `media@cleafy.com`; Cleafy labels it PR-only.
 
 Verified public basis:
@@ -58,7 +58,7 @@ Recommended route:
 
 - Email `contatti@digitalpa.it`, or use the official contact form selecting Risk & Compliance / relevant software interest.
 - Opening attention line: `Alla cortese attenzione di Andrea Puggioni / Matteo Serra`.
-- Use the full email in `docs/outreach/italy-first-touch-drafts-tier-1.md`; use the short form variant if submitting through the form.
+- Use the full email in `docs/archive/outreach/italy-first-touch-drafts-tier-1.md`; use the short form variant if submitting through the form.
 
 Verified public basis:
 
@@ -73,7 +73,7 @@ Send decision:
 
 ## After Sending
 
-Update `docs/outreach/italy-target-tracker.csv` for each sent row:
+Update `docs/archive/outreach/paused-italy-2026-05/italy-target-tracker.csv` for each sent row:
 
 - `status=sent`
 - `first_touch_date=<actual send date>`
@@ -82,4 +82,4 @@ Update `docs/outreach/italy-target-tracker.csv` for each sent row:
 - `email` or `contact_linkedin=<actual route>`
 - `next_action=Follow up in 5-7 working days if no reply.`
 
-If a reply arrives, use `docs/outreach/italy-discovery-call-playbook.md` before taking the call.
+If a reply arrives, use `docs/archive/outreach/italy-discovery-call-playbook.md` before taking the call.

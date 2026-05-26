@@ -2,7 +2,7 @@
 
 Status: verification worksheet, not a send list.
 Date: 2026-05-05.
-Scope: first 10 companies from `docs/outreach/italy-outreach-verification-queue.md`.
+Scope: first 10 companies from `docs/archive/outreach/italy-outreach-verification-queue.md`.
 
 Result: 0 / 10 send-ready.
 
@@ -41,4 +41,4 @@ The company-level hooks are mostly usable, but no row should move to `sent` unti
 1. Use LinkedIn Sales Navigator or equivalent to verify employee range for AtWorkStudio, Kubee, Digibyte, Corelink, Enter Med, Manxx, Venco Services, and Alveo.
 2. For ReeVo and Mia-Platform, resolve contact owner first; size signal is strong enough to keep them in the top queue but not enough to send blindly.
 3. Capture one named owner per company where possible. Preferred order: CISO/security owner, CTO/CIO, DPO/privacy owner, product security owner, founder, partner/channel owner.
-4. Update `docs/outreach/italy-target-tracker.csv` only after a contact is verified. Keep `status=not_sent` until the email is actually sent.
+4. Update `docs/archive/outreach/paused-italy-2026-05/italy-target-tracker.csv` only after a contact is verified. Keep `status=not_sent` until the email is actually sent.

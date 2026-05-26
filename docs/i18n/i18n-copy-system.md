@@ -1,15 +1,15 @@
 # i18n Copy System
 
-Last updated: 2026-05-06
+Last updated: 2026-05-26
 
 ## Source Of Truth
 
-`messages/en-EU.json` is the master product copy. Czech and Italian copy should be translated from the English meaning, not from each other and not from old Czech-first drafts.
+`messages/cs-CZ.json` is the primary product copy for Czech-first public and app surfaces. English-EU and Italian copy should preserve the same product promise, legal/compliance claim boundaries, and placeholders, but may be naturally localized.
 
 Active locale files:
 
-- `messages/en-EU.json` - master copy and English-EU runtime locale
-- `messages/cs-CZ.json` - Czech runtime locale
+- `messages/cs-CZ.json` - primary Czech runtime locale and default locale
+- `messages/en-EU.json` - English-EU runtime locale
 - `messages/it-IT.json` - Italian runtime locale
 
 Do not recreate `messages/en.json` or `messages/cs.json`. They were stale legacy files and created a false second source of truth.
@@ -56,12 +56,12 @@ Generic keys are acceptable inside a narrow namespace when the UI context is una
 
 ## Review Workflow
 
-1. Write or normalize the English-EU master copy first.
+1. Write or normalize the Czech primary copy first for Czech-first features.
 2. Classify each key as system label or marketing/explanatory text.
-3. Translate Czech and Italian from the English meaning.
+3. Translate English-EU and Italian from the approved Czech meaning, or from an approved English source when the feature is intentionally EU-generic.
 4. Check the glossary before choosing synonyms.
 5. Run `npm run smoke:i18n-shell` and `npm run smoke:copy-hygiene`.
-6. For outreach-critical pages, do a browser pass in EN, CS, and IT before deploy.
+6. For outreach-critical pages, do a browser pass in CS, EN, and IT before deploy.
 
 ## Current Guardrails
 

@@ -2,14 +2,14 @@
 
 EU compliance automation for NIS2, GDPR, EU AI Act, ISO 27001, and related evidence workflows.
 
-Current strategy: Italy first, English-EU second, Czech tertiary. See [PROJECT_PLAN.md](PROJECT_PLAN.md) for the canonical current state, blockers, and next work order.
+Current strategy: Czech first (`cs-CZ` default), English-EU second, Italian tertiary. See [PROJECT_PLAN.md](PROJECT_PLAN.md) for the canonical current state, blockers, and next work order.
 
 The app currently includes:
 
 - Next.js 15 App Router with Clerk auth boundaries.
 - next-intl marketing/app localization for Czech, English, and Italian.
 - Drizzle/Neon schema for organisations, frameworks, controls, tests, evidence, policies, vendors, risks, incidents, generated artifacts, questionnaires, and Trust Center.
-- Public marketing, legal, security/status, Trust Center, and NIS2 scoping routes.
+- Public marketing, pricing, blog, comparison, partner, legal, security/status, Trust Center, and NIS2 checker routes.
 - Authenticated app routes for dashboard, controls, frameworks, evidence, integrations, policies, vendors, risks, incidents, questionnaires, team, clients, and settings.
 - Microsoft 365, GitHub, and AWS integration surfaces and test-run infrastructure.
 - Static knowledge/source-document scripts and mapping-review agent scripts.
@@ -56,8 +56,8 @@ Core modules:
 Main routes:
 
 - `/` - localized marketing page
-- `/platform`, `/predpisy`, `/blog`, `/pricing`, `/early-access`, `/about`
-- `/it/strumenti/nis2-scope` - public Italian NIS2 scoping tool
+- `/platform`, `/predpisy`, `/blog`, `/cenik`, `/srovnani`, `/partneri`, `/security`
+- `/nastroje/nis2-kalkulator` - public NIS2/regulatory profile checker
 - `/dashboard` - protected app shell
 - `/frameworks`, `/controls`, `/evidence`, `/integrations`, `/policies`, `/vendors`, `/risks`, `/incidents`, `/questionnaires`
 - `/trust/[orgSlug]` - public Trust Center

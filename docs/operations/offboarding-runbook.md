@@ -46,7 +46,7 @@ Before deletion, collect the exports that apply to the customer workspace:
 | Full workspace export | `/api/exports/workspace` | JSON | Authenticated and scoped to active Clerk organisation. Excludes encrypted integration tokens and direct Blob URLs; includes authenticated download paths for private files. |
 | Workspace archive | `/api/exports/workspace/archive` | ZIP | Authenticated and scoped to active Clerk organisation. Bundles `workspace-export.json`, `evidence-metadata.csv`, private evidence files, generated policy/gap-report PDFs, and `export-manifest.json` with included or missing file records. |
 | Audit log | `/api/audit-log/export` | CSV | Authenticated and scoped to active Clerk organisation. Supports `action`, `entityType`, UTC `from`/`to`, `limit` up to 5000, and cursor pagination through the `X-Audit-Log-Next-Cursor` response header. |
-| Audit-log SOP | `docs/audit-log-export-sop.md` | Procedure | Use for large customers or any export where the first CSV page returns `X-Audit-Log-Truncated: true`. |
+| Audit-log SOP | `docs/operations/audit-log-export-sop.md` | Procedure | Use for large customers or any export where the first CSV page returns `X-Audit-Log-Truncated: true`. |
 | Access reviews | `/api/access-reviews/[reviewId]/export` | CSV | Export each access review that must be returned. |
 | ISO 27001 package | `/api/frameworks/iso27001/certification-package` | ZIP | Includes Statement of Applicability, policies metadata, evidence metadata, and passing controls. |
 | Risk register | `/api/risks/register-report` | PDF | Authenticated and scoped to active Clerk organisation. |

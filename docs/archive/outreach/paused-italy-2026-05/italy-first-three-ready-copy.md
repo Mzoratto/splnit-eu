@@ -3,7 +3,7 @@
 Status: ready for owner review. Not sent.
 Prepared: 2026-05-07.
 
-Use only after the sender block is finalized. Keep one first-touch route per company. Do not update `docs/outreach/italy-target-tracker.csv` until the message is actually sent.
+Use only after the sender block is finalized. Keep one first-touch route per company. Do not update `docs/archive/outreach/paused-italy-2026-05/italy-target-tracker.csv` until the message is actually sent.
 
 ## Sender block placeholder
 
@@ -212,7 +212,7 @@ Grazie,
 
 ## Tracker update after sending
 
-After each actual send, update only that company row in `docs/outreach/italy-target-tracker.csv`:
+After each actual send, update only that company row in `docs/archive/outreach/paused-italy-2026-05/italy-target-tracker.csv`:
 
 ```text
 status=sent

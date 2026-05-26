@@ -7,7 +7,7 @@ Use this before any design-partner commitment. The call goal is to learn whether
 
 ## Pre-Call Checklist
 
-- Company row exists in `docs/outreach/italy-target-tracker.csv`.
+- Company row exists in `docs/archive/outreach/paused-italy-2026-05/italy-target-tracker.csv`.
 - `status` is `replied` or `call_booked`, not `sent` only.
 - Contact name, role, company, date, and source route are recorded.
 - Call goal is written in one sentence.
@@ -70,7 +70,7 @@ Mark each row after the call:
 
 ## Outcome Codes
 
-Use these in `docs/outreach/italy-target-tracker.csv`:
+Use these in `docs/archive/outreach/paused-italy-2026-05/italy-target-tracker.csv`:
 
 - `no_fit`: useful conversation, no follow-up.
 - `advisor_interview`: useful market/advisor learning, not a customer path.

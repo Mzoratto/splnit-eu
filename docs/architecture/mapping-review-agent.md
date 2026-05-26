@@ -61,7 +61,7 @@ Add `--apply` to write rows into `mapping_review_queue`. Add `--replace` with `-
 
 The importer does not fabricate source text from Markdown. It uses the Mapping ID column to load the canonical control and article text from Postgres. This keeps the queue tied to the structured knowledge layer instead of a copied review packet.
 
-Italian NIS2 is now the first target for the full agent pipeline. `docs/legal-reviews/nis2-it-mapping-review.md` is generated from reviewed Gazzetta Ufficiale article text for D.Lgs. 138/2024 Art. 23-25 and draft Italian framework-control links. Stage 1 has imported and embedded all 34 Italian NIS2 rows in local `mapping_review_queue` with ACN as the jurisdiction regulator. Stage 2 classified all 34 rows: 1 high-confidence `agent_decided` approval, 27 approval candidates routed to human because broad Art. 24 similarity stayed below threshold, and 6 `too_broad` candidates routed to human. Stage 3 cross-checked all 34 rows, persisted `stage3_checks`, and moved the single `agent_decided` incident-notification row back to `needs_human` because NIS2 incident/deadline mappings are domain-blacklisted. Stage 4 dry-run and apply both found 0 promotable Italian rows. `docs/legal-reviews/nis2-it-agent-review.md` now exports those agent results for human review. No Italian mapping row has been promoted to `reviewed`.
+Historical Italian NIS2 pipeline evidence is preserved in `docs/legal-reviews/nis2-it-mapping-review.md` and related review packets. The current product strategy is Czech-first, so new mapping-review work should prioritize Czech/EU rows unless `PROJECT_PLAN.md` explicitly revives an Italian review slice. No Italian mapping row should be promoted to `reviewed` without explicit human/advisor approval.
 
 ## Full Pipeline
 

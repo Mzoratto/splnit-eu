@@ -2,7 +2,7 @@
 
 Status: contact-verification worksheet, not a send list.
 Date: 2026-05-05.
-Source: `docs/outreach/italy-verification-batch-1.md`, `docs/outreach/italy-verification-batch-2.md`, and `docs/outreach/italy-verification-batch-3.md`.
+Source: `docs/archive/outreach/italy-verification-batch-1.md`, `docs/archive/outreach/italy-verification-batch-2.md`, and `docs/archive/outreach/italy-verification-batch-3.md`.
 
 The first 25-company verification queue produced 0 send-ready rows. The blocker is now contact quality, not company fit. This shortlist narrows the next pass to companies where the fit signal is strong enough to justify finding a named owner before drafting any first-touch email.
 
@@ -46,4 +46,4 @@ These rows should not consume first-wave contact-verification time unless the ow
 
 ## Next Action
 
-Run a contact-quality pass on the six Tier 1 rows only. The output should be a small send-candidate worksheet with one named owner, role, source link, and exact hook per company. Do not update `docs/outreach/italy-target-tracker.csv` until the owner is verified.
+Run a contact-quality pass on the six Tier 1 rows only. The output should be a small send-candidate worksheet with one named owner, role, source link, and exact hook per company. Do not update `docs/archive/outreach/paused-italy-2026-05/italy-target-tracker.csv` until the owner is verified.

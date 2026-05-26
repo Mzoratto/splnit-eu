@@ -11,7 +11,7 @@ Do not send these before:
 
 - Cubbit, Cleafy and DigitalPA have been sent or explicitly skipped by the owner.
 - Sender placeholders are replaced everywhere.
-- The exact route is recorded in `docs/outreach/italy-target-tracker.csv`.
+- The exact route is recorded in `docs/archive/outreach/paused-italy-2026-05/italy-target-tracker.csv`.
 
 ## 1. Netalia
 

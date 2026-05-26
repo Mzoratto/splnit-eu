@@ -7,7 +7,7 @@ This document defines the follow-up loop for the first Italian outreach wave. It
 
 ## Tracker State Machine
 
-Use these `status` values in `docs/outreach/italy-target-tracker.csv`.
+Use these `status` values in `docs/archive/outreach/paused-italy-2026-05/italy-target-tracker.csv`.
 
 | Status | Meaning | Required fields |
 | --- | --- | --- |

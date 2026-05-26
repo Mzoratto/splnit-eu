@@ -48,7 +48,7 @@ Regulatory anchors:
 - Add per-record Blob deletion if evidence, policy, or generated-report delete buttons are introduced.
 - Define dashboard retention for Vercel logs, Neon PITR, Sentry events, PostHog events, Resend logs, Loops subscribers, Inngest events, and Upstash Redis keys.
 - Decide whether `expires_at` means "review again" or "delete after this date" for each record type; the current product uses it as review/expiry metadata.
-- Use `docs/offboarding-runbook.md` as the manual export/offboarding runbook and load-test the workspace archive route before large customer workspaces rely on it.
+- Use `docs/operations/offboarding-runbook.md` as the manual export/offboarding runbook and load-test the workspace archive route before large customer workspaces rely on it.
 
 ## Counsel Questions
 

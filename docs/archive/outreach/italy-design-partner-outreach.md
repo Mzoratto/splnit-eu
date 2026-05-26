@@ -132,7 +132,7 @@ Week 12:
 
 ## Outcome Codes
 
-Use the canonical tracker state machine in `docs/outreach/italy-response-tracking-and-follow-up.md`.
+Use the canonical tracker state machine in `docs/archive/outreach/italy-response-tracking-and-follow-up.md`.
 
 - `not_sent`: target researched but not contacted.
 - `sent`: first-touch sent.

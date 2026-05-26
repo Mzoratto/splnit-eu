@@ -21,8 +21,8 @@ Code-level readiness is tracked in the repository. The items below require dashb
 ## Compliance
 
 - Review `/soukromi`, `/cookies`, `/podminky`, and `/dpa` with counsel before launch.
-- Use `docs/legal-review.md` as the counsel handoff checklist and close every item there before production launch.
+- Use `docs/legal/legal-review.md` as the counsel handoff checklist and close every item there before production launch.
 - Confirm DPA coverage with Vercel, Neon, Clerk, Stripe, Resend, Loops, Upstash, Sentry, Vercel Blob, Inngest, PostHog, and OpenAI where enabled.
 - Keep `QUESTIONNAIRE_AI_ENABLED=true` restricted to controlled/approved customer use until OpenAI DPA/data-retention controls, customer opt-in notice, human-review wording, and subprocessor notice are approved.
-- Review `docs/offboarding-runbook.md` with counsel and the support owner before accepting production customers.
-- Close the launch blockers in `docs/subprocessors.md`, `docs/retention-policy.md`, and `docs/data-processing-map.md`.
+- Review `docs/operations/offboarding-runbook.md` with counsel and the support owner before accepting production customers.
+- Close the launch blockers in `docs/legal/subprocessors.md`, `docs/legal/retention-policy.md`, and `docs/legal/data-processing-map.md`.

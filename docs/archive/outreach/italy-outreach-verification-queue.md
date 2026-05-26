@@ -3,7 +3,7 @@
 Status: internal triage, not a send list.
 Date: 2026-05-05.
 
-This document turns the 50 sourced targets in `docs/outreach/italy-target-tracker.csv` into an ordered verification queue. A company remains `not_sent` until the blocking checks are completed.
+This document turns the 50 sourced targets in `docs/archive/outreach/paused-italy-2026-05/italy-target-tracker.csv` into an ordered verification queue. A company remains `not_sent` until the blocking checks are completed.
 
 ## Triage Rules
 
@@ -101,6 +101,6 @@ For each row in the first verification queue:
 2. Identify one named role owner or defensible generic role inbox.
 3. Confirm the hook still matches the target's own public language.
 4. Decide target type: `design_partner`, `channel_partner`, `advisor_interview`, or `learning_only`.
-5. Only after all checks pass, update `docs/outreach/italy-target-tracker.csv` with contact details and keep `status=not_sent` until the email is actually sent.
+5. Only after all checks pass, update `docs/archive/outreach/paused-italy-2026-05/italy-target-tracker.csv` with contact details and keep `status=not_sent` until the email is actually sent.
 
 Do not mass-email the first 25. Verify and send in small groups of 8-10 so weak hooks can be corrected before burning the full list.
