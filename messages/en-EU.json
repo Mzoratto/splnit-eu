@@ -1847,7 +1847,14 @@
       "monitoringTitle": "Configuration monitoring",
       "monitoringBody": "Surface configuration drift in connected systems so the team can review it.",
       "documentsTitle": "Automated documents",
-      "documentsBody": "Export a Cybersecurity Assessment Report — mapped to Czech ZoKB obligations and ready for an auditor or NÚKIB inspection. Automatically verified controls appear as green blocks, manually declared ones as grey."
+      "documentsBody": "Export a Cybersecurity Assessment Report — mapped to Czech ZoKB obligations and ready for an auditor or NÚKIB inspection. Automatically verified controls appear as green blocks, manually declared ones as grey.",
+      "templatesTitle": "Free downloadable templates",
+      "templatesBody": "Core policies, ROPA, BCP, DPIA, and GAP analyses available as DOCX and XLSX. No registration, available to everyone.",
+      "templatesLink": "View templates →",
+      "smartDocumentsTitle": "Pre-filled documents from your data",
+      "smartDocumentsBody": "The platform generates GAP analysis, Statement of Applicability, and vendor reports directly from your live data — not from an empty spreadsheet.",
+      "clientAccessTitle": "Client access links for MSPs",
+      "clientAccessBody": "Share compliance posture with each customer separately. Dedicated link, dedicated regulation selection, open tracking."
     },
     "trustBadges": {
       "early": "Early access",
@@ -1884,6 +1891,7 @@
     "partnerCta": "Launch Agency →",
     "comparisonTag": "Feature comparison",
     "comparisonTitle": "Choose by automation depth.",
+    "comparisonDocumentsNote": "Core templates are free for everyone on the regulation pages. Generating pre-filled documents from platform data is included in paid plans.",
     "faqTag": "FAQ",
     "faqTitle": "Common questions",
     "finalTitle": "Start free, then upgrade in the app.",
@@ -1906,7 +1914,8 @@
         "features": [
           "1 regulation",
           "Manual controls",
-          "3 document templates",
+          "Downloadable templates (11 documents)",
+          "— Pre-filled document generation",
           "1 user",
           "Community support"
         ]
@@ -1920,6 +1929,8 @@
           "All supported frameworks",
           "Current connectors and automated checks",
           "Evidence archive and exports",
+          "Downloadable templates (11 documents)",
+          "✓ Pre-filled document generation",
           "Up to 25 users",
           "Email support"
         ]
@@ -1932,6 +1943,8 @@
           "Everything in SME",
           "Up to 20 managed client organisations",
           "White-label consultant portal",
+          "Downloadable templates (11 documents)",
+          "✓ Pre-filled document generation",
           "Unlimited consultant seats",
           "Client invites and comments"
         ]
@@ -1974,7 +1987,8 @@
         "automatedEvidence": "Automated evidence collection",
         "failureAlerts": "Failure alerts",
         "scheduler": "Scheduler",
-        "policyTemplates": "Policy templates",
+        "downloadableTemplates": "Downloadable templates (DOCX/XLSX)",
+        "prefilledDocumentGeneration": "Pre-filled document generation",
         "pdfGeneration": "PDF generation",
         "trainingTemplates": "Training templates",
         "auditorExport": "Auditor export",

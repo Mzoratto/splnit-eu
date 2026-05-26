@@ -1846,7 +1846,14 @@
       "monitoringTitle": "Monitoraggio configurazione",
       "monitoringBody": "Fate emergere deviazioni di configurazione nei sistemi collegati, così il team può revisionarle.",
       "documentsTitle": "Documenti automatici",
-      "documentsBody": "Esporta un Rapporto di Valutazione della Cybersicurezza — mappato sugli obblighi ZoKB cechi e pronto per un revisore o un'ispezione NÚKIB. I controlli verificati automaticamente appaiono come blocchi verdi, quelli dichiarati manualmente come grigi."
+      "documentsBody": "Esporta un Rapporto di Valutazione della Cybersicurezza — mappato sugli obblighi ZoKB cechi e pronto per un revisore o un'ispezione NÚKIB. I controlli verificati automaticamente appaiono come blocchi verdi, quelli dichiarati manualmente come grigi.",
+      "templatesTitle": "Modelli scaricabili gratuiti",
+      "templatesBody": "Policy di base, ROPA, BCP, DPIA e GAP analysis scaricabili come DOCX e XLSX. Senza registrazione, per tutti.",
+      "templatesLink": "Vedi modelli →",
+      "smartDocumentsTitle": "Documenti precompilati dai vostri dati",
+      "smartDocumentsBody": "La piattaforma genera GAP analysis, dichiarazione di applicabilità e vendor report direttamente dai vostri dati live — non da un foglio vuoto.",
+      "clientAccessTitle": "Accessi cliente per MSP",
+      "clientAccessBody": "Condividete lo stato compliance separatamente con ogni cliente. Link dedicato, scelta dedicata delle normative, tracciamento delle aperture."
     },
     "trustBadges": {
       "early": "Accesso anticipato",
@@ -1884,6 +1891,7 @@
     "partnerCta": "Lancia Agency →",
     "comparisonTag": "Confronto funzioni",
     "comparisonTitle": "Scegliete in base alla profondità di automazione.",
+    "comparisonDocumentsNote": "I modelli di base sono gratuiti per tutti nelle pagine delle normative. La generazione di documenti precompilati dai dati della piattaforma è inclusa nei piani a pagamento.",
     "faqTag": "FAQ",
     "faqTitle": "Domande frequenti",
     "finalTitle": "Iniziate gratis, poi fate upgrade nell'app.",
@@ -1906,7 +1914,8 @@
         "features": [
           "1 normativa",
           "Controlli manuali",
-          "3 modelli di documento",
+          "Modelli scaricabili (11 documenti)",
+          "— Generazione documenti precompilati",
           "1 utente",
           "Supporto community"
         ]
@@ -1920,6 +1929,8 @@
           "Tutti i framework supportati",
           "Connettori attuali e controlli automatici",
           "Archivio evidenze ed export",
+          "Modelli scaricabili (11 documenti)",
+          "✓ Generazione documenti precompilati",
           "Fino a 25 utenti",
           "Supporto email"
         ]
@@ -1932,6 +1943,8 @@
           "Tutto il piano SME",
           "Fino a 20 organizzazioni cliente gestite",
           "Portale consulente white-label",
+          "Modelli scaricabili (11 documenti)",
+          "✓ Generazione documenti precompilati",
           "Posti consulente illimitati",
           "Inviti cliente e commenti"
         ]
@@ -1974,7 +1987,8 @@
         "automatedEvidence": "Raccolta automatica evidenze",
         "failureAlerts": "Avvisi di errore",
         "scheduler": "Pianificatore",
-        "policyTemplates": "Modelli policy",
+        "downloadableTemplates": "Modelli scaricabili (DOCX/XLSX)",
+        "prefilledDocumentGeneration": "Generazione documenti precompilati",
         "pdfGeneration": "Generazione PDF",
         "trainingTemplates": "Modelli di formazione",
         "auditorExport": "Export per revisore",

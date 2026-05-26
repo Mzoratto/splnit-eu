@@ -48,7 +48,8 @@ export type ComparisonFeatureKey =
   | "automatedEvidence"
   | "failureAlerts"
   | "scheduler"
-  | "policyTemplates"
+  | "downloadableTemplates"
+  | "prefilledDocumentGeneration"
   | "pdfGeneration"
   | "trainingTemplates"
   | "auditorExport"
@@ -128,7 +129,8 @@ export const comparisonGroups: ComparisonGroup[] = [
   {
     key: "documents",
     rows: [
-      { cells: ["3", "unlimited", "unlimited"], key: "policyTemplates" },
+      { cells: ["✓", "✓", "✓"], key: "downloadableTemplates" },
+      { cells: ["-", "✓", "✓"], key: "prefilledDocumentGeneration" },
       { cells: ["-", "✓", "✓"], key: "pdfGeneration" },
       { cells: ["-", "✓", "✓"], key: "trainingTemplates" },
       { cells: ["-", "✓", "✓"], key: "auditorExport" },
