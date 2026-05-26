@@ -47,16 +47,37 @@ for (const path of appShellRoutes) {
 
     await expect(page.getByRole("banner")).toBeVisible();
     if (testInfo.project.name === "mobile-chrome") {
-      await expect(
-        page.locator("nav").filter({
+      const mobileNav = page
+        .locator("nav")
+        .filter({
           has: page.getByRole("link", { name: "Dashboard" }),
-        }).last(),
+        })
+        .last();
+
+      await expect(mobileNav).toBeVisible();
+      await expect(
+        mobileNav.getByRole("link", { name: "Dashboard" }),
+      ).toBeVisible();
+      await expect(
+        mobileNav.getByRole("link", { name: "Kontroly" }),
+      ).toBeVisible();
+
+      const moreButton = mobileNav.getByRole("button", { name: "Více" });
+      const moreDrawer = page.locator("#mobile-more-drawer");
+
+      await expect(moreButton).toBeVisible();
+      await expect(async () => {
+        await moreButton.click();
+        await expect(moreDrawer).toBeVisible({ timeout: 1_000 });
+      }).toPass();
+      await expect(
+        moreDrawer.getByRole("link", { name: "Nastavení" }),
       ).toBeVisible();
     } else {
       await expect(sidebar).toContainText("Splnit.eu");
+      await expect(page.getByRole("link", { name: "Dashboard" })).toBeVisible();
+      await expect(page.getByRole("link", { name: "Kontroly" })).toBeVisible();
+      await expect(page.getByRole("link", { name: "Nastavení" })).toBeVisible();
     }
-    await expect(page.getByRole("link", { name: "Dashboard" })).toBeVisible();
-    await expect(page.getByRole("link", { name: "Kontroly" })).toBeVisible();
-    await expect(page.getByRole("link", { name: "Nastavení" })).toBeVisible();
   });
 }
