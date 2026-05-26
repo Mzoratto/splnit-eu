@@ -119,6 +119,7 @@ export default async function PricingPage() {
                 {t("comparisonPageCta")}
               </Link>
             </div>
+          </div>
         </section>
 
         <section className="border-t border-border bg-white py-20">
