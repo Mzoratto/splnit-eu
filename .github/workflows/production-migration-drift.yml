@@ -20,16 +20,11 @@ jobs:
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
-          node-version: 22
+          node-version-file: .nvmrc
           cache: npm
 
       - name: Install dependencies
         run: npm ci
 
       - name: Check production migration drift
-        if: env.PRODUCTION_DATABASE_URL_UNPOOLED != ''
         run: npm run check:production-migration-drift
-
-      - name: Skip production migration drift check
-        if: env.PRODUCTION_DATABASE_URL_UNPOOLED == ''
-        run: echo "PRODUCTION_DATABASE_URL_UNPOOLED is not configured; skipping read-only production migration drift check."

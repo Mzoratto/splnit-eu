@@ -134,7 +134,8 @@
     "db:migrate": "drizzle-kit migrate",
     "db:seed": "tsx scripts/seed.ts",
     "db:studio": "drizzle-kit studio",
-    "audit:localization": "node scripts/localization-audit.mjs"
+    "audit:localization": "node scripts/localization-audit.mjs",
+    "ci:product-safety": "npm run lint:copy:intake-prioritization:strict && npm run smoke:i18n-shell && npm run smoke:jurisdictions && npm run smoke:trust-center-public-disclosure && npm run smoke:org-boundaries && npm run smoke:export-endpoints-source && npm run smoke:templates"
   },
   "dependencies": {
     "@aws-sdk/client-cloudtrail": "^3.1039.0",
@@ -194,5 +195,10 @@
     "tailwindcss": "^4",
     "tsx": "^4.21.0",
     "typescript": "^5"
-  }
+  },
+  "engines": {
+    "node": ">=22.13 <23",
+    "npm": ">=10 <12"
+  },
+  "packageManager": "npm@11.0.0"
 }

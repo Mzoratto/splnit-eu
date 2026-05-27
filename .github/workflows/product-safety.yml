@@ -1,0 +1,39 @@
+name: Product safety
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+      - staging
+
+jobs:
+  static-product-gates:
+    runs-on: ubuntu-latest
+    env:
+      CI: true
+      NEXT_TELEMETRY_DISABLED: 1
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Typecheck
+        run: npm run typecheck
+
+      - name: Lint
+        run: npm run lint
+
+      - name: Product safety smoke gates
+        run: npm run ci:product-safety
+
+      - name: Critical dependency audit
+        run: npm audit --omit=dev --audit-level=critical --json > npm-audit-critical.json || (cat npm-audit-critical.json && exit 1)
