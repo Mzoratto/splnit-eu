@@ -1,4 +1,4 @@
-import * as XLSX from "xlsx";
+import writeXlsxFile, { type Cell, type Sheet } from "write-excel-file/node";
 import { FRAMEWORK_LIBRARY } from "@/lib/frameworks/registry";
 import { mapControlStatus, mapVendorRiskTier, mapVendorStatus } from "./status-map";
 import type {
@@ -8,21 +8,23 @@ import type {
   VendorReportRow,
 } from "./queries";
 
-type Workbook = XLSX.WorkBook;
-type Worksheet = XLSX.WorkSheet & {
-  "!cols"?: Array<{ wch: number }>;
-  "!freeze"?: { xSplit?: number; ySplit?: number };
-  "!views"?: Array<{ state: "frozen"; xSplit?: number; ySplit?: number }>;
+type SpreadsheetValue = string | number | boolean | Date | null | undefined;
+type SpreadsheetRow = SpreadsheetValue[];
+type SpreadsheetSheet = {
+  name: string;
+  rows: SpreadsheetRow[];
 };
 
 const HEADER_STYLE = {
-  alignment: { vertical: "center", wrapText: true },
-  fill: { fgColor: { rgb: "1F4E78" }, patternType: "solid" },
-  font: { bold: true, color: { rgb: "FFFFFF" } },
+  alignVertical: "center" as const,
+  backgroundColor: "#1F4E78",
+  fontWeight: "bold" as const,
+  textColor: "#FFFFFF",
+  wrap: true,
 };
 
 const ALT_ROW_STYLE = {
-  fill: { fgColor: { rgb: "F3F6FA" }, patternType: "solid" },
+  backgroundColor: "#F3F6FA",
 };
 
 function formatDate(value: Date | string | null | undefined) {
@@ -41,32 +43,9 @@ function formatDate(value: Date | string | null | undefined) {
   ).padStart(2, "0")}.${date.getFullYear()}`;
 }
 
-function appendRows(workbook: Workbook, sheetName: string, rows: unknown[][]) {
-  const worksheet = XLSX.utils.aoa_to_sheet(rows) as Worksheet;
-  const range = XLSX.utils.decode_range(worksheet["!ref"] ?? "A1:A1");
-
-  for (let column = range.s.c; column <= range.e.c; column += 1) {
-    const headerCell = worksheet[XLSX.utils.encode_cell({ c: column, r: 0 })];
-
-    if (headerCell) {
-      headerCell.s = HEADER_STYLE;
-    }
-  }
-
-  for (let row = 1; row <= range.e.r; row += 1) {
-    if (row % 2 !== 0) {
-      for (let column = range.s.c; column <= range.e.c; column += 1) {
-        const cell = worksheet[XLSX.utils.encode_cell({ c: column, r: row })];
-
-        if (cell) {
-          cell.s = ALT_ROW_STYLE;
-        }
-      }
-    }
-  }
-
-  worksheet["!cols"] = rows[0]?.map((_, columnIndex) => ({
-    wch: Math.min(
+function columnWidths(rows: SpreadsheetRow[]) {
+  return rows[0]?.map((_, columnIndex) => ({
+    width: Math.min(
       Math.max(
         ...rows.map((row) => String(row[columnIndex] ?? "").length),
         10,
@@ -74,16 +53,37 @@ function appendRows(workbook: Workbook, sheetName: string, rows: unknown[][]) {
       60,
     ),
   }));
-  worksheet["!freeze"] = { ySplit: 1 };
-  worksheet["!views"] = [{ state: "frozen", ySplit: 1 }];
-  XLSX.utils.book_append_sheet(workbook, worksheet, sheetName);
 }
 
-function workbookBuffer(workbook: Workbook) {
-  return XLSX.write(workbook, {
-    bookType: "xlsx",
-    type: "buffer",
-  }) as Buffer;
+function styledRows(rows: SpreadsheetRow[]): Cell[][] {
+  return rows.map((row, rowIndex) =>
+    row.map((value) => {
+      const cellValue = value ?? "";
+
+      if (rowIndex === 0) {
+        return { value: cellValue, ...HEADER_STYLE };
+      }
+
+      if (rowIndex % 2 !== 0) {
+        return { value: cellValue, ...ALT_ROW_STYLE };
+      }
+
+      return cellValue;
+    }),
+  );
+}
+
+function buildSheet(sheet: SpreadsheetSheet): Sheet<Buffer> {
+  return {
+    columns: columnWidths(sheet.rows),
+    data: styledRows(sheet.rows),
+    sheet: sheet.name,
+    stickyRowsCount: 1,
+  };
+}
+
+function workbookBuffer(sheets: SpreadsheetSheet[]) {
+  return writeXlsxFile(sheets.map(buildSheet)).toBuffer();
 }
 
 function getFrameworkName(frameworkSlug: string) {
@@ -147,81 +147,91 @@ function metadataRows(meta: OrgDocumentMetadata, frameworkName: string, rows: Ga
   ];
 }
 
-export function generateGapAnalysisXLSX(input: {
+export async function generateGapAnalysisXLSX(input: {
   frameworkSlug: string;
   meta: OrgDocumentMetadata;
   rows: GapAnalysisRow[];
 }) {
-  const workbook = XLSX.utils.book_new();
   const frameworkName = getFrameworkName(input.frameworkSlug);
 
-  appendRows(workbook, "Metadata", metadataRows(input.meta, frameworkName, input.rows));
-  appendRows(workbook, "GAP analýza", [
-    [
-      "#",
-      "Kategorie",
-      "Kontrola",
-      "Aktuální stav",
-      "Poznámky",
-      "Odpovědná osoba",
-      "Datum ověření",
-    ],
-    ...input.rows.map((row, index) => [
-      index + 1,
-      row.category ?? "",
-      `${row.controlKey} — ${row.title}`,
-      mapControlStatus(row.status),
-      row.notes,
-      row.assignedTo || input.meta.responsiblePerson?.fullName || "",
-      formatDate(row.lastTestedAt),
-    ]),
+  return workbookBuffer([
+    {
+      name: "Metadata",
+      rows: metadataRows(input.meta, frameworkName, input.rows),
+    },
+    {
+      name: "GAP analýza",
+      rows: [
+        [
+          "#",
+          "Kategorie",
+          "Kontrola",
+          "Aktuální stav",
+          "Poznámky",
+          "Odpovědná osoba",
+          "Datum ověření",
+        ],
+        ...input.rows.map((row, index) => [
+          index + 1,
+          row.category ?? "",
+          `${row.controlKey} — ${row.title}`,
+          mapControlStatus(row.status),
+          row.notes,
+          row.assignedTo || input.meta.responsiblePerson?.fullName || "",
+          formatDate(row.lastTestedAt),
+        ]),
+      ],
+    },
   ]);
-
-  return workbookBuffer(workbook);
 }
 
-export function generateSoAXLSX(input: {
+export async function generateSoAXLSX(input: {
   data: SoAData;
   meta: OrgDocumentMetadata;
 }) {
-  const workbook = XLSX.utils.book_new();
   const rows = input.data.controls;
   const metadata = metadataRows(input.meta, "ISO 27001", rows);
 
   metadata.push(["Stav frameworku", input.data.framework?.status ?? ""]);
   metadata.push(["Skóre frameworku", input.data.framework?.score ?? ""]);
-  appendRows(workbook, "Metadata", metadata);
-  appendRows(workbook, "Prohlášení o aplikovatelnosti", [
-    [
-      "ID",
-      "Název kontroly",
-      "Téma",
-      "Aplikujeme?",
-      "Zdůvodnění",
-      "Stav implementace",
-      "Vlastník",
-      "Poznámky",
-    ],
-    ...rows.map((row) => [
-      row.controlKey,
-      row.title,
-      row.category ?? "",
-      row.status === "not_applicable" ? "Ne" : "Ano",
-      row.status === "not_applicable" ? row.notes : "",
-      mapControlStatus(row.status),
-      row.assignedTo || input.meta.responsiblePerson?.fullName || "",
-      row.notes,
-    ]),
-  ]);
 
-  return workbookBuffer(workbook);
+  return workbookBuffer([
+    {
+      name: "Metadata",
+      rows: metadata,
+    },
+    {
+      name: "Prohlášení o aplikovatelnosti",
+      rows: [
+        [
+          "ID",
+          "Název kontroly",
+          "Téma",
+          "Aplikujeme?",
+          "Zdůvodnění",
+          "Stav implementace",
+          "Vlastník",
+          "Poznámky",
+        ],
+        ...rows.map((row) => [
+          row.controlKey,
+          row.title,
+          row.category ?? "",
+          row.status === "not_applicable" ? "Ne" : "Ano",
+          row.status === "not_applicable" ? row.notes : "",
+          mapControlStatus(row.status),
+          row.assignedTo || input.meta.responsiblePerson?.fullName || "",
+          row.notes,
+        ]),
+      ],
+    },
+  ]);
 }
 
-export function generateVendorReportXLSX(input: {
+export async function generateVendorReportXLSX(input: {
   meta: OrgDocumentMetadata;
   rows: VendorReportRow[];
 }) {
-  const workbook = XLSX.utils.book_new();
   const riskCounts = input.rows.reduce(
     (counts, row) => {
       if (row.riskTier === "critical") {
@@ -239,40 +249,46 @@ export function generateVendorReportXLSX(input: {
     { critical: 0, high: 0, low: 0, medium: 0 },
   );
 
-  appendRows(workbook, "Metadata", [
-    ["Pole", "Hodnota"],
-    ["Organizace", input.meta.name],
-    ["Datum generování", formatDate(new Date())],
-    ["Dodavatelé celkem", input.rows.length],
-    ["Kritické riziko", riskCounts.critical],
-    ["Vysoké riziko", riskCounts.high],
-    ["Střední riziko", riskCounts.medium],
-    ["Nízké riziko", riskCounts.low],
+  return workbookBuffer([
+    {
+      name: "Metadata",
+      rows: [
+        ["Pole", "Hodnota"],
+        ["Organizace", input.meta.name],
+        ["Datum generování", formatDate(new Date())],
+        ["Dodavatelé celkem", input.rows.length],
+        ["Kritické riziko", riskCounts.critical],
+        ["Vysoké riziko", riskCounts.high],
+        ["Střední riziko", riskCounts.medium],
+        ["Nízké riziko", riskCounts.low],
+      ],
+    },
+    {
+      name: "Přehled dodavatelů",
+      rows: [
+        [
+          "#",
+          "Název",
+          "Kategorie",
+          "Riziková úroveň",
+          "Stav",
+          "Skóre hodnocení",
+          "Datum hodnocení",
+          "Příští přezkum",
+        ],
+        ...input.rows.map((row, index) => [
+          index + 1,
+          row.name,
+          row.category ?? "",
+          mapVendorRiskTier(row.riskTier),
+          mapVendorStatus(row.status),
+          row.latestAssessment?.score == null
+            ? "Nehodnoceno"
+            : `${row.latestAssessment.score}/100`,
+          formatDate(row.latestAssessment?.assessedAt ?? row.lastAssessedAt),
+          formatDate(row.nextReviewAt),
+        ]),
+      ],
+    },
   ]);
-  appendRows(workbook, "Přehled dodavatelů", [
-    [
-      "#",
-      "Název",
-      "Kategorie",
-      "Riziková úroveň",
-      "Stav",
-      "Skóre hodnocení",
-      "Datum hodnocení",
-      "Příští přezkum",
-    ],
-    ...input.rows.map((row, index) => [
-      index + 1,
-      row.name,
-      row.category ?? "",
-      mapVendorRiskTier(row.riskTier),
-      mapVendorStatus(row.status),
-      row.latestAssessment?.score == null
-        ? "Nehodnoceno"
-        : `${row.latestAssessment.score}/100`,
-      formatDate(row.latestAssessment?.assessedAt ?? row.lastAssessedAt),
-      formatDate(row.nextReviewAt),
-    ]),
-  ]);
-
-  return workbookBuffer(workbook);
 }

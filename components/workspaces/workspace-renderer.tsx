@@ -696,20 +696,29 @@ function ControlCard({
 type LayerTabProps = {
   active: boolean;
   completedControls: number;
+  interactive: boolean;
   onClick: () => void;
   title: string;
   totalControls: number;
 };
 
-function LayerTab({ active, completedControls, onClick, title, totalControls }: LayerTabProps) {
+function LayerTab({
+  active,
+  completedControls,
+  interactive,
+  onClick,
+  title,
+  totalControls,
+}: LayerTabProps) {
   const done = completedControls === totalControls && totalControls > 0;
 
   return (
     <button
       type="button"
+      disabled={!interactive}
       onClick={onClick}
       className={clsx(
-        "flex flex-col gap-1 rounded-lg border px-4 py-3 text-left text-sm transition-colors",
+        "flex flex-col gap-1 rounded-lg border px-4 py-3 text-left text-sm transition-colors disabled:cursor-wait disabled:opacity-70",
         active
           ? "border-primary bg-primary/8 text-primary"
           : "border-border bg-surface text-foreground/72 hover:bg-surface-muted",
@@ -743,8 +752,13 @@ export function WorkspaceRenderer({
 }: WorkspaceRendererProps) {
   const t = useTranslations("workspace");
   const [activeLayerIndex, setActiveLayerIndex] = React.useState(0);
+  const [interactive, setInteractive] = React.useState(false);
   const activeLayer = workspace.layers[activeLayerIndex];
   const activeLayerProg = activeLayer ? layerProgress(activeLayer.id, progress) : null;
+
+  React.useEffect(() => {
+    setInteractive(true);
+  }, []);
 
   if (!activeLayer) {
     return (
@@ -804,6 +818,7 @@ export function WorkspaceRenderer({
               key={layer.id}
               active={index === activeLayerIndex}
               completedControls={lp?.completedControls ?? 0}
+              interactive={interactive}
               onClick={() => setActiveLayerIndex(index)}
               title={layer.title}
               totalControls={lp?.totalControls ?? layer.controls.length}

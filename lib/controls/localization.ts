@@ -82,6 +82,12 @@ const italianControlTitles: Record<string, string> = {
   ctrl_media_disposal: "Supporti e dispositivi smaltiti in modo sicuro",
   ctrl_cryptography_policy: "Policy crittografica approvata",
   ctrl_network_segmentation: "Rete segmentata per criticita",
+  "aws-infra-ec2-running": "Istanza AWS EC2 in esecuzione",
+  "aws-infra-security-group-rules-present":
+    "Regole security group AWS presenti",
+  "aws-infra-s3-backup-recent": "Backup AWS S3 recente",
+  "aws-infra-cloudtrail-logging-enabled":
+    "Logging AWS CloudTrail abilitato",
   "hetzner-infra-server-running": "Server Hetzner Cloud in esecuzione",
   "hetzner-infra-firewall-present":
     "Regole firewall Hetzner Cloud presenti",

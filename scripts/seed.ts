@@ -353,6 +353,10 @@ async function seedIntegrationTests(controlIds: Map<string, string>) {
       integrationType: "ovhcloud",
     })),
   ];
+  const activeDefinitionKeys = new Set<string>();
+  const seededIntegrationTypes = new Set(
+    definitions.map((definition) => definition.integrationType),
+  );
 
   for (const definition of definitions) {
     const controlId = controlIds.get(definition.controlKey);
@@ -360,6 +364,10 @@ async function seedIntegrationTests(controlIds: Map<string, string>) {
     if (!controlId) {
       throw new Error(`Missing control id for ${definition.controlKey}`);
     }
+
+    activeDefinitionKeys.add(
+      `${definition.integrationType}\0${definition.checkLogic}\0${controlId}`,
+    );
 
     const existingRows = await db
       .select({ id: tests.id })
@@ -395,6 +403,32 @@ async function seedIntegrationTests(controlIds: Map<string, string>) {
     }
 
     count += 1;
+  }
+
+  const existingTests = await db
+    .select({
+      checkLogic: tests.checkLogic,
+      controlId: tests.controlId,
+      id: tests.id,
+      integrationType: tests.integrationType,
+    })
+    .from(tests);
+
+  for (const existingTest of existingTests) {
+    if (!seededIntegrationTypes.has(existingTest.integrationType)) {
+      continue;
+    }
+
+    const activeDefinitionKey = `${existingTest.integrationType}\0${existingTest.checkLogic}\0${existingTest.controlId}`;
+
+    if (activeDefinitionKeys.has(activeDefinitionKey)) {
+      continue;
+    }
+
+    await db
+      .update(tests)
+      .set({ isActive: false })
+      .where(eq(tests.id, existingTest.id));
   }
 
   return count;
