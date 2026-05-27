@@ -363,6 +363,10 @@ async function main() {
   const runTestIndex = runnerSource.indexOf("adapter.runTest");
   assert.ok(lockIndex >= 0, "Integration runner must acquire a per-org/provider lock.");
   assert.ok(runTestIndex > lockIndex, "Integration runner must acquire the lock before running checks.");
+  assert.ok(
+    runnerSource.includes("eq(tests.isActive, true)"),
+    "Integration runner must ignore inactive integration tests.",
+  );
 
   console.log("aws connector checks smoke passed");
 }

@@ -1,4 +1,48 @@
 export const NIS2_EVIDENCE_REQUIREMENTS_BY_CONTROL: Record<string, string> = {
+  "aws-infra-cloudtrail-logging-enabled":
+    "AWS CloudTrail configuration export or console snapshot showing an active trail, IsLogging status, protected log destination, region/account scope, and date of review.",
+  "aws-infra-ec2-running":
+    "AWS EC2 inventory export or console snapshot showing in-scope production instances, running state, region/account scope, owner, and date of review.",
+  "aws-infra-s3-backup-recent":
+    "AWS S3 backup bucket listing or backup tool report showing the configured bucket, latest backup object timestamp, retention scope, owner, and date of review.",
+  "aws-infra-security-group-rules-present":
+    "AWS security group export or console snapshot showing relevant inbound/outbound rules, associated assets, review owner, and date of review.",
+  "abra-flexi-api-config-readable":
+    "ABRA Flexi API permission evidence showing the integration user, read-only scope, tested endpoint or export, owner, and date of review.",
+  "abra-flexi-api-credential-rotation":
+    "ABRA Flexi API credential rotation record showing credential owner, rotation interval, last rotation date, emergency revocation process, and exceptions.",
+  "abra-flexi-api-https":
+    "ABRA Flexi API transport evidence showing HTTPS/TLS endpoint configuration or compensating VPN/local restriction, certificate state, and review date.",
+  "abra-flexi-backup-api":
+    "ABRA Flexi backup export or backup endpoint result showing backup scope, timestamp, retention location, owner, and date of review.",
+  "abra-flexi-backup-restore-test":
+    "ABRA Flexi restore-test record showing tested backup, isolated target environment, test date, result, issues, and remediation actions.",
+  "abra-flexi-backup-schedule":
+    "ABRA Flexi backup schedule evidence showing frequency, retention, storage location, monitoring owner, and last successful run.",
+  "abra-flexi-iam-least-privilege":
+    "ABRA Flexi role or permission export showing assigned roles, business rationale, privileged accounts, reviewer, and remediation of excessive access.",
+  "abra-flexi-iam-offboarding":
+    "ABRA Flexi offboarding evidence showing disabled users or removed API access, departure trigger, completion date, and reviewer.",
+  "abra-flexi-iam-user-accounts":
+    "ABRA Flexi user export showing active named accounts, shared-account exceptions, last review date, and owner for remediation.",
+  "abra-flexi-infra-database-protected":
+    "ABRA Flexi database or host protection evidence showing encryption or access controls, patch state, backup owner, and review date.",
+  "abra-flexi-infra-deployment-secured":
+    "ABRA Flexi deployment record showing hosting model, responsible owner, protected assets, security controls in place, and review date.",
+  "abra-flexi-infra-network-restricted":
+    "ABRA Flexi network access evidence showing firewall/VPN/HTTPS restrictions, allowed sources, exposed ports, owner, and review date.",
+  "hetzner-infra-firewall-present":
+    "Hetzner firewall export or console snapshot showing inbound/outbound rules, associated servers, rule owner, and date of review.",
+  "hetzner-infra-server-running":
+    "Hetzner Cloud server inventory or API result showing in-scope production servers, running state, owner, and date of review.",
+  "hetzner-infra-snapshot-recent":
+    "Hetzner snapshot or backup evidence showing latest snapshot timestamp, covered server or volume, retention location, owner, and date of review.",
+  "ovhcloud-infra-backup-present":
+    "OVHcloud backup storage or backup job evidence showing protected server, latest backup timestamp, retention location, owner, and date of review.",
+  "ovhcloud-infra-firewall-enabled":
+    "OVHcloud firewall or network protection evidence showing enabled rules, protected server, allowed traffic, owner, and date of review.",
+  "ovhcloud-infra-server-operational":
+    "OVHcloud server inventory or API result showing in-scope dedicated server, operational state, owner, and date of review.",
   ctrl_asset_inventory:
     "Asset inventory export listing in-scope systems, owners, classification or criticality, last review date, and excluded assets with rationale.",
   ctrl_backup_tested:

@@ -142,7 +142,12 @@ export async function runTestsForOrg(
     const relevantTests = await db
       .select()
       .from(tests)
-      .where(eq(tests.integrationType, integration.provider));
+      .where(
+        and(
+          eq(tests.integrationType, integration.provider),
+          eq(tests.isActive, true),
+        ),
+      );
     let testsRun = 0;
     let errors = 0;
     let evidenceCreated = 0;

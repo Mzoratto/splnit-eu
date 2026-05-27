@@ -117,17 +117,17 @@ export async function GET(
     }
 
     const rows = await getGapAnalysisData(session.orgId, framework);
-    buffer = generateGapAnalysisXLSX({
+    buffer = await generateGapAnalysisXLSX({
       frameworkSlug: framework,
       meta,
       rows,
     });
   } else if (type === "soa-iso27001") {
     const data = await getSoAData(session.orgId);
-    buffer = generateSoAXLSX({ data, meta });
+    buffer = await generateSoAXLSX({ data, meta });
   } else {
     const rows = await getVendorReportData(session.orgId);
-    buffer = generateVendorReportXLSX({ meta, rows });
+    buffer = await generateVendorReportXLSX({ meta, rows });
   }
 
   return responseFromBuffer(

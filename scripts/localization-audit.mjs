@@ -1,5 +1,4 @@
 import fs from 'node:fs';
-import path from 'node:path';
 
 const locales = ['en-EU', 'it-IT', 'cs-CZ'];
 const messages = Object.fromEntries(locales.map((locale) => [

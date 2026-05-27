@@ -130,7 +130,7 @@ const clerk = clerkMiddleware(async (auth, request) => {
   return applyLocale(request);
 });
 
-export default function middleware(request: NextRequest, event: NextFetchEvent) {
+export function proxy(request: NextRequest, event: NextFetchEvent) {
   const clerkConfigured =
     Boolean(process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY) &&
     Boolean(process.env.CLERK_SECRET_KEY);

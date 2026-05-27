@@ -760,6 +760,66 @@ const BASE_CONTROL_LIBRARY: ControlSeed[] = [
     ],
   },
   {
+    key: "aws-infra-ec2-running",
+    titleCs: "AWS EC2 instance je spuštěná",
+    titleEn: "AWS EC2 instance is running",
+    descriptionCs:
+      "Produkční EC2 instance v AWS je dostupná a API kontrola potvrzuje stav running.",
+    category: "business_continuity",
+    testType: "automated",
+    requiresEvidence: true,
+    isAutomated: true,
+    frameworkMappings: [
+      { frameworkSlug: "nis2", articleRef: "Article 21(2)(c)", level: "mandatory" },
+      { frameworkSlug: "iso27001", articleRef: "A.12.1.3", level: "recommended" },
+    ],
+  },
+  {
+    key: "aws-infra-security-group-rules-present",
+    titleCs: "AWS security group má pravidla",
+    titleEn: "AWS security group rules are present",
+    descriptionCs:
+      "Pro AWS prostředí je definována neprázdná sada security group pravidel pro síťový přístup.",
+    category: "asset_management",
+    testType: "automated",
+    requiresEvidence: true,
+    isAutomated: true,
+    frameworkMappings: [
+      { frameworkSlug: "nis2", articleRef: "Article 21(2)(h)", level: "mandatory" },
+      { frameworkSlug: "iso27001", articleRef: "A.13.1.1", level: "recommended" },
+    ],
+  },
+  {
+    key: "aws-infra-s3-backup-recent",
+    titleCs: "AWS S3 záloha je aktuální",
+    titleEn: "AWS S3 backup is recent",
+    descriptionCs:
+      "V nakonfigurovaném AWS S3 backup bucketu existuje objekt změněný v posledních 7 dnech.",
+    category: "business_continuity",
+    testType: "automated",
+    requiresEvidence: true,
+    isAutomated: true,
+    frameworkMappings: [
+      { frameworkSlug: "nis2", articleRef: "Article 21(2)(c)", level: "mandatory" },
+      { frameworkSlug: "iso27001", articleRef: "A.12.3.1", level: "recommended" },
+    ],
+  },
+  {
+    key: "aws-infra-cloudtrail-logging-enabled",
+    titleCs: "AWS CloudTrail aktivně loguje",
+    titleEn: "AWS CloudTrail logging is enabled",
+    descriptionCs:
+      "AWS účet má alespoň jeden CloudTrail trail a jeho stav IsLogging potvrzuje aktivní záznam událostí.",
+    category: "incident",
+    testType: "automated",
+    requiresEvidence: true,
+    isAutomated: true,
+    frameworkMappings: [
+      { frameworkSlug: "nis2", articleRef: "Article 21(2)(h)", level: "mandatory" },
+      { frameworkSlug: "iso27001", articleRef: "A.12.4.1", level: "recommended" },
+    ],
+  },
+  {
     key: "hetzner-infra-server-running",
     titleCs: "Hetzner Cloud server je spuštěný",
     titleEn: "Hetzner Cloud server is running",
