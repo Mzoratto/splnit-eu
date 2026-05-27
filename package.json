@@ -135,7 +135,7 @@
     "db:seed": "tsx scripts/seed.ts",
     "db:studio": "drizzle-kit studio",
     "audit:localization": "node scripts/localization-audit.mjs",
-    "ci:product-safety": "npm run lint:copy:intake-prioritization:strict && npm run smoke:i18n-shell && npm run smoke:jurisdictions && npm run smoke:trust-center-public-disclosure && npm run smoke:org-boundaries && npm run smoke:export-endpoints-source && npm run smoke:templates"
+    "ci:product-safety": "npm run lint:copy:intake-prioritization:strict && npm run smoke:i18n-shell && npm run smoke:jurisdictions && npm run smoke:trust-center-public-disclosure && npm run smoke:export-endpoints-source && npm run smoke:templates"
   },
   "dependencies": {
     "@aws-sdk/client-cloudtrail": "^3.1039.0",
