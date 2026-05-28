@@ -19,6 +19,7 @@ on:
       - 'package.json'
       - 'package-lock.json'
       - 'drizzle.config.ts'
+      - 'tests/fixtures/nis2-eu-articles-ci.xhtml'
       - '.github/workflows/knowledge-layer.yml'
   push:
     branches:
@@ -41,6 +42,7 @@ on:
       - 'package.json'
       - 'package-lock.json'
       - 'drizzle.config.ts'
+      - 'tests/fixtures/nis2-eu-articles-ci.xhtml'
       - '.github/workflows/knowledge-layer.yml'
   workflow_dispatch:
 
