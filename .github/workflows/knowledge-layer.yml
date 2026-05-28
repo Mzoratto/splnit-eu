@@ -19,6 +19,7 @@ on:
       - 'package.json'
       - 'package-lock.json'
       - 'drizzle.config.ts'
+      - '.github/workflows/knowledge-layer.yml'
   push:
     branches:
       - main
@@ -40,6 +41,7 @@ on:
       - 'package.json'
       - 'package-lock.json'
       - 'drizzle.config.ts'
+      - '.github/workflows/knowledge-layer.yml'
   workflow_dispatch:
 
 concurrency:
@@ -55,7 +57,7 @@ jobs:
       DATABASE_URL: postgresql://splnit_ci:splnit_ci@localhost:5432/splnit_ci
     services:
       postgres:
-        image: postgres:16
+        image: pgvector/pgvector:pg16
         env:
           POSTGRES_DB: splnit_ci
           POSTGRES_USER: splnit_ci
