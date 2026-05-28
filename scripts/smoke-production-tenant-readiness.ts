@@ -82,6 +82,36 @@ const liveQuestionnaireSmokeEnabled = process.env.SMOKE_LIVE_OPENAI_QUESTIONNAIR
 const runId = `prod_tenant_readiness_${Date.now()}`;
 const orgName = `Splnit Production Readiness Smoke ${runId}`;
 const trustSlug = `smoke-${Date.now()}`;
+function classifyClerkKey(value: string | undefined, prefixes: { live: string; test: string }) {
+  const trimmed = value?.trim();
+  if (!trimmed) {
+    return "missing";
+  }
+  if (trimmed.startsWith(prefixes.live)) {
+    return "live";
+  }
+  if (trimmed.startsWith(prefixes.test)) {
+    return "test";
+  }
+  return "unknown";
+}
+
+const clerkTarget = (() => {
+  const hostname = new URL(baseUrl).hostname;
+  return hostname === "splnit.eu" || hostname.endsWith(".splnit.eu") ? "live" : "non_live";
+})();
+const publishableKeyClass = classifyClerkKey(publishableKey, {
+  live: "pk_live_",
+  test: "pk_test_",
+});
+const secretKeyClass = classifyClerkKey(secretKey, {
+  live: "sk_live_",
+  test: "sk_test_",
+});
+const clerkCredentialsCompatible =
+  publishableKeyClass === secretKeyClass &&
+  (publishableKeyClass === "live" || publishableKeyClass === "test") &&
+  (clerkTarget !== "live" || publishableKeyClass === "live");
 
 type ProductionSmokeBrowserClerk = {
   client: {
@@ -111,7 +141,11 @@ assert.equal(
   true,
   "SMOKE_LIVE_OPENAI_QUESTIONNAIRE=true is required to prove live OpenAI questionnaire generation in production.",
 );
-
+assert.ok(
+  clerkCredentialsCompatible,
+  `Production tenant readiness smoke target ${baseUrl} requires Clerk credentials from the same environment. ` +
+    `Resolved publishable=${publishableKeyClass}, secret=${secretKeyClass}, target=${clerkTarget}.`,
+);
 const parsedDatabaseUrl = new URL(databaseUrl);
 if (["localhost", "127.0.0.1", "::1"].includes(parsedDatabaseUrl.hostname)) {
   throw new Error(
