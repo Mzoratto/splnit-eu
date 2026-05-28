@@ -145,7 +145,7 @@ const recommendedChecks: EnvCheck[] = [
   {
     level: "recommended",
     name: "sentrySourceMaps",
-    variables: ["SENTRY_AUTH_TOKEN", "SENTRY_ORG", "SENTRY_PROJECT"],
+    variables: ["SENTRY_AUTH_TOKEN"],
   },
 ];
 
