@@ -1,0 +1,87 @@
+name: Knowledge layer
+
+on:
+  pull_request:
+    paths:
+      - 'lib/controls/**'
+      - 'lib/regulations/**'
+      - 'lib/compliance/**'
+      - 'lib/db/schema.ts'
+      - 'lib/db/migrations/**'
+      - 'lib/frameworks/**'
+      - 'lib/integrations/**/test-definitions.ts'
+      - 'scripts/seed.ts'
+      - 'scripts/import-*'
+      - 'scripts/report-knowledge-counts.ts'
+      - 'scripts/smoke-source-documents.ts'
+      - 'scripts/smoke-nis2-evidence-templates.ts'
+      - 'scripts/smoke-reviewed-article-links.ts'
+      - 'package.json'
+      - 'package-lock.json'
+      - 'drizzle.config.ts'
+  push:
+    branches:
+      - main
+      - staging
+    paths:
+      - 'lib/controls/**'
+      - 'lib/regulations/**'
+      - 'lib/compliance/**'
+      - 'lib/db/schema.ts'
+      - 'lib/db/migrations/**'
+      - 'lib/frameworks/**'
+      - 'lib/integrations/**/test-definitions.ts'
+      - 'scripts/seed.ts'
+      - 'scripts/import-*'
+      - 'scripts/report-knowledge-counts.ts'
+      - 'scripts/smoke-source-documents.ts'
+      - 'scripts/smoke-nis2-evidence-templates.ts'
+      - 'scripts/smoke-reviewed-article-links.ts'
+      - 'package.json'
+      - 'package-lock.json'
+      - 'drizzle.config.ts'
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  knowledge-layer:
+    runs-on: ubuntu-latest
+    env:
+      CI: true
+      NEXT_TELEMETRY_DISABLED: 1
+      DATABASE_URL: postgresql://splnit_ci:splnit_ci@localhost:5432/splnit_ci
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_DB: splnit_ci
+          POSTGRES_USER: splnit_ci
+          POSTGRES_PASSWORD: splnit_ci
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U splnit_ci -d splnit_ci"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Install PDF tooling
+        run: sudo apt-get update && sudo apt-get install -y poppler-utils
+
+      - name: Run knowledge-layer gates
+        run: npm run ci:knowledge-layer

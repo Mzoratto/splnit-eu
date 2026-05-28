@@ -1,6 +1,6 @@
 steps:
   - name: deploy-production
-    image: node:24-bookworm-slim
+    image: node:22-bookworm-slim
     environment:
       VERCEL_TOKEN:
         from_secret: vercel_token
@@ -12,12 +12,14 @@ steps:
       - test -n "$VERCEL_TOKEN"
       - test -n "$VERCEL_ORG_ID"
       - test -n "$VERCEL_PROJECT_ID"
+      - apt-get update && apt-get install -y --no-install-recommends ca-certificates curl && rm -rf /var/lib/apt/lists/*
       - npm ci
       - npm install --global vercel@latest
       - vercel pull --yes --environment=production --token "$VERCEL_TOKEN"
       - npm run db:migrate
       - vercel build --prod --token "$VERCEL_TOKEN"
       - vercel deploy --prebuilt --prod --token "$VERCEL_TOKEN"
+      - for attempt in 1 2 3 4 5; do curl --fail --silent --show-error --max-time 30 https://splnit.eu/api/health && break; if [ "$attempt" = "5" ]; then exit 1; fi; sleep 5; done
     when:
       - event: push
         branch: main

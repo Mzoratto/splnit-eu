@@ -7,6 +7,10 @@ on:
       - main
       - staging
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   static-product-gates:
     runs-on: ubuntu-latest
@@ -35,5 +39,8 @@ jobs:
       - name: Product safety smoke gates
         run: npm run ci:product-safety
 
-      - name: Critical dependency audit
-        run: npm audit --omit=dev --audit-level=critical --json > npm-audit-critical.json || (cat npm-audit-critical.json && exit 1)
+      - name: Connector smoke gates
+        run: npm run ci:connector-smokes
+
+      - name: Dependency audit
+        run: npm audit --omit=dev --audit-level=moderate --json > npm-audit-moderate.json || (cat npm-audit-moderate.json && exit 1)
