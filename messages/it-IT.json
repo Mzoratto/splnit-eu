@@ -94,7 +94,7 @@
         "price": "490 Kč/mese",
         "description": "Workspace compliance completo per una organizzazione.",
         "features": [
-          "Tutti i connettori attuali e controlli automatici",
+          "Connettori verificati in base a disponibilità e permessi",
           "Export PDF della panoramica delle misure di sicurezza",
           "Una organizzazione"
         ]
@@ -593,6 +593,10 @@
       "downloadLatestPdf": "Scarica ultimo PDF",
       "gapReportEmpty": "Il PDF verrà creato dopo la prima valutazione del framework.",
       "generatePdf": "Genera PDF",
+      "smartDocumentsTitle": "Genera documenti",
+      "downloadGapAnalysis": "Scarica GAP analysis",
+      "downloadSoa": "Scarica SoA (ISO 27001)",
+      "smartDocumentsBody": "Il documento è precompilato con i dati della piattaforma. Revisionate il contenuto prima di condividerlo con revisori.",
       "isoPackageTitle": "Pacchetto certificazione ISO 27001",
       "isoPackageBody": "L'export ZIP include Statement of Applicability, controlli completati, evidenze disponibili, politiche attive e link agli organismi di certificazione.",
       "downloadZip": "Scarica ZIP",
@@ -1294,6 +1298,8 @@
     "title": "Rischio fornitori",
     "subtitle": "Catalogo fornitori, valutazione del livello di rischio e report supply chain NIS2.",
     "exportReport": "Esporta report NIS2",
+    "vendorReportDownload": "Scarica vendor report",
+    "smartDocumentNotice": "Il documento è precompilato con i dati della piattaforma. Revisionate il contenuto prima di condividerlo con revisori.",
     "form": {
       "title": "Nuovo fornitore",
       "name": "Nome",
@@ -1777,7 +1783,7 @@
         "week1Body": "Confermiamo la giurisdizione, analizziamo l'applicabilità NIS2 e prepariamo la prima lista di priorità.",
         "week2Title": "Settimana 2",
         "week2Heading": "Integrazioni ed evidenze",
-        "week2Body": "Colleghiamo Microsoft 365, GitHub, AWS, Hetzner Cloud, OVHcloud o un workspace ERP e configuriamo i primi controlli automatici.",
+        "week2Body": "Configuriamo integrazioni verificate o workspace ERP in base a disponibilità e permessi, poi salviamo le prime evidenze.",
         "week3Title": "Settimana 3",
         "week3Heading": "Documenti e pacchetto audit",
         "week3Body": "Generiamo il primo set di documenti e prepariamo il formato delle evidenze per il revisore."
@@ -1838,9 +1844,9 @@
     "docsCta": "Vedi la documentazione",
     "steps": {
       "connectTitle": "Collegate gli strumenti",
-      "connectBody": "Collegate Microsoft 365, GitHub, AWS, Hetzner Cloud o OVHcloud. Per le PMI ceche sono disponibili spazi di lavoro specializzati per Pohoda, Money S3, Helios e ABRA Flexi.",
+      "connectBody": "Usate integrazioni verificate o workspace ERP cechi in base a disponibilità e permessi. Le fonti non supportate possono essere tracciate manualmente per ora.",
       "testsTitle": "I controlli possono girare sui sistemi collegati",
-      "testsBody": "I controlli configurati monitorano i sistemi collegati e salvano i risultati come evidenza interna da revisionare.",
+      "testsBody": "I controlli configurati monitorano i sistemi collegati disponibili e salvano i risultati come evidenza interna da revisionare.",
       "resultsTitle": "Ricevete i risultati",
       "resultsBody": "Cruscotto, avvisi sugli errori e documentazione di lavoro per la revisione con consulente o revisore."
     },
@@ -1850,7 +1856,7 @@
       "monitoringTitle": "Monitoraggio configurazione",
       "monitoringBody": "Fate emergere deviazioni di configurazione nei sistemi collegati, così il team può revisionarle.",
       "documentsTitle": "Documenti automatici",
-      "documentsBody": "Esporta un Rapporto di Valutazione della Cybersicurezza — mappato sugli obblighi ZoKB cechi e pronto per un revisore o un'ispezione NÚKIB. I controlli verificati automaticamente appaiono come blocchi verdi, quelli dichiarati manualmente come grigi.",
+      "documentsBody": "Esporta un Rapporto di Valutazione della Cybersicurezza — mappato sugli obblighi ZoKB cechi e preparato per revisione di consulenti o autorità. I controlli verificati automaticamente appaiono come blocchi verdi, quelli dichiarati manualmente come grigi.",
       "templatesTitle": "Modelli scaricabili gratuiti",
       "templatesBody": "Policy di base, ROPA, BCP, DPIA e GAP analysis scaricabili come DOCX e XLSX. Senza registrazione, per tutti.",
       "templatesLink": "Vedi modelli →",
@@ -1934,7 +1940,7 @@
         "features": [
           "Una organizzazione",
           "Tutti i framework supportati",
-          "Connettori attuali e controlli automatici",
+          "Connettori verificati in base a disponibilità e permessi",
           "Archivio evidenze ed export",
           "Modelli scaricabili (11 documenti)",
           "✓ Generazione documenti precompilati",

@@ -51,7 +51,7 @@ const demoRecords: EmployeeTrainingRecord[] = [
     employeeRole: "it_admin",
     id: "demo-training-2",
     notes: null,
-    provider: "NÚKIB",
+    provider: "Czech national cybersecurity authority",
     trainingDate: "2025-07-02",
     trainingType: "incident_response",
   },

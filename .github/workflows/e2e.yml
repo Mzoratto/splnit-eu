@@ -51,9 +51,6 @@ jobs:
     env:
       CI: true
       NEXT_TELEMETRY_DISABLED: 1
-      NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY: ""
-      CLERK_SECRET_KEY: ""
-      ENABLE_LOCAL_DEMO_DATA: "true"
       ENABLE_TEST_ROUTES: "true"
       NEXT_PUBLIC_ENABLE_TEST_ROUTES: "true"
       NODE_OPTIONS: --max-old-space-size=8192
@@ -100,8 +97,19 @@ jobs:
       - name: Build
         run: npm run build
 
-      - name: Run E2E
-        run: npm run test:e2e
+      - name: Run public E2E
+        run: npm run test:e2e:public
+        env:
+          CLERK_SECRET_KEY: ""
+          ENABLE_LOCAL_DEMO_DATA: "false"
+          NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY: ""
+
+      - name: Run local demo E2E
+        run: npm run test:e2e:local-demo
+        env:
+          CLERK_SECRET_KEY: ""
+          ENABLE_LOCAL_DEMO_DATA: "true"
+          NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY: ""
 
       - name: Upload Playwright report
         if: always()

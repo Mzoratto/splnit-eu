@@ -19,6 +19,7 @@ const protectedRoutes = [
   "/incidents(.*)",
   "/risks(.*)",
   "/team(.*)",
+  "/workspaces(.*)",
   "/settings(.*)",
 ];
 

@@ -16,19 +16,19 @@ const metadataByLocale: Record<
   "cs-CZ": {
     title: "Splnit.eu - Compliance automation pro evropské SMB týmy",
     description:
-      "Splnit.eu propojí Microsoft 365, GitHub, AWS, Hetzner Cloud, OVHcloud a české ERP workspaces pro auditní důkazy NIS2, GDPR a ISO 27001.",
+      "Splnit.eu pomáhá řídit NIS2, GDPR a ISO 27001 důkazy z ověřených integrací, manuálních vstupů a českých ERP workspace podle dostupnosti.",
     locale: "cs_CZ",
   },
   "en-EU": {
     title: "Splnit.eu - Compliance automation for European SMB teams",
     description:
-      "Connect Microsoft 365, GitHub, AWS, Hetzner Cloud, OVHcloud, and Czech ERP workspaces to prepare audit evidence for NIS2, GDPR, and ISO 27001.",
+      "Splnit.eu helps manage NIS2, GDPR, and ISO 27001 evidence from verified integrations, manual inputs, and Czech ERP workspaces where available.",
     locale: "en_EU",
   },
   "it-IT": {
     title: "Splnit.eu - Automazione compliance per PMI europee",
     description:
-      "Collegate Microsoft 365, GitHub, AWS, Hetzner Cloud, OVHcloud e workspace ERP cechi per preparare evidenze audit per NIS2, GDPR e ISO 27001.",
+      "Splnit.eu aiuta a gestire evidenze NIS2, GDPR e ISO 27001 da integrazioni verificate, input manuali e workspace ERP cechi dove disponibili.",
     locale: "it_IT",
   },
 };

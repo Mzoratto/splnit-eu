@@ -34,9 +34,16 @@ type BrowserClerk = {
 
 const smokeUserEmail = process.env.SMOKE_USER_EMAIL?.trim();
 const clerkSecretKey = process.env.CLERK_SECRET_KEY?.trim();
+const requireAuthenticatedE2E = process.env.REQUIRE_AUTHENTICATED_E2E === "true";
 const canRunAuthenticatedFeatureVerification = Boolean(
   smokeUserEmail && clerkSecretKey && process.env.DATABASE_URL?.trim(),
 );
+
+if (requireAuthenticatedE2E && !canRunAuthenticatedFeatureVerification) {
+  throw new Error(
+    "test:e2e:authenticated requires SMOKE_USER_EMAIL, CLERK_SECRET_KEY, and DATABASE_URL.",
+  );
+}
 
 let clerk: ReturnType<typeof createClerkClient>;
 let smokeOrgId: string;

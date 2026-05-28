@@ -29,7 +29,7 @@ const copy: Record<Locale, PageCopy> = {
       description:
         "Bezplatný přehled pro české firmy: koho se týká NIS2, kdy řešit GDPR povinnosti SME a jak začít s EU compliance bez registrace.",
       locale: "cs_CZ",
-      title: "Které EU předpisy se vás týkají? Bezplatný přehled | Splnit.eu",
+      title: "Které EU předpisy mohou být relevantní? Bezplatný přehled | Splnit.eu",
     },
     noteBody:
       "Výsledek je orientační triáž, ne právní stanovisko. U NIS2 vždy ověřte konkrétní regulovanou službu, velikost organizace a český režim podle ZoKB.",

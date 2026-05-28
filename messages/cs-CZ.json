@@ -94,7 +94,7 @@
         "price": "490 Kč/měsíc",
         "description": "Plný compliance workspace pro jednu organizaci.",
         "features": [
-          "Všechny aktuální konektory a automatické kontroly",
+          "Ověřené konektory podle dostupnosti a oprávnění",
           "PDF export Přehledu bezpečnostních opatření",
           "Jedna organizace"
         ]
@@ -593,6 +593,10 @@
       "downloadLatestPdf": "Stáhnout poslední PDF",
       "gapReportEmpty": "PDF se vytvoří po prvním vyhodnocení frameworku.",
       "generatePdf": "Vygenerovat PDF",
+      "smartDocumentsTitle": "Generovat dokumenty",
+      "downloadGapAnalysis": "Stáhnout GAP analýzu",
+      "downloadSoa": "Stáhnout SoA (ISO 27001)",
+      "smartDocumentsBody": "Dokument je předvyplněn daty z vaší platformy. Zkontrolujte obsah před sdílením s auditory.",
       "isoPackageTitle": "Balíček certifikace ISO 27001",
       "isoPackageBody": "ZIP export obsahuje Statement of Applicability, splněné kontroly, dostupné důkazy, aktivní politiky a odkazy na certifikační orgány.",
       "downloadZip": "Stáhnout ZIP",
@@ -1291,9 +1295,11 @@
     "noDate": "nenaplánováno",
     "emptyValue": "n/a",
     "eyebrow": "Dodavatelé",
-    "title": "Riziko dodavatelů",
+    "title": "Dodavatelé",
     "subtitle": "Katalog dodavatelů, hodnocení úrovně rizika a report dodavatelského řetězce pro NIS2.",
     "exportReport": "Exportovat NIS2 report",
+    "vendorReportDownload": "Stáhnout vendor report",
+    "smartDocumentNotice": "Dokument je předvyplněn daty z vaší platformy. Zkontrolujte obsah před sdílením s auditory.",
     "form": {
       "title": "Nový dodavatel",
       "name": "Název",
@@ -1777,7 +1783,7 @@
         "week1Body": "Potvrdíme jurisdikci, projdeme NIS2 aplikovatelnost a připravíme první seznam priorit.",
         "week2Title": "2. týden",
         "week2Heading": "Integrace a evidence",
-        "week2Body": "Připojíme Microsoft 365, GitHub, AWS, Hetzner Cloud, OVHcloud nebo ERP workspace a nastavíme první automatické kontroly.",
+        "week2Body": "Nastavíme první ověřené integrace nebo ERP workspace podle dostupnosti a oprávnění a uložíme první důkazy.",
         "week3Title": "3. týden",
         "week3Heading": "Dokumenty a auditní balíček",
         "week3Body": "Vygenerujeme první sadu dokumentů a připravíme formát důkazů pro auditora."
@@ -1793,7 +1799,7 @@
       "whyTag": "Proč",
       "whyTitle": "Compliance postavená vývojářem, respektující lokální legislativu.",
       "whyP1": "Velké globální compliance platformy často dobře pokrývají obecné rámce, ale evropské MSP potřebují také lokální transpozice, jasné citace a praktický onboarding.",
-      "whyP2": "Splnit.eu začíná menší: automatické kontroly pro systémy, které firmy už používají, dokumenty připravené k právní kontrole a přímá práce se zakladatelem u prvních design partnerů.",
+      "whyP2": "Splnit.eu začíná menší: ověřené kontroly tam, kde existují funkční integrace, dokumenty připravené k právní kontrole a přímá práce se zakladatelem u prvních design partnerů.",
       "realToday": {
         "solo": "Splnit.eu je produkt v předběžném přístupu vedený zakladatelem a postavený v Olomouci.",
         "focus": "Produkt se zaměřuje na automatizaci EU compliance pro NIS2, GDPR a ISO 27001.",
@@ -1839,9 +1845,9 @@
     "docsCta": "Zobrazit dokumentaci",
     "steps": {
       "connectTitle": "Připojte nástroje",
-      "connectBody": "Propojte Microsoft 365, GitHub, AWS, Hetzner Cloud nebo OVHcloud. Pro české SME jsou k dispozici specializované pracovní prostory pro Pohodu, Money S3, Helios a ABRA Flexi.",
+      "connectBody": "Použijte ověřené integrace nebo české ERP workspace podle dostupnosti a oprávnění. Nepodporované zdroje lze zatím evidovat ručně.",
       "testsTitle": "Kontroly mohou běžet nad propojenými systémy",
-      "testsBody": "Nakonfigurované kontroly sledují připojené systémy a ukládají výsledky jako interní evidenci ke kontrole.",
+      "testsBody": "Nakonfigurované kontroly sledují dostupné propojené systémy a ukládají výsledky jako interní evidenci ke kontrole.",
       "resultsTitle": "Dostanete výsledky",
       "resultsBody": "Dashboard, upozornění na selhání a pracovní auditní dokumentace ke kontrole s poradcem nebo auditorem."
     },
@@ -1869,8 +1875,8 @@
   },
   "leadCapture": {
     "tag": "Orientační přehled",
-    "title": "Které EU předpisy pro vás mohou být relevantní?",
-    "subtitle": "Vyberte profil firmy — zvýrazníme, které EU předpisy pro vás mohou být relevantní.",
+    "title": "Které EU předpisy mohou být relevantní?",
+    "subtitle": "Vyberte profil firmy — zvýrazníme, které EU předpisy mohou být relevantní.",
     "companySize": "Velikost firmy",
     "industry": "Odvětví",
     "matchingRegulations": "Relevantní předpisy",
@@ -1934,7 +1940,7 @@
         "features": [
           "Jedna organizace",
           "Všechny podporované frameworky",
-          "Aktuální konektory a automatické kontroly",
+          "Ověřené konektory podle dostupnosti a oprávnění",
           "Archiv evidence a exporty",
           "Šablony ke stažení (11 dokumentů)",
           "✓ Generování předvyplněných dokumentů",

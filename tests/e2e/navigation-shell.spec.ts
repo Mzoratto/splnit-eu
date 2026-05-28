@@ -37,47 +37,26 @@ for (const path of demoRoutes) {
 }
 
 for (const path of appShellRoutes) {
-  test(`authenticated app route ${path} keeps the shared navigation shell`, async ({
+  test(`protected app route ${path} does not expose the app shell without auth`, async ({
     page,
-  }, testInfo) => {
-    await page.goto(path, { waitUntil: "domcontentloaded" });
-    const sidebar = page.locator("aside").filter({
-      has: page.getByRole("link", { name: "Dashboard" }),
-    });
+  }) => {
+    const response = await page.goto(path, { waitUntil: "domcontentloaded" });
+    const status = response?.status() ?? 0;
 
-    await expect(page.getByRole("banner")).toBeVisible();
-    if (testInfo.project.name === "mobile-chrome") {
-      const mobileNav = page
-        .locator("nav")
-        .filter({
-          has: page.getByRole("link", { name: "Dashboard" }),
-        })
-        .last();
-
-      await expect(mobileNav).toBeVisible();
-      await expect(
-        mobileNav.getByRole("link", { name: "Dashboard" }),
-      ).toBeVisible();
-      await expect(
-        mobileNav.getByRole("link", { name: "Kontroly" }),
-      ).toBeVisible();
-
-      const moreButton = mobileNav.getByRole("button", { name: "Více" });
-      const moreDrawer = page.locator("#mobile-more-drawer");
-
-      await expect(moreButton).toBeVisible();
-      await expect(async () => {
-        await moreButton.click();
-        await expect(moreDrawer).toBeVisible({ timeout: 1_000 });
-      }).toPass();
-      await expect(
-        moreDrawer.getByRole("link", { name: "Nastavení" }),
-      ).toBeVisible();
-    } else {
-      await expect(sidebar).toContainText("Splnit.eu");
-      await expect(page.getByRole("link", { name: "Dashboard" })).toBeVisible();
-      await expect(page.getByRole("link", { name: "Kontroly" })).toBeVisible();
-      await expect(page.getByRole("link", { name: "Nastavení" })).toBeVisible();
+    if (status === 503) {
+      await expect(page.locator("body")).toContainText("Authentication is not configured.");
+      return;
     }
+
+    if (page.url().includes("/sign-in")) {
+      await expect(page.locator("body")).toContainText(/Sign in|Přihlásit|Přihlášení/i);
+      return;
+    }
+
+    await expect(
+      page
+        .locator("aside")
+        .filter({ has: page.getByRole("link", { name: "Dashboard" }) }),
+    ).toHaveCount(0);
   });
 }

@@ -67,32 +67,32 @@ const copy: Record<Locale, PlatformCopy> = {
   "cs-CZ": {
     metadata: {
       description:
-        "Technická platforma Splnit.eu pro automatické kontroly, evidence vault a dokumenty pro NIS2, GDPR a ISO 27001.",
+        "Technická platforma Splnit.eu pro ověřené kontroly, evidence vault a dokumenty pro NIS2, GDPR a ISO 27001.",
       locale: "cs_CZ",
       title:
-        "Platforma | Splnit.eu — automatické kontroly pro cloud, identity a ERP",
+        "Platforma | Splnit.eu — ověřené kontroly pro cloud, identity a ERP",
     },
     jsonLdDescription:
-      "Platforma Splnit.eu automatizuje compliance testy, evidence vault a Trust Center pro NIS2, EU AI Act, GDPR a ISO 27001.",
+      "Platforma Splnit.eu podporuje compliance kontroly, evidence vault a Trust Center pro NIS2, EU AI Act, GDPR a ISO 27001 podle ověřených zdrojů.",
     pageName: "Splnit.eu Platforma",
     hero: {
       body:
-        "Připojte Microsoft 365, GitHub, AWS, Hetzner Cloud, OVHcloud nebo český ERP workspace. Splnit.eu pomáhá průběžně kontrolovat bezpečnostní nastavení a ukládat auditní záznamy.",
+        "Připojte ověřené integrace nebo český ERP workspace podle dostupnosti a oprávnění. Splnit.eu pomáhá kontrolovat bezpečnostní nastavení a ukládat auditní záznamy bez tvrzení nad rámec dostupných důkazů.",
       cta: "Rezervovat demo",
       tag: "Pro vývojáře",
-      title: "Automatické kontroly pro systémy, které už používáte.",
+      title: "Kontroly pro systémy, které už používáte.",
     },
     steps: [
       {
-        body: "Microsoft 365, GitHub, AWS, Hetzner Cloud, OVHcloud a české ERP workspaces podle dostupnosti a oprávnění.",
+        body: "Ověřené integrace a české ERP workspaces podle dostupnosti, prostředí a oprávnění.",
         icon: "solar:plug-linear",
         title: "Připojte nástroje",
       },
       {
         body:
-          "Kontroly pro připojené systémy běží průběžně a výsledky se ukládají jako důkazy.",
+          "Kontroly pro dostupné propojené systémy se ukládají jako důkazy ke kontrole.",
         icon: "solar:cpu-linear",
-        title: "Testy běží automaticky",
+        title: "Kontroly běží tam, kde jsou nakonfigurované",
       },
       {
         body:
@@ -104,10 +104,10 @@ const copy: Record<Locale, PlatformCopy> = {
     integrations: {
       available: "Dostupné integrace",
       body:
-        "Nevěříme na ruční sběr důkazů. Splnit.eu se nativně připojuje k vašim identity providerům, cloudovým platformám a interním systémům.",
+        "Ruční sběr důkazů zůstává možný. Automatizaci popisujeme jako dostupnou jen u ověřených integrací a oprávnění.",
       bullets: [
-        "Cloudové a identity integrace: Microsoft 365, GitHub a AWS",
-        "Infrastrukturní konektory: Hetzner Cloud a OVHcloud",
+        "Cloudové a identity integrace podle ověřené konfigurace",
+        "Infrastrukturní konektory podle dostupných pověření",
         "České ERP pracovní prostory: Pohoda, Money S3 / S4, Helios a ABRA Flexi s mapováním na ZoKB",
         "Upozornění na selhání kontrol v aplikaci",
         "Lokální regulatorní zdroje tam, kde jsou ověřené",
@@ -131,7 +131,7 @@ const copy: Record<Locale, PlatformCopy> = {
     evidence: {
       cards: [
         {
-          body: "API snapshoty z každé integrace uloženy jako důkaz.",
+          body: "API snapshoty z nakonfigurovaných integrací uložené jako důkaz.",
           icon: "solar:cloud-download-linear",
           title: "Automatický sběr",
         },
@@ -149,7 +149,7 @@ const copy: Record<Locale, PlatformCopy> = {
       extraSections: [
         {
           body:
-            "GAP analýza, prohlášení o aplikovatelnosti (SoA) a vendor report se generují přímo z dat, která platforma průběžně sbírá. Výsledný XLSX je předvyplněný a připravený pro auditora.",
+            "GAP analýza, prohlášení o aplikovatelnosti (SoA) a vendor report se generují z dat dostupných v platformě. Výstup je předvyplněný a vyžaduje kontrolu před sdílením s auditorem.",
           title: "Generování dokumentů z dat platformy",
         },
       ],
@@ -182,32 +182,32 @@ const copy: Record<Locale, PlatformCopy> = {
   "en-EU": {
     metadata: {
       description:
-        "The Splnit.eu platform for automated checks, evidence vault, and documents for NIS2, GDPR, and ISO 27001.",
+        "The Splnit.eu platform for verified checks, evidence vault, and documents for NIS2, GDPR, and ISO 27001.",
       locale: "en_EU",
       title:
-        "Platform | Splnit.eu — automated checks for cloud, identity, and ERP",
+        "Platform | Splnit.eu — verified checks for cloud, identity, and ERP",
     },
     jsonLdDescription:
-      "Splnit.eu automates compliance checks, evidence collection, and Trust Center workflows for NIS2, EU AI Act, GDPR, and ISO 27001.",
+      "Splnit.eu supports compliance checks, evidence collection, and Trust Center workflows for NIS2, EU AI Act, GDPR, and ISO 27001 according to verified sources.",
     pageName: "Splnit.eu Platform",
     hero: {
       body:
-        "Connect Microsoft 365, GitHub, AWS, Hetzner Cloud, OVHcloud, or a Czech ERP workspace. Splnit.eu helps check security settings over time and store audit records.",
+        "Connect verified integrations or a Czech ERP workspace according to availability and permissions. Splnit.eu helps check security settings and store audit records without stronger claims than the available evidence supports.",
       cta: "Book a demo",
       tag: "Developer First",
-      title: "Automated checks for the systems you already use.",
+      title: "Checks for the systems you already use.",
     },
     steps: [
       {
-        body: "Microsoft 365, GitHub, AWS, Hetzner Cloud, OVHcloud, and Czech ERP workspaces, depending on available integrations and permissions.",
+        body: "Verified integrations and Czech ERP workspaces, depending on availability, environment, and permissions.",
         icon: "solar:plug-linear",
         title: "Connect tools",
       },
       {
         body:
-          "Checks for connected systems run continuously and store results as evidence.",
+          "Checks for available connected systems are stored as evidence for review.",
         icon: "solar:cpu-linear",
-        title: "Checks run automatically",
+        title: "Checks run where configured",
       },
       {
         body:
@@ -219,10 +219,10 @@ const copy: Record<Locale, PlatformCopy> = {
     integrations: {
       available: "Available integrations",
       body:
-        "Manual evidence collection does not scale. Splnit.eu connects directly to identity providers, cloud platforms, and internal systems.",
+        "Manual evidence collection remains available. Automation is described as available only for verified integrations and permissions.",
       bullets: [
-        "Cloud and identity integrations: Microsoft 365, GitHub and AWS",
-        "Infrastructure connectors: Hetzner Cloud and OVHcloud",
+        "Cloud and identity integrations according to verified configuration",
+        "Infrastructure connectors according to available credentials",
         "Czech ERP workspaces: Pohoda, Money S3 / S4, Helios, and ABRA Flexi mapped to ZoKB obligations",
         "In-app alerts on failed controls",
         "Local regulatory sources where verified",
@@ -246,7 +246,7 @@ const copy: Record<Locale, PlatformCopy> = {
     evidence: {
       cards: [
         {
-          body: "API snapshots from every integration stored as evidence.",
+          body: "API snapshots from configured integrations stored as evidence.",
           icon: "solar:cloud-download-linear",
           title: "Automatic collection",
         },
@@ -264,7 +264,7 @@ const copy: Record<Locale, PlatformCopy> = {
       extraSections: [
         {
           body:
-            "GAP analysis, Statement of Applicability (SoA), and vendor reports are generated directly from data the platform continuously collects. The resulting XLSX is pre-filled and ready for auditor review.",
+            "GAP analysis, Statement of Applicability (SoA), and vendor reports are generated from data available in the platform. The output is pre-filled and must be reviewed before auditor sharing.",
           title: "Document generation from platform data",
         },
       ],
@@ -297,32 +297,32 @@ const copy: Record<Locale, PlatformCopy> = {
   "it-IT": {
     metadata: {
       description:
-        "La piattaforma Splnit.eu per controlli automatici, archivio evidenze e documenti per NIS2, GDPR e ISO 27001. Le fonti normative locali vengono aggiunte solo dopo verifica.",
+        "La piattaforma Splnit.eu per controlli verificati, archivio evidenze e documenti per NIS2, GDPR e ISO 27001. Le fonti normative locali vengono aggiunte solo dopo verifica.",
       locale: "it_IT",
       title:
-        "Piattaforma | Splnit.eu — controlli automatici per cloud, identity ed ERP",
+        "Piattaforma | Splnit.eu — controlli verificati per cloud, identity ed ERP",
     },
     jsonLdDescription:
-      "Splnit.eu automatizza controlli di compliance, raccolta evidenze e workflow Trust Center per NIS2, EU AI Act, GDPR e ISO 27001. Le fonti locali vengono mostrate solo quando verificate.",
+      "Splnit.eu supporta controlli di compliance, raccolta evidenze e workflow Trust Center per NIS2, EU AI Act, GDPR e ISO 27001 secondo fonti verificate.",
     pageName: "Splnit.eu Piattaforma",
     hero: {
       body:
-        "Collegate Microsoft 365, GitHub, AWS, Hetzner Cloud, OVHcloud o un workspace ERP ceco. Splnit.eu aiuta a controllare le impostazioni di sicurezza nel tempo e a conservare evidenze di audit, con riferimenti normativi aggiunti solo quando verificati.",
+        "Collegate integrazioni verificate o un workspace ERP ceco in base a disponibilità e permessi. Splnit.eu aiuta a controllare le impostazioni di sicurezza e conservare evidenze senza claim più forti delle prove disponibili.",
       cta: "Prenota demo",
       tag: "Pensato per sviluppatori",
-      title: "Controlli automatici per i sistemi che usate già.",
+      title: "Controlli per i sistemi che usate già.",
     },
     steps: [
       {
-        body: "Microsoft 365, GitHub, AWS, Hetzner Cloud, OVHcloud e workspace ERP cechi, in base alle integrazioni e ai permessi disponibili.",
+        body: "Integrazioni verificate e workspace ERP cechi, in base a disponibilità, ambiente e permessi.",
         icon: "solar:plug-linear",
         title: "Collegate gli strumenti",
       },
       {
         body:
-          "I controlli sui sistemi collegati girano in modo continuo e salvano i risultati come evidenze.",
+          "I controlli sui sistemi collegati disponibili vengono salvati come evidenze da revisionare.",
         icon: "solar:cpu-linear",
-        title: "I test girano automaticamente",
+        title: "I controlli girano dove configurati",
       },
       {
         body:
@@ -334,10 +334,10 @@ const copy: Record<Locale, PlatformCopy> = {
     integrations: {
       available: "Integrazioni disponibili",
       body:
-        "La raccolta manuale delle evidenze non scala. Splnit.eu si collega direttamente a identity provider, piattaforme cloud e sistemi interni.",
+        "La raccolta manuale delle evidenze resta disponibile. Descriviamo l'automazione come disponibile solo per integrazioni e permessi verificati.",
       bullets: [
-        "Integrazioni cloud e identity: Microsoft 365, GitHub e AWS",
-        "Connettori infrastrutturali: Hetzner Cloud e OVHcloud",
+        "Integrazioni cloud e identity in base a configurazione verificata",
+        "Connettori infrastrutturali in base alle credenziali disponibili",
         "Spazi di lavoro ERP cechi: Pohoda, Money S3 / S4, Helios e ABRA Flexi mappati sugli obblighi ZoKB",
         "Avvisi in-app per controlli falliti",
         "Fonti normative locali dove verificate",
@@ -361,7 +361,7 @@ const copy: Record<Locale, PlatformCopy> = {
     evidence: {
       cards: [
         {
-          body: "Snapshot API da ogni integrazione salvati come evidenza.",
+          body: "Snapshot API dalle integrazioni configurate salvati come evidenza.",
           icon: "solar:cloud-download-linear",
           title: "Raccolta automatica",
         },
@@ -379,7 +379,7 @@ const copy: Record<Locale, PlatformCopy> = {
       extraSections: [
         {
           body:
-            "GAP analysis, dichiarazione di applicabilità (SoA) e vendor report vengono generati direttamente dai dati che la piattaforma raccoglie nel tempo. Il file XLSX risultante è precompilato e pronto per il revisore.",
+            "GAP analysis, dichiarazione di applicabilità (SoA) e vendor report vengono generati dai dati disponibili nella piattaforma. L'output è precompilato e deve essere revisionato prima della condivisione con revisori.",
           title: "Generazione documenti dai dati della piattaforma",
         },
       ],

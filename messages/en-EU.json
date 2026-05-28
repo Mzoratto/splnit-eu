@@ -94,7 +94,7 @@
         "price": "490 Kč/month",
         "description": "Full compliance workspace for one organisation.",
         "features": [
-          "All current connectors and automated checks",
+          "Verified connectors according to availability and permissions",
           "PDF export of the security-measures overview",
           "One organisation"
         ]
@@ -593,6 +593,10 @@
       "downloadLatestPdf": "Download latest PDF",
       "gapReportEmpty": "The PDF will be created after the first framework assessment.",
       "generatePdf": "Generate PDF",
+      "smartDocumentsTitle": "Generate documents",
+      "downloadGapAnalysis": "Download GAP analysis",
+      "downloadSoa": "Download SoA (ISO 27001)",
+      "smartDocumentsBody": "The document is pre-filled with your platform data. Review the content before sharing it with auditors.",
       "isoPackageTitle": "ISO 27001 certification package",
       "isoPackageBody": "The ZIP export includes the Statement of Applicability, completed controls, available evidence, active policies, and certification body links.",
       "downloadZip": "Download ZIP",
@@ -1294,6 +1298,8 @@
     "title": "Vendor risk",
     "subtitle": "Vendor catalogue, risk-tier assessment, and NIS2 supply-chain report.",
     "exportReport": "Export NIS2 report",
+    "vendorReportDownload": "Download vendor report",
+    "smartDocumentNotice": "The document is pre-filled with your platform data. Review the content before sharing it with auditors.",
     "form": {
       "title": "New vendor",
       "name": "Name",
@@ -1777,7 +1783,7 @@
         "week1Body": "We confirm jurisdiction, walk through NIS2 applicability, and prepare the first priority list.",
         "week2Title": "Week 2",
         "week2Heading": "Integrations and evidence",
-        "week2Body": "We connect Microsoft 365, GitHub, AWS, Hetzner Cloud, OVHcloud, or an ERP workspace and configure the first automated checks.",
+        "week2Body": "We configure verified integrations or ERP workspaces according to availability and permissions, then capture the first evidence.",
         "week3Title": "Week 3",
         "week3Heading": "Documents and audit pack",
         "week3Body": "We generate the first document set and prepare an evidence format for your auditor."
@@ -1839,9 +1845,9 @@
     "docsCta": "View documentation",
     "steps": {
       "connectTitle": "Connect tools",
-      "connectBody": "Connect Microsoft 365, GitHub, AWS, Hetzner Cloud, or OVHcloud. Specialized workspaces for Pohoda, Money S3, Helios, and ABRA Flexi are available for Czech SMEs.",
+      "connectBody": "Use verified integrations or Czech ERP workspaces according to availability and permissions. Unsupported sources can be tracked manually for now.",
       "testsTitle": "Checks can run on connected systems",
-      "testsBody": "Configured checks monitor connected systems and save results as internal evidence for review.",
+      "testsBody": "Configured checks monitor available connected systems and save results as internal evidence for review.",
       "resultsTitle": "Get results",
       "resultsBody": "Dashboard, failure alerts, and working audit documentation for review with your advisor or auditor."
     },
@@ -1851,7 +1857,7 @@
       "monitoringTitle": "Configuration monitoring",
       "monitoringBody": "Surface configuration drift in connected systems so the team can review it.",
       "documentsTitle": "Automated documents",
-      "documentsBody": "Export a Cybersecurity Assessment Report — mapped to Czech ZoKB obligations and ready for an auditor or NÚKIB inspection. Automatically verified controls appear as green blocks, manually declared ones as grey.",
+      "documentsBody": "Export a Cybersecurity Assessment Report — mapped to Czech ZoKB obligations and prepared for advisor or authority review. Automatically verified controls appear as green blocks, manually declared ones as grey.",
       "templatesTitle": "Free downloadable templates",
       "templatesBody": "Core policies, ROPA, BCP, DPIA, and GAP analyses available as DOCX and XLSX. No registration, available to everyone.",
       "templatesLink": "View templates →",
@@ -1870,7 +1876,7 @@
   "leadCapture": {
     "tag": "Indicative overview",
     "title": "Which EU regulations may matter for your company?",
-    "subtitle": "Select your company profile — we'll highlight which EU regulations apply to you.",
+    "subtitle": "Select your company profile — we'll highlight which EU regulations may be relevant.",
     "companySize": "Company size",
     "industry": "Industry",
     "matchingRegulations": "Matching regulations",
@@ -1934,7 +1940,7 @@
         "features": [
           "One organisation",
           "All supported frameworks",
-          "Current connectors and automated checks",
+          "Verified connectors according to availability and permissions",
           "Evidence archive and exports",
           "Downloadable templates (11 documents)",
           "✓ Pre-filled document generation",

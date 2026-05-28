@@ -373,22 +373,22 @@ export default async function FrameworkDetailPage({
           <article className="card">
             <div className="flex items-center gap-2">
               <FileSpreadsheet className="h-5 w-5 text-primary" aria-hidden="true" strokeWidth={1.5} />
-              <h2 className="text-lg font-medium">Generovat dokumenty</h2>
+              <h2 className="text-lg font-medium">{copy.detail.smartDocumentsTitle}</h2>
             </div>
             <div className="mt-5 flex flex-wrap gap-3">
               <DocumentDownloadButton
                 href={`/api/documents/generate/gap-analysis?framework=${encodeURIComponent(seedFramework.slug)}`}
-                label="Stáhnout GAP analýzu"
+                label={copy.detail.downloadGapAnalysis}
               />
               {isIso27001 ? (
                 <DocumentDownloadButton
                   href="/api/documents/generate/soa-iso27001"
-                  label="Stáhnout SoA (ISO 27001)"
+                  label={copy.detail.downloadSoa}
                 />
               ) : null}
             </div>
             <p className="mt-4 text-sm leading-6 text-foreground/64">
-              Dokument je předvyplněn daty z vaší platformy. Zkontrolujte obsah před sdílením s auditory.
+              {copy.detail.smartDocumentsBody}
             </p>
           </article>
         ) : null}

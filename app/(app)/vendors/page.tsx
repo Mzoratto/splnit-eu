@@ -151,7 +151,7 @@ export default async function VendorsPage() {
             <DocumentDownloadButton
               className="inline-flex items-center gap-2 rounded-md border border-border px-4 py-3 text-sm font-medium hover:bg-surface-muted"
               href="/api/documents/generate/vendor-report"
-              label="Stáhnout vendor report"
+              label={copy.vendorReportDownload}
             />
           ) : null}
           <a
@@ -166,7 +166,7 @@ export default async function VendorsPage() {
 
       {smartDocumentsEnabled ? (
         <p className="max-w-2xl text-sm leading-6 text-foreground/64">
-          Dokument je předvyplněn daty z vaší platformy. Zkontrolujte obsah před sdílením s auditory.
+          {copy.smartDocumentNotice}
         </p>
       ) : null}
 
