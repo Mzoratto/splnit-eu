@@ -1,22 +1,17 @@
-import { auth } from "@clerk/nextjs/server";
 import { z } from "zod";
+import { getNukibRegistrationApiSession } from "@/lib/compliance/nukib/registration-api-session";
+import type { NukibRegistration } from "@/lib/compliance/nukib/registration-schema";
 import {
   NUKIB_REGISTRATION_KIND,
   parseNukibRegistrationContent,
 } from "@/lib/compliance/nukib/registration-artifact";
+import { getNukibRegistrationTestArtifact } from "@/lib/compliance/nukib/registration-test-store";
 import { getGeneratedArtifactForOrg } from "@/lib/db/queries/generated-artifacts";
 import { privateJson, withPrivateNoStore } from "@/lib/http/private-response";
 import { renderNukibRegistrationPdf } from "@/lib/pdf/nukib-registration";
 
 export const dynamic = "force-dynamic";
 export const runtime = "nodejs";
-
-function hasClerkConfig() {
-  return (
-    Boolean(process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY) &&
-    Boolean(process.env.CLERK_SECRET_KEY)
-  );
-}
 
 function slugifyFilenamePart(value: string) {
   const slug = value
@@ -33,13 +28,9 @@ export async function GET(
   _request: Request,
   { params }: { params: Promise<{ artifactId: string }> },
 ) {
-  if (!hasClerkConfig()) {
-    return privateJson({ error: "Unauthorized" }, { status: 401 });
-  }
+  const session = await getNukibRegistrationApiSession();
 
-  const session = await auth();
-
-  if (!session?.userId || !session.orgId) {
+  if (!session) {
     return privateJson({ error: "Unauthorized" }, { status: 401 });
   }
 
@@ -49,17 +40,29 @@ export async function GET(
     return privateJson({ error: "Invalid artifact id" }, { status: 400 });
   }
 
-  const artifact = await getGeneratedArtifactForOrg({
-    artifactId,
-    clerkOrgId: session.orgId,
-    kind: NUKIB_REGISTRATION_KIND,
-  });
+  let registration: NukibRegistration | null = null;
 
-  if (!artifact) {
-    return privateJson({ error: "Forbidden" }, { status: 403 });
+  if (session.mode === "test") {
+    registration =
+      getNukibRegistrationTestArtifact({
+        artifactId,
+        clerkOrgId: session.orgId,
+      })?.content ?? null;
+  } else {
+    const artifact = await getGeneratedArtifactForOrg({
+      artifactId,
+      clerkOrgId: session.orgId,
+      kind: NUKIB_REGISTRATION_KIND,
+    });
+
+    registration = artifact
+      ? parseNukibRegistrationContent(artifact.content)
+      : null;
   }
 
-  const registration = parseNukibRegistrationContent(artifact.content);
+  if (!registration) {
+    return privateJson({ error: "Forbidden" }, { status: 403 });
+  }
   const pdf = await renderNukibRegistrationPdf(registration);
   const orgSlug = slugifyFilenamePart(registration.organisationName);
 

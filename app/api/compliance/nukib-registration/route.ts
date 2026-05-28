@@ -1,4 +1,3 @@
-import { auth } from "@clerk/nextjs/server";
 import { and, desc, eq } from "drizzle-orm";
 import { NextResponse } from "next/server";
 import { z } from "zod";
@@ -7,22 +6,20 @@ import {
   NUKIB_REGISTRATION_KIND,
   parseNukibRegistrationContent,
 } from "@/lib/compliance/nukib/registration-artifact";
+import { getNukibRegistrationApiSession } from "@/lib/compliance/nukib/registration-api-session";
 import {
   NUKIB_REGISTRATION_LEGAL_BASIS,
   NukibRegistrationSchema,
 } from "@/lib/compliance/nukib/registration-schema";
+import {
+  createNukibRegistrationTestArtifact,
+  getLatestNukibRegistrationTestArtifact,
+} from "@/lib/compliance/nukib/registration-test-store";
 import { getDb } from "@/lib/db";
 import { generatedArtifacts } from "@/lib/db/schema";
 import { privateJson } from "@/lib/http/private-response";
 
 export const dynamic = "force-dynamic";
-
-function hasClerkConfig() {
-  return (
-    Boolean(process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY) &&
-    Boolean(process.env.CLERK_SECRET_KEY)
-  );
-}
 
 function validationError(error: z.ZodError) {
   return privateJson(
@@ -35,13 +32,9 @@ function validationError(error: z.ZodError) {
 }
 
 export async function POST(request: Request) {
-  if (!hasClerkConfig()) {
-    return privateJson({ error: "Unauthorized" }, { status: 401 });
-  }
+  const session = await getNukibRegistrationApiSession();
 
-  const session = await auth();
-
-  if (!session?.userId || !session.orgId) {
+  if (!session) {
     return privateJson({ error: "Unauthorized" }, { status: 401 });
   }
 
@@ -62,6 +55,16 @@ export async function POST(request: Request) {
     return validationError(parsed.error);
   }
 
+  if (session.mode === "test") {
+    const artifact = createNukibRegistrationTestArtifact({
+      clerkOrgId: session.orgId,
+      createdBy: session.userId,
+      data: parsed.data,
+    });
+
+    return NextResponse.json({ id: artifact.id });
+  }
+
   const artifact = await buildNukibRegistrationArtifact(
     session.orgId,
     parsed.data,
@@ -72,14 +75,28 @@ export async function POST(request: Request) {
 }
 
 export async function GET() {
-  if (!hasClerkConfig()) {
+  const session = await getNukibRegistrationApiSession();
+
+  if (!session) {
     return privateJson({ error: "Unauthorized" }, { status: 401 });
   }
 
-  const session = await auth();
+  if (session.mode === "test") {
+    const artifact = getLatestNukibRegistrationTestArtifact(session.orgId);
 
-  if (!session?.orgId) {
-    return privateJson({ error: "Unauthorized" }, { status: 401 });
+    if (!artifact) {
+      return privateJson(
+        { error: "NÚKIB registration artifact not found" },
+        { status: 404 },
+      );
+    }
+
+    return NextResponse.json({
+      content: artifact.content,
+      createdAt: artifact.createdAt,
+      id: artifact.id,
+      title: artifact.title,
+    });
   }
 
   const db = getDb();

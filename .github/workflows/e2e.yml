@@ -99,6 +99,8 @@ jobs:
 
       - name: Build
         run: npm run build
+        env:
+          NEXT_PUBLIC_ENABLE_TEST_ROUTES: "true"
 
       - name: Validate NÚKIB registration template schema
         run: npx tsx scripts/validate-nukib-template.ts
