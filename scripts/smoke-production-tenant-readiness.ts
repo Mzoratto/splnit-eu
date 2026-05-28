@@ -856,12 +856,18 @@ async function main() {
     const page = await context.newPage();
     const browserConsoleErrors: string[] = [];
     const pageErrors: string[] = [];
+    const resource404s: string[] = [];
     page.on("console", (message) => {
       if (message.type() === "error") {
         browserConsoleErrors.push(message.text());
       }
     });
     page.on("pageerror", (error) => pageErrors.push(error.message));
+    page.on("response", (response) => {
+      if (response.status() === 404) {
+        resource404s.push(response.url());
+      }
+    });
 
     await signIn(page, {
       email: smokeUserEmail!,
@@ -965,9 +971,9 @@ async function main() {
       crossVendorName: exportFixtures.crossVendorName,
       riskTitle: exportFixtures.riskTitle,
     });
+    assert.deepEqual(resource404s, [], `404 responses should be empty: ${resource404s.join(", ")}`);
     assert.deepEqual(browserConsoleErrors, [], "browser console errors should be empty.");
     assert.deepEqual(pageErrors, [], "browser page errors should be empty.");
-
     await context.close();
 
     smokeResult = {
