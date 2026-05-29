@@ -10,11 +10,11 @@ import {
   ShieldCheck,
   Trash2,
 } from "lucide-react";
+import { useLocale, useTranslations } from "next-intl";
 import {
   CONTACT_ROLE_OPTIONS,
   ENTITY_SIZE_OPTIONS,
   GEOGRAPHIC_SCOPE_OPTIONS,
-  NETWORK_SCOPE_FIELD_META,
   REGIME_OPTIONS,
   SERVICE_CATEGORY_OPTIONS,
 } from "@/lib/compliance/nukib/registration-labels";
@@ -229,15 +229,16 @@ function formErrorsFromIssues(
   return errors;
 }
 
-function formatDate(value: string | null) {
+function formatDate(
+  value: string | null,
+  formatter: Intl.DateTimeFormat,
+  emptyValue: string,
+) {
   if (!value) {
-    return "n/a";
+    return emptyValue;
   }
 
-  return new Intl.DateTimeFormat("cs-CZ", {
-    dateStyle: "medium",
-    timeStyle: "short",
-  }).format(new Date(value));
+  return formatter.format(new Date(value));
 }
 
 function filenameFromDisposition(disposition: string | null) {
@@ -247,6 +248,8 @@ function filenameFromDisposition(disposition: string | null) {
 }
 
 export default function NukibRegistrationPage() {
+  const locale = useLocale();
+  const t = useTranslations("nukibRegistration");
   const [artifact, setArtifact] = useState<RegistrationArtifact | null>(null);
   const [form, setForm] = useState<RegistrationFormState>(initialFormState);
   const [isLoading, setIsLoading] = useState(true);
@@ -265,6 +268,54 @@ export default function NukibRegistrationPage() {
       form.contacts.some((contact) => contact.role === "statutory"),
     [form.contacts],
   );
+  const dateFormatter = useMemo(
+    () =>
+      new Intl.DateTimeFormat(locale, {
+        dateStyle: "medium",
+        timeStyle: "short",
+      }),
+    [locale],
+  );
+  const serviceCategoryOptions = useMemo(
+    () =>
+      SERVICE_CATEGORY_OPTIONS.map((option) => ({
+        ...option,
+        label: t(`serviceCategories.${option.value}`),
+      })),
+    [t],
+  );
+  const regimeOptions = useMemo(
+    () =>
+      REGIME_OPTIONS.map((option) => ({
+        ...option,
+        label: t(`regimes.${option.value}`),
+      })),
+    [t],
+  );
+  const entitySizeOptions = useMemo(
+    () =>
+      ENTITY_SIZE_OPTIONS.map((option) => ({
+        ...option,
+        label: t(`entitySizes.${option.value}`),
+      })),
+    [t],
+  );
+  const geographicScopeOptions = useMemo(
+    () =>
+      GEOGRAPHIC_SCOPE_OPTIONS.map((option) => ({
+        ...option,
+        label: t(`geographicScopes.${option.value}`),
+      })),
+    [t],
+  );
+  const contactRoleOptions = useMemo(
+    () =>
+      CONTACT_ROLE_OPTIONS.map((option) => ({
+        ...option,
+        label: t(`contactRoles.${option.value}`),
+      })),
+    [t],
+  );
 
   const loadArtifact = useCallback(async () => {
     setError(null);
@@ -281,7 +332,7 @@ export default function NukibRegistrationPage() {
         const body = (await response.json().catch(() => null)) as {
           error?: string;
         } | null;
-        throw new Error(body?.error ?? "Nepodařilo se načíst záznam.");
+        throw new Error(body?.error ?? t("errors.load"));
       }
 
       const nextArtifact = (await response.json()) as RegistrationArtifact;
@@ -293,10 +344,10 @@ export default function NukibRegistrationPage() {
       setError(
         loadError instanceof Error
           ? loadError.message
-          : "Nepodařilo se načíst záznam.",
+          : t("errors.load"),
       );
     }
-  }, []);
+  }, [t]);
 
   useEffect(() => {
     void loadArtifact().finally(() => setIsLoading(false));
@@ -416,7 +467,7 @@ export default function NukibRegistrationPage() {
         const body = (await response.json().catch(() => null)) as {
           error?: string;
         } | null;
-        throw new Error(body?.error ?? "Registraci se nepodařilo připravit.");
+        throw new Error(body?.error ?? t("errors.submit"));
       }
 
       await loadArtifact();
@@ -424,7 +475,7 @@ export default function NukibRegistrationPage() {
       setError(
         submitError instanceof Error
           ? submitError.message
-          : "Registraci se nepodařilo připravit.",
+          : t("errors.submit"),
       );
     } finally {
       setIsSubmitting(false);
@@ -446,7 +497,7 @@ export default function NukibRegistrationPage() {
         const body = (await response.json().catch(() => null)) as {
           error?: string;
         } | null;
-        throw new Error(body?.error ?? "PDF se nepodařilo vytvořit.");
+        throw new Error(body?.error ?? t("errors.pdf"));
       }
 
       const blob = await response.blob();
@@ -465,7 +516,7 @@ export default function NukibRegistrationPage() {
       setError(
         downloadError instanceof Error
           ? downloadError.message
-          : "PDF se nepodařilo vytvořit.",
+          : t("errors.pdf"),
       );
     } finally {
       setIsDownloading(false);
@@ -476,16 +527,20 @@ export default function NukibRegistrationPage() {
     <section className="space-y-8">
       <div>
         <p className="text-sm font-medium uppercase tracking-[0.14em] text-primary">
-          NÚKIB
+          {t("hero.eyebrow")}
         </p>
         <h1 className="mt-2 text-3xl font-semibold tracking-normal">
-          Registrace regulované služby
+          {t("hero.title")}
         </h1>
         <p className="mt-2 max-w-3xl text-sm leading-6 text-foreground/64">
-          Přípravný podklad pro údaje, které organizace přepisuje do formuláře
-          na Portálu NÚKIB.
+          {t("hero.subtitle")}
         </p>
       </div>
+
+      <section className="rounded-lg border border-amber-200 bg-amber-50 p-4 text-sm leading-6 text-amber-950">
+        <p className="font-semibold">{t("betaBanner.title")}</p>
+        <p className="mt-1">{t("betaBanner.body")}</p>
+      </section>
 
       <section className="rounded-lg border border-border bg-surface p-5">
         <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
@@ -496,13 +551,19 @@ export default function NukibRegistrationPage() {
               strokeWidth={1.7}
             />
             <div>
-              <h2 className="text-lg font-semibold">Stav přípravy</h2>
+              <h2 className="text-lg font-semibold">{t("status.title")}</h2>
               <p className="mt-1 text-sm text-foreground/62">
                 {isLoading
-                  ? "Načítám poslední záznam..."
+                  ? t("status.loading")
                   : artifact
-                    ? `Poslední příprava: ${formatDate(artifact.createdAt)}`
-                    : "Dosud nebyl vytvořen žádný záznam."}
+                    ? t("status.lastPreparation", {
+                        date: formatDate(
+                          artifact.createdAt,
+                          dateFormatter,
+                          t("common.noDate"),
+                        ),
+                      })
+                    : t("status.empty")}
               </p>
             </div>
           </div>
@@ -522,7 +583,7 @@ export default function NukibRegistrationPage() {
               ) : (
                 <Download className="h-4 w-4" aria-hidden="true" strokeWidth={1.7} />
               )}
-              Stáhnout PDF
+              {t("actions.downloadPdf")}
             </button>
           ) : null}
         </div>
@@ -539,22 +600,22 @@ export default function NukibRegistrationPage() {
         <section className="rounded-lg border border-border bg-surface p-5">
           <div className="flex items-center gap-2">
             <FileText className="h-5 w-5 text-primary" aria-hidden="true" />
-            <h2 className="text-lg font-semibold">Identifikace organizace</h2>
+            <h2 className="text-lg font-semibold">{t("sections.organisation")}</h2>
           </div>
           <div className="mt-5 grid gap-4 md:grid-cols-3">
             <label className="grid gap-2 text-sm">
-              IČO
+              {t("fields.ico")}
               <input
                 className={fieldClass("font-mono")}
                 inputMode="numeric"
-                pattern="\\d{8}"
+                pattern="[0-9]{8}"
                 required
                 value={form.ico}
                 onChange={(event) => updateField("ico", event.target.value)}
               />
             </label>
             <label className="grid gap-2 text-sm md:col-span-2">
-              Název organizace
+              {t("fields.organisationName")}
               <input
                 className={fieldClass()}
                 required
@@ -565,7 +626,7 @@ export default function NukibRegistrationPage() {
               />
             </label>
             <label className="grid gap-2 text-sm">
-              Datová schránka
+              {t("fields.dataBoxId")}
               <input
                 className={fieldClass("font-mono")}
                 value={form.dataBoxId ?? ""}
@@ -576,10 +637,10 @@ export default function NukibRegistrationPage() {
         </section>
 
         <section className="rounded-lg border border-border bg-surface p-5">
-          <h2 className="text-lg font-semibold">Klasifikace služby</h2>
+          <h2 className="text-lg font-semibold">{t("sections.serviceClassification")}</h2>
           <div className="mt-5 grid gap-4 md:grid-cols-2">
             <label className="grid gap-2 text-sm">
-              Kategorie služby
+              {t("fields.serviceCategory")}
               <select
                 className={fieldClass()}
                 value={form.serviceCategory}
@@ -590,7 +651,7 @@ export default function NukibRegistrationPage() {
                   )
                 }
               >
-                {SERVICE_CATEGORY_OPTIONS.map((option) => (
+                {serviceCategoryOptions.map((option) => (
                   <option key={option.value} value={option.value}>
                     {option.label}
                   </option>
@@ -598,7 +659,7 @@ export default function NukibRegistrationPage() {
               </select>
             </label>
             <label className="grid gap-2 text-sm">
-              Režim povinností
+              {t("fields.regime")}
               <select
                 className={fieldClass()}
                 value={form.regime}
@@ -609,7 +670,7 @@ export default function NukibRegistrationPage() {
                   )
                 }
               >
-                {REGIME_OPTIONS.map((option) => (
+                {regimeOptions.map((option) => (
                   <option key={option.value} value={option.value}>
                     {option.label}
                   </option>
@@ -617,7 +678,7 @@ export default function NukibRegistrationPage() {
               </select>
             </label>
             <label className="grid gap-2 text-sm">
-              Velikost subjektu
+              {t("fields.entitySize")}
               <select
                 className={fieldClass()}
                 value={form.entitySize}
@@ -628,7 +689,7 @@ export default function NukibRegistrationPage() {
                   )
                 }
               >
-                {ENTITY_SIZE_OPTIONS.map((option) => (
+                {entitySizeOptions.map((option) => (
                   <option key={option.value} value={option.value}>
                     {option.label}
                   </option>
@@ -636,7 +697,7 @@ export default function NukibRegistrationPage() {
               </select>
             </label>
             <label className="grid gap-2 text-sm md:col-span-2">
-              Popis služby
+              {t("fields.serviceDescription")}
               <textarea
                 className={textAreaClass()}
                 required
@@ -650,11 +711,12 @@ export default function NukibRegistrationPage() {
         </section>
 
         <section className="rounded-lg border border-border bg-surface p-5">
-          <h2 className="text-lg font-semibold">Geografický rozsah</h2>
+          <h2 className="text-lg font-semibold">{t("sections.geographicScope")}</h2>
           <div className="mt-5 grid gap-4 md:grid-cols-2">
             <label className="grid gap-2 text-sm">
-              Rozsah
+              {t("fields.scope")}
               <select
+                aria-label={t("fields.scope")}
                 className={fieldClass()}
                 value={form.geographicScope}
                 onChange={(event) =>
@@ -664,7 +726,7 @@ export default function NukibRegistrationPage() {
                   )
                 }
               >
-                {GEOGRAPHIC_SCOPE_OPTIONS.map((option) => (
+                {geographicScopeOptions.map((option) => (
                   <option key={option.value} value={option.value}>
                     {option.label}
                   </option>
@@ -672,10 +734,10 @@ export default function NukibRegistrationPage() {
               </select>
             </label>
             <label className="grid gap-2 text-sm">
-              Dotčené členské státy
+              {t("fields.affectedMemberStates")}
               <input
                 className={fieldClass("font-mono")}
-                placeholder="SK, DE"
+                placeholder={t("placeholders.affectedMemberStates")}
                 value={form.affectedMemberStates}
                 onChange={(event) =>
                   updateField("affectedMemberStates", event.target.value)
@@ -687,10 +749,10 @@ export default function NukibRegistrationPage() {
 
         <section className="rounded-lg border border-border bg-surface p-5">
           <h2 className="text-lg font-semibold">
-            {NETWORK_SCOPE_FIELD_META.sectionLabel}
+            {t("networkScope.sectionLabel")}
           </h2>
           <p className="mt-3 rounded-md border border-amber-200 bg-amber-50 p-3 text-sm leading-6 text-amber-950">
-            {NETWORK_SCOPE_FIELD_META.sectionHint}
+            {t("networkScope.sectionHint")}
           </p>
 
           <div className="mt-5 grid gap-6 lg:grid-cols-2">
@@ -698,10 +760,10 @@ export default function NukibRegistrationPage() {
               <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
                 <div>
                   <h3 className="text-sm font-semibold">
-                    {NETWORK_SCOPE_FIELD_META.ipRanges.label}
+                    {t("networkScope.ipRanges.label")}
                   </h3>
                   <p className="mt-1 text-xs leading-5 text-foreground/58">
-                    {NETWORK_SCOPE_FIELD_META.ipRanges.hint}
+                    {t("networkScope.ipRanges.hint")}
                   </p>
                 </div>
                 <button
@@ -710,7 +772,7 @@ export default function NukibRegistrationPage() {
                   onClick={() => addNetworkScopeRow("ipRanges")}
                 >
                   <Plus className="h-4 w-4" aria-hidden="true" />
-                  Přidat IP
+                  {t("actions.addIp")}
                 </button>
               </div>
 
@@ -722,7 +784,7 @@ export default function NukibRegistrationPage() {
                     <div className="flex gap-2">
                       <input
                         className={fieldClass("w-full font-mono")}
-                        placeholder={NETWORK_SCOPE_FIELD_META.ipRanges.placeholder}
+                        placeholder={t("networkScope.ipRanges.placeholder")}
                         value={value}
                         onChange={(event) =>
                           updateNetworkScopeField(
@@ -736,7 +798,7 @@ export default function NukibRegistrationPage() {
                         type="button"
                         className="btn btn-ghost h-10 w-10 shrink-0 px-0 text-[var(--status-fail)]"
                         disabled={form.serviceNetworkScope.ipRanges.length <= 1}
-                        title="Odebrat IP adresu nebo rozsah"
+                        title={t("actions.removeIp")}
                         onClick={() => removeNetworkScopeRow("ipRanges", index)}
                       >
                         <Trash2 className="h-4 w-4" aria-hidden="true" />
@@ -756,10 +818,10 @@ export default function NukibRegistrationPage() {
               <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
                 <div>
                   <h3 className="text-sm font-semibold">
-                    {NETWORK_SCOPE_FIELD_META.domainNames.label}
+                    {t("networkScope.domainNames.label")}
                   </h3>
                   <p className="mt-1 text-xs leading-5 text-foreground/58">
-                    {NETWORK_SCOPE_FIELD_META.domainNames.hint}
+                    {t("networkScope.domainNames.hint")}
                   </p>
                 </div>
                 <button
@@ -768,7 +830,7 @@ export default function NukibRegistrationPage() {
                   onClick={() => addNetworkScopeRow("domainNames")}
                 >
                   <Plus className="h-4 w-4" aria-hidden="true" />
-                  Přidat doménu
+                  {t("actions.addDomain")}
                 </button>
               </div>
 
@@ -780,7 +842,7 @@ export default function NukibRegistrationPage() {
                     <div className="flex gap-2">
                       <input
                         className={fieldClass("w-full font-mono")}
-                        placeholder={NETWORK_SCOPE_FIELD_META.domainNames.placeholder}
+                        placeholder={t("networkScope.domainNames.placeholder")}
                         value={value}
                         onChange={(event) =>
                           updateNetworkScopeField(
@@ -794,7 +856,7 @@ export default function NukibRegistrationPage() {
                         type="button"
                         className="btn btn-ghost h-10 w-10 shrink-0 px-0 text-[var(--status-fail)]"
                         disabled={form.serviceNetworkScope.domainNames.length <= 1}
-                        title="Odebrat doménové jméno"
+                        title={t("actions.removeDomain")}
                         onClick={() => removeNetworkScopeRow("domainNames", index)}
                       >
                         <Trash2 className="h-4 w-4" aria-hidden="true" />
@@ -815,10 +877,9 @@ export default function NukibRegistrationPage() {
         <section className="rounded-lg border border-border bg-surface p-5">
           <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
             <div>
-              <h2 className="text-lg font-semibold">Kontaktní osoby</h2>
+              <h2 className="text-lg font-semibold">{t("sections.contacts")}</h2>
               <p className="mt-2 text-sm leading-6 text-foreground/62">
-                Vyžaduje se alespoň jeden primární, technický a statutární
-                kontakt.
+                {t("contacts.help")}
               </p>
             </div>
             <button
@@ -827,7 +888,7 @@ export default function NukibRegistrationPage() {
               onClick={addContact}
             >
               <Plus className="h-4 w-4" aria-hidden="true" />
-              Přidat kontakt
+              {t("actions.addContact")}
             </button>
           </div>
 
@@ -845,7 +906,7 @@ export default function NukibRegistrationPage() {
               >
                 <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-[170px_1fr_1fr_150px_1fr_auto]">
                   <label className="grid gap-2 text-sm">
-                    Role
+                    {t("fields.role")}
                     <select
                       className={fieldClass()}
                       value={contact.role}
@@ -857,7 +918,7 @@ export default function NukibRegistrationPage() {
                         )
                       }
                     >
-                      {CONTACT_ROLE_OPTIONS.map((option) => (
+                      {contactRoleOptions.map((option) => (
                         <option key={option.value} value={option.value}>
                           {option.label}
                         </option>
@@ -865,7 +926,7 @@ export default function NukibRegistrationPage() {
                     </select>
                   </label>
                   <label className="grid gap-2 text-sm">
-                    Jméno
+                    {t("fields.name")}
                     <input
                       className={fieldClass()}
                       required
@@ -876,7 +937,7 @@ export default function NukibRegistrationPage() {
                     />
                   </label>
                   <label className="grid gap-2 text-sm">
-                    E-mail
+                    {t("fields.email")}
                     <input
                       className={fieldClass()}
                       required
@@ -888,7 +949,7 @@ export default function NukibRegistrationPage() {
                     />
                   </label>
                   <label className="grid gap-2 text-sm">
-                    Telefon
+                    {t("fields.phone")}
                     <input
                       className={fieldClass()}
                       required
@@ -899,7 +960,7 @@ export default function NukibRegistrationPage() {
                     />
                   </label>
                   <label className="grid gap-2 text-sm">
-                    Pozice
+                    {t("fields.position")}
                     <input
                       className={fieldClass()}
                       value={contact.position ?? ""}
@@ -913,11 +974,11 @@ export default function NukibRegistrationPage() {
                       type="button"
                       className="btn btn-ghost h-10 w-full text-[var(--status-fail)] xl:w-10 xl:px-0"
                       disabled={form.contacts.length <= 2}
-                      title="Odebrat kontakt"
+                      title={t("actions.removeContact")}
                       onClick={() => removeContact(index)}
                     >
                       <Trash2 className="h-4 w-4" aria-hidden="true" />
-                      <span className="xl:sr-only">Odebrat</span>
+                      <span className="xl:sr-only">{t("actions.remove")}</span>
                     </button>
                   </div>
                 </div>
@@ -927,18 +988,18 @@ export default function NukibRegistrationPage() {
 
           {!hasRequiredContacts ? (
             <p className="mt-3 text-sm text-[var(--status-fail)]">
-              Chybí některá z povinných rolí: primární, technická, statutární.
+              {t("contacts.missingRoles")}
             </p>
           ) : null}
         </section>
 
         <section className="rounded-lg border border-border bg-surface p-5">
           <h2 className="text-lg font-semibold">
-            Doplňující údaje (30denní lhůta)
+            {t("sections.additionalData")}
           </h2>
           <div className="mt-5 grid gap-4 md:grid-cols-2">
             <label className="grid gap-2 text-sm">
-              Vlastnická struktura
+              {t("fields.ownershipChain")}
               <textarea
                 className={textAreaClass()}
                 value={form.ownershipChain ?? ""}
@@ -948,7 +1009,7 @@ export default function NukibRegistrationPage() {
               />
             </label>
             <label className="grid gap-2 text-sm">
-              Přeshraniční závislosti
+              {t("fields.crossBorderDependencies")}
               <textarea
                 className={textAreaClass()}
                 value={form.crossBorderDependencies ?? ""}
@@ -958,7 +1019,7 @@ export default function NukibRegistrationPage() {
               />
             </label>
             <label className="grid gap-2 text-sm">
-              Manažer kybernetické bezpečnosti
+              {t("fields.cyberSecurityManagerAppointed")}
               <select
                 className={fieldClass()}
                 value={form.cyberSecurityManagerAppointed}
@@ -970,9 +1031,9 @@ export default function NukibRegistrationPage() {
                   )
                 }
               >
-                <option value="">Neuvedeno</option>
-                <option value="true">Ano</option>
-                <option value="false">Ne</option>
+                <option value="">{t("boolean.unspecified")}</option>
+                <option value="true">{t("boolean.yes")}</option>
+                <option value="false">{t("boolean.no")}</option>
               </select>
             </label>
           </div>
@@ -993,15 +1054,13 @@ export default function NukibRegistrationPage() {
             ) : (
               <ShieldCheck className="h-4 w-4" aria-hidden="true" strokeWidth={1.7} />
             )}
-            Připravit registraci
+            {t("actions.prepareRegistration")}
           </button>
         </div>
       </form>
 
       <section className="rounded-lg border border-amber-200 bg-amber-50 p-4 text-sm leading-6 text-amber-950">
-        Tento podklad slouží jako příprava pro vyplnění formuláře na Portálu
-        NÚKIB. Podání probíhá přímo na portálu NÚKIB s autentizací přes BankID /
-        NIA. Splnit.eu nepodává formulář za vás.
+        {t("submissionNotice")}
       </section>
     </section>
   );

@@ -9,8 +9,10 @@ import {
 
 export const NUKIB_REGISTRATION_KIND = "nukib_registration" as const;
 
-export function serializeNukibRegistrationContent(data: NukibRegistration) {
-  return JSON.stringify(data);
+export function serializeNukibRegistrationContent(
+  data: NukibRegistration,
+): Record<string, unknown> {
+  return NukibRegistrationSchema.parse(data) as unknown as Record<string, unknown>;
 }
 
 export function parseNukibRegistrationContent(content: unknown): NukibRegistration {
@@ -31,7 +33,7 @@ export async function buildNukibRegistrationArtifact(
   const content = serializeNukibRegistrationContent(parsed);
   const artifact = await createGeneratedArtifact({
     clerkOrgId: orgId,
-    content: content as unknown as Record<string, unknown>,
+    content,
     createdBy,
     kind: NUKIB_REGISTRATION_KIND satisfies GeneratedArtifactKind,
     model: null,

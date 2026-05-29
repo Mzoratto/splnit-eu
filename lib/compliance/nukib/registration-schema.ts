@@ -30,6 +30,56 @@ export const NUKIB_CONTACT_ROLES = [
   "statutory",
 ] as const;
 
+function isValidIpv4Cidr(value: string) {
+  const [address, mask, extra] = value.split("/");
+
+  if (extra !== undefined || !address) {
+    return false;
+  }
+
+  const octets = address.split(".");
+
+  if (octets.length !== 4) {
+    return false;
+  }
+
+  const hasValidOctets = octets.every((octet) => {
+    if (!/^\d{1,3}$/.test(octet)) {
+      return false;
+    }
+
+    const number = Number(octet);
+
+    return Number.isInteger(number) && number >= 0 && number <= 255;
+  });
+
+  if (!hasValidOctets) {
+    return false;
+  }
+
+  if (mask === undefined) {
+    return true;
+  }
+
+  if (!/^\d{1,2}$/.test(mask)) {
+    return false;
+  }
+
+  const maskNumber = Number(mask);
+
+  return Number.isInteger(maskNumber) && maskNumber >= 0 && maskNumber <= 32;
+}
+
+function isValidInternationalPhone(value: string) {
+  if (!/^\+[1-9]\d{0,3}(?: ?\d)+$/.test(value)) {
+    return false;
+  }
+
+  const digitCount = value.replace(/\D/g, "").length;
+
+  return digitCount >= 8 && digitCount <= 15;
+}
+
 export const NukibRegistrationSchema = z
   .object({
     ico: z.string().regex(/^\d{8}$/, "IČO must be 8 digits"),
@@ -48,8 +98,8 @@ export const NukibRegistrationSchema = z
       .object({
         ipRanges: z
           .array(
-            z.string().regex(
-              /^(\d{1,3}\.){3}\d{1,3}(\/\d{1,2})?$/,
+            z.string().refine(
+              isValidIpv4Cidr,
               "Musí být platná IPv4 adresa nebo rozsah CIDR",
             ),
           )
@@ -73,7 +123,10 @@ export const NukibRegistrationSchema = z
           role: z.enum(NUKIB_CONTACT_ROLES),
           name: z.string().min(1),
           email: z.string().email(),
-          phone: z.string().min(1),
+          phone: z.string().refine(
+            isValidInternationalPhone,
+            "Telefon musí být v mezinárodním formátu, např. +420 200 000 001",
+          ),
           position: z.string().optional(),
         }),
       )

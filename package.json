@@ -12,6 +12,8 @@
     "lint": "eslint",
     "typecheck": "tsc --noEmit",
     "test:e2e": "playwright test",
+    "test:e2e:nukib-registration": "npm run build && NUKIB_REGISTRATION_E2E_SERVER=true PLAYWRIGHT_PORT=3002 playwright test tests/e2e/nukib-registration.spec.ts --project=chromium",
+    "test:e2e:nukib-registration-ui": "npm run build && NUKIB_REGISTRATION_E2E_SERVER=true PLAYWRIGHT_PORT=3002 playwright test tests/e2e/nukib-registration-ui.spec.ts",
     "test:e2e:intake-prioritization": "playwright test tests/e2e/intake-prioritization-smoke.spec.ts",
     "test:e2e:activation-loop": "playwright test tests/e2e/activation-loop.spec.ts",
     "test:e2e:ui": "playwright test --ui",

@@ -32,7 +32,7 @@ function validationError(error: z.ZodError) {
 }
 
 export async function POST(request: Request) {
-  const session = await getNukibRegistrationApiSession();
+  const session = await getNukibRegistrationApiSession(request);
 
   if (!session) {
     return privateJson({ error: "Unauthorized" }, { status: 401 });
@@ -74,8 +74,8 @@ export async function POST(request: Request) {
   return NextResponse.json(artifact);
 }
 
-export async function GET() {
-  const session = await getNukibRegistrationApiSession();
+export async function GET(request: Request) {
+  const session = await getNukibRegistrationApiSession(request);
 
   if (!session) {
     return privateJson({ error: "Unauthorized" }, { status: 401 });

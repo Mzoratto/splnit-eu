@@ -25,10 +25,10 @@ function slugifyFilenamePart(value: string) {
 }
 
 export async function GET(
-  _request: Request,
+  request: Request,
   { params }: { params: Promise<{ artifactId: string }> },
 ) {
-  const session = await getNukibRegistrationApiSession();
+  const session = await getNukibRegistrationApiSession(request);
 
   if (!session) {
     return privateJson({ error: "Unauthorized" }, { status: 401 });

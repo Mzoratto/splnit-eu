@@ -1808,6 +1808,135 @@
       }
     }
   },
+  "nukibRegistration": {
+    "common": {
+      "noDate": "n/a"
+    },
+    "hero": {
+      "eyebrow": "NÚKIB",
+      "title": "Registrace regulované služby",
+      "subtitle": "Přípravný podklad pro údaje, které organizace přepisuje do formuláře na Portálu NÚKIB."
+    },
+    "betaBanner": {
+      "title": "Beta pro design partnery",
+      "body": "Tato stránka připravuje pracovní podklad pro českou registraci u NÚKIB. Není právním poradenstvím, nepodává formulář za vás a nezaručuje přijetí ani splnění povinností. Oficiální podání stále probíhá na Portálu NÚKIB."
+    },
+    "status": {
+      "title": "Stav přípravy",
+      "loading": "Načítám poslední záznam...",
+      "lastPreparation": "Poslední příprava: {date}",
+      "empty": "Dosud nebyl vytvořen žádný záznam."
+    },
+    "sections": {
+      "organisation": "Identifikace organizace",
+      "serviceClassification": "Klasifikace služby",
+      "geographicScope": "Geografický rozsah",
+      "contacts": "Kontaktní osoby",
+      "additionalData": "Doplňující údaje (30denní lhůta)"
+    },
+    "fields": {
+      "ico": "IČO",
+      "organisationName": "Název organizace",
+      "dataBoxId": "Datová schránka",
+      "serviceCategory": "Kategorie služby",
+      "regime": "Režim povinností",
+      "entitySize": "Velikost subjektu",
+      "serviceDescription": "Popis služby",
+      "scope": "Rozsah",
+      "affectedMemberStates": "Dotčené členské státy",
+      "role": "Role",
+      "name": "Jméno",
+      "email": "E-mail",
+      "phone": "Telefon",
+      "position": "Pozice",
+      "ownershipChain": "Vlastnická struktura",
+      "crossBorderDependencies": "Přeshraniční závislosti",
+      "cyberSecurityManagerAppointed": "Manažer kybernetické bezpečnosti"
+    },
+    "placeholders": {
+      "affectedMemberStates": "SK, DE"
+    },
+    "networkScope": {
+      "sectionLabel": "Síťový rozsah služby",
+      "sectionHint": "Povinná součást hlášení dle § 11 zákona č. 264/2025 Sb. Vyplňte při prvním ohlášení nebo do 30 dnů od rozhodnutí o registraci.",
+      "ipRanges": {
+        "label": "IP adresy / rozsahy (CIDR)",
+        "placeholder": "např. 192.0.2.0/24",
+        "hint": "IP adresy nebo rozsahy CIDR využívané regulovanou službou."
+      },
+      "domainNames": {
+        "label": "Doménová jména",
+        "placeholder": "např. splnit.eu",
+        "hint": "Doménová jména využívaná regulovanou službou."
+      }
+    },
+    "contacts": {
+      "help": "Vyžaduje se alespoň jeden primární, technický a statutární kontakt.",
+      "missingRoles": "Chybí některá z povinných rolí: primární, technická, statutární."
+    },
+    "boolean": {
+      "unspecified": "Neuvedeno",
+      "yes": "Ano",
+      "no": "Ne"
+    },
+    "actions": {
+      "downloadPdf": "Stáhnout PDF",
+      "addIp": "Přidat IP",
+      "removeIp": "Odebrat IP adresu nebo rozsah",
+      "addDomain": "Přidat doménu",
+      "removeDomain": "Odebrat doménové jméno",
+      "addContact": "Přidat kontakt",
+      "removeContact": "Odebrat kontakt",
+      "remove": "Odebrat",
+      "prepareRegistration": "Připravit registraci"
+    },
+    "errors": {
+      "load": "Nepodařilo se načíst záznam.",
+      "submit": "Registraci se nepodařilo připravit.",
+      "pdf": "PDF se nepodařilo vytvořit."
+    },
+    "serviceCategories": {
+      "energetika": "Energetika",
+      "doprava": "Doprava",
+      "bankovnictvi": "Bankovnictví",
+      "financni_trhy": "Infrastruktura finančních trhů",
+      "zdravotnictvi": "Zdravotnictví",
+      "pitna_voda": "Pitná voda",
+      "odpadni_vody": "Odpadní vody",
+      "digitalni_infrastruktura": "Digitální infrastruktura",
+      "rizeni_ict_sluzeb": "Řízení služeb ICT",
+      "verejna_sprava": "Veřejná správa",
+      "vesmir": "Vesmír",
+      "postovni_sluzby": "Poštovní a kurýrní služby",
+      "nakladani_s_odpady": "Nakládání s odpady",
+      "chemicke_latky": "Chemické látky",
+      "potraviny": "Potraviny",
+      "vyroba": "Výroba",
+      "digitalni_poskytovatele": "Digitální poskytovatelé",
+      "vyzkum": "Výzkum"
+    },
+    "contactRoles": {
+      "primary": "Primární",
+      "technical": "Technický",
+      "security_manager": "Manažer KB",
+      "statutory": "Statutární"
+    },
+    "entitySizes": {
+      "micro": "Mikro",
+      "small": "Malý",
+      "medium": "Střední",
+      "large": "Velký"
+    },
+    "regimes": {
+      "nizsi": "Nižší",
+      "vyssi": "Vyšší"
+    },
+    "geographicScopes": {
+      "cross_border": "Přeshraniční",
+      "cz_only": "CZ pouze"
+    },
+    "submissionNotice": "Tento podklad slouží jako příprava pro vyplnění formuláře na Portálu NÚKIB. Podání probíhá přímo na portálu NÚKIB s autentizací přes BankID / NIA. Splnit.eu nepodává formulář za vás."
+  },
   "home": {
     "badge": "Připravenost na EU compliance pro české firmy",
     "titleLine1": "Zpřehledněte compliance práci ve své jurisdikci.",
