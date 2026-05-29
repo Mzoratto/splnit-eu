@@ -199,7 +199,7 @@
     "@types/react-dom": "^19",
     "agent-browser": "^0.26.0",
     "drizzle-kit": "^0.31.10",
-    "eslint": "^9",
+    "eslint": "^10",
     "eslint-config-next": "^15.5.15",
     "tailwindcss": "^4",
     "tsx": "^4.21.0",
