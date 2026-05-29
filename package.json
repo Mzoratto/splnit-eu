@@ -203,7 +203,7 @@
     "eslint-config-next": "^15.5.15",
     "tailwindcss": "^4",
     "tsx": "^4.21.0",
-    "typescript": "^5"
+    "typescript": "^6"
   },
   "engines": {
     "node": ">=22.13 <23",
