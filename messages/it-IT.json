@@ -1808,6 +1808,135 @@
       }
     }
   },
+  "nukibRegistration": {
+    "common": {
+      "noDate": "n/d"
+    },
+    "hero": {
+      "eyebrow": "NÚKIB",
+      "title": "Registrazione del servizio regolato",
+      "subtitle": "Scheda di preparazione per i dati che l'organizzazione copia nel modulo sul Portale NÚKIB."
+    },
+    "betaBanner": {
+      "title": "Beta per design partner",
+      "body": "Questa pagina prepara un artefatto di lavoro per la registrazione ceca presso NÚKIB. Non è consulenza legale, non invia il modulo al posto vostro e non garantisce accettazione o conformità. L'invio ufficiale avviene comunque sul Portale NÚKIB."
+    },
+    "status": {
+      "title": "Stato della preparazione",
+      "loading": "Caricamento dell'ultimo record...",
+      "lastPreparation": "Ultima preparazione: {date}",
+      "empty": "Non è stato ancora creato alcun record."
+    },
+    "sections": {
+      "organisation": "Identificazione dell'organizzazione",
+      "serviceClassification": "Classificazione del servizio",
+      "geographicScope": "Ambito geografico",
+      "contacts": "Persone di contatto",
+      "additionalData": "Dati aggiuntivi (termine di 30 giorni)"
+    },
+    "fields": {
+      "ico": "IČO",
+      "organisationName": "Nome dell'organizzazione",
+      "dataBoxId": "Casella dati",
+      "serviceCategory": "Categoria del servizio",
+      "regime": "Regime degli obblighi",
+      "entitySize": "Dimensione del soggetto",
+      "serviceDescription": "Descrizione del servizio",
+      "scope": "Ambito",
+      "affectedMemberStates": "Stati membri interessati",
+      "role": "Ruolo",
+      "name": "Nome",
+      "email": "E-mail",
+      "phone": "Telefono",
+      "position": "Posizione",
+      "ownershipChain": "Struttura proprietaria",
+      "crossBorderDependencies": "Dipendenze transfrontaliere",
+      "cyberSecurityManagerAppointed": "Manager della cybersicurezza"
+    },
+    "placeholders": {
+      "affectedMemberStates": "SK, DE"
+    },
+    "networkScope": {
+      "sectionLabel": "Ambito di rete del servizio",
+      "sectionHint": "Parte richiesta della segnalazione ai sensi del § 11 della legge n. 264/2025 Coll. Compilarla con la prima notifica o entro 30 giorni dalla decisione di registrazione.",
+      "ipRanges": {
+        "label": "Indirizzi IP / intervalli (CIDR)",
+        "placeholder": "es. 192.0.2.0/24",
+        "hint": "Indirizzi IP o intervalli CIDR utilizzati dal servizio regolato."
+      },
+      "domainNames": {
+        "label": "Nomi di dominio",
+        "placeholder": "es. splnit.eu",
+        "hint": "Nomi di dominio utilizzati dal servizio regolato."
+      }
+    },
+    "contacts": {
+      "help": "È richiesto almeno un contatto primario, tecnico e statutario.",
+      "missingRoles": "Manca uno dei ruoli obbligatori: primario, tecnico, statutario."
+    },
+    "boolean": {
+      "unspecified": "Non indicato",
+      "yes": "Sì",
+      "no": "No"
+    },
+    "actions": {
+      "downloadPdf": "Scarica PDF",
+      "addIp": "Aggiungi IP",
+      "removeIp": "Rimuovi indirizzo IP o intervallo",
+      "addDomain": "Aggiungi dominio",
+      "removeDomain": "Rimuovi nome di dominio",
+      "addContact": "Aggiungi contatto",
+      "removeContact": "Rimuovi contatto",
+      "remove": "Rimuovi",
+      "prepareRegistration": "Prepara registrazione"
+    },
+    "errors": {
+      "load": "Impossibile caricare il record.",
+      "submit": "Impossibile preparare l'artefatto di registrazione.",
+      "pdf": "Impossibile creare il PDF."
+    },
+    "serviceCategories": {
+      "energetika": "Energia",
+      "doprava": "Trasporti",
+      "bankovnictvi": "Bancario",
+      "financni_trhy": "Infrastruttura dei mercati finanziari",
+      "zdravotnictvi": "Sanità",
+      "pitna_voda": "Acqua potabile",
+      "odpadni_vody": "Acque reflue",
+      "digitalni_infrastruktura": "Infrastruttura digitale",
+      "rizeni_ict_sluzeb": "Gestione dei servizi ICT",
+      "verejna_sprava": "Pubblica amministrazione",
+      "vesmir": "Spazio",
+      "postovni_sluzby": "Servizi postali e di corriere",
+      "nakladani_s_odpady": "Gestione dei rifiuti",
+      "chemicke_latky": "Sostanze chimiche",
+      "potraviny": "Alimentare",
+      "vyroba": "Produzione",
+      "digitalni_poskytovatele": "Fornitori digitali",
+      "vyzkum": "Ricerca"
+    },
+    "contactRoles": {
+      "primary": "Primario",
+      "technical": "Tecnico",
+      "security_manager": "Manager sicurezza",
+      "statutory": "Statutario"
+    },
+    "entitySizes": {
+      "micro": "Micro",
+      "small": "Piccolo",
+      "medium": "Medio",
+      "large": "Grande"
+    },
+    "regimes": {
+      "nizsi": "Inferiore",
+      "vyssi": "Superiore"
+    },
+    "geographicScopes": {
+      "cross_border": "Transfrontaliero",
+      "cz_only": "Solo CZ"
+    },
+    "submissionNotice": "Questo artefatto serve solo a preparare la compilazione del modulo sul Portale NÚKIB. L'invio avviene direttamente sul Portale NÚKIB con autenticazione BankID / NIA. Splnit.eu non invia il modulo al posto vostro."
+  },
   "home": {
     "badge": "Preparazione alla compliance UE per le PMI italiane",
     "titleLine1": "Rendete più chiaro il lavoro di compliance nella vostra giurisdizione.",

@@ -1808,6 +1808,135 @@
       }
     }
   },
+  "nukibRegistration": {
+    "common": {
+      "noDate": "n/a"
+    },
+    "hero": {
+      "eyebrow": "NÚKIB",
+      "title": "Regulated service registration",
+      "subtitle": "Preparation worksheet for data an organisation copies into the form on the NÚKIB Portal."
+    },
+    "betaBanner": {
+      "title": "Beta for design partners",
+      "body": "This page prepares a working artifact for Czech NÚKIB registration. It is not legal advice, it does not file the form for you, and it does not guarantee acceptance or compliance. Official submission still happens on the NÚKIB Portal."
+    },
+    "status": {
+      "title": "Preparation status",
+      "loading": "Loading the latest record...",
+      "lastPreparation": "Latest preparation: {date}",
+      "empty": "No record has been created yet."
+    },
+    "sections": {
+      "organisation": "Organisation identification",
+      "serviceClassification": "Service classification",
+      "geographicScope": "Geographic scope",
+      "contacts": "Contact persons",
+      "additionalData": "Additional data (30-day period)"
+    },
+    "fields": {
+      "ico": "IČO",
+      "organisationName": "Organisation name",
+      "dataBoxId": "Data box",
+      "serviceCategory": "Service category",
+      "regime": "Obligation regime",
+      "entitySize": "Entity size",
+      "serviceDescription": "Service description",
+      "scope": "Scope",
+      "affectedMemberStates": "Affected member states",
+      "role": "Role",
+      "name": "Name",
+      "email": "Email",
+      "phone": "Phone",
+      "position": "Position",
+      "ownershipChain": "Ownership structure",
+      "crossBorderDependencies": "Cross-border dependencies",
+      "cyberSecurityManagerAppointed": "Cybersecurity manager"
+    },
+    "placeholders": {
+      "affectedMemberStates": "SK, DE"
+    },
+    "networkScope": {
+      "sectionLabel": "Service network scope",
+      "sectionHint": "Required part of reporting under § 11 of Act No. 264/2025 Coll. Complete it with the first notification or within 30 days after the registration decision.",
+      "ipRanges": {
+        "label": "IP addresses / ranges (CIDR)",
+        "placeholder": "e.g. 192.0.2.0/24",
+        "hint": "IP addresses or CIDR ranges used by the regulated service."
+      },
+      "domainNames": {
+        "label": "Domain names",
+        "placeholder": "e.g. splnit.eu",
+        "hint": "Domain names used by the regulated service."
+      }
+    },
+    "contacts": {
+      "help": "At least one primary, technical, and statutory contact is required.",
+      "missingRoles": "One of the required roles is missing: primary, technical, statutory."
+    },
+    "boolean": {
+      "unspecified": "Not specified",
+      "yes": "Yes",
+      "no": "No"
+    },
+    "actions": {
+      "downloadPdf": "Download PDF",
+      "addIp": "Add IP",
+      "removeIp": "Remove IP address or range",
+      "addDomain": "Add domain",
+      "removeDomain": "Remove domain name",
+      "addContact": "Add contact",
+      "removeContact": "Remove contact",
+      "remove": "Remove",
+      "prepareRegistration": "Prepare registration"
+    },
+    "errors": {
+      "load": "The record could not be loaded.",
+      "submit": "The registration artifact could not be prepared.",
+      "pdf": "The PDF could not be created."
+    },
+    "serviceCategories": {
+      "energetika": "Energy",
+      "doprava": "Transport",
+      "bankovnictvi": "Banking",
+      "financni_trhy": "Financial market infrastructure",
+      "zdravotnictvi": "Healthcare",
+      "pitna_voda": "Drinking water",
+      "odpadni_vody": "Waste water",
+      "digitalni_infrastruktura": "Digital infrastructure",
+      "rizeni_ict_sluzeb": "ICT service management",
+      "verejna_sprava": "Public administration",
+      "vesmir": "Space",
+      "postovni_sluzby": "Postal and courier services",
+      "nakladani_s_odpady": "Waste management",
+      "chemicke_latky": "Chemical substances",
+      "potraviny": "Food",
+      "vyroba": "Manufacturing",
+      "digitalni_poskytovatele": "Digital providers",
+      "vyzkum": "Research"
+    },
+    "contactRoles": {
+      "primary": "Primary",
+      "technical": "Technical",
+      "security_manager": "Security manager",
+      "statutory": "Statutory"
+    },
+    "entitySizes": {
+      "micro": "Micro",
+      "small": "Small",
+      "medium": "Medium",
+      "large": "Large"
+    },
+    "regimes": {
+      "nizsi": "Lower",
+      "vyssi": "Higher"
+    },
+    "geographicScopes": {
+      "cross_border": "Cross-border",
+      "cz_only": "CZ only"
+    },
+    "submissionNotice": "This artifact is only preparation for completing the form on the NÚKIB Portal. Submission happens directly on the NÚKIB Portal with BankID / NIA authentication. Splnit.eu does not submit the form for you."
+  },
   "home": {
     "badge": "EU compliance readiness for European SMBs",
     "titleLine1": "Make compliance work clearer in your jurisdiction.",

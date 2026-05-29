@@ -1,6 +1,8 @@
 import { defineConfig, devices } from "@playwright/test";
 
 const port = Number(process.env.PLAYWRIGHT_PORT ?? 3002);
+const shouldStartWebServer =
+  Boolean(process.env.CI) || process.env.NUKIB_REGISTRATION_E2E_SERVER === "true";
 
 export default defineConfig({
   expect: {
@@ -17,15 +19,18 @@ export default defineConfig({
     baseURL: `http://127.0.0.1:${port}`,
     trace: "retain-on-failure",
   },
-  ...(process.env.CI
+  ...(shouldStartWebServer
     ? {
         webServer: {
           command: `npm run start -- -p ${port}`,
           env: {
+            CLERK_SECRET_KEY: "",
             CRON_SECRET: "test-cron-secret",
             ENABLE_LOCAL_DEMO_DATA: "true",
             ENABLE_TEST_ROUTES: "true",
+            NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY: "",
             NEXT_PUBLIC_ENABLE_TEST_ROUTES: "true",
+            NUKIB_REGISTRATION_TEST_MODE: "true",
             NODE_OPTIONS: process.env.NODE_OPTIONS ?? "--max-old-space-size=8192",
             TEST_BYPASS_PLAN_GATE: "true",
           },

@@ -12,6 +12,8 @@
     "lint": "eslint",
     "typecheck": "tsc --noEmit",
     "test:e2e": "playwright test",
+    "test:e2e:nukib-registration": "npm run build && NUKIB_REGISTRATION_E2E_SERVER=true PLAYWRIGHT_PORT=3002 playwright test tests/e2e/nukib-registration.spec.ts --project=chromium",
+    "test:e2e:nukib-registration-ui": "npm run build && NUKIB_REGISTRATION_E2E_SERVER=true PLAYWRIGHT_PORT=3002 playwright test tests/e2e/nukib-registration-ui.spec.ts",
     "test:e2e:intake-prioritization": "playwright test tests/e2e/intake-prioritization-smoke.spec.ts",
     "test:e2e:activation-loop": "playwright test tests/e2e/activation-loop.spec.ts",
     "test:e2e:ui": "playwright test --ui",
@@ -181,7 +183,9 @@
   "overrides": {
     "brace-expansion": "5.0.6",
     "esbuild": "0.28.0",
+    "js-cookie": "3.0.7",
     "postcss": "8.5.10",
+    "qs": "6.15.2",
     "tmp": "0.2.7",
     "uuid": "11.1.1"
   },

@@ -1,0 +1,43 @@
+{
+  "ico": "27123456",
+  "organisationName": "Testovaci vodarenska spolecnost Example, a.s.",
+  "dataBoxId": "ab12cde",
+  "serviceCategory": "pitna_voda",
+  "serviceDescription": "Provoz úpravny vody a distribuční soustavy pro obce v okrese Beroun.",
+  "regime": "vyssi",
+  "entitySize": "medium",
+  "geographicScope": "cz_only",
+  "serviceNetworkScope": {
+    "ipRanges": ["192.0.2.0/24"],
+    "domainNames": ["voda.example.test", "app.voda.example.test"]
+  },
+  "contacts": [
+    {
+      "role": "primary",
+      "name": "Jana Novakova",
+      "email": "jana.novakova@example.test",
+      "phone": "+420 200 000 001",
+      "position": "Vedoucí compliance"
+    },
+    {
+      "role": "technical",
+      "name": "Petr Dvorak",
+      "email": "petr.dvorak@example.test",
+      "phone": "+420 200 000 002",
+      "position": "Správce infrastruktury"
+    },
+    {
+      "role": "statutory",
+      "name": "Jana Novakova",
+      "email": "statutar@example.test",
+      "phone": "+420 200 000 003",
+      "position": "Jednatelka"
+    }
+  ],
+  "ownershipChain": "Syntetická testovací společnost vlastněná ukázkovým municipálním vlastníkem.",
+  "crossBorderDependencies": "Bez přímých přeshraničních provozních závislostí.",
+  "cyberSecurityManagerAppointed": true,
+  "preparedAt": "2026-01-15T09:30:00.000Z",
+  "preparedBy": "user_fixture_nukib",
+  "legalBasis": "zákon č. 264/2025 Sb."
+}
