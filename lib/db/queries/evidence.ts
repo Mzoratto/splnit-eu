@@ -1,5 +1,6 @@
 import { and, desc, eq, inArray } from "drizzle-orm";
-import { createEvidenceState, type EvidenceAssessmentResult } from "@/lib/activation/evidence-state";
+import { createEvidenceState } from "@/lib/activation/evidence-state";
+import type { EvidenceAssessmentResult } from "@/lib/activation/evidence-state";
 import { getDb } from "@/lib/db";
 import {
   controls,
@@ -56,17 +57,26 @@ export async function createManualEvidence(input: {
   collectedBy: string;
   controlKey: string;
   description: string | null;
+  assessmentResult?: EvidenceAssessmentResult;
   expiresAt: string | null;
   fileType: string;
   snapshotData?: Record<string, unknown> | null;
 }) {
   const db = getDb();
+
+  if (input.fileType === "helios_csv_import" && input.assessmentResult === "pass") {
+    throw new Error("Helios CSV import evidence cannot be assessed as pass.");
+  }
+
   const manualEvidenceState = createEvidenceState({
     assessment_result: "manual_review",
     collected_at: new Date(),
     collection_status: "collected",
     source: "manual",
   });
+  if (input.assessmentResult && input.assessmentResult !== "manual_review") {
+    manualEvidenceState.assessment_result = input.assessmentResult;
+  }
   const controlRows = await db
     .select({ id: controls.id })
     .from(controls)
@@ -134,72 +144,49 @@ export async function createManualAttestationEvidence(input: {
   description: string | null;
   expiresAt?: string | null;
 }) {
-  const db = getDb();
-  const controlRows = await db
-    .select({ id: controls.id })
-    .from(controls)
-    .where(eq(controls.key, input.controlKey))
-    .limit(1);
-  const control = controlRows[0] ?? null;
-
-  if (!control) {
-    throw new Error(`Unknown control: ${input.controlKey}`);
-  }
-
-  const evidenceState = createEvidenceState({
-    assessment_result: input.assessmentResult ?? "manual_review",
-    collected_at: new Date(),
-    collection_status: "collected",
-    source: "manual",
+  return createManualEvidence({
+    assessmentResult: input.assessmentResult,
+    blobUrl: null,
+    clerkOrgId: input.clerkOrgId,
+    collectedBy: input.collectedBy,
+    controlKey: input.controlKey,
+    description: input.description,
+    expiresAt: input.expiresAt ?? null,
+    fileType: "attestation_answers",
+    snapshotData: {
+      attestationAnswers: input.answers,
+    },
   });
+}
 
-  const insertedRows = await db
-    .insert(evidence)
-    .values({
-      assessmentResult: evidenceState.assessment_result,
-      blockedReason: evidenceState.blocked_reason,
-      blobUrl: null,
-      clerkOrgId: input.clerkOrgId,
-      collectedAt: evidenceState.collected_at,
-      collectedBy: input.collectedBy,
-      collectionStatus: evidenceState.collection_status,
-      confidence: evidenceState.confidence,
-      controlId: control.id,
-      description: input.description,
-      snapshotData: {
-        attestationAnswers: input.answers,
-      },
-      source: evidenceState.source,
-      type: "attestation_answers",
-    })
-    .returning({ id: evidence.id });
-  const evidenceId = insertedRows[0]?.id;
-
-  if (!evidenceId) {
-    throw new Error("Failed to create attestation evidence record.");
+export async function createHeliosCsvImportEvidence(input: {
+  assessmentResult: EvidenceAssessmentResult;
+  clerkOrgId: string;
+  collectedBy: string;
+  controlKey: string;
+  description: string | null;
+  rows: Record<string, unknown>[];
+  templateVersion?: string | null;
+}) {
+  if (input.assessmentResult !== "manual_review" && input.assessmentResult !== "gap") {
+    throw new Error("Helios CSV import evidence must be manual_review or gap.");
   }
 
-  await db
-    .insert(orgControlStatuses)
-    .values({
-      clerkOrgId: input.clerkOrgId,
-      controlId: control.id,
-      lastEvidenceAt: new Date(),
-      status: "unknown",
-      updatedAt: new Date(),
-    })
-    .onConflictDoUpdate({
-      target: [orgControlStatuses.clerkOrgId, orgControlStatuses.controlId],
-      set: {
-        lastEvidenceAt: new Date(),
-        updatedAt: new Date(),
-      },
-    });
-
-  return {
-    controlId: control.id,
-    evidenceId,
-  };
+  return createManualEvidence({
+    assessmentResult: input.assessmentResult,
+    blobUrl: null,
+    clerkOrgId: input.clerkOrgId,
+    collectedBy: input.collectedBy,
+    controlKey: input.controlKey,
+    description: input.description,
+    expiresAt: null,
+    fileType: "helios_csv_import",
+    snapshotData: {
+      provenance: "customer_reported_csv_template",
+      rows: input.rows,
+      templateVersion: input.templateVersion ?? null,
+    },
+  });
 }
 
 export async function getEvidenceForOrg(input: {
@@ -239,6 +226,7 @@ export async function listEvidenceVault(clerkOrgId: string) {
       blockedReason: evidence.blockedReason,
       collectionStatus: evidence.collectionStatus,
       confidence: evidence.confidence,
+      snapshotData: evidence.snapshotData,
       source: evidence.source,
       status: orgControlStatuses.status,
       type: evidence.type,
@@ -317,6 +305,7 @@ export async function listEvidenceMetadataForExport(
       blockedReason: evidence.blockedReason,
       collectionStatus: evidence.collectionStatus,
       confidence: evidence.confidence,
+      snapshotData: evidence.snapshotData,
       source: evidence.source,
       status: orgControlStatuses.status,
       type: evidence.type,
