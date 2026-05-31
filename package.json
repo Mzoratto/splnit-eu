@@ -70,6 +70,8 @@
     "smoke:ovhcloud-workspace-config": "tsx scripts/smoke-ovhcloud-workspace-config.ts",
     "smoke:compliance-report": "tsx scripts/smoke-compliance-report.ts",
     "smoke:helios-workspace-config": "tsx scripts/smoke-helios-workspace-config.ts",
+    "seed:helios-controls": "tsx scripts/seed-helios-controls.ts",
+    "smoke:helios-control-seeding": "tsx scripts/smoke-helios-control-seeding.ts",
     "smoke:policy-evidence-loop": "tsx scripts/smoke-policy-evidence-loop.ts",
     "smoke:evidence-state-transitions": "tsx scripts/smoke-evidence-state-transitions.ts",
     "smoke:authenticated-primary-flow": "tsx scripts/smoke-authenticated-primary-flow.ts",

@@ -1,3 +1,4 @@
+import { HELIOS_CONTROL_SEEDS } from "@/lib/workspaces/control-seeds";
 import { NIS2_EVIDENCE_REQUIREMENTS_BY_CONTROL } from "./evidence-requirements";
 
 export type FrameworkSlug = "nis2" | "ai-act" | "gdpr" | "iso27001" | "csrd";
@@ -1425,6 +1426,7 @@ export const CONTROL_LIBRARY: ControlSeed[] = [
   ...BASE_CONTROL_LIBRARY.map(withNis2EvidenceRequirements),
   ...ISO27001_EXTENSION_CONTROLS,
   ...CSRD_DATA_POINT_CONTROLS,
+  ...HELIOS_CONTROL_SEEDS,
 ];
 
 export function getControlMappingsForFramework(frameworkSlug: FrameworkSlug) {
