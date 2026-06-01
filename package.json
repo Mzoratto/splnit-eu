@@ -78,6 +78,8 @@
     "smoke:production-tenant-readiness-source": "tsx scripts/smoke-production-tenant-readiness-source.ts",
     "smoke:production-intake-profile": "tsx scripts/smoke-production-intake-profile.ts",
     "check:production-migration-drift": "tsx scripts/check-production-migration-drift.ts",
+    "db:migrate:production": "tsx scripts/run-production-migrations-safe.ts",
+    "smoke:production-migration-guard": "tsx scripts/run-production-migrations-safe.ts --self-test",
     "lint:copy:intake-prioritization": "tsx scripts/lint-intake-prioritization-copy.ts",
     "lint:copy:intake-prioritization:strict": "tsx scripts/lint-intake-prioritization-copy.ts --strict",
     "cleanup:historical-smoke-orgs": "node scripts/cleanup-historical-smoke-organisations.mjs",
