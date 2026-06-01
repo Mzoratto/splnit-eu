@@ -1,6 +1,6 @@
 # Splnit.eu Project Plan
 
-Last updated: 2026-05-26
+Last updated: 2026-06-01
 
 This is the single source of truth for current project direction. Older phase plans, outreach worksheets, and onboarding playbooks are archived under `docs/archive/` and should not drive work unless this file explicitly revives them.
 
@@ -29,21 +29,43 @@ Hard constraints:
 - Core app surfaces exist in code: dashboard, controls, frameworks, evidence, integrations, policies, vendors, risks, incidents, questionnaires, training, team/access reviews, billing/settings, agency, and Trust Center admin.
 - NÚKIB/ÚOOÚ incident workflow, 72-hour countdown, and reporting fields exist.
 - Trust Center, MSP/agency portal, vendor questionnaire flow, risk register, training records, access reviews, audit log, and NÚKIB regulatory feed exist.
+- Authenticated production primary-flow proof is green for the narrowed buyer-critical path: live Clerk org creation, six-step onboarding, dashboard redirect, NIS2 assessment, control status persistence, evidence upload, evidence download, Italian primary pages, and database verification. Policy PDF and gap-report PDF generation are separate proof gates, not covered by that smoke.
+- Production migration drift was reconciled after the organisation identifier fix; current recorded production state has 28 expected and 28 applied migrations through `0027_drop_ico_format_check`.
+- Helios is now at the live manual ERP workspace tier: 19 canonical `helios-*` controls, 19 NIS2 mappings, targeted seed/readiness verifier, live manual attestation/user-flow smoke coverage, CSV-assisted manual evidence import, claim-safety guard, and a recorded owner-approved production seed window on GitHub `main`.
+- Helios production boundary: Helios controls are seeded and verified in production; authenticated Helios workspace attestation and CSV upload are proven in local/preview smoke coverage, not yet by a logged-in production smoke against the live seed.
+- Live integration adapters exist in code for Microsoft 365, GitHub, AWS, Hetzner Cloud, OVHcloud, and ABRA Flexi via `lib/integrations/registry.ts`. Their proof level must be tracked per provider: source adapter and smoke coverage are not the same as a customer-connected production tenant proof.
+- ABRA Flexi remains the Czech ERP runtime adapter. Helios and Pohoda are manual/workspace-tier surfaces, not runtime/API adapter integrations.
+- EU AI Act exists as a mapped manual-control framework in the product, with controls such as AI inventory, AI literacy, prohibited-practices review, high-risk provider verification, human oversight, log retention, individual notice, and content labeling. It is not an automated live-adapter framework and should be marketed as readiness/guidance unless mapping review status supports stronger wording.
+- Stripe subscription primitives exist: Checkout session creation, Customer Portal session creation, signed webhook verification, subscription persistence, plan-gate enforcement, invoice/cancellation email paths, and local/test smoke coverage for billing logic.
 - Pricing is sourced from `lib/stripe/plans.ts`; public UI must not hardcode plan names or prices.
 - Public proof remains intentionally honest: no testimonials, customers, logos, SOC 2, ISO certification, or uptime claims without real evidence and owner approval.
 - Italian outreach materials are preserved as archived context under `docs/archive/outreach/paused-italy-2026-05/`; they are not current operating instructions.
 
+### Capability Tiers And Claim Boundaries
+
+| Tier | Meaning | Current examples | Claim boundary |
+|------|---------|------------------|----------------|
+| Live integration adapter | Provider-specific adapter registered in `lib/integrations/registry.ts` that can run automated checks when a tenant connects credentials and grants required permissions. | Microsoft 365, GitHub, AWS, Hetzner Cloud, OVHcloud, ABRA Flexi. | May say automated checks exist for configured integrations. Do not imply every listed adapter is production-proven for a real customer tenant until that provider has a recorded live/customer-connected proof. |
+| API-key connector | Credential-based connector with provider-specific health/check logic. | AWS IAM access key flow, Hetzner API token, OVHcloud credentials, ABRA Flexi connection primitives. | Say connector/checks are available where credentials and permissions are configured. Do not call it continuous compliance unless scheduling/evidence freshness is proven. |
+| Manual ERP workspace | Guided workspace/checklist with mapped controls, manual attestation, evidence upload, and progress visibility. | Pohoda, Money S3 / S4, Helios; Helios has the strongest seed/CSV proof today. | Say workspace/manual readiness review. Do not call it native API automation. |
+| CSV-assisted manual evidence import | Strict import path that converts customer-reported CSV rows into manual-review/gap evidence candidates. | Helios CSV import. | CSV imports are customer-reported and must not produce `pass` automatically. |
+| Regulation guide / mapped manual framework | Framework appears in intake, controls, templates, or public guidance, but relies on manual evidence and reviewed mappings. | EU AI Act, GDPR, ISO 27001, NIS2/ZoKB depending on review status. | Say readiness/guidance/mapped controls according to review status. Do not imply legal certification or automated regulator submission. |
+| Public/regulatory content | Plain-language marketing or educational pages. | `/predpisy`, NIS2 checker, blog/regulation pages. | Must remain indicative, source-backed, and not auditor-ready unless source/mapping review supports it. |
+
 ### In Progress
 
 - Czech-first positioning and conversion work for design partners, MSPs, and SMB buyers.
-- App hardening: export/report smokes, onboarding polish, provider-configured integration smokes, Stripe test-mode billing smoke, and broader action-level authorization coverage.
-- Legal/counsel review: public legal pages, DPA, subprocessor, retention, and operator identity wording remain drafts until reviewed.
+- App hardening: export/report smokes, policy/gap-report PDF proof after the narrowed primary-flow pass, onboarding polish, provider-configured integration smokes, and broader action-level authorization coverage.
+- Stripe readiness: local/test billing logic is partially proven, but browser-completed Stripe-hosted Checkout, Customer Portal, and Stripe-delivered webhook forwarding remain unproven. Do not claim production billing readiness until those are green and counsel-approved payment/liability wording is available.
+- Legal/counsel review: public legal pages, DPA, subprocessor, retention, liability/payment wording, DPO/contact wording, and OSVČ/operator identity presentation remain drafts until reviewed. The working OSVČ identity exists, but publication wording still needs final approval.
 - Knowledge layer hardening: mapping/template promotion remains gated by review status.
 - Policy-to-Evidence Loop: v1 exists for selected controls; do not broaden it until product review confirms the current pattern.
+- ERP parity follow-up: Helios is now stronger than Pohoda on canonical production seed proof and CSV-assisted import. Pohoda can remain the older reference workspace, but if ERP parity is important, add Pohoda seed hardening and/or CSV import as a separate scoped lane.
 
 ### Blocked
 
 - Public legal/counsel closeout is blocked on exact approved OSVČ/operator identity, DPO/contact, DPA/subprocessor, and retention wording.
+- Paid Stripe design-partner onboarding is blocked until counsel-approved payment/liability terms and live-mode billing proof are complete. A free or manually invoiced pilot can proceed if product/legal wording is clear.
 - Real testimonials/customer proof are blocked until design partners complete onboarding and give written consent.
 - SOC 2, ISO certification, and pen-test claims are blocked until the external work is actually complete or formally in progress with an approved status line.
 - Full NÚKIB portal API submission is blocked until NÚKIB publishes a stable API.
@@ -87,12 +109,14 @@ Tracked root files are intentionally minimal for a Next.js/Vercel app:
 
 Do these before broad new feature work:
 
-1. **Verify current PR and production deploy state:** keep GitHub and Codeberg `main` aligned; confirm CI, Vercel preview, and production smoke checks after merge.
-2. **Product-review the Czech-first primary flow:** dashboard, controls, evidence, incidents, NIS2 checker, pricing, comparison, partner page, and security page.
-3. **Audit/export endpoint smokes:** verify audit-log export pagination/limit behavior, org scoping, and stable output shape; verify buyer-visible vendor/risk/workspace export endpoints require auth and return only org-owned data.
-4. **Onboarding UX polish:** refine onboarding and framework setup after export/report risk is contained.
-5. **Legal/operator identity closeout:** publish final legal/customer-facing wording only when OSVČ/IČO/ARES/operator, DPO/contact, DPA/subprocessor, and retention terms are approved.
-6. **Vendor-submitted evidence feature:** future, not the current sprint. If built later, vendor answers should become vendor-supplied draft evidence with explicit control mapping and human review before any auditor-facing claim.
+1. **Reconcile working state before release work:** align local `main`, GitHub `main`, and any mirror/deploy branch; keep dirty/untracked docs and package changes intentional. Do not deploy from a stale local `main`.
+2. **Finish Stripe hosted proof:** run browser-hosted Stripe test Checkout, Customer Portal, and Stripe-delivered webhook forwarding in a safe sandbox/test setup; record redacted evidence. Keep live-mode Stripe disabled until counsel/payment terms and live smoke are ready.
+3. **Close legal/template gaps for the first Czech design partner:** finalize customer-facing operator identity wording, DPA/subprocessors/retention/liability/payment terms, and decide whether CZ/EU RoPA templates are required before onboarding.
+4. **Product-review the current Czech-first primary flow and public claim surfaces:** dashboard, onboarding, controls, evidence, Helios workspace/CSV import, incidents, NIS2 checker, pricing, comparison, partner page, security page, `/platform`, and SoftwareApplication JSON-LD. Reconcile `/platform` copy against the capability-tier table, especially “automatic checks,” “manual evidence,” “internal systems,” and AI Act wording. Capture gaps as audit items instead of silently polishing everything.
+5. **Choose the next Czech moat lane:** either harden Pohoda toward Helios-level seed/import proof, add public WEDOS/Forpsi/VSHosting DNS/TLS/email checks, or implement framework maturity labels. Do not run all three at once.
+6. **Audit/export endpoint smokes:** verify audit-log export pagination/limit behavior, org scoping, stable output shape, and buyer-visible vendor/risk/workspace export auth/ownership boundaries.
+7. **Onboarding UX polish:** refine onboarding and framework setup only after the proof/legal/billing gates above are not blocking the first design-partner path.
+8. **Vendor-submitted evidence feature:** future, not the current sprint. If built later, vendor answers should become vendor-supplied draft evidence with explicit control mapping and human review before any auditor-facing claim.
 
 Standing blockers that still apply across the work above:
 
