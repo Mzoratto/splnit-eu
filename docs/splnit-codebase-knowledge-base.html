@@ -1,0 +1,612 @@
+<!doctype html><html><head><meta charset="utf-8"><title>Splnit.eu Codebase Study Guide</title><style>
+body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif; color:#111; line-height:1.48; max-width: 1040px; margin: 40px auto; }
+h1 { font-size: 34px; border-bottom: 2px solid #111; padding-bottom: 8px; }
+h2 { font-size: 25px; margin-top: 34px; border-bottom: 1px solid #ccc; padding-bottom: 4px; }
+h3 { font-size: 19px; margin-top: 24px; } h4 { font-size: 16px; margin-top: 18px; }
+table { border-collapse: collapse; width: 100%; margin: 12px 0; font-size: 12px; }
+th, td { border: 1px solid #ccc; padding: 6px; vertical-align: top; } th { background: #f3f4f6; }
+pre { background:#f6f8fa; border:1px solid #ddd; padding:10px; overflow-wrap:anywhere; white-space:pre-wrap; font-size:10.5px; }
+.note { background:#eff6ff; border-left:4px solid #2563eb; padding:10px; margin:12px 0; }
+.why { background:#eefbf2; border-left:4px solid #16a34a; padding:10px; margin:12px 0; }
+.warn { background:#fff1f2; border-left:4px solid #ef4444; padding:10px; margin:12px 0; }
+.small { font-size: 12px; color:#555; }
+.flow { background:#fafafa; border:1px solid #ddd; padding:10px; font-family: ui-monospace, SFMono-Regular, Menlo, monospace; white-space:pre-wrap; font-size:12px; }
+</style></head><body>
+<h1>Splnit.eu Codebase Study Guide: How the App Is Built</h1>
+<p>Updated 2026-05-30 07:07. This version expands the earlier knowledge-base document with code-level explanations, implementation rationale, and guided reading notes.</p>
+<div class="note"><strong>How to use this document:</strong> read it next to the source code. Each section explains what a file does, why the pattern exists, what alternatives were avoided, and what to study next. It intentionally avoids secrets and does not reproduce every source file.</div>
+<div class="warn"><strong>Repository state note:</strong> before this document edit, the repo already had unrelated dirty changes in <code>package.json</code>, <code>package-lock.json</code>, and untracked <code>memory/</code>. This document update does not resolve those.</div>
+<h2>1. Mental Model of the App</h2>
+<p>Splnit.eu is built as a multi-tenant compliance automation app. The user sees a product experience, but the code is organized around a few repeatable domain flows: tenant identity, intake/profile, framework/control mapping, evidence collection, document generation, vendor questionnaires, and trust-center publication.</p>
+<div class="flow">Browser request
+  → proxy.ts applies locale and Clerk auth boundaries
+  → app/ route group renders public, app, auth, demo, API, or token route
+  → server component or route handler calls lib/db/queries/* and domain logic in lib/*
+  → domain module reads schema/data/config and returns typed data
+  → component renders UI with localized copy and safe status labels
+  → scripts/tests/smokes verify the behavior outside the browser</div>
+<div class="why"><strong>Why this choice:</strong> This split keeps framework-specific Next.js code in <code>app/</code>, reusable UI in <code>components/</code>, and business rules in <code>lib/</code>. That makes the compliance logic testable from scripts and route handlers instead of being trapped inside React components.</div>
+<h2>2. Stack Choices and Why They Fit This App</h2>
+<table><thead><tr><th>Choice</th><th>Where used</th><th>Why it was chosen / what it gives</th><th>Tradeoff to know</th></tr></thead><tbody><tr><td>Next.js App Router</td><td>app/, app/layout.tsx, app/api/*</td><td>Good fit for mixed public marketing pages, authenticated app pages, API handlers, metadata, sitemap/robots, and server-side data access in one project.</td><td>Requires care around server/client boundaries and env vars during build.</td></tr><tr><td>React Server Components by default</td><td>app/(app) and app/(marketing) pages</td><td>Most pages can fetch data on the server and send less JavaScript. Sensitive DB/auth logic stays server-side.</td><td>Interactive widgets must be pushed into smaller client components with &quot;use client&quot;.</td></tr><tr><td>TypeScript</td><td>all .ts/.tsx files</td><td>Compliance data structures are complex; TS catches status/key/provider mistakes early.</td><td>Requires more explicit types and sometimes larger files.</td></tr><tr><td>Clerk</td><td>proxy.ts, app/(auth), lib/clerk/*</td><td>Handles users, sessions, organizations, sign-in/up UI, and protected route enforcement faster than custom auth.</td><td>App must sync Clerk org IDs into its own database and handle missing env safely.</td></tr><tr><td>Drizzle ORM + Postgres/Neon</td><td>lib/db/schema.ts, lib/db/queries/*</td><td>Schema is TypeScript-readable, migrations are explicit, and Postgres fits relational compliance/evidence data.</td><td>Production migrations need direct/unpooled DB connection and drift checks.</td></tr><tr><td>next-intl</td><td>i18n/, messages/, app/layout.tsx</td><td>Czech-first app with English-EU and Italian text needs structured locale handling and localized message bundles.</td><td>Copy changes must be audited so locales do not drift or overclaim legal status.</td></tr><tr><td>Tailwind CSS + design tokens</td><td>styles/design-tokens.css, components/*</td><td>Fast, consistent UI iteration with project-specific tokens and low component overhead.</td><td>Requires discipline to reuse tokens and avoid ad-hoc styling.</td></tr><tr><td>Inngest</td><td>inngest/, app/api/inngest</td><td>Background jobs for integration tests, reminders, expiry alerts, and regulation updates without blocking UI requests.</td><td>Job results must still be recorded and surfaced clearly in DB/UI.</td></tr><tr><td>Smoke scripts</td><td>scripts/smoke-*.ts</td><td>Compliance SaaS needs proof boundaries; scripts verify source/runtime/production behavior and avoid relying on assumptions.</td><td>Many scripts exist; choose the focused one for the changed surface.</td></tr></tbody></table>
+<h2>3. Request Entry: Root Layout and Proxy</h2>
+<h3>3.1 app/layout.tsx</h3>
+<p>The root layout is global shell code. It loads fonts, sets metadata, attaches the next-intl provider, registers the service worker, and renders the cookie consent widget. It also injects a tiny script before hydration to avoid theme/locale flashes.</p>
+<pre><code>  30| const themeScript = `
+  31| (() =&gt; {
+  32|   try {
+  33|     const stored = window.localStorage.getItem(&quot;splnit-theme&quot;);
+  34|     const theme = stored === &quot;dark&quot; ? &quot;dark&quot; : &quot;light&quot;;
+  35|     document.documentElement.dataset.theme = theme;
+  36|     document.documentElement.style.colorScheme = theme;
+  37| 
+  38|     const savedLocale = window.localStorage.getItem(&quot;splnit_locale&quot;);
+  39|     const supportedLocales = new Set([&quot;cs-CZ&quot;, &quot;en-EU&quot;, &quot;it-IT&quot;]);
+  40|     const hasLocaleCookie = /(?:^|; )NEXT_LOCALE=/.test(document.cookie);
+  41|     if (savedLocale &amp;&amp; supportedLocales.has(savedLocale) &amp;&amp; !hasLocaleCookie) {
+  42|       document.cookie = &quot;NEXT_LOCALE=&quot; + savedLocale + &quot;; path=/; max-age=31536000; SameSite=Lax&quot;;
+  43|     }
+  44|   } catch {
+  45|     document.documentElement.dataset.theme = &quot;light&quot;;
+  46|   }
+  47| })();</code></pre>
+<div class="why"><strong>Why this choice:</strong> The theme/locale bootstrap is inline because it must run before React hydrates. If this were a normal client component, users could briefly see the wrong theme or locale. The layout also keeps metadata centralized so every page inherits a safe baseline.</div>
+<h3>3.2 proxy.ts</h3>
+<p>proxy.ts is the request gate. It checks whether a route is protected, whether Clerk is configured, whether the path is API/public/demo, and which locale should be applied. This is not business logic; it is request routing and safety logic.</p>
+<pre><code>   6| const protectedRoutes = [
+   7|   &quot;/agency(.*)&quot;,
+   8|   &quot;/agency-client-invites(.*)&quot;,
+   9|   &quot;/dashboard(.*)&quot;,
+  10|   &quot;/onboarding(.*)&quot;,
+  11|   &quot;/frameworks(.*)&quot;,
+  12|   &quot;/controls(.*)&quot;,
+  13|   &quot;/evidence(.*)&quot;,
+  14|   &quot;/integrations(.*)&quot;,
+  15|   &quot;/policies(.*)&quot;,
+  16|   &quot;/vendors(.*)&quot;,
+  17|   &quot;/questionnaires(.*)&quot;,
+  18|   &quot;/trust-center(.*)&quot;,
+  19|   &quot;/incidents(.*)&quot;,
+  20|   &quot;/risks(.*)&quot;,
+  21|   &quot;/team(.*)&quot;,
+  22|   &quot;/workspaces(.*)&quot;,
+  23|   &quot;/settings(.*)&quot;,
+  24| ];
+  25| 
+  26| const localizedProtectedRoutes = protectedRoutes.flatMap((route) =&gt; [
+  27|   `/en${route}`,
+  28|   `/it${route}`,
+  29|   `/cs${route}`,
+  30| ]);
+  31| 
+  32| const isProtectedRoute = createRouteMatcher([
+  33|   ...protectedRoutes,
+  34|   ...localizedProtectedRoutes,
+  35| ]);
+  36| 
+  37| const isPublicRoute = createRouteMatcher([&quot;/demo(.*)&quot;]);
+  38| 
+  39| const isApiRoute = createRouteMatcher([&quot;/api(.*)&quot;, &quot;/trpc(.*)&quot;]);
+  40| </code></pre>
+<pre><code> 118| const clerk = clerkMiddleware(async (auth, request) =&gt; {
+ 119|   const clerkConfigured =
+ 120|     Boolean(process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY) &amp;&amp;
+ 121|     Boolean(process.env.CLERK_SECRET_KEY);
+ 122| 
+ 123|   if (clerkConfigured &amp;&amp; isProtectedRoute(request) &amp;&amp; !isPublicRoute(request)) {
+ 124|     await auth.protect();
+ 125|   }
+ 126| 
+ 127|   if (isApiRoute(request)) {
+ 128|     return NextResponse.next();
+ 129|   }
+ 130| 
+ 131|   return applyLocale(request);
+ 132| });
+ 133| 
+ 134| export function proxy(request: NextRequest, event: NextFetchEvent) {
+ 135|   const clerkConfigured =
+ 136|     Boolean(process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY) &amp;&amp;
+ 137|     Boolean(process.env.CLERK_SECRET_KEY);
+ 138| 
+ 139|   if (isPublicRoute(request)) {
+ 140|     return NextResponse.next();
+ 141|   }
+ 142| 
+ 143|   if (!clerkConfigured) {
+ 144|     if (
+ 145|       process.env.NODE_ENV === &quot;production&quot; &amp;&amp;
+ 146|       isProtectedRoute(request) &amp;&amp;
+ 147|       !isPublicRoute(request) &amp;&amp;
+ 148|       !localDemoDataEnabled()
+ 149|     ) {
+ 150|       return authConfigurationError();
+ 151|     }
+ 152| 
+ 153|     if (isApiRoute(request)) {
+ 154|       return NextResponse.next();
+ 155|     }
+ 156| 
+ 157|     return applyLocale(request);
+ 158|   }
+ 159| 
+ 160|   return clerk(request, event);</code></pre>
+<div class="why"><strong>Why this choice:</strong> Protected routes are declared in one place so adding a new authenticated route does not depend on every page remembering to check auth manually. The production 503 fallback for missing Clerk config is safer than accidentally exposing protected pages or crashing ambiguously.</div>
+<h2>4. Server Components vs Client Components</h2>
+<p>A key pattern in this app is: pages are server components unless they need browser state, localStorage, form transitions, or live interaction. Interactive areas become smaller client components.</p>
+<table><thead><tr><th>Example</th><th>Type</th><th>Why</th></tr></thead><tbody><tr><td>app/(app)/dashboard/page.tsx</td><td>Server component page</td><td>Reads auth/session and database-backed dashboard data on the server; can gracefully fall back to demo state when DB/auth are unavailable.</td></tr><tr><td>components/onboarding/onboarding-wizard.tsx</td><td>Client component</td><td>Needs useReducer, localStorage draft restore, step navigation, form interactions, and transitions.</td></tr><tr><td>components/questionnaires/questionnaire-workbench.tsx</td><td>Client component</td><td>Reviewer editing/approval workflow needs interactive state.</td></tr><tr><td>components/trust-center/public-trust-ui.tsx</td><td>Mostly presentational UI</td><td>Public trust model is prepared in lib, UI renders safe aggregates.</td></tr></tbody></table>
+<pre><code>   1| &quot;use client&quot;;
+   2| 
+   3| import Link from &quot;next/link&quot;;
+   4| import { useLocale, useTranslations } from &quot;next-intl&quot;;
+   5| import { useEffect, useMemo, useReducer, useRef, useState, useTransition } from &quot;react&quot;;
+   6| import {
+   7|   ArrowRight,
+   8|   Building2,
+   9|   Check,
+  10|   ChevronLeft,
+  11|   Clock3,
+  12|   ClipboardList,
+  13|   Gauge,
+  14|   LockKeyhole,
+  15|   Plug,
+  16|   Save,
+  17|   ShieldCheck,
+  18|   Sparkles,
+  19| } from &quot;lucide-react&quot;;
+  20| import {
+  21|   completeOnboardingStep,
+  22|   saveCompanyStep,
+  23|   saveFrameworkStep,
+  24|   saveIntakeStep,
+  25|   saveToolsStep,
+  26| } from &quot;@/app/(app)/onboarding/actions&quot;;
+  27| import { normalizeLocale } from &quot;@/i18n/routing&quot;;
+  28| import { getFrameworkDisplayName } from &quot;@/lib/frameworks/localization&quot;;
+  29| import type { FrameworkSeed } from &quot;@/lib/frameworks/registry&quot;;
+  30| import { INTAKE_QUESTIONS, type IntakeQuestionKey } from &quot;@/lib/onboarding/intake-questions&quot;;
+  31| import {
+  32|   deriveFrameworkAssessment,
+  33|   getDefaultFrameworkSlugs,
+  34| } from &quot;@/lib/onboarding/framework-assessment&quot;;
+  35| import { deriveIntakeScope, type IntakeAnswers } from &quot;@/lib/onboarding/intake-scope&quot;;
+  36| import type { ToolInventoryItem } from &quot;@/lib/onboarding/tools&quot;;</code></pre>
+<div class="why"><strong>Why this choice:</strong> The onboarding wizard starts with <code>"use client"</code> because it manages browser-only draft state and a multi-step reducer. Keeping only the wizard client-side avoids turning the whole authenticated app into a client-rendered app.</div>
+<h2>5. Database Design and Access</h2>
+<h3>5.1 Lazy database client</h3>
+<p>The DB client is intentionally lazy. The app should build without production secrets, but database-backed routes should fail clearly if DATABASE_URL is missing at runtime.</p>
+<pre><code>   9| let db: Database | null = null;
+  10| 
+  11| function getDatabaseUrl() {
+  12|   const databaseUrl = process.env.DATABASE_URL?.trim();
+  13| 
+  14|   if (!databaseUrl || databaseUrl === &#x27;&quot;&quot;&#x27; || databaseUrl === &quot;&#x27;&#x27;&quot;) {
+  15|     return null;
+  16|   }
+  17| 
+  18|   try {
+  19|     const { protocol } = new URL(databaseUrl);
+  20|     return protocol === &quot;postgres:&quot; || protocol === &quot;postgresql:&quot;
+  21|       ? databaseUrl
+  22|       : null;
+  23|   } catch {
+  24|     return null;
+  25|   }
+  26| }
+  27| 
+  28| export function hasDatabaseUrl() {
+  29|   return Boolean(getDatabaseUrl());
+  30| }
+  31| 
+  32| export function getDb(): Database {
+  33|   const databaseUrl = getDatabaseUrl();
+  34| 
+  35|   if (!databaseUrl) {
+  36|     throw new Error(&quot;DATABASE_URL is required for database access.&quot;);
+  37|   }
+  38| 
+  39|   if (!db) {
+  40|     if (isLocalDatabaseUrl(databaseUrl)) {
+  41|       const localPool = new Pool({ connectionString: databaseUrl, max: 5 });
+  42|       db = drizzleNodePostgres(localPool, { schema }) as unknown as Database;
+  43|     } else {
+  44|       db = drizzleNeon(neon(databaseUrl), { schema });
+  45|     }
+  46|   }
+  47| 
+  48|   return db;
+  49| }</code></pre>
+<div class="why"><strong>Why this choice:</strong> This avoids a common Next.js deployment problem: importing a module at build time initializes a database SDK before env vars are available. The code waits until <code>getDb()</code> is called. It also chooses node-postgres for local DB URLs and Neon HTTP for non-local URLs.</div>
+<h3>5.2 Schema as the domain map</h3>
+<p>The schema is more than storage; it is a readable map of the product domain. Tables are named around compliance concepts rather than generic CRUD resources.</p>
+<table><thead><tr><th>Export</th><th>Table</th><th>What to understand</th></tr></thead><tbody><tr><td>organisations</td><td>organisations</td><td>Tenant row tied to Clerk org ID; stores locale, country, subscription, branding, and company identity.</td></tr><tr><td>orgIntakeProfiles</td><td>org_intake_profiles</td><td>Onboarding answers and derived scope; this powers control prioritization.</td></tr><tr><td>frameworks</td><td>frameworks</td><td>Tenant-enabled frameworks such as NIS2/GDPR/ISO.</td></tr><tr><td>sourceDocuments</td><td>source_documents</td><td>Support table.</td></tr><tr><td>controls</td><td>controls</td><td>Compliance controls tied to evidence and frameworks.</td></tr><tr><td>tests</td><td>tests</td><td>Checks that can be run manually or through integrations.</td></tr><tr><td>evidence</td><td>evidence</td><td>Proof records with source, assessment result, freshness, and confidence.</td></tr><tr><td>policies</td><td>policies</td><td>Generated/reviewed policy documents.</td></tr><tr><td>vendors</td><td>vendors</td><td>Supplier register.</td></tr><tr><td>vendorAssessments</td><td>vendor_assessments</td><td>Supplier questionnaire responses from token route.</td></tr><tr><td>incidents</td><td>incidents</td><td>Incident reporting records.</td></tr><tr><td>riskItems</td><td>risk_items</td><td>Risk register.</td></tr><tr><td>trustCenters</td><td>trust_centers</td><td>Admin Trust Center settings.</td></tr><tr><td>trustCenterClients</td><td>trust_center_clients</td><td>Private trust center client access.</td></tr><tr><td>trustCenterRequests</td><td>trust_center_requests</td><td>Requests for access.</td></tr><tr><td>accessReviews</td><td>access_reviews</td><td>Access review campaigns.</td></tr><tr><td>accessReviewItems</td><td>access_review_items</td><td>Items in access reviews.</td></tr><tr><td>regulationUpdates</td><td>regulation_updates</td><td>Regulatory feed/update entries.</td></tr></tbody></table>
+<h2>6. Onboarding and Control Scoping</h2>
+<p>The onboarding flow is the app’s activation core: ask business questions, derive applicable controls, rank priority gaps, recommend integrations/workspaces, and save a tenant-specific profile.</p>
+<pre><code>  96| const BASELINE_CONTROLS = [
+  97|   &quot;ctrl_mfa_all_users&quot;,
+  98|   &quot;ctrl_security_training_annual&quot;,
+  99|   &quot;ctrl_incident_plan_documented&quot;,
+ 100|   &quot;ctrl_backup_tested&quot;,
+ 101|   &quot;ctrl_asset_inventory&quot;,
+ 102| ] as const;
+ 103| 
+ 104| const CONTROL_KEYS = new Set(CONTROL_LIBRARY.map((control) =&gt; control.key));
+ 105| 
+ 106| export function deriveIntakeScope(input: DeriveIntakeScopeInput): IntakeDerivedScope {
+ 107|   const selectedFrameworks = unique(input.selectedFrameworks);
+ 108|   const selectedTools = input.selectedTools ?? [];
+ 109|   const drafts = new Map&lt;string, ControlDraft&gt;();
+ 110| 
+ 111|   const add = (
+ 112|     controlKey: string,
+ 113|     category: IntakeRationaleCategory,
+ 114|     rationale: string,
+ 115|     options?: {
+ 116|       priority?: boolean;
+ 117|       status?: &quot;unknown&quot; | &quot;manual_review&quot; | &quot;fail&quot;;
+ 118|     },
+ 119|   ) =&gt; {
+ 120|     if (!CONTROL_KEYS.has(controlKey) || !isMappedToSelectedFramework(controlKey, selectedFrameworks)) {
+ 121|       return;
+ 122|     }
+ 123| 
+ 124|     const existing = drafts.get(controlKey);
+ 125|     const priority = options?.priority ?? false;
+ 126|     const status = options?.status ?? &quot;unknown&quot;;
+ 127| 
+ 128|     if (!existing) {
+ 129|       drafts.set(controlKey, {
+ 130|         category,
+ 131|         controlKey,
+ 132|         priority,
+ 133|         rationale,
+ 134|         recommendedInitialStatus: status,
+ 135|         scopeStatus: &quot;applicable&quot;,
+ 136|       });
+ 137|       return;
+ 138|     }
+ 139| 
+ 140|     drafts.set(controlKey, {
+ 141|       ...existing,
+ 142|       priority: existing.priority || priority,
+ 143|       recommendedInitialStatus: strongestStatus(existing.recommendedInitialStatus, status),
+ 144|       rationale: mergeRationales(existing.rationale, rationale),
+ 145|     });
+ 146|   };
+ 147| 
+ 148|   for (const controlKey of BASELINE_CONTROLS) {
+ 149|     add(
+ 150|       controlKey,
+ 151|       &quot;baseline_security&quot;,
+ 152|       &quot;Baseline readiness control for selected security and privacy frameworks.&quot;,
+ 153|       { priority: isPriorityBaselineControl(controlKey), status: &quot;fail&quot; },
+ 154|     );
+ 155|   }</code></pre>
+<p>The deriveIntakeScope function starts from baseline controls and conditionally adds more based on the company answers. Each added control includes a category, rationale, priority flag, and recommended initial status.</p>
+<pre><code> 160|   if (input.answers.handlesPersonalData !== &quot;none&quot;) {
+ 161|     add(&quot;ctrl_data_processing_inventory&quot;, &quot;data_protection&quot;, &quot;The organisation handles personal data, so processing records should be established.&quot;, { priority: true, status: &quot;manual_review&quot; });
+ 162|     add(&quot;ctrl_privacy_notice_current&quot;, &quot;data_protection&quot;, &quot;The organisation handles personal data, so privacy notices should be current.&quot;, { priority: true, status: &quot;manual_review&quot; });
+ 163|     add(&quot;ctrl_dsr_process&quot;, &quot;data_protection&quot;, &quot;The organisation handles personal data, so data subject request handling should be defined.&quot;, { status: &quot;manual_review&quot; });
+ 164|     add(&quot;ctrl_data_retention_schedule&quot;, &quot;data_protection&quot;, &quot;Personal data handling requires retention rules and deletion responsibilities.&quot;, { status: &quot;manual_review&quot; });
+ 165|     add(&quot;ctrl_incident_72h_notification&quot;, &quot;data_protection&quot;, &quot;Personal data breaches may trigger statutory notification timelines.&quot;, { priority: input.answers.handlesSensitiveData, status: &quot;manual_review&quot; });
+ 166|   }
+ 167| 
+ 168|   if (input.answers.handlesSensitiveData || input.answers.sector === &quot;healthcare&quot;) {
+ 169|     add(&quot;ctrl_dpia_process&quot;, &quot;data_protection&quot;, &quot;Sensitive data or healthcare context requires manual DPIA screening.&quot;, { priority: true, status: &quot;manual_review&quot; });
+ 170|     add(&quot;ctrl_data_encrypted_at_rest&quot;, &quot;data_protection&quot;, &quot;Sensitive data should be protected with encryption at rest.&quot;, { priority: true, status: &quot;fail&quot; });
+ 171|     add(&quot;ctrl_data_classification&quot;, &quot;data_protection&quot;, &quot;Sensitive data requires classification before evidence collection can be trusted.&quot;, { priority: true, status: &quot;manual_review&quot; });
+ 172|     add(&quot;ctrl_cryptography_policy&quot;, &quot;data_protection&quot;, &quot;Sensitive data handling requires documented cryptography expectations.&quot;, { status: &quot;manual_review&quot; });
+ 173|   }
+ 174| 
+ 175|   if (input.answers.usesThirdPartyProcessors !== &quot;none&quot; || selectedTools.length &gt; 0) {
+ 176|     add(&quot;ctrl_vendor_security_assessment&quot;, &quot;supplier_risk&quot;, &quot;Third-party processors or business tools are in use, so supplier risk review applies.&quot;, { priority: input.answers.usesThirdPartyProcessors === &quot;many&quot;, status: &quot;manual_review&quot; });
+ 177|     add(&quot;ctrl_supplier_contract_security&quot;, &quot;supplier_risk&quot;, &quot;Processor and supplier contracts should contain security and data-protection requirements.&quot;, { priority: input.answers.usesThirdPartyProcessors === &quot;many&quot;, status: &quot;manual_review&quot; });
+ 178|   }
+ 179| 
+ 180|   if (input.answers.usesThirdPartyProcessors === &quot;many&quot;) {
+ 181|     add(&quot;ctrl_supplier_monitoring&quot;, &quot;supplier_risk&quot;, &quot;Many or critical vendors require ongoing review, not just purchase-time assessment.&quot;, { status: &quot;manual_review&quot; });
+ 182|   }
+ 183| 
+ 184|   if (input.answers.usesCloudHosting) {
+ 185|     add(&quot;ctrl_cloudtrail_enabled&quot;, &quot;cloud_security&quot;, &quot;Cloud hosting requires audit logging for administrator and security events.&quot;, { priority: true, status: &quot;fail&quot; });
+ 186|     add(&quot;ctrl_s3_encryption&quot;, &quot;cloud_security&quot;, &quot;Cloud storage with business or personal data should enforce encryption and block public access.&quot;, { priority: true, status: &quot;fail&quot; });
+ 187|     add(&quot;ctrl_root_account_mfa&quot;, &quot;cloud_security&quot;, &quot;Cloud root or break-glass accounts should have MFA and monitoring.&quot;, { priority: true, status: &quot;fail&quot; });
+ 188|     add(&quot;ctrl_secure_configuration_baseline&quot;, &quot;cloud_security&quot;, &quot;Cloud services should start from documented secure configuration baselines.&quot;, { status: &quot;manual_review&quot; });
+ 189|   }
+ 190| 
+ 191|   if (input.answers.hasPublicApp || input.answers.hasProductionSoftware) {
+ 192|     add(&quot;ctrl_code_review_required&quot;, &quot;software_delivery&quot;, &quot;Production software changes need review before release.&quot;, { priority: input.answers.hasProductionSoftware, status: &quot;manual_review&quot; });
+ 193|     add(&quot;ctrl_dependency_vulnerability_monitoring&quot;, &quot;software_delivery&quot;, &quot;Software delivery introduces dependency vulnerability risk.&quot;, { priority: true, status: &quot;fail&quot; });
+ 194|     add(&quot;ctrl_change_management&quot;, &quot;software_delivery&quot;, &quot;Production changes should have ownership, approval, and rollback expectations.&quot;, { status: &quot;manual_review&quot; });
+ 195|     add(&quot;ctrl_secure_development_policy&quot;, &quot;software_delivery&quot;, &quot;Software delivery should be governed by secure development rules.&quot;, { status: &quot;manual_review&quot; });
+ 196|   }
+ 197| 
+ 198|   if (input.answers.hasPublicApp) {
+ 199|     add(&quot;ctrl_penetration_test_annual&quot;, &quot;software_delivery&quot;, &quot;Public apps, portals, and APIs need periodic external security testing.&quot;, { priority: true, status: &quot;manual_review&quot; });
+ 200|     add(&quot;ctrl_vulnerability_management&quot;, &quot;software_delivery&quot;, &quot;Public exposure requires tracked vulnerability remediation.&quot;, { priority: true, status: &quot;manual_review&quot; });</code></pre>
+<div class="why"><strong>Why this choice:</strong> This rule-based approach is explainable and safer than asking an LLM to classify legal scope. For a compliance product, users need to know why a control appears. The code stores rationales so UI and audit notes can explain the recommendation.</div>
+<h2>7. Dashboard: Combining Data, Fallbacks, and Status Labels</h2>
+<p>The dashboard page is a good study file because it shows many app patterns: safe database loading, Clerk-aware data access, locale messages, fallback/demo data, status normalization, and UI composition.</p>
+<pre><code>  87| async function loadDashboardData() {
+  88|   const clerkConfigured =
+  89|     Boolean(process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY) &amp;&amp;
+  90|     Boolean(process.env.CLERK_SECRET_KEY);
+  91|   const session = clerkConfigured ? await auth() : null;
+  92| 
+  93|   if (!session?.orgId || !hasDatabaseUrl()) {
+  94|     return null;
+  95|   }
+  96| 
+  97|   try {
+  98|     return await getDashboardData(session.orgId);
+  99|   } catch {
+ 100|     return null;
+ 101|   }</code></pre>
+<pre><code> 121| function statusTone(status: string | null | undefined, score?: number | null): StatusPillTone {
+ 122|   if (status === &quot;pass&quot; || status === &quot;completed&quot; || status === &quot;connected&quot;) {
+ 123|     return &quot;pass&quot;;
+ 124|   }
+ 125| 
+ 126|   if (status === &quot;fail&quot; || status === &quot;error&quot; || status === &quot;critical&quot;) {
+ 127|     return &quot;fail&quot;;
+ 128|   }
+ 129| 
+ 130|   if (
+ 131|     status === &quot;manual_review&quot; ||
+ 132|     status === &quot;warning&quot; ||
+ 133|     status === &quot;setup&quot; ||
+ 134|     status === &quot;in_progress&quot; ||
+ 135|     status === &quot;connecting&quot;
+ 136|   ) {
+ 137|     return &quot;warn&quot;;
+ 138|   }
+ 139| 
+ 140|   if (typeof score === &quot;number&quot;) {
+ 141|     if (score &gt;= 80) {
+ 142|       return &quot;pass&quot;;
+ 143|     }
+ 144|     if (score &gt;= 60) {
+ 145|       return &quot;warn&quot;;
+ 146|     }
+ 147|     return &quot;fail&quot;;
+ 148|   }
+ 149| 
+ 150|   return &quot;neutral&quot;;</code></pre>
+<div class="why"><strong>Why this choice:</strong> The dashboard does not crash if auth or DB is unavailable; it returns null and can render fallback/demo states. This supports local UI work without every service configured. Status normalization keeps raw DB statuses from leaking directly into user-facing tone.</div>
+<h2>8. Integrations: Registry, Adapter Interface, Runner</h2>
+<p>Integrations use a plug-in style interface. Provider-specific code lives in provider folders, but the runner only needs the adapter contract: provider + runTest(checkLogic, integration).</p>
+<pre><code>   3| export type IntegrationProvider =
+   4|   | &quot;microsoft365&quot;
+   5|   | &quot;github&quot;
+   6|   | &quot;abra-flexi&quot;
+   7|   | &quot;hetzner&quot;
+   8|   | &quot;ovhcloud&quot;
+   9|   | &quot;aws&quot;
+  10|   | &quot;azure&quot;
+  11|   | &quot;gcp&quot;
+  12|   | &quot;google_workspace&quot;
+  13|   | &quot;nukib&quot;;
+  14| 
+  15| export type TestStatus =
+  16|   | &quot;pass&quot;
+  17|   | &quot;fail&quot;
+  18|   | &quot;warning&quot;
+  19|   | &quot;error&quot;
+  20|   | &quot;manual_review&quot;
+  21|   | &quot;not_applicable&quot;;
+  22| 
+  23| export type TestResult = {
+  24|   status: TestStatus;
+  25|   data: Record&lt;string, unknown&gt;;
+  26|   failureReason?: string;
+  27| };
+  28| 
+  29| export type IntegrationAdapter = {
+  30|   provider: IntegrationProvider;
+  31|   runTest(checkLogic: string, integration: Integration): Promise&lt;TestResult&gt;;
+  32| };</code></pre>
+<pre><code>   9| export const supportedIntegrationProviders = [
+  10|   &quot;microsoft365&quot;,
+  11|   &quot;github&quot;,
+  12|   &quot;aws&quot;,
+  13|   &quot;abra-flexi&quot;,
+  14|   &quot;hetzner&quot;,
+  15|   &quot;ovhcloud&quot;,
+  16| ] as const satisfies IntegrationProvider[];
+  17| 
+  18| export type SupportedIntegrationProvider =
+  19|   (typeof supportedIntegrationProviders)[number];
+  20| 
+  21| const adapters: Record&lt;SupportedIntegrationProvider, IntegrationAdapter&gt; = {
+  22|   &quot;abra-flexi&quot;: abraFlexiAdapter,
+  23|   aws: awsAdapter,
+  24|   github: githubAdapter,
+  25|   hetzner: hetznerAdapter,
+  26|   microsoft365: microsoft365Adapter,
+  27|   ovhcloud: ovhcloudAdapter,
+  28| };
+  29| 
+  30| export function getAdapter(provider: string) {
+  31|   return isSupportedIntegrationProvider(provider) ? adapters[provider] : null;</code></pre>
+<div class="why"><strong>Why this choice:</strong> The adapter pattern is chosen because Microsoft 365, GitHub, AWS, Hetzner, OVHcloud, and ABRA Flexi all need different API logic but should produce the same <code>TestResult</code> shape. This keeps the rest of the system provider-agnostic.</div>
+<h3>8.1 Runner flow</h3>
+<pre><code>  89| export async function runTestsForOrg(
+  90|   clerkOrgId: string,
+  91|   options: RunTestsOptions = {},
+  92| ) {
+  93|   const db = getDb();
+  94|   const connected = await db
+  95|     .select()
+  96|     .from(integrations)
+  97|     .where(
+  98|       and(
+  99|         eq(integrations.clerkOrgId, clerkOrgId),
+ 100|         eq(integrations.status, &quot;connected&quot;),
+ 101|       ),
+ 102|     );
+ 103|   const summaries: ProviderRunSummary[] = [];
+ 104| 
+ 105|   for (const integration of connected) {
+ 106|     if (options.provider &amp;&amp; integration.provider !== options.provider) {
+ 107|       continue;
+ 108|     }
+ 109| 
+ 110|     const adapter = getAdapter(integration.provider);
+ 111|     if (!adapter) {
+ 112|       summaries.push({
+ 113|         evidenceCreated: 0,
+ 114|         errors: 0,
+ 115|         integrationId: integration.id,
+ 116|         lockEnabled: false,
+ 117|         provider: integration.provider,
+ 118|         skipped: true,
+ 119|         testsRun: 0,
+ 120|       });
+ 121|       continue;</code></pre>
+<pre><code> 176|           const result = await adapter.runTest(test.checkLogic, integration);
+ 177| 
+ 178|           const insertedRuns = await db
+ 179|             .insert(integrationRuns)
+ 180|             .values({
+ 181|               integrationId: integration.id,
+ 182|               testId: test.id,
+ 183|               clerkOrgId,
+ 184|               status: result.status,
+ 185|               resultData: result.data,
+ 186|               failureReason: result.failureReason,
+ 187|             })
+ 188|             .returning({ id: integrationRuns.id });
+ 189|           const integrationRunId = insertedRuns[0]?.id;
+ 190| 
+ 191|           if (!integrationRunId) {
+ 192|             throw new Error(&quot;Failed to create integration run.&quot;);
+ 193|           }
+ 194| 
+ 195|           const shouldCreateEvidence = shouldCollectAutomatedEvidence({
+ 196|             lastEvidenceAt: currentStatus?.lastEvidenceAt ?? null,
+ 197|             now,
+ 198|             previousStatus: currentStatus?.status ?? null,
+ 199|             resultData: result.data,
+ 200|             resultStatus: result.status,
+ 201|           });
+ 202| 
+ 203|           if (shouldCreateEvidence) {
+ 204|             await createAutomatedEvidenceForIntegrationRun({
+ 205|               checkLogic: test.checkLogic,
+ 206|               clerkOrgId,
+ 207|               controlId: test.controlId,
+ 208|               failureReason: result.failureReason,
+ 209|               integrationRunId,
+ 210|               passCriteria: test.passCriteria,
+ 211|               provider: integration.provider,
+ 212|               resultData: result.data,
+ 213|               status: result.status,
+ 214|               testName: test.name,
+ 215|             });</code></pre>
+<p>The runner finds connected integrations for a tenant, gets the correct adapter, runs active tests, inserts integration run records, optionally creates automated evidence, updates control status, recalculates framework score, and records activation events.</p>
+<div class="why"><strong>Why this choice:</strong> Separating <code>integrationRuns</code> from <code>evidence</code> is important. A check run is operational telemetry; evidence is a compliance artifact. Not every run should create new evidence, so <code>shouldCollectAutomatedEvidence</code> makes that decision explicitly.</div>
+<h2>9. Trust Center: Public Safety by Design</h2>
+<p>The Trust Center has a strict boundary: internal proof is detailed; public proof is aggregated and safe. The public model coarsens timestamps and summarizes by category/framework.</p>
+<pre><code>  43| type ControlStatusRow = {
+  44|   category: string | null;
+  45|   frameworkId: string;
+  46|   lastTestedAt: Date | null;
+  47|   status: string | null;
+  48| };
+  49| 
+  50| function coarsenTimestamp(date: Date): string {
+  51|   return date.toISOString().slice(0, 7);
+  52| }</code></pre>
+<pre><code> 205| export async function getPublicTrustCenterModel(input: {
+ 206|   accessToken?: string | null;
+ 207|   clientAccessToken?: string | null;
+ 208|   locale?: Locale;
+ 209|   orgSlug: string;
+ 210| }): Promise&lt;PublicTrustCenterModel | null&gt; {
+ 211|   const locale = input.locale ?? &quot;cs-CZ&quot;;
+ 212| 
+ 213|   if (input.orgSlug === &quot;splnit&quot;) {
+ 214|     return getSplnitTrustCenterModel(locale);
+ 215|   }
+ 216| 
+ 217|   if (hasDatabaseUrl()) {
+ 218|     const model = await loadDatabaseTrustCenter({ ...input, locale }).catch(() =&gt; null);
+ 219| 
+ 220|     if (model) {</code></pre>
+<div class="why"><strong>Why this choice:</strong> The public model intentionally hides operational detail. Coarsening timestamps to month-level and using category aggregates reduces attacker-useful information while still giving buyers a meaningful readiness signal.</div>
+<h2>10. Questionnaire AI: Feature-Gated Provider Abstraction</h2>
+<p>Questionnaire generation uses a provider abstraction and explicit enable/config checks. The OpenAI provider is registered, but the app will not call it unless the feature flag and provider config are present.</p>
+<pre><code>   8| const QUESTIONNAIRE_AI_PROVIDERS = [openAiQuestionnaireProvider] as const;
+   9| const DEFAULT_QUESTIONNAIRE_AI_PROVIDER = &quot;openai&quot;;
+  10| 
+  11| export function isQuestionnaireAiEnabled() {
+  12|   return process.env.QUESTIONNAIRE_AI_ENABLED?.trim().toLowerCase() === &quot;true&quot;;
+  13| }
+  14| 
+  15| export function getQuestionnaireAiProviderId() {
+  16|   return (
+  17|     process.env.QUESTIONNAIRE_AI_PROVIDER?.trim() ||
+  18|     DEFAULT_QUESTIONNAIRE_AI_PROVIDER
+  19|   );
+  20| }
+  21| 
+  22| export function getQuestionnaireAiProvider(): QuestionnaireAiProvider | null {
+  23|   const providerId = getQuestionnaireAiProviderId();
+  24| 
+  25|   return (
+  26|     QUESTIONNAIRE_AI_PROVIDERS.find((provider) =&gt; provider.id === providerId) ??
+  27|     null
+  28|   );
+  29| }
+  30| 
+  31| export function hasQuestionnaireAiConfig() {
+  32|   return isQuestionnaireAiEnabled() &amp;&amp; Boolean(getQuestionnaireAiProvider()?.isConfigured());
+  33| }</code></pre>
+<pre><code>  51| export async function answerQuestionnaireWithProvider(
+  52|   input: QuestionnaireAiInput,
+  53| ): Promise&lt;QuestionnaireAiOutput&gt; {
+  54|   if (!isQuestionnaireAiEnabled()) {
+  55|     throw new Error(&quot;Questionnaire AI is not enabled.&quot;);
+  56|   }
+  57| 
+  58|   const provider = getQuestionnaireAiProvider();
+  59| 
+  60|   if (!provider) {
+  61|     throw new Error(
+  62|       `Unsupported questionnaire AI provider: ${getQuestionnaireAiProviderId()}`,
+  63|     );
+  64|   }
+  65| 
+  66|   if (!provider.isConfigured()) {
+  67|     throw new Error(
+  68|       `Questionnaire AI provider is not configured: ${provider.label}`,
+  69|     );
+  70|   }
+  71| 
+  72|   return provider.answer(input);
+  73| }</code></pre>
+<div class="why"><strong>Why this choice:</strong> This design prevents accidental live AI calls in environments where the feature is not enabled or keys are missing. It also allows future providers to be added without rewriting the questionnaire workflow.</div>
+<h2>11. Why These Components Instead of Alternatives</h2>
+<table><thead><tr><th>Problem</th><th>Chosen component/pattern</th><th>Alternative</th><th>Why chosen here</th></tr></thead><tbody><tr><td>Authentication and tenant orgs</td><td>Clerk + org sync</td><td>Custom auth tables/sessions</td><td>Faster secure auth/org support; app can focus on compliance domain. Custom auth would increase security risk and development time.</td></tr><tr><td>Data access</td><td>Drizzle schema + query modules</td><td>Raw SQL everywhere or Prisma</td><td>Drizzle keeps schema/types close to TS and avoids a heavier runtime. Query modules still allow explicit SQL-like control.</td></tr><tr><td>Interactive onboarding</td><td>Client wizard + reducer + server actions</td><td>One giant server form or full SPA state library</td><td>Reducer is enough for predictable local state; server actions keep persistence server-side; no Redux/Zustand overhead.</td></tr><tr><td>Provider integrations</td><td>Adapter registry</td><td>Switch statements throughout pages/jobs</td><td>Adapters isolate provider-specific API quirks and keep runner/evidence code uniform.</td></tr><tr><td>Compliance recommendations</td><td>Rule-based scope derivation</td><td>LLM-only classification</td><td>Rules are deterministic, explainable, auditable, and safer for legal/compliance boundaries.</td></tr><tr><td>Public proof surface</td><td>PublicTrustCenterModel aggregate builder</td><td>Expose internal control/evidence rows</td><td>Aggregates support buyer readiness without leaking implementation detail.</td></tr><tr><td>AI questionnaire support</td><td>Feature-gated provider interface</td><td>Direct OpenAI calls in UI/routes</td><td>Gating and provider interface reduce accidental calls and make proof boundaries clear.</td></tr><tr><td>Verification</td><td>Many focused smoke scripts</td><td>One broad generic test suite only</td><td>Focused smokes prove exact business boundaries: copy hygiene, trust disclosure, production tenant readiness, mailbox receipt, etc.</td></tr><tr><td>Localization</td><td>next-intl + message bundles</td><td>Hardcoded copy in components</td><td>Regulatory/copy surfaces must be locale-aware and auditable.</td></tr><tr><td>Background tasks</td><td>Inngest functions</td><td>Browser-triggered long operations</td><td>Long-running checks/reminders should be durable and not depend on a tab staying open.</td></tr></tbody></table>
+<h2>12. Study Guide by Feature</h2>
+<table><thead><tr><th>Feature</th><th>Read first</th><th>Then read</th><th>Questions to ask yourself</th></tr></thead><tbody><tr><td>Marketing/localization</td><td>app/(marketing)/page.tsx, components/marketing/marketing-shell.tsx</td><td>messages/*.json, i18n/marketing-paths.ts, lib/marketing/*</td><td>How is Czech default maintained? Where is copy stored? What must not be overclaimed?</td></tr><tr><td>Auth/app shell</td><td>proxy.ts, app/(auth)/*, components/app/app-shell.tsx</td><td>lib/clerk/sync.ts, app/(app)/layout.tsx</td><td>Which routes are protected? Where does Clerk org ID become app tenant ID?</td></tr><tr><td>Onboarding</td><td>components/onboarding/onboarding-wizard.tsx</td><td>lib/onboarding/intake-scope.ts, app/(app)/onboarding/actions.ts</td><td>Which state is local? Which state is persisted? Why does each answer change control scope?</td></tr><tr><td>Controls/frameworks</td><td>lib/controls/library.ts, lib/frameworks/registry.ts</td><td>lib/frameworks/localization.ts, app/(app)/controls/page.tsx</td><td>How are controls categorized and localized?</td></tr><tr><td>Evidence/integrations</td><td>lib/integrations/types.ts, registry.ts, runner.ts</td><td>provider tests.ts files, lib/integrations/evidence.ts</td><td>What is a run vs evidence? When does evidence get created?</td></tr><tr><td>Policies/documents</td><td>lib/policies/templates.ts, resolve-template.ts</td><td>components/policies/policy-editor.tsx, app/api/documents/generate/[type]</td><td>How are templates selected by locale/jurisdiction?</td></tr><tr><td>Vendor questionnaire</td><td>lib/vendors/*, lib/questionnaires/*</td><td>app/vendor-assessment/[token], components/questionnaires/questionnaire-workbench.tsx</td><td>Where is delivery, public submission, AI draft, and human review separated?</td></tr><tr><td>Trust Center</td><td>lib/trust-center/public-model.ts</td><td>components/trust-center/public-trust-ui.tsx, app/(app)/trust-center</td><td>What is internal-only? What is safe for public buyers?</td></tr><tr><td>Billing</td><td>lib/stripe/plans.ts, lib/stripe/actions.ts</td><td>app/api/webhooks/stripe, settings/billing page</td><td>Where do plan names/prices come from? What is driven by Stripe webhooks?</td></tr><tr><td>Production verification</td><td>scripts/smoke-production-tenant-readiness*.ts</td><td>docs/audits/app-readiness-audit.md, docs/audits/questionnaire-flow-audit.md</td><td>Which proof is source/local/public/authenticated/mailbox?</td></tr></tbody></table>
+<h2>13. Route and API Inventory</h2>
+<h3>13.1 Main page routes</h3>
+<table><thead><tr><th>Route</th></tr></thead><tbody><tr><td>/</td></tr><tr><td>/(app)</td></tr><tr><td>/(app)/agency</td></tr><tr><td>/(app)/agency-client-invites/[token]</td></tr><tr><td>/(app)/agency/clients/[orgId]</td></tr><tr><td>/(app)/agency/dashboard</td></tr><tr><td>/(app)/agency/settings</td></tr><tr><td>/(app)/agency/signup</td></tr><tr><td>/(app)/agency/signup/complete</td></tr><tr><td>/(app)/clients</td></tr><tr><td>/(app)/clients/[clientOrgId]</td></tr><tr><td>/(app)/controls</td></tr><tr><td>/(app)/controls/[controlId]</td></tr><tr><td>/(app)/dashboard</td></tr><tr><td>/(app)/evidence</td></tr><tr><td>/(app)/frameworks</td></tr><tr><td>/(app)/frameworks/[frameworkSlug]</td></tr><tr><td>/(app)/frameworks/[frameworkSlug]/setup</td></tr><tr><td>/(app)/incidents</td></tr><tr><td>/(app)/integrations</td></tr><tr><td>/(app)/integrations/[provider]</td></tr><tr><td>/(app)/integrations/aws</td></tr><tr><td>/(app)/integrations/github</td></tr><tr><td>/(app)/integrations/microsoft365</td></tr><tr><td>/(app)/onboarding</td></tr><tr><td>/(app)/policies</td></tr><tr><td>/(app)/policies/[type]</td></tr><tr><td>/(app)/questionnaires</td></tr><tr><td>/(app)/risks</td></tr><tr><td>/(app)/settings/audit-log</td></tr><tr><td>/(app)/settings/billing</td></tr><tr><td>/(app)/settings/organisation</td></tr><tr><td>/(app)/settings/profile</td></tr><tr><td>/(app)/team</td></tr><tr><td>/(app)/team/access-reviews</td></tr><tr><td>/(app)/training</td></tr><tr><td>/(app)/trust-center</td></tr><tr><td>/(app)/vendors</td></tr><tr><td>/(app)/vendors/[vendorId]</td></tr><tr><td>/(app)/workspaces/abra-flexi</td></tr><tr><td>/(app)/workspaces/helios</td></tr><tr><td>/(app)/workspaces/money-s3</td></tr><tr><td>/(app)/workspaces/pohoda</td></tr><tr><td>/(auth)</td></tr><tr><td>/(auth)/sign-in/[[...sign-in]]</td></tr><tr><td>/(auth)/sign-up/[[...sign-up]]</td></tr><tr><td>/(demo)/demo</td></tr><tr><td>/(demo)/demo/controls</td></tr><tr><td>/(demo)/demo/export</td></tr><tr><td>/(demo)/demo/workspaces/hetzner</td></tr><tr><td>/(demo)/demo/workspaces/pohoda</td></tr><tr><td>/(marketing)</td></tr><tr><td>/(marketing)/about</td></tr><tr><td>/(marketing)/blog</td></tr><tr><td>/(marketing)/blog/[slug]</td></tr><tr><td>/(marketing)/cenik</td></tr><tr><td>/(marketing)/cookies</td></tr><tr><td>/(marketing)/dpa</td></tr><tr><td>/(marketing)/early-access</td></tr><tr><td>/(marketing)/nastroje/nis2-kalkulator</td></tr><tr><td>/(marketing)/partneri</td></tr><tr><td>/(marketing)/platform</td></tr><tr><td>/(marketing)/podminky</td></tr><tr><td>/(marketing)/predpisy</td></tr><tr><td>/(marketing)/predpisy/[slug]</td></tr><tr><td>/(marketing)/pricing</td></tr><tr><td>/(marketing)/security</td></tr><tr><td>/(marketing)/soukromi</td></tr><tr><td>/(marketing)/srovnani</td></tr><tr><td>/(marketing)/status</td></tr><tr><td>/(marketing)/tools/nis2-scope</td></tr><tr><td>/(marketing)/trust/[orgSlug]</td></tr><tr><td>/(marketing)/trust/[orgSlug]/frameworks/[frameworkSlug]</td></tr><tr><td>/(marketing)/zakaznici</td></tr><tr><td>/vendor-assessment/[token]</td></tr></tbody></table>
+<h3>13.2 API routes</h3>
+<table><thead><tr><th>API route</th><th>Explanation</th></tr></thead><tbody><tr><td>/api/access-reviews/[reviewId]/export</td><td>File/report export or download</td></tr><tr><td>/api/agency/setup-status</td><td>Application server endpoint</td></tr><tr><td>/api/audit-log/export</td><td>File/report export or download</td></tr><tr><td>/api/cron/access-review-reminders</td><td>Scheduled/cron trigger</td></tr><tr><td>/api/cron/deadline-reminders</td><td>Scheduled/cron trigger</td></tr><tr><td>/api/cron/evidence-expiry</td><td>Scheduled/cron trigger</td></tr><tr><td>/api/cron/policy-review-reminders</td><td>Scheduled/cron trigger</td></tr><tr><td>/api/cron/regulation-sync</td><td>Scheduled/cron trigger</td></tr><tr><td>/api/cron/run-tests</td><td>Scheduled/cron trigger</td></tr><tr><td>/api/documents/generate/[type]</td><td>Application server endpoint</td></tr><tr><td>/api/evidence/[evidenceId]/download</td><td>File/report export or download</td></tr><tr><td>/api/export/compliance-report</td><td>File/report export or download</td></tr><tr><td>/api/exports/evidence-metadata</td><td>File/report export or download</td></tr><tr><td>/api/exports/workspace</td><td>File/report export or download</td></tr><tr><td>/api/exports/workspace/archive</td><td>File/report export or download</td></tr><tr><td>/api/frameworks/iso27001/certification-package</td><td>Application server endpoint</td></tr><tr><td>/api/health</td><td>Health/readiness endpoint</td></tr><tr><td>/api/incidents/[incidentId]/cybersecurity-report</td><td>Application server endpoint</td></tr><tr><td>/api/incidents/[incidentId]/data-protection-report</td><td>Application server endpoint</td></tr><tr><td>/api/incidents/[incidentId]/nukib-report</td><td>Application server endpoint</td></tr><tr><td>/api/incidents/[incidentId]/uoou-report</td><td>Application server endpoint</td></tr><tr><td>/api/inngest</td><td>Application server endpoint</td></tr><tr><td>/api/integrations/github/callback</td><td>Application server endpoint</td></tr><tr><td>/api/integrations/google/callback</td><td>Application server endpoint</td></tr><tr><td>/api/integrations/microsoft/callback</td><td>Application server endpoint</td></tr><tr><td>/api/integrations/microsoft/start</td><td>Application server endpoint</td></tr><tr><td>/api/internal/health</td><td>Health/readiness endpoint</td></tr><tr><td>/api/newsletter</td><td>Application server endpoint</td></tr><tr><td>/api/policies/[policyId]/download</td><td>File/report export or download</td></tr><tr><td>/api/questionnaires/export/pdf</td><td>File/report export or download</td></tr><tr><td>/api/questionnaires/export/xlsx</td><td>File/report export or download</td></tr><tr><td>/api/readiness</td><td>Health/readiness endpoint</td></tr><tr><td>/api/risks/register-report</td><td>Application server endpoint</td></tr><tr><td>/api/test/workspace-attestation</td><td>Application server endpoint</td></tr><tr><td>/api/trust/[orgSlug]</td><td>Application server endpoint</td></tr><tr><td>/api/vendors/supply-chain-report</td><td>Application server endpoint</td></tr><tr><td>/api/webhooks/clerk</td><td>Webhook endpoint</td></tr><tr><td>/api/webhooks/stripe</td><td>Webhook endpoint</td></tr></tbody></table>
+<h2>14. Commands and Verification</h2>
+<table><thead><tr><th>Script</th><th>Command</th><th>When to use</th></tr></thead><tbody><tr><td>dev</td><td>next dev</td><td>Start local Next dev server.</td></tr><tr><td>build</td><td>next build</td><td>Production build check.</td></tr><tr><td>typecheck</td><td>tsc --noEmit</td><td>TypeScript correctness.</td></tr><tr><td>lint</td><td>eslint</td><td>ESLint quality/style issues.</td></tr><tr><td>db:generate</td><td>drizzle-kit generate</td><td>Generate Drizzle migration after schema change.</td></tr><tr><td>db:migrate</td><td>drizzle-kit migrate</td><td>Apply Drizzle migrations.</td></tr><tr><td>check:production-migration-drift</td><td>tsx scripts/check-production-migration-drift.ts</td><td>Read-only production migration parity gate.</td></tr><tr><td>smoke:production-tenant-readiness-prereqs</td><td>tsx scripts/smoke-production-tenant-readiness-prereqs.ts</td><td>Check live smoke prerequisites without printing secrets.</td></tr><tr><td>smoke:production-tenant-readiness-source</td><td>tsx scripts/smoke-production-tenant-readiness-source.ts</td><td>Check production-smoke source coverage.</td></tr><tr><td>smoke:copy-hygiene</td><td>tsx scripts/smoke-copy-hygiene.ts</td><td>Project script; inspect package.json for exact context.</td></tr><tr><td>smoke:trust-center-public-disclosure</td><td>tsx scripts/smoke-trust-center-public-disclosure.ts</td><td>Project script; inspect package.json for exact context.</td></tr></tbody></table>
+<h2>15. Module Appendix</h2>
+<h3>15.1 Top-level file counts</h3>
+<table><thead><tr><th>Top-level path</th><th>Files</th></tr></thead><tbody><tr><td>lib</td><td>284</td></tr><tr><td>.clawpatch</td><td>263</td></tr><tr><td>app</td><td>154</td></tr><tr><td>scripts</td><td>117</td></tr><tr><td>docs</td><td>98</td></tr><tr><td>.agents</td><td>79</td></tr><tr><td>.pi</td><td>64</td></tr><tr><td>components</td><td>48</td></tr><tr><td>.</td><td>30</td></tr><tr><td>tests</td><td>26</td></tr><tr><td>public</td><td>23</td></tr><tr><td>memory</td><td>21</td></tr><tr><td>tmp</td><td>12</td></tr><tr><td>.github</td><td>7</td></tr><tr><td>.understand-anything</td><td>7</td></tr><tr><td>inngest</td><td>6</td></tr><tr><td>i18n</td><td>4</td></tr><tr><td>messages</td><td>3</td></tr><tr><td>.woodpecker</td><td>1</td></tr><tr><td>styles</td><td>1</td></tr><tr><td>.vscode</td><td>1</td></tr><tr><td>.hermes</td><td>1</td></tr></tbody></table>
+<h3>15.2 lib/ subdirectories</h3>
+<table><thead><tr><th>lib subdirectory</th><th>Files</th></tr></thead><tbody><tr><td>db</td><td>83</td></tr><tr><td>integrations</td><td>25</td></tr><tr><td>regulations</td><td>19</td></tr><tr><td>connectors</td><td>14</td></tr><tr><td>questionnaires</td><td>13</td></tr><tr><td>workspaces</td><td>12</td></tr><tr><td>frameworks</td><td>11</td></tr><tr><td>policies</td><td>10</td></tr><tr><td>compliance</td><td>9</td></tr><tr><td>email</td><td>9</td></tr><tr><td>pdf</td><td>7</td></tr><tr><td>trust-center</td><td>7</td></tr><tr><td>marketing</td><td>6</td></tr><tr><td>stripe</td><td>6</td></tr><tr><td>.</td><td>4</td></tr><tr><td>vendors</td><td>4</td></tr><tr><td>controls</td><td>4</td></tr><tr><td>onboarding</td><td>4</td></tr><tr><td>activation</td><td>3</td></tr><tr><td>agents</td><td>3</td></tr><tr><td>documents</td><td>3</td></tr><tr><td>agency</td><td>2</td></tr><tr><td>dashboard</td><td>2</td></tr><tr><td>http</td><td>2</td></tr><tr><td>access-reviews</td><td>2</td></tr><tr><td>export</td><td>2</td></tr><tr><td>clerk</td><td>2</td></tr><tr><td>policy-evidence</td><td>2</td></tr><tr><td>incidents</td><td>2</td></tr><tr><td>demo</td><td>1</td></tr><tr><td>privacy</td><td>1</td></tr><tr><td>evidence</td><td>1</td></tr><tr><td>redis</td><td>1</td></tr><tr><td>jurisdictions</td><td>1</td></tr><tr><td>features</td><td>1</td></tr><tr><td>exports</td><td>1</td></tr><tr><td>risks</td><td>1</td></tr><tr><td>i18n</td><td>1</td></tr><tr><td>legal</td><td>1</td></tr><tr><td>seo</td><td>1</td></tr><tr><td>blob</td><td>1</td></tr></tbody></table>
+<h3>15.3 components/ subdirectories</h3>
+<table><thead><tr><th>components subdirectory</th><th>Files</th></tr></thead><tbody><tr><td>marketing</td><td>12</td></tr><tr><td>app</td><td>10</td></tr><tr><td>.</td><td>6</td></tr><tr><td>demo</td><td>2</td></tr><tr><td>templates</td><td>2</td></tr><tr><td>legal</td><td>2</td></tr><tr><td>trust-center</td><td>2</td></tr><tr><td>ui</td><td>1</td></tr><tr><td>questionnaires</td><td>1</td></tr><tr><td>brand</td><td>1</td></tr><tr><td>activation</td><td>1</td></tr><tr><td>workspaces</td><td>1</td></tr><tr><td>policies</td><td>1</td></tr><tr><td>pwa</td><td>1</td></tr><tr><td>documents</td><td>1</td></tr><tr><td>export</td><td>1</td></tr><tr><td>frameworks</td><td>1</td></tr><tr><td>policy-evidence</td><td>1</td></tr><tr><td>onboarding</td><td>1</td></tr></tbody></table>
+<h3>15.4 Largest files to study carefully</h3>
+<table><thead><tr><th>Lines</th><th>Path</th></tr></thead><tbody><tr><td>137975</td><td>.understand-anything/knowledge-graph.json</td></tr><tr><td>44099</td><td>.understand-anything/fingerprints.json</td></tr><tr><td>30065</td><td>docs/review/text-review-it-IT.md</td></tr><tr><td>29546</td><td>tmp/openai-czech-linguistic-qa-raw.json</td></tr><tr><td>27851</td><td>docs/review/text-review-cs-CZ.md</td></tr><tr><td>27711</td><td>docs/review/text-review-en-EU.md</td></tr><tr><td>20082</td><td>package-lock.json</td></tr><tr><td>9482</td><td>tmp/openai-czech-tiered-triage.json</td></tr><tr><td>5216</td><td>lib/db/migrations/meta/0025_snapshot.json</td></tr><tr><td>5129</td><td>lib/db/migrations/meta/0024_snapshot.json</td></tr><tr><td>5060</td><td>lib/db/migrations/meta/0023_snapshot.json</td></tr><tr><td>5054</td><td>lib/db/migrations/meta/0022_snapshot.json</td></tr><tr><td>4911</td><td>lib/db/migrations/meta/0021_snapshot.json</td></tr><tr><td>4596</td><td>lib/marketing/blog.ts</td></tr><tr><td>4543</td><td>lib/db/migrations/meta/0020_snapshot.json</td></tr><tr><td>3789</td><td>lib/db/migrations/meta/0019_snapshot.json</td></tr><tr><td>3745</td><td>lib/db/migrations/meta/0018_snapshot.json</td></tr><tr><td>3730</td><td>lib/db/migrations/meta/0017_snapshot.json</td></tr><tr><td>3655</td><td>lib/db/migrations/meta/0015_snapshot.json</td></tr><tr><td>3641</td><td>lib/db/migrations/meta/0016_snapshot.json</td></tr><tr><td>3629</td><td>lib/db/migrations/meta/0014_snapshot.json</td></tr><tr><td>3628</td><td>lib/db/migrations/meta/0013_snapshot.json</td></tr><tr><td>3575</td><td>lib/db/migrations/meta/0012_snapshot.json</td></tr><tr><td>3191</td><td>lib/db/migrations/meta/0011_snapshot.json</td></tr><tr><td>3064</td><td>lib/db/migrations/meta/0010_snapshot.json</td></tr><tr><td>3035</td><td>lib/compliance/nukib/generated/baseline-manifest-2026-05-21T19-41-44-170Z.json</td></tr><tr><td>3035</td><td>lib/compliance/nukib/generated/baseline-current.json</td></tr><tr><td>2653</td><td>messages/it-IT.json</td></tr><tr><td>2653</td><td>messages/en-EU.json</td></tr><tr><td>2653</td><td>messages/cs-CZ.json</td></tr><tr><td>2614</td><td>lib/db/migrations/meta/0009_snapshot.json</td></tr><tr><td>2600</td><td>lib/db/migrations/meta/0008_snapshot.json</td></tr><tr><td>2500</td><td>lib/db/migrations/meta/0007_snapshot.json</td></tr><tr><td>2479</td><td>lib/db/migrations/meta/0006_snapshot.json</td></tr><tr><td>2358</td><td>lib/db/migrations/meta/0005_snapshot.json</td></tr><tr><td>2260</td><td>lib/db/migrations/meta/0004_snapshot.json</td></tr><tr><td>2259</td><td>lib/db/migrations/meta/0003_snapshot.json</td></tr><tr><td>2148</td><td>tmp/openai-czech-linguistic-qa-report.md</td></tr><tr><td>2114</td><td>lib/db/migrations/meta/0002_snapshot.json</td></tr><tr><td>2100</td><td>lib/db/migrations/meta/0001_snapshot.json</td></tr><tr><td>2087</td><td>lib/db/migrations/meta/0000_snapshot.json</td></tr><tr><td>1635</td><td>.pi/pi-vs-claude-code/extensions/coms-net.ts</td></tr><tr><td>1604</td><td>.pi/pi-vs-claude-code/scripts/coms-net-server.ts</td></tr><tr><td>1597</td><td>.pi/pi-vs-claude-code/extensions/coms.ts</td></tr><tr><td>1439</td><td>lib/controls/library.ts</td></tr><tr><td>1242</td><td>components/onboarding/onboarding-wizard.tsx</td></tr><tr><td>1217</td><td>tmp/localization-audit.json</td></tr><tr><td>1073</td><td>lib/db/schema.ts</td></tr><tr><td>1055</td><td>scripts/smoke-production-tenant-readiness.ts</td></tr><tr><td>939</td><td>app/(app)/dashboard/page.tsx</td></tr></tbody></table>
+<h2>16. Safe Development Rules</h2>
+<ul><li>Do not fabricate customers, testimonials, certifications, uptime, legal review status, metrics, or supported regulation coverage.</li><li>Do not expose internal evidence filenames, individual control IDs, exact test timing, or implementation details publicly in Trust Center pages.</li><li>Keep default locale as <code>cs-CZ</code>; do not silently make English or Italian the default.</li><li>Keep service clients lazily initialized to protect <code>next build</code>.</li><li>Use <code>lib/stripe/plans.ts</code> for Stripe plan names/prices instead of hardcoding them in UI.</li><li>For production claims, separate source/local proof, public route proof, authenticated tenant proof, and mailbox receipt proof.</li><li>When adding a new route under protected app surfaces, update/prove auth boundaries in <code>proxy.ts</code>.</li><li>When adding an integration, add provider types/registry/adapter/tests/storage/UI and focused smoke coverage; a card alone is not implementation.</li></ul>
+<h2>17. What to Learn Next</h2>
+<ol><li>Trace one user journey end-to-end: sign in → onboarding → dashboard → controls → evidence. Write down each file touched.</li><li>Trace one integration: provider registry → adapter → runner → integration_runs → evidence → dashboard/control status.</li><li>Trace one public-safe surface: internal trust settings → public model → public route/UI. Verify what details are intentionally removed.</li><li>Trace one generated document: policy template selection → editor/draft → API download/export.</li><li>Run targeted smoke scripts after reading each flow so the code explanations connect to real verification.</li></ol>
+<hr><p class="small">Generated by Hermes from source inspection. No secrets or environment values are included.</p></body></html>
