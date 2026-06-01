@@ -24,7 +24,7 @@ export async function importHeliosCsvAction(formData: FormData): Promise<HeliosC
 
   const kindValue = formData.get("kind");
   if (!isSupportedKind(kindValue)) {
-    return { error: "Vyberte podporovanou Splnit CSV šablonu.", ok: false };
+    return { error: "Select a supported Splnit CSV template.", ok: false };
   }
 
   const uploaded = formData.get("file");
