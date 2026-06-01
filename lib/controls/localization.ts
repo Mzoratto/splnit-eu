@@ -117,6 +117,44 @@ const italianControlTitles: Record<string, string> = {
     "Utente REST API ABRA Flexi con accesso minimo in lettura",
   "abra-flexi-api-credential-rotation":
     "Credenziali API ABRA Flexi ruotate periodicamente",
+  "helios-infra-deployment-type":
+    "Modello di distribuzione Helios documentato",
+  "helios-infra-physical-server-room":
+    "Sala server fisica Helios riesaminata manualmente",
+  "helios-infra-encryption-at-rest":
+    "Cifratura dei dati Helios a riposo riesaminata",
+  "helios-infra-os-patch-management":
+    "Patch di sistema per Helios gestite e documentate",
+  "helios-infra-network-segmentation":
+    "Segmentazione di rete Helios riesaminata",
+  "helios-iam-user-accounts":
+    "Account utente individuali Helios riesaminati",
+  "helios-iam-module-role-hierarchy":
+    "Ruoli e moduli Helios riesaminati per privilegio minimo",
+  "helios-iam-contractor-access-management":
+    "Accesso dei collaboratori Helios gestito",
+  "helios-iam-inactive-session-audit":
+    "Sessioni inattive Helios controllate manualmente",
+  "helios-iam-offboarding":
+    "Offboarding Helios documentato",
+  "helios-backup-sql-agent-jobs":
+    "Job di backup SQL per Helios documentati",
+  "helios-backup-encryption":
+    "Cifratura dei backup Helios riesaminata",
+  "helios-backup-offsite-immutable":
+    "Backup Helios offsite o immutabili documentati",
+  "helios-backup-restoration-test":
+    "Test di ripristino Helios documentato",
+  "helios-api-mes-scada-integration":
+    "Integrazioni MES/SCADA Helios riesaminate manualmente",
+  "helios-api-edi-supplier-customer":
+    "Integrazioni EDI Helios riesaminate manualmente",
+  "helios-api-credential-rotation":
+    "Rotazione credenziali API Helios documentata",
+  "helios-api-network-access-control":
+    "Accesso di rete alle API Helios controllato",
+  "helios-api-tls-enforcement":
+    "Uso di TLS per le API Helios riesaminato",
   ctrl_cloudtrail_enabled: "CloudTrail o audit log equivalente abilitato",
   ctrl_s3_encryption: "Bucket object storage cifrano i dati",
   ctrl_root_account_mfa: "Account root o break-glass protetti da MFA",

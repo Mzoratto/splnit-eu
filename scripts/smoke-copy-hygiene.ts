@@ -84,6 +84,28 @@ const policyEvidenceForbiddenPatterns = [
   /\breal-time compliance status\b/i,
 ] as const;
 
+const heliosAutomationClaimForbiddenPatterns = [
+  /\bHelios\s+evidence\s+is\s+collected\s+automatically\b/i,
+  /\bHelios\s+automated\s+evidence\b/i,
+  /\bHelios\s+API\s+checks\s+are\s+live\b/i,
+  /\b(?:MES\/SCADA|EDI)\s+automatically\s+verified\b/i,
+  /\bHelios\b[^\n.]{0,100}\b(?:native|API|runtime)\b[^\n.]{0,100}\b(?:automation|automated|connection|checks?|verification|verified|live)\b/i,
+  /\bHelios\b[^\n.]{0,100}\b(?:evidence|checks?|verification|runtime)\b[^\n.]{0,100}\b(?:collected|verified|runs?)\s+automatically\b/i,
+] as const;
+
+const heliosAutomationClaimAllowedPatterns = [/\bnot\s+an\s+automated\s+Helios\s+API\s+connection\b/gi] as const;
+
+function redactAllowedHeliosClaimPhrases(content: string) {
+  return heliosAutomationClaimAllowedPatterns.reduce(
+    (current, pattern) => current.replace(pattern, "[allowed Helios manual-boundary phrase]"),
+    content,
+  );
+}
+
+function matchesHeliosAutomationClaim(content: string, pattern: RegExp) {
+  return redactAllowedHeliosClaimPhrases(content).match(pattern);
+}
+
 const checkedFiles = [
   "messages/en-EU.json",
   "messages/it-IT.json",
@@ -133,6 +155,16 @@ const policyEvidenceCheckedFiles = [
   ...listSourceFiles("lib/policy-evidence"),
 ];
 
+const heliosAutomationClaimCheckedFiles = [
+  "messages/cs-CZ.json",
+  "messages/en-EU.json",
+  "messages/it-IT.json",
+  ...listSourceFiles("app"),
+  ...listSourceFiles("components"),
+  ...listSourceFiles("lib"),
+  ...listSourceFiles("public"),
+];
+
 function listSourceFiles(directory: string): string[] {
   return readdirSync(directory).flatMap((entry) => {
     const path = join(directory, entry);
@@ -147,6 +179,41 @@ function listSourceFiles(directory: string): string[] {
 }
 
 const failures: string[] = [];
+
+function assertHeliosClaimGuardSelfTest() {
+  const forbiddenSamples = [
+    "Helios evidence is collected automatically",
+    "Helios automated evidence",
+    "Helios API checks are live",
+    "MES/SCADA automatically verified",
+    "EDI automatically verified",
+    "Helios native API automation is live",
+    "Helios runtime verification runs automatically",
+  ];
+
+  const allowedSamples = [
+    "Helios workspace/checklist",
+    "manual readiness review",
+    "CSV-assisted evidence import",
+    "not an automated Helios API connection",
+  ];
+
+  const missedForbidden = forbiddenSamples.filter(
+    (sample) => !heliosAutomationClaimForbiddenPatterns.some((pattern) => matchesHeliosAutomationClaim(sample, pattern)),
+  );
+  const rejectedAllowed = allowedSamples.filter((sample) =>
+    heliosAutomationClaimForbiddenPatterns.some((pattern) => matchesHeliosAutomationClaim(sample, pattern)),
+  );
+
+  assert.deepEqual(missedForbidden, [], `Helios claim guard missed forbidden samples: ${missedForbidden.join(", ")}`);
+  assert.deepEqual(rejectedAllowed, [], `Helios claim guard rejected allowed samples: ${rejectedAllowed.join(", ")}`);
+
+  console.log("Helios claim guard self-test passed.");
+}
+
+if (process.env.HELIOS_CLAIM_GUARD_SELF_TEST === "1") {
+  assertHeliosClaimGuardSelfTest();
+}
 
 for (const file of checkedFiles) {
   const content = readFileSync(file, "utf8");
@@ -228,6 +295,18 @@ for (const file of policyEvidenceCheckedFiles) {
 
     if (match) {
       failures.push(`${file}: policy-to-evidence copy guard matched ${pattern}`);
+    }
+  }
+}
+
+for (const file of heliosAutomationClaimCheckedFiles) {
+  const content = readFileSync(file, "utf8");
+
+  for (const pattern of heliosAutomationClaimForbiddenPatterns) {
+    const match = matchesHeliosAutomationClaim(content, pattern);
+
+    if (match) {
+      failures.push(`${file}: Helios automation claim guard matched ${pattern}`);
     }
   }
 }

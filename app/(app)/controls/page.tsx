@@ -113,18 +113,19 @@ function buildDemoControls(): OrgControl[] {
 }
 
 async function loadControlsIndexData() {
+  const localDemoHeliosRecommended = process.env.ENABLE_LOCAL_DEMO_DATA === "true";
   const clerkConfigured =
     Boolean(process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY) &&
     Boolean(process.env.CLERK_SECRET_KEY);
 
   if (!clerkConfigured || !hasDatabaseUrl()) {
-    return { controls: buildDemoControls(), mode: "demo" as DataMode, organisationLocale: null, pohodaRecommended: false, pohodaCompletionPct: null, heliosRecommended: false, heliosCompletionPct: null, moneyS3Recommended: false, moneyS3CompletionPct: null, abraFlexiRecommended: false, abraFlexiCompletionPct: null };
+    return { controls: buildDemoControls(), mode: "demo" as DataMode, organisationLocale: null, pohodaRecommended: false, pohodaCompletionPct: null, heliosRecommended: localDemoHeliosRecommended, heliosCompletionPct: null, moneyS3Recommended: false, moneyS3CompletionPct: null, abraFlexiRecommended: false, abraFlexiCompletionPct: null };
   }
 
   const session = await auth();
 
   if (!session.orgId) {
-    return { controls: buildDemoControls(), mode: "demo" as DataMode, organisationLocale: null, pohodaRecommended: false, pohodaCompletionPct: null, heliosRecommended: false, heliosCompletionPct: null, moneyS3Recommended: false, moneyS3CompletionPct: null, abraFlexiRecommended: false, abraFlexiCompletionPct: null };
+    return { controls: buildDemoControls(), mode: "demo" as DataMode, organisationLocale: null, pohodaRecommended: false, pohodaCompletionPct: null, heliosRecommended: localDemoHeliosRecommended, heliosCompletionPct: null, moneyS3Recommended: false, moneyS3CompletionPct: null, abraFlexiRecommended: false, abraFlexiCompletionPct: null };
   }
 
   try {
@@ -201,7 +202,7 @@ async function loadControlsIndexData() {
       abraFlexiCompletionPct,
     };
   } catch {
-    return { controls: buildDemoControls(), mode: "demo" as DataMode, organisationLocale: null, pohodaRecommended: false, pohodaCompletionPct: null, heliosRecommended: false, heliosCompletionPct: null, moneyS3Recommended: false, moneyS3CompletionPct: null, abraFlexiRecommended: false, abraFlexiCompletionPct: null };
+    return { controls: buildDemoControls(), mode: "demo" as DataMode, organisationLocale: null, pohodaRecommended: false, pohodaCompletionPct: null, heliosRecommended: localDemoHeliosRecommended, heliosCompletionPct: null, moneyS3Recommended: false, moneyS3CompletionPct: null, abraFlexiRecommended: false, abraFlexiCompletionPct: null };
   }
 }
 
