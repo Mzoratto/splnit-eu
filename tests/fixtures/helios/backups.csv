@@ -1,0 +1,3 @@
+job_name,backup_type,last_success_at,encrypted,offsite_or_immutable,restore_tested_at,comment
+Helios Full Backup,FULL,2026-05-30,false,true,2025-01-10,encryption gap expected
+Helios Log Backup,LOG,,true,false,,missing last success and restore test
