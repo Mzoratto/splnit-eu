@@ -11,6 +11,44 @@ export const NIS2_EVIDENCE_REQUIREMENTS_BY_CONTROL: Record<string, string> = {
     "ABRA Flexi API permission evidence showing the integration user, read-only scope, tested endpoint or export, owner, and date of review.",
   "abra-flexi-api-credential-rotation":
     "ABRA Flexi API credential rotation record showing credential owner, rotation interval, last rotation date, emergency revocation process, and exceptions.",
+  "helios-api-credential-rotation":
+    "Manual Helios API credential review record showing credential owners, rotation interval, last rotation or replacement date, revocation process, and unresolved exceptions.",
+  "helios-api-edi-supplier-customer":
+    "Manual Helios EDI integration inventory showing supplier/customer endpoints, data scope, access owner, transport protection, review date, and remediation items.",
+  "helios-api-mes-scada-integration":
+    "Manual Helios MES/SCADA integration review showing connected systems, exposed interfaces, network boundary, access owner, review date, and open risks.",
+  "helios-api-network-access-control":
+    "Manual network-access review for Helios APIs showing allowed sources, firewall/VPN restrictions, exposed ports, owner, review date, and exceptions.",
+  "helios-api-tls-enforcement":
+    "Manual Helios API transport review showing TLS or compensating network restriction, certificate/endpoint state, owner, review date, and exceptions.",
+  "helios-backup-encryption":
+    "Manual Helios backup review showing encryption or compensating protection for backup media, key/access owner, review date, and exceptions.",
+  "helios-backup-offsite-immutable":
+    "Manual Helios backup-retention review showing offsite or immutable copy location, protected scope, retention period, owner, review date, and gaps.",
+  "helios-backup-restoration-test":
+    "Manual Helios restore-test record showing tested backup, isolated target environment, test date, outcome, issues, and remediation actions.",
+  "helios-backup-sql-agent-jobs":
+    "Manual Helios SQL backup job review showing job list, protected databases, latest successful run, monitoring owner, retention, and review date.",
+  "helios-iam-contractor-access-management":
+    "Manual Helios contractor access review showing active external users, business owner, access expiry or review date, and removed or justified exceptions.",
+  "helios-iam-inactive-session-audit":
+    "Manual Helios session/access review showing inactivity settings or compensating review, reviewer, review date, and remediation for stale sessions or accounts.",
+  "helios-iam-module-role-hierarchy":
+    "Manual Helios role/module export or screenshot showing assigned roles, privileged modules, reviewer, review date, and least-privilege remediation items.",
+  "helios-iam-offboarding":
+    "Manual Helios offboarding evidence showing disabled or removed users, departure trigger, completion date, reviewer, and unresolved exceptions.",
+  "helios-iam-user-accounts":
+    "Manual Helios user export or screenshot showing named active accounts, shared-account exceptions, owner, last review date, and remediation items.",
+  "helios-infra-deployment-type":
+    "Manual Helios deployment record showing hosting model, responsible owner, protected assets, security controls in place, review date, and open gaps.",
+  "helios-infra-encryption-at-rest":
+    "Manual Helios data-at-rest review showing database/storage protection, encryption or compensating controls, owner, review date, and exceptions.",
+  "helios-infra-network-segmentation":
+    "Manual Helios network segmentation review showing network zones, allowed flows, remote access path, owner, review date, and exceptions.",
+  "helios-infra-os-patch-management":
+    "Manual Helios host patch review showing operating-system versions, last patch cycle, responsible owner, overdue patches, and review date.",
+  "helios-infra-physical-server-room":
+    "Manual Helios physical hosting review showing server-room location, access controls, responsible owner, review date, and unresolved physical-security gaps.",
   "abra-flexi-api-https":
     "ABRA Flexi API transport evidence showing HTTPS/TLS endpoint configuration or compensating VPN/local restriction, certificate state, and review date.",
   "abra-flexi-backup-api":

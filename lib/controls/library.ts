@@ -1426,7 +1426,7 @@ export const CONTROL_LIBRARY: ControlSeed[] = [
   ...BASE_CONTROL_LIBRARY.map(withNis2EvidenceRequirements),
   ...ISO27001_EXTENSION_CONTROLS,
   ...CSRD_DATA_POINT_CONTROLS,
-  ...HELIOS_CONTROL_SEEDS,
+  ...HELIOS_CONTROL_SEEDS.map(withNis2EvidenceRequirements),
 ];
 
 export function getControlMappingsForFramework(frameworkSlug: FrameworkSlug) {
