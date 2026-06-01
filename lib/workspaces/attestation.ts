@@ -2,6 +2,19 @@ export type WorkspaceAttestationAssessmentResult = "pass" | "gap" | "manual_revi
 
 export function deriveWorkspaceAttestationAssessmentResult(
   answers: Record<string, unknown>,
+  options: { platformId?: string } = {},
+): WorkspaceAttestationAssessmentResult {
+  const rawResult = deriveRawWorkspaceAttestationAssessmentResult(answers);
+
+  if (options.platformId === "helios" && rawResult === "pass") {
+    return "manual_review";
+  }
+
+  return rawResult;
+}
+
+function deriveRawWorkspaceAttestationAssessmentResult(
+  answers: Record<string, unknown>,
 ): WorkspaceAttestationAssessmentResult {
   if (isDesignatedPersonTrainingGap(answers)) {
     return "gap";

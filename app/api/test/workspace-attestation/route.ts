@@ -48,7 +48,7 @@ export async function POST(request: NextRequest) {
 
   const { answers, assessmentResult, controlKey, layerId, platformId } = parsed.data;
   const resolvedAssessmentResult =
-    assessmentResult ?? deriveWorkspaceAttestationAssessmentResult(answers);
+    assessmentResult ?? deriveWorkspaceAttestationAssessmentResult(answers, { platformId });
 
   try {
     const result = await createManualAttestationEvidence({

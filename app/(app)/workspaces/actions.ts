@@ -11,6 +11,7 @@ import {
 import { createAuditLog } from "@/lib/db/queries/audit-logs";
 import { createManualAttestationEvidence } from "@/lib/db/queries/evidence";
 import { deriveWorkspaceAttestationAssessmentResult } from "@/lib/workspaces/attestation";
+import { upsertHeliosGapRemediationTask } from "@/lib/workspaces/helios/lifecycle";
 
 async function getActiveSession() {
   const session = await auth();
@@ -46,7 +47,9 @@ export async function submitWorkspaceAttestationAction(input: {
   const parsed = submitAttestationSchema.parse(input);
   const session = await getActiveSession();
 
-  const assessmentResult = deriveWorkspaceAttestationAssessmentResult(parsed.answers);
+  const assessmentResult = deriveWorkspaceAttestationAssessmentResult(parsed.answers, {
+    platformId: parsed.platformId,
+  });
 
   const result = await createManualAttestationEvidence({
     answers: parsed.answers,
@@ -56,6 +59,16 @@ export async function submitWorkspaceAttestationAction(input: {
     controlKey: parsed.controlKey,
     description: `Workspace attestation — platform: ${parsed.platformId}, layer: ${parsed.layerId}`,
   });
+
+  if (parsed.platformId === "helios") {
+    await upsertHeliosGapRemediationTask({
+      assessmentResult,
+      clerkOrgId: session.clerkOrgId,
+      controlId: result.controlId,
+      controlKey: parsed.controlKey,
+      evidenceId: result.evidenceId,
+    });
+  }
 
   await createAuditLog({
     action: "evidence.workspace_attestation_submitted",
