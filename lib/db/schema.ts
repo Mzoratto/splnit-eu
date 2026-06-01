@@ -86,7 +86,7 @@ export const organisations = pgTable("organisations", {
   id: uuid("id").primaryKey().defaultRandom(),
   clerkOrgId: text("clerk_org_id").notNull().unique(),
   name: text("name").notNull(),
-  ico: varchar("ico", { length: 8 }),
+  ico: varchar("ico", { length: 32 }),
   dic: varchar("dic", { length: 12 }),
   sidlo: text("sidlo"),
   rezimPovinnosti: varchar("rezim_povinnosti", { length: 10 })
