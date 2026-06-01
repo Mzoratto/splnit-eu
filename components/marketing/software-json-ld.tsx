@@ -19,9 +19,10 @@ const localizedDefaults: Record<
   "cs-CZ": {
     areaServed: ["CZ", "EU"],
     description:
-      "Splnit.eu automatizuje compliance pro NIS2, EU AI Act, GDPR a ISO 27001 pro české firmy.",
+      "Splnit.eu pomáhá českým firmám řídit compliance pro NIS2, EU AI Act, GDPR a ISO 27001 — s automatickým sběrem důkazů z připojených integrací a manuálními workspace pro lokální systémy.",
     featureList: [
-      "Automatické compliance testy",
+      "Automatický sběr důkazů z připojených integrací (Microsoft 365, GitHub, AWS)",
+      "Manuální a CSV sběr důkazů pro lokální systémy",
       "Mapování kontrol na NIS2, EU AI Act, GDPR a ISO 27001",
       "Evidence vault",
       "Trust Center",
@@ -31,9 +32,10 @@ const localizedDefaults: Record<
   "en-EU": {
     areaServed: ["EU"],
     description:
-      "Splnit.eu automates compliance work for NIS2, EU AI Act, GDPR, and ISO 27001 for European SMBs.",
+      "Splnit.eu helps European SMBs manage NIS2, EU AI Act, GDPR, and ISO 27001 compliance, with automated evidence collection for connected integrations and guided manual workspaces for local systems.",
     featureList: [
-      "Automated compliance tests",
+      "Automated evidence collection for connected integrations (Microsoft 365, GitHub, AWS)",
+      "Manual and CSV-assisted evidence collection for local systems",
       "Control mapping for NIS2, EU AI Act, GDPR, and ISO 27001",
       "Evidence vault",
       "Trust Center",
@@ -43,9 +45,10 @@ const localizedDefaults: Record<
   "it-IT": {
     areaServed: ["IT", "EU"],
     description:
-      "Splnit.eu automatizza il lavoro di compliance per NIS2, EU AI Act, GDPR e ISO 27001 per PMI europee.",
+      "Splnit.eu aiuta le PMI europee a gestire la compliance per NIS2, EU AI Act, GDPR e ISO 27001, con raccolta automatica delle prove dalle integrazioni collegate e workspace manuali guidati per i sistemi locali.",
     featureList: [
-      "Test compliance automatici",
+      "Raccolta automatica delle prove dalle integrazioni collegate (Microsoft 365, GitHub, AWS)",
+      "Raccolta manuale e assistita da CSV per i sistemi locali",
       "Mappatura controlli per NIS2, EU AI Act, GDPR e ISO 27001",
       "Evidence vault",
       "Trust Center",

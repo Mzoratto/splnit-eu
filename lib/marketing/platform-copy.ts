@@ -73,7 +73,7 @@ const copy: Record<Locale, PlatformCopy> = {
         "Platforma | Splnit.eu — ověřené kontroly pro cloud, identity a ERP",
     },
     jsonLdDescription:
-      "Platforma Splnit.eu podporuje compliance kontroly, evidence vault a Trust Center pro NIS2, EU AI Act, GDPR a ISO 27001 podle ověřených zdrojů.",
+      "Splnit.eu pomáhá českým firmám řídit compliance pro NIS2, EU AI Act, GDPR a ISO 27001 — s automatickým sběrem důkazů z připojených integrací a manuálními workspace pro lokální systémy.",
     pageName: "Splnit.eu Platforma",
     hero: {
       body:
@@ -188,7 +188,7 @@ const copy: Record<Locale, PlatformCopy> = {
         "Platform | Splnit.eu — verified checks for cloud, identity, and ERP",
     },
     jsonLdDescription:
-      "Splnit.eu supports compliance checks, evidence collection, and Trust Center workflows for NIS2, EU AI Act, GDPR, and ISO 27001 according to verified sources.",
+      "Splnit.eu helps European SMBs manage NIS2, EU AI Act, GDPR, and ISO 27001 compliance, with automated evidence collection for connected integrations and guided manual workspaces for local systems.",
     pageName: "Splnit.eu Platform",
     hero: {
       body:
@@ -303,7 +303,7 @@ const copy: Record<Locale, PlatformCopy> = {
         "Piattaforma | Splnit.eu — controlli verificati per cloud, identity ed ERP",
     },
     jsonLdDescription:
-      "Splnit.eu supporta controlli di compliance, raccolta evidenze e workflow Trust Center per NIS2, EU AI Act, GDPR e ISO 27001 secondo fonti verificate.",
+      "Splnit.eu aiuta le PMI europee a gestire la compliance per NIS2, EU AI Act, GDPR e ISO 27001, con raccolta automatica delle prove dalle integrazioni collegate e workspace manuali guidati per i sistemi locali.",
     pageName: "Splnit.eu Piattaforma",
     hero: {
       body:

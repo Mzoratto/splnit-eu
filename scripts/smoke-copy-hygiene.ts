@@ -133,6 +133,30 @@ const policyEvidenceCheckedFiles = [
   ...listSourceFiles("lib/policy-evidence"),
 ];
 
+const jsonLdCheckedFiles = [
+  "components/marketing/software-json-ld.tsx",
+  "lib/marketing/platform-copy.ts",
+];
+
+const jsonLdAutomationTerms = [
+  /automated/i,
+  /automatic/i,
+  /automatiz(?:e|uje|za)/i,
+  /automatick(?:ý|é|ych|ých|a|i|ou|ým|ému)?/i,
+  /automatici/i,
+  /automatica/i,
+] as const;
+
+const jsonLdAutomationScopeTerms = [
+  /connected integration/i,
+  /connected integrations/i,
+  /připojen(?:é|ých|ymi|ými)? integrac/i,
+  /integrazioni collegate/i,
+  /Microsoft 365/i,
+  /GitHub/i,
+  /AWS/i,
+] as const;
+
 function listSourceFiles(directory: string): string[] {
   return readdirSync(directory).flatMap((entry) => {
     const path = join(directory, entry);
@@ -228,6 +252,66 @@ for (const file of policyEvidenceCheckedFiles) {
 
     if (match) {
       failures.push(`${file}: policy-to-evidence copy guard matched ${pattern}`);
+    }
+  }
+}
+
+function extractQuotedStrings(content: string) {
+  return Array.from(content.matchAll(/"([^"\\]*(?:\\.[^"\\]*)*)"/g)).map(
+    (match) => match[1],
+  );
+}
+
+function extractJsonLdStrings(file: string) {
+  const content = readFileSync(file, "utf8");
+
+  if (file === "components/marketing/software-json-ld.tsx") {
+    const defaultsBlock = content.match(/const localizedDefaults:[\s\S]*?\n};/);
+    return defaultsBlock ? extractQuotedStrings(defaultsBlock[0]) : [];
+  }
+
+  if (file === "lib/marketing/platform-copy.ts") {
+    return Array.from(
+      content.matchAll(/jsonLdDescription:\s*\n\s*"([^"\\]*(?:\\.[^"\\]*)*)"/g),
+    ).map((match) => match[1]);
+  }
+
+  return [];
+}
+
+function hasAnyPattern(value: string, patterns: readonly RegExp[]) {
+  return patterns.some((pattern) => pattern.test(value));
+}
+
+function hasFrameworkAutomationOrTestAdjacency(value: string) {
+  const frameworkAlternation = "(?:NIS2|EU AI Act|GDPR|ISO\\s*27001)";
+  const automationOrTestAlternation = "(?:test(?:s|y)?|automat\\w*|automatic\\w*)";
+  const adjacent = "(?:\\W+\\w+){0,4}\\W+";
+
+  return new RegExp(
+    `${frameworkAlternation}${adjacent}${automationOrTestAlternation}|${automationOrTestAlternation}${adjacent}${frameworkAlternation}`,
+    "i",
+  ).test(value);
+}
+
+for (const file of jsonLdCheckedFiles) {
+  const strings = extractJsonLdStrings(file);
+
+  for (const value of strings) {
+    const hasAutomation = hasAnyPattern(value, jsonLdAutomationTerms);
+    const hasScope = hasAnyPattern(value, jsonLdAutomationScopeTerms);
+    const hasFrameworkAutomationOrTest = hasFrameworkAutomationOrTestAdjacency(value);
+
+    if (hasAutomation && !hasScope) {
+      failures.push(
+        `${file}: JSON-LD automation claim is not scoped to connected integrations: ${value}`,
+      );
+    }
+
+    if (hasFrameworkAutomationOrTest && !hasScope) {
+      failures.push(
+        `${file}: JSON-LD framework name is adjacent to automation/test claim: ${value}`,
+      );
     }
   }
 }
