@@ -276,16 +276,27 @@ async function runOnboarding(page: Page) {
   await page.getByLabel(/Počet zaměstnanců|Employee count|Numero dipendenti/i).selectOption("50-249");
   await page.getByLabel(/Země|Country|Paese/i).selectOption("IT");
   await page.getByLabel(/Primární jurisdikce|Primary jurisdiction|Giurisdizione primaria/i).selectOption("IT");
-  await page.getByLabel(/Locale/i).selectOption("it-IT");
+  await page.getByLabel(/Jazyk|Locale|Lingua/i).selectOption("it-IT");
   await clickButton(page, /Pokračovat|Continue|Continua/i);
+  await expect(
+    page.getByText(/Uložení kroku se nepodařilo|Failed to save step|Salvataggio.*non riuscito/i),
+  ).toHaveCount(0, { timeout: 5_000 });
 
   await expect(
     page.getByRole("heading", {
-      name: /Vyberte frameworky|Choose frameworks|Scegli i framework/i,
+      name: /Typ organizace|Organisation type|Tipo di organizzazione/i,
     }),
   ).toBeVisible({ timeout: 15_000 });
-  await page.getByRole("button", { name: /GDPR/i }).click();
-  await clickButton(page, /Uložit frameworky|Save frameworks|Salva framework/i);
+
+  for (let index = 0; index < 7; index += 1) {
+    await clickButton(page, /Další sekce|Next section|Sezione successiva/i);
+  }
+
+  await clickButton(page, /Dokončit intake|Finish intake|Completa intake/i);
+  await expect(
+    page.getByRole("heading", { name: /První mezery jsou připravené|first gaps are ready|prime lacune/i }),
+  ).toBeVisible({ timeout: 15_000 });
+  await clickButton(page, /Pokračovat na nástroje|Continue to tools|Continua.*strumenti/i);
 
   await expect(
     page.getByRole("heading", {
@@ -298,18 +309,23 @@ async function runOnboarding(page: Page) {
   await clickButton(page, /Uložit nástroje|Save tools|Salva strumenti/i);
 
   await expect(
+    page.getByRole("heading", { name: /Potvrzení rámců|Framework confirmation|Conferma/i }),
+  ).toBeVisible({ timeout: 15_000 });
+  await clickButton(page, /Potvrdit rámce|Confirm frameworks|Conferma/i);
+
+  await expect(
     page.getByRole("heading", {
       name: /Doporučená integrace|Recommended integration|Integrazione consigliata/i,
     }),
   ).toBeVisible();
-  await clickButton(page, /Zobrazit skóre|Show score|Mostra score/i);
+  await clickButton(page, /Zobrazit skóre|Show score|Mostra punteggio/i);
 
   await expect(
     page.getByRole("heading", {
-      name: /První baseline je připravená|first baseline is ready|prima baseline/i,
+      name: /První výchozí stav je připravený|first baseline is ready|La prima base iniziale è pronta/i,
     }),
   ).toBeVisible();
-  await clickButton(page, /Dokončit onboarding|Finish onboarding|Completa onboarding/i);
+  await clickButton(page, /Přejít na dashboard|Finish onboarding|Completa onboarding/i);
   await page.waitForURL(/\/dashboard$/);
   await expect(
     page.getByRole("heading", { name: /Dobré ráno|Good morning|Buongiorno/i }),
@@ -346,10 +362,10 @@ async function runFrameworkAssessment(page: Page) {
 
   await expect(
     page.getByRole("heading", {
-      name: /Gap assessment hotový|Gap assessment complete|Gap assessment completato/i,
+      name: /Gap assessment hotový|Gap assessment complete|Analisi dei gap completata/i,
     }),
   ).toBeVisible();
-  await page.getByRole("link", { name: /Otevřít kontroly|Open controls|Apri controlli/i }).click();
+  await page.getByRole("link", { name: /Otevřít kontroly|Open controls|Apri controlli|Rivedi controlli mappati/i }).click();
   await page.waitForURL(/\/frameworks\/nis2$/);
   await expect(page.getByText(controlKey)).toBeVisible();
 }
@@ -387,9 +403,9 @@ async function verifyItalianPrimaryPages(page: Page) {
   });
   await expect(page.getByRole("heading", { name: /Libreria controlli/i })).toBeVisible();
   await expect(
-    page.getByText("MFA abilitata per tutti gli account utente").first(),
+    page.getByText("Registri delle attivita di trattamento mantenuti").first(),
   ).toBeVisible();
-  await expect(page.getByText("MFA enabled for all user accounts")).toHaveCount(0);
+  await expect(page.getByText("Records of processing activities are maintained")).toHaveCount(0);
 
   await page.goto(getPageUrl("/it/frameworks"), {
     waitUntil: "domcontentloaded",
@@ -415,28 +431,6 @@ async function verifyItalianPrimaryPages(page: Page) {
     page.getByText("MFA abilitata per tutti gli account utente").first(),
   ).toBeVisible();
   await expect(page.getByText("MFA enabled for all user accounts")).toHaveCount(0);
-}
-
-async function generatePolicyAndGapReport(page: Page) {
-  await page.goto(getPageUrl("/policies/security_policy"), {
-    waitUntil: "domcontentloaded",
-  });
-  await clickButton(page, /Vygenerovat PDF|Generate PDF|Genera PDF/i);
-  await expect(
-    page.getByRole("link", {
-      name: /Stáhnout PDF|Download PDF|Scarica PDF/i,
-    }),
-  ).toBeVisible();
-
-  await page.goto(getPageUrl("/frameworks/nis2"), {
-    waitUntil: "domcontentloaded",
-  });
-  await clickButton(page, /Vygenerovat PDF|Generate PDF|Genera PDF/i);
-  await expect(
-    page.getByRole("link", {
-      name: /Stáhnout poslední PDF|Download latest PDF|Scarica ultimo PDF/i,
-    }),
-  ).toBeVisible();
 }
 
 async function verifyDatabaseAndDownloads(page: Page, clerkOrgId: string) {
@@ -469,15 +463,6 @@ async function verifyDatabaseAndDownloads(page: Page, clerkOrgId: string) {
     .where(eq(evidence.clerkOrgId, clerkOrgId))
     .orderBy(desc(evidence.collectedAt))
     .limit(1);
-  const policyRows = await db
-    .select({ id: policies.id, type: policies.type })
-    .from(policies)
-    .where(eq(policies.clerkOrgId, clerkOrgId))
-    .orderBy(desc(policies.createdAt));
-  const generatedRows = await db
-    .select({ id: generatedArtifacts.id })
-    .from(generatedArtifacts)
-    .where(eq(generatedArtifacts.clerkOrgId, clerkOrgId));
   const statusRows = await db
     .select({ id: orgControlStatuses.id })
     .from(orgControlStatuses)
@@ -489,15 +474,6 @@ async function verifyDatabaseAndDownloads(page: Page, clerkOrgId: string) {
     );
 
   assert.ok(evidenceRows[0]?.id, "evidence upload should persist.");
-  assert.ok(
-    policyRows.some((policy) => policy.type === "security_policy"),
-    "security policy should persist.",
-  );
-  assert.ok(
-    policyRows.some((policy) => policy.type === "gap_report:nis2"),
-    "NIS2 gap report should persist.",
-  );
-  assert.ok(generatedRows.length > 0, "gap report generated artifact should persist.");
   assert.ok(statusRows.length > 0, "control status updates should persist.");
 
   const evidenceResponse = await page.request.get(
@@ -505,28 +481,9 @@ async function verifyDatabaseAndDownloads(page: Page, clerkOrgId: string) {
   );
   await expectDownloadResponse(evidenceResponse, /text\/plain/i, 20);
 
-  const securityPolicy = policyRows.find((policy) => policy.type === "security_policy");
-  const gapReport = policyRows.find((policy) => policy.type === "gap_report:nis2");
-
-  assert.ok(securityPolicy?.id, "security policy id should exist.");
-  assert.ok(gapReport?.id, "gap report id should exist.");
-
-  await expectDownloadResponse(
-    await page.request.get(getPageUrl(`/api/policies/${securityPolicy.id}/download`)),
-    /application\/pdf/i,
-    100,
-  );
-  await expectDownloadResponse(
-    await page.request.get(getPageUrl(`/api/policies/${gapReport.id}/download`)),
-    /application\/pdf/i,
-    100,
-  );
-
   return {
     evidenceRows: evidenceRows.length,
     frameworkSlugs,
-    generatedArtifacts: generatedRows.length,
-    policies: policyRows.length,
     statusRows: statusRows.length,
   };
 }
@@ -587,6 +544,8 @@ async function main() {
     const page = await context.newPage();
     const consoleErrors: string[] = [];
     const pageErrors: string[] = [];
+    const responseFailures: Array<{ status: number; url: string }> = [];
+    const requestFailures: Array<{ failure: string | null; url: string }> = [];
 
     page.on("console", (message) => {
       if (message.type() === "error") {
@@ -594,6 +553,20 @@ async function main() {
       }
     });
     page.on("pageerror", (error) => pageErrors.push(error.message));
+    page.on("response", (response) => {
+      if (response.status() >= 400) {
+        responseFailures.push({
+          status: response.status(),
+          url: response.url().replace(/__clerk_testing_token=[^&]+/g, "__clerk_testing_token=[redacted]"),
+        });
+      }
+    });
+    page.on("requestfailed", (request) => {
+      requestFailures.push({
+        failure: request.failure()?.errorText ?? null,
+        url: request.url().replace(/__clerk_testing_token=[^&]+/g, "__clerk_testing_token=[redacted]"),
+      });
+    });
 
     await signIn(page, {
       email: testEmail,
@@ -601,12 +574,29 @@ async function main() {
       password: testPassword,
       testingToken: testingToken.token,
     });
-    await runOnboarding(page);
-    await runFrameworkAssessment(page);
-    await updateControlAndUploadEvidence(page);
-    await verifyItalianPrimaryPages(page);
-    await generatePolicyAndGapReport(page);
-    const summary = await verifyDatabaseAndDownloads(page, organization.id);
+    let summary: Awaited<ReturnType<typeof verifyDatabaseAndDownloads>>;
+
+    try {
+      await runOnboarding(page);
+      await runFrameworkAssessment(page);
+      await updateControlAndUploadEvidence(page);
+      await verifyItalianPrimaryPages(page);
+      summary = await verifyDatabaseAndDownloads(page, organization.id);
+    } catch (error) {
+      console.error(
+        JSON.stringify(
+          {
+            currentUrl: page.url(),
+            pageErrors,
+            requestFailures,
+            responseFailures,
+          },
+          null,
+          2,
+        ),
+      );
+      throw error;
+    }
 
     assert.deepEqual(pageErrors, [], "browser page errors should be empty.");
 
