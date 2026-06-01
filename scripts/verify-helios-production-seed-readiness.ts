@@ -3,7 +3,7 @@ import assert from "node:assert/strict";
 import { loadEnvConfig } from "@next/env";
 import { Pool } from "pg";
 
-import { heliosWorkspace } from "@/lib/workspaces/helios";
+import { HELIOS_CANONICAL_CONTROL_KEYS } from "@/lib/workspaces/control-seeds";
 
 loadEnvConfig(process.cwd());
 
@@ -37,9 +37,7 @@ function findDuplicates(values: readonly string[]) {
 }
 
 async function main() {
-  const expectedKeys: string[] = heliosWorkspace.layers
-    .flatMap((layer) => layer.controls.map((control) => control.controlKey))
-    .sort();
+  const expectedKeys: string[] = [...HELIOS_CANONICAL_CONTROL_KEYS].sort();
   assert.equal(expectedKeys.length, 19, "Expected Helios canonical control key count changed");
   assert.deepEqual(findDuplicates(expectedKeys), [], "Duplicate expected Helios canonical control keys");
 

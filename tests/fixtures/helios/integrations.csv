@@ -1,0 +1,4 @@
+name,type,protocol,auth_type,tls_enabled,network_restricted,credentials_rotated_at,owner
+MES line bridge,MES,REST,service_account,false,true,2026-01-15,OT
+SCADA historian,SCADA,OPC-UA,service_account,true,false,2025-02-01,OT
+EDI supplier,EDI,SFTP,api_key,true,true,2026-03-10,Logistics

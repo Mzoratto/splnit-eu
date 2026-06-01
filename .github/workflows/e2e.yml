@@ -51,10 +51,25 @@ jobs:
     env:
       CI: true
       NEXT_TELEMETRY_DISABLED: 1
+      DATABASE_URL: postgresql://splnit_ci:splnit_ci@localhost:5432/splnit_ci
       ENABLE_TEST_ROUTES: "true"
       NEXT_PUBLIC_ENABLE_TEST_ROUTES: "true"
       NODE_OPTIONS: --max-old-space-size=8192
       TEST_BYPASS_PLAN_GATE: "true"
+    services:
+      postgres:
+        image: pgvector/pgvector:pg16
+        env:
+          POSTGRES_DB: splnit_ci
+          POSTGRES_USER: splnit_ci
+          POSTGRES_PASSWORD: splnit_ci
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U splnit_ci -d splnit_ci"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
     steps:
       - name: Checkout
         uses: actions/checkout@v6
@@ -96,6 +111,9 @@ jobs:
 
       - name: Build
         run: npm run build
+
+      - name: Prepare local demo database
+        run: npm run db:migrate && npm run seed:helios-controls
 
       - name: Run public E2E
         run: npm run test:e2e:public

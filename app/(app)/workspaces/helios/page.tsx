@@ -120,6 +120,19 @@ export default async function HeliosWorkspacePage() {
         </div>
       ) : null}
 
+      <Link
+        href="/workspaces/helios/import"
+        className="block rounded-lg border border-border bg-white p-5 shadow-xs transition hover:border-primary/40 hover:shadow-sm"
+      >
+        <p className="text-xs font-medium uppercase tracking-[0.14em] text-primary">
+          CSV-assisted evidence import
+        </p>
+        <h2 className="mt-1 text-lg font-semibold">Import ze Splnit CSV šablony</h2>
+        <p className="mt-2 max-w-3xl text-sm leading-6 text-foreground/64">
+          Stáhněte šablonu Splnit, namapujte export z Heliosu do této šablony a nahrajte vyplněné CSV. Import nepředstavuje automatické napojení na Helios API.
+        </p>
+      </Link>
+
       <WorkspaceRenderer
         commentsByControlKey={commentsByControlKey}
         workspace={heliosWorkspace}
