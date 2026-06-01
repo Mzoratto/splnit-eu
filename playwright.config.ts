@@ -18,6 +18,7 @@ const localDemoSpecs = [
   "**/compliance-report-happy-path.spec.ts",
   "**/compliance-report-profile-gate.spec.ts",
   "**/demo-fallback-containment.spec.ts",
+  "**/helios-onboarding-recommendation.spec.ts",
   "**/helios-workspace.spec.ts",
   "**/intake-prioritization-smoke.spec.ts",
   "**/integration-connect.spec.ts",

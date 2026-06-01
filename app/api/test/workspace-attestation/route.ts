@@ -1,6 +1,9 @@
 import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
+import { eq } from "drizzle-orm";
+import { getDb } from "@/lib/db";
 import { createManualAttestationEvidence } from "@/lib/db/queries/evidence";
+import { evidence, orgControlStatuses, organisations } from "@/lib/db/schema";
 import { deriveWorkspaceAttestationAssessmentResult } from "@/lib/workspaces/attestation";
 
 // Test-only route — hard-blocked in production and requires explicit opt-in.
@@ -13,6 +16,14 @@ export const dynamic = "force-dynamic";
 const TEST_CLERK_ORG_ID = "org_e2e_attestation_test";
 const TEST_COLLECTED_BY = "user_e2e_test";
 
+function isTestRouteEnabled() {
+  if (process.env.VERCEL_ENV === "production") {
+    return false;
+  }
+
+  return process.env.NODE_ENV === "test" || process.env.ENABLE_TEST_ROUTES === "true";
+}
+
 const requestSchema = z.object({
   answers: z.record(z.string(), z.unknown()),
   assessmentResult: z.enum(["pass", "gap", "manual_review"]).optional(),
@@ -22,13 +33,8 @@ const requestSchema = z.object({
 });
 
 export async function POST(request: NextRequest) {
-  if (process.env.NODE_ENV === "production") {
+  if (!isTestRouteEnabled()) {
     return new Response(null, { status: 404 });
-  }
-
-  // Double guard: hard-stop in production; require explicit test opt-in elsewhere.
-  if (process.env.NODE_ENV !== "test" && process.env.ENABLE_TEST_ROUTES !== "true") {
-    return NextResponse.json({ error: "Not found" }, { status: 404 });
   }
 
   let body: unknown;
@@ -51,6 +57,18 @@ export async function POST(request: NextRequest) {
     assessmentResult ?? deriveWorkspaceAttestationAssessmentResult(answers);
 
   try {
+    const db = getDb();
+    await db
+      .insert(organisations)
+      .values({
+        clerkOrgId: TEST_CLERK_ORG_ID,
+        country: "CZ",
+        locale: "cs-CZ",
+        name: "E2E workspace attestation test org",
+        primaryJurisdiction: "CZ",
+      })
+      .onConflictDoNothing();
+
     const result = await createManualAttestationEvidence({
       answers,
       assessmentResult: resolvedAssessmentResult,
@@ -73,4 +91,31 @@ export async function POST(request: NextRequest) {
     const message = err instanceof Error ? err.message : "Unknown error";
     return NextResponse.json({ error: message }, { status: 500 });
   }
+}
+
+export async function DELETE() {
+  if (!isTestRouteEnabled()) {
+    return new Response(null, { status: 404 });
+  }
+
+  const db = getDb();
+  const deletedEvidenceRows = await db
+    .delete(evidence)
+    .where(eq(evidence.clerkOrgId, TEST_CLERK_ORG_ID))
+    .returning({ id: evidence.id });
+  const deletedStatusRows = await db
+    .delete(orgControlStatuses)
+    .where(eq(orgControlStatuses.clerkOrgId, TEST_CLERK_ORG_ID))
+    .returning({ controlId: orgControlStatuses.controlId });
+  const deletedOrgRows = await db
+    .delete(organisations)
+    .where(eq(organisations.clerkOrgId, TEST_CLERK_ORG_ID))
+    .returning({ clerkOrgId: organisations.clerkOrgId });
+
+  return NextResponse.json({
+    clerkOrgId: TEST_CLERK_ORG_ID,
+    deletedEvidence: deletedEvidenceRows.length,
+    deletedOrganisations: deletedOrgRows.length,
+    deletedStatuses: deletedStatusRows.length,
+  });
 }
