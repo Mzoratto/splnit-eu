@@ -128,4 +128,43 @@ test.describe("Helios workspace", () => {
     // ZoKB section reference
     await expect(page.getByText(/ZoKB.*§ 7/).first()).toBeVisible();
   });
+
+  test("test route accepts one live Helios IAM attestation", async ({ request }) => {
+    await request.delete("/api/test/workspace-attestation");
+
+    const payload = {
+      answers: {
+        done: true,
+        notes: "E2E Helios IAM attestation route proof.",
+      },
+      assessmentResult: "manual_review",
+      controlKey: "helios-iam-user-accounts",
+      layerId: "identity-access",
+      platformId: "helios",
+    };
+
+    const response = await request.post("/api/test/workspace-attestation", {
+      data: payload,
+    });
+    const body = (await response.json()) as {
+      controlId?: string;
+      controlKey?: string;
+      evidenceId?: string;
+      platformId?: string;
+    };
+
+    expect(response.status(), JSON.stringify(body)).toBe(200);
+    expect(body).toMatchObject({
+      controlKey: "helios-iam-user-accounts",
+      platformId: "helios",
+    });
+    expect(body.evidenceId).toEqual(expect.any(String));
+    expect(body.controlId).toEqual(expect.any(String));
+
+    const cleanup = await request.delete("/api/test/workspace-attestation");
+    const cleanupBody = (await cleanup.json()) as { clerkOrgId?: string; deletedEvidence?: number };
+
+    expect(cleanup.status(), JSON.stringify(cleanupBody)).toBe(200);
+    expect(cleanupBody.clerkOrgId).toBe("org_e2e_attestation_test");
+  });
 });
