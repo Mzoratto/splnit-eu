@@ -2,6 +2,7 @@ import { and, desc, eq, inArray } from "drizzle-orm";
 import { getDb } from "@/lib/db";
 import { controls, evidence } from "@/lib/db/schema";
 import type { EvidenceAssessmentResult, EvidenceCollectionStatus } from "@/lib/activation/evidence-state";
+import { getHeliosEvidenceFreshness } from "@/lib/workspaces/helios/lifecycle";
 import type { PlatformWorkspace } from "@/lib/workspaces/types";
 
 // Per-control evidence snapshot returned by getWorkspaceProgress.
@@ -11,6 +12,9 @@ export type WorkspaceControlProgress = {
   assessmentResult: EvidenceAssessmentResult;
   collectionStatus: EvidenceCollectionStatus;
   collectedAt: Date | null;
+  expiresAt?: Date | null;
+  freshnessStatus?: "fresh" | "stale" | "missing";
+  staleDays?: number | null;
   // null means no evidence row exists at all.
   evidenceId: string | null;
 };
@@ -138,6 +142,13 @@ export async function getWorkspaceProgress(
       (ctrl) => {
         const controlId = keyToId.get(ctrl.controlKey);
         const latest = controlId ? latestByControlId.get(controlId) : undefined;
+        const freshness =
+          workspace.platformId === "helios"
+            ? getHeliosEvidenceFreshness({
+                collectedAt: latest?.collectedAt ?? null,
+                controlKey: ctrl.controlKey,
+              })
+            : null;
 
         if (latest) {
           return {
@@ -146,6 +157,9 @@ export async function getWorkspaceProgress(
             assessmentResult: latest.assessmentResult,
             collectionStatus: latest.collectionStatus,
             collectedAt: latest.collectedAt,
+            expiresAt: freshness?.expires_at ?? null,
+            freshnessStatus: freshness?.status ?? "fresh",
+            staleDays: freshness?.staleDays ?? null,
             evidenceId: latest.evidenceId,
           };
         }
@@ -156,6 +170,9 @@ export async function getWorkspaceProgress(
           assessmentResult: "unknown" as EvidenceAssessmentResult,
           collectionStatus: "pending" as EvidenceCollectionStatus,
           collectedAt: null,
+          expiresAt: freshness?.expires_at ?? null,
+          freshnessStatus: freshness?.status ?? "missing",
+          staleDays: null,
           evidenceId: null,
         };
       },

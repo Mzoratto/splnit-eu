@@ -28,6 +28,9 @@ function buildDemoProgress(): WorkspaceProgress {
       assessmentResult: "unknown" as const,
       collectionStatus: "pending" as const,
       collectedAt: null,
+      expiresAt: null,
+      freshnessStatus: "missing" as const,
+      staleDays: null,
       evidenceId: null,
     })),
   }));

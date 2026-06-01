@@ -615,6 +615,11 @@ function ControlCard({
               className="text-xs"
             />
           ) : null}
+          {controlProg?.freshnessStatus === "stale" ? (
+            <span className="rounded-full border border-amber-300 bg-amber-50 px-2 py-0.5 text-xs font-medium text-amber-800">
+              Stale — re-attestation needed
+            </span>
+          ) : null}
           {open ? (
             <ChevronDown className="mt-1 h-4 w-4 text-foreground/40" aria-hidden="true" />
           ) : (
@@ -639,6 +644,13 @@ function ControlCard({
                 {t("currentEvidenceState")}
               </p>
               <ActivationStatus state={activationState} showDetails />
+            </div>
+          ) : null}
+
+          {controlProg?.freshnessStatus === "stale" ? (
+            <div className="rounded-md border border-amber-300 bg-amber-50 p-3 text-sm leading-6 text-amber-900">
+              This Helios workspace evidence is stale
+              {controlProg.staleDays !== null ? ` by ${controlProg.staleDays} day(s)` : ""}. Re-attest the control or provide updated customer-reported evidence before relying on it.
             </div>
           ) : null}
 

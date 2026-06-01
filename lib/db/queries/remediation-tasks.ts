@@ -85,6 +85,29 @@ export async function listOpenRemediationTasksForOrg(clerkOrgId: string) {
     .orderBy(desc(remediationTasks.updatedAt));
 }
 
+export async function getRemediationTaskBySource(input: {
+  clerkOrgId: string;
+  controlId: string;
+  sourceKey: string;
+  sourceType: RemediationTaskSourceType;
+}) {
+  const db = getDb();
+  const rows = await db
+    .select()
+    .from(remediationTasks)
+    .where(
+      and(
+        eq(remediationTasks.clerkOrgId, input.clerkOrgId),
+        eq(remediationTasks.controlId, input.controlId),
+        eq(remediationTasks.sourceKey, input.sourceKey),
+        eq(remediationTasks.sourceType, input.sourceType),
+      ),
+    )
+    .limit(1);
+
+  return rows[0] ?? null;
+}
+
 export async function updateRemediationTaskStatus(input: {
   clerkOrgId: string;
   status: Extract<RemediationTaskStatus, "resolved" | "dismissed" | "in_progress" | "open">;

@@ -71,6 +71,7 @@
     "smoke:compliance-report": "tsx scripts/smoke-compliance-report.ts",
     "smoke:helios-workspace-config": "tsx scripts/smoke-helios-workspace-config.ts",
     "smoke:remediation-tasks": "tsx scripts/smoke-remediation-tasks.ts",
+    "smoke:helios-evidence-lifecycle": "tsx scripts/smoke-helios-evidence-lifecycle.ts",
     "smoke:policy-evidence-loop": "tsx scripts/smoke-policy-evidence-loop.ts",
     "smoke:evidence-state-transitions": "tsx scripts/smoke-evidence-state-transitions.ts",
     "smoke:authenticated-primary-flow": "tsx scripts/smoke-authenticated-primary-flow.ts",
