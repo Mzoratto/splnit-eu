@@ -1,0 +1,1 @@
+ALTER TABLE "organisations" ALTER COLUMN "ico" SET DATA TYPE varchar(32);
