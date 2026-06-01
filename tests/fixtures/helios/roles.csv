@@ -1,0 +1,4 @@
+role,module,permission,business_owner,scope_note
+Operator,Manufacturing,read_write,Production Manager,shop-floor role
+HR,Payroll,read_write,HR Manager,payroll role
+Finance,Accounting,approve,CFO,financial close

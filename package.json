@@ -73,6 +73,8 @@
     "smoke:helios-evidence-provenance": "tsx scripts/smoke-helios-evidence-provenance.ts",
     "smoke:helios-live-attestation": "tsx scripts/smoke-helios-live-attestation.ts",
     "smoke:helios-agency-progress": "tsx scripts/smoke-helios-agency-progress.ts",
+    "smoke:helios-csv-parser": "tsx scripts/smoke-helios-csv-parser.ts",
+    "smoke:helios-csv-import": "tsx scripts/smoke-helios-csv-import.ts",
     "seed:helios-controls": "tsx scripts/seed-helios-controls.ts",
     "smoke:helios-control-seeding": "tsx scripts/smoke-helios-control-seeding.ts",
     "smoke:policy-evidence-loop": "tsx scripts/smoke-policy-evidence-loop.ts",

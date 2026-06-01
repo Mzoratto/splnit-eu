@@ -1,0 +1,4 @@
+username,display_name,active,last_login_at,role,employee_type,shared_account_flag,notes
+jnovak,Jan Novak,true,2026-05-20,Operator,employee,false,day shift
+operator_shared,Smena Operator,true,2026-05-28,Operator,employee,true,shared workstation
+vendor_svc,Vendor Service,true,2026-04-15,Service,contractor,false,external support
