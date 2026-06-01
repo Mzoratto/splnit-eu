@@ -377,7 +377,7 @@
       "setupPending": "Dokončete vstupní dotazník, abyste viděli použitelné kontroly, prioritní mezery a další kroky."
     },
     "aiActWizardCta": "Spustit průvodce EU AI Act",
-    "scoreLabel": "Skóre",
+    "scoreLabel": "Skóre připravenosti",
     "general": "Obecné",
     "onboarding": {
       "eyebrow": "Řízené nastavení",
@@ -394,18 +394,18 @@
         "Intake",
         "Framework",
         "Integrace",
-        "První důkaz"
+        "První důkaz nebo mezera"
       ],
       "stepHints": [
         "Určí relevantní kontroly",
         "Aktivujte GDPR, NIS2, ISO",
         "Připojte první zdroj",
-        "Nahrajte první důkaz"
+        "Přidejte důkaz nebo označte mezeru"
       ],
       "stepDetails": [
         {
           "title": "Vyplňte intake dotazník",
-          "description": "15minutový průvodce určí, které kontroly a frameworky jsou pro vaši organizaci relevantní. Bez tohoto kroku nelze spolehlivě spočítat compliance skóre.",
+          "description": "15minutový průvodce určí, které kontroly a frameworky jsou pro vaši organizaci relevantní. Bez tohoto kroku nelze spolehlivě spočítat skóre připravenosti.",
           "time": "~15 minut",
           "unlocks": "Odemkne: frameworky, kontroly a prioritní mezery",
           "button": "Zahájit intake"
@@ -419,31 +419,36 @@
         },
         {
           "title": "Připojte první integraci",
-          "description": "Propojte Microsoft 365, GitHub, AWS, Hetzner Cloud, OVHcloud nebo ABRA Flexi, aby se důkazy začaly sbírat automaticky.",
+          "description": "Propojte podporovanou integraci, aby Splnit mohl načíst dostupné technické signály. Ostatní důkazy doplníte ručně jako dokument, screenshot, export nebo poznámku.",
           "time": "~10 minut",
-          "unlocks": "Odemkne: automatické testy",
+          "unlocks": "Odemkne: dostupné technické signály",
           "button": "Připojit integraci"
         },
         {
-          "title": "Nahrajte první důkaz",
-          "description": "Vyberte jednu prioritní mezeru a nahrajte dokument, screenshot nebo poznámku. Tím se aktivuje smysluplné skóre.",
+          "title": "Přidejte první důkaz nebo mezeru",
+          "description": "Vyberte jednu prioritní mezeru a přidejte dokument, screenshot, export nebo poznámku. Pokud důkaz zatím nemáte, označte mezeru — i to je správný výsledek.",
           "time": "~5 minut",
-          "unlocks": "Aktivuje: compliance skóre",
-          "button": "Nahrát důkaz"
+          "unlocks": "Aktivuje: skóre připravenosti",
+          "button": "Přidat důkaz nebo mezeru"
         }
-      ]
+      ],
+      "evidenceHelper": {
+        "title": "Co je důkaz?",
+        "body": "Důkaz je cokoli, co pomáhá doložit, že proces existuje nebo že riziko řídíte: dokument, screenshot, export, smlouva, nastavení systému, seznam uživatelů, záznam školení nebo krátká poznámka.",
+        "missing": "Pokud důkaz nemáte, označte mezeru. Splnit má ukázat, co chybí — ne předstírat splnění."
+      }
     },
     "statusLabels": {
       "fail": "K opravě",
-      "manualReview": "V revizi",
+      "manualReview": "Vyžaduje revizi",
       "outOfScope": "Mimo rozsah",
-      "pass": "V souladu",
+      "pass": "Doloženo",
       "toAssess": "K posouzení"
     },
     "metrics": {
-      "scoreTitle": "Compliance skóre",
-      "scoreBody": "Průměr skóre frameworků a stavů kontrol.",
-      "scorePendingBody": "Dostupné po intake a prvním posouzení kontrol.",
+      "scoreTitle": "Skóre připravenosti",
+      "scoreBody": "Orientační souhrn stavů frameworků a kontrol podle doložených podkladů.",
+      "scorePendingBody": "Dostupné po intake a prvním posouzení kontrol nebo důkazů.",
       "pendingScore": "Čeká",
       "activeFrameworks": "Aktivní frameworky",
       "failedControls": "Nesplněné kontroly",

@@ -506,36 +506,57 @@ export default async function DashboardPage({
             })}
           </div>
 
-          <div className="mt-5 rounded-md border border-primary/20 bg-primary/5 p-4">
-            <div className="flex flex-col gap-4 md:flex-row md:items-start">
-              <div className="grid h-10 w-10 shrink-0 place-items-center rounded-md bg-primary text-primary-foreground">
-                <CheckCircle2 className="h-5 w-5" aria-hidden="true" strokeWidth={1.7} />
-              </div>
-              <div className="min-w-0 flex-1">
-                <h2 className="text-base font-medium">{activeOnboardingDetail.title}</h2>
-                <p className="mt-1 max-w-3xl text-sm leading-6 text-foreground/64">
-                  {activeOnboardingDetail.description}
-                </p>
-                <div className="mt-3 flex flex-wrap gap-2">
-                  <span className="rounded-full border border-border bg-background px-3 py-1 text-xs text-foreground/58">
-                    {activeOnboardingDetail.time}
-                  </span>
-                  <span className="rounded-full border border-border bg-background px-3 py-1 text-xs text-foreground/58">
-                    {activeOnboardingDetail.unlocks}
-                  </span>
+          <div className="mt-5 grid gap-3 lg:grid-cols-[minmax(0,1.35fr)_minmax(280px,0.65fr)]">
+            <div className="rounded-md border border-primary/20 bg-primary/5 p-4">
+              <div className="flex flex-col gap-4 md:flex-row md:items-start">
+                <div className="grid h-10 w-10 shrink-0 place-items-center rounded-md bg-primary text-primary-foreground">
+                  <CheckCircle2 className="h-5 w-5" aria-hidden="true" strokeWidth={1.7} />
                 </div>
-                {useDemoData || dataNotice ? (
-                  <p className="mt-3 inline-flex max-w-3xl items-start gap-2 rounded-md border border-border bg-background px-3 py-2 text-xs leading-5 text-foreground/58">
-                    <Info className="mt-0.5 h-3.5 w-3.5 shrink-0" aria-hidden="true" strokeWidth={1.7} />
-                    {copy.onboarding.demoNote}
+                <div className="min-w-0 flex-1">
+                  <h2 className="text-base font-medium">{activeOnboardingDetail.title}</h2>
+                  <p className="mt-1 max-w-3xl text-sm leading-6 text-foreground/64">
+                    {activeOnboardingDetail.description}
                   </p>
-                ) : null}
+                  <div className="mt-3 flex flex-wrap gap-2">
+                    <span className="rounded-full border border-border bg-background px-3 py-1 text-xs text-foreground/58">
+                      {activeOnboardingDetail.time}
+                    </span>
+                    <span className="rounded-full border border-border bg-background px-3 py-1 text-xs text-foreground/58">
+                      {activeOnboardingDetail.unlocks}
+                    </span>
+                  </div>
+                  {useDemoData || dataNotice ? (
+                    <p className="mt-3 inline-flex max-w-3xl items-start gap-2 rounded-md border border-border bg-background px-3 py-2 text-xs leading-5 text-foreground/58">
+                      <Info className="mt-0.5 h-3.5 w-3.5 shrink-0" aria-hidden="true" strokeWidth={1.7} />
+                      {copy.onboarding.demoNote}
+                    </p>
+                  ) : null}
+                </div>
+                <Link href={setupCta.href} className="btn btn-primary md:mt-1">
+                  {activeOnboardingDetail.button}
+                  <ArrowRight className="h-4 w-4" aria-hidden="true" strokeWidth={1.5} />
+                </Link>
               </div>
-              <Link href={setupCta.href} className="btn btn-primary md:mt-1">
-                {activeOnboardingDetail.button}
-                <ArrowRight className="h-4 w-4" aria-hidden="true" strokeWidth={1.5} />
-              </Link>
             </div>
+
+            <aside className="rounded-md border border-border bg-background p-4" aria-labelledby="evidence-helper-title">
+              <div className="flex items-start gap-3">
+                <div className="grid h-9 w-9 shrink-0 place-items-center rounded-md border border-border bg-surface text-primary">
+                  <Info className="h-4 w-4" aria-hidden="true" strokeWidth={1.7} />
+                </div>
+                <div>
+                  <h2 id="evidence-helper-title" className="text-sm font-medium">
+                    {copy.onboarding.evidenceHelper.title}
+                  </h2>
+                  <p className="mt-1 text-sm leading-6 text-foreground/62">
+                    {copy.onboarding.evidenceHelper.body}
+                  </p>
+                  <p className="mt-2 text-xs leading-5 text-foreground/52">
+                    {copy.onboarding.evidenceHelper.missing}
+                  </p>
+                </div>
+              </div>
+            </aside>
           </div>
         </section>
       ) : (
@@ -927,13 +948,15 @@ export default async function DashboardPage({
           ))}
         </div>
       </section>
-      <Link
-        href={setupCta.href}
-        className="btn btn-primary fixed inset-x-4 bottom-[calc(5.25rem+env(safe-area-inset-bottom))] z-40 min-h-12 lg:hidden"
-      >
-        {setupCta.label}
-        <ArrowRight className="h-4 w-4" aria-hidden="true" strokeWidth={1.5} />
-      </Link>
+      <div className="lg:hidden">
+        <Link
+          href={setupCta.href}
+          className="btn btn-primary fixed inset-x-4 bottom-[calc(5.25rem+env(safe-area-inset-bottom))] z-40 min-h-12"
+        >
+          {setupCta.label}
+          <ArrowRight className="h-4 w-4" aria-hidden="true" strokeWidth={1.5} />
+        </Link>
+      </div>
     </section>
   );
 }

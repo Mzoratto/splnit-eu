@@ -377,7 +377,7 @@
       "setupPending": "Complete the intake to see applicable controls, priority gaps, and next actions."
     },
     "aiActWizardCta": "Start AI Act wizard",
-    "scoreLabel": "Score",
+    "scoreLabel": "Readiness score",
     "general": "General",
     "onboarding": {
       "eyebrow": "Guided setup",
@@ -394,18 +394,18 @@
         "Intake",
         "Framework",
         "Integration",
-        "First evidence"
+        "First proof or gap"
       ],
       "stepHints": [
         "Defines relevant controls",
         "Activate GDPR, NIS2, ISO",
         "Connect first source",
-        "Upload first proof"
+        "Add proof or mark a gap"
       ],
       "stepDetails": [
         {
           "title": "Complete the intake questionnaire",
-          "description": "A roughly 15-minute guide identifies which controls and frameworks apply to your organisation. Without this step, the compliance score is not reliable.",
+          "description": "A roughly 15-minute guide identifies which controls and frameworks apply to your organisation. Without this step, the readiness score is not reliable.",
           "time": "~15 minutes",
           "unlocks": "Unlocks: frameworks, controls, and priority gaps",
           "button": "Start intake"
@@ -419,31 +419,36 @@
         },
         {
           "title": "Connect the first integration",
-          "description": "Connect Microsoft 365, GitHub, AWS, Hetzner Cloud, OVHcloud, or ABRA Flexi so evidence can start collecting automatically.",
+          "description": "Connect a supported integration so Splnit can read available technical signals. Other proof can be added manually as a document, screenshot, export, or note.",
           "time": "~10 minutes",
-          "unlocks": "Unlocks: automated checks",
+          "unlocks": "Unlocks: available technical signals",
           "button": "Connect integration"
         },
         {
-          "title": "Upload the first evidence",
-          "description": "Choose one priority gap and upload a document, screenshot, or note. This makes the score meaningful.",
+          "title": "Add the first proof or gap",
+          "description": "Choose one priority gap and add a document, screenshot, export, or note. If you do not have proof yet, mark the gap — that is a valid outcome.",
           "time": "~5 minutes",
-          "unlocks": "Activates: compliance score",
-          "button": "Upload evidence"
+          "unlocks": "Activates: readiness score",
+          "button": "Add proof or gap"
         }
-      ]
+      ],
+      "evidenceHelper": {
+        "title": "What counts as proof?",
+        "body": "Proof can be anything that helps show a process exists or a risk is managed: a document, screenshot, export, contract, system setting, user list, training record, or short note.",
+        "missing": "If you do not have proof, mark the gap. Splnit should show what is missing — not pretend the control is complete."
+      }
     },
     "statusLabels": {
       "fail": "Needs correction",
-      "manualReview": "In review",
+      "manualReview": "Needs review",
       "outOfScope": "Out of scope",
-      "pass": "Compliant",
+      "pass": "Documented",
       "toAssess": "To assess"
     },
     "metrics": {
-      "scoreTitle": "Compliance score",
-      "scoreBody": "Average of framework scores and control statuses.",
-      "scorePendingBody": "Available after intake and first control assessments.",
+      "scoreTitle": "Readiness score",
+      "scoreBody": "Indicative summary of framework and control states based on documented inputs.",
+      "scorePendingBody": "Available after intake and first control or proof assessments.",
       "pendingScore": "Pending",
       "activeFrameworks": "Active frameworks",
       "failedControls": "Controls not passed",

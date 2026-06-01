@@ -377,7 +377,7 @@
       "setupPending": "Completa l'intake per vedere controlli applicabili, gap prioritari e prossime azioni."
     },
     "aiActWizardCta": "Avvia wizard AI Act",
-    "scoreLabel": "Punteggio",
+    "scoreLabel": "Punteggio di preparazione",
     "general": "Generale",
     "onboarding": {
       "eyebrow": "Avvio guidato",
@@ -394,18 +394,18 @@
         "Intake",
         "Framework",
         "Integrazione",
-        "Prima evidenza"
+        "Prima prova o gap"
       ],
       "stepHints": [
         "Definisce i controlli rilevanti",
         "Attiva GDPR, NIS2, ISO",
         "Collega la prima fonte",
-        "Carica la prima prova"
+        "Aggiungi prova o segna un gap"
       ],
       "stepDetails": [
         {
           "title": "Completa il questionario intake",
-          "description": "Un percorso di circa 15 minuti identifica quali controlli e framework sono rilevanti per la tua organizzazione. Senza questo passaggio il punteggio compliance non è affidabile.",
+          "description": "Un percorso di circa 15 minuti identifica quali controlli e framework sono rilevanti per la tua organizzazione. Senza questo passaggio il punteggio di preparazione non è affidabile.",
           "time": "~15 minuti",
           "unlocks": "Sblocca: framework, controlli e gap prioritari",
           "button": "Avvia intake"
@@ -419,31 +419,36 @@
         },
         {
           "title": "Collega la prima integrazione",
-          "description": "Collega Microsoft 365, GitHub, AWS, Hetzner Cloud, OVHcloud o ABRA Flexi per iniziare a raccogliere evidenze automaticamente.",
+          "description": "Collega un’integrazione supportata così Splnit può leggere i segnali tecnici disponibili. Le altre prove si aggiungono manualmente come documento, screenshot, export o nota.",
           "time": "~10 minuti",
-          "unlocks": "Sblocca: test automatici",
+          "unlocks": "Sblocca: segnali tecnici disponibili",
           "button": "Collega integrazione"
         },
         {
-          "title": "Carica la prima evidenza",
-          "description": "Scegli un gap prioritario e carica un documento, screenshot o nota. Questo rende il punteggio significativo.",
+          "title": "Aggiungi la prima prova o gap",
+          "description": "Scegli un gap prioritario e aggiungi un documento, screenshot, export o nota. Se non hai ancora una prova, segna il gap: è un risultato valido.",
           "time": "~5 minuti",
-          "unlocks": "Attiva: punteggio compliance",
-          "button": "Carica evidenza"
+          "unlocks": "Attiva: punteggio di preparazione",
+          "button": "Aggiungi prova o gap"
         }
-      ]
+      ],
+      "evidenceHelper": {
+        "title": "Cosa conta come prova?",
+        "body": "Una prova è qualsiasi elemento che aiuta a dimostrare che un processo esiste o che un rischio è gestito: documento, screenshot, export, contratto, impostazione di sistema, elenco utenti, registro formazione o breve nota.",
+        "missing": "Se non hai una prova, segna il gap. Splnit deve mostrare cosa manca, non fingere che il controllo sia completo."
+      }
     },
     "statusLabels": {
       "fail": "Da correggere",
-      "manualReview": "In revisione",
+      "manualReview": "Richiede revisione",
       "outOfScope": "Fuori ambito",
-      "pass": "Conforme",
+      "pass": "Documentato",
       "toAssess": "Da valutare"
     },
     "metrics": {
-      "scoreTitle": "Punteggio compliance",
-      "scoreBody": "Media dei punteggi framework e degli stati dei controlli.",
-      "scorePendingBody": "Disponibile dopo intake e valutazione dei primi controlli.",
+      "scoreTitle": "Punteggio di preparazione",
+      "scoreBody": "Sintesi indicativa degli stati di framework e controlli in base agli elementi documentati.",
+      "scorePendingBody": "Disponibile dopo intake e prime valutazioni di controlli o prove.",
       "pendingScore": "In attesa",
       "activeFrameworks": "Framework attivi",
       "failedControls": "Controlli non superati",
