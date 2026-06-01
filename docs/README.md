@@ -27,6 +27,7 @@
 - `operations/` - launch, export, offboarding, and support runbooks.
 - `product/business-entitlement-matrix.md` - plan entitlement and claim-boundary source.
 - `product/splnit-product-status.md` - current product summary, functional status, live gaps, and NÚKIB/SME claim boundaries.
+- `product/new-user-dashboard-response-playbook.md` - founder/support study guide for answering “I registered and I am on the dashboard, what next?”
 
 ### Localization
 
