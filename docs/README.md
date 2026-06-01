@@ -26,6 +26,7 @@
 - `legal-reviews/` - Czech/Italian mapping and template review queues/results.
 - `operations/` - launch, export, offboarding, and support runbooks.
 - `product/business-entitlement-matrix.md` - plan entitlement and claim-boundary source.
+- `product/splnit-product-status.md` - current product summary, functional status, live gaps, and NÚKIB/SME claim boundaries.
 
 ### Localization
 
