@@ -717,6 +717,69 @@ export const riskItems = pgTable("risk_items", {
   updatedAt: timestamp("updated_at", { withTimezone: true }).defaultNow(),
 });
 
+export type RemediationTaskSourceType =
+  | "workspace_evidence_stale"
+  | "workspace_gap"
+  | "helios_csv_change"
+  | "workspace_review_due";
+
+export type RemediationTaskStatus = "open" | "in_progress" | "resolved" | "dismissed";
+export type RemediationTaskSeverity = "low" | "medium" | "high";
+
+export const remediationTasks = pgTable(
+  "remediation_tasks",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    clerkOrgId: text("clerk_org_id")
+      .notNull()
+      .references(() => organisations.clerkOrgId, { onDelete: "cascade" }),
+    controlId: uuid("control_id")
+      .notNull()
+      .references(() => controls.id),
+    controlKey: text("control_key").notNull(),
+    sourceType: text("source_type").$type<RemediationTaskSourceType>().notNull(),
+    sourceKey: text("source_key").notNull(),
+    title: text("title").notNull(),
+    description: text("description"),
+    frameworkRefs: jsonb("framework_refs")
+      .$type<Record<string, unknown>[]>()
+      .notNull()
+      .default([]),
+    severity: text("severity").$type<RemediationTaskSeverity>().notNull().default("medium"),
+    status: text("status").$type<RemediationTaskStatus>().notNull().default("open"),
+    dueDate: date("due_date"),
+    metadata: jsonb("metadata").$type<Record<string, unknown>>().notNull().default({}),
+    createdAt: timestamp("created_at", { withTimezone: true }).defaultNow(),
+    updatedAt: timestamp("updated_at", { withTimezone: true }).defaultNow(),
+  },
+  (table) => [
+    unique("remediation_tasks_source_unique").on(
+      table.clerkOrgId,
+      table.controlId,
+      table.sourceType,
+      table.sourceKey,
+    ),
+    index("idx_remediation_tasks_org_status_due").on(
+      table.clerkOrgId,
+      table.status,
+      table.dueDate,
+    ),
+    index("idx_remediation_tasks_org_control").on(table.clerkOrgId, table.controlKey),
+    check(
+      "remediation_tasks_source_type_check",
+      sql`${table.sourceType} IN ('workspace_evidence_stale', 'workspace_gap', 'helios_csv_change', 'workspace_review_due')`,
+    ),
+    check(
+      "remediation_tasks_status_check",
+      sql`${table.status} IN ('open', 'in_progress', 'resolved', 'dismissed')`,
+    ),
+    check(
+      "remediation_tasks_severity_check",
+      sql`${table.severity} IN ('low', 'medium', 'high')`,
+    ),
+  ],
+);
+
 export const trustCenters = pgTable("trust_centers", {
   id: uuid("id").primaryKey().defaultRandom(),
   clerkOrgId: text("clerk_org_id")
@@ -1068,6 +1131,7 @@ export type Evidence = typeof evidence.$inferSelect;
 export type EmployeeTrainingRecord = typeof employeeTrainingRecords.$inferSelect;
 export type FeatureFlag = typeof featureFlags.$inferSelect;
 export type GeneratedArtifact = typeof generatedArtifacts.$inferSelect;
+export type RemediationTask = typeof remediationTasks.$inferSelect;
 export type MappingReviewQueueItem = typeof mappingReviewQueue.$inferSelect;
 export type MappingPromotionAudit = typeof mappingPromotionAudit.$inferSelect;
 export type AuditLog = typeof auditLogs.$inferSelect;

@@ -197,6 +197,13 @@
       "when": 1780177874665,
       "tag": "0027_drop_ico_format_check",
       "breakpoints": true
+    },
+    {
+      "idx": 28,
+      "version": "7",
+      "when": 1780319613513,
+      "tag": "0028_great_wasp",
+      "breakpoints": true
     }
   ]
 }
