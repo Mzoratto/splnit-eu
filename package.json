@@ -158,7 +158,8 @@
     "smoke:t4b-safety-gates": "tsx scripts/smoke-t4b-safety-gates.ts",
     "smoke:manual-evidence-status-propagation": "tsx scripts/smoke-manual-evidence-status-propagation.ts",
     "smoke:t4c-offboarding-source": "tsx scripts/smoke-t4c-offboarding-source.ts",
-    "smoke:t4d-integration-workspace-correctness": "tsx scripts/smoke-t4d-integration-workspace-correctness.ts"
+    "smoke:t4d-integration-workspace-correctness": "tsx scripts/smoke-t4d-integration-workspace-correctness.ts",
+    "smoke:t4e-plan-entitlements-source": "tsx scripts/smoke-t4e-plan-entitlements-source.ts"
   },
   "dependencies": {
     "@aws-sdk/client-cloudtrail": "^3.1056.0",

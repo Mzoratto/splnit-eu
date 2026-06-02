@@ -123,7 +123,7 @@ async function main() {
         lastReviewed,
         locale: definition.sourceDocument.locale,
         officialText,
-        reviewStatus: "reviewed",
+        reviewStatus: "draft",
         sourceDocumentId,
         title: definition.sourceDocument.title,
         updatedAt: new Date(),
@@ -137,7 +137,7 @@ async function main() {
           jurisdiction: definition.sourceDocument.jurisdiction,
           lastReviewed,
           officialText,
-          reviewStatus: "reviewed",
+          reviewStatus: "draft",
           title: definition.sourceDocument.title,
           updatedAt: new Date(),
         },
@@ -146,7 +146,7 @@ async function main() {
     imported += 1;
   }
 
-  console.log(`Imported ${imported} reviewed Italian GDPR Garante guidance rows.`);
+  console.log(`Imported ${imported} draft Italian GDPR Garante guidance rows.`);
 }
 
 main().catch((error: unknown) => {

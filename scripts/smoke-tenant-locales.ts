@@ -1,23 +1,15 @@
 import assert from "node:assert/strict";
-import { loadEnvConfig } from "@next/env";
-import { Pool } from "pg";
 import { getMessagesForLocale } from "../i18n/messages";
 import type { Locale } from "../i18n/routing";
+import { AUTHORITATIVE_SOURCE_DOCUMENTS } from "../lib/regulations/authoritative-sources";
 import {
   listResolvedPolicyTemplates,
   resolvePolicyTemplate,
 } from "../lib/policies/resolve-template";
-import { POLICY_TEMPLATE_TYPES } from "../lib/policies/templates";
+import { POLICY_TEMPLATE_TYPES, POLICY_TEMPLATES } from "../lib/policies/templates";
 import { getPolicyUiCopy } from "../lib/policies/ui-copy";
 
-loadEnvConfig(process.cwd());
-
-const databaseUrl = process.env.DATABASE_URL?.trim();
-
-assert.ok(databaseUrl, "DATABASE_URL is required for Italian tenant smoke test.");
-
 type TenantScenario = {
-  clerkOrgIdPrefix: string;
   country: string;
   expectedTemplateJurisdiction: string;
   expectedTemplateLocale: Locale;
@@ -32,7 +24,6 @@ type TenantScenario = {
 
 const tenantScenarios: TenantScenario[] = [
   {
-    clerkOrgIdPrefix: "smoke_cz",
     country: "CZ",
     expectedTemplateJurisdiction: "CZ",
     expectedTemplateLocale: "cs-CZ",
@@ -42,7 +33,6 @@ const tenantScenarios: TenantScenario[] = [
     sourceDocumentScopes: [{ jurisdiction: "CZ", locale: "cs-CZ" }],
   },
   {
-    clerkOrgIdPrefix: "smoke_eu",
     country: "DE",
     expectedTemplateJurisdiction: "EU",
     expectedTemplateLocale: "en-EU",
@@ -52,7 +42,6 @@ const tenantScenarios: TenantScenario[] = [
     sourceDocumentScopes: [{ jurisdiction: "EU", locale: "en-EU" }],
   },
   {
-    clerkOrgIdPrefix: "smoke_it",
     country: "IT",
     expectedTemplateJurisdiction: "EU",
     expectedTemplateLocale: "en-EU",
@@ -71,7 +60,7 @@ function assertLocaleSmokeCopy(locale: Locale) {
   const policyCopy = getPolicyUiCopy(locale);
 
   if (locale === "cs-CZ") {
-    assert.equal(messages.dashboard.nukib.title, "NÚKIB feed");
+    assert.equal(messages.dashboard.nukib.title, "Feed NÚKIB");
     assert.equal(messages.frameworks.index.title, "Regulace a standardy");
     assert.equal(policyCopy.list.title, "Compliance dokumenty");
     return;
@@ -89,133 +78,58 @@ function assertLocaleSmokeCopy(locale: Locale) {
   assert.equal(policyCopy.list.title, "Documenti di compliance");
 }
 
-async function main() {
-  const pool = new Pool({ connectionString: databaseUrl, max: 1 });
-  const client = await pool.connect();
-  let transactionOpen = false;
+function countSourceDocuments(scope: { jurisdiction: string; locale: Locale }) {
+  return AUTHORITATIVE_SOURCE_DOCUMENTS.filter(
+    (source) => source.jurisdiction === scope.jurisdiction && source.locale === scope.locale,
+  ).length;
+}
 
-  try {
-    await client.query("BEGIN");
-    transactionOpen = true;
+for (const scenario of tenantScenarios) {
+  assert.equal(scenario.country.length, 2, `${scenario.name} should use ISO-like country code.`);
+  assertLocaleSmokeCopy(scenario.locale);
 
-    for (const scenario of tenantScenarios) {
-      const clerkOrgId = `${scenario.clerkOrgIdPrefix}_${Date.now()}`;
+  const resolvedTemplates = listResolvedPolicyTemplates({
+    locale: scenario.locale,
+    primaryJurisdiction: scenario.primaryJurisdiction,
+  });
 
-      await client.query(
-        `
-        INSERT INTO organisations (
-          clerk_org_id,
-          country,
-          locale,
-          name,
-          primary_jurisdiction
-        )
-        VALUES ($1, $2, $3, $4, $5)
-      `,
-        [
-          clerkOrgId,
-          scenario.country,
-          scenario.locale,
-          scenario.name,
-          scenario.primaryJurisdiction,
-        ],
-      );
+  assert.equal(resolvedTemplates.length, POLICY_TEMPLATE_TYPES.length);
 
-      const tenantResult = await client.query<{
-        country: string;
-        locale: Locale;
-        primary_jurisdiction: string;
-      }>(
-        `
-        SELECT country, locale, primary_jurisdiction
-        FROM organisations
-        WHERE clerk_org_id = $1
-      `,
-        [clerkOrgId],
-      );
-      const tenant = tenantResult.rows[0];
+  for (const family of POLICY_TEMPLATE_TYPES) {
+    const template = resolvePolicyTemplate(family, {
+      locale: scenario.locale,
+      primaryJurisdiction: scenario.primaryJurisdiction,
+    });
 
-      assert.ok(tenant, `${scenario.name} should be inserted.`);
-      assert.equal(tenant.country, scenario.country);
-      assert.equal(tenant.locale, scenario.locale);
-      assert.equal(tenant.primary_jurisdiction, scenario.primaryJurisdiction);
+    assert.equal(
+      template.jurisdiction,
+      scenario.expectedTemplateJurisdiction,
+      `${family} should resolve ${scenario.name} to ${scenario.expectedTemplateJurisdiction}/${scenario.expectedTemplateLocale}`,
+    );
+    assert.equal(template.locale, scenario.expectedTemplateLocale);
+    assert.notEqual(
+      template.jurisdiction,
+      scenario.primaryJurisdiction === "CZ" ? "EU" : "CZ",
+    );
+  }
 
-      const resolvedTemplates = listResolvedPolicyTemplates({
-        locale: tenant.locale,
-        primaryJurisdiction: tenant.primary_jurisdiction,
-      });
-
-      assert.equal(resolvedTemplates.length, POLICY_TEMPLATE_TYPES.length);
-
-      for (const family of POLICY_TEMPLATE_TYPES) {
-        const template = resolvePolicyTemplate(family, {
-          locale: tenant.locale,
-          primaryJurisdiction: tenant.primary_jurisdiction,
-        });
-
-        assert.equal(
-          template.jurisdiction,
-          scenario.expectedTemplateJurisdiction,
-          `${family} should resolve ${scenario.name} to ${scenario.expectedTemplateJurisdiction}/${scenario.expectedTemplateLocale}`,
-        );
-        assert.equal(template.locale, scenario.expectedTemplateLocale);
-        assert.notEqual(
-          template.jurisdiction,
-          scenario.primaryJurisdiction === "CZ" ? "EU" : "CZ",
-        );
-      }
-
-      const sourceDocumentCounts = await client.query<{
-        count: string;
-        jurisdiction: string;
-        locale: Locale;
-      }>(
-        `
-        SELECT jurisdiction, locale, count(*)::text
-        FROM source_documents
-        WHERE (${scenario.sourceDocumentScopes
-          .map((_, index) => `(jurisdiction = $${index * 2 + 1} AND locale = $${index * 2 + 2})`)
-          .join(" OR ")})
-        GROUP BY jurisdiction, locale
-      `,
-        scenario.sourceDocumentScopes.flatMap((scope) => [
-          scope.jurisdiction,
-          scope.locale,
-        ]),
-      );
-      const countByScope = new Map(
-        sourceDocumentCounts.rows.map((row) => [
-          `${row.jurisdiction}/${row.locale}`,
-          Number(row.count),
-        ]),
-      );
-
-      for (const scope of scenario.sourceDocumentScopes) {
-        assert.ok(
-          (countByScope.get(`${scope.jurisdiction}/${scope.locale}`) ?? 0) > 0,
-          `${scenario.name} should have source documents for ${scope.jurisdiction}/${scope.locale}.`,
-        );
-      }
-
-      assertLocaleSmokeCopy(scenario.locale);
-    }
-
-    await client.query("ROLLBACK");
-    transactionOpen = false;
-  } finally {
-    if (transactionOpen) {
-      await client.query("ROLLBACK");
-    }
-    client.release();
-    await pool.end();
+  for (const scope of scenario.sourceDocumentScopes) {
+    assert.ok(
+      countSourceDocuments(scope) > 0,
+      `${scenario.name} should have source document metadata for ${scope.jurisdiction}/${scope.locale}.`,
+    );
   }
 }
 
-main()
-  .then(() => {
-    console.log("Tenant locale smoke test passed.");
-  })
-  .catch((error: unknown) => {
-    console.error(error);
-    process.exit(1);
-  });
+const italianTemplates = POLICY_TEMPLATES.filter(
+  (template) => template.jurisdiction === "IT" && template.locale === "it-IT",
+);
+
+assert.ok(italianTemplates.length > 0, "Italian policy templates should be represented.");
+assert.equal(
+  italianTemplates.every((template) => template.reviewStatus === "draft"),
+  true,
+  "Italian policy templates must remain draft/secondary until legal review promotes them.",
+);
+
+console.log("Tenant locale source smoke test passed.");

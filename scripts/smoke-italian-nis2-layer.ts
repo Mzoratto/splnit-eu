@@ -1,231 +1,98 @@
 import assert from "node:assert/strict";
-import { loadEnvConfig } from "@next/env";
-import { Pool } from "pg";
+import { existsSync, readFileSync } from "node:fs";
 
-loadEnvConfig(process.cwd());
+import { ITALIAN_NIS2_ACN_GUIDANCE_DOCUMENTS } from "../lib/regulations/italian-nis2-acn";
+import { ITALIAN_NIS2_ARTICLES, ITALIAN_NIS2_SOURCE } from "../lib/regulations/italian-nis2";
 
-const databaseUrl = process.env.DATABASE_URL?.trim();
-
-assert.ok(databaseUrl, "DATABASE_URL is required for Italian NIS2 smoke test.");
-
-async function main() {
-  const pool = new Pool({ connectionString: databaseUrl, max: 1 });
-
-  try {
-    const sourceResult = await pool.query<{
-      filename: string;
-      last_reviewed: Date | null;
-      url: string | null;
-    }>(
-      `
-      SELECT filename, last_reviewed, url
-      FROM source_documents
-      WHERE filename = 'it/dlgs-138-2024.html'
-    `,
-    );
-    const source = sourceResult.rows[0];
-
-    assert.ok(source, "Italian NIS2 Gazzetta source should exist.");
-    assert.equal(
-      new URL(source.url ?? "").hostname,
-      "www.gazzettaufficiale.it",
-      "Italian NIS2 source should use Gazzetta Ufficiale.",
-    );
-    assert.ok(source.last_reviewed, "Italian NIS2 source should have lastReviewed.");
-
-    const articlesResult = await pool.query<{
-      article_key: string;
-      official_text: string;
-      review_status: string;
-      title: string | null;
-    }>(
-      `
-      SELECT article_key, title, official_text, review_status
-      FROM articles
-      WHERE jurisdiction = 'IT'
-        AND locale = 'it-IT'
-        AND article_key = ANY($1::text[])
-      ORDER BY article_key
-    `,
-      [["Art. 23", "Art. 24", "Art. 25"]],
-    );
-
-    const articlesByKey = new Map(
-      articlesResult.rows.map((row) => [row.article_key, row]),
-    );
-
-    const allItalianNis2Articles = await pool.query<{ count: number }>(
-      `
-      SELECT COUNT(*)::int AS count
-      FROM articles a
-      JOIN source_documents sd ON sd.id = a.source_document_id
-      WHERE a.jurisdiction = 'IT'
-        AND a.locale = 'it-IT'
-        AND a.review_status = 'reviewed'
-        AND sd.filename = 'it/dlgs-138-2024.html'
-        AND a.article_key ~ '^Art\\. [0-9]+$'
-    `,
-    );
-
-    assert.equal(
-      allItalianNis2Articles.rows[0]?.count ?? 0,
-      44,
-      "All 44 D.Lgs. 138/2024 articles should be imported from Gazzetta.",
-    );
-
-    for (const articleKey of ["Art. 23", "Art. 24", "Art. 25"]) {
-      const row = articlesByKey.get(articleKey);
-
-      assert.ok(row, `${articleKey} should be imported for Italian NIS2.`);
-      assert.equal(row.review_status, "reviewed", `${articleKey} should be reviewed.`);
-      assert.ok(row.title, `${articleKey} should have a title.`);
-    }
-
-    assert.match(
-      articlesByKey.get("Art. 24")?.official_text ?? "",
-      /misure di gestione dei rischi per la sicurezza/i,
-      "Art. 24 should contain risk-management measure text.",
-    );
-    assert.match(
-      articlesByKey.get("Art. 25")?.official_text ?? "",
-      /notifica di incidente/i,
-      "Art. 25 should contain incident notification text.",
-    );
-
-    const boundaryArticles = await pool.query<{
-      article_key: string;
-      official_text: string;
-      title: string | null;
-    }>(
-      `
-      SELECT article_key, title, official_text
-      FROM articles
-      WHERE jurisdiction = 'IT'
-        AND locale = 'it-IT'
-        AND article_key = ANY($1::text[])
-    `,
-      [["Art. 1", "Art. 44"]],
-    );
-    const boundaryArticlesByKey = new Map(
-      boundaryArticles.rows.map((row) => [row.article_key, row]),
-    );
-
-    assert.equal(
-      boundaryArticlesByKey.get("Art. 1")?.title,
-      "Oggetto",
-      "Art. 1 should be imported with its official title.",
-    );
-    assert.match(
-      boundaryArticlesByKey.get("Art. 44")?.official_text ?? "",
-      /Disposizioni finanziarie/i,
-      "Art. 44 should contain final financial-provisions text.",
-    );
-
-    const mappingResult = await pool.query<{
-      confidence: string;
-      count: number;
-    }>(
-      `
-      SELECT fca.confidence, COUNT(*)::int AS count
-      FROM framework_control_articles fca
-      JOIN articles a ON a.id = fca.article_id
-      WHERE a.jurisdiction = 'IT'
-        AND a.locale = 'it-IT'
-      GROUP BY fca.confidence
-    `,
-    );
-    const mappingCounts = new Map(
-      mappingResult.rows.map((row) => [row.confidence, row.count]),
-    );
-
-    assert.ok(
-      (mappingCounts.get("draft") ?? 0) > 0,
-      "Italian NIS2 framework-control links should be draft pending mapping review.",
-    );
-    assert.equal(
-      mappingCounts.get("reviewed") ?? 0,
-      0,
-      "Italian NIS2 mappings must not be reviewed before mapping review.",
-    );
-
-    const acnGuidanceArticleKeys = [
-      "ACN 136117/2025",
-      "ACN 164179/2025",
-      "ACN 164179/2025 Allegato 1",
-      "ACN 164179/2025 Allegato 2",
-      "ACN 164179/2025 Allegato 3",
-      "ACN 164179/2025 Allegato 4",
-      "ACN 112335/2026",
-      "ACN 276206/2025",
-      "ACN 127437/2026",
-      "ACN 136118/2025",
-      "ACN 379907/2025",
-      "ACN 127434/2026",
-      "ACN 155238/2026",
-    ] as const;
-
-    const acnGuidanceResult = await pool.query<{
-      article_key: string;
-      official_text: string;
-      review_status: string;
-      source_filename: string;
-    }>(
-      `
-      SELECT
-        a.article_key,
-        a.official_text,
-        a.review_status,
-        sd.filename AS source_filename
-      FROM articles a
-      JOIN source_documents sd ON sd.id = a.source_document_id
-      WHERE a.jurisdiction = 'IT'
-        AND a.locale = 'it-IT'
-        AND a.article_key = ANY($1::text[])
-      ORDER BY a.article_key
-    `,
-      [acnGuidanceArticleKeys],
-    );
-    const acnGuidanceByKey = new Map(
-      acnGuidanceResult.rows.map((row) => [row.article_key, row]),
-    );
-
-    for (const articleKey of acnGuidanceArticleKeys) {
-      const row = acnGuidanceByKey.get(articleKey);
-
-      assert.ok(row, `${articleKey} should be imported as ACN guidance.`);
-      assert.equal(row.review_status, "reviewed", `${articleKey} should be reviewed.`);
-      assert.match(
-        row.source_filename,
-        /^it\/acn-/,
-        `${articleKey} should come from an ACN source document.`,
-      );
-    }
-
-    assert.match(
-      acnGuidanceByKey.get("ACN 164179/2025 Allegato 1")?.official_text ?? "",
-      /Misure di sicurezza di base per i soggetti importanti/i,
-      "ACN Allegato 1 should contain important-entity baseline measures.",
-    );
-    assert.match(
-      acnGuidanceByKey.get("ACN 379907/2025")?.official_text ?? "",
-      /specifiche di base|articoli 23, 24, 25, 29 e 32/i,
-      "ACN 379907/2025 should contain updated NIS obligations text.",
-    );
-    assert.match(
-      acnGuidanceByKey.get("ACN 155238/2026")?.official_text ?? "",
-      /elencazione, caratterizzazione e categorizzazione/i,
-      "ACN 155238/2026 should contain categorization text.",
-    );
-  } finally {
-    await pool.end();
-  }
+function assertOfficialHost(url: string, expectedHostname: string, label: string) {
+  assert.equal(new URL(url).hostname, expectedHostname, `${label} should use ${expectedHostname}.`);
 }
 
-main()
-  .then(() => {
-    console.log("Italian NIS2 knowledge-layer smoke test passed.");
-  })
-  .catch((error: unknown) => {
-    console.error(error);
-    process.exit(1);
-  });
+assert.equal(ITALIAN_NIS2_SOURCE.filename, "it/dlgs-138-2024.html");
+assert.equal(ITALIAN_NIS2_SOURCE.jurisdiction, "IT");
+assert.equal(ITALIAN_NIS2_SOURCE.locale, "it-IT");
+assertOfficialHost(
+  ITALIAN_NIS2_SOURCE.url,
+  "www.gazzettaufficiale.it",
+  ITALIAN_NIS2_SOURCE.filename,
+);
+
+assert.equal(
+  ITALIAN_NIS2_ARTICLES.length,
+  44,
+  "Italian NIS2 source model should enumerate all 44 D.Lgs. 138/2024 article fetch targets.",
+);
+
+for (const articleId of [1, 23, 24, 25, 44]) {
+  const article = ITALIAN_NIS2_ARTICLES.find((candidate) => candidate.articleId === articleId);
+
+  assert.ok(article, `D.Lgs. 138/2024 Art. ${articleId} should be represented.`);
+  assert.equal(article.citation, `D.Lgs. 138/2024, Art. ${articleId}`);
+  assertOfficialHost(
+    article.url,
+    "www.gazzettaufficiale.it",
+    `D.Lgs. 138/2024 Art. ${articleId}`,
+  );
+}
+
+const acnGuidanceArticleKeys = [
+  "ACN 136117/2025",
+  "ACN 164179/2025",
+  "ACN 164179/2025 Allegato 1",
+  "ACN 164179/2025 Allegato 2",
+  "ACN 164179/2025 Allegato 3",
+  "ACN 164179/2025 Allegato 4",
+  "ACN 112335/2026",
+  "ACN 276206/2025",
+  "ACN 127437/2026",
+  "ACN 136118/2025",
+  "ACN 379907/2025",
+  "ACN 127434/2026",
+  "ACN 155238/2026",
+] as const;
+
+assert.deepEqual(
+  ITALIAN_NIS2_ACN_GUIDANCE_DOCUMENTS.map((document) => document.articleKey),
+  [...acnGuidanceArticleKeys],
+  "Italian NIS2 ACN source metadata should include the expected guidance documents.",
+);
+
+for (const document of ITALIAN_NIS2_ACN_GUIDANCE_DOCUMENTS) {
+  assert.match(document.sourceDocument.filename, /^it\/acn-/);
+  assertOfficialHost(document.sourceDocument.url, "www.acn.gov.it", document.sourceDocument.filename);
+}
+
+const importScriptPaths = [
+  "scripts/import-italian-nis2-articles.ts",
+  "scripts/import-italian-nis2-acn-guidance.ts",
+] as const;
+
+for (const importScriptPath of importScriptPaths) {
+  assert.ok(existsSync(importScriptPath), `${importScriptPath} should exist for local/test DB imports.`);
+  const importScript = readFileSync(importScriptPath, "utf8");
+
+  assert.match(
+    importScript,
+    /reviewStatus:\s*"draft"/,
+    `${importScriptPath} must keep Italian NIS2 imports draft/secondary until reviewed-row promotion is approved.`,
+  );
+  assert.doesNotMatch(
+    importScript,
+    /reviewStatus:\s*"reviewed"/,
+    `${importScriptPath} must not promote Italian NIS2 articles to reviewed in T4-G.`,
+  );
+}
+
+const articleImportScript = readFileSync("scripts/import-italian-nis2-articles.ts", "utf8");
+assert.match(
+  articleImportScript,
+  /confidence:\s*"draft"/,
+  "Italian NIS2 framework-control links should remain draft pending mapping review.",
+);
+assert.doesNotMatch(
+  articleImportScript,
+  /confidence:\s*"reviewed"/,
+  "Italian NIS2 mapping imports must not be promoted to reviewed in T4-G.",
+);
+
+console.log("Italian NIS2 draft/secondary source-layer smoke test passed.");

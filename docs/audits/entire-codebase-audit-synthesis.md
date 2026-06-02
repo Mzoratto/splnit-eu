@@ -370,14 +370,21 @@ Owner lane: 10
 Dependent lanes: 08
 Priority: P1/P2
 
-Dispatch status: unblocked. T4-G can proceed immediately; Italy localization scope may either populate reviewed rows or mark Italy explicitly draft/secondary, and plan vocabulary must align to canonical Free/SME/Agency public names.
+Dispatch status: completed in source-smoke mode. Italy path chosen: explicit draft/secondary, not reviewed-row population. Public/runtime plan vocabulary remains Free/SME/Agency; `lib/stripe/plans.ts` was not changed.
 
-Scope:
+Completed T4-G implementation:
 
-- Fix stale smoke expectations for `Readiness score` vs `Compliance score` and `Feed NÚKIB` vs `NÚKIB feed`, or decide copy source of truth.
-- Populate/review missing IT GDPR/NIS2 article rows or mark Italy as explicitly draft/secondary.
-- Add Helios evidence requirements metadata for 19 mappings or document why not applicable.
-- Keep `smoke:reviewed-article-links` non-vacuous; T4-B already corrected the old weak-green behavior so it fails on zero reviewed article rows.
+- Reconciled stale smoke expectations to existing product copy: English/Italian dashboard score uses Readiness/preparation wording; Czech dashboard keeps `Feed NÚKIB`.
+- Converted the tenant-locale and Italian GDPR/NIS2 layer smokes to source-safe checks instead of nonlocal DB expectations.
+- Kept Italian GDPR/NIS2 source metadata and local/test import paths available, but changed Italian GDPR/NIS2 article import scripts to write `draft` article rows and draft NIS2 mapping links until reviewed-row promotion is separately approved.
+- Verified the 19 Helios canonical NIS2 mappings have source evidence requirements and that seed source copies those requirements into evidence-template descriptions. No production DB backfill or production seed/import was run.
+- `smoke:reviewed-article-links` remains non-vacuous and refused the current nonlocal `DATABASE_URL`; this was treated as the intended T4-B safety block, not as article coverage proof.
+
+T4-G verification recorded:
+
+- RED before change: `smoke:i18n-shell`, `smoke:tenant-locales`, `smoke:italian-gdpr-layer`, `smoke:italian-nis2-layer`, and `smoke:nis2-evidence-templates` failed with the T0 localization/knowledge assertions.
+- GREEN after change: `npm run smoke:i18n-shell && npm run smoke:tenant-locales && npm run smoke:italian-gdpr-layer && npm run smoke:italian-nis2-layer && npm run smoke:nis2-evidence-templates` passed.
+- Safety/quality checks: `npm run audit:localization` passed with existing localization findings; `npm run smoke:t4b-safety-gates`, `npm run typecheck`, and `npm run lint` passed.
 
 ### T4-H: Frontend UX/a11y hardening
 

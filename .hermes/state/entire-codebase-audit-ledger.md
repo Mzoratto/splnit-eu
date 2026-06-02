@@ -269,3 +269,24 @@ Before dispatching any T4-C implementation work for retention/offboarding/right-
 - Public pricing pages and locale messages must use SME/Agency vocabulary consistently.
 - This is a documentation/copy alignment decision only; T4-E must not change what plans offer unless matching `lib/stripe/plans.ts`.
 - T4-G is unblocked and may proceed immediately; Italy localization may either populate reviewed rows or mark Italy explicitly draft/secondary and record the chosen path.
+
+
+
+## T4-E Implementation Log
+
+- T4-E completed in source-smoke/docs mode: `docs/product/plan-entitlement-matrix.md` now records the current Free/SME/Agency runtime plan model from `lib/stripe/plans.ts`; `docs/product/business-entitlement-matrix.md` is archived/superseded and points to the new matrix.
+- Public plan vocabulary alignment: Business, Starter, and Consultant are legacy aliases only; public billing/pricing copy must use Free/SME/Agency. English public Agency copy no longer labels the plan as a Consultant portal.
+- Buyer-proof/report/export entitlement surfaces are documented from current source enforcement; T4-E did not silently add subscription gates or change runtime offers.
+- Stripe webhook idempotency is documented as future durable event-id-keyed work; no Stripe API was called and no webhook idempotency implementation/schema migration was added in this tranche.
+- T4-E verification: `npm run smoke:t4e-plan-entitlements-source`, `npm run smoke:plan-gate-enforcement`, `npm run smoke:plan-gate-bypass`, `npm run smoke:t4b-safety-gates`, `npm run typecheck`, `npm run lint`, and `npm run build` passed; independent review APPROVED.
+- No production DB, live Stripe action, deploy, production seed/import, or runtime plan-offer change was performed for T4-E.
+
+## T4-G Implementation Log
+
+- T4-G completed in source-smoke mode: stale `Readiness score`/`Compliance score` and `Feed NÚKIB`/`NÚKIB feed` smoke expectations were reconciled to existing copy; tenant-locale, Italian GDPR, Italian NIS2, and NIS2 evidence-template smokes now run source-safe instead of requiring the inherited nonlocal `DATABASE_URL` state.
+- Italy path chosen: explicit draft/secondary. Italian GDPR/NIS2 import scripts now write draft article rows; Italian NIS2 framework-control links remain draft; no reviewed Italian legal article rows or mappings were fabricated or promoted.
+- Helios NIS2 evidence requirements are verified from canonical source mappings for all 19 canonical Helios controls; seed source still copies mapping evidence requirements into evidence-template descriptions.
+- `smoke:reviewed-article-links` remained unchanged/non-vacuous and refused the current nonlocal database URL, preserving the T4-B safety guard.
+- T4-G RED proof: before changes, `smoke:i18n-shell`, `smoke:tenant-locales`, `smoke:italian-gdpr-layer`, `smoke:italian-nis2-layer`, and `smoke:nis2-evidence-templates` failed with stale copy expectations, absent Italian reviewed article rows, and Helios evidence-requirement gaps in connected DB state.
+- T4-G GREEN proof: after changes, `npm run smoke:i18n-shell && npm run smoke:tenant-locales && npm run smoke:italian-gdpr-layer && npm run smoke:italian-nis2-layer && npm run smoke:nis2-evidence-templates` passed; `npm run audit:localization`, `npm run smoke:t4b-safety-gates`, `npm run typecheck`, and `npm run lint` passed.
+- No production DB, production seed/import, live external service call, live source fetch, deploy, commit, or push was performed for T4-G.

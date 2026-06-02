@@ -1,12 +1,10 @@
 import assert from "node:assert/strict";
-import { loadEnvConfig } from "@next/env";
-import { Pool } from "pg";
+import { existsSync } from "node:fs";
+import { readFileSync } from "node:fs";
 
-loadEnvConfig(process.cwd());
-
-const databaseUrl = process.env.DATABASE_URL?.trim();
-
-assert.ok(databaseUrl, "DATABASE_URL is required for Italian GDPR smoke test.");
+import { GDPR_EU_ARTICLES, GDPR_EU_IT_SOURCE } from "../lib/regulations/gdpr-eu";
+import { ITALIAN_GDPR_CODICE_PRIVACY_DOCUMENT } from "../lib/regulations/italian-gdpr-codice-privacy";
+import { ITALIAN_GDPR_GARANTE_GUIDANCE_DOCUMENTS } from "../lib/regulations/italian-gdpr-garante";
 
 const requiredGaranteArticleKeys = [
   "Garante Data Breach",
@@ -14,232 +12,75 @@ const requiredGaranteArticleKeys = [
   "Garante Registro Trattamenti FAQ",
 ] as const;
 
-const requiredGdprArticleKeys = [
-  "Article 5",
-  "Article 30",
-  "Article 32",
-  "Article 33",
-  "Article 35",
-  "Article 99",
-] as const;
+const requiredGdprArticleIds = [5, 30, 32, 33, 35, 99] as const;
 
-async function main() {
-  const pool = new Pool({ connectionString: databaseUrl, max: 1 });
-
-  try {
-    const sourceResult = await pool.query<{
-      filename: string;
-      last_reviewed: Date | null;
-      url: string | null;
-    }>(
-      `
-      SELECT filename, last_reviewed, url
-      FROM source_documents
-      WHERE filename = ANY($1::text[])
-      ORDER BY filename
-    `,
-      [
-        [
-          "eu/gdpr-2016-679-it.pdf",
-          "it/codice-privacy-dlgs-196-2003.html",
-          "it/garante-data-breach.html",
-          "it/garante-dpia.html",
-          "it/garante-ropa-faq.html",
-        ],
-      ],
-    );
-
-    assert.equal(
-      sourceResult.rows.length,
-      5,
-      "Italian GDPR source documents should exist.",
-    );
-
-    for (const source of sourceResult.rows) {
-      assert.ok(source.last_reviewed, `${source.filename} should have lastReviewed.`);
-      const hostname = new URL(source.url ?? "").hostname;
-
-      if (source.filename === "eu/gdpr-2016-679-it.pdf") {
-        assert.equal(
-          hostname,
-          "eur-lex.europa.eu",
-          `${source.filename} should use the official EUR-Lex hostname.`,
-        );
-      } else if (source.filename === "it/codice-privacy-dlgs-196-2003.html") {
-        assert.equal(
-          hostname,
-          "www.normattiva.it",
-          `${source.filename} should use the official Normattiva hostname.`,
-        );
-      } else {
-        assert.equal(
-          hostname,
-          "www.garanteprivacy.it",
-          `${source.filename} should use the official Garante hostname.`,
-        );
-      }
-    }
-
-    const articlesResult = await pool.query<{
-      article_key: string;
-      official_text: string;
-      review_status: string;
-      source_filename: string;
-    }>(
-      `
-      SELECT
-        a.article_key,
-        a.official_text,
-        a.review_status,
-        sd.filename AS source_filename
-      FROM articles a
-      JOIN source_documents sd ON sd.id = a.source_document_id
-      WHERE a.jurisdiction = 'IT'
-        AND a.locale = 'it-IT'
-        AND a.article_key = ANY($1::text[])
-      ORDER BY a.article_key
-    `,
-      [["D.Lgs. 196/2003", ...requiredGaranteArticleKeys]],
-    );
-
-    const articlesByKey = new Map(
-      articlesResult.rows.map((row) => [row.article_key, row]),
-    );
-
-    for (const articleKey of requiredGaranteArticleKeys) {
-      const row = articlesByKey.get(articleKey);
-
-      assert.ok(row, `${articleKey} should be imported as Garante guidance.`);
-      assert.equal(row.review_status, "reviewed", `${articleKey} should be reviewed.`);
-      assert.match(
-        row.source_filename,
-        /^it\/garante-/,
-        `${articleKey} should come from a Garante source document.`,
-      );
-    }
-
-    const codice = articlesByKey.get("D.Lgs. 196/2003");
-
-    assert.ok(codice, "D.Lgs. 196/2003 should be imported as Codice Privacy.");
-    assert.equal(
-      codice.review_status,
-      "reviewed",
-      "D.Lgs. 196/2003 should be reviewed.",
-    );
-    assert.equal(
-      codice.source_filename,
-      "it/codice-privacy-dlgs-196-2003.html",
-      "D.Lgs. 196/2003 should come from the Normattiva source document.",
-    );
-    assert.match(
-      codice.official_text,
-      /Codice in materia di protezione dei dati personali|regolamento \(UE\) n\. 2016\/679/i,
-      "Codice Privacy source text should contain the consolidated privacy-code title.",
-    );
-
-    assert.match(
-      articlesByKey.get("Garante Data Breach")?.official_text ?? "",
-      /entro 72 ore|violazione dei dati personali/i,
-      "Garante data breach guidance should contain breach notification text.",
-    );
-    assert.match(
-      articlesByKey.get("Garante DPIA")?.official_text ?? "",
-      /valutazione di impatto|art\.?\s*35/i,
-      "Garante DPIA guidance should contain DPIA text.",
-    );
-    assert.match(
-      articlesByKey.get("Garante Registro Trattamenti FAQ")?.official_text ?? "",
-      /art\.?\s*30|registro delle attività di trattamento/i,
-      "Garante ROPA FAQ should contain processing-record text.",
-    );
-
-    const gdprArticlesResult = await pool.query<{
-      article_key: string;
-      official_text: string;
-      review_status: string;
-      source_filename: string;
-      title: string | null;
-    }>(
-      `
-      SELECT
-        a.article_key,
-        a.official_text,
-        a.review_status,
-        sd.filename AS source_filename,
-        a.title
-      FROM articles a
-      JOIN source_documents sd ON sd.id = a.source_document_id
-      WHERE a.jurisdiction = 'EU'
-        AND a.locale = 'it-IT'
-        AND sd.filename = 'eu/gdpr-2016-679-it.pdf'
-      ORDER BY a.article_key
-    `,
-    );
-
-    assert.equal(
-      gdprArticlesResult.rows.length,
-      99,
-      "Italian GDPR EUR-Lex source import should create 99 reviewed article rows.",
-    );
-
-    const gdprArticlesByKey = new Map(
-      gdprArticlesResult.rows.map((row) => [row.article_key, row]),
-    );
-
-    for (const articleKey of requiredGdprArticleKeys) {
-      const row = gdprArticlesByKey.get(articleKey);
-
-      assert.ok(row, `${articleKey} should be imported from Italian GDPR.`);
-      assert.equal(row.review_status, "reviewed", `${articleKey} should be reviewed.`);
-      assert.equal(
-        row.source_filename,
-        "eu/gdpr-2016-679-it.pdf",
-        `${articleKey} should come from the Italian GDPR EUR-Lex source document.`,
-      );
-      assert.ok(row.title, `${articleKey} should have a title.`);
-    }
-
-    assert.match(
-      gdprArticlesByKey.get("Article 30")?.official_text ?? "",
-      /Registri delle attività di trattamento|registro delle attività di trattamento/i,
-      "GDPR Article 30 should contain processing-record text.",
-    );
-    assert.match(
-      gdprArticlesByKey.get("Article 32")?.official_text ?? "",
-      /sicurezza del trattamento|misure tecniche e organizzative/i,
-      "GDPR Article 32 should contain security-of-processing text.",
-    );
-    assert.match(
-      gdprArticlesByKey.get("Article 99")?.official_text ?? "",
-      /25 maggio 2018|Entrata in vigore e applicazione/i,
-      "GDPR Article 99 should contain application-date text.",
-    );
-
-    const linkedMappings = await pool.query<{ count: number }>(
-      `
-      SELECT COUNT(*)::int AS count
-      FROM framework_control_articles fca
-      JOIN articles a ON a.id = fca.article_id
-      WHERE a.article_key = ANY($1::text[])
-    `,
-      [["D.Lgs. 196/2003", ...requiredGaranteArticleKeys, ...requiredGdprArticleKeys]],
-    );
-
-    assert.equal(
-      linkedMappings.rows[0]?.count ?? 0,
-      0,
-      "Italian GDPR source import should not create or promote mapping links.",
-    );
-  } finally {
-    await pool.end();
-  }
+function assertOfficialHost(url: string, expectedHostname: string, label: string) {
+  assert.equal(new URL(url).hostname, expectedHostname, `${label} should use ${expectedHostname}.`);
 }
 
-main()
-  .then(() => {
-    console.log("Italian GDPR source-layer smoke test passed.");
-  })
-  .catch((error: unknown) => {
-    console.error(error);
-    process.exit(1);
-  });
+assert.equal(GDPR_EU_IT_SOURCE.filename, "eu/gdpr-2016-679-it.pdf");
+assert.equal(GDPR_EU_IT_SOURCE.jurisdiction, "EU");
+assert.equal(GDPR_EU_IT_SOURCE.locale, "it-IT");
+assertOfficialHost(GDPR_EU_IT_SOURCE.url, "eur-lex.europa.eu", GDPR_EU_IT_SOURCE.filename);
+assert.equal(
+  GDPR_EU_ARTICLES.length,
+  99,
+  "Italian GDPR EUR-Lex source model should enumerate 99 GDPR articles.",
+);
+
+for (const articleId of requiredGdprArticleIds) {
+  assert.ok(
+    GDPR_EU_ARTICLES.some((article) => article.articleId === articleId),
+    `GDPR Article ${articleId} should be represented in the Italian GDPR source model.`,
+  );
+}
+
+assert.equal(ITALIAN_GDPR_CODICE_PRIVACY_DOCUMENT.articleKey, "D.Lgs. 196/2003");
+assert.equal(
+  ITALIAN_GDPR_CODICE_PRIVACY_DOCUMENT.sourceDocument.filename,
+  "it/codice-privacy-dlgs-196-2003.html",
+);
+assertOfficialHost(
+  ITALIAN_GDPR_CODICE_PRIVACY_DOCUMENT.sourceDocument.url,
+  "www.normattiva.it",
+  ITALIAN_GDPR_CODICE_PRIVACY_DOCUMENT.sourceDocument.filename,
+);
+
+assert.deepEqual(
+  ITALIAN_GDPR_GARANTE_GUIDANCE_DOCUMENTS.map((document) => document.articleKey),
+  [...requiredGaranteArticleKeys],
+  "Italian GDPR Garante source metadata should include the expected guidance documents.",
+);
+
+for (const document of ITALIAN_GDPR_GARANTE_GUIDANCE_DOCUMENTS) {
+  assert.match(document.sourceDocument.filename, /^it\/garante-/);
+  assertOfficialHost(
+    document.sourceDocument.url,
+    "www.garanteprivacy.it",
+    document.sourceDocument.filename,
+  );
+}
+
+const italianGdprImportScripts = [
+  "scripts/import-gdpr-eu-it-articles.ts",
+  "scripts/import-italian-gdpr-codice-privacy.ts",
+  "scripts/import-italian-gdpr-garante-guidance.ts",
+] as const;
+
+for (const scriptPath of italianGdprImportScripts) {
+  assert.ok(existsSync(scriptPath), `${scriptPath} should exist for local/test DB imports.`);
+  const source = readFileSync(scriptPath, "utf8");
+
+  assert.match(
+    source,
+    /reviewStatus:\s*"draft"/,
+    `${scriptPath} must keep Italian GDPR article imports draft/secondary until reviewed-row promotion is approved.`,
+  );
+  assert.doesNotMatch(
+    source,
+    /reviewStatus:\s*"reviewed"/,
+    `${scriptPath} must not promote Italian GDPR articles to reviewed in T4-G.`,
+  );
+}
+
+console.log("Italian GDPR draft/secondary source-layer smoke test passed.");

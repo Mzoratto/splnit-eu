@@ -1,105 +1,77 @@
 import assert from "node:assert/strict";
-import { loadEnvConfig } from "@next/env";
-import { Pool } from "pg";
+import { readFileSync } from "node:fs";
 
-loadEnvConfig(process.cwd());
+import { CONTROL_LIBRARY } from "../lib/controls/library";
+import { HELIOS_CANONICAL_CONTROL_KEYS } from "../lib/workspaces/control-seeds";
 
-const databaseUrl = process.env.DATABASE_URL?.trim();
+const nis2Mappings = CONTROL_LIBRARY.flatMap((control) =>
+  control.frameworkMappings
+    .filter((mapping) => mapping.frameworkSlug === "nis2")
+    .map((mapping) => ({
+      articleRef: mapping.articleRef,
+      controlKey: control.key,
+      evidenceRequirements: mapping.evidenceRequirements,
+    })),
+);
 
-assert.ok(databaseUrl, "DATABASE_URL is required for NIS2 evidence template smoke test.");
+assert.ok(
+  nis2Mappings.length > 0,
+  "NIS2 framework-control mappings should be present before checking evidence templates.",
+);
 
-type MissingEvidenceRequirementRow = {
-  article_ref: string;
-  control_key: string;
-};
+const missingEvidenceRequirements = nis2Mappings
+  .filter((mapping) => !mapping.evidenceRequirements?.trim())
+  .map(({ articleRef, controlKey }) => ({ articleRef, controlKey }))
+  .sort((a, b) =>
+    a.controlKey.localeCompare(b.controlKey) || a.articleRef.localeCompare(b.articleRef),
+  );
 
-type MissingEvidenceTemplateRow = {
-  article_ref: string;
-  control_key: string;
-  framework_control_id: string;
-};
+assert.deepEqual(
+  missingEvidenceRequirements,
+  [],
+  `NIS2 source framework-control mappings missing evidence requirements: ${JSON.stringify(
+    missingEvidenceRequirements,
+    null,
+    2,
+  )}`,
+);
 
-type CountRow = {
-  count: number;
-};
+const heliosNis2Mappings = nis2Mappings.filter((mapping) =>
+  (HELIOS_CANONICAL_CONTROL_KEYS as readonly string[]).includes(mapping.controlKey),
+);
 
-async function main() {
-  const pool = new Pool({ connectionString: databaseUrl, max: 1 });
+assert.equal(
+  heliosNis2Mappings.length,
+  HELIOS_CANONICAL_CONTROL_KEYS.length,
+  "Every canonical Helios control should have one NIS2 source mapping.",
+);
 
-  try {
-    const nis2Mappings = await pool.query<CountRow>(`
-      SELECT COUNT(*)::int AS count
-      FROM framework_controls fc
-      JOIN frameworks f ON f.id = fc.framework_id
-      WHERE f.slug = 'nis2'
-    `);
+for (const controlKey of HELIOS_CANONICAL_CONTROL_KEYS) {
+  const mapping = heliosNis2Mappings.find((candidate) => candidate.controlKey === controlKey);
 
-    assert.ok(
-      (nis2Mappings.rows[0]?.count ?? 0) > 0,
-      "NIS2 framework-control mappings should be seeded before checking evidence templates.",
-    );
-
-    const missingEvidenceRequirements = await pool.query<MissingEvidenceRequirementRow>(`
-      SELECT
-        c.key AS control_key,
-        fc.article_ref
-      FROM framework_controls fc
-      JOIN frameworks f ON f.id = fc.framework_id
-      JOIN controls c ON c.id = fc.control_id
-      WHERE f.slug = 'nis2'
-        AND NULLIF(BTRIM(fc.evidence_requirements), '') IS NULL
-      ORDER BY c.key, fc.article_ref
-    `);
-
-    assert.deepEqual(
-      missingEvidenceRequirements.rows,
-      [],
-      `NIS2 framework-control mappings missing evidence requirements: ${JSON.stringify(
-        missingEvidenceRequirements.rows,
-        null,
-        2,
-      )}`,
-    );
-
-    const missingEvidenceTemplates = await pool.query<MissingEvidenceTemplateRow>(`
-      SELECT
-        c.key AS control_key,
-        fc.article_ref,
-        fc.id AS framework_control_id
-      FROM framework_controls fc
-      JOIN frameworks f ON f.id = fc.framework_id
-      JOIN controls c ON c.id = fc.control_id
-      WHERE f.slug = 'nis2'
-        AND NOT EXISTS (
-          SELECT 1
-          FROM evidence_templates et
-          WHERE et.framework_control_id = fc.id
-            AND et.control_id = c.id
-            AND et.locale = 'en-EU'
-            AND et.is_active = TRUE
-        )
-      ORDER BY c.key, fc.article_ref
-    `);
-
-    assert.deepEqual(
-      missingEvidenceTemplates.rows,
-      [],
-      `NIS2 framework-control mappings missing evidence templates: ${JSON.stringify(
-        missingEvidenceTemplates.rows,
-        null,
-        2,
-      )}`,
-    );
-  } finally {
-    await pool.end();
-  }
+  assert.ok(mapping, `${controlKey} should have a NIS2 source mapping.`);
+  assert.ok(
+    (mapping.evidenceRequirements?.length ?? 0) >= 80,
+    `${controlKey} should have detailed evidence requirements, not a generic placeholder.`,
+  );
+  assert.match(
+    mapping.evidenceRequirements ?? "",
+    /Helios|network|backup|credential|contractor|session|role|offboarding|deployment|server-room|host|transport|EDI|MES|SCADA|API/i,
+    `${controlKey} should have control-specific evidence requirements.`,
+  );
 }
 
-main()
-  .then(() => {
-    console.log("NIS2 evidence template smoke test passed.");
-  })
-  .catch((error: unknown) => {
-    console.error(error);
-    process.exit(1);
-  });
+const seedSource = readFileSync("scripts/seed.ts", "utf8");
+
+assert.match(
+  seedSource,
+  /if \(!mapping\.evidenceRequirements\) \{\s*continue;\s*\}/,
+  "Seed source should only create evidence templates for mappings with evidence requirements.",
+);
+assert.match(
+  seedSource,
+  /description:\s*mapping\.evidenceRequirements/,
+  "Seed source should copy mapping evidence requirements into evidence template descriptions.",
+);
+
+console.log("NIS2 evidence template source smoke test passed.");

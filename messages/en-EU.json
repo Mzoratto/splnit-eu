@@ -102,7 +102,7 @@
       "agency": {
         "name": "Agency",
         "price": "1 990 Kč/month",
-        "description": "Consultant portal for managing client organisations.",
+        "description": "Agency portal for managing client organisations.",
         "features": [
           "Everything in SME",
           "White-label consultant portal",
@@ -1955,7 +1955,7 @@
       },
       "agency": {
         "name": "Agency",
-        "description": "Consultant portal for managing client organisations.",
+        "description": "Agency portal for managing client organisations.",
         "cta": "Launch Agency",
         "features": [
           "Everything in SME",

@@ -112,7 +112,7 @@ async function upsertArticles(sourceDocumentId: string, frameworkId: string) {
         lastReviewed,
         locale: ITALIAN_NIS2_SOURCE.locale,
         officialText: extracted.officialText,
-        reviewStatus: "reviewed",
+        reviewStatus: "draft",
         sourceDocumentId,
         title: extracted.title,
         updatedAt: new Date(),
@@ -126,7 +126,7 @@ async function upsertArticles(sourceDocumentId: string, frameworkId: string) {
           jurisdiction: ITALIAN_NIS2_SOURCE.jurisdiction,
           lastReviewed,
           officialText: extracted.officialText,
-          reviewStatus: "reviewed",
+          reviewStatus: "draft",
           title: extracted.title,
           updatedAt: new Date(),
         },
@@ -192,7 +192,7 @@ async function main() {
   const linkedMappings = await linkItalianNis2FrameworkControls(frameworkId, articleIds);
 
   console.log(
-    `Imported ${articleIds.size} reviewed Italian NIS2 articles and linked ${linkedMappings} draft mappings.`,
+    `Imported ${articleIds.size} draft Italian NIS2 articles and linked ${linkedMappings} draft mappings.`,
   );
 }
 

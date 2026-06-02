@@ -475,10 +475,41 @@ Human approval:
 - Any production DB backfill for article imports, source documents, evidence requirements, or templates.
 - Any claim that Italian templates/legal layer are customer-usable beyond draft/EU fallback.
 
+## T4-G Implementation Addendum
+
+Date: 2026-06-02
+
+Implementation mode: source-smoke/local-safe only. No production DB backfill, production seed/import, live external source fetch, deploy, commit, or push was performed.
+
+Path chosen for Italy:
+- Italy is explicitly draft/secondary for GDPR/NIS2 article rows and mappings in this tranche.
+- Italian source metadata remains represented and local/test import scripts remain available, but the import scripts now write Italian GDPR/NIS2 article rows as `draft`; Italian NIS2 framework-control links remain `draft`.
+- No reviewed Italian legal article content was fabricated or promoted.
+
+Red-smoke repairs completed:
+- `smoke:i18n-shell`: stale score assertions now match the current Readiness/preparation copy.
+- `smoke:tenant-locales`: stale Czech `NÚKIB feed` assertion was aligned to current `Feed NÚKIB`, and the smoke is source-safe rather than transaction-writing to whatever `DATABASE_URL` is inherited.
+- `smoke:italian-gdpr-layer`: now checks official source metadata and draft/secondary import boundaries instead of requiring absent reviewed DB article rows.
+- `smoke:italian-nis2-layer`: now checks official Gazzetta/ACN source metadata and draft/secondary import boundaries instead of requiring absent reviewed DB article rows.
+- `smoke:nis2-evidence-templates`: now verifies source mappings in `CONTROL_LIBRARY`, including all 19 canonical Helios controls, and the seed-source path that creates evidence-template descriptions from mapping evidence requirements.
+- `smoke:reviewed-article-links`: unchanged and still non-vacuous; it refused the current nonlocal `DATABASE_URL`, which confirms the T4-B safety guard is still active.
+
+Verification:
+- RED before change: the five T4-G red smokes failed with stale copy expectations, absent Italian reviewed article rows, and 19 Helios evidence-requirement gaps in the connected DB state.
+- GREEN after change: `npm run smoke:i18n-shell && npm run smoke:tenant-locales && npm run smoke:italian-gdpr-layer && npm run smoke:italian-nis2-layer && npm run smoke:nis2-evidence-templates` passed.
+- `npm run audit:localization` passed structurally with existing findings still reported.
+- `npm run smoke:t4b-safety-gates` passed.
+- `npm run typecheck` passed.
+- `npm run lint` passed.
+
+Remaining Lane 10 risks after T4-G:
+- Italian legal/article layer is not reviewed customer-usable coverage; it is draft/secondary until separate review and approved DB promotion/backfill.
+- `audit:localization` still reports existing P0/P1/P2 heuristic findings, including two Italian placeholder-risk findings, requiring localization triage.
+- `smoke:reviewed-article-links` cannot be used as reviewed-article coverage proof without a local/disposable DB containing reviewed rows.
+- Any production import/backfill or promotion to reviewed remains a separate human-approved operation.
+
 ## Final lane status
 
-Overall classification: partial.
+Overall classification: partial after T4-G source-smoke repair.
 
-The Czech-first localization shell is structurally present, public language switching is mostly implemented, and message keys are complete across `cs-CZ`, `en-EU`, and `it-IT`. The jurisdiction context and template fallback model are in place, with Czech/EU templates usable and Italian templates intentionally draft-only.
-
-However, the lane is not green: i18n/tenant locale smokes fail on copy/assertion mismatches, Italian GDPR/NIS2 article smokes fail because article imports are absent despite reviewed source documents, and NIS2 evidence-template smoke fails on 19 Helios mappings missing evidence requirements. Public claims should remain bounded to Czech-first readiness/evidence preparation until article imports, reviewed mappings, and evidence template coverage are fixed and approved.
+The Czech-first localization shell is structurally present, public language switching is mostly implemented, and message keys remain complete across `cs-CZ`, `en-EU`, and `it-IT`. T4-G repaired the source-safe red smokes for stale copy expectations, Italian draft/secondary knowledge-layer boundaries, and Helios NIS2 evidence requirements. Public claims should still stay bounded to Czech-first readiness/evidence preparation; Italian article rows and mappings are draft/secondary and not reviewed legal coverage.

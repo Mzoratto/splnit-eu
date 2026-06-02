@@ -140,7 +140,7 @@ assert.equal(en.controlsPage.index.title, "Control library");
 assert.equal(en.controlsPage.report.title, "Cybersecurity posture assessment report");
 assert.equal(en.controlsPage.detail.saveStatus, "Save status");
 assert.equal(en.controlsPage.statuses.fail, "Not passed");
-assert.equal(en.dashboard.metrics.scoreTitle, "Compliance score");
+assert.equal(en.dashboard.metrics.scoreTitle, "Readiness score");
 assert.equal(en.dashboard.nukib.title, "Regulatory feed");
 assert.doesNotMatch(en.dashboard.nukib.title, /NÚKIB|ÚOOÚ/);
 assert.doesNotMatch(en.dashboard.demoUpdates.nukibMethodology.title, /NÚKIB|ÚOOÚ/);
@@ -242,7 +242,7 @@ assert.equal(
 );
 assert.equal(it.controlsPage.detail.saveStatus, "Salva stato");
 assert.equal(it.controlsPage.statuses.fail, "Non superato");
-assert.equal(it.dashboard.metrics.scoreTitle, "Punteggio compliance");
+assert.equal(it.dashboard.metrics.scoreTitle, "Punteggio di preparazione");
 assert.equal(it.dashboard.nukib.badge, "Monitor UE");
 assert.equal(it.dashboard.nukib.title, "Feed normativo");
 assert.doesNotMatch(it.dashboard.nukib.title, /NÚKIB|ÚOOÚ/);

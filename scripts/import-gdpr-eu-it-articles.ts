@@ -142,7 +142,7 @@ async function upsertArticles(sourceDocumentId: string, frameworkId: string, for
         lastReviewed,
         locale: GDPR_EU_IT_SOURCE.locale,
         officialText: extracted.officialText,
-        reviewStatus: "reviewed",
+        reviewStatus: "draft",
         sourceDocumentId,
         title: extracted.title,
         updatedAt: new Date(),
@@ -156,7 +156,7 @@ async function upsertArticles(sourceDocumentId: string, frameworkId: string, for
           jurisdiction: GDPR_EU_IT_SOURCE.jurisdiction,
           lastReviewed,
           officialText: extracted.officialText,
-          reviewStatus: "reviewed",
+          reviewStatus: "draft",
           title: extracted.title,
           updatedAt: new Date(),
         },
@@ -175,7 +175,7 @@ async function main() {
   const imported = await upsertArticles(sourceDocumentId, frameworkId, formexXml);
 
   console.log(
-    `Imported ${imported} reviewed Italian GDPR articles from official EUR-Lex/CELLAR Formex source.`,
+    `Imported ${imported} draft Italian GDPR articles from official EUR-Lex/CELLAR Formex source.`,
   );
   console.log("No framework-control mapping links were created or promoted.");
 }

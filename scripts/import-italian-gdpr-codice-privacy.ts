@@ -121,7 +121,7 @@ async function main() {
       lastReviewed,
       locale: definition.sourceDocument.locale,
       officialText,
-      reviewStatus: "reviewed",
+      reviewStatus: "draft",
       sourceDocumentId,
       title: definition.sourceDocument.title,
       updatedAt: new Date(),
@@ -135,13 +135,13 @@ async function main() {
         jurisdiction: definition.sourceDocument.jurisdiction,
         lastReviewed,
         officialText,
-        reviewStatus: "reviewed",
+        reviewStatus: "draft",
         title: definition.sourceDocument.title,
         updatedAt: new Date(),
       },
     });
 
-  console.log("Imported 1 reviewed Italian GDPR Codice Privacy row.");
+  console.log("Imported 1 draft Italian GDPR Codice Privacy row.");
 }
 
 main().catch((error: unknown) => {
