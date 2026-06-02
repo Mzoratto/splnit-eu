@@ -258,3 +258,14 @@ Before dispatching any T4-C implementation work for retention/offboarding/right-
 - T4-C completed: audit-log retention docs reconciled to retained-on-org-deletion behavior; root org deletion is blocked if Blob URL collection fails; Blob cleanup returns auditable per-URL deleted/skipped/failed results; granular evidence erasure blocks row deletion when Blob cleanup or audit logging fails; offboarding runbook documents webhook failure/retry behavior. Verified by `npm run smoke:t4c-offboarding-source` and independent re-review APPROVED.
 - T4-D completed: Microsoft Graph client token refresh is wired before Graph checks; API-key connector connect/rotate paths enqueue first-run checks where intended; OVHcloud `serviceName` is required before credentials are runnable; Vercel Cron is scheduler-of-record while Inngest functions remain event-triggerable; evidence expiry alerts remain disabled by default until expiry persistence exists. Verified by `npm run smoke:t4d-integration-workspace-correctness`, integration neighbor smokes, typecheck/lint/build, and independent review.
 - No production DB, production Blob, live provider API, live Stripe, deploy, or production seed was run for T4-C/T4-D.
+
+
+## T4-E/T4-G Plan Model Decision
+
+- Free/SME/Agency is the canonical plan model.
+- Business, Starter, and Consultant are legacy aliases only, not public plan names.
+- `lib/stripe/plans.ts` is the runtime truth source for plan names, limits, and pricing.
+- `docs/product/business-entitlement-matrix.md` is archived/superseded and will be replaced by `docs/product/plan-entitlement-matrix.md` in T4-E.
+- Public pricing pages and locale messages must use SME/Agency vocabulary consistently.
+- This is a documentation/copy alignment decision only; T4-E must not change what plans offer unless matching `lib/stripe/plans.ts`.
+- T4-G is unblocked and may proceed immediately; Italy localization may either populate reviewed rows or mark Italy explicitly draft/secondary and record the chosen path.

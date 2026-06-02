@@ -334,6 +334,15 @@ Owner lane: 05
 Dependent lanes: 06, 08, 10
 Priority: P1
 
+Resolved plan-model decision for T4-E/T4-G dispatch:
+
+- Free/SME/Agency is the canonical plan model.
+- Business, Starter, and Consultant are legacy aliases only, not public plan names.
+- `lib/stripe/plans.ts` is the runtime truth source for plan names, limits, and pricing.
+- `docs/product/business-entitlement-matrix.md` is archived/superseded and will be replaced by `docs/product/plan-entitlement-matrix.md` in T4-E.
+- Public pricing pages and locale messages must use SME/Agency vocabulary consistently.
+- This is documentation/copy alignment only; do not change the runtime plan offers unless `lib/stripe/plans.ts` already does so.
+
 Scope:
 
 - Replace/archive Business-era entitlement matrix with Free/SME/Agency matrix.
@@ -358,15 +367,17 @@ Scope:
 ### T4-G: Localization and knowledge-layer red-smoke repair
 
 Owner lane: 10
-Dependent lanes: 06, 08
+Dependent lanes: 08
 Priority: P1/P2
+
+Dispatch status: unblocked. T4-G can proceed immediately; Italy localization scope may either populate reviewed rows or mark Italy explicitly draft/secondary, and plan vocabulary must align to canonical Free/SME/Agency public names.
 
 Scope:
 
 - Fix stale smoke expectations for `Readiness score` vs `Compliance score` and `Feed NÚKIB` vs `NÚKIB feed`, or decide copy source of truth.
 - Populate/review missing IT GDPR/NIS2 article rows or mark Italy as explicitly draft/secondary.
 - Add Helios evidence requirements metadata for 19 mappings or document why not applicable.
-- Strengthen `reviewed-article-links` so it does not pass vacuously when no reviewed articles exist. Until this is fixed, treat `smoke:reviewed-article-links` as a known weak gate, not proof of reviewed article coverage.
+- Keep `smoke:reviewed-article-links` non-vacuous; T4-B already corrected the old weak-green behavior so it fails on zero reviewed article rows.
 
 ### T4-H: Frontend UX/a11y hardening
 
@@ -403,10 +414,10 @@ Before implementation:
 1. Accept or change owner assignment for shared-file conflicts.
 2. RESOLVED for T4-C: stale existing `unknown` statuses are left until re-attestation/new evidence; no production DB repair/backfill job in T4-C.
 3. Decide public Trust Center aggregate disclosure/coarsening.
-4. Decide current plan/entitlement truth source: Free/SME/Agency vs Business-era doc.
+4. RESOLVED for T4-E/T4-G: Free/SME/Agency is the canonical plan model; Business, Starter, and Consultant are legacy aliases only; `lib/stripe/plans.ts` is runtime truth; `docs/product/business-entitlement-matrix.md` is archived/superseded and will be replaced by `docs/product/plan-entitlement-matrix.md`.
 5. Approve paid-readiness proof scope and Stripe test/live boundaries.
 6. RESOLVED for T4-C: retain audit logs on org deletion with documented legal basis; exact retention period must be set before paid launch.
-7. Approve whether Italy remains draft/secondary with explicit GTM cost or gets article/template population now.
+7. NOT A T4-G BLOCKER: Italy localization can proceed by either populating reviewed rows or marking Italy explicitly draft/secondary; record whichever path T4-G implements.
 8. Approve Woodpecker production migration path: guarded wrapper required before deploy, or explicit ops sign-off accepting the bare `npm run db:migrate` risk.
 9. Decide pg SSL-mode configuration hardening: normalize to `sslmode=verify-full` where appropriate or document accepted `sslmode=require` / `uselibpqcompat` behavior.
 
