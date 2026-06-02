@@ -282,10 +282,15 @@ Production gate:
 ### T4-C: Retention/offboarding/right-to-erasure and Blob cleanup
 
 Owner lane: 03
-Dependent lanes: 06, 08
+Dependent lanes: 02, 06, 08
 Priority: P0/P1
 
-Scope:
+Pre-start approval gates:
+
+- Resolve or explicitly defer with accepted risk the stale existing `unknown` status decision: targeted repair/backfill vs leave until re-attestation/new evidence. This affects whether T4-C must coordinate with a status repair job before or during offboarding/cleanup verification.
+- Resolve or explicitly defer with accepted legal/ops risk the retention/audit-log deletion policy and wording. This is core T4-C scope; do not implement final deletion/Blob cleanup behavior before the audit-log retention policy is accepted.
+
+Scope after the pre-start gates are recorded:
 
 - Reconcile audit-log retention docs vs schema behavior.
 - Add/verify granular offboarding and right-to-erasure paths.
@@ -380,11 +385,11 @@ Scope:
 Before implementation:
 
 1. Accept or change owner assignment for shared-file conflicts.
-2. Decide whether stale existing `unknown` statuses should be repaired by targeted backfill or left until re-attestation/new evidence.
+2. T4-C BLOCKER: decide whether stale existing `unknown` statuses should be repaired by targeted backfill or left until re-attestation/new evidence. If deferred, record accepted risk and whether T4-C must coordinate with a later status repair job.
 3. Decide public Trust Center aggregate disclosure/coarsening.
 4. Decide current plan/entitlement truth source: Free/SME/Agency vs Business-era doc.
 5. Approve paid-readiness proof scope and Stripe test/live boundaries.
-6. Approve retention/audit-log deletion policy and legal wording.
+6. T4-C BLOCKER: approve retention/audit-log deletion policy and legal wording. If deferred, record accepted legal/ops risk before any deletion/Blob cleanup implementation is treated as final.
 7. Approve whether Italy remains draft/secondary with explicit GTM cost or gets article/template population now.
 8. Approve Woodpecker production migration path: guarded wrapper required before deploy, or explicit ops sign-off accepting the bare `npm run db:migrate` risk.
 9. Decide pg SSL-mode configuration hardening: normalize to `sslmode=verify-full` where appropriate or document accepted `sslmode=require` / `uselibpqcompat` behavior.

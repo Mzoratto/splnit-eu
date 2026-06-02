@@ -237,6 +237,15 @@ Escalation rule: if T3 cannot assign a clear owner lane for a shared file, escal
 - DB-backed smokes repeatedly emit pg SSL-mode warnings around `sslmode=require` / `uselibpqcompat`; T4-B must normalize to `sslmode=verify-full` where appropriate or document the accepted configuration.
 
 
+
+
+## T4-C Pre-Start Approval Gate
+
+Before dispatching any T4-C implementation work for retention/offboarding/right-to-erasure or Blob cleanup:
+
+- Resolve or explicitly defer with accepted risk the stale existing `unknown` status decision: targeted repair/backfill vs leave until re-attestation/new evidence. If deferred, record whether T4-C must coordinate with a later status repair job.
+- Resolve or explicitly defer with accepted legal/ops risk the retention/audit-log deletion policy and legal wording. This is core T4-C scope; do not implement final deletion/Blob cleanup behavior before the policy is accepted or the risk is recorded.
+
 ## T4-A/T4-B Decision Log
 
 - Human-approved T4-A canonical mapping: manual evidence `gap` maps to existing control status `fail`; this tranche does not add a first-class `gap` control status.
