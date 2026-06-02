@@ -309,53 +309,56 @@ export function Nis2ScopeChecker({ locale }: { locale: Locale }) {
   }
 
   return (
-    <section className="border-t border-zinc-200/50 bg-white px-5 py-16">
+    <section className="border-t border-border bg-surface px-5 py-16">
       <div className="mx-auto grid max-w-7xl gap-8 lg:grid-cols-[0.95fr_0.65fr]">
-        <div className="rounded-lg border border-zinc-200 bg-white p-6 md:p-8">
+        <div className="rounded-lg border border-border bg-surface p-6 md:p-8">
           <div className="mb-8 flex flex-col justify-between gap-4 sm:flex-row sm:items-start">
             <div>
-              <p className="mono text-xs uppercase text-zinc-400">
+              <p className="mono text-xs uppercase text-foreground/42">
                 {t.formTitle}
               </p>
-              <h2 className="mt-2 text-2xl font-semibold text-zinc-900">
+              <h2 className="mt-2 text-2xl font-semibold text-foreground">
                 {t.sizeTitle}
               </h2>
             </div>
             <button
               type="button"
               onClick={clear}
-              className="inline-flex w-fit items-center gap-2 rounded-md border border-zinc-200 px-3 py-2 text-sm font-medium text-zinc-700 transition-colors hover:bg-zinc-50"
+              className="inline-flex w-fit items-center gap-2 rounded-md border border-border px-3 py-2 text-sm font-medium text-foreground/72 transition-colors hover:bg-surface-muted"
             >
               <Icon icon="solar:restart-linear" aria-hidden="true" />
               {t.clear}
             </button>
           </div>
 
-          <div className="grid gap-3 sm:grid-cols-2">
-            {sizeKeys.map((key) => (
-              <button
-                key={key}
-                type="button"
-                aria-pressed={size === key}
-                onClick={() => setSize(key)}
-                className={`flex items-center justify-between rounded-lg border px-4 py-3 text-left text-sm font-medium transition-colors ${
-                  size === key
-                    ? "border-blue-200 bg-blue-50 text-blue-700"
-                    : "border-zinc-200 bg-white text-zinc-700 hover:bg-zinc-50"
-                }`}
-              >
-                {t.size[key]}
-                {size === key ? (
-                  <Icon icon="solar:check-circle-bold" aria-hidden="true" />
-                ) : null}
-              </button>
-            ))}
-          </div>
+          <fieldset>
+            <legend className="sr-only">{t.sizeTitle}</legend>
+            <div className="grid gap-3 sm:grid-cols-2" aria-label={t.sizeTitle}>
+              {sizeKeys.map((key) => (
+                <button
+                  key={key}
+                  type="button"
+                  aria-pressed={size === key}
+                  onClick={() => setSize(key)}
+                  className={`flex items-center justify-between rounded-lg border px-4 py-3 text-left text-sm font-medium transition-colors ${
+                    size === key
+                      ? "border-[var(--accent-border)] bg-[var(--accent-subtle)] text-[var(--accent)]"
+                      : "border-border bg-surface text-foreground/72 hover:bg-surface-muted"
+                  }`}
+                >
+                  {t.size[key]}
+                  {size === key ? (
+                    <Icon icon="solar:check-circle-bold" aria-hidden="true" />
+                  ) : null}
+                </button>
+              ))}
+            </div>
+          </fieldset>
 
-          <div className="mt-10">
-            <h3 className="text-lg font-semibold text-zinc-900">
+          <fieldset className="mt-10">
+            <legend className="text-lg font-semibold text-foreground">
               {t.sectorTitle}
-            </h3>
+            </legend>
             <div className="mt-4 grid gap-3 sm:grid-cols-2">
               {sectorKeys.map((key) => {
                 const selected = sectors.has(key);
@@ -367,8 +370,8 @@ export function Nis2ScopeChecker({ locale }: { locale: Locale }) {
                     onClick={() => toggleSector(key)}
                     className={`flex min-h-16 items-start gap-3 rounded-lg border px-4 py-3 text-left text-sm leading-5 transition-colors ${
                       selected
-                        ? "border-blue-200 bg-blue-50 text-blue-800"
-                        : "border-zinc-200 bg-white text-zinc-600 hover:bg-zinc-50"
+                        ? "border-[var(--accent-border)] bg-[var(--accent-subtle)] text-[var(--accent)]"
+                        : "border-border bg-surface text-foreground/64 hover:bg-surface-muted"
                     }`}
                   >
                     <Icon
@@ -381,12 +384,12 @@ export function Nis2ScopeChecker({ locale }: { locale: Locale }) {
                 );
               })}
             </div>
-          </div>
+          </fieldset>
 
-          <div className="mt-10">
-            <h3 className="text-lg font-semibold text-zinc-900">
+          <fieldset className="mt-10">
+            <legend className="text-lg font-semibold text-foreground">
               {t.flagsTitle}
-            </h3>
+            </legend>
             <div className="mt-4 grid gap-3">
               {flagKeys.map((key) => {
                 const selected = flags.has(key);
@@ -398,8 +401,8 @@ export function Nis2ScopeChecker({ locale }: { locale: Locale }) {
                     onClick={() => toggleFlag(key)}
                     className={`flex items-center gap-3 rounded-lg border px-4 py-3 text-left text-sm font-medium transition-colors ${
                       selected
-                        ? "border-emerald-200 bg-emerald-50 text-emerald-800"
-                        : "border-zinc-200 bg-white text-zinc-600 hover:bg-zinc-50"
+                        ? "border-[var(--status-pass-border)] bg-[var(--status-pass-subtle)] text-[var(--status-pass)]"
+                        : "border-border bg-surface text-foreground/64 hover:bg-surface-muted"
                     }`}
                   >
                     <Icon
@@ -412,26 +415,26 @@ export function Nis2ScopeChecker({ locale }: { locale: Locale }) {
                 );
               })}
             </div>
-          </div>
+          </fieldset>
         </div>
 
-        <aside className="h-fit rounded-lg border border-blue-100 bg-blue-50/50 p-6 md:p-8">
-          <p className="mono text-xs uppercase text-blue-500">{t.resultTitle}</p>
-          <h2 className="mt-3 text-3xl font-semibold leading-tight text-zinc-900">
+        <aside className="h-fit rounded-lg border border-[var(--accent-border)] bg-[var(--accent-subtle)] p-6 md:p-8" aria-live="polite">
+          <p className="mono text-xs uppercase text-[var(--accent)]">{t.resultTitle}</p>
+          <h2 className="mt-3 text-3xl font-semibold leading-tight text-foreground">
             {result.title}
           </h2>
-          <p className="mt-4 text-sm leading-6 text-zinc-600">{result.body}</p>
+          <p className="mt-4 text-sm leading-6 text-foreground/64">{result.body}</p>
 
-          <div className="mt-6 rounded-lg border border-white/80 bg-white p-4">
-            <h3 className="text-sm font-semibold text-zinc-900">
+          <div className="mt-6 rounded-lg border border-border bg-surface p-4">
+            <h3 className="text-sm font-semibold text-foreground">
               {t.nextTitle}
             </h3>
-            <ul className="mt-3 space-y-2 text-sm leading-6 text-zinc-600">
+            <ul className="mt-3 space-y-2 text-sm leading-6 text-foreground/64">
               {result.next.map((item) => (
                 <li key={item} className="flex gap-2">
                   <Icon
                     icon="solar:check-circle-linear"
-                    className="mt-0.5 shrink-0 text-lg text-blue-600"
+                    className="mt-0.5 shrink-0 text-lg text-[var(--accent)]"
                     aria-hidden="true"
                   />
                   <span>{item}</span>
@@ -440,8 +443,8 @@ export function Nis2ScopeChecker({ locale }: { locale: Locale }) {
             </ul>
           </div>
 
-          <div className="mt-5 rounded-lg border border-zinc-200 bg-white p-4">
-            <p className="text-sm leading-6 text-zinc-600">{t.disclaimer}</p>
+          <div className="mt-5 rounded-lg border border-border bg-surface p-4">
+            <p className="text-sm leading-6 text-foreground/64">{t.disclaimer}</p>
           </div>
         </aside>
       </div>

@@ -333,3 +333,42 @@ No persistent data migration or backfill is required for any finding in this lan
 ## Files created or modified
 
 - Created: `docs/audits/entire-codebase-lane-09-performance-security-observability.md`
+
+## T4-I implementation closeout
+
+Date: 2026-06-02
+
+Scope completed without commit, push, deploy, production DB/Blob, live Stripe/provider action, package install, or production environment change.
+
+### Changes made
+
+- Added dependency override governance documentation with rationale, owner, validation command, and removal criteria for `brace-expansion`, `esbuild`, `postcss`, `tmp`, and `uuid`: `docs/security/dependency-overrides.md`.
+- Documented the accepted Next ecosystem compatibility risk instead of changing package versions: `docs/operations/performance-security-observability-closeout.md`.
+- Added a first-class local Lighthouse script: `perf:lighthouse` runs `lhci autorun --upload.target=filesystem` so reports stay local unless a future gate changes policy.
+- Added an explicit Sentry scrubber policy and implementation: `lib/observability/sentry-scrubber.ts`, wired into `instrumentation-client.ts`, `sentry.server.config.ts`, and `sentry.edge.config.ts` with `sendDefaultPii: false`, `beforeSend`, and `beforeSendTransaction`.
+- Added source-only smokes for Sentry scrubbing and T4-I governance/investigation coverage: `scripts/smoke-sentry-scrubbing.ts`, `scripts/smoke-t4i-performance-security-observability.ts`, and `scripts/smoke-manifest.json` entries.
+- Investigated and documented build route-rendering output: the edge warning is consistent with `app/opengraph-image.tsx` exporting `runtime = "edge"`; broad public dynamic output is consistent with root/i18n dynamic API usage in `app/layout.tsx` (`cookies()`) and `i18n/request.ts` (`headers()`). No route behavior was changed.
+
+### Measurement / verification
+
+Baseline before changes:
+
+- `npm run build`: PASS. Build compiled in 12.0s, Sentry/Next runAfterProductionCompile completed in 396ms, TypeScript finished in 13.6s, generated 77 static pages in 258ms. Warning persisted: `Using edge runtime on a page currently disables static generation for that page`. Route table remained mostly dynamic (`ƒ`), with only `/manifest.webmanifest`, `/robots.txt`, and `/sitemap.xml` static (`○`).
+- `npm ls next @next/bundle-analyzer eslint-config-next --depth=0`: `next@16.2.6`, `@next/bundle-analyzer@15.5.18`, `eslint-config-next@15.5.18`.
+- `npm view @next/bundle-analyzer version && npm view eslint-config-next version`: both returned `16.2.7`, confirming a Next 16-compatible tooling line exists, but package changes were intentionally not made in this tranche.
+
+After changes:
+
+- `npm run smoke:sentry-scrubbing && npm run smoke:t4i-performance-security-observability && npm run smoke:t4b-safety-gates`: PASS.
+- `npm run typecheck`: PASS after the concurrent T4-H lead-capture status narrowing issue was fixed during parent integration.
+- `npm run lint`: PASS.
+- `npm run build`: PASS after the concurrent T4-H lead-capture status narrowing issue was fixed; build still shows the known edge-runtime static-generation warning and mostly dynamic route table.
+- `npm audit --audit-level=high`: PASS, `found 0 vulnerabilities`.
+
+### Remaining risks
+
+- Public routes are still broadly dynamic; static public-route generation needs a separate curated-route/product behavior decision.
+- The edge-runtime static-generation warning is understood but not removed; changing/removing the OG image edge runtime was out of this closeout scope.
+- Next-related package versions remain misaligned until a dependency-maintenance tranche updates `next`, `@next/bundle-analyzer`, and `eslint-config-next` together and reruns install/build/analyzer checks.
+- Sentry scrubbing is deny-list based and reduces risk but does not authorize sending PII/customer content; future context expansion still needs product/legal/security approval.
+- Lighthouse is first-class and local/advisory, not a CI gate. A blocking performance budget still needs approval of thresholds, representative fixtures, and artifact retention.

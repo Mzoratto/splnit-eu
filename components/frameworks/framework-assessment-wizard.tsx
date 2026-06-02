@@ -258,6 +258,7 @@ export function FrameworkAssessmentWizard({
             <button
               key={group[0]?.id ?? index}
               type="button"
+              aria-current={active ? "step" : undefined}
               onClick={() => setStep(index)}
               className={`flex min-h-12 items-center justify-center rounded-md border px-3 text-sm ${
                 active
@@ -292,7 +293,17 @@ export function FrameworkAssessmentWizard({
               })}
             </p>
           </div>
-          <div className="h-2 w-full rounded-full bg-surface-muted md:w-56">
+          <div
+            className="h-2 w-full rounded-full bg-surface-muted md:w-56"
+            role="progressbar"
+            aria-label={interpolate(copy.answered, {
+              answered: answeredCount,
+              total: questions.length,
+            })}
+            aria-valuemin={0}
+            aria-valuemax={questions.length}
+            aria-valuenow={answeredCount}
+          >
             <div
               className="h-2 rounded-full bg-primary"
               style={{ width: `${(answeredCount / questions.length) * 100}%` }}
@@ -300,11 +311,13 @@ export function FrameworkAssessmentWizard({
           </div>
         </div>
 
-        {error ? (
-          <div className="mb-4 rounded-md border border-red-200 bg-red-50 p-3 text-sm text-red-700">
-            {error}
-          </div>
-        ) : null}
+        <div
+          role={error ? "alert" : "status"}
+          aria-live={error ? "assertive" : "polite"}
+          className={error ? "mb-4 rounded-md border border-[var(--status-fail-border)] bg-[var(--status-fail-subtle)] p-3 text-sm text-[var(--status-fail)]" : "sr-only"}
+        >
+          {error ?? ""}
+        </div>
 
         <div className="grid gap-4">
           {activeQuestions.map((question) => (
@@ -312,13 +325,13 @@ export function FrameworkAssessmentWizard({
               key={question.id}
               className="rounded-lg border border-border bg-background p-4"
             >
-              <legend className="px-1 font-medium">{questionText(question)}</legend>
+              <legend id={`framework-question-${question.id}`} className="px-1 font-medium">{questionText(question)}</legend>
               {questionHelp(question) ? (
                 <p className="mt-1 text-sm leading-6 text-foreground/58">
                   {questionHelp(question)}
                 </p>
               ) : null}
-              <div className="mt-4 grid gap-2 sm:grid-cols-4">
+              <div className="mt-4 grid gap-2 sm:grid-cols-4" aria-labelledby={`framework-question-${question.id}`}>
                 {answerOptions.map((option) => {
                   const selected = answers[question.id] === option.value;
 
@@ -326,6 +339,7 @@ export function FrameworkAssessmentWizard({
                     <button
                       key={option.value}
                       type="button"
+                      aria-pressed={selected}
                       onClick={() => selectAnswer(question.id, option.value)}
                       className={`inline-flex min-h-11 items-center justify-center gap-2 rounded-md border px-3 text-sm font-medium ${
                         selected

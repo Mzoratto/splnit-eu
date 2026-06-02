@@ -99,11 +99,7 @@ export default async function TrustCenterPage({
             </div>
           ) : null}
           {trustCenter.showLiveIndicator === false ? null : (
-            <LiveIndicator
-              copy={copy}
-              lastTestedAt={trustCenter.lastTestedAt}
-              locale={locale}
-            />
+            <LiveIndicator copy={copy} />
           )}
           <HeroActions copy={copy} orgName={trustCenter.organisationName} />
         </div>
@@ -146,7 +142,7 @@ export default async function TrustCenterPage({
         copy={copy}
         orgName={trustCenter.organisationName}
       />
-      <TrustFooter copy={copy} locale={locale} trustCenter={trustCenter} />
+      <TrustFooter copy={copy} />
     </main>
   );
 }

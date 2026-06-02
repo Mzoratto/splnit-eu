@@ -357,21 +357,22 @@ Owner lane: 06
 Dependent lanes: 03, 05, 10
 Priority: P1
 
-Dispatch status: unblocked. Lane 03, Lane 05, and Lane 10 dependencies are satisfied or accepted by T4-C, T4-E, and T4-G.
+Dispatch status: completed in source-smoke mode. Lane 03, Lane 05, and Lane 10 dependencies were satisfied or accepted by T4-C, T4-E, and T4-G.
 
 Resolved Trust Center aggregate disclosure decision:
 
 - Retain the current aggregate-only public Trust Center model.
 - This is intentional and acceptable for T4-F because public surfaces expose category/framework-level aggregate counts/scores only, not individual control IDs, evidence filenames, test timing details, or attacker-useful implementation detail.
-- T4-F should add explicit durable product/security documentation for this decision and source smokes that prevent accidental disclosure expansion.
-- If future product work wants labels/buckets instead of numeric aggregates, that is a separate product/security decision, not a blocker for T4-F.
+- Durable decision record: `docs/legal/trust-center-public-disclosure.md`.
+- If future product work wants labels/buckets instead of numeric aggregates, that is a separate product/security decision, not a T4-F blocker.
 
-Scope:
+Completed T4-F implementation:
 
-- Record and guard the accepted aggregate-only Trust Center disclosure model.
-- Review/narrow `Compliant since <year>` style wording.
-- Keep vendor-submitted proof as draft/manual-review provenance, not automatic pass.
-- Expand export/report proof coverage after entitlement gates are clear.
+- Public Trust Center `Compliant since <year>` style trust-signal wording was narrowed to bounded readiness-evidence wording.
+- Public Trust Center API no longer returns test-timing fields (`lastTestedAt`, `nextTestAt`, framework `lastAssessedAt`) while retaining approved aggregate counts/scores.
+- Vendor token submissions now record `vendor_reported_manual_review` provenance and still do not create automatic pass/control evidence; vendor risk PDF labels vendor answers as vendor-reported/manual-review input.
+- Export/report source smoke coverage now includes incident report PDFs, access-review CSV, policy/evidence downloads, ISO 27001 package ZIP, smart document XLSX, evidence metadata CSV, and workspace JSON export in addition to existing audit/vendor/risk/workspace archive coverage.
+- Verification: `npm run smoke:t4f-legal-public-proof`, `npm run smoke:trust-center-public-disclosure`, `npm run smoke:copy-hygiene`, `npm run smoke:export-endpoints-source`, `npm run smoke:questionnaire-review-gate`, `npm run smoke:questionnaire-citations`, `npm run smoke:t4b-safety-gates`, `npm run smoke:t4e-plan-entitlements-source`, `npm run typecheck`, and `npm run lint` passed.
 
 ### T4-G: Localization and knowledge-layer red-smoke repair
 
@@ -422,6 +423,15 @@ Scope:
 - Add first-class Lighthouse script if performance budget becomes a gate.
 - Add explicit Sentry PII/secret scrubber policy.
 - Investigate all-public-routes-dynamic build output and edge runtime static-generation warning.
+
+T4-I implementation completed in this tranche:
+
+- Dependency overrides are documented with owner, rationale, validation command, and removal criteria in `docs/security/dependency-overrides.md`.
+- Next ecosystem package mismatch is documented as an accepted compatibility risk for this tranche; no package or lockfile versions were changed.
+- `perf:lighthouse` is available as a first-class local/advisory Lighthouse command using filesystem upload, not temporary public storage.
+- Sentry client/server/edge config now explicitly sets `sendDefaultPii: false` and uses a shared source-smoked scrubber for events and transactions.
+- Build-output investigation found the edge warning is consistent with `app/opengraph-image.tsx` edge runtime, while broad public dynamic output is consistent with root/i18n dynamic API usage (`cookies()` in `app/layout.tsx`, `headers()` in `i18n/request.ts`). No route behavior was changed.
+- Verification: T4-I source smokes, T4-B safety gate smoke, `npm run typecheck`, `npm run lint`, `npm run build`, and high-severity npm audit passed during parent integration. Build still shows the known edge-runtime static-generation warning and mostly dynamic route table.
 
 ## Human approval queue
 

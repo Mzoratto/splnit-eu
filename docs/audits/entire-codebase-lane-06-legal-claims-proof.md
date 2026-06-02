@@ -556,17 +556,34 @@ Human approval is required before changing or publishing:
 - `app/api/questionnaires/export/*`, `lib/questionnaires/*`, `app/(app)/questionnaires/actions.ts`: shared with AI/provider/product lanes; export gating and citation guard must remain intact.
 - `app/vendor-assessment/[token]/*`, `lib/vendors/*`, `app/api/vendors/supply-chain-report/route.ts`: shared with vendor/supply-chain lanes; vendor evidence must remain vendor-reported/manual-review until reviewed.
 
+## T4-F closeout
+
+Status: CLOSED for T4-F source-smoke scope / implemented with remaining counsel-launch caveats.
+
+T4-F records the APPROVED aggregate-only Trust Center disclosure decision in `docs/legal/trust-center-public-disclosure.md`: public Trust Center surfaces may expose category/framework-level aggregate counts/scores, but must not expose individual control IDs, evidence filenames, exact test timing details, or attacker-useful implementation detail. Numeric aggregates remain intentionally public for this tranche; replacing them with labels/buckets is a separate future product/security decision.
+
+T4-F changes narrowed public Trust Center `Compliant since <year>` style wording to bounded readiness-evidence wording. The public Trust Center API no longer returns `lastTestedAt`, `nextTestAt`, or framework `lastAssessedAt`; it still returns approved aggregate counts/scores. Vendor-submitted proof is guarded as vendor-reported/manual-review provenance: token submissions record `assessedBy: "vendor_reported_manual_review"`, do not create automatic passing control evidence, and the vendor risk PDF labels vendor answers as manual-review input rather than certification/pass proof.
+
+Report/export proof coverage was expanded in source-smoke mode after T4-E documented current entitlement gates. `scripts/smoke-export-endpoints-source.ts` now covers incident PDFs, access-review CSV, policy download, evidence download, ISO 27001 package ZIP, smart document XLSX, evidence metadata CSV, workspace JSON export, and existing audit/vendor/risk/workspace archive routes for auth/org/private response boundaries.
+
+T4-F verification command:
+
+```sh
+npm run smoke:t4f-legal-public-proof
+```
+
+The T4-F smoke is registered in `package.json` and `scripts/smoke-manifest.json` as `source_only`.
+
 ## Overall lane result
 
-Status: PARTIAL PASS / implemented with caveats.
+Status: T4-F CLOSED / legal-public proof implemented with launch caveats.
 
-The core guardrails for public honesty, legal placeholders, Trust Center public disclosure, export source scoping, questionnaire review-gated exports, citation sanitization, and compliance report generation are present and passing their lane smokes.
+The core guardrails for public honesty, legal placeholders, Trust Center public disclosure, export source scoping, questionnaire review-gated exports, citation sanitization, compliance report generation, accepted aggregate-only Trust Center disclosure, narrowed compliance wording, and vendor-submitted proof provenance are present and covered by source/runtime smokes.
 
-The remaining work is not emergency implementation but approval/proof hardening:
+Remaining launch caveats:
 
-1. Decide and test public Trust Center API aggregate disclosure.
-2. Approve or narrow GDPR/compliance-style Trust Center wording.
-3. Expand report/export proof coverage for the full buyer suite.
-4. Convert vendor submissions into draft evidence with safe provenance.
-5. Reconcile entitlements/plan gates for buyer proof features.
-6. Complete counsel/owner approval before paid production reliance on legal/public claims.
+1. Final counsel/owner approval is still required before paid production reliance on terms, DPA, privacy, cookies, retention periods, SLA/liability/payment/refund wording, subprocessor/region claims, and public legal copy.
+2. Public Trust Center numeric aggregate counts/scores are accepted for T4-F; any future disclosure expansion or bucket/label replacement needs a separate product/security decision.
+3. Vendor submissions remain vendor-reported/manual-review inputs; converting them into first-class evidence rows remains future work and must preserve manual-review provenance until approved reviewer promotion.
+4. Expanded report/export coverage is source-level. It does not perform live Blob downloads, production DB reads, or full binary text extraction for every generated PDF/XLSX/ZIP.
+5. Entitlement gates remain as documented by T4-E; T4-F did not silently add paid gates to authenticated buyer-proof exports.

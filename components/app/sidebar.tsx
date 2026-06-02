@@ -4,7 +4,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { SignOutButton } from "@clerk/nextjs";
 import { useTranslations } from "next-intl";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { LogoMark } from "@/components/brand/logo-mark";
 import {
   AlertTriangle,
@@ -81,6 +81,18 @@ function Badge({ count }: { count: number }) {
   );
 }
 
+function getFocusableElements(container: HTMLElement | null) {
+  if (!container) {
+    return [];
+  }
+
+  return Array.from(
+    container.querySelectorAll<HTMLElement>(
+      'a[href], button:not([disabled]), textarea, input, select, [tabindex]:not([tabindex="-1"])',
+    ),
+  ).filter((element) => !element.hasAttribute("disabled") && element.getAttribute("aria-disabled") !== "true");
+}
+
 export function Sidebar({
   clerkEnabled,
   organisationName,
@@ -98,7 +110,7 @@ export function Sidebar({
   const t = useTranslations("navigation");
 
   return (
-    <aside className="fixed inset-y-0 left-0 hidden w-[220px] border-r border-slate-800 bg-slate-900 text-white lg:flex lg:flex-col">
+    <aside className="fixed inset-y-0 left-0 hidden w-[var(--app-sidebar-width)] border-r border-white/10 bg-[var(--color-brand-900)] text-white lg:flex lg:flex-col">
       <div className="flex h-20 items-center gap-3 border-b border-white/10 px-5 text-lg font-bold">
         <LogoMark className="h-9 w-9" />
         <span>Splnit.eu</span>
@@ -185,6 +197,59 @@ export function MobileTabBar({
   const pathname = usePathname();
   const t = useTranslations("navigation");
   const [moreOpen, setMoreOpen] = useState(false);
+  const moreButtonRef = useRef<HTMLButtonElement>(null);
+  const drawerRef = useRef<HTMLDivElement>(null);
+  const wasMoreOpenRef = useRef(false);
+
+  useEffect(() => {
+    if (!moreOpen) {
+      if (wasMoreOpenRef.current) {
+        moreButtonRef.current?.focus();
+      }
+      wasMoreOpenRef.current = false;
+      return;
+    }
+
+    wasMoreOpenRef.current = true;
+    const focusableElements = getFocusableElements(drawerRef.current);
+    focusableElements[0]?.focus();
+
+    function handleKeyDown(event: KeyboardEvent) {
+      if (event.key === "Escape") {
+        event.preventDefault();
+        setMoreOpen(false);
+        return;
+      }
+
+      if (event.key !== "Tab") {
+        return;
+      }
+
+      const elements = getFocusableElements(drawerRef.current);
+      const first = elements[0];
+      const last = elements[elements.length - 1];
+
+      if (!first || !last) {
+        event.preventDefault();
+        return;
+      }
+
+      if (event.shiftKey && document.activeElement === first) {
+        event.preventDefault();
+        last.focus();
+        return;
+      }
+
+      if (!event.shiftKey && document.activeElement === last) {
+        event.preventDefault();
+        first.focus();
+      }
+    }
+
+    document.addEventListener("keydown", handleKeyDown);
+
+    return () => document.removeEventListener("keydown", handleKeyDown);
+  }, [moreOpen]);
 
   return (
     <>
@@ -219,6 +284,7 @@ export function MobileTabBar({
         })}
 
         <button
+          ref={moreButtonRef}
           type="button"
           aria-controls="mobile-more-drawer"
           aria-expanded={moreOpen}
@@ -237,11 +303,18 @@ export function MobileTabBar({
           onClick={() => setMoreOpen(false)}
         >
           <div
+            ref={drawerRef}
             id="mobile-more-drawer"
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="mobile-more-title"
             className="absolute inset-x-0 bottom-0 max-h-[82vh] overflow-y-auto rounded-t-2xl bg-surface pb-[calc(1rem+env(safe-area-inset-bottom))] pt-4 shadow-2xl"
             onClick={(event) => event.stopPropagation()}
           >
             <div className="mx-auto mb-4 h-1 w-10 rounded-full bg-border" />
+            <h2 id="mobile-more-title" className="sr-only">
+              {t("more")}
+            </h2>
             {navigation.map((group) => (
               <div key={group.sectionKey} className="mb-2">
                 <p className="px-5 pb-1 pt-2 text-[11px] font-semibold uppercase text-foreground/40">

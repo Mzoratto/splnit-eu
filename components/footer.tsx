@@ -58,44 +58,61 @@ export function Footer() {
               <p className="mb-2 text-xs font-bold uppercase text-white">
                 {t("newsletterTitle")}
               </p>
-              {status === "success" ? (
-                <p className="inline-flex items-center gap-1.5 rounded-full border border-[var(--status-pass-border)] bg-[var(--status-pass-subtle)] px-3 py-1.5 text-xs font-semibold text-[var(--status-pass)]">
-                  <Icon icon="solar:check-circle-linear" aria-hidden="true" />
-                  {t("newsletterSuccess")}
-                </p>
-              ) : (
-                <div className="space-y-2">
-                  <form className="flex max-w-xs gap-2" onSubmit={handleSubmit}>
-                    <input
-                      type="email"
-                      required
-                      placeholder="Email"
-                      value={email}
-                      onChange={(event) => {
-                        setEmail(event.target.value);
-                        if (status === "error") {
-                          setStatus("idle");
-                        }
-                      }}
-                      className="min-h-10 min-w-0 flex-1 rounded-lg border border-white/15 bg-white/10 px-3.5 py-2 text-sm text-white placeholder:text-white/38 focus:outline-none focus:ring-2 focus:ring-[var(--color-brand-400)]"
-                    />
-                    <button
-                      type="submit"
-                      disabled={status === "loading"}
-                      className="min-h-10 shrink-0 rounded-lg bg-[var(--color-brand-700)] px-4 py-2 text-xs font-semibold text-white transition-colors hover:bg-[var(--color-brand-600)] disabled:cursor-not-allowed disabled:opacity-60"
-                    >
-                      {status === "loading"
-                        ? t("newsletterLoading")
-                        : t("newsletterSubmit")}
-                    </button>
-                  </form>
-                  {status === "error" ? (
-                    <p className="text-xs text-red-300">
-                      {t("newsletterError")}
-                    </p>
+              <div className="space-y-2">
+                <form className="flex max-w-xs gap-2" onSubmit={handleSubmit}>
+                  <label htmlFor="footer-newsletter-email" className="sr-only">
+                    {t("newsletterTitle")}
+                  </label>
+                  <input
+                    id="footer-newsletter-email"
+                    type="email"
+                    required
+                    placeholder="Email"
+                    value={email}
+                    aria-describedby="footer-newsletter-status"
+                    aria-invalid={status === "error"}
+                    onChange={(event) => {
+                      setEmail(event.target.value);
+                      if (status === "error") {
+                        setStatus("idle");
+                      }
+                    }}
+                    className="min-h-10 min-w-0 flex-1 rounded-lg border border-white/15 bg-white/10 px-3.5 py-2 text-sm text-white placeholder:text-white/38 focus:outline-none focus:ring-2 focus:ring-[var(--color-brand-400)]"
+                  />
+                  <button
+                    type="submit"
+                    disabled={status === "loading"}
+                    className="min-h-10 shrink-0 rounded-lg bg-[var(--color-brand-700)] px-4 py-2 text-xs font-semibold text-white transition-colors hover:bg-[var(--color-brand-600)] disabled:cursor-not-allowed disabled:opacity-60"
+                  >
+                    {status === "loading"
+                      ? t("newsletterLoading")
+                      : t("newsletterSubmit")}
+                  </button>
+                </form>
+                <p
+                  id="footer-newsletter-status"
+                  role={status === "error" ? "alert" : "status"}
+                  aria-live={status === "error" ? "assertive" : "polite"}
+                  className={
+                    status === "success"
+                      ? "inline-flex items-center gap-1.5 rounded-full border border-[var(--status-pass-border)] bg-[var(--status-pass-subtle)] px-3 py-1.5 text-xs font-semibold text-[var(--status-pass)]"
+                      : status === "error"
+                        ? "text-xs text-[var(--status-fail)]"
+                        : "sr-only"
+                  }
+                >
+                  {status === "success" ? (
+                    <Icon icon="solar:check-circle-linear" aria-hidden="true" />
                   ) : null}
-                </div>
-              )}
+                  {status === "success"
+                    ? t("newsletterSuccess")
+                    : status === "error"
+                      ? t("newsletterError")
+                      : status === "loading"
+                        ? t("newsletterLoading")
+                        : ""}
+                </p>
+              </div>
             </div>
           </div>
 

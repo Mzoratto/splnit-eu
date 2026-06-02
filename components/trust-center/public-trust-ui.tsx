@@ -187,8 +187,7 @@ export function FrameworkCard({
 
       <div className="mt-5 flex flex-col gap-3 border-t border-border pt-4 sm:flex-row sm:items-center sm:justify-between">
         <p className="font-mono text-xs text-foreground/50">
-          {copy.frameworkCard.lastAssessed}{" "}
-          {formatDateTime(framework.lastAssessedAt, locale)} · {copy.frameworkCard.auto}
+          {copy.frameworkCard.auto}
         </p>
         {showDrilldown ? (
           <Link
@@ -327,19 +326,15 @@ export function ContactSection({
 export function TrustFooter({
   backHref,
   copy,
-  locale,
-  trustCenter,
 }: {
   backHref?: string;
   copy: PublicTrustCopy;
-  locale: Locale;
-  trustCenter: PublicTrustCenterModel;
 }) {
   return (
     <footer className="border-t border-border bg-surface">
       <div className="mx-auto flex max-w-7xl flex-col gap-4 px-4 py-6 sm:px-6 lg:flex-row lg:items-center lg:justify-between">
         <p className="font-mono text-xs text-foreground/50">
-          {copy.footer.lastReviewed} {formatDateTime(trustCenter.lastTestedAt, locale)} · {copy.footer.reviewWindow} {copy.time.later}
+          {copy.footer.lastReviewed} · {copy.footer.reviewWindow} {copy.time.later}
         </p>
         <div className="flex flex-wrap items-center gap-4 text-sm text-foreground/58">
           {backHref ? <Link href={backHref}>{copy.footer.back}</Link> : null}
@@ -436,21 +431,14 @@ export function HeroActions({
 
 export function LiveIndicator({
   copy,
-  lastTestedAt,
-  locale,
 }: {
   copy: PublicTrustCopy;
-  lastTestedAt: string | null;
-  locale: Locale;
 }) {
   return (
     <div className="mt-6 inline-flex flex-wrap items-center gap-3 rounded-[var(--r-lg)] border border-[var(--status-pass-border)] bg-[var(--status-pass-subtle)] px-4 py-3">
       <span className="flex items-center gap-2 text-sm font-medium text-[var(--status-pass)]">
         <span className="h-2 w-2 animate-pulse rounded-full bg-[var(--status-pass)]" />
         {copy.liveIndicator.live}
-      </span>
-      <span className="font-mono text-xs text-foreground/58">
-        {copy.liveIndicator.last} {formatDateTime(lastTestedAt, locale)}
       </span>
     </div>
   );

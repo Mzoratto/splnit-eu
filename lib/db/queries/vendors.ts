@@ -321,6 +321,7 @@ export async function submitVendorAssessmentByToken(input: {
     .set({
       answers: input.answers,
       assessedAt,
+      assessedBy: "vendor_reported_manual_review",
       score,
       status: "submitted",
     })

@@ -85,6 +85,11 @@ function VendorRiskReport({
         <Text style={styles.muted}>
           {organisationName} · {generatedAt.toISOString().slice(0, 10)}
         </Text>
+        <Text style={styles.muted}>
+          Vendor-submitted answers are vendor-reported inputs for manual review;
+          this report does not treat them as certification or automatic control
+          pass evidence.
+        </Text>
         {vendors.map((vendor) => (
           <View key={vendor.id} style={styles.vendor}>
             <View style={styles.vendorHeader}>

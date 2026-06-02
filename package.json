@@ -8,6 +8,7 @@
     "predeploy": "npm run check:production-migration-drift",
     "deploy": "vercel deploy --prod --yes",
     "analyze": "ANALYZE=true next build",
+    "perf:lighthouse": "lhci autorun --upload.target=filesystem",
     "start": "next start",
     "lint": "eslint",
     "typecheck": "tsc --noEmit",
@@ -159,7 +160,11 @@
     "smoke:manual-evidence-status-propagation": "tsx scripts/smoke-manual-evidence-status-propagation.ts",
     "smoke:t4c-offboarding-source": "tsx scripts/smoke-t4c-offboarding-source.ts",
     "smoke:t4d-integration-workspace-correctness": "tsx scripts/smoke-t4d-integration-workspace-correctness.ts",
-    "smoke:t4e-plan-entitlements-source": "tsx scripts/smoke-t4e-plan-entitlements-source.ts"
+    "smoke:t4e-plan-entitlements-source": "tsx scripts/smoke-t4e-plan-entitlements-source.ts",
+    "smoke:t4f-legal-public-proof": "tsx scripts/smoke-t4f-legal-public-proof.ts",
+    "smoke:sentry-scrubbing": "tsx scripts/smoke-sentry-scrubbing.ts",
+    "smoke:t4i-performance-security-observability": "tsx scripts/smoke-t4i-performance-security-observability.ts",
+    "smoke:t4h-frontend-a11y-source": "tsx scripts/smoke-t4h-frontend-a11y-source.ts"
   },
   "dependencies": {
     "@aws-sdk/client-cloudtrail": "^3.1056.0",

@@ -300,3 +300,19 @@ Before dispatching any T4-C implementation work for retention/offboarding/right-
 - T4-F must document this decision durably and add source smokes that prevent accidental disclosure expansion.
 - If future product work wants labels/buckets instead of numeric aggregates, that requires a separate product/security decision and is not a T4-F blocker.
 - T4-H and T4-I have no blocking approvals and may run in parallel with T4-F.
+
+## T4-I Implementation Log
+
+- T4-I completed in measurement/source-smoke mode: dependency override rationale/removal criteria documented in `docs/security/dependency-overrides.md`; Next package mismatch documented as accepted compatibility risk for this tranche; `perf:lighthouse` added as a local/filesystem Lighthouse script; Sentry client/server/edge configs now set `sendDefaultPii: false` and use a shared scrubber; build dynamic-route/edge warning investigation documented in `docs/operations/performance-security-observability-closeout.md`.
+- Verification: baseline `npm run build` passed before changes and showed the known edge-runtime warning plus mostly dynamic public routes; `npm ls next @next/bundle-analyzer eslint-config-next --depth=0` showed `next@16.2.6`, `@next/bundle-analyzer@15.5.18`, and `eslint-config-next@15.5.18`; package metadata showed Next 16.2.7 tooling exists, but package updates were intentionally skipped.
+- T4-I green checks: `npm run smoke:sentry-scrubbing && npm run smoke:t4i-performance-security-observability && npm run smoke:t4b-safety-gates`, `npm run typecheck`, `npm run lint`, `npm run build`, and `npm audit --audit-level=high` passed during parent integration after the concurrent T4-H lead-capture status narrowing issue was fixed. No production DB, live service, deploy, package install/update, or production env change was performed.
+
+## T4-F Implementation Log
+
+- T4-F completed in strict source-smoke-first mode. RED proof: new `scripts/smoke-t4f-legal-public-proof.ts` initially failed because `docs/legal/trust-center-public-disclosure.md` did not exist, then exposed implementation/doc gaps before green.
+- Aggregate-only public Trust Center disclosure is documented in `docs/legal/trust-center-public-disclosure.md`: category/framework-level aggregate counts/scores are approved for public exposure; individual control IDs, evidence filenames, exact test timing details, and attacker-useful implementation detail remain forbidden.
+- Public Trust Center wording was narrowed from `Compliant since <year>` style claims to bounded readiness-evidence wording. Public Trust Center API no longer returns `lastTestedAt`, `nextTestAt`, or framework `lastAssessedAt`, while retaining approved aggregate counts/scores.
+- Vendor-submitted proof remains vendor-reported/manual-review provenance: token submissions record `assessedBy: "vendor_reported_manual_review"`, do not create automatic passing control evidence, and the vendor risk report labels submitted answers as manual-review input rather than certification/pass proof.
+- Export/report proof coverage was expanded in `scripts/smoke-export-endpoints-source.ts` and `docs/product/plan-entitlement-matrix.md` for incident PDFs, access-review CSV, policy/evidence downloads, ISO 27001 package ZIP, smart document XLSX, evidence metadata CSV, and workspace JSON export. T4-F did not add or weaken entitlement gates.
+- T4-F GREEN verification: `npm run smoke:t4f-legal-public-proof`, `npm run smoke:trust-center-public-disclosure && npm run smoke:copy-hygiene && npm run smoke:export-endpoints-source && npm run smoke:questionnaire-review-gate && npm run smoke:questionnaire-citations && npm run smoke:t4b-safety-gates`, `npm run smoke:t4e-plan-entitlements-source`, `npm run typecheck`, and `npm run lint` passed.
+- No production DB, production Blob, live external service, live Stripe, deploy, production seed/import, or package install/update was performed for T4-F.

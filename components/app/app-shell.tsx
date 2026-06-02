@@ -41,7 +41,7 @@ export function AppShell({
         plan={plan}
         regulationUpdateCount={regulationUpdateCount}
       />
-      <div className="lg:pl-[220px]">
+      <div className="lg:pl-[var(--app-sidebar-width)]">
         <header className="sticky top-0 z-[var(--z-sticky)] flex h-20 items-center justify-between border-b border-border bg-surface/90 px-4 backdrop-blur-xl sm:px-6">
           <div className="flex min-w-0 items-center gap-3 pr-3">
             <div className="min-w-0">
@@ -54,10 +54,15 @@ export function AppShell({
               <OrgSwitcher enabled={clerkEnabled} />
             </div>
           </div>
-          <label className="mx-4 hidden h-11 w-full max-w-md items-center gap-2 rounded-lg border border-border bg-background px-4 text-sm text-foreground/52 lg:flex">
+          <button
+            type="button"
+            disabled
+            title={t("search")}
+            className="mx-4 hidden h-11 w-full max-w-md cursor-not-allowed items-center gap-2 rounded-lg border border-border bg-background px-4 text-left text-sm text-foreground/52 opacity-75 lg:flex"
+          >
             <Search className="h-4 w-4" aria-hidden="true" strokeWidth={1.5} />
             <span>{t("search")}</span>
-          </label>
+          </button>
           <div className="flex items-center gap-2">
             <Link
               href={trustCenterHref}

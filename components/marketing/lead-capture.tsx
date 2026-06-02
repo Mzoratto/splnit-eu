@@ -59,12 +59,12 @@ const regulationBadges: Array<{
 
 const badgeClass: Record<BadgeState, string> = {
   active:
-    "border-[var(--color-brand-700)] bg-[var(--color-brand-700)] text-white ring-2 ring-[var(--color-brand-400)] scale-105",
+    "scale-105 border-[var(--accent)] bg-[var(--accent)] text-[var(--text-on-accent)] ring-2 ring-[var(--accent-border)]",
   secondary:
-    "border-[var(--color-brand-400)] bg-[var(--color-brand-100)] text-[var(--color-brand-700)]",
+    "border-[var(--accent-border)] bg-[var(--accent-subtle)] text-[var(--accent)]",
   dimmed:
-    "border-gray-200 bg-gray-100 text-gray-400 opacity-40 grayscale pointer-events-none",
-  idle: "border-gray-200 bg-gray-100 text-gray-600",
+    "pointer-events-none border-[var(--border-subtle)] bg-[var(--bg-subtle)] text-[var(--text-muted)] opacity-40 grayscale",
+  idle: "border-[var(--border-subtle)] bg-[var(--bg-subtle)] text-[var(--text-secondary)]",
 };
 
 export function LeadCapture({
@@ -136,7 +136,7 @@ export function LeadCapture({
   }
 
   return (
-    <div className="rounded-lg border border-blue-100 bg-blue-50/60 p-8 text-center md:p-14">
+    <div className="rounded-lg border border-[var(--accent-border)] bg-[var(--accent-subtle)] p-8 text-center md:p-14">
       <div className="section-tag mx-auto mb-5 w-fit">
         <Icon icon="solar:clipboard-check-linear" aria-hidden="true" />
         {t("tag")}
@@ -151,7 +151,7 @@ export function LeadCapture({
           {resources.map((resource) => (
             <span
               key={resource}
-              className="rounded-full border border-blue-100 bg-white px-4 py-2 text-sm font-semibold text-foreground/70"
+              className="rounded-full border border-[var(--accent-border)] bg-surface px-4 py-2 text-sm font-semibold text-foreground/70"
             >
               {resource}
             </span>
@@ -162,7 +162,6 @@ export function LeadCapture({
           <div className="rounded-lg border border-[var(--color-border)] bg-white p-4 shadow-[var(--shadow-sm)]">
             <fieldset
               className="grid gap-3"
-              role="radiogroup"
               aria-label={t("companySize")}
             >
               <legend className="text-xs font-bold uppercase text-foreground/60">
@@ -176,8 +175,7 @@ export function LeadCapture({
                     <button
                       key={size.value}
                       type="button"
-                      role="radio"
-                      aria-checked={active}
+                      aria-pressed={active}
                       onClick={() => chooseCompanySize(size.value)}
                       className={`min-h-10 rounded-md px-3 text-sm font-semibold transition-all duration-[var(--duration-base)] ${
                         active
@@ -215,7 +213,7 @@ export function LeadCapture({
                       {t(`industries.${industry}`)}
                       <span
                         className={`h-2.5 w-2.5 rounded-full ${
-                          active ? "bg-[var(--color-logo-green)]" : "bg-gray-300"
+                          active ? "bg-[var(--color-logo-green)]" : "bg-[var(--border-strong)]"
                         }`}
                         aria-hidden="true"
                       />
@@ -258,7 +256,12 @@ export function LeadCapture({
       )}
 
       {status === "success" ? (
-        <div className="mx-auto flex max-w-md items-center justify-center gap-1.5 rounded-full border border-[var(--status-pass-border)] bg-[var(--status-pass-subtle)] px-4 py-2 text-sm font-semibold text-[var(--status-pass)]">
+        <div
+          id="lead-capture-success"
+          role="status"
+          aria-live="polite"
+          className="mx-auto flex max-w-md items-center justify-center gap-1.5 rounded-full border border-[var(--status-pass-border)] bg-[var(--status-pass-subtle)] px-4 py-2 text-sm font-semibold text-[var(--status-pass)]"
+        >
           <Icon icon="solar:check-circle-linear" aria-hidden="true" />
           {t("success")}
         </div>
@@ -267,10 +270,16 @@ export function LeadCapture({
           className="mx-auto flex max-w-md flex-col justify-center gap-2.5 sm:flex-row"
           onSubmit={handleSubmit}
         >
+          <label htmlFor="lead-capture-email" className="sr-only">
+            {t("placeholder")}
+          </label>
           <input
+            id="lead-capture-email"
             type="email"
             required
             value={email}
+            aria-describedby="lead-capture-status lead-capture-footnote"
+            aria-invalid={status === "error"}
             onChange={(event) => {
               setEmail(event.target.value);
               if (status === "error") {
@@ -278,23 +287,30 @@ export function LeadCapture({
               }
             }}
             placeholder={t("placeholder")}
-            className="min-h-11 min-w-0 flex-1 rounded-lg border border-border bg-white px-5 py-2.5 text-sm text-foreground shadow-sm placeholder:text-foreground/38 focus:border-transparent focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="min-h-11 min-w-0 flex-1 rounded-lg border border-border bg-surface px-5 py-2.5 text-sm text-foreground shadow-sm placeholder:text-foreground/38 focus:border-transparent focus:outline-none focus:ring-2 focus:ring-[var(--accent)]"
           />
           <button
             type="submit"
             disabled={status === "loading"}
-            className="min-h-11 rounded-lg bg-primary px-6 py-2.5 text-sm font-semibold text-white shadow-sm transition-colors hover:bg-[var(--accent-hover)]"
+            className="min-h-11 rounded-lg bg-primary px-6 py-2.5 text-sm font-semibold text-white shadow-sm transition-colors hover:bg-[var(--accent-hover)] disabled:cursor-not-allowed disabled:opacity-60"
           >
             {status === "loading" ? t("loading") : resolvedCta}
           </button>
         </form>
       )}
-      {status === "error" ? (
-        <p className="mt-3 text-xs font-semibold text-[var(--status-fail)]">
-          {t("error")}
-        </p>
-      ) : null}
-      <p className="mt-3 text-xs text-foreground/42">
+      <p
+        id="lead-capture-status"
+        role={status === "error" ? "alert" : "status"}
+        aria-live={status === "error" ? "assertive" : "polite"}
+        className={
+          status === "error"
+            ? "mt-3 text-xs font-semibold text-[var(--status-fail)]"
+            : "sr-only"
+        }
+      >
+        {status === "error" ? t("error") : status === "loading" ? t("loading") : ""}
+      </p>
+      <p id="lead-capture-footnote" className="mt-3 text-xs text-foreground/42">
         {t("footnote")}
       </p>
     </div>

@@ -564,6 +564,30 @@
       "safetyClass": "source_only",
       "status": "required",
       "rationale": "T4-E source-only gate for Free/SME/Agency plan docs, public plan vocabulary, buyer-proof entitlement surfaces, and Stripe webhook idempotency documentation."
+    },
+    "smoke:t4f-legal-public-proof": {
+      "command": "tsx scripts/smoke-t4f-legal-public-proof.ts",
+      "safetyClass": "source_only",
+      "status": "required",
+      "rationale": "T4-F source-only closeout gate for aggregate-only Trust Center disclosure, narrowed public compliance wording, vendor-submitted proof provenance, and buyer-proof export/report source coverage."
+    },
+    "smoke:sentry-scrubbing": {
+      "command": "tsx scripts/smoke-sentry-scrubbing.ts",
+      "safetyClass": "source_only",
+      "status": "required",
+      "rationale": "Source-only/fixture smoke for Sentry PII/secret scrubber behavior; no live Sentry network calls."
+    },
+    "smoke:t4i-performance-security-observability": {
+      "command": "tsx scripts/smoke-t4i-performance-security-observability.ts",
+      "safetyClass": "source_only",
+      "status": "required",
+      "rationale": "T4-I source-only closeout gate for dependency override docs, local Lighthouse script, Sentry scrubber wiring, and measured build warning documentation."
+    },
+    "smoke:t4h-frontend-a11y-source": {
+      "command": "tsx scripts/smoke-t4h-frontend-a11y-source.ts",
+      "safetyClass": "source_only",
+      "status": "required",
+      "rationale": "T4-H source-only gate for public form labels/status, mobile drawer/dialog focus semantics, route boundaries, progress/selection accessibility, and token drift reductions."
     }
   }
 }

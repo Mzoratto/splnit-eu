@@ -12,7 +12,6 @@ import {
   HeroActions,
   TrustFooter,
   TrustTopbar,
-  formatDateTime,
 } from "@/components/trust-center/public-trust-ui";
 import {
   getPublicFrameworkDetailModel,
@@ -55,7 +54,7 @@ export async function generateMetadata({
       : data.framework.framework.nameEn;
 
   return {
-    description: `${data.trustCenter.organisationName} readiness summary for ${frameworkName} (${data.framework.regulator}). Latest public evidence date ${formatDateTime(data.framework.lastAssessedAt, locale)}.`,
+    description: `${data.trustCenter.organisationName} readiness summary for ${frameworkName} (${data.framework.regulator}). Public Trust Center disclosure uses category-level aggregate evidence only.`,
     openGraph: {
       images: [`/api/og/trust/${orgSlug}/${frameworkSlug}`],
     },
@@ -172,10 +171,6 @@ export default async function TrustFrameworkPage({
           </div>
 
           <div className="mt-6 flex flex-wrap gap-4 border-t border-border pt-4 font-mono text-xs text-foreground/50">
-            <span>
-              {copy.detail.lastAssessed}{" "}
-              {formatDateTime(framework.lastAssessedAt, locale)}
-            </span>
             <span>{copy.detail.autoTested}</span>
             <span>{copy.detail.controlsInScope()}</span>
           </div>
@@ -274,8 +269,6 @@ export default async function TrustFrameworkPage({
       <TrustFooter
         backHref={trustCenterBackHref}
         copy={copy}
-        locale={locale}
-        trustCenter={trustCenter}
       />
     </main>
   );

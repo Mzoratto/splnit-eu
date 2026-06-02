@@ -190,6 +190,8 @@
   --z-modal: 400;
   --z-popover: 500;
   --z-toast: 600;
+
+  --app-sidebar-width: 220px;
 }
 
 [data-theme="dark"] {

@@ -148,6 +148,18 @@ function findIntakeQuestion(key: IntakeQuestionKey) {
   return INTAKE_QUESTIONS.find((question) => question.key === key);
 }
 
+function getFocusableElements(container: HTMLElement | null) {
+  if (!container) {
+    return [];
+  }
+
+  return Array.from(
+    container.querySelectorAll<HTMLElement>(
+      'a[href], button:not([disabled]), textarea, input, select, [tabindex]:not([tabindex="-1"])',
+    ),
+  ).filter((element) => !element.hasAttribute("disabled") && element.getAttribute("aria-disabled") !== "true");
+}
+
 function reducer(state: WizardState, action: WizardAction): WizardState {
   switch (action.type) {
     case "company":
@@ -349,6 +361,9 @@ export function OnboardingWizard({
     step: 1,
   });
   const draftHydrated = useRef(false);
+  const intakeRevealTriggerRef = useRef<HTMLButtonElement>(null);
+  const intakeRevealDialogRef = useRef<HTMLDivElement>(null);
+  const wasIntakeRevealOpenRef = useRef(false);
   const score = useMemo(() => calculateInitialScore(state), [state]);
   const frameworkAssessment = useMemo(
     () => deriveFrameworkAssessment(state.intake),
@@ -389,6 +404,56 @@ export function OnboardingWizard({
 
     dispatch({ type: "setFrameworks", slugs: defaultFrameworks });
   }, [frameworkAssessment]);
+
+  useEffect(() => {
+    if (!intakeRevealOpen) {
+      if (wasIntakeRevealOpenRef.current) {
+        intakeRevealTriggerRef.current?.focus();
+      }
+      wasIntakeRevealOpenRef.current = false;
+      return;
+    }
+
+    wasIntakeRevealOpenRef.current = true;
+    const focusableElements = getFocusableElements(intakeRevealDialogRef.current);
+    focusableElements[0]?.focus();
+
+    function handleKeyDown(event: KeyboardEvent) {
+      if (event.key === "Escape") {
+        event.preventDefault();
+        setIntakeRevealOpen(false);
+        return;
+      }
+
+      if (event.key !== "Tab") {
+        return;
+      }
+
+      const elements = getFocusableElements(intakeRevealDialogRef.current);
+      const first = elements[0];
+      const last = elements[elements.length - 1];
+
+      if (!first || !last) {
+        event.preventDefault();
+        return;
+      }
+
+      if (event.shiftKey && document.activeElement === first) {
+        event.preventDefault();
+        last.focus();
+        return;
+      }
+
+      if (!event.shiftKey && document.activeElement === last) {
+        event.preventDefault();
+        first.focus();
+      }
+    }
+
+    document.addEventListener("keydown", handleKeyDown);
+
+    return () => document.removeEventListener("keydown", handleKeyDown);
+  }, [intakeRevealOpen]);
 
   const derivedScope = useMemo(
     () =>
@@ -493,7 +558,14 @@ export function OnboardingWizard({
             {minutesRemaining}
           </p>
         </div>
-        <div className="mt-3 h-2 overflow-hidden rounded-full bg-surface-muted" aria-label={`Postup onboardingu ${wizardProgress} %`}>
+        <div
+          className="mt-3 h-2 overflow-hidden rounded-full bg-surface-muted"
+          role="progressbar"
+          aria-label={`Postup onboardingu ${wizardProgress} %`}
+          aria-valuemin={0}
+          aria-valuemax={100}
+          aria-valuenow={wizardProgress}
+        >
           <div className="h-full rounded-full bg-primary transition-all duration-300" style={{ width: `${wizardProgress}%` }} />
         </div>
       </div>
@@ -537,11 +609,13 @@ export function OnboardingWizard({
         )}
       </div>
 
-      {error ? (
-        <div className="rounded-md border border-red-200 bg-red-50 p-3 text-sm text-red-700">
-          {error}
-        </div>
-      ) : null}
+      <div
+        role={error ? "alert" : "status"}
+        aria-live={error ? "assertive" : "polite"}
+        className={error ? "rounded-md border border-[var(--status-fail-border)] bg-[var(--status-fail-subtle)] p-3 text-sm text-[var(--status-fail)]" : "sr-only"}
+      >
+        {error ?? ""}
+      </div>
 
       {state.step === 1 ? (
         <div className="rounded-lg border border-border bg-surface p-5">
@@ -719,7 +793,14 @@ export function OnboardingWizard({
             </div>
           </div>
 
-          <div className="mb-6" aria-label={`Postup intake ${intakeProgress} %`}>
+          <div
+            className="mb-6"
+            role="progressbar"
+            aria-label={`Postup intake ${intakeProgress} %`}
+            aria-valuemin={0}
+            aria-valuemax={100}
+            aria-valuenow={intakeProgress}
+          >
             <div className="flex items-center justify-between text-xs text-foreground/58">
               <span>Postup intake</span>
               <span>{intakeProgress}%</span>
@@ -875,6 +956,7 @@ export function OnboardingWizard({
               {intakeSectionIndex === 0 ? t("buttons.back") : "Předchozí sekce"}
             </button>
             <button
+              ref={intakeRevealTriggerRef}
               type="button"
               disabled={pending}
               onClick={() => {
@@ -893,15 +975,15 @@ export function OnboardingWizard({
           </div>
 
           {intakeRevealOpen ? (
-            <div className="fixed inset-0 z-50 grid place-items-center bg-foreground/30 p-4" role="dialog" aria-modal="true" aria-labelledby="intake-results-title">
-              <div className="w-full max-w-xl rounded-lg border border-border bg-background p-6 shadow-xl">
+            <div className="fixed inset-0 z-50 grid place-items-center bg-foreground/30 p-4" role="dialog" aria-modal="true" aria-labelledby="intake-results-title" aria-describedby="intake-results-description">
+              <div ref={intakeRevealDialogRef} className="w-full max-w-xl rounded-lg border border-border bg-background p-6 shadow-xl">
                 <p className="text-xs font-medium uppercase tracking-[0.12em] text-primary">
                   Výsledky intake
                 </p>
                 <h3 id="intake-results-title" className="mt-2 text-2xl font-semibold">
                   První mezery jsou připravené
                 </h3>
-                <p className="mt-3 text-sm leading-6 text-foreground/64">
+                <p id="intake-results-description" className="mt-3 text-sm leading-6 text-foreground/64">
                   Na základě odpovědí jsme seřadili rámce, prioritní kontroly a doporučenou první integraci. Teď můžete připojit systém nebo pokračovat do detailu kontrol.
                 </p>
                 <div className="mt-5 grid gap-3 sm:grid-cols-3">

@@ -828,7 +828,7 @@ function getCoarsenedYear(value: string | null | undefined) {
 function trustSignalCopy(locale: Locale) {
   if (locale === "en-EU") {
     return {
-      gdprCompliant: (year: number) => `Compliant since ${year}`,
+      gdprCompliant: (year: number) => `Readiness evidence since ${year}`,
       monitored: "Monitored",
       monitored247: "Monitored 24/7",
       ninetyDays: "90 days",
@@ -840,7 +840,7 @@ function trustSignalCopy(locale: Locale) {
 
   if (locale === "it-IT") {
     return {
-      gdprCompliant: (year: number) => `Compliant dal ${year}`,
+      gdprCompliant: (year: number) => `Evidenza di preparazione dal ${year}`,
       monitored: "Monitorato",
       monitored247: "Monitorato 24/7",
       ninetyDays: "90 giorni",
@@ -851,7 +851,7 @@ function trustSignalCopy(locale: Locale) {
   }
 
   return {
-    gdprCompliant: (year: number) => `Compliant od ${year}`,
+    gdprCompliant: (year: number) => `Evidence připravenosti od ${year}`,
     monitored: "Sledováno",
     monitored247: "Monitorováno 24/7",
     ninetyDays: "90 dní",
