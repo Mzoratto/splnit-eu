@@ -239,12 +239,12 @@ Escalation rule: if T3 cannot assign a clear owner lane for a shared file, escal
 
 
 
-## T4-C Pre-Start Approval Gate
+## T4-C Pre-Start Approval Gate — Resolved
 
-Before dispatching any T4-C implementation work for retention/offboarding/right-to-erasure or Blob cleanup:
+Before dispatching any T4-C implementation work for retention/offboarding/right-to-erasure or Blob cleanup, the two blocking decisions were resolved on 2026-06-02:
 
-- Resolve or explicitly defer with accepted risk the stale existing `unknown` status decision: targeted repair/backfill vs leave until re-attestation/new evidence. If deferred, record whether T4-C must coordinate with a later status repair job.
-- Resolve or explicitly defer with accepted legal/ops risk the retention/audit-log deletion policy and legal wording. This is core T4-C scope; do not implement final deletion/Blob cleanup behavior before the policy is accepted or the risk is recorded.
+- Stale existing `unknown` statuses: leave until re-attestation/new evidence. No production DB operation, status repair job, or backfill is in T4-C scope; status state self-heals over time as new evidence is collected. Revisit before paid launch if customer feedback shows stale status is a practical problem.
+- Audit-log retention on org deletion: retain audit logs with documented legal basis. The exact retention period must be set before paid launch. This matches current schema behavior after migration `0016` intentionally removed the audit-log org FK and unblocks T4-C without counsel approval today.
 
 ## T4-A/T4-B Decision Log
 
