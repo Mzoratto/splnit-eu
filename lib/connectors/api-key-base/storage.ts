@@ -86,7 +86,7 @@ export function encryptedValuesForCredential(
     config: {
       consumerKeyEnc: encryptSecret(clean(credential.consumerKey), clerkOrgId),
       credentialType: "ovhcloud_three_part",
-      serviceName: credential.serviceName?.trim() || null,
+      serviceName: clean(credential.serviceName),
       tokenType: "api_key",
     },
     refreshTokenEnc: encryptSecret(clean(credential.appSecret), clerkOrgId),
@@ -207,7 +207,9 @@ export async function getStoredConnectorCredential(input: {
 
   const consumerKeyEnc = getConsumerKeyEnc(config);
 
-  if (!row.refreshTokenEnc || !consumerKeyEnc) {
+  const serviceName = getServiceName(config);
+
+  if (!row.refreshTokenEnc || !consumerKeyEnc || !serviceName) {
     return null;
   }
 
@@ -216,7 +218,7 @@ export async function getStoredConnectorCredential(input: {
     appSecret: decryptSecret(row.refreshTokenEnc, input.clerkOrgId),
     consumerKey: decryptSecret(consumerKeyEnc, input.clerkOrgId),
     platform: "ovhcloud",
-    serviceName: getServiceName(config),
+    serviceName,
   };
 }
 

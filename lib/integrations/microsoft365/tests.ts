@@ -312,7 +312,7 @@ export const microsoft365Adapter: IntegrationAdapter = {
 
   async runTest(checkLogic: string, integration: Integration): Promise<TestResult> {
     const { getGraphClient } = await import("./client");
-    const client = getGraphClient(integration);
+    const client = await getGraphClient(integration);
     return runMicrosoft365CheckWithClient(checkLogic, client);
   },
 };

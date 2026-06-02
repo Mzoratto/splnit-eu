@@ -1,13 +1,6 @@
-import { deleteBlobUrls } from "@/lib/blob/cleanup";
 import { getDb } from "@/lib/db";
-import {
-  evidence,
-  organisations,
-  orgControlStatuses,
-  policies,
-  profiles,
-  trustCenterRequests,
-} from "@/lib/db/schema";
+import { organisations, profiles } from "@/lib/db/schema";
+import { deleteOrganisationForOffboarding } from "@/lib/offboarding/org-deletion";
 import { and, eq } from "drizzle-orm";
 
 export async function upsertOrganisationFromClerk(input: {
@@ -36,35 +29,21 @@ export async function upsertOrganisationFromClerk(input: {
 }
 
 export async function deleteOrganisationFromClerk(clerkOrgId: string) {
-  const db = getDb();
-  const [evidenceBlobRows, policyBlobRows] = await Promise.all([
-    db
-      .select({ blobUrl: evidence.blobUrl })
-      .from(evidence)
-      .where(eq(evidence.clerkOrgId, clerkOrgId)),
-    db
-      .select({ blobUrl: policies.blobUrl })
-      .from(policies)
-      .where(eq(policies.clerkOrgId, clerkOrgId)),
-  ]);
+  const result = await deleteOrganisationForOffboarding(clerkOrgId);
 
-  await deleteBlobUrls([
-    ...evidenceBlobRows.map((row) => row.blobUrl),
-    ...policyBlobRows.map((row) => row.blobUrl),
-  ]);
+  if (result.failures.length > 0) {
+    console.warn("Clerk organisation deletion completed with offboarding cleanup failures", {
+      clerkOrgId,
+      failures: result.failures,
+      retained: result.retained,
+    });
+  }
 
-  await Promise.all([
-    db
-      .delete(orgControlStatuses)
-      .where(eq(orgControlStatuses.clerkOrgId, clerkOrgId)),
-    db
-      .delete(trustCenterRequests)
-      .where(eq(trustCenterRequests.clerkOrgId, clerkOrgId)),
-  ]);
+  if (!result.deletedRootOrganisation) {
+    throw new Error(`Failed to delete organisation ${clerkOrgId}.`);
+  }
 
-  await db
-    .delete(organisations)
-    .where(eq(organisations.clerkOrgId, clerkOrgId));
+  return result;
 }
 
 export async function upsertProfileFromClerk(input: {

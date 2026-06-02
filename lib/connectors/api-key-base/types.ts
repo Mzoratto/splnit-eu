@@ -16,7 +16,7 @@ export type OVHcloudCredentialInput = {
   appKey: string;
   appSecret: string;
   consumerKey: string;
-  serviceName?: string | null;
+  serviceName: string;
 };
 
 export type AbraFlexiCredentialInput = {

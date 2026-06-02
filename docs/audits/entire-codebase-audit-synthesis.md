@@ -298,6 +298,14 @@ Scope:
 - Separate retention exceptions from deletion failures.
 - Add source and local-only verification; no production Blob actions without approval.
 
+T4-C implementation completed in this tranche:
+
+- Audit-log retention docs now match schema behavior: audit logs are retained on organisation deletion with documented legal/security/compliance basis; exact retention period remains a before-paid-launch decision.
+- Offboarding service blocks root organisation deletion if Blob URL collection fails, preserving Blob URL provenance for retry.
+- Blob cleanup is auditable and idempotent via normalized/deduped URL batches and per-URL deleted/skipped/failed results.
+- Granular evidence erasure blocks row deletion if Blob cleanup fails/skips or audit logging fails; retained audit log is written before evidence row deletion.
+- T4-C source smoke enumerates `clerk_org_id` tables and Blob/logo URL columns and verifies these guards locally.
+
 ### T4-D: Integration/workspace execution correctness
 
 Owner lane: 04
@@ -311,6 +319,14 @@ Scope:
 - Fix OVHcloud `serviceName` connection-validity bug.
 - Decide scheduler-of-record between Vercel Cron and Inngest for duplicate jobs.
 - Fix evidence expiry query/job path after Lane 02 expiry persistence decision.
+
+T4-D implementation completed in this tranche:
+
+- Microsoft Graph client now refreshes near-expired/expired tokens through the existing OAuth helper and persists refreshed token metadata before checks run.
+- API-key connector connect/rotate paths enqueue first-run checks where intended without blocking successful credential save on enqueue failure.
+- OVHcloud `serviceName` is required at form/action/type/storage boundaries; stored OVH credentials without `serviceName` no longer appear runnable.
+- Vercel Cron is recorded as scheduler-of-record for duplicate scheduled jobs; duplicate Inngest cron triggers were removed while event-triggerable functions remain.
+- Evidence expiry alerts stay disabled by default because expiry persistence is still absent; source smoke keeps that blocker explicit instead of fabricating behavior.
 
 ### T4-E: Plan entitlement and buyer-proof gate alignment
 

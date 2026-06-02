@@ -1,6 +1,6 @@
 # Retention Policy Draft
 
-Last updated: 2026-05-01
+Last updated: 2026-06-02
 
 Status: engineering draft for counsel and business-owner review. This file proposes operational retention rules; it is not a final legal schedule.
 
@@ -21,7 +21,8 @@ Regulatory anchors:
 - `profiles` are deleted on Clerk membership/user deletion.
 - Integration disconnect deletes the `integrations` row and resets related control statuses.
 - `evidence.expires_at` and `policies.expires_at` currently drive reminders/review UX, not automatic hard deletion.
-- Vercel Blob object URLs are stored for evidence and generated policy/report files. Organisation deletion now deletes known Blob objects before deleting the organisation record; failed database saves after upload try to delete the just-uploaded object.
+- Vercel Blob object URLs are stored for evidence, generated policy/report files, and selected workspace/branding logos. Organisation deletion collects known Blob URLs for the organisation and runs an idempotent, auditable cleanup before deleting the organisation record; Blob cleanup failures are recorded separately from database deletion and retained-data exceptions. Failed database saves after upload still try to delete the just-uploaded object.
+- `audit_logs` are retained on organisation deletion for legal, security, fraud/abuse investigation, and compliance-proof purposes. This matches migration `0016_retain_audit_logs_on_org_cleanup.sql`, which intentionally removed the audit-log organisation foreign key. The exact retention period must be set before paid launch.
 - Backup/PITR retention is not defined in code and must be configured in vendor dashboards.
 
 ## Proposed Schedule
@@ -35,7 +36,7 @@ Regulatory anchors:
 | Billing records | Stripe customer/subscription IDs, plan state, invoices/payment metadata in Stripe. | Keep for statutory accounting, tax, chargeback, and dispute periods. | Stripe stores billing records; Splnit stores Stripe IDs and plan metadata. | Counsel/accountant to define exact Czech accounting/tax period and customer-facing wording. |
 | Compliance workspace data | Framework enrolment, control statuses, vendor assessments, risks, incidents, access reviews, Trust Center settings. | Contract term plus export/offboarding window, then delete unless legal hold or customer instruction says otherwise. | Mostly cascade-deleted with organisation deletion. | Confirm whether customer can choose longer in-product retention by plan. |
 | Evidence and uploaded files | Evidence metadata, uploaded documents, generated PDFs, gap reports, policy documents. | Customer-controlled during contract; delete or return after service end unless legal hold applies. | Org deletion deletes known Blob objects before DB deletion; failed DB saves after upload try to delete the just-uploaded object. | Add per-record delete/export workflows if customers need granular deletion before workspace termination. |
-| Audit logs and security events | `audit_logs`, integration runs, application/security logs, Sentry events. | Long enough for incident investigation and compliance proof, short enough for minimisation. | DB audit logs cascade on organisation deletion; Sentry/vendor logs depend on dashboard settings. | Counsel/security owner to set exact periods for app audit logs, runtime logs, and Sentry. |
+| Audit logs and security events | `audit_logs`, integration runs, application/security logs, Sentry events. | Long enough for incident investigation and compliance proof, short enough for minimisation. | DB audit logs are retained on organisation deletion as a documented retention exception; Sentry/vendor logs depend on dashboard settings. | Counsel/security owner to set exact periods for app audit logs, runtime logs, and Sentry before paid launch. |
 | Integration tokens and connected-system metadata | Microsoft refresh tokens, GitHub installation ID, AWS role/config, test results. | Tokens until disconnect or account deletion; test results according to compliance workspace retention. | Tokens are deleted when integration row is deleted; tokens are encrypted at rest. | Confirm disconnect semantics and whether evidence snapshots survive integration disconnect. |
 | Questionnaire AI prompts/outputs | Pasted/uploaded questionnaire questions, organisation name/plan, control summaries, evidence summaries/metadata, policy metadata, reviewed citation metadata sent to OpenAI when enabled; generated draft answers stored in Splnit. Raw uploaded evidence files, secrets, credentials, and special-category personal data should not be sent. | Keep generated answers as customer workspace data until customer deletion/export/offboarding; provider prompt/log retention depends on OpenAI account terms/settings and must be confirmed before broad customer use. | App stores outputs as generated artifacts; provider calls require `QUESTIONNAIRE_AI_ENABLED=true` and `OPENAI_API_KEY`. Provider code supports OpenAI only. Answers default to draft and UI copy blocks PDF/XLSX export until all answers are approved. | Confirm OpenAI DPA/data-retention controls, training/use-of-inputs setting, support/log retention, transfer mechanism, and customer opt-in/review wording. |
 | Trust Center access requests | Requester email, company, NDA status, expiry. | Until request expires plus security/audit review window. | Request expiry exists; table lacks an organisation foreign-key cascade in schema. | Add explicit cleanup or FK migration before production Trust Center access requests. |
@@ -44,8 +45,8 @@ Regulatory anchors:
 
 ## Engineering Follow-Ups
 
-- Add regression coverage for organisation deletion cleanup or replace explicit cleanup with cascade foreign keys in a future schema migration.
-- Add per-record Blob deletion if evidence, policy, or generated-report delete buttons are introduced.
+- Keep regression coverage for organisation deletion cleanup, including the retained audit-log exception. Do not add an audit-log FK cascade unless the approved retention posture changes.
+- Add per-record Blob deletion if evidence, policy, or generated-report delete buttons are introduced; current source hardening covers org-level offboarding cleanup and preserves audit-log retention.
 - Define dashboard retention for Vercel logs, Neon PITR, Sentry events, PostHog events, Resend logs, Loops subscribers, Inngest events, and Upstash Redis keys.
 - Decide whether `expires_at` means "review again" or "delete after this date" for each record type; the current product uses it as review/expiry metadata.
 - Use `docs/operations/offboarding-runbook.md` as the manual export/offboarding runbook and load-test the workspace archive route before large customer workspaces rely on it.

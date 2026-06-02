@@ -77,6 +77,47 @@ export async function upsertIntegrationConnection(input: {
   return integration;
 }
 
+export async function updateMicrosoftIntegrationTokens(input: {
+  accessTokenEnc: string;
+  clerkOrgId: string;
+  integrationId: string;
+  refreshTokenEnc?: string | null;
+  tokenExpiresAt: Date;
+}) {
+  const db = getDb();
+
+  const setValues: {
+    accessTokenEnc: string;
+    lastErrorMsg: null;
+    refreshTokenEnc?: string | null;
+    tokenExpiresAt: Date;
+  } = {
+    accessTokenEnc: input.accessTokenEnc,
+    lastErrorMsg: null,
+    tokenExpiresAt: input.tokenExpiresAt,
+  };
+
+  if (input.refreshTokenEnc !== undefined) {
+    setValues.refreshTokenEnc = input.refreshTokenEnc;
+  }
+
+  const rows = await db
+    .update(integrations)
+    .set(setValues)
+    .where(
+      and(
+        eq(integrations.id, input.integrationId),
+        eq(integrations.clerkOrgId, input.clerkOrgId),
+        eq(integrations.provider, "microsoft365"),
+      ),
+    )
+    .returning({ id: integrations.id });
+
+  if (!rows[0]) {
+    throw new Error("Failed to persist refreshed Microsoft 365 tokens.");
+  }
+}
+
 export async function getIntegrationDetail(input: {
   clerkOrgId: string;
   provider: string;

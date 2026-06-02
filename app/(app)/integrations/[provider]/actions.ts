@@ -23,9 +23,8 @@ const ovhcloudConnectionSchema = z.object({
   serviceName: z
     .string()
     .trim()
-    .max(200)
-    .optional()
-    .transform((value) => value || null),
+    .min(1)
+    .max(200),
 });
 
 const connectionSchema = z.discriminatedUnion("platform", [

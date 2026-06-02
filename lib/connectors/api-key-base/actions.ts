@@ -6,6 +6,7 @@ import { z } from "zod";
 import { recordActivationEvent } from "@/lib/activation/events";
 import { createAuditLog } from "@/lib/db/queries/audit-logs";
 import { disconnectIntegrationConnection } from "@/lib/db/queries/integrations";
+import { enqueueIntegrationFirstRun } from "@/lib/integrations/first-run-enqueue";
 import { acquireIntegrationRunLock } from "@/lib/integrations/locks";
 import { normalizeAbraFlexiBaseUrl } from "@/lib/connectors/abra-flexi/url";
 import { checkConnectorCredentialHealth } from "./health";
@@ -26,7 +27,7 @@ const ovhcloudCredentialSchema = z.object({
   appSecret: z.string().min(1).max(4096),
   consumerKey: z.string().min(1).max(4096),
   platform: z.literal("ovhcloud"),
-  serviceName: z.string().max(200).optional().nullable(),
+  serviceName: z.string().trim().min(1).max(200),
 });
 
 const abraFlexiCredentialSchema = z.object({
@@ -177,6 +178,49 @@ async function validateAndStoreCredential(input: {
       },
       name: "ConnectorOAuthCompleted",
     });
+
+    const firstRunTrigger = input.action === "connect"
+      ? "api_key_connect_first_run"
+      : "credential_rotation_first_run";
+
+    try {
+      const firstRun = await enqueueIntegrationFirstRun({
+        clerkOrgId: input.clerkOrgId,
+        integrationId: integration.id,
+        provider: input.credential.platform,
+        trigger: input.action === "connect" ? "api_key_connect_first_run" : "credential_rotation_first_run",
+      });
+
+      await createAuditLog({
+        action: firstRun.enqueued
+          ? "integration.first_run_queued"
+          : "integration.first_run_skipped",
+        clerkOrgId: input.clerkOrgId,
+        clerkUserId: input.userId,
+        entityId: integration.id,
+        entityType: "integration",
+        metadata: {
+          lockEnabled: firstRun.lockEnabled,
+          provider: input.credential.platform,
+          tokenType: "api_key",
+          trigger: firstRunTrigger,
+        },
+      });
+    } catch (error) {
+      await createAuditLog({
+        action: "integration.first_run_failed",
+        clerkOrgId: input.clerkOrgId,
+        clerkUserId: input.userId,
+        entityId: integration.id,
+        entityType: "integration",
+        metadata: {
+          message: error instanceof Error ? error.message : "unknown",
+          provider: input.credential.platform,
+          tokenType: "api_key",
+          trigger: firstRunTrigger,
+        },
+      });
+    }
 
     revalidateConnectorPaths(input.credential.platform);
 

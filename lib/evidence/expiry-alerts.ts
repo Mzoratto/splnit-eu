@@ -16,7 +16,19 @@ function addDays(date: Date, days: number) {
   return nextDate;
 }
 
+function evidenceExpiryAlertsEnabled() {
+  return process.env.SPLNIT_ENABLE_EVIDENCE_EXPIRY_ALERTS === "true";
+}
+
 export async function sendEvidenceExpiryAlerts(now = new Date()) {
+  if (!evidenceExpiryAlertsEnabled()) {
+    return {
+      emailsSent: 0,
+      evidenceCount: 0,
+      skipped: "Evidence expiry persistence is not implemented.",
+    };
+  }
+
   if (!hasDatabaseUrl()) {
     return {
       emailsSent: 0,

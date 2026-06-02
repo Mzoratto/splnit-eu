@@ -251,3 +251,10 @@ Before dispatching any T4-C implementation work for retention/offboarding/right-
 - Human-approved T4-A canonical mapping: manual evidence `gap` maps to existing control status `fail`; this tranche does not add a first-class `gap` control status.
 - Manual evidence propagation rollback flag documented in `docs/operations/evidence-status-propagation-runbook.md`: `SPLNIT_MANUAL_EVIDENCE_STATUS_PROPAGATION=disabled` (`disabled`, `false`, `0` accepted) preserves legacy `unknown` status behavior and skips score recalculation.
 - T4-B reviewed-article gate correction: T0 `smoke:reviewed-article-links` pass is classified as WEAK GREEN/false green; the updated smoke fails when no reviewed article rows exist and refuses non-local DBs.
+
+
+## T4-C/T4-D Implementation Log
+
+- T4-C completed: audit-log retention docs reconciled to retained-on-org-deletion behavior; root org deletion is blocked if Blob URL collection fails; Blob cleanup returns auditable per-URL deleted/skipped/failed results; granular evidence erasure blocks row deletion when Blob cleanup or audit logging fails; offboarding runbook documents webhook failure/retry behavior. Verified by `npm run smoke:t4c-offboarding-source` and independent re-review APPROVED.
+- T4-D completed: Microsoft Graph client token refresh is wired before Graph checks; API-key connector connect/rotate paths enqueue first-run checks where intended; OVHcloud `serviceName` is required before credentials are runnable; Vercel Cron is scheduler-of-record while Inngest functions remain event-triggerable; evidence expiry alerts remain disabled by default until expiry persistence exists. Verified by `npm run smoke:t4d-integration-workspace-correctness`, integration neighbor smokes, typecheck/lint/build, and independent review.
+- No production DB, production Blob, live provider API, live Stripe, deploy, or production seed was run for T4-C/T4-D.

@@ -6,7 +6,7 @@ export const regulationUpdates = inngest.createFunction(
   {
     id: "regulation-updates",
     name: "Regulation updates",
-    triggers: { cron: "0 6 * * 1" },
+    triggers: { event: "scheduler/regulation-updates.requested" },
   },
   async ({ step }) => {
     const sync = await step.run("sync regulation sources", () =>

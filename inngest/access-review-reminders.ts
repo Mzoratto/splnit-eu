@@ -5,7 +5,7 @@ export const accessReviewReminders = inngest.createFunction(
   {
     id: "access-review-reminders",
     name: "Access review reminders",
-    triggers: { cron: "0 8 1 */3 *" },
+    triggers: { event: "scheduler/access-review-reminders.requested" },
   },
   async () => {
     return sendAccessReviewReminders();

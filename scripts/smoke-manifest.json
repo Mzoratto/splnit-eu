@@ -546,6 +546,18 @@
       "safetyClass": "db_local_only",
       "status": "required",
       "rationale": "T4-A regression smoke; writes disposable org/evidence/status rows and must run only against local/disposable DB."
+    },
+    "smoke:t4c-offboarding-source": {
+      "command": "tsx scripts/smoke-t4c-offboarding-source.ts",
+      "safetyClass": "source_only",
+      "status": "required",
+      "rationale": "Static/source-only or pure helper smoke; safe to run without production DB/Blob/Stripe/email credentials."
+    },
+    "smoke:t4d-integration-workspace-correctness": {
+      "command": "tsx scripts/smoke-t4d-integration-workspace-correctness.ts",
+      "safetyClass": "source_only",
+      "status": "required",
+      "rationale": "Static/source-only or pure helper smoke; safe to run without production DB/Blob/Stripe/email credentials."
     }
   }
 }

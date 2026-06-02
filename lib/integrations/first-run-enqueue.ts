@@ -14,7 +14,10 @@ type FirstRunEvent = {
     clerkOrgId: string;
     integrationId: string;
     provider: string;
-    trigger: "oauth_callback_first_run";
+    trigger:
+      | "oauth_callback_first_run"
+      | "api_key_connect_first_run"
+      | "credential_rotation_first_run";
   };
 };
 
@@ -31,6 +34,7 @@ export async function enqueueIntegrationFirstRun(
     clerkOrgId: string;
     integrationId: string;
     provider: string;
+    trigger?: FirstRunEvent["data"]["trigger"];
   },
   deps: FirstRunEnqueueDeps = {},
 ) {
@@ -53,7 +57,7 @@ export async function enqueueIntegrationFirstRun(
         clerkOrgId: input.clerkOrgId,
         integrationId: input.integrationId,
         provider: input.provider,
-        trigger: "oauth_callback_first_run",
+        trigger: input.trigger ?? "oauth_callback_first_run",
       },
     });
   } catch (error) {

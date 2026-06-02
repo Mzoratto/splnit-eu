@@ -1,12 +1,14 @@
 # Audit Log Export SOP
 
-Last updated: 2026-05-01
+Last updated: 2026-06-02
 
 Status: support procedure for counsel and business-owner review. Use only from an authorised organisation admin or approved support-access session.
 
 ## Purpose
 
 This procedure returns all organisation-scoped `audit_logs` rows without relying on the default first page. It supports customer offboarding, legal-hold review, and auditor evidence requests.
+
+Audit logs are retained after organisation deletion under the documented legal/security/compliance retention exception. Export audit logs before triggering organisation deletion when they are part of a customer offboarding package; after deletion they are no longer available through the normal authenticated organisation route.
 
 ## Route
 

@@ -50,7 +50,7 @@ export async function collectAccessReviewItems(input: {
 }
 
 async function listMicrosoftEntraUsers(integration: Integration) {
-  const client = getGraphClient(integration);
+  const client = await getGraphClient(integration);
   const response = (await client
     .api("/users")
     .select("displayName,userPrincipalName,mail,accountEnabled,userType")

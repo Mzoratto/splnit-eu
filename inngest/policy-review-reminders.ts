@@ -5,7 +5,7 @@ export const policyReviewReminders = inngest.createFunction(
   {
     id: "policy-review-reminders",
     name: "Policy review reminders",
-    triggers: { cron: "0 8 * * *" },
+    triggers: { event: "scheduler/policy-review-reminders.requested" },
   },
   async () => {
     return sendPolicyReviewReminders();

@@ -5,7 +5,7 @@ export const evidenceExpiryAlerts = inngest.createFunction(
   {
     id: "evidence-expiry-alerts",
     name: "Evidence expiry alerts",
-    triggers: { cron: "0 8 * * *" },
+    triggers: { event: "scheduler/evidence-expiry.requested" },
   },
   async () => {
     return sendEvidenceExpiryAlerts();

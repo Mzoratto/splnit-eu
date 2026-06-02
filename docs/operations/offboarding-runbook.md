@@ -1,6 +1,6 @@
 # Customer Export and Offboarding Runbook
 
-Last updated: 2026-05-01
+Last updated: 2026-06-02
 
 Status: engineering runbook for counsel and business-owner review. This is not a final contractual deletion procedure until counsel confirms the DPA and retention schedule.
 
@@ -70,11 +70,27 @@ Use this order for a normal export-then-delete request:
 3. Disconnect customer integrations where possible from the application UI or admin process.
 4. Trigger Clerk organisation deletion only after export and legal-hold checks are complete.
 5. Verify the Clerk webhook processed `organization.deleted`.
-6. Confirm `deleteOrganisationFromClerk()` deleted known Vercel Blob objects for evidence, generated policies, and generated gap reports before deleting the organisation row.
+6. Confirm `deleteOrganisationFromClerk()` ran `deleteOrganisationForOffboarding()` and attempted idempotent cleanup for known Vercel Blob objects: evidence files, generated policies/gap reports, workspace branding logo, Trust Center logo, consultant/client white-label logo, and agency branding logo where present.
 7. Confirm organisation-scoped database rows were removed by cascade or explicit cleanup.
-8. Record residual vendor retention items that remain outside app control.
+8. Audit logs are retained after organisation deletion as a documented legal/security/compliance retention exception. Do not treat retained `audit_logs` rows as deletion failures; export them before deletion when the customer request includes audit history. The exact retention period must be set before paid launch.
+9. Record residual vendor retention items that remain outside app control.
 
 Do not run ad hoc production SQL deletes unless the Clerk/webhook path is unavailable and the incident owner approves a documented fallback.
+
+## Granular right-to-erasure handling
+
+- For a request that targets a single uploaded evidence record before full workspace termination, use the org-scoped `eraseEvidenceForOrg()` service path from an approved admin/support process. It selects the record by both `clerk_org_id` and `evidence_id`, attempts audited Blob cleanup for the associated file URL, deletes the evidence row, and writes a retained `audit_logs` entry with action `evidence.erased`.
+- Treat retained audit logs as the legal/security/compliance exception, not as customer workspace content that cascades with the evidence row.
+- Wider per-record erasure for generated policies, vendor submissions, incidents, and access-review rows still needs product/legal design before customer-facing launch.
+
+## Webhook failure and retry behavior
+
+- Clerk retries failed webhooks according to Clerk delivery behavior; use the Clerk webhook delivery log as the source of truth for whether `organization.deleted` was delivered and retried.
+- `deleteOrganisationFromClerk()` now separates cleanup outcomes: retained data exceptions, Blob cleanup failures/skips, explicit DB cleanup failures, and root organisation deletion failure.
+- Blob cleanup is idempotent and URL-deduplicated. Missing Blob objects or repeated deletion attempts should not require ad hoc SQL. If Blob deletion fails or is skipped, the handler logs a warning with the failed URLs and continues to delete the app organisation row when database deletion is otherwise possible.
+- The webhook should return failure only when the root app organisation row cannot be deleted. In that case, allow Clerk retry or manually replay the webhook in a non-destructive, ticketed incident process.
+- If Blob cleanup failures remain after the organisation row is deleted, record the warning payload in the offboarding ticket and perform a separately approved Blob cleanup using only the collected URLs. Do not list or delete production Blob objects by prefix without explicit approval.
+- If the webhook cannot be replayed, run only the approved offboarding service or documented fallback from an incident ticket. Do not invent table-specific production deletes during support handling.
 
 ## Post-Deletion Checks
 
@@ -83,7 +99,8 @@ Check the following after deletion:
 - the organisation no longer exists in the app database;
 - `profiles` rows for that `clerk_org_id` are gone;
 - `org_control_statuses` and `trust_center_requests` rows for that `clerk_org_id` are gone;
-- evidence and policy Blob URLs collected before deletion no longer resolve through Vercel Blob;
+- audit logs for that `clerk_org_id` may still exist and are retained under the documented exception;
+- evidence, policy/report, and branding Blob URLs collected before deletion no longer resolve through Vercel Blob, or any remaining cleanup failures are recorded with URL and error details in the ticket;
 - protected app routes no longer expose the deleted workspace;
 - residual vendor-dashboard tasks are tracked in the offboarding ticket.
 

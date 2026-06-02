@@ -8,7 +8,10 @@ type SentEvent = {
     clerkOrgId: string;
     integrationId: string;
     provider: string;
-    trigger: "oauth_callback_first_run";
+    trigger:
+      | "oauth_callback_first_run"
+      | "api_key_connect_first_run"
+      | "credential_rotation_first_run";
   };
 };
 
