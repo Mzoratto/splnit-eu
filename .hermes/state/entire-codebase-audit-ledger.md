@@ -290,3 +290,13 @@ Before dispatching any T4-C implementation work for retention/offboarding/right-
 - T4-G RED proof: before changes, `smoke:i18n-shell`, `smoke:tenant-locales`, `smoke:italian-gdpr-layer`, `smoke:italian-nis2-layer`, and `smoke:nis2-evidence-templates` failed with stale copy expectations, absent Italian reviewed article rows, and Helios evidence-requirement gaps in connected DB state.
 - T4-G GREEN proof: after changes, `npm run smoke:i18n-shell && npm run smoke:tenant-locales && npm run smoke:italian-gdpr-layer && npm run smoke:italian-nis2-layer && npm run smoke:nis2-evidence-templates` passed; `npm run audit:localization`, `npm run smoke:t4b-safety-gates`, `npm run typecheck`, and `npm run lint` passed.
 - No production DB, production seed/import, live external service call, live source fetch, deploy, commit, or push was performed for T4-G.
+
+
+## T4-F Trust Center Disclosure Decision
+
+- T4-F dependencies are satisfied or accepted: Lane 03 via T4-C offboarding/retention, Lane 05 via T4-E entitlement matrix, and Lane 10 via T4-G localization/knowledge alignment.
+- Product/security decision: retain the current aggregate-only public Trust Center model as intentional and acceptable for T4-F.
+- Public Trust Center surfaces may expose category/framework-level aggregate counts/scores, but must not expose individual control IDs, evidence filenames, test timing details, or attacker-useful implementation detail.
+- T4-F must document this decision durably and add source smokes that prevent accidental disclosure expansion.
+- If future product work wants labels/buckets instead of numeric aggregates, that requires a separate product/security decision and is not a T4-F blocker.
+- T4-H and T4-I have no blocking approvals and may run in parallel with T4-F.

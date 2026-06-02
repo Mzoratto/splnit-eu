@@ -357,9 +357,18 @@ Owner lane: 06
 Dependent lanes: 03, 05, 10
 Priority: P1
 
+Dispatch status: unblocked. Lane 03, Lane 05, and Lane 10 dependencies are satisfied or accepted by T4-C, T4-E, and T4-G.
+
+Resolved Trust Center aggregate disclosure decision:
+
+- Retain the current aggregate-only public Trust Center model.
+- This is intentional and acceptable for T4-F because public surfaces expose category/framework-level aggregate counts/scores only, not individual control IDs, evidence filenames, test timing details, or attacker-useful implementation detail.
+- T4-F should add explicit durable product/security documentation for this decision and source smokes that prevent accidental disclosure expansion.
+- If future product work wants labels/buckets instead of numeric aggregates, that is a separate product/security decision, not a blocker for T4-F.
+
 Scope:
 
-- Decide whether public Trust Center API aggregate counts/scores are acceptable or need coarsening.
+- Record and guard the accepted aggregate-only Trust Center disclosure model.
 - Review/narrow `Compliant since <year>` style wording.
 - Keep vendor-submitted proof as draft/manual-review provenance, not automatic pass.
 - Expand export/report proof coverage after entitlement gates are clear.
@@ -420,7 +429,7 @@ Before implementation:
 
 1. Accept or change owner assignment for shared-file conflicts.
 2. RESOLVED for T4-C: stale existing `unknown` statuses are left until re-attestation/new evidence; no production DB repair/backfill job in T4-C.
-3. Decide public Trust Center aggregate disclosure/coarsening.
+3. RESOLVED for T4-F: retain current aggregate-only public Trust Center model as intentional and acceptable; T4-F must document and smoke-guard against disclosure expansion.
 4. RESOLVED for T4-E/T4-G: Free/SME/Agency is the canonical plan model; Business, Starter, and Consultant are legacy aliases only; `lib/stripe/plans.ts` is runtime truth; `docs/product/business-entitlement-matrix.md` is archived/superseded and will be replaced by `docs/product/plan-entitlement-matrix.md`.
 5. Approve paid-readiness proof scope and Stripe test/live boundaries.
 6. RESOLVED for T4-C: retain audit logs on org deletion with documented legal basis; exact retention period must be set before paid launch.
