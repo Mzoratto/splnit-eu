@@ -154,7 +154,9 @@
     "audit:localization": "node scripts/localization-audit.mjs",
     "ci:product-safety": "npm run lint:copy:intake-prioritization:strict && npm run smoke:i18n-shell && npm run smoke:jurisdictions && npm run smoke:trust-center-public-disclosure && npm run smoke:export-endpoints-source && npm run smoke:templates",
     "ci:connector-smokes": "npm run smoke:api-key-base && npm run smoke:aws-checks && npm run smoke:hetzner-checks && npm run smoke:ovhcloud-checks",
-    "ci:knowledge-layer": "npm run db:migrate && npm run db:seed && npm run knowledge:import:nis2-eu -- --file tests/fixtures/nis2-eu-articles-ci.xhtml && npm run smoke:knowledge-layer && npm run smoke:source-documents && npm run smoke:nis2-evidence-templates"
+    "ci:knowledge-layer": "npm run db:migrate && npm run db:seed && npm run knowledge:import:nis2-eu -- --file tests/fixtures/nis2-eu-articles-ci.xhtml && npm run smoke:knowledge-layer && npm run smoke:source-documents && npm run smoke:nis2-evidence-templates",
+    "smoke:t4b-safety-gates": "tsx scripts/smoke-t4b-safety-gates.ts",
+    "smoke:manual-evidence-status-propagation": "tsx scripts/smoke-manual-evidence-status-propagation.ts"
   },
   "dependencies": {
     "@aws-sdk/client-cloudtrail": "^3.1056.0",

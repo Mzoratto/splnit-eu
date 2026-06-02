@@ -1,12 +1,19 @@
 import assert from "node:assert/strict";
 import { loadEnvConfig } from "@next/env";
 import { Pool } from "pg";
+import {
+  assertLocalDatabaseUrl,
+  normalizeDatabaseUrlForPg,
+} from "../lib/db/url-policy";
 
 loadEnvConfig(process.cwd());
 
 const databaseUrl = process.env.DATABASE_URL?.trim();
 
 assert.ok(databaseUrl, "DATABASE_URL is required for reviewed article link smoke test.");
+assertLocalDatabaseUrl(databaseUrl, "reviewed article link smoke test");
+
+const normalizedDatabaseUrl = normalizeDatabaseUrlForPg(databaseUrl);
 
 type MissingLinkRow = {
   article_key: string;
@@ -14,10 +21,26 @@ type MissingLinkRow = {
   framework_control_id: string;
 };
 
+type ReviewedArticleCountRow = {
+  reviewed_article_count: number;
+};
+
 async function main() {
-  const pool = new Pool({ connectionString: databaseUrl, max: 1 });
+  const pool = new Pool({ connectionString: normalizedDatabaseUrl, max: 1 });
 
   try {
+    const reviewedRows = await pool.query<ReviewedArticleCountRow>(`
+      SELECT COUNT(*)::int AS reviewed_article_count
+      FROM articles
+      WHERE review_status = 'reviewed'
+    `);
+    const reviewedArticleCount = reviewedRows.rows[0]?.reviewed_article_count ?? 0;
+
+    assert.ok(
+      reviewedArticleCount > 0,
+      "reviewed article link smoke is not meaningful until at least one reviewed article row exists.",
+    );
+
     const missingLinks = await pool.query<MissingLinkRow>(`
       WITH nis2_framework_controls AS (
         SELECT

@@ -3,6 +3,7 @@ import { drizzle as drizzleNeon } from "drizzle-orm/neon-http";
 import { drizzle as drizzleNodePostgres } from "drizzle-orm/node-postgres";
 import { Pool } from "pg";
 import * as schema from "./schema";
+import { isLocalDatabaseUrl } from "./url-policy";
 
 type Database = ReturnType<typeof drizzleNeon<typeof schema>>;
 
@@ -46,13 +47,4 @@ export function getDb(): Database {
   }
 
   return db;
-}
-
-function isLocalDatabaseUrl(databaseUrl: string) {
-  try {
-    const { hostname } = new URL(databaseUrl);
-    return hostname === "localhost" || hostname === "127.0.0.1" || hostname === "::1";
-  } catch {
-    return false;
-  }
 }

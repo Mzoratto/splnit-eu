@@ -1,6 +1,7 @@
 import { and, desc, eq, inArray } from "drizzle-orm";
 import { createEvidenceState } from "@/lib/activation/evidence-state";
 import type { EvidenceAssessmentResult } from "@/lib/activation/evidence-state";
+import { recalculateFrameworkScore } from "@/lib/controls/scorer";
 import { getDb } from "@/lib/db";
 import {
   controls,
@@ -8,6 +9,7 @@ import {
   frameworkControls,
   frameworks,
   orgControlStatuses,
+  orgFrameworks,
 } from "@/lib/db/schema";
 
 export type EvidenceMetadataExportRow = {
@@ -40,6 +42,43 @@ export type EvidenceArchiveFile = {
   source: string | null;
   type: string;
 };
+
+function manualEvidenceStatusPropagationEnabled() {
+  const value = process.env.SPLNIT_MANUAL_EVIDENCE_STATUS_PROPAGATION?.trim().toLowerCase();
+  return value !== "disabled" && value !== "false" && value !== "0";
+}
+
+function mapManualEvidenceResultToControlStatus(result: EvidenceAssessmentResult) {
+  if (result === "gap") {
+    return "fail";
+  }
+
+  return result;
+}
+
+async function recalculateFrameworkScoresForControl(input: {
+  clerkOrgId: string;
+  controlId: string;
+}) {
+  const db = getDb();
+  const frameworkRows = await db
+    .select({ frameworkId: frameworkControls.frameworkId })
+    .from(frameworkControls)
+    .innerJoin(
+      orgFrameworks,
+      and(
+        eq(orgFrameworks.frameworkId, frameworkControls.frameworkId),
+        eq(orgFrameworks.clerkOrgId, input.clerkOrgId),
+      ),
+    )
+    .where(eq(frameworkControls.controlId, input.controlId));
+
+  await Promise.all(
+    frameworkRows.map((row) =>
+      recalculateFrameworkScore(input.clerkOrgId, row.frameworkId),
+    ),
+  );
+}
 
 export async function listEvidenceForControl(clerkOrgId: string, controlId: string) {
   const db = getDb();
@@ -112,22 +151,36 @@ export async function createManualEvidence(input: {
     throw new Error("Failed to create evidence record.");
   }
 
+  const shouldPropagateStatus = manualEvidenceStatusPropagationEnabled();
+  const controlStatus = shouldPropagateStatus
+    ? mapManualEvidenceResultToControlStatus(manualEvidenceState.assessment_result)
+    : "unknown";
+  const lastEvidenceAt = new Date();
+
   await db
     .insert(orgControlStatuses)
     .values({
       clerkOrgId: input.clerkOrgId,
       controlId: control.id,
-      lastEvidenceAt: new Date(),
-      status: "unknown",
-      updatedAt: new Date(),
+      lastEvidenceAt,
+      status: controlStatus,
+      updatedAt: lastEvidenceAt,
     })
     .onConflictDoUpdate({
       target: [orgControlStatuses.clerkOrgId, orgControlStatuses.controlId],
       set: {
-        lastEvidenceAt: new Date(),
-        updatedAt: new Date(),
+        lastEvidenceAt,
+        status: controlStatus,
+        updatedAt: lastEvidenceAt,
       },
     });
+
+  if (shouldPropagateStatus) {
+    await recalculateFrameworkScoresForControl({
+      clerkOrgId: input.clerkOrgId,
+      controlId: control.id,
+    });
+  }
 
   return {
     controlId: control.id,

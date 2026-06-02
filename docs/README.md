@@ -14,8 +14,10 @@
 - `decisions/` - decision records and one-off technical decisions.
 
 ### Audits And Verification
-
+- `operations/` - deployment, migration, seed, launch, evidence status propagation, and audit operations runbooks.
+- `operations/evidence-status-propagation-runbook.md` - manual evidence status mapping, score recalculation, and rollback flag.
 - `audits/` - app readiness, production, billing, export, questionnaire, copy, PDF, and tranche audit records.
+- `audits/entire-codebase-audit-synthesis.md` - full-codebase audit synthesis with lane reports, conflict registry, cross-lane gates, and prioritized roadmap.
 - `verification/primary-flow-verification.md` - local database primary-flow verification record.
 - `reviews/` - human/product review records.
 - `review/` - generated text review outputs; regenerate when needed.
@@ -28,6 +30,7 @@
 - `product/business-entitlement-matrix.md` - plan entitlement and claim-boundary source.
 - `product/splnit-product-status.md` - current product summary, functional status, live gaps, and NÚKIB/SME claim boundaries.
 - `product/new-user-dashboard-response-playbook.md` - founder/support study guide for answering “I registered and I am on the dashboard, what next?”
+- `product/implementation-gap-audit.md` - codebase audit of implemented surfaces, gaps, and recommended next implementation slices.
 
 ### Localization
 

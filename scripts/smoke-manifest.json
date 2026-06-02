@@ -1,0 +1,551 @@
+{
+  "version": 1,
+  "classes": {
+    "source_only": "No DB, Blob, Stripe, email, production URL, or live credential side effects expected.",
+    "local_runtime": "Requires local app/runtime process only; must not target production.",
+    "db_local_only": "Requires DATABASE_URL and may read/write DB; must use local/disposable database unless explicitly approved.",
+    "human_approved_live_or_sensitive": "Blocked by default; requires human approval, scoped credentials, and cleanup/rollback plan."
+  },
+  "scripts": {
+    "smoke:i18n-shell": {
+      "command": "tsx scripts/smoke-i18n-shell.ts",
+      "safetyClass": "source_only",
+      "status": "required",
+      "rationale": "Static/source-only or pure helper smoke; safe to run without production DB/Blob/Stripe/email credentials."
+    },
+    "smoke:intake-scope": {
+      "command": "tsx scripts/smoke-intake-scope.ts",
+      "safetyClass": "source_only",
+      "status": "required",
+      "rationale": "Static/source-only or pure helper smoke; safe to run without production DB/Blob/Stripe/email credentials."
+    },
+    "smoke:onboarding-status-seeding": {
+      "command": "tsx scripts/smoke-onboarding-status-seeding.ts",
+      "safetyClass": "db_local_only",
+      "status": "required",
+      "rationale": "Uses or may use DATABASE_URL; must run only against a local/disposable database unless separately classified and approved."
+    },
+    "smoke:primary-flow": {
+      "command": "tsx scripts/smoke-primary-flow.ts",
+      "safetyClass": "db_local_only",
+      "status": "required",
+      "rationale": "Uses or may use DATABASE_URL; must run only against a local/disposable database unless separately classified and approved."
+    },
+    "smoke:gap-analysis-artifacts": {
+      "command": "tsx scripts/smoke-gap-analysis-artifacts.ts",
+      "safetyClass": "source_only",
+      "status": "required",
+      "rationale": "Static/source-only or pure helper smoke; safe to run without production DB/Blob/Stripe/email credentials."
+    },
+    "smoke:generated-artifact-audit": {
+      "command": "tsx scripts/smoke-generated-artifact-audit.ts",
+      "safetyClass": "source_only",
+      "status": "required",
+      "rationale": "Static/source-only or pure helper smoke; safe to run without production DB/Blob/Stripe/email credentials."
+    },
+    "smoke:automated-evidence-citations": {
+      "command": "tsx scripts/smoke-automated-evidence-citations.ts",
+      "safetyClass": "db_local_only",
+      "status": "required",
+      "rationale": "Uses or may use DATABASE_URL; must run only against a local/disposable database unless separately classified and approved."
+    },
+    "smoke:integration-evidence-policy": {
+      "command": "tsx scripts/smoke-integration-evidence-policy.ts",
+      "safetyClass": "source_only",
+      "status": "required",
+      "rationale": "Static/source-only or pure helper smoke; safe to run without production DB/Blob/Stripe/email credentials."
+    },
+    "smoke:microsoft-callback-dimensional-evidence-source": {
+      "command": "tsx scripts/smoke-microsoft-callback-dimensional-evidence-source.ts",
+      "safetyClass": "source_only",
+      "status": "required",
+      "rationale": "Static/source-only or pure helper smoke; safe to run without production DB/Blob/Stripe/email credentials."
+    },
+    "smoke:manual-evidence-dimensions-source": {
+      "command": "tsx scripts/smoke-manual-evidence-dimensions-source.ts",
+      "safetyClass": "source_only",
+      "status": "required",
+      "rationale": "Static/source-only or pure helper smoke; safe to run without production DB/Blob/Stripe/email credentials."
+    },
+    "smoke:integration-first-run-enqueue": {
+      "command": "tsx scripts/smoke-integration-first-run-enqueue.ts",
+      "safetyClass": "source_only",
+      "status": "required",
+      "rationale": "Static/source-only or pure helper smoke; safe to run without production DB/Blob/Stripe/email credentials."
+    },
+    "smoke:activation-status": {
+      "command": "tsx scripts/smoke-activation-status.tsx",
+      "safetyClass": "source_only",
+      "status": "required",
+      "rationale": "Static/source-only or pure helper smoke; safe to run without production DB/Blob/Stripe/email credentials."
+    },
+    "smoke:api-key-base": {
+      "command": "tsx scripts/smoke-api-key-base.ts",
+      "safetyClass": "source_only",
+      "status": "required",
+      "rationale": "Static/source-only or pure helper smoke; safe to run without production DB/Blob/Stripe/email credentials."
+    },
+    "smoke:abra-flexi-checks": {
+      "command": "tsx scripts/smoke-abra-flexi-checks.ts",
+      "safetyClass": "source_only",
+      "status": "required",
+      "rationale": "Static/source-only or pure helper smoke; safe to run without production DB/Blob/Stripe/email credentials."
+    },
+    "smoke:controls-focus-activation-status-source": {
+      "command": "tsx scripts/smoke-controls-focus-activation-status-source.ts",
+      "safetyClass": "source_only",
+      "status": "required",
+      "rationale": "Static/source-only or pure helper smoke; safe to run without production DB/Blob/Stripe/email credentials."
+    },
+    "smoke:microsoft-first-run-enqueue-source": {
+      "command": "tsx scripts/smoke-microsoft-first-run-enqueue-source.ts",
+      "safetyClass": "source_only",
+      "status": "required",
+      "rationale": "Static/source-only or pure helper smoke; safe to run without production DB/Blob/Stripe/email credentials."
+    },
+    "smoke:activation-events-source": {
+      "command": "tsx scripts/smoke-activation-events-source.ts",
+      "safetyClass": "source_only",
+      "status": "required",
+      "rationale": "Static/source-only or pure helper smoke; safe to run without production DB/Blob/Stripe/email credentials."
+    },
+    "smoke:activation-event-sanitizer": {
+      "command": "tsx scripts/smoke-activation-event-sanitizer.ts",
+      "safetyClass": "source_only",
+      "status": "required",
+      "rationale": "Static/source-only or pure helper smoke; safe to run without production DB/Blob/Stripe/email credentials."
+    },
+    "smoke:sanitizer-rejection": {
+      "command": "tsx scripts/smoke-sanitizer-rejection.ts",
+      "safetyClass": "source_only",
+      "status": "required",
+      "rationale": "Static/source-only or pure helper smoke; safe to run without production DB/Blob/Stripe/email credentials."
+    },
+    "smoke:microsoft365-permission-failures": {
+      "command": "tsx scripts/smoke-microsoft365-permission-failures.ts",
+      "safetyClass": "source_only",
+      "status": "required",
+      "rationale": "Static/source-only or pure helper smoke; safe to run without production DB/Blob/Stripe/email credentials."
+    },
+    "smoke:hetzner-checks": {
+      "command": "tsx scripts/smoke-hetzner-checks.ts",
+      "safetyClass": "source_only",
+      "status": "required",
+      "rationale": "Static/source-only or pure helper smoke; safe to run without production DB/Blob/Stripe/email credentials."
+    },
+    "smoke:aws-checks": {
+      "command": "tsx scripts/smoke-aws-checks.ts",
+      "safetyClass": "source_only",
+      "status": "required",
+      "rationale": "Static/source-only or pure helper smoke; safe to run without production DB/Blob/Stripe/email credentials."
+    },
+    "smoke:ovhcloud-checks": {
+      "command": "tsx scripts/smoke-ovhcloud-checks.ts",
+      "safetyClass": "source_only",
+      "status": "required",
+      "rationale": "Static/source-only or pure helper smoke; safe to run without production DB/Blob/Stripe/email credentials."
+    },
+    "smoke:policy-drafts": {
+      "command": "tsx scripts/smoke-policy-drafts.ts",
+      "safetyClass": "source_only",
+      "status": "required",
+      "rationale": "Static/source-only or pure helper smoke; safe to run without production DB/Blob/Stripe/email credentials."
+    },
+    "smoke:incident-notifications": {
+      "command": "tsx scripts/smoke-incident-notifications.ts",
+      "safetyClass": "source_only",
+      "status": "required",
+      "rationale": "Static/source-only or pure helper smoke; safe to run without production DB/Blob/Stripe/email credentials."
+    },
+    "smoke:questionnaire-artifacts": {
+      "command": "tsx scripts/smoke-questionnaire-artifacts.ts",
+      "safetyClass": "source_only",
+      "status": "required",
+      "rationale": "Static/source-only or pure helper smoke; safe to run without production DB/Blob/Stripe/email credentials."
+    },
+    "smoke:questionnaire-citations": {
+      "command": "tsx scripts/smoke-questionnaire-citations.ts",
+      "safetyClass": "source_only",
+      "status": "required",
+      "rationale": "Static/source-only or pure helper smoke; safe to run without production DB/Blob/Stripe/email credentials."
+    },
+    "smoke:questionnaire-provider": {
+      "command": "tsx scripts/smoke-questionnaire-provider.ts",
+      "safetyClass": "source_only",
+      "status": "required",
+      "rationale": "Static/source-only or pure helper smoke; safe to run without production DB/Blob/Stripe/email credentials."
+    },
+    "smoke:questionnaire-review-gate": {
+      "command": "tsx scripts/smoke-questionnaire-review-gate.ts",
+      "safetyClass": "source_only",
+      "status": "required",
+      "rationale": "Static/source-only or pure helper smoke; safe to run without production DB/Blob/Stripe/email credentials."
+    },
+    "smoke:questionnaire-review-patching": {
+      "command": "tsx scripts/smoke-questionnaire-review-patching.ts",
+      "safetyClass": "source_only",
+      "status": "required",
+      "rationale": "Static/source-only or pure helper smoke; safe to run without production DB/Blob/Stripe/email credentials."
+    },
+    "smoke:stripe-billing": {
+      "command": "tsx scripts/smoke-stripe-billing-runtime.ts",
+      "safetyClass": "human_approved_live_or_sensitive",
+      "status": "blocked_by_default",
+      "rationale": "May touch production/live credentials, Stripe, Clerk-authenticated flows, or production readiness surfaces; run only with explicit approval and cleanup plan."
+    },
+    "smoke:stripe-upgrade-flow": {
+      "command": "tsx scripts/smoke-stripe-upgrade-flow.ts",
+      "safetyClass": "human_approved_live_or_sensitive",
+      "status": "blocked_by_default",
+      "rationale": "May touch production/live credentials, Stripe, Clerk-authenticated flows, or production readiness surfaces; run only with explicit approval and cleanup plan."
+    },
+    "smoke:stripe-invoice-email": {
+      "command": "tsx scripts/smoke-stripe-invoice-email.ts",
+      "safetyClass": "human_approved_live_or_sensitive",
+      "status": "blocked_by_default",
+      "rationale": "May touch production/live credentials, Stripe, Clerk-authenticated flows, or production readiness surfaces; run only with explicit approval and cleanup plan."
+    },
+    "smoke:plan-gate-bypass": {
+      "command": "tsx scripts/smoke-plan-gate-bypass.ts",
+      "safetyClass": "source_only",
+      "status": "required",
+      "rationale": "Static/source-only or pure helper smoke; safe to run without production DB/Blob/Stripe/email credentials."
+    },
+    "smoke:plan-gate-enforcement": {
+      "command": "tsx scripts/smoke-plan-gate-enforcement.ts",
+      "safetyClass": "source_only",
+      "status": "required",
+      "rationale": "Static/source-only or pure helper smoke; safe to run without production DB/Blob/Stripe/email credentials."
+    },
+    "smoke:vendor-questionnaire-delivery-status": {
+      "command": "tsx scripts/smoke-vendor-questionnaire-delivery-status.ts",
+      "safetyClass": "source_only",
+      "status": "required",
+      "rationale": "Static/source-only or pure helper smoke; safe to run without production DB/Blob/Stripe/email credentials."
+    },
+    "smoke:seo": {
+      "command": "tsx scripts/smoke-seo.ts",
+      "safetyClass": "source_only",
+      "status": "required",
+      "rationale": "Static/source-only or pure helper smoke; safe to run without production DB/Blob/Stripe/email credentials."
+    },
+    "smoke:copy-hygiene": {
+      "command": "tsx scripts/smoke-copy-hygiene.ts",
+      "safetyClass": "source_only",
+      "status": "required",
+      "rationale": "Static/source-only or pure helper smoke; safe to run without production DB/Blob/Stripe/email credentials."
+    },
+    "smoke:demo-routes": {
+      "command": "tsx scripts/smoke-demo-routes.ts",
+      "safetyClass": "local_runtime",
+      "status": "required",
+      "rationale": "Requires a managed local server/base URL; no production network target."
+    },
+    "smoke:training-module": {
+      "command": "tsx scripts/smoke-training-module.ts",
+      "safetyClass": "source_only",
+      "status": "required",
+      "rationale": "Static/source-only or pure helper smoke; safe to run without production DB/Blob/Stripe/email credentials."
+    },
+    "smoke:pohoda-workspace-config": {
+      "command": "tsx scripts/smoke-pohoda-workspace-config.ts",
+      "safetyClass": "source_only",
+      "status": "required",
+      "rationale": "Static/source-only or pure helper smoke; safe to run without production DB/Blob/Stripe/email credentials."
+    },
+    "smoke:abra-flexi-workspace-config": {
+      "command": "tsx scripts/smoke-abra-flexi-workspace-config.ts",
+      "safetyClass": "source_only",
+      "status": "required",
+      "rationale": "Static/source-only or pure helper smoke; safe to run without production DB/Blob/Stripe/email credentials."
+    },
+    "smoke:money-s3-workspace-config": {
+      "command": "tsx scripts/smoke-money-s3-workspace-config.ts",
+      "safetyClass": "source_only",
+      "status": "required",
+      "rationale": "Static/source-only or pure helper smoke; safe to run without production DB/Blob/Stripe/email credentials."
+    },
+    "smoke:hetzner-workspace-config": {
+      "command": "tsx scripts/smoke-hetzner-workspace-config.ts",
+      "safetyClass": "source_only",
+      "status": "required",
+      "rationale": "Static/source-only or pure helper smoke; safe to run without production DB/Blob/Stripe/email credentials."
+    },
+    "smoke:hetzner-live-key": {
+      "command": "tsx scripts/smoke-hetzner-live-key.ts",
+      "safetyClass": "human_approved_live_or_sensitive",
+      "status": "blocked_by_default",
+      "rationale": "May touch production/live credentials, Stripe, Clerk-authenticated flows, or production readiness surfaces; run only with explicit approval and cleanup plan."
+    },
+    "smoke:aws-live-key": {
+      "command": "tsx scripts/smoke-aws-live-key.ts",
+      "safetyClass": "human_approved_live_or_sensitive",
+      "status": "blocked_by_default",
+      "rationale": "May touch production/live credentials, Stripe, Clerk-authenticated flows, or production readiness surfaces; run only with explicit approval and cleanup plan."
+    },
+    "smoke:aws-workspace-config": {
+      "command": "tsx scripts/smoke-aws-workspace-config.ts",
+      "safetyClass": "source_only",
+      "status": "required",
+      "rationale": "Static/source-only or pure helper smoke; safe to run without production DB/Blob/Stripe/email credentials."
+    },
+    "smoke:ovhcloud-workspace-config": {
+      "command": "tsx scripts/smoke-ovhcloud-workspace-config.ts",
+      "safetyClass": "source_only",
+      "status": "required",
+      "rationale": "Static/source-only or pure helper smoke; safe to run without production DB/Blob/Stripe/email credentials."
+    },
+    "smoke:compliance-report": {
+      "command": "tsx scripts/smoke-compliance-report.ts",
+      "safetyClass": "db_local_only",
+      "status": "required",
+      "rationale": "Uses or may use DATABASE_URL; must run only against a local/disposable database unless separately classified and approved."
+    },
+    "smoke:helios-workspace-config": {
+      "command": "tsx scripts/smoke-helios-workspace-config.ts",
+      "safetyClass": "source_only",
+      "status": "required",
+      "rationale": "Static/source-only or pure helper smoke; safe to run without production DB/Blob/Stripe/email credentials."
+    },
+    "smoke:remediation-tasks": {
+      "command": "tsx scripts/smoke-remediation-tasks.ts",
+      "safetyClass": "source_only",
+      "status": "required",
+      "rationale": "Static/source-only or pure helper smoke; safe to run without production DB/Blob/Stripe/email credentials."
+    },
+    "smoke:helios-evidence-lifecycle": {
+      "command": "tsx scripts/smoke-helios-evidence-lifecycle.ts",
+      "safetyClass": "db_local_only",
+      "status": "required",
+      "rationale": "Uses or may use DATABASE_URL; must run only against a local/disposable database unless separately classified and approved."
+    },
+    "smoke:helios-gap-remediation": {
+      "command": "tsx scripts/smoke-helios-gap-remediation.ts",
+      "safetyClass": "source_only",
+      "status": "required",
+      "rationale": "Static/source-only or pure helper smoke; safe to run without production DB/Blob/Stripe/email credentials."
+    },
+    "smoke:helios-evidence-provenance": {
+      "command": "tsx scripts/smoke-helios-evidence-provenance.ts",
+      "safetyClass": "db_local_only",
+      "status": "required",
+      "rationale": "Uses or may use DATABASE_URL; must run only against a local/disposable database unless separately classified and approved."
+    },
+    "smoke:helios-live-attestation": {
+      "command": "tsx scripts/smoke-helios-live-attestation.ts",
+      "safetyClass": "db_local_only",
+      "status": "required",
+      "rationale": "Uses or may use DATABASE_URL; must run only against a local/disposable database unless separately classified and approved."
+    },
+    "smoke:helios-agency-progress": {
+      "command": "tsx scripts/smoke-helios-agency-progress.ts",
+      "safetyClass": "db_local_only",
+      "status": "required",
+      "rationale": "Uses or may use DATABASE_URL; must run only against a local/disposable database unless separately classified and approved."
+    },
+    "smoke:helios-csv-parser": {
+      "command": "tsx scripts/smoke-helios-csv-parser.ts",
+      "safetyClass": "source_only",
+      "status": "required",
+      "rationale": "Static/source-only or pure helper smoke; safe to run without production DB/Blob/Stripe/email credentials."
+    },
+    "smoke:helios-csv-import": {
+      "command": "tsx scripts/smoke-helios-csv-import.ts",
+      "safetyClass": "db_local_only",
+      "status": "required",
+      "rationale": "Uses or may use DATABASE_URL; must run only against a local/disposable database unless separately classified and approved."
+    },
+    "smoke:helios-control-seeding": {
+      "command": "tsx scripts/smoke-helios-control-seeding.ts",
+      "safetyClass": "db_local_only",
+      "status": "required",
+      "rationale": "Uses or may use DATABASE_URL; must run only against a local/disposable database unless separately classified and approved."
+    },
+    "smoke:policy-evidence-loop": {
+      "command": "tsx scripts/smoke-policy-evidence-loop.ts",
+      "safetyClass": "source_only",
+      "status": "required",
+      "rationale": "Static/source-only or pure helper smoke; safe to run without production DB/Blob/Stripe/email credentials."
+    },
+    "smoke:evidence-state-transitions": {
+      "command": "tsx scripts/smoke-evidence-state-transitions.ts",
+      "safetyClass": "source_only",
+      "status": "required",
+      "rationale": "Static/source-only or pure helper smoke; safe to run without production DB/Blob/Stripe/email credentials."
+    },
+    "smoke:authenticated-primary-flow": {
+      "command": "tsx scripts/smoke-authenticated-primary-flow.ts",
+      "safetyClass": "human_approved_live_or_sensitive",
+      "status": "blocked_by_default",
+      "rationale": "May touch production/live credentials, Stripe, Clerk-authenticated flows, or production readiness surfaces; run only with explicit approval and cleanup plan."
+    },
+    "smoke:production-tenant-readiness": {
+      "command": "tsx scripts/smoke-production-tenant-readiness.ts",
+      "safetyClass": "human_approved_live_or_sensitive",
+      "status": "blocked_by_default",
+      "rationale": "May touch production/live credentials, Stripe, Clerk-authenticated flows, or production readiness surfaces; run only with explicit approval and cleanup plan."
+    },
+    "smoke:production-tenant-readiness-prereqs": {
+      "command": "tsx scripts/smoke-production-tenant-readiness-prereqs.ts",
+      "safetyClass": "human_approved_live_or_sensitive",
+      "status": "blocked_by_default",
+      "rationale": "May touch production/live credentials, Stripe, Clerk-authenticated flows, or production readiness surfaces; run only with explicit approval and cleanup plan."
+    },
+    "smoke:production-tenant-readiness-source": {
+      "command": "tsx scripts/smoke-production-tenant-readiness-source.ts",
+      "safetyClass": "human_approved_live_or_sensitive",
+      "status": "blocked_by_default",
+      "rationale": "May touch production/live credentials, Stripe, Clerk-authenticated flows, or production readiness surfaces; run only with explicit approval and cleanup plan."
+    },
+    "smoke:production-intake-profile": {
+      "command": "tsx scripts/smoke-production-intake-profile.ts",
+      "safetyClass": "human_approved_live_or_sensitive",
+      "status": "blocked_by_default",
+      "rationale": "May touch production/live credentials, Stripe, Clerk-authenticated flows, or production readiness surfaces; run only with explicit approval and cleanup plan."
+    },
+    "smoke:production-migration-guard": {
+      "command": "tsx scripts/run-production-migrations-safe.ts --self-test",
+      "safetyClass": "human_approved_live_or_sensitive",
+      "status": "blocked_by_default",
+      "rationale": "May touch production/live credentials, Stripe, Clerk-authenticated flows, or production readiness surfaces; run only with explicit approval and cleanup plan."
+    },
+    "smoke:trust-center-settings": {
+      "command": "tsx scripts/smoke-trust-center-settings.ts",
+      "safetyClass": "source_only",
+      "status": "required",
+      "rationale": "Static/source-only or pure helper smoke; safe to run without production DB/Blob/Stripe/email credentials."
+    },
+    "smoke:trust-center-public-disclosure": {
+      "command": "tsx scripts/smoke-trust-center-public-disclosure.ts",
+      "safetyClass": "source_only",
+      "status": "required",
+      "rationale": "Static/source-only or pure helper smoke; safe to run without production DB/Blob/Stripe/email credentials."
+    },
+    "smoke:weekly-digest-edge-cases": {
+      "command": "tsx scripts/smoke-weekly-digest-edge-cases.ts",
+      "safetyClass": "source_only",
+      "status": "required",
+      "rationale": "Static/source-only or pure helper smoke; safe to run without production DB/Blob/Stripe/email credentials."
+    },
+    "smoke:public-module-seams": {
+      "command": "tsx scripts/smoke-public-module-seams.ts",
+      "safetyClass": "source_only",
+      "status": "required",
+      "rationale": "Static/source-only or pure helper smoke; safe to run without production DB/Blob/Stripe/email credentials."
+    },
+    "smoke:export-endpoints-source": {
+      "command": "tsx scripts/smoke-export-endpoints-source.ts",
+      "safetyClass": "source_only",
+      "status": "required",
+      "rationale": "Static/source-only or pure helper smoke; safe to run without production DB/Blob/Stripe/email credentials."
+    },
+    "smoke:org-boundaries": {
+      "command": "tsx scripts/smoke-org-boundaries.ts",
+      "safetyClass": "db_local_only",
+      "status": "required",
+      "rationale": "Uses or may use DATABASE_URL; must run only against a local/disposable database unless separately classified and approved."
+    },
+    "smoke:agency-model": {
+      "command": "tsx scripts/smoke-agency-model.ts",
+      "safetyClass": "db_local_only",
+      "status": "required",
+      "rationale": "Uses or may use DATABASE_URL; must run only against a local/disposable database unless separately classified and approved."
+    },
+    "smoke:agency-invite-client-cache": {
+      "command": "tsx scripts/smoke-agency-invite-and-client-cache.ts",
+      "safetyClass": "source_only",
+      "status": "required",
+      "rationale": "Static/source-only or pure helper smoke; safe to run without production DB/Blob/Stripe/email credentials."
+    },
+    "smoke:draft-extraction-sources": {
+      "command": "tsx scripts/smoke-draft-extraction-sources.ts",
+      "safetyClass": "db_local_only",
+      "status": "required",
+      "rationale": "Uses or may use DATABASE_URL; must run only against a local/disposable database unless separately classified and approved."
+    },
+    "smoke:nukib-baseline": {
+      "command": "tsx scripts/smoke-nukib-baseline.ts",
+      "safetyClass": "source_only",
+      "status": "required",
+      "rationale": "Static/source-only or pure helper smoke; safe to run without production DB/Blob/Stripe/email credentials."
+    },
+    "smoke:italian-tenant": {
+      "command": "tsx scripts/smoke-tenant-locales.ts",
+      "safetyClass": "db_local_only",
+      "status": "required",
+      "rationale": "Uses or may use DATABASE_URL; must run only against a local/disposable database unless separately classified and approved."
+    },
+    "smoke:italian-gdpr-layer": {
+      "command": "tsx scripts/smoke-italian-gdpr-layer.ts",
+      "safetyClass": "db_local_only",
+      "status": "required",
+      "rationale": "Uses or may use DATABASE_URL; must run only against a local/disposable database unless separately classified and approved."
+    },
+    "smoke:tenant-locales": {
+      "command": "tsx scripts/smoke-tenant-locales.ts",
+      "safetyClass": "db_local_only",
+      "status": "required",
+      "rationale": "Uses or may use DATABASE_URL; must run only against a local/disposable database unless separately classified and approved."
+    },
+    "smoke:jurisdictions": {
+      "command": "tsx scripts/smoke-jurisdiction-context.ts",
+      "safetyClass": "source_only",
+      "status": "required",
+      "rationale": "Static/source-only or pure helper smoke; safe to run without production DB/Blob/Stripe/email credentials."
+    },
+    "smoke:italian-nis2-layer": {
+      "command": "tsx scripts/smoke-italian-nis2-layer.ts",
+      "safetyClass": "db_local_only",
+      "status": "required",
+      "rationale": "Uses or may use DATABASE_URL; must run only against a local/disposable database unless separately classified and approved."
+    },
+    "smoke:knowledge-layer": {
+      "command": "tsx scripts/report-knowledge-counts.ts --smoke",
+      "safetyClass": "db_local_only",
+      "status": "required",
+      "rationale": "Uses or may use DATABASE_URL; must run only against a local/disposable database unless separately classified and approved."
+    },
+    "smoke:mapping-review-schema": {
+      "command": "tsx scripts/smoke-mapping-review-schema.ts",
+      "safetyClass": "db_local_only",
+      "status": "required",
+      "rationale": "Uses or may use DATABASE_URL; must run only against a local/disposable database unless separately classified and approved."
+    },
+    "smoke:nis2-evidence-templates": {
+      "command": "tsx scripts/smoke-nis2-evidence-templates.ts",
+      "safetyClass": "db_local_only",
+      "status": "required",
+      "rationale": "Uses or may use DATABASE_URL; must run only against a local/disposable database unless separately classified and approved."
+    },
+    "smoke:reviewed-article-links": {
+      "command": "tsx scripts/smoke-reviewed-article-links.ts",
+      "safetyClass": "db_local_only",
+      "status": "weak_green",
+      "rationale": "Passes only after reviewed article rows exist and reviewed NIS2 links are complete; weak until seeded reviewed-row baseline exists."
+    },
+    "smoke:source-documents": {
+      "command": "tsx scripts/smoke-source-documents.ts",
+      "safetyClass": "db_local_only",
+      "status": "required",
+      "rationale": "Uses or may use DATABASE_URL; must run only against a local/disposable database unless separately classified and approved."
+    },
+    "smoke:templates": {
+      "command": "tsx scripts/smoke-template-resolution.ts",
+      "safetyClass": "source_only",
+      "status": "required",
+      "rationale": "Static/source-only or pure helper smoke; safe to run without production DB/Blob/Stripe/email credentials."
+    },
+    "smoke:t4b-safety-gates": {
+      "command": "tsx scripts/smoke-t4b-safety-gates.ts",
+      "safetyClass": "source_only",
+      "status": "required",
+      "rationale": "T4-B source safety gate for manifest, Woodpecker migration wrapper, DB URL policy, and weak-green smoke labeling."
+    },
+    "smoke:manual-evidence-status-propagation": {
+      "command": "tsx scripts/smoke-manual-evidence-status-propagation.ts",
+      "safetyClass": "db_local_only",
+      "status": "required",
+      "rationale": "T4-A regression smoke; writes disposable org/evidence/status rows and must run only against local/disposable DB."
+    }
+  }
+}

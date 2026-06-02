@@ -16,7 +16,7 @@ steps:
       - npm ci
       - npm install --global vercel@latest
       - vercel pull --yes --environment=production --token "$VERCEL_TOKEN"
-      - npm run db:migrate
+      - SPLNIT_CONFIRM_PRODUCTION_MIGRATION=I_UNDERSTAND_PRODUCTION_MIGRATIONS npm run db:migrate:production
       - vercel build --prod --token "$VERCEL_TOKEN"
       - vercel deploy --prebuilt --prod --token "$VERCEL_TOKEN"
       - for attempt in 1 2 3 4 5; do curl --fail --silent --show-error --max-time 30 https://splnit.eu/api/health && break; if [ "$attempt" = "5" ]; then exit 1; fi; sleep 5; done
