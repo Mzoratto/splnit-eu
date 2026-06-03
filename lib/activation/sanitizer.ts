@@ -66,6 +66,8 @@ const DENIED_KEYS: ReadonlySet<string> = new Set([
   "password",
   "credential",
   "apiKey",
+  "clientSecret",
+  "connectionString",
   "privateKey",
   "signingKey",
   "sessionToken",

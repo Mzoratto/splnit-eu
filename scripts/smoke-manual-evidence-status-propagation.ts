@@ -45,6 +45,22 @@ async function readControlStatus(controlId: string) {
   return row ?? null;
 }
 
+async function readEvidenceAssessmentResult(evidenceId: string) {
+  const db = getDb();
+  const [row] = await db
+    .select({ assessmentResult: evidence.assessmentResult })
+    .from(evidence)
+    .where(
+      and(
+        eq(evidence.clerkOrgId, clerkOrgId),
+        eq(evidence.id, evidenceId),
+      ),
+    )
+    .limit(1);
+
+  return row?.assessmentResult ?? null;
+}
+
 async function readFrameworkScore(frameworkId: string) {
   const db = getDb();
   const [row] = await db
@@ -124,6 +140,26 @@ async function main() {
       await db.delete(orgControlStatuses).where(eq(orgControlStatuses.clerkOrgId, clerkOrgId));
     }
     delete process.env.SPLNIT_MANUAL_EVIDENCE_STATUS_PROPAGATION;
+
+    const implicitReviewResult = await createManualAttestationEvidence({
+      answers: { explicitAssertion: true, implicitReviewOnly: true },
+      clerkOrgId,
+      collectedBy: "manual-status-smoke",
+      controlKey,
+      description: "Manual evidence without explicit assessment must stay in human review.",
+    });
+
+    assert.equal(
+      await readEvidenceAssessmentResult(implicitReviewResult.evidenceId),
+      "manual_review",
+      "manual evidence without an explicit assessment must remain manual_review evidence.",
+    );
+    const implicitReviewStatus = await readControlStatus(implicitReviewResult.controlId);
+    assert.equal(
+      implicitReviewStatus?.status,
+      "manual_review",
+      "manual evidence without explicit pass must not auto-pass the control.",
+    );
 
     const passResult = await createManualAttestationEvidence({
       answers: { explicitAssertion: true },

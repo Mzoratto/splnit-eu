@@ -95,6 +95,47 @@ const heliosAutomationClaimForbiddenPatterns = [
 
 const heliosAutomationClaimAllowedPatterns = [/\bnot\s+an\s+automated\s+Helios\s+API\s+connection\b/gi] as const;
 
+const activationAutomationLocaleCopyPaths = [
+  ["dashboard", "activation", "automationOutcomeTitle"],
+  ["dashboard", "activation", "automationOutcomeBody"],
+  ["evidence", "records", "emptyAutomationOutcome"],
+  ["evidence", "records", "emptyAutomationBlockedAction"],
+  ["controlsPage", "index", "automationBlockedStatus"],
+] as const;
+
+const activationAutomationBlockedCopyPaths = new Set([
+  "evidence.records.emptyAutomationOutcome",
+  "evidence.records.emptyAutomationBlockedAction",
+  "controlsPage.index.automationBlockedStatus",
+]);
+
+const activationAutomationPostureInflationForbiddenPatterns = [
+  /\bcompliant\b/i,
+  /\bcertified\b/i,
+  /\bauditor-ready\b/i,
+  /\blegal proof\b/i,
+  /\bsatisfies Article\b/i,
+  /\bready for audit\b/i,
+  /\bcompliance status\b/i,
+  /\bspln(?:ě|e)n(?:í|i|o|ou|á|a|ý|y|é|e)?\b/i,
+  /\bv souladu\b/i,
+  /\bvyhovuje\b/i,
+  /\bprávn(?:í|i) důkaz\b/i,
+  /\bauditn(?:ě|e) připraven/i,
+  /\bconforme\b/i,
+  /\bconformità\b/i,
+  /\bcertificat/i,
+  /\bprova legale\b/i,
+  /\bpront[oa] per (?:l['’])?audit\b/i,
+  /\bsoddisfa (?:l['’])?articolo\b/i,
+] as const;
+
+const activationAutomationBlockedFailureForbiddenPatterns = [
+  /\b(?:failed|failure|errored|error)\b/i,
+  /\b(?:selhal|selhala|selhání|selhani|neuspěl|neuspela|neúspěch|neuspech)\b/i,
+  /\b(?:fallito|fallita|fallimento|errore)\b/i,
+] as const;
+
 function redactAllowedHeliosClaimPhrases(content: string) {
   return heliosAutomationClaimAllowedPatterns.reduce(
     (current, pattern) => current.replace(pattern, "[allowed Helios manual-boundary phrase]"),
@@ -104,6 +145,24 @@ function redactAllowedHeliosClaimPhrases(content: string) {
 
 function matchesHeliosAutomationClaim(content: string, pattern: RegExp) {
   return redactAllowedHeliosClaimPhrases(content).match(pattern);
+}
+
+function getJsonPathValue(source: unknown, path: readonly string[]) {
+  let current = source;
+
+  for (const segment of path) {
+    if (!current || typeof current !== "object" || !(segment in current)) {
+      throw new Error(`Missing locale copy path: ${path.join(".")}`);
+    }
+
+    current = (current as Record<string, unknown>)[segment];
+  }
+
+  if (typeof current !== "string") {
+    throw new Error(`Locale copy path is not a string: ${path.join(".")}`);
+  }
+
+  return current;
 }
 
 const checkedFiles = [
@@ -238,6 +297,57 @@ if (process.env.HELIOS_CLAIM_GUARD_SELF_TEST === "1") {
   assertHeliosClaimGuardSelfTest();
 }
 
+function assertActivationAutomationCopyGuardSelfTest() {
+  const forbiddenSamples = [
+    "Automation proves this control is compliant.",
+    "Connector evidence is auditor-ready.",
+    "Záznam je právní důkaz splnění.",
+    "Automatizace je auditně připravená.",
+    "Il controllo è conforme.",
+    "Prova legale pronta per audit.",
+  ];
+  const forbiddenBlockedSamples = [
+    "Review failed automation",
+    "Automatizace selhala",
+    "Rivedi errore automazione",
+  ];
+  const allowedSamples = [
+    "Review blocked automation",
+    "Zkontrolovat blokovanou automatizaci",
+    "Rivedi automazione bloccata",
+    "This reflects existing connector evidence and remediation task state.",
+  ];
+
+  const missedPostureSamples = forbiddenSamples.filter(
+    (sample) => !activationAutomationPostureInflationForbiddenPatterns.some((pattern) => pattern.test(sample)),
+  );
+  const missedBlockedSamples = forbiddenBlockedSamples.filter(
+    (sample) => !activationAutomationBlockedFailureForbiddenPatterns.some((pattern) => pattern.test(sample)),
+  );
+  const rejectedAllowed = allowedSamples.filter((sample) =>
+    activationAutomationPostureInflationForbiddenPatterns.some((pattern) => pattern.test(sample)) ||
+    activationAutomationBlockedFailureForbiddenPatterns.some((pattern) => pattern.test(sample)),
+  );
+
+  assert.deepEqual(
+    missedPostureSamples,
+    [],
+    `Activation automation copy guard missed forbidden posture samples: ${missedPostureSamples.join(", ")}`,
+  );
+  assert.deepEqual(
+    missedBlockedSamples,
+    [],
+    `Activation automation copy guard missed forbidden blocked-copy samples: ${missedBlockedSamples.join(", ")}`,
+  );
+  assert.deepEqual(
+    rejectedAllowed,
+    [],
+    `Activation automation copy guard rejected allowed samples: ${rejectedAllowed.join(", ")}`,
+  );
+}
+
+assertActivationAutomationCopyGuardSelfTest();
+
 for (const file of checkedFiles) {
   const content = readFileSync(file, "utf8");
 
@@ -258,6 +368,33 @@ for (const file of globalCheckedFiles) {
 
     if (match) {
       failures.push(`${file}: public honesty guard matched ${pattern}`);
+    }
+  }
+}
+
+for (const file of ["messages/cs-CZ.json", "messages/en-EU.json", "messages/it-IT.json"]) {
+  const source = JSON.parse(readFileSync(file, "utf8")) as unknown;
+
+  for (const path of activationAutomationLocaleCopyPaths) {
+    const pathLabel = path.join(".");
+    const value = getJsonPathValue(source, path);
+
+    for (const pattern of activationAutomationPostureInflationForbiddenPatterns) {
+      const match = value.match(pattern);
+
+      if (match) {
+        failures.push(`${file}:${pathLabel}: activation automation posture guard matched ${pattern}`);
+      }
+    }
+
+    if (activationAutomationBlockedCopyPaths.has(pathLabel)) {
+      for (const pattern of activationAutomationBlockedFailureForbiddenPatterns) {
+        const match = value.match(pattern);
+
+        if (match) {
+          failures.push(`${file}:${pathLabel}: activation automation blocked/failure copy guard matched ${pattern}`);
+        }
+      }
     }
   }
 }

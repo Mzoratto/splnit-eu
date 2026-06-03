@@ -9,7 +9,6 @@ import { ComplianceReportButton } from "@/components/export/compliance-report-bu
 import { getMessagesForLocale } from "@/i18n/messages";
 import { normalizeLocale, type Locale } from "@/i18n/routing";
 import { deriveActivationNextAction, type ActivationNextActionStage } from "@/lib/activation/next-action";
-import { isAutomationBlockedPermissionState } from "@/lib/activation/automation-outcome";
 import { getActivationRecommendation } from "@/lib/activation/recommendations";
 import {
   getControlDisplayDescription,
@@ -689,7 +688,7 @@ export default async function ControlsPage({
                   reviewStatus: control.status,
                   source: automationInput?.source ?? control.latestEvidenceSource,
                 });
-                const automationBlocked = isAutomationBlockedPermissionState(automationInput);
+                const automationBlocked = activationStatusState.status === "blocked";
 
                 return (
                   <article key={control.key} className={`rounded-lg border border-border bg-surface p-4 ${getPriorityBorderClass(control)}`}>

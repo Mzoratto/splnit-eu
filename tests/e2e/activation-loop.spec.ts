@@ -10,7 +10,8 @@
  *
  * Blocked-permission fallback: verified on the controls page demo data which
  * always includes a control with a blocked/missing_permission state showing
- * "Blocked" and "Permission missing" in the ActivationStatus component.
+ * the card-level "can’t collect yet" badge and the permission detail in the
+ * ActivationStatus component.
  */
 
 import { expect, test } from "@playwright/test";
@@ -114,10 +115,15 @@ test("activation loop: blocked-permission fallback is visible in controls index"
     page.getByRole("heading", { name: "Knihovna kontrol" }),
   ).toBeVisible({ timeout: 15_000 });
 
-  // Demo evidence cycle includes blocked/missing_permission state in the first 5 priority controls
-  await expect(page.getByText("Blokováno").first()).toBeVisible();
+  // Demo evidence cycle includes blocked/missing_permission state in the first 5 priority controls.
+  const blockedCard = page.locator("article", { hasText: "Zatím nelze sesbírat" }).first();
+  await expect(blockedCard).toBeVisible();
+
+  // The blocked badge is card-scoped, so this does not accidentally pass on unrelated page copy.
+  await expect(blockedCard.getByText("Zatím nelze sesbírat", { exact: true })).toBeVisible();
+  await expect(blockedCard.getByText("Blokováno").first()).toBeVisible();
   // In focus view showDetails=true — reason text is rendered by ActivationStatus
-  await expect(page.getByText("Důvod: Oprávnění chybí.").first()).toBeVisible();
+  await expect(blockedCard.getByText("Důvod: Oprávnění chybí.").first()).toBeVisible();
 });
 
 test("activation loop: blocked state preserves last-known passing result in controls focus view", async ({

@@ -59,6 +59,33 @@ function assertThrows(
   }
 }
 
+function assertDeniedMetadataKey(label: string, key: string, value: unknown) {
+  assert(label, () => {
+    try {
+      sanitizeActivationEvent({
+        clerkOrgId: "org_test",
+        entityId: "conn_1",
+        entityType: "connector",
+        metadata: { provider: "microsoft365", tokenType: "oauth2", [key]: value },
+        name: "ConnectorOAuthCompleted",
+      } as unknown as ActivationEvent);
+    } catch (err) {
+      if (!(err instanceof ActivationEventSanitizationError)) {
+        throw new Error(`Expected ActivationEventSanitizationError, got ${err?.constructor?.name}`);
+      }
+      if (err.offendingKey !== key) {
+        throw new Error(`Expected offendingKey "${key}", got "${err.offendingKey}"`);
+      }
+      if (!err.reason.includes("global deny-list")) {
+        throw new Error(`Expected explicit deny-list rejection for "${key}", got reason "${err.reason}"`);
+      }
+      return;
+    }
+
+    throw new Error(`Expected "${key}" to be rejected by the global deny-list.`);
+  });
+}
+
 // ---------------------------------------------------------------------------
 // PASS cases — valid events should pass through unchanged
 // ---------------------------------------------------------------------------
@@ -195,6 +222,15 @@ assert("ManualEvidenceAdded — valid", () => {
 // ---------------------------------------------------------------------------
 
 console.log("\nForbidden data (should all throw — runtime guards):");
+
+for (const [key, value] of [
+  ["apiKey", "api_key_secret"],
+  ["clientSecret", "oauth_client_secret"],
+  ["connectionString", "postgres://example.invalid/db"],
+  ["privateKey", "-----BEGIN PRIVATE KEY-----"],
+] as const) {
+  assertDeniedMetadataKey(`Rejects explicit secret key ${key}`, key, value);
+}
 
 assertThrows(
   "Rejects raw intake answers (answers key)",

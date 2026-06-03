@@ -63,6 +63,76 @@ async function listTasks() {
     .where(eq(remediationTasks.clerkOrgId, clerkOrgId));
 }
 
+const connectorTaskCopyForbiddenPatterns = [
+  /\bcompliant\b/i,
+  /\bcertified\b/i,
+  /\bauditor-ready\b/i,
+  /\blegal proof\b/i,
+  /\bsatisfies Article\b/i,
+  /\bready for audit\b/i,
+  /\bcompliance status\b/i,
+  /\bspln(?:ě|e)n(?:í|i|o|ou|á|a|ý|y|é|e)?\b/i,
+  /\bv souladu\b/i,
+  /\bprávn(?:í|i) důkaz\b/i,
+  /\bconforme\b/i,
+  /\bcertificat/i,
+  /\bprova legale\b/i,
+] as const;
+
+const connectorBlockedCopyForbiddenPatterns = [
+  /\b(?:failed|failure|errored|error)\b/i,
+  /\b(?:selhal|selhala|selhání|selhani|neuspěl|neuspela|neúspěch|neuspech)\b/i,
+  /\b(?:fallito|fallita|fallimento|errore)\b/i,
+] as const;
+
+function assertConnectorTaskCopySafe(
+  task: Awaited<ReturnType<typeof listTasks>>[number],
+  label: string,
+) {
+  const text = `${task.title}\n${task.description ?? ""}`;
+
+  for (const pattern of connectorTaskCopyForbiddenPatterns) {
+    assert.doesNotMatch(text, pattern, `${label} must not inflate remediation copy into proof/compliance posture.`);
+  }
+
+  if (task.sourceType === "connector_blocked") {
+    for (const pattern of connectorBlockedCopyForbiddenPatterns) {
+      assert.doesNotMatch(text, pattern, `${label} must say blocked/needs attention, not failed/error.`);
+    }
+  }
+}
+
+async function assertConnectorStatusCreatesGap(input: {
+  checkLogic: string;
+  controlId: string;
+  evidenceId: string;
+  failureReason: string;
+  status: "warning" | "manual_review";
+  testName: string;
+}) {
+  const result = await syncConnectorRemediationForEvidence({
+    checkLogic: input.checkLogic,
+    clerkOrgId,
+    controlId: input.controlId,
+    controlKey,
+    evidenceId: input.evidenceId,
+    failureReason: input.failureReason,
+    passCriteria: "Connector result must be reviewed before treating the control as ready.",
+    provider: "github",
+    resultData: { status: input.status },
+    status: input.status,
+    testName: input.testName,
+  });
+
+  assert.equal(result.action, "upserted", `${input.status} connector result must create a remediation task.`);
+  assert.equal(result.sourceType, "connector_gap", `${input.status} connector result must map to connector_gap.`);
+
+  const [task] = (await listTasks()).filter((row) => row.id === result.taskId);
+  assert.ok(task, `${input.status} connector gap task should exist.`);
+  assert.equal(task.sourceType, "connector_gap");
+  assertConnectorTaskCopySafe(task, `${input.status} connector gap remediation task`);
+}
+
 async function main() {
   await cleanup();
   const controlId = await seed();
@@ -93,6 +163,7 @@ async function main() {
   assert.equal(tasks[0]?.sourceType, "connector_gap");
   assert.equal(tasks[0]?.sourceKey, sourceKey);
   assert.equal(tasks[0]?.status, "open");
+  assertConnectorTaskCopySafe(tasks[0]!, "connector_gap remediation task");
 
   await db
     .update(remediationTasks)
@@ -183,7 +254,9 @@ async function main() {
   assert.equal(blocked.sourceType, "connector_blocked");
 
   tasks = await listTasks();
-  assert.equal(tasks.filter((task) => task.sourceType === "connector_blocked").length, 1);
+  const blockedTasks = tasks.filter((task) => task.sourceType === "connector_blocked");
+  assert.equal(blockedTasks.length, 1);
+  assertConnectorTaskCopySafe(blockedTasks[0]!, "connector_blocked remediation task");
 
   const resolvedBlocked = await syncConnectorRemediationForEvidence({
     checkLogic: "repo_branch_protection",
@@ -201,6 +274,23 @@ async function main() {
     throw new Error("Passing connector evidence should resolve the blocked remediation task.");
   }
   assert.equal(resolvedBlocked.tasksResolved, 1, "pass should also resolve connector_blocked tasks.");
+
+  await assertConnectorStatusCreatesGap({
+    checkLogic: "repo_secret_scanning_warning",
+    controlId,
+    evidenceId: "evidence-warning-a",
+    failureReason: "Secret scanning needs review before this can be treated as ready.",
+    status: "warning",
+    testName: "GitHub secret scanning warning",
+  });
+  await assertConnectorStatusCreatesGap({
+    checkLogic: "repo_dependency_manual_review",
+    controlId,
+    evidenceId: "evidence-manual-review-a",
+    failureReason: "Dependency alert status requires human review.",
+    status: "manual_review",
+    testName: "GitHub dependency review",
+  });
 
   const manualEvidence = await createManualEvidence({
     assessmentResult: "manual_review",

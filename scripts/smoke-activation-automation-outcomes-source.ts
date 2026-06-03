@@ -112,8 +112,13 @@ assert.match(
 );
 assert.match(
   controlsPageSource,
-  /isAutomationBlockedPermissionState\(automationInput\)/,
-  "Controls cards must label permission/key connector blockers separately from failed controls.",
+  /blockedReason: automationInput\?\.blockedReason \?\? control\.latestEvidenceBlockedReason \?\? undefined/,
+  "Controls cards must derive blocked status from query-provided automation outcomes or latest evidence state.",
+);
+assert.match(
+  controlsPageSource,
+  /const automationBlocked = activationStatusState\.status === "blocked";/,
+  "Controls cards must label derived blocked collection states separately from failed controls.",
 );
 assert.match(
   evidencePageSource,
