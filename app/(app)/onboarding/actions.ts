@@ -10,7 +10,6 @@ import {
   getRecommendedConnectorFromTools,
   recordActivationEvent,
 } from "@/lib/activation/events";
-import type { FrameworkSlug } from "@/lib/controls/library";
 import {
   completeOnboarding,
   markOnboardingIntakeCompleted,
@@ -22,6 +21,7 @@ import {
 } from "@/lib/db/queries/onboarding";
 import { FRAMEWORK_LIBRARY } from "@/lib/frameworks/registry";
 import { INTAKE_PROFILE_VERSION } from "@/lib/onboarding/intake-questions";
+import { parseOnboardingIntakeStepInput } from "@/lib/onboarding/intake-step-input";
 import { deriveIntakeScope } from "@/lib/onboarding/intake-scope";
 import { TOOL_INVENTORY_LIBRARY } from "@/lib/onboarding/tools";
 
@@ -61,54 +61,6 @@ const frameworkSchema = z.object({
 
 const toolSchema = z.object({
   toolKeys: z
-    .array(z.enum(TOOL_INVENTORY_LIBRARY.map((tool) => tool.key) as [
-      string,
-      ...string[],
-    ]))
-    .max(TOOL_INVENTORY_LIBRARY.length),
-});
-
-const businessModels = [
-  "professional_services",
-  "saas",
-  "physical_operations",
-  "regulated_service",
-] as const;
-const intakeSectors = [
-  "professional_services",
-  "technology",
-  "manufacturing",
-  "healthcare",
-  "other",
-] as const;
-const employeeBands = ["1_9", "10_49", "50_249", "250_plus"] as const;
-const personalDataScopes = ["none", "employees_only", "customers_and_employees"] as const;
-const processorUses = ["none", "few", "many"] as const;
-const aiSystemUses = ["none", "internal_productivity", "customer_or_patient_facing"] as const;
-
-const intakeSchema = z.object({
-  answers: z.object({
-    businessModel: z.enum(businessModels),
-    employeeBand: z.enum(employeeBands),
-    handlesPersonalData: z.enum(personalDataScopes),
-    handlesSensitiveData: z.boolean(),
-    hasCriticalOperations: z.boolean(),
-    hasProductionSoftware: z.boolean(),
-    hasPublicApp: z.boolean(),
-    sector: z.enum(intakeSectors),
-    usesAiSystems: z.enum(aiSystemUses),
-    usesCloudHosting: z.boolean(),
-    usesHighRiskAi: z.boolean(),
-    usesThirdPartyProcessors: z.enum(processorUses),
-  }),
-  selectedFrameworks: z
-    .array(z.enum(FRAMEWORK_LIBRARY.map((framework) => framework.slug) as [
-      string,
-      ...string[],
-    ]))
-    .min(1)
-    .max(FRAMEWORK_LIBRARY.length),
-  selectedTools: z
     .array(z.enum(TOOL_INVENTORY_LIBRARY.map((tool) => tool.key) as [
       string,
       ...string[],
@@ -205,11 +157,11 @@ export async function saveToolsStep(input: unknown) {
 }
 
 export async function saveIntakeStep(input: unknown) {
-  const parsed = intakeSchema.parse(input);
+  const parsed = parseOnboardingIntakeStepInput(input);
   const clerkOrgId = await getActiveOrgId();
   const derivedScope = deriveIntakeScope({
     answers: parsed.answers,
-    selectedFrameworks: parsed.selectedFrameworks as FrameworkSlug[],
+    selectedFrameworks: parsed.selectedFrameworks,
     selectedTools: parsed.selectedTools,
   });
 

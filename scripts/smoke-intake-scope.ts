@@ -4,6 +4,7 @@ import {
   type IntakeAnswers,
 } from "../lib/onboarding/intake-scope";
 import { INTAKE_QUESTIONS } from "../lib/onboarding/intake-questions";
+import { parseOnboardingIntakeStepInput } from "../lib/onboarding/intake-step-input";
 
 function assertIncludes(
   actual: readonly string[],
@@ -25,7 +26,7 @@ function assertExcludes(
   }
 }
 
-assert.equal(INTAKE_QUESTIONS.length, 12);
+assert.equal(INTAKE_QUESTIONS.length, 13);
 assert.deepEqual(
   INTAKE_QUESTIONS.map((question) => question.key),
   [
@@ -41,7 +42,39 @@ assert.deepEqual(
     "usesThirdPartyProcessors",
     "usesAiSystems",
     "usesHighRiskAi",
+    "accountingPlatform",
   ],
+);
+
+const parsedAccountingPlatformPayload = parseOnboardingIntakeStepInput({
+  answers: {
+    accountingPlatform: "helios",
+    businessModel: "physical_operations",
+    employeeBand: "50_249",
+    handlesPersonalData: "employees_only",
+    handlesSensitiveData: false,
+    hasCriticalOperations: true,
+    hasProductionSoftware: false,
+    hasPublicApp: false,
+    sector: "manufacturing",
+    usesAiSystems: "none",
+    usesCloudHosting: false,
+    usesHighRiskAi: false,
+    usesThirdPartyProcessors: "few",
+  },
+  selectedFrameworks: ["nis2", "gdpr", "iso27001"],
+  selectedTools: [],
+});
+assert.equal(
+  parsedAccountingPlatformPayload.answers.accountingPlatform,
+  "helios",
+  "onboarding intake parser should preserve accountingPlatform before deriving persisted scope",
+);
+const persistedAccountingPlatformScope = deriveIntakeScope(parsedAccountingPlatformPayload);
+assert.deepEqual(
+  persistedAccountingPlatformScope.workspaceRecommendations.map((recommendation) => recommendation.platformKey),
+  ["helios"],
+  "persisted intake scope should include the selected Czech ERP workspace recommendation",
 );
 
 const tinyProfessionalServices: IntakeAnswers = {
