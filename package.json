@@ -35,6 +35,7 @@
     "smoke:activation-status": "tsx scripts/smoke-activation-status.tsx",
     "smoke:activation-recommendations": "tsx scripts/smoke-activation-recommendations.ts",
     "smoke:activation-next-action": "tsx scripts/smoke-activation-next-action.ts",
+    "smoke:activation-automation-outcomes-source": "tsx scripts/smoke-activation-automation-outcomes-source.ts",
     "smoke:api-key-base": "tsx scripts/smoke-api-key-base.ts",
     "smoke:abra-flexi-checks": "tsx scripts/smoke-abra-flexi-checks.ts",
     "smoke:controls-focus-activation-status-source": "tsx scripts/smoke-controls-focus-activation-status-source.ts",

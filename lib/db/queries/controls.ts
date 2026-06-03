@@ -19,6 +19,7 @@ import {
   tests,
 } from "@/lib/db/schema";
 import { getTrainingGapSummary } from "@/lib/db/queries/training";
+import { listActivationAutomationOutcomesForControlKeys } from "@/lib/db/queries/activation-automation-outcomes";
 
 type IntakeScopeSummary = {
   applicableControlKeys: string[];
@@ -267,7 +268,19 @@ export async function listOrgControlsForIndex(clerkOrgId: string) {
     }
   }
 
-  return [...controlMap.values()];
+  const controlsWithEvidence = [...controlMap.values()];
+  const automationOutcomes = await listActivationAutomationOutcomesForControlKeys({
+    clerkOrgId,
+    controlKeys: controlsWithEvidence.map((control) => control.key),
+  });
+  const automationOutcomesByControlKey = new Map(
+    automationOutcomes.map((outcome) => [outcome.controlKey, outcome]),
+  );
+
+  return controlsWithEvidence.map((control) => ({
+    ...control,
+    automationOutcome: automationOutcomesByControlKey.get(control.key) ?? null,
+  }));
 }
 
 function isConfirmedEvidenceAssessment(

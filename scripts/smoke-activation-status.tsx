@@ -1,14 +1,21 @@
 import assert from "node:assert/strict";
 import * as React from "react";
 import { renderToStaticMarkup } from "react-dom/server";
+import { IntlProvider } from "use-intl";
 import {
   ActivationStatus,
   deriveActivationStatusState,
   type ActivationStatusState,
 } from "@/components/activation/activation-status";
+import { getMessagesForLocale } from "@/i18n/messages";
+import type { Locale } from "@/i18n/routing";
 
-function render(state: ActivationStatusState) {
-  return renderToStaticMarkup(<ActivationStatus confidence="high" state={state} />);
+function render(state: ActivationStatusState, locale: Locale = "en-EU") {
+  return renderToStaticMarkup(
+    <IntlProvider locale={locale} messages={getMessagesForLocale(locale)} timeZone="Europe/Prague">
+      <ActivationStatus confidence="high" state={state} />
+    </IntlProvider>,
+  );
 }
 
 function assertContains(markup: string, expected: string, message: string) {
@@ -117,6 +124,7 @@ for (const state of apiKeyBlockedStates) {
       blockedReason: state.reason,
       collectionStatus: "blocked",
     }),
+    "cs-CZ",
   );
 
   assertContains(

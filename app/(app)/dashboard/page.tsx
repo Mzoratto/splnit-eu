@@ -17,6 +17,7 @@ import {
   ShieldCheck,
 } from "lucide-react";
 import { AnimatedScoreRing } from "@/components/app/animated-score-ring";
+import { ActivationStatus, deriveActivationStatusState } from "@/components/activation/activation-status";
 import { DataModeNotice } from "@/components/app/data-mode-notice";
 import { StatusPill, type StatusPillTone } from "@/components/app/status-pill";
 import { ComplianceReportButton } from "@/components/export/compliance-report-button";
@@ -437,6 +438,20 @@ export default async function DashboardPage({
   const activationManualHref = activationNextAction.topPriorityControlKey
     ? `/controls/${activationNextAction.topPriorityControlKey}`
     : "/controls?scope=priority";
+  const activationAutomationOutcome = data?.activationAutomationOutcome ?? null;
+  const activationAutomationTarget =
+    activationAutomationOutcome?.controlTitle ??
+    activationTargetControl?.title ??
+    activationTarget;
+  const activationAutomationStatusState = activationAutomationOutcome
+    ? deriveActivationStatusState({
+        assessmentResult: activationAutomationOutcome.assessmentResult,
+        blockedReason: activationAutomationOutcome.blockedReason ?? undefined,
+        collectionStatus: activationAutomationOutcome.collectionStatus,
+        lastKnownAssessmentResult: activationAutomationOutcome.lastKnownAssessmentResult,
+        source: activationAutomationOutcome.source,
+      })
+    : null;
   const setupCta = isPreIntake
     ? { href: "/onboarding", label: copy.onboarding.primaryCta }
     : { href: activationNextAction.href, label: activationStageCopy.cta };
@@ -641,6 +656,22 @@ export default async function DashboardPage({
                   <p className="mt-3 rounded-md border border-border bg-background/80 px-3 py-2 text-xs leading-5 text-foreground/62">
                     {activationNextAction.recommendation.reason}
                   </p>
+                ) : null}
+                {activationAutomationOutcome && activationAutomationStatusState ? (
+                  <div className="mt-4 max-w-2xl rounded-md border border-border bg-background/85 p-3">
+                    <p className="mb-2 text-xs font-medium uppercase tracking-[0.1em] text-foreground/52">
+                      {formatCopyTemplate(copy.activation.automationOutcomeTitle, {
+                        target: activationAutomationTarget,
+                      })}
+                    </p>
+                    <ActivationStatus
+                      confidence={activationAutomationOutcome.confidence}
+                      state={activationAutomationStatusState}
+                    />
+                    <p className="mt-2 text-xs leading-5 text-foreground/54">
+                      {copy.activation.automationOutcomeBody}
+                    </p>
+                  </div>
                 ) : null}
                 <div className="mt-4 flex flex-wrap gap-2">
                   <Link href={setupCta.href} className="btn btn-primary">

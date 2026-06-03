@@ -12,8 +12,14 @@ match(
 
 match(
   controlsPageSource,
-  /state=\{deriveActivationStatusState\(\{[\s\S]*assessmentResult: control\.latestEvidenceAssessmentResult,/,
-  "Controls focus cards should derive activation state from the latest evidence row.",
+  /const automationInput = control\.automationOutcome \?\? null;/,
+  "Controls focus cards should consume the query-provided automation outcome when present.",
+);
+
+match(
+  controlsPageSource,
+  /assessmentResult: automationInput\?\.assessmentResult \?\? control\.latestEvidenceAssessmentResult,/,
+  "Controls focus cards should prefer automation outcome state and fall back to the latest evidence row.",
 );
 
 match(
@@ -47,7 +53,19 @@ match(
 );
 
 match(
+  controlsQuerySource,
+  /listActivationAutomationOutcomesForControlKeys/,
+  "Controls index query should load read-only activation automation outcomes for control cards.",
+);
+
+match(
+  controlsQuerySource,
+  /automationOutcome: automationOutcomesByControlKey\.get\(control\.key\) \?\? null,/,
+  "Controls index query should attach automation outcomes without render-path writes.",
+);
+
+match(
   controlsPageSource,
-  /reviewStatus: control\.status,[\s\S]*source: control\.latestEvidenceSource,/,
-  "Controls focus cards should pass manual review status and evidence source into the shared activation state.",
+  /reviewStatus: control\.status,[\s\S]*source: automationInput\?\.source \?\? control\.latestEvidenceSource,/,
+  "Controls focus cards should pass review status and the outcome/evidence source into the shared activation state.",
 );

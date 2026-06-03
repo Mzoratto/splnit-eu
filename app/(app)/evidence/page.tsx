@@ -6,14 +6,19 @@ import { ActivationStatus, deriveActivationStatusState } from "@/components/acti
 import { PageHeader } from "@/components/app/page-header";
 import { getMessagesForLocale } from "@/i18n/messages";
 import { normalizeLocale, type Locale } from "@/i18n/routing";
+import { deriveActivationNextAction } from "@/lib/activation/next-action";
 import { getControlDisplayTitle } from "@/lib/controls/localization";
 import { hasDatabaseUrl } from "@/lib/db";
-import { getOrganisationByClerkOrgId } from "@/lib/db/queries/organisations";
 import { listEvidenceVault } from "@/lib/db/queries/evidence";
+import { getActivationAutomationOutcomeForControlKeys } from "@/lib/db/queries/activation-automation-outcomes";
+import { listOrgControlsForIndex, getOrgWorkspaceRecommendations } from "@/lib/db/queries/controls";
+import { getIntegrationsHubData } from "@/lib/db/queries/integrations";
+import { getOrganisationByClerkOrgId } from "@/lib/db/queries/organisations";
 import { getFrameworkDisplayName } from "@/lib/frameworks/localization";
 import { FRAMEWORK_LIBRARY } from "@/lib/frameworks/registry";
 
 type EvidenceRow = Awaited<ReturnType<typeof listEvidenceVault>>[number];
+type EvidenceControl = Awaited<ReturnType<typeof listOrgControlsForIndex>>[number];
 
 type SearchParams = {
   expiry?: string;
@@ -66,6 +71,18 @@ function getFrameworkName(
   return getFrameworkDisplayName(framework, locale);
 }
 
+function getLocalizedAppHref(path: string, requestLocale: Locale) {
+  if (requestLocale === "it-IT") {
+    return `/it${path}`;
+  }
+
+  if (requestLocale === "en-EU") {
+    return `/en${path}`;
+  }
+
+  return path;
+}
+
 function getEvidenceFrameworkName(
   framework: EvidenceRow["frameworks"][number],
   locale: Locale,
@@ -80,33 +97,135 @@ function getEvidenceFrameworkName(
   );
 }
 
-async function loadEvidenceRows() {
+function getEvidenceControlPriorityScore(control: EvidenceControl) {
+  let score = 0;
+
+  if (control.isIntakePriority) {
+    score += 100;
+  }
+
+  if (control.status === "fail") {
+    score += 40;
+  } else if (control.status === "manual_review" || control.status === "warning") {
+    score += 25;
+  } else if (control.status === "unknown" || control.status === null) {
+    score += 15;
+  }
+
+  if (control.scopeStatus === "applicable") {
+    score += 10;
+  }
+
+  if (control.intakeRationale) {
+    score += 5;
+  }
+
+  return score;
+}
+
+function buildEvidenceActivationPriorityControls(
+  controls: EvidenceControl[],
+  locale: Locale,
+) {
+  return controls
+    .filter(
+      (control) =>
+        control.scopeStatus !== "out_of_scope" &&
+        control.scopeStatus !== "not_applicable" &&
+        getEvidenceControlPriorityScore(control) > 0,
+    )
+    .sort((first, second) => {
+      const scoreDelta = getEvidenceControlPriorityScore(second) - getEvidenceControlPriorityScore(first);
+      return scoreDelta || first.key.localeCompare(second.key);
+    })
+    .map((control) => ({
+      evidenceCount: control.latestEvidenceCollectionStatus || control.latestEvidenceCollectedAt ? 1 : 0,
+      href: `/controls/${control.key}`,
+      key: control.key,
+      status: control.status,
+      title: getControlDisplayTitle(control, locale),
+    }));
+}
+
+async function loadEvidenceRows(requestLocale: Locale) {
+  const fallbackActivationNextAction = deriveActivationNextAction({
+    hasIntakeProfile: false,
+  });
   const clerkConfigured =
     Boolean(process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY) &&
     Boolean(process.env.CLERK_SECRET_KEY);
 
   if (!clerkConfigured || !hasDatabaseUrl()) {
-    return { organisationLocale: null, rows: [] };
+    return {
+      activationAutomationOutcome: null,
+      activationNextAction: fallbackActivationNextAction,
+      organisationLocale: null,
+      rows: [],
+    };
   }
 
   const session = await auth();
 
   if (!session.orgId) {
-    return { organisationLocale: null, rows: [] };
+    return {
+      activationAutomationOutcome: null,
+      activationNextAction: fallbackActivationNextAction,
+      organisationLocale: null,
+      rows: [],
+    };
   }
 
   try {
-    const [organisation, rows] = await Promise.all([
+    const [
+      organisation,
+      rows,
+      controls,
+      workspaceRecommendations,
+      integrationHubData,
+    ] = await Promise.all([
       getOrganisationByClerkOrgId(session.orgId),
       listEvidenceVault(session.orgId),
+      listOrgControlsForIndex(session.orgId),
+      getOrgWorkspaceRecommendations(session.orgId),
+      getIntegrationsHubData(session.orgId),
     ]);
+    const locale = normalizeLocale(organisation?.locale) ?? requestLocale;
+    const priorityControls = buildEvidenceActivationPriorityControls(controls, locale);
+    const hasIntakeProfile = controls.some(
+      (control) => control.scopeStatus !== null || control.isIntakePriority || Boolean(control.intakeRationale),
+    );
+    const selectedTools = Array.isArray(organisation?.toolInventory)
+      ? organisation.toolInventory.filter((tool): tool is string => typeof tool === "string")
+      : [];
+
+    const activationNextAction = deriveActivationNextAction({
+      hasIntakeProfile,
+      integrations: integrationHubData.integrations.map((integration) => ({
+        provider: integration.provider,
+        status: integration.status,
+      })),
+      priorityControls,
+      selectedTools,
+      workspaceRecommendations,
+    });
+    const activationAutomationOutcome = await getActivationAutomationOutcomeForControlKeys({
+      clerkOrgId: session.orgId,
+      controlKeys: priorityControls.map((control) => control.key),
+    });
 
     return {
+      activationAutomationOutcome,
+      activationNextAction,
       organisationLocale: organisation?.locale ?? null,
       rows,
     };
   } catch {
-    return { organisationLocale: null, rows: [] };
+    return {
+      activationAutomationOutcome: null,
+      activationNextAction: fallbackActivationNextAction,
+      organisationLocale: null,
+      rows: [],
+    };
   }
 }
 
@@ -117,7 +236,7 @@ export default async function EvidencePage({
 }) {
   const requestLocale = normalizeLocale(await getLocale()) ?? "cs-CZ";
   const filters = await searchParams;
-  const { organisationLocale, rows } = await loadEvidenceRows();
+  const { activationAutomationOutcome, activationNextAction, organisationLocale, rows } = await loadEvidenceRows(requestLocale);
   const locale = normalizeLocale(organisationLocale) ?? requestLocale;
   const copy = getMessagesForLocale(locale).evidence;
   const filteredRows = rows.filter((row) => {
@@ -138,6 +257,24 @@ export default async function EvidencePage({
 
     return frameworkMatch && statusMatch && expiryMatch;
   });
+  const emptyAutomationStatusState = activationAutomationOutcome
+    ? deriveActivationStatusState({
+        assessmentResult: activationAutomationOutcome.assessmentResult,
+        blockedReason: activationAutomationOutcome.blockedReason ?? undefined,
+        collectionStatus: activationAutomationOutcome.collectionStatus,
+        lastKnownAssessmentResult: activationAutomationOutcome.lastKnownAssessmentResult,
+        source: activationAutomationOutcome.source,
+      })
+    : null;
+  const emptyEvidenceHref = getLocalizedAppHref(
+    activationAutomationOutcome
+      ? `/controls/${activationAutomationOutcome.controlKey}`
+      : activationNextAction.href,
+    requestLocale,
+  );
+  const emptyEvidenceAction = activationAutomationOutcome?.kind === "blocked"
+    ? copy.records.emptyAutomationBlockedAction
+    : copy.records.emptyAction;
 
   return (
     <section className="space-y-6">
@@ -294,10 +431,20 @@ export default async function EvidencePage({
           ) : rows.length === 0 ? (
             <div className="p-5">
               <p className="text-sm leading-6 text-foreground/64">
-                {copy.records.empty}
+                {activationAutomationOutcome
+                  ? copy.records.emptyAutomationOutcome
+                  : copy.records.empty}
               </p>
-              <Link href="/frameworks" className="btn btn-primary mt-4">
-                {copy.records.emptyAction}
+              {activationAutomationOutcome && emptyAutomationStatusState ? (
+                <div className="mt-4 max-w-xl">
+                  <ActivationStatus
+                    confidence={activationAutomationOutcome.confidence}
+                    state={emptyAutomationStatusState}
+                  />
+                </div>
+              ) : null}
+              <Link href={emptyEvidenceHref} className="btn btn-primary mt-4">
+                {emptyEvidenceAction}
                 <ArrowRight className="h-4 w-4" aria-hidden="true" strokeWidth={1.5} />
               </Link>
             </div>

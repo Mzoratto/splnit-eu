@@ -445,6 +445,8 @@
       "rankedGapsTitle": "Seřazené mezery",
       "rankedGapsBody": "{count} prioritních položek je dostupných z intake a aktuální evidence.",
       "noRankedGaps": "Zatím není dostupná žádná seřazená mezera. Dokončete intake nebo projděte fokus kontrol.",
+      "automationOutcomeTitle": "Stav automatizace pro {target}",
+      "automationOutcomeBody": "Zobrazuje existující stav konektorových důkazů a remediačních úkolů; dashboard při zobrazení nezakládá nový úkol.",
       "stages": {
         "complete_intake": {
           "title": "Dokončete intake",
@@ -586,8 +588,10 @@
     "records": {
       "title": "Záznamy evidence",
       "empty": "Důkazy se objeví po nastavení frameworku, integracích, nahrání souborů nebo vygenerování dokumentů, které vytvoří první záznamy ke kontrolám.",
+      "emptyAutomationOutcome": "Pro prioritní kontrolu už existuje stav konektorové automatizace, ale zatím není dostupný žádný stahovatelný záznam evidence. Než vytvoříte manuální důkaz, projděte dotčenou kontrolu.",
+      "emptyAutomationBlockedAction": "Zkontrolovat blokovanou automatizaci",
       "emptyFiltered": "Žádné záznamy neodpovídají aktuálním filtrům. Upravte nebo vymažte filtry a zobrazte další záznamy.",
-      "emptyAction": "Nastavit framework",
+      "emptyAction": "Pokračovat dalším krokem",
       "aiDraftHumanReview": "AI návrh · vyžaduje lidskou kontrolu"
     },
     "expiry": {
@@ -1450,6 +1454,7 @@
       "emptyActive": "Kontroly se zobrazí po aktivaci frameworku. Začněte nastavením frameworku, které vytvoří první rozsah kontrol.",
       "frameworksLabel": "Frameworky",
       "statusLabel": "Stav",
+      "automationBlockedStatus": "Zatím nelze sesbírat",
       "automated": "Automatizovaná",
       "manual": "Manuální",
       "openControl": "Otevřít kontrolu",

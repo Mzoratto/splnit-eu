@@ -445,6 +445,8 @@
       "rankedGapsTitle": "Gap ordinati",
       "rankedGapsBody": "{count} elementi prioritari sono disponibili da intake ed evidenze correnti.",
       "noRankedGaps": "Nessun gap ordinato è ancora disponibile. Completate l'intake o rivedete il focus controlli.",
+      "automationOutcomeTitle": "Stato automazione per {target}",
+      "automationOutcomeBody": "Riflette evidenze del connettore e task di remediation già esistenti; la vista dashboard non crea nuovi task.",
       "stages": {
         "complete_intake": {
           "title": "Completate l'intake",
@@ -586,8 +588,10 @@
     "records": {
       "title": "Registro evidenze",
       "empty": "Le evidenze appariranno dopo la configurazione del framework, le integrazioni, i caricamenti o i documenti generati che creano i primi record collegati ai controlli.",
+      "emptyAutomationOutcome": "Esiste già uno stato di automazione del connettore per un controllo prioritario, ma non è ancora disponibile un record evidenza scaricabile. Rivedete il controllo interessato prima di creare una prova manuale.",
+      "emptyAutomationBlockedAction": "Rivedi automazione bloccata",
       "emptyFiltered": "Nessun record di evidenza corrisponde ai filtri attuali. Modificate o cancellate i filtri per vedere altri record.",
-      "emptyAction": "Configura framework",
+      "emptyAction": "Continua con la prossima azione",
       "aiDraftHumanReview": "Bozza AI · revisione umana richiesta"
     },
     "expiry": {
@@ -1450,6 +1454,7 @@
       "emptyActive": "I controlli appariranno dopo l’attivazione di un framework. Iniziate dalla configurazione del framework per creare il primo ambito controlli.",
       "frameworksLabel": "Framework",
       "statusLabel": "Stato",
+      "automationBlockedStatus": "Non raccoglibile per ora",
       "automated": "Automatico",
       "manual": "Manuale",
       "openControl": "Apri controllo",

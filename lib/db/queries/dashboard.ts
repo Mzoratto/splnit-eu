@@ -1,6 +1,7 @@
 import { and, eq, inArray, sql } from "drizzle-orm";
 import { getDb } from "@/lib/db";
 import { applyIntakeScopeToDashboardPriorityControls } from "@/lib/dashboard/priority-controls";
+import { getActivationAutomationOutcomeForControlKeys } from "@/lib/db/queries/activation-automation-outcomes";
 import {
   controls,
   frameworks,
@@ -181,9 +182,14 @@ export async function getDashboardData(clerkOrgId: string) {
     activationControls,
     scopeSummary,
   );
+  const activationAutomationOutcome = await getActivationAutomationOutcomeForControlKeys({
+    clerkOrgId,
+    controlKeys: scopedActivationControls.map((control) => control.key),
+  });
 
   return {
     accountingPlatform: getAccountingPlatform(intakeRows[0]?.answers),
+    activationAutomationOutcome,
     activationPriorityControls: scopedActivationControls,
     frameworkScores,
     hasIntakeProfile: Boolean(intakeRows[0]?.completedAt || derivedScope),

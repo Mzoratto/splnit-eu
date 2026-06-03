@@ -445,6 +445,8 @@
       "rankedGapsTitle": "Ranked gaps",
       "rankedGapsBody": "{count} priority items are available from intake and current evidence.",
       "noRankedGaps": "No ranked gap is available yet. Finish intake or review the full control focus.",
+      "automationOutcomeTitle": "Automation status for {target}",
+      "automationOutcomeBody": "This reflects existing connector evidence and remediation task state; no new task is created from the dashboard view.",
       "stages": {
         "complete_intake": {
           "title": "Complete intake",
@@ -586,8 +588,10 @@
     "records": {
       "title": "Evidence records",
       "empty": "Evidence will appear after framework setup, integrations, uploads, or generated documents create the first control records.",
+      "emptyAutomationOutcome": "A connector automation state already exists for a priority control, but no downloadable evidence record is available yet. Review the affected control before creating manual proof.",
+      "emptyAutomationBlockedAction": "Review blocked automation",
       "emptyFiltered": "No evidence records match the current filters. Clear or adjust filters to see other records.",
-      "emptyAction": "Set up a framework",
+      "emptyAction": "Continue next action",
       "aiDraftHumanReview": "AI draft · human review required"
     },
     "expiry": {
@@ -1450,6 +1454,7 @@
       "emptyActive": "Controls appear here after a framework is activated. Start with framework setup to create the first control scope.",
       "frameworksLabel": "Frameworks",
       "statusLabel": "Status",
+      "automationBlockedStatus": "Can’t collect yet",
       "automated": "Automated",
       "manual": "Manual",
       "openControl": "Open control",

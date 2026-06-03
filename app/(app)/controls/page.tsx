@@ -9,6 +9,7 @@ import { ComplianceReportButton } from "@/components/export/compliance-report-bu
 import { getMessagesForLocale } from "@/i18n/messages";
 import { normalizeLocale, type Locale } from "@/i18n/routing";
 import { deriveActivationNextAction, type ActivationNextActionStage } from "@/lib/activation/next-action";
+import { isAutomationBlockedPermissionState } from "@/lib/activation/automation-outcome";
 import { getActivationRecommendation } from "@/lib/activation/recommendations";
 import {
   getControlDisplayDescription,
@@ -99,6 +100,7 @@ function buildDemoControls(): OrgControl[] {
     const latestEvidence = evidenceCycle[index % evidenceCycle.length];
 
     return {
+      automationOutcome: null,
       category: control.category,
       descriptionCs: control.descriptionCs ?? null,
       frameworks,
@@ -677,64 +679,70 @@ export default async function ControlsPage({
         {controls.length ? (
           controlsForView.length ? (
             <div className="space-y-3">
-              {controlsForView.map((control, index) => (
-                <article key={control.key} className={`rounded-lg border border-border bg-surface p-4 ${getPriorityBorderClass(control)}`}>
-                  <div className="grid gap-4 lg:grid-cols-[minmax(0,1fr)_auto] lg:items-start">
-                    <div>
-                      <div className="flex flex-wrap items-center gap-2">
-                        <span className="font-mono text-xs text-foreground/52">#{index + 1} · {control.key}</span>
-                        <span className="rounded-sm bg-surface-muted px-2 py-1 text-xs font-medium text-foreground/64">
-                          {getCategoryLabel(control.category ?? "unknown", copy)}
-                        </span>
-                        <StatusPill tone={getStatusTone(control.status)}>
-                          {getStatusLabel(control.status, copy)}
-                        </StatusPill>
-                      </div>
-                      <h3 className="mt-2 text-lg font-medium">
-                        {getControlDisplayTitle(control, locale)}
-                      </h3>
-                      <p className="mt-2 text-sm leading-6 text-foreground/64">
-                        {getControlDisplayDescription(control, locale)}
-                      </p>
-                      {control.intakeRationale ? (
-                        <div className="mt-3 inline-flex items-center gap-1.5 rounded-full border border-border bg-background px-2.5 py-1 text-xs font-medium text-foreground/58" title={control.intakeRationale}>
-                          <CircleHelp className="h-3.5 w-3.5" aria-hidden="true" strokeWidth={1.8} />
-                          {copy.index.rationaleLabel}
+              {controlsForView.map((control, index) => {
+                const automationInput = control.automationOutcome ?? null;
+                const activationStatusState = deriveActivationStatusState({
+                  assessmentResult: automationInput?.assessmentResult ?? control.latestEvidenceAssessmentResult,
+                  blockedReason: automationInput?.blockedReason ?? control.latestEvidenceBlockedReason ?? undefined,
+                  collectionStatus: automationInput?.collectionStatus ?? control.latestEvidenceCollectionStatus,
+                  lastKnownAssessmentResult: automationInput?.lastKnownAssessmentResult ?? control.lastKnownAssessmentResult,
+                  reviewStatus: control.status,
+                  source: automationInput?.source ?? control.latestEvidenceSource,
+                });
+                const automationBlocked = isAutomationBlockedPermissionState(automationInput);
+
+                return (
+                  <article key={control.key} className={`rounded-lg border border-border bg-surface p-4 ${getPriorityBorderClass(control)}`}>
+                    <div className="grid gap-4 lg:grid-cols-[minmax(0,1fr)_auto] lg:items-start">
+                      <div>
+                        <div className="flex flex-wrap items-center gap-2">
+                          <span className="font-mono text-xs text-foreground/52">#{index + 1} · {control.key}</span>
+                          <span className="rounded-sm bg-surface-muted px-2 py-1 text-xs font-medium text-foreground/64">
+                            {getCategoryLabel(control.category ?? "unknown", copy)}
+                          </span>
+                          <StatusPill tone={automationBlocked ? "warn" : getStatusTone(control.status)}>
+                            {automationBlocked ? copy.index.automationBlockedStatus : getStatusLabel(control.status, copy)}
+                          </StatusPill>
                         </div>
-                      ) : null}
+                        <h3 className="mt-2 text-lg font-medium">
+                          {getControlDisplayTitle(control, locale)}
+                        </h3>
+                        <p className="mt-2 text-sm leading-6 text-foreground/64">
+                          {getControlDisplayDescription(control, locale)}
+                        </p>
+                        {control.intakeRationale ? (
+                          <div className="mt-3 inline-flex items-center gap-1.5 rounded-full border border-border bg-background px-2.5 py-1 text-xs font-medium text-foreground/58" title={control.intakeRationale}>
+                            <CircleHelp className="h-3.5 w-3.5" aria-hidden="true" strokeWidth={1.8} />
+                            {copy.index.rationaleLabel}
+                          </div>
+                        ) : null}
+                      </div>
+                      <div className="flex flex-col gap-3 lg:w-56">
+                        <div className="rounded-md bg-surface-muted p-3 text-sm">
+                          <p className="text-xs text-foreground/52">{copy.index.effortLabel}</p>
+                          <p className="mt-1 font-medium">{getEffortEstimate(control, copy)}</p>
+                        </div>
+                        <div className="rounded-md bg-surface-muted p-3 text-sm">
+                          <p className="text-xs text-foreground/52">{copy.index.frameworksLabel}</p>
+                          <p className="mt-1 text-sm font-medium">{getFrameworkNames(control, locale)}</p>
+                        </div>
+                        <div className="rounded-md bg-surface-muted p-3 text-sm">
+                          <p className="mb-2 text-xs text-foreground/52">{copy.index.statusLabel}</p>
+                          <ActivationStatus
+                            confidence={automationInput?.confidence ?? control.latestEvidenceConfidence}
+                            showDetails={viewMode === "focus"}
+                            state={activationStatusState}
+                          />
+                        </div>
+                        <Link href={getLocalizedAppHref(`/controls/${control.key}`, requestLocale)} className="btn btn-secondary justify-center">
+                          {copy.index.openControl}
+                          <ArrowRight className="h-4 w-4" aria-hidden="true" strokeWidth={1.5} />
+                        </Link>
+                      </div>
                     </div>
-                    <div className="flex flex-col gap-3 lg:w-56">
-                      <div className="rounded-md bg-surface-muted p-3 text-sm">
-                        <p className="text-xs text-foreground/52">{copy.index.effortLabel}</p>
-                        <p className="mt-1 font-medium">{getEffortEstimate(control, copy)}</p>
-                      </div>
-                      <div className="rounded-md bg-surface-muted p-3 text-sm">
-                        <p className="text-xs text-foreground/52">{copy.index.frameworksLabel}</p>
-                        <p className="mt-1 text-sm font-medium">{getFrameworkNames(control, locale)}</p>
-                      </div>
-                      <div className="rounded-md bg-surface-muted p-3 text-sm">
-                        <p className="mb-2 text-xs text-foreground/52">{copy.index.statusLabel}</p>
-                        <ActivationStatus
-                          confidence={control.latestEvidenceConfidence}
-                          showDetails={viewMode === "focus"}
-                          state={deriveActivationStatusState({
-                            assessmentResult: control.latestEvidenceAssessmentResult,
-                            blockedReason: control.latestEvidenceBlockedReason ?? undefined,
-                            collectionStatus: control.latestEvidenceCollectionStatus,
-                            lastKnownAssessmentResult: control.lastKnownAssessmentResult,
-                            reviewStatus: control.status,
-                            source: control.latestEvidenceSource,
-                          })}
-                        />
-                      </div>
-                      <Link href={getLocalizedAppHref(`/controls/${control.key}`, requestLocale)} className="btn btn-secondary justify-center">
-                        {copy.index.openControl}
-                        <ArrowRight className="h-4 w-4" aria-hidden="true" strokeWidth={1.5} />
-                      </Link>
-                    </div>
-                  </div>
-                </article>
-              ))}
+                  </article>
+                );
+              })}
               {hasMoreControls ? (
                 <div className="flex justify-center pt-2">
                   <Link href={`${localizedControlsPath}?view=all&scope=${scopeFilter}&limit=${visibleCount + 5}`} className="btn btn-secondary">
