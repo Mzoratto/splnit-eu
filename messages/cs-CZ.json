@@ -623,7 +623,10 @@
       "hetzner": "Servery, firewally a snapshoty v Hetzner Cloud přes read-only API token.",
       "ovhcloud": "Dedikované servery, firewall a backup storage v OVHcloud přes read-only API klíče.",
       "abra-flexi": "REST API připojení pro ABRA Flexi: uživatelé, transport, konfigurace a ruční fallback pro zálohy.",
-      "google_workspace": "Protokoly auditu Workspace, sdílení na Disku a administrátorské účty."
+      "google_workspace": "Protokoly auditu Workspace, sdílení na Disku a administrátorské účty.",
+      "pohoda": "Workspace/checklist pro Pohoda: zálohy dat, přístupy k mServer/API, uživatelské role a ruční důkazy.",
+      "money_s3": "Workspace/checklist pro Money S3/S4: zálohy databáze, přístupy, nastavení SQL Serveru a ruční důkazy.",
+      "helios": "Workspace/checklist pro Helios: SQL Server zálohy, přístupy, návaznosti MES/SCADA nebo EDI a ruční důkazy."
     },
     "index": {
       "eyebrow": "Integrace",

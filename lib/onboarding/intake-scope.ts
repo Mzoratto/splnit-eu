@@ -1,4 +1,5 @@
 import { CONTROL_LIBRARY, type FrameworkSlug } from "@/lib/controls/library";
+import { getWorkspaceRecommendationForAccountingPlatform, toWorkspaceRecommendation } from "@/lib/activation/recommendations";
 import { INTAKE_PROFILE_VERSION } from "@/lib/onboarding/intake-questions";
 
 export type BusinessModel =
@@ -280,41 +281,11 @@ function unique<T>(values: readonly T[]): T[] {
 }
 
 function deriveWorkspaceRecommendations(answers: IntakeAnswers): WorkspaceRecommendation[] {
-  const recommendations: WorkspaceRecommendation[] = [];
+  const recommendation = toWorkspaceRecommendation(
+    getWorkspaceRecommendationForAccountingPlatform(answers.accountingPlatform),
+  );
 
-  if (answers.accountingPlatform === "pohoda") {
-    recommendations.push({
-      platformKey: "pohoda",
-      label: "Pohoda",
-      reason: "Používáte Pohoda — doporučujeme propojit účetní data se sadou NIS2 kontrol specifických pro Pohoda (zálohování dat, přístup k mServeru, API credentials).",
-    });
-  }
-
-  if (answers.accountingPlatform === "abra_flexi") {
-    recommendations.push({
-      platformKey: "abra-flexi",
-      label: "ABRA Flexi",
-      reason: "Používáte ABRA Flexi — doporučujeme projít sadu NIS2/ZoKB kontrol pro REST API, uživatelské role, zálohy a bezpečný transport.",
-    });
-  }
-
-  if (answers.accountingPlatform === "money_s3") {
-    recommendations.push({
-      platformKey: "money_s3",
-      label: "Money S3 / S4 (Seyfor)",
-      reason: "Používáte Money S3 / S4 — doporučujeme projít sadou NIS2/ZoKB kontrol specifických pro Money S3 (zálohy databáze, přístupy, SQL Server konfigurace, API connectivity).",
-    });
-  }
-
-  if (answers.accountingPlatform === "helios") {
-    recommendations.push({
-      platformKey: "helios",
-      label: "Helios (Asseco)",
-      reason: "Používáte Helios — doporučujeme projít sadou NIS2/ZoKB kontrol specifických pro Helios (SQL Server zálohy, přístupy, MES/SCADA integrace, EDI zabezpečení).",
-    });
-  }
-
-  return recommendations;
+  return recommendation ? [recommendation] : [];
 }
 
 function isMappedToSelectedFramework(controlKey: string, selectedFrameworks: readonly FrameworkSlug[]) {

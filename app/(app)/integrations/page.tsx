@@ -12,88 +12,33 @@ import {
   MonitorCog,
   PlugZap,
   XCircle,
+  type LucideIcon,
 } from "lucide-react";
 import { PageHeader } from "@/components/app/page-header";
 import { StatusPill, type StatusPillTone } from "@/components/app/status-pill";
 import { getMessagesForLocale } from "@/i18n/messages";
 import { normalizeLocale, type Locale } from "@/i18n/routing";
+import {
+  getConnectorRecommendationFromTools,
+  getIntegrationHubRecommendations,
+  type IntegrationHubIconKey,
+} from "@/lib/activation/recommendations";
 import { hasDatabaseUrl } from "@/lib/db";
 import { getIntegrationsHubData } from "@/lib/db/queries/integrations";
 import { getOrganisationByClerkOrgId } from "@/lib/db/queries/organisations";
 import { disconnectIntegrationAction } from "./actions";
 import { IntegrationStatusRefresh } from "./status-refresh";
 
-const providers = [
-  {
-    href: "/integrations/microsoft365",
-    icon: MonitorCog,
-    key: "microsoft365",
-    name: "Microsoft 365",
-    planned: false,
-    testCount: 6,
-  },
-  {
-    href: "/integrations/github",
-    icon: GitBranch,
-    key: "github",
-    name: "GitHub",
-    planned: false,
-    testCount: 5,
-  },
-  {
-    href: "/integrations/aws",
-    icon: Cloud,
-    key: "aws",
-    name: "AWS",
-    planned: false,
-    testCount: 4,
-  },
-  {
-    href: "/integrations/hetzner",
-    icon: ServerCog,
-    key: "hetzner",
-    name: "Hetzner Cloud",
-    planned: false,
-    testCount: 3,
-  },
-  {
-    href: "/integrations/ovhcloud",
-    icon: DatabaseZap,
-    key: "ovhcloud",
-    name: "OVHcloud",
-    planned: false,
-    testCount: 3,
-  },
-  {
-    href: "/workspaces/abra-flexi",
-    icon: DatabaseZap,
-    key: "abra-flexi",
-    name: "ABRA Flexi",
-    planned: false,
-    testCount: 4,
-  },
-  {
-    href: "/integrations/google-workspace",
-    icon: PlugZap,
-    key: "google_workspace",
-    name: "Google Workspace",
-    planned: true,
-    testCount: 0,
-  },
-] as const;
-
-const providerBadges: Record<string, { abbreviation: string; className: string }> = {
-  "abra-flexi": { abbreviation: "AB", className: "bg-purple-600" },
-  aws: { abbreviation: "AW", className: "bg-amber-500" },
-  github: { abbreviation: "GH", className: "bg-slate-800" },
-  google_workspace: { abbreviation: "GW", className: "bg-slate-400" },
-  hetzner: { abbreviation: "HE", className: "bg-orange-500" },
-  microsoft365: { abbreviation: "MI", className: "bg-sky-500" },
-  ovhcloud: { abbreviation: "OV", className: "bg-indigo-600" },
+const providerIcons: Record<IntegrationHubIconKey, LucideIcon> = {
+  cloud: Cloud,
+  database: DatabaseZap,
+  "git-branch": GitBranch,
+  monitor: MonitorCog,
+  plug: PlugZap,
+  server: ServerCog,
 };
 
 type HubData = Awaited<ReturnType<typeof getIntegrationsHubData>>;
-type IntegrationProviderKey = (typeof providers)[number]["key"];
 type IntegrationsCopy = ReturnType<typeof getMessagesForLocale>["integrations"];
 
 async function loadHubData() {
@@ -201,22 +146,17 @@ function hasAwsApiKeyCredential(integration: HubData["integrations"][number] | u
 }
 
 function getRecommendedProvider(toolInventory: string[]) {
-  if (toolInventory.includes("microsoft-copilot")) {
-    return "microsoft365";
-  }
-
-  if (toolInventory.includes("github-copilot")) {
-    return "github";
-  }
-
-  return "microsoft365";
+  return getConnectorRecommendationFromTools(toolInventory, { fallback: true })?.providerKey ?? "microsoft365";
 }
 
 function getProviderDescription(
-  providerKey: IntegrationProviderKey,
+  providerKey: string,
   copy: IntegrationsCopy,
+  fallback: string,
 ) {
-  return copy.providers[providerKey];
+  const providerDescriptions = copy.providers as Record<string, string>;
+
+  return providerDescriptions[providerKey] ?? fallback;
 }
 
 export default async function IntegrationsPage() {
@@ -237,6 +177,7 @@ export default async function IntegrationsPage() {
     (integration) => integration.status === "connected" || integration.status === "connecting",
   ) ?? false;
   const recommendedProvider = getRecommendedProvider(toolInventory);
+  const providerCards = getIntegrationHubRecommendations();
 
   return (
     <section className="space-y-6">
@@ -273,25 +214,28 @@ export default async function IntegrationsPage() {
       </div>
 
       <div className="grid items-stretch gap-4 md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4">
-        {providers.map((provider) => {
-          const Icon = provider.icon;
-          const rawIntegration = integrationMap.get(provider.key);
+        {providerCards.map((provider) => {
+          const Icon = providerIcons[provider.iconKey];
+          const statusProviderKey = provider.providerKey ?? provider.workspaceKey ?? provider.key;
+          const recommendationKey = provider.providerKey ?? provider.key;
+          const isComingSoon = provider.planned || !provider.supported;
+          const rawIntegration = integrationMap.get(statusProviderKey);
           const integration =
-            provider.key === "aws" && !hasAwsApiKeyCredential(rawIntegration)
+            statusProviderKey === "aws" && !hasAwsApiKeyCredential(rawIntegration)
               ? undefined
               : rawIntegration;
           const rawStatus =
-            integration?.status ?? (provider.planned ? "coming_soon" : "available");
+            integration?.status ?? (isComingSoon ? "coming_soon" : "available");
           const connected = rawStatus === "connected";
           const providerStatus = statusMeta(rawStatus, copy);
-          const breakdown = getRunBreakdown(provider.key, data);
-          const testCount = getTestCount(provider.key, provider.testCount, data);
+          const breakdown = getRunBreakdown(statusProviderKey, data);
+          const testCount = getTestCount(statusProviderKey, provider.defaultTestCount, data);
 
           return (
             <article
               key={provider.key}
               className={
-                !hasConnectedIntegration && provider.key === recommendedProvider
+                !hasConnectedIntegration && recommendationKey === recommendedProvider
                   ? "card interactive-card flex h-full flex-col border-primary/50 ring-1 ring-primary/20"
                   : rawStatus === "available" || rawStatus === "coming_soon"
                     ? "card interactive-card flex h-full flex-col border-dashed"
@@ -301,19 +245,19 @@ export default async function IntegrationsPage() {
               <div className="flex items-start justify-between gap-4">
                 <div>
                   <span
-                    className={`mb-4 grid h-11 w-11 place-items-center rounded-lg text-sm font-bold text-white ${providerBadges[provider.key]?.className ?? "bg-slate-500"}`}
+                    className={`mb-4 grid h-11 w-11 place-items-center rounded-lg text-sm font-bold text-white ${provider.badgeClassName}`}
                   >
-                    {providerBadges[provider.key]?.abbreviation ?? provider.name.slice(0, 2)}
+                    {provider.badgeAbbreviation}
                   </span>
                   <div className="flex flex-wrap gap-2">
                     <StatusPill tone={providerStatus.tone}>
                       {providerStatus.label}
                     </StatusPill>
-                    {!hasConnectedIntegration && provider.key === recommendedProvider ? (
+                    {!hasConnectedIntegration && recommendationKey === recommendedProvider ? (
                       <StatusPill tone="warn">{copy.index.recommended}</StatusPill>
                     ) : null}
                   </div>
-                  <h2 className="mt-3 text-lg font-semibold">{provider.name}</h2>
+                  <h2 className="mt-3 text-lg font-semibold">{provider.label}</h2>
                 </div>
                 {connected ? (
                   <CheckCircle2
@@ -321,7 +265,7 @@ export default async function IntegrationsPage() {
                     aria-hidden="true"
                     strokeWidth={1.5}
                   />
-                ) : provider.planned ? (
+                ) : isComingSoon ? (
                   <CircleDashed
                     className="h-5 w-5 text-foreground/42"
                     aria-hidden="true"
@@ -332,9 +276,9 @@ export default async function IntegrationsPage() {
                 )}
               </div>
               <p className="mt-3 min-h-24 text-sm leading-6 text-foreground/64">
-                {getProviderDescription(provider.key, copy)}
+                {getProviderDescription(provider.key, copy, provider.reason)}
               </p>
-              {provider.planned ? (
+              {isComingSoon ? (
                 <p className="mt-2 rounded-md border border-border bg-surface-muted px-3 py-2 text-xs leading-5 text-foreground/62">
                   {copy.index.plannedCardNote}
                 </p>
@@ -379,7 +323,7 @@ export default async function IntegrationsPage() {
               </div>
 
               <div className="mt-auto flex flex-wrap gap-2 pt-5">
-                {provider.planned ? (
+                {isComingSoon ? (
                   <span
                     className="btn btn-secondary cursor-not-allowed opacity-60"
                     aria-disabled="true"
@@ -397,7 +341,7 @@ export default async function IntegrationsPage() {
                   </Link>
                 )}
                 {connected ? (
-                  <form action={disconnectIntegrationAction.bind(null, provider.key)}>
+                  <form action={disconnectIntegrationAction.bind(null, statusProviderKey)}>
                     <button
                       type="submit"
                       className="btn btn-danger"

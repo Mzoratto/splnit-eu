@@ -1,4 +1,5 @@
 import { createAuditLog } from "@/lib/db/queries/audit-logs";
+import { getRecommendedConnectorFromTools as getRegistryRecommendedConnectorFromTools } from "@/lib/activation/recommendations";
 import type { EvidenceAssessmentResult, EvidenceBlockedReason, EvidenceCollectionStatus } from "./evidence-state";
 import { sanitizeActivationEvent } from "./sanitizer";
 
@@ -122,13 +123,5 @@ export async function recordActivationEvent(event: ActivationEvent) {
 }
 
 export function getRecommendedConnectorFromTools(toolKeys: string[]) {
-  if (toolKeys.some((toolKey) => toolKey === "microsoft365" || toolKey === "microsoft-copilot")) {
-    return "microsoft365";
-  }
-
-  if (toolKeys.includes("google-workspace")) {
-    return "google";
-  }
-
-  return "microsoft365";
+  return getRegistryRecommendedConnectorFromTools(toolKeys);
 }

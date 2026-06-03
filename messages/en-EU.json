@@ -623,7 +623,10 @@
       "hetzner": "Servers, firewalls, and snapshots in Hetzner Cloud through a read-only API token.",
       "ovhcloud": "Dedicated servers, firewall, and backup storage in OVHcloud through read-only API keys.",
       "abra-flexi": "REST API connection for ABRA Flexi users, transport, configuration, and manual backup fallback.",
-      "google_workspace": "Workspace audit logs, Drive sharing, and administrator accounts."
+      "google_workspace": "Workspace audit logs, Drive sharing, and administrator accounts.",
+      "pohoda": "Workspace/checklist for Pohoda users covering data backups, mServer/API access, user roles, and manual evidence.",
+      "money_s3": "Workspace/checklist for Money S3/S4 users covering database backups, access, SQL Server settings, and manual evidence.",
+      "helios": "Workspace/checklist for Helios users covering SQL Server backups, access, MES/SCADA or EDI dependencies, and manual evidence."
     },
     "index": {
       "eyebrow": "Integrations",

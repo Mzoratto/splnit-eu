@@ -25,6 +25,7 @@ import {
   saveToolsStep,
 } from "@/app/(app)/onboarding/actions";
 import { normalizeLocale } from "@/i18n/routing";
+import { getPrimaryActivationRecommendation } from "@/lib/activation/recommendations";
 import { getFrameworkDisplayName } from "@/lib/frameworks/localization";
 import type { FrameworkSeed } from "@/lib/frameworks/registry";
 import { INTAKE_QUESTIONS, type IntakeQuestionKey } from "@/lib/onboarding/intake-questions";
@@ -91,12 +92,6 @@ const jurisdictions = ["CZ", "IT", "EU"] as const;
 const locales = ["cs-CZ", "en-EU", "it-IT"] as const;
 const stepKeys = ["company", "activity", "tools", "frameworks", "integration", "score"];
 const intakeDraftStorageKey = "splnit:onboarding-draft:v1";
-const integrationRecommendations = [
-  { aliases: ["microsoft365", "microsoft-copilot"], label: "Microsoft 365" },
-  { aliases: ["github", "github-copilot"], label: "GitHub" },
-  { aliases: ["aws"], label: "AWS" },
-] as const;
-
 const businessRealitySections = [
   {
     title: "Typ organizace",
@@ -256,24 +251,6 @@ function readStoredDraft(): (Partial<WizardState> & { intakeSectionIndex?: numbe
   } catch {
     return null;
   }
-}
-
-function getRecommendedIntegration(selectedTools: string[], tools: ToolInventoryItem[]) {
-  const selectedKey = selectedTools.includes("microsoft365") ? "microsoft365" : selectedTools[0];
-  const recommended = integrationRecommendations.find((item) => item.aliases.some((alias) => alias === selectedKey));
-
-  if (recommended) {
-    return recommended.label;
-  }
-
-  return tools.find((tool) => tool.key === selectedKey)?.name ?? "Microsoft 365";
-}
-
-function getRecommendedIntegrationHref(selectedTools: string[]) {
-  const selectedKey = selectedTools.includes("microsoft365") ? "microsoft365" : selectedTools[0];
-  const providerKey = integrationRecommendations.find((item) => item.aliases.some((alias) => alias === selectedKey))?.aliases[0];
-
-  return `/integrations/${providerKey ?? "microsoft365"}`;
 }
 
 function calculateInitialScore(state: WizardState) {
@@ -533,8 +510,14 @@ export function OnboardingWizard({
   const intakeStepNumber = intakeSectionIndex + 1;
   const intakeProgress = Math.round((intakeStepNumber / businessRealitySections.length) * 100);
   const intakeMinutesRemaining = Math.max(1, businessRealitySections.length - intakeSectionIndex);
-  const recommendedIntegration = getRecommendedIntegration(state.selectedTools, tools);
-  const recommendedIntegrationHref = getRecommendedIntegrationHref(state.selectedTools);
+  const recommendedActivation = getPrimaryActivationRecommendation({
+    accountingPlatform: state.intake.accountingPlatform,
+    fallbackConnector: true,
+    selectedTools: state.selectedTools,
+    workspaceRecommendations: derivedScope.workspaceRecommendations,
+  });
+  const recommendedIntegration = recommendedActivation?.label ?? "Microsoft 365";
+  const recommendedIntegrationHref = recommendedActivation?.href ?? "/integrations/microsoft365";
 
   return (
     <section className="space-y-6">

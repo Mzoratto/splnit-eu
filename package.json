@@ -33,6 +33,8 @@
     "smoke:manual-evidence-dimensions-source": "tsx scripts/smoke-manual-evidence-dimensions-source.ts",
     "smoke:integration-first-run-enqueue": "tsx scripts/smoke-integration-first-run-enqueue.ts",
     "smoke:activation-status": "tsx scripts/smoke-activation-status.tsx",
+    "smoke:activation-recommendations": "tsx scripts/smoke-activation-recommendations.ts",
+    "smoke:activation-next-action": "tsx scripts/smoke-activation-next-action.ts",
     "smoke:api-key-base": "tsx scripts/smoke-api-key-base.ts",
     "smoke:abra-flexi-checks": "tsx scripts/smoke-abra-flexi-checks.ts",
     "smoke:controls-focus-activation-status-source": "tsx scripts/smoke-controls-focus-activation-status-source.ts",
