@@ -23,6 +23,7 @@ import { ComplianceReportButton } from "@/components/export/compliance-report-bu
 import { markRegulationUpdateReadAction } from "@/app/(app)/dashboard/actions";
 import { getMessagesForLocale } from "@/i18n/messages";
 import { normalizeLocale, type Locale } from "@/i18n/routing";
+import { deriveActivationNextAction, type ActivationNextActionStage } from "@/lib/activation/next-action";
 import { getControlDisplayTitle } from "@/lib/controls/localization";
 import { CONTROL_LIBRARY } from "@/lib/controls/library";
 import { calculateComplianceScore } from "@/lib/dashboard/score";
@@ -36,6 +37,7 @@ import {
 } from "@/lib/frameworks/localization";
 import { FRAMEWORK_LIBRARY } from "@/lib/frameworks/registry";
 import { getJurisdictionContext } from "@/lib/jurisdictions/context";
+import type { AccountingPlatform } from "@/lib/onboarding/intake-scope";
 
 type DashboardCopy = ReturnType<typeof getMessagesForLocale>["dashboard"];
 
@@ -239,6 +241,17 @@ function formatDeadline(deadline: string | null, copy: DashboardCopy) {
   return copy.deadline.days.replace("{days}", String(days));
 }
 
+function formatCopyTemplate(template: string, values: Record<string, string | number | null | undefined>) {
+  return Object.entries(values).reduce(
+    (current, [key, value]) => current.replaceAll(`{${key}}`, String(value ?? "")),
+    template,
+  );
+}
+
+function getActivationStageCopy(copy: DashboardCopy, stage: ActivationNextActionStage) {
+  return copy.activation.stages[stage] ?? copy.activation.stages.review_ranked_gaps;
+}
+
 function Sparkline({ score }: { score: number }) {
   const values = Array.from({ length: 14 }, (_, index) =>
     Math.max(12, Math.min(96, score - 8 + (index % 5) * 3 + Math.floor(index / 3))),
@@ -303,6 +316,7 @@ export default async function DashboardPage({
   const reportCopy = messages.complianceReport;
   const frameworkCopy = messages.frameworks;
   const fallbackUpdates = getFallbackUpdates(copy);
+  const fallbackRegulatoryUpdates = fallbackUpdates.slice(0, 2);
   const useDemoData = !data && isLocalDemoDataEnabled();
   const dataNotice = useDemoData
     ? {
@@ -349,6 +363,7 @@ export default async function DashboardPage({
             intakeRationale: null,
             isIntakePriority: index < 2,
             key: control.key,
+            lastEvidenceAt: null,
             scopeStatus: "applicable" as const,
             status: index < 2 ? "fail" : "manual_review",
             title: getControlDisplayTitle(control, locale),
@@ -363,7 +378,7 @@ export default async function DashboardPage({
   const updates = data?.updates.length
     ? data.updates
     : useDemoData
-      ? fallbackUpdates
+      ? fallbackRegulatoryUpdates
       : [];
   const statusRows =
     data?.statusRows.length
@@ -391,11 +406,40 @@ export default async function DashboardPage({
         ["manual_review", "warning", "unknown"].includes(row.status),
       ).length;
   const openFindings = failingControls + warningControls;
+  const activationPriorityRows = data?.activationPriorityControls ?? priorityControlRows;
+  const activationPriorityControls = activationPriorityRows.map((control) => ({
+    evidenceCount: control.lastEvidenceAt ? 1 : 0,
+    href: `/controls/${control.key}`,
+    key: control.key,
+    status: control.status,
+    title: control.title,
+  }));
+  const activationNextAction = deriveActivationNextAction({
+    accountingPlatform: data?.accountingPlatform as AccountingPlatform | null | undefined,
+    hasIntakeProfile: data?.hasIntakeProfile ?? hasIntakeScope,
+    integrations: data?.integrations ?? [],
+    priorityControls: activationPriorityControls,
+    selectedTools: data?.organisationToolInventory ?? (useDemoData ? ["microsoft365", "github"] : []),
+    workspaceRecommendations: intakeScopeSummary?.workspaceRecommendations ?? [],
+  });
+  const activationStageCopy = getActivationStageCopy(copy, activationNextAction.stage);
+  const activationTargetControl = activationPriorityControls.find(
+    (control) => control.key === activationNextAction.topPriorityControlKey,
+  ) ?? activationPriorityControls[0];
+  const isControlTargetStage =
+    activationNextAction.stage === "upload_first_evidence" ||
+    activationNextAction.stage === "review_first_gap";
+  const activationTarget = isControlTargetStage
+    ? activationTargetControl?.title ?? copy.activation.fallbackTarget
+    : activationNextAction.recommendation?.label ??
+      activationTargetControl?.title ??
+      copy.activation.fallbackTarget;
+  const activationManualHref = activationNextAction.topPriorityControlKey
+    ? `/controls/${activationNextAction.topPriorityControlKey}`
+    : "/controls?scope=priority";
   const setupCta = isPreIntake
     ? { href: "/onboarding", label: copy.onboarding.primaryCta }
-    : hasIntakeScope
-      ? { href: "/controls?scope=priority", label: copy.onboarding.reviewGapsCta }
-      : { href: "/onboarding", label: copy.onboarding.continueSetupCta };
+    : { href: activationNextAction.href, label: activationStageCopy.cta };
   const onboardingStepIcons = [CheckCircle2, Landmark, Plug, FileUp];
   const activeOnboardingStep = 0;
   const activeOnboardingDetail = copy.onboarding.stepDetails[activeOnboardingStep];
@@ -410,7 +454,7 @@ export default async function DashboardPage({
   const visibleRegulatoryUpdates = regulatoryUpdates.length
     ? regulatoryUpdates
     : useDemoData
-      ? fallbackUpdates
+      ? fallbackRegulatoryUpdates
       : [];
   const exportProfileMode = Array.isArray(resolvedSearchParams.exportProfile)
     ? resolvedSearchParams.exportProfile[0]
@@ -580,6 +624,59 @@ export default async function DashboardPage({
           {dataNotice ? (
             <DataModeNotice body={dataNotice.body} title={dataNotice.title} />
           ) : null}
+
+          <section className="rounded-xl border border-primary/30 bg-primary/8 p-5 shadow-sm sm:p-6">
+            <div className="grid gap-5 lg:grid-cols-[minmax(0,1.3fr)_minmax(260px,0.7fr)] lg:items-start">
+              <div>
+                <p className="text-xs font-medium uppercase tracking-[0.12em] text-primary">
+                  {copy.activation.eyebrow}
+                </p>
+                <h2 className="mt-2 text-2xl font-semibold tracking-normal">
+                  {formatCopyTemplate(activationStageCopy.title, { target: activationTarget })}
+                </h2>
+                <p className="mt-2 max-w-3xl text-sm leading-6 text-foreground/66">
+                  {formatCopyTemplate(activationStageCopy.body, { target: activationTarget })}
+                </p>
+                {activationNextAction.recommendation ? (
+                  <p className="mt-3 rounded-md border border-border bg-background/80 px-3 py-2 text-xs leading-5 text-foreground/62">
+                    {activationNextAction.recommendation.reason}
+                  </p>
+                ) : null}
+                <div className="mt-4 flex flex-wrap gap-2">
+                  <Link href={setupCta.href} className="btn btn-primary">
+                    {setupCta.label}
+                    <ArrowRight className="h-4 w-4" aria-hidden="true" strokeWidth={1.5} />
+                  </Link>
+                  <Link href={activationManualHref} className="btn btn-secondary">
+                    {copy.activation.manualFallbackCta}
+                  </Link>
+                </div>
+              </div>
+              <aside className="rounded-lg border border-border bg-background/80 p-4">
+                <p className="text-sm font-medium">{copy.activation.rankedGapsTitle}</p>
+                <p className="mt-1 text-xs leading-5 text-foreground/54">
+                  {formatCopyTemplate(copy.activation.rankedGapsBody, { count: priorityControlRows.length })}
+                </p>
+                <div className="mt-3 space-y-2">
+                  {priorityControlRows.slice(0, 3).map((control, index) => (
+                    <Link
+                      key={control.key}
+                      href={`/controls/${control.key}`}
+                      className="block rounded-md border border-border bg-surface px-3 py-2 text-sm hover:bg-surface-muted"
+                    >
+                      <span className="font-mono text-xs text-foreground/48">#{index + 1}</span>
+                      <span className="ml-2 font-medium">{control.title}</span>
+                    </Link>
+                  ))}
+                  {priorityControlRows.length === 0 ? (
+                    <p className="rounded-md border border-border bg-surface px-3 py-2 text-sm text-foreground/58">
+                      {copy.activation.noRankedGaps}
+                    </p>
+                  ) : null}
+                </div>
+              </aside>
+            </div>
+          </section>
         </>
       )}
 
@@ -809,7 +906,7 @@ export default async function DashboardPage({
               </span>
             </summary>
             <div className="mt-4 grid gap-3">
-              {visibleRegulatoryUpdates.slice(0, 3).map((update) => (
+              {visibleRegulatoryUpdates.map((update) => (
                 <article
                   key={update.id}
                   className="rounded-md border border-white/10 bg-white/[0.04] p-3"

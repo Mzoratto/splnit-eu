@@ -19,6 +19,10 @@ export function applyIntakeScopeToDashboardPriorityControls<
   controls: readonly TControl[],
   scopeSummary: DashboardPriorityControlScopeSummary,
 ): TControl[] {
+  const priorityIndexByKey = new Map(
+    scopeSummary.priorityControlKeys.map((key, index) => [key, index]),
+  );
+
   return controls
     .map((control) => {
       const scopeStatus = scopeSummary.applicableControlKeys.includes(control.key)
@@ -39,5 +43,14 @@ export function applyIntakeScopeToDashboardPriorityControls<
     .filter(
       (control) => control.scopeStatus !== "not_applicable" && control.scopeStatus !== "out_of_scope",
     )
-    .sort((a, b) => Number(b.isIntakePriority) - Number(a.isIntakePriority));
+    .sort((a, b) => {
+      const aPriorityIndex = priorityIndexByKey.get(a.key) ?? Number.POSITIVE_INFINITY;
+      const bPriorityIndex = priorityIndexByKey.get(b.key) ?? Number.POSITIVE_INFINITY;
+
+      if (aPriorityIndex !== bPriorityIndex) {
+        return aPriorityIndex - bPriorityIndex;
+      }
+
+      return Number(b.isIntakePriority) - Number(a.isIntakePriority);
+    });
 }

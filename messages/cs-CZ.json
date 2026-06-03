@@ -438,6 +438,51 @@
         "missing": "Pokud důkaz nemáte, označte mezeru. Splnit má ukázat, co chybí — ne předstírat splnění."
       }
     },
+    "activation": {
+      "eyebrow": "Další krok",
+      "fallbackTarget": "prioritní mezera",
+      "manualFallbackCta": "Ruční nahrání důkazu",
+      "rankedGapsTitle": "Seřazené mezery",
+      "rankedGapsBody": "{count} prioritních položek je dostupných z intake a aktuální evidence.",
+      "noRankedGaps": "Zatím není dostupná žádná seřazená mezera. Dokončete intake nebo projděte fokus kontrol.",
+      "stages": {
+        "complete_intake": {
+          "title": "Dokončete intake",
+          "body": "Dokončete intake, aby vznikly seřazené mezery a první cesta k důkazu.",
+          "cta": "Zahájit intake"
+        },
+        "connect_recommended_integration": {
+          "title": "Připojte {target}",
+          "body": "Začněte s {target}; může vytvořit první automatickou evidenci pro nejdůležitější mezery.",
+          "cta": "Připojit integraci"
+        },
+        "open_recommended_workspace": {
+          "title": "Otevřít {target}",
+          "body": "Použijte pracovní prostor {target} pro první systémové kontroly a důkazy.",
+          "cta": "Otevřít workspace"
+        },
+        "upload_first_evidence": {
+          "title": "Přidat první důkaz pro {target}",
+          "body": "Nahrajte screenshot, export, dokument nebo poznámku pro první seřazenou mezeru. Pokud důkaz chybí, označte mezeru poctivě.",
+          "cta": "Přidat důkaz"
+        },
+        "review_first_gap": {
+          "title": "Zkontrolovat {target}",
+          "body": "První mezera s evidencí potřebuje lidskou revizi, než změní příběh připravenosti.",
+          "cta": "Zkontrolovat mezeru"
+        },
+        "active_monitoring": {
+          "title": "Pokračovat v prioritních kontrolách",
+          "body": "První aktivační smyčka běží. Pokračujte v seřazených kontrolách a evidenci.",
+          "cta": "Pokračovat v kontrolách"
+        },
+        "review_ranked_gaps": {
+          "title": "Zkontrolovat seřazené mezery",
+          "body": "Zatím není dostupný jeden jasný důkazový cíl. Projděte fokus kontrol a vyberte první poctivou mezeru.",
+          "cta": "Zkontrolovat kontroly"
+        }
+      }
+    },
     "statusLabels": {
       "fail": "K opravě",
       "manualReview": "Vyžaduje revizi",
@@ -1427,6 +1472,47 @@
       "loadMore": "Načíst dalších 5",
       "demoMode": "Demo režim: ukázková data bez přihlášené organizace",
       "emptyFocus": "Z intake zatím nevznikly prioritní mezery pro tento filtr. Přepněte na Všechny nebo upravte filtr."
+    },
+    "activationCallout": {
+      "eyebrow": "Aktuální další krok",
+      "fallbackTarget": "prioritní kontrola",
+      "stages": {
+        "complete_intake": {
+          "title": "Dokončete intake před prací s kontrolami",
+          "body": "Fokus kontrol je užitečnější po intake, který odvodí seřazené mezery.",
+          "cta": "Zahájit intake"
+        },
+        "connect_recommended_integration": {
+          "title": "Připojte {target} před evidencí",
+          "body": "Doporučený zdroj má odpovídat dashboardu a onboarding CTA.",
+          "cta": "Otevřít integraci"
+        },
+        "open_recommended_workspace": {
+          "title": "Otevřít {target}",
+          "body": "Použijte doporučený workspace před úpravou jednotlivých kontrol.",
+          "cta": "Otevřít workspace"
+        },
+        "upload_first_evidence": {
+          "title": "Přidat první důkaz pro {target}",
+          "body": "Přiložte poctivý důkaz nebo označte chybějící evidenci pro nejvýše seřazenou kontrolu.",
+          "cta": "Otevřít kontrolu"
+        },
+        "review_first_gap": {
+          "title": "Zkontrolovat {target}",
+          "body": "Evidence existuje; zkontrolujte první mezeru před tím, než ji budete brát jako vyřešenou.",
+          "cta": "Zkontrolovat kontrolu"
+        },
+        "active_monitoring": {
+          "title": "Pokračovat v seřazených kontrolách",
+          "body": "Aktivační smyčka začala. Pokračujte ve fokus seznamu kontrol.",
+          "cta": "Pokračovat"
+        },
+        "review_ranked_gaps": {
+          "title": "Zkontrolovat seřazené kontroly",
+          "body": "Vyberte první poctivou mezeru ze seznamu fokus kontrol.",
+          "cta": "Zkontrolovat fokus"
+        }
+      }
     },
     "detail": {
       "statusTitle": "Stav kontroly",

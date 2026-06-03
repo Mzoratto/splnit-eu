@@ -4,6 +4,7 @@ import { applyIntakeScopeToDashboardPriorityControls } from "@/lib/dashboard/pri
 import {
   controls,
   frameworks,
+  integrations,
   organisations,
   orgControlStatuses,
   orgFrameworks,
@@ -26,6 +27,7 @@ export type DashboardControl = {
   title: string;
   category: string | null;
   status: string;
+  lastEvidenceAt: Date | null;
   intakeRationale: string | null;
   isIntakePriority: boolean;
   scopeStatus: "applicable" | "not_applicable" | "out_of_scope" | null;
@@ -51,12 +53,25 @@ type IntakeScopeSummary = {
   outOfScopeControlKeys: string[];
   priorityControlKeys: string[];
   rationales: Record<string, string>;
+  workspaceRecommendations: Array<{
+    label: string;
+    platformKey: string;
+    reason: string;
+  }>;
 };
 
 export async function getDashboardData(clerkOrgId: string) {
   const db = getDb();
-  const [organisationRows, frameworkScores, priorityControls, statusRows, intakeRows, updates] =
-    await Promise.all([
+  const [
+    organisationRows,
+    frameworkScores,
+    priorityControls,
+    activationControls,
+    statusRows,
+    intakeRows,
+    integrationRows,
+    updates,
+  ] = await Promise.all([
       db
         .select({
           clerkOrgId: organisations.clerkOrgId,
@@ -65,6 +80,7 @@ export async function getDashboardData(clerkOrgId: string) {
           locale: organisations.locale,
           primaryJurisdiction: organisations.primaryJurisdiction,
           sidlo: organisations.sidlo,
+          toolInventory: organisations.toolInventory,
         })
         .from(organisations)
         .where(eq(organisations.clerkOrgId, clerkOrgId))
@@ -86,6 +102,7 @@ export async function getDashboardData(clerkOrgId: string) {
           key: controls.key,
           isIntakePriority: sql<boolean>`false`,
           intakeRationale: sql<string | null>`null`,
+          lastEvidenceAt: orgControlStatuses.lastEvidenceAt,
           scopeStatus: sql<"applicable" | "not_applicable" | "out_of_scope" | null>`null`,
           status: orgControlStatuses.status,
           title: controls.titleCs,
@@ -105,16 +122,54 @@ export async function getDashboardData(clerkOrgId: string) {
           ),
         ),
       db
+        .select({
+          category: controls.category,
+          key: controls.key,
+          isIntakePriority: sql<boolean>`false`,
+          intakeRationale: sql<string | null>`null`,
+          lastEvidenceAt: orgControlStatuses.lastEvidenceAt,
+          scopeStatus: sql<"applicable" | "not_applicable" | "out_of_scope" | null>`null`,
+          status: orgControlStatuses.status,
+          title: controls.titleCs,
+          titleCs: controls.titleCs,
+          titleEn: controls.titleEn,
+        })
+        .from(orgControlStatuses)
+        .innerJoin(controls, eq(orgControlStatuses.controlId, controls.id))
+        .where(
+          and(
+            eq(orgControlStatuses.clerkOrgId, clerkOrgId),
+            inArray(orgControlStatuses.status, [
+              "fail",
+              "manual_review",
+              "pass",
+              "unknown",
+              "warning",
+            ]),
+          ),
+        ),
+      db
         .select({ status: orgControlStatuses.status })
         .from(orgControlStatuses)
         .where(eq(orgControlStatuses.clerkOrgId, clerkOrgId))
         .limit(500),
       db
-        .select({ derivedScope: orgIntakeProfiles.derivedScope })
+        .select({
+          answers: orgIntakeProfiles.answers,
+          completedAt: orgIntakeProfiles.completedAt,
+          derivedScope: orgIntakeProfiles.derivedScope,
+        })
         .from(orgIntakeProfiles)
         .where(eq(orgIntakeProfiles.clerkOrgId, clerkOrgId))
         .limit(1),
-      listRelevantRegulationUpdates(clerkOrgId, 5),
+      db
+        .select({
+          provider: integrations.provider,
+          status: integrations.status,
+        })
+        .from(integrations)
+        .where(eq(integrations.clerkOrgId, clerkOrgId)),
+      listRelevantRegulationUpdates(clerkOrgId, 2),
     ]);
   const derivedScope = intakeRows[0]?.derivedScope ?? null;
   const scopeSummary = buildIntakeScopeSummary(derivedScope);
@@ -122,9 +177,17 @@ export async function getDashboardData(clerkOrgId: string) {
     priorityControls,
     scopeSummary,
   );
+  const scopedActivationControls = applyIntakeScopeToDashboardPriorityControls(
+    activationControls,
+    scopeSummary,
+  );
 
   return {
+    accountingPlatform: getAccountingPlatform(intakeRows[0]?.answers),
+    activationPriorityControls: scopedActivationControls,
     frameworkScores,
+    hasIntakeProfile: Boolean(intakeRows[0]?.completedAt || derivedScope),
+    integrations: integrationRows,
     intakeScopeSummary: scopeSummary,
     organisationExportIdentity: organisationRows[0]
       ? {
@@ -136,6 +199,9 @@ export async function getDashboardData(clerkOrgId: string) {
       : null,
     organisationJurisdiction: organisationRows[0]?.primaryJurisdiction ?? null,
     organisationLocale: organisationRows[0]?.locale ?? null,
+    organisationToolInventory: Array.isArray(organisationRows[0]?.toolInventory)
+      ? organisationRows[0].toolInventory.filter((tool): tool is string => typeof tool === "string")
+      : [],
     priorityControls: scopedPriorityControls,
     statusRows,
     updates,
@@ -155,6 +221,7 @@ function buildIntakeScopeSummary(derivedScope: unknown): IntakeScopeSummary {
     outOfScopeControlKeys?: unknown;
     priorityControlKeys?: unknown;
     rationales?: unknown;
+    workspaceRecommendations?: unknown;
   };
 
   return {
@@ -165,6 +232,7 @@ function buildIntakeScopeSummary(derivedScope: unknown): IntakeScopeSummary {
     outOfScopeControlKeys: stringArray(scope.outOfScopeControlKeys),
     priorityControlKeys: stringArray(scope.priorityControlKeys),
     rationales: stringRecord(scope.rationales),
+    workspaceRecommendations: workspaceRecommendations(scope.workspaceRecommendations),
   };
 }
 
@@ -177,6 +245,7 @@ function emptyIntakeScopeSummary(): IntakeScopeSummary {
     outOfScopeControlKeys: [],
     priorityControlKeys: [],
     rationales: {},
+    workspaceRecommendations: [],
   };
 }
 
@@ -192,4 +261,41 @@ function stringRecord(value: unknown) {
   return Object.fromEntries(
     Object.entries(value).filter((entry): entry is [string, string] => typeof entry[1] === "string"),
   );
+}
+
+function workspaceRecommendations(value: unknown) {
+  if (!Array.isArray(value)) {
+    return [];
+  }
+
+  return value.flatMap((item) => {
+    if (!item || typeof item !== "object") {
+      return [];
+    }
+
+    const candidate = item as Record<string, unknown>;
+    if (
+      typeof candidate.platformKey !== "string" ||
+      typeof candidate.label !== "string" ||
+      typeof candidate.reason !== "string"
+    ) {
+      return [];
+    }
+
+    return [{
+      label: candidate.label,
+      platformKey: candidate.platformKey,
+      reason: candidate.reason,
+    }];
+  });
+}
+
+function getAccountingPlatform(answers: unknown) {
+  if (!answers || typeof answers !== "object" || Array.isArray(answers)) {
+    return null;
+  }
+
+  const value = (answers as Record<string, unknown>).accountingPlatform;
+
+  return typeof value === "string" ? value : null;
 }

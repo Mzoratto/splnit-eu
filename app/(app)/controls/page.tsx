@@ -8,6 +8,8 @@ import { StatusPill, type StatusPillTone } from "@/components/app/status-pill";
 import { ComplianceReportButton } from "@/components/export/compliance-report-button";
 import { getMessagesForLocale } from "@/i18n/messages";
 import { normalizeLocale, type Locale } from "@/i18n/routing";
+import { deriveActivationNextAction, type ActivationNextActionStage } from "@/lib/activation/next-action";
+import { getActivationRecommendation } from "@/lib/activation/recommendations";
 import {
   getControlDisplayDescription,
   getControlDisplayTitle,
@@ -15,6 +17,7 @@ import {
 import { CONTROL_LIBRARY } from "@/lib/controls/library";
 import { hasDatabaseUrl } from "@/lib/db";
 import { listOrgControlsForIndex, getOrgWorkspaceRecommendations } from "@/lib/db/queries/controls";
+import { getIntegrationsHubData } from "@/lib/db/queries/integrations";
 import { getOrganisationByClerkOrgId } from "@/lib/db/queries/organisations";
 import { getWorkspaceProgress } from "@/lib/db/queries/workspaces";
 import { pohodaWorkspace } from "@/lib/workspaces/pohoda";
@@ -27,6 +30,13 @@ type OrgControl = Awaited<ReturnType<typeof listOrgControlsForIndex>>[number];
 type DataMode = "live" | "demo" | "unavailable";
 type ScopeFilter = "in-scope" | "priority" | "gaps" | "out-of-scope";
 type ViewMode = "focus" | "all";
+type WorkspaceCallout = {
+  href: string;
+  key: string;
+  label: string;
+  progressPct: number | null;
+  reason: string;
+};
 
 
 function buildDemoControls(): OrgControl[] {
@@ -112,27 +122,64 @@ function buildDemoControls(): OrgControl[] {
   });
 }
 
+function buildWorkspaceCallout(platformKey: string, progressPct: number | null): WorkspaceCallout | null {
+  const recommendation = getActivationRecommendation(platformKey);
+
+  if (!recommendation || recommendation.kind !== "workspace") {
+    return null;
+  }
+
+  return {
+    href: recommendation.href,
+    key: recommendation.key,
+    label: recommendation.label,
+    progressPct,
+    reason: recommendation.reason,
+  };
+}
+
 async function loadControlsIndexData() {
   const localDemoHeliosRecommended = process.env.ENABLE_LOCAL_DEMO_DATA === "true";
   const clerkConfigured =
     Boolean(process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY) &&
     Boolean(process.env.CLERK_SECRET_KEY);
 
+  const demoWorkspaceRecommendations = localDemoHeliosRecommended
+    ? [{ platformKey: "helios", label: "Helios (Asseco)", reason: "Demo Helios workspace recommendation." }]
+    : [];
+  const demoData = {
+    abraFlexiCompletionPct: null,
+    abraFlexiRecommended: false,
+    controls: buildDemoControls(),
+    heliosCompletionPct: null,
+    heliosRecommended: localDemoHeliosRecommended,
+    integrations: [] as { provider: string; status: string }[],
+    mode: "demo" as DataMode,
+    moneyS3CompletionPct: null,
+    moneyS3Recommended: false,
+    organisationLocale: null,
+    pohodaCompletionPct: null,
+    pohodaRecommended: false,
+    toolInventory: ["microsoft-copilot", "github"],
+    workspaceRecommendations: demoWorkspaceRecommendations,
+  };
+
   if (!clerkConfigured || !hasDatabaseUrl()) {
-    return { controls: buildDemoControls(), mode: "demo" as DataMode, organisationLocale: null, pohodaRecommended: false, pohodaCompletionPct: null, heliosRecommended: localDemoHeliosRecommended, heliosCompletionPct: null, moneyS3Recommended: false, moneyS3CompletionPct: null, abraFlexiRecommended: false, abraFlexiCompletionPct: null };
+    return demoData;
   }
 
   const session = await auth();
 
   if (!session.orgId) {
-    return { controls: buildDemoControls(), mode: "demo" as DataMode, organisationLocale: null, pohodaRecommended: false, pohodaCompletionPct: null, heliosRecommended: localDemoHeliosRecommended, heliosCompletionPct: null, moneyS3Recommended: false, moneyS3CompletionPct: null, abraFlexiRecommended: false, abraFlexiCompletionPct: null };
+    return demoData;
   }
 
   try {
-    const [controls, organisation, workspaceRecommendations] = await Promise.all([
+    const [controls, organisation, workspaceRecommendations, integrationHubData] = await Promise.all([
       listOrgControlsForIndex(session.orgId),
       getOrganisationByClerkOrgId(session.orgId),
       getOrgWorkspaceRecommendations(session.orgId),
+      getIntegrationsHubData(session.orgId),
     ]);
 
     const pohodaRecommended = workspaceRecommendations.some((r) => r.platformKey === "pohoda");
@@ -196,13 +243,21 @@ async function loadControlsIndexData() {
       pohodaCompletionPct,
       heliosRecommended,
       heliosCompletionPct,
+      integrations: integrationHubData.integrations.map((integration) => ({
+        provider: integration.provider,
+        status: integration.status,
+      })),
       moneyS3Recommended,
       moneyS3CompletionPct,
       abraFlexiRecommended,
       abraFlexiCompletionPct,
+      toolInventory: Array.isArray(organisation?.toolInventory)
+        ? organisation.toolInventory.filter((tool): tool is string => typeof tool === "string")
+        : [],
+      workspaceRecommendations,
     };
   } catch {
-    return { controls: buildDemoControls(), mode: "demo" as DataMode, organisationLocale: null, pohodaRecommended: false, pohodaCompletionPct: null, heliosRecommended: localDemoHeliosRecommended, heliosCompletionPct: null, moneyS3Recommended: false, moneyS3CompletionPct: null, abraFlexiRecommended: false, abraFlexiCompletionPct: null };
+    return demoData;
   }
 }
 
@@ -277,6 +332,17 @@ function getLocalizedAppHref(path: string, requestLocale: Locale) {
   }
 
   return path;
+}
+
+function formatCopyTemplate(template: string, values: Record<string, string | number | null | undefined>) {
+  return Object.entries(values).reduce(
+    (current, [key, value]) => current.replaceAll(`{${key}}`, String(value ?? "")),
+    template,
+  );
+}
+
+function getActivationStageCopy(copy: ControlsCopy, stage: ActivationNextActionStage) {
+  return copy.activationCallout.stages[stage] ?? copy.activationCallout.stages.review_ranked_gaps;
 }
 
 function getControlPriorityScore(control: OrgControl) {
@@ -361,7 +427,22 @@ export default async function ControlsPage({
 }) {
   const requestLocale = normalizeLocale(await getLocale()) ?? "cs-CZ";
   const resolvedSearchParams = searchParams ? await searchParams : {};
-  const { controls, mode, organisationLocale, pohodaRecommended, pohodaCompletionPct, heliosRecommended, heliosCompletionPct, moneyS3Recommended, moneyS3CompletionPct, abraFlexiRecommended, abraFlexiCompletionPct } = await loadControlsIndexData();
+  const {
+    abraFlexiCompletionPct,
+    abraFlexiRecommended,
+    controls,
+    heliosCompletionPct,
+    heliosRecommended,
+    integrations,
+    mode,
+    moneyS3CompletionPct,
+    moneyS3Recommended,
+    organisationLocale,
+    pohodaCompletionPct,
+    pohodaRecommended,
+    toolInventory,
+    workspaceRecommendations,
+  } = await loadControlsIndexData();
   const locale = normalizeLocale(organisationLocale) ?? requestLocale;
   const messages = getMessagesForLocale(locale);
   const copy = messages.controlsPage;
@@ -370,13 +451,53 @@ export default async function ControlsPage({
   const viewMode = normalizeViewMode(resolvedSearchParams.view);
   const visibleCount = normalizeVisibleCount(resolvedSearchParams.limit);
   const filteredControls = filterControlsByScope(controls, scopeFilter);
-  const rankedControls = [...filteredControls].sort((first, second) => {
-    const scoreDelta = getControlPriorityScore(second) - getControlPriorityScore(first);
+  const sortControlsByPriority = (items: OrgControl[]) =>
+    [...items].sort((first, second) => {
+      const scoreDelta = getControlPriorityScore(second) - getControlPriorityScore(first);
 
-    return scoreDelta || first.key.localeCompare(second.key);
-  });
+      return scoreDelta || first.key.localeCompare(second.key);
+    });
+  const rankedControls = sortControlsByPriority(filteredControls);
   const focusControls = rankedControls.filter((control) => getControlPriorityScore(control) > 0);
   const controlsForView = viewMode === "focus" ? focusControls.slice(0, 5) : rankedControls.slice(0, visibleCount);
+  const activationSourceControls = sortControlsByPriority(
+    controls.filter(
+      (control) =>
+        control.scopeStatus !== "out_of_scope" &&
+        control.scopeStatus !== "not_applicable" &&
+        getControlPriorityScore(control) > 0,
+    ),
+  );
+  const activationPriorityControls = activationSourceControls.map((control) => ({
+    evidenceCount: control.latestEvidenceCollectionStatus || control.latestEvidenceCollectedAt ? 1 : 0,
+    href: `/controls/${control.key}`,
+    key: control.key,
+    status: control.status,
+    title: getControlDisplayTitle(control, locale),
+  }));
+  const hasIntakeProfile = controls.some(
+    (control) => control.scopeStatus !== null || control.isIntakePriority || Boolean(control.intakeRationale),
+  );
+  const activationNextAction = deriveActivationNextAction({
+    hasIntakeProfile,
+    integrations,
+    priorityControls: activationPriorityControls,
+    selectedTools: toolInventory,
+    workspaceRecommendations,
+  });
+  const activationStageCopy = getActivationStageCopy(copy, activationNextAction.stage);
+  const activationTargetControl = activationPriorityControls.find(
+    (control) => control.key === activationNextAction.topPriorityControlKey,
+  ) ?? activationPriorityControls[0];
+  const isControlTargetStage =
+    activationNextAction.stage === "upload_first_evidence" ||
+    activationNextAction.stage === "review_first_gap";
+  const activationTarget = isControlTargetStage
+    ? activationTargetControl?.title ?? copy.activationCallout.fallbackTarget
+    : activationNextAction.recommendation?.label ??
+      activationTargetControl?.title ??
+      copy.activationCallout.fallbackTarget;
+  const activationHref = getLocalizedAppHref(activationNextAction.href, requestLocale);
   const hasMoreControls = viewMode === "all" && rankedControls.length > visibleCount;
   const localizedControlsPath = getLocalizedAppHref("/controls", requestLocale);
   const scopeFilters: { href: string; label: string; value: ScopeFilter }[] = [
@@ -386,6 +507,14 @@ export default async function ControlsPage({
     { href: `${localizedControlsPath}?scope=out-of-scope`, label: copy.index.outOfScope, value: "out-of-scope" },
   ];
   const demoMode = mode !== "live";
+  const workspaceCallouts = viewMode === "focus"
+    ? [
+        pohodaRecommended ? buildWorkspaceCallout("pohoda", pohodaCompletionPct) : null,
+        heliosRecommended ? buildWorkspaceCallout("helios", heliosCompletionPct) : null,
+        moneyS3Recommended ? buildWorkspaceCallout("money_s3", moneyS3CompletionPct) : null,
+        abraFlexiRecommended ? buildWorkspaceCallout("abra-flexi", abraFlexiCompletionPct) : null,
+      ].filter((callout): callout is WorkspaceCallout => Boolean(callout))
+    : [];
 
   const exportProfileParam =
     typeof resolvedSearchParams.exportProfile === "string"
@@ -438,101 +567,53 @@ export default async function ControlsPage({
         />
       </div>
 
-      {viewMode === "focus" && pohodaRecommended ? (
-        <Link
-          href={getLocalizedAppHref("/workspaces/pohoda", requestLocale)}
-          className="flex items-start gap-4 rounded-lg border border-primary/24 bg-primary/4 p-4 transition-colors hover:bg-primary/8"
-        >
-          <BookCheck className="mt-0.5 h-5 w-5 shrink-0 text-primary" aria-hidden="true" />
-          <div className="flex-1">
-            <p className="text-sm font-medium">Pohoda (Stormware) — compliance workspace</p>
-            <p className="mt-0.5 text-xs text-foreground/60">
-              {copy.workspaceCallouts.workspaceDescription.replace("{platform}", "Pohoda")}
+      <section className="rounded-lg border border-primary/24 bg-primary/5 p-4">
+        <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+          <div>
+            <p className="text-xs font-medium uppercase tracking-[0.12em] text-primary">
+              {copy.activationCallout.eyebrow}
             </p>
-            {pohodaCompletionPct !== null ? (
-              <p className="mt-1.5 text-xs font-medium text-primary">
-                {copy.workspaceCallouts.workspaceCompletion.replace(
-                  "{progress}",
-                  String(Math.round(pohodaCompletionPct * 100)),
-                )}
-              </p>
-            ) : null}
+            <h2 className="mt-1 text-lg font-semibold">
+              {formatCopyTemplate(activationStageCopy.title, { target: activationTarget })}
+            </h2>
+            <p className="mt-1 max-w-3xl text-sm leading-6 text-foreground/62">
+              {formatCopyTemplate(activationStageCopy.body, { target: activationTarget })}
+            </p>
           </div>
-          <ArrowRight className="mt-0.5 h-4 w-4 shrink-0 text-primary" aria-hidden="true" />
-        </Link>
-      ) : null}
+          <Link href={activationHref} className="btn btn-primary shrink-0">
+            {activationStageCopy.cta}
+            <ArrowRight className="h-4 w-4" aria-hidden="true" />
+          </Link>
+        </div>
+      </section>
 
-      {viewMode === "focus" && heliosRecommended ? (
+      {workspaceCallouts.map((callout) => (
         <Link
-          href={getLocalizedAppHref("/workspaces/helios", requestLocale)}
+          key={callout.key}
+          href={getLocalizedAppHref(callout.href, requestLocale)}
           className="flex items-start gap-4 rounded-lg border border-primary/24 bg-primary/4 p-4 transition-colors hover:bg-primary/8"
         >
           <BookCheck className="mt-0.5 h-5 w-5 shrink-0 text-primary" aria-hidden="true" />
           <div className="flex-1">
-            <p className="text-sm font-medium">Helios (Asseco) — compliance workspace</p>
+            <p className="text-sm font-medium">{callout.label} — compliance workspace</p>
             <p className="mt-0.5 text-xs text-foreground/60">
-              {copy.workspaceCallouts.workspaceDescription.replace("{platform}", "Helios")}
+              {copy.workspaceCallouts.workspaceDescription.replace("{platform}", callout.label)}
             </p>
-            {heliosCompletionPct !== null ? (
+            <p className="mt-1 text-xs leading-5 text-foreground/58">
+              {callout.reason}
+            </p>
+            {callout.progressPct !== null ? (
               <p className="mt-1.5 text-xs font-medium text-primary">
                 {copy.workspaceCallouts.workspaceCompletion.replace(
                   "{progress}",
-                  String(Math.round(heliosCompletionPct * 100)),
+                  String(Math.round(callout.progressPct * 100)),
                 )}
               </p>
             ) : null}
           </div>
           <ArrowRight className="mt-0.5 h-4 w-4 shrink-0 text-primary" aria-hidden="true" />
         </Link>
-      ) : null}
-
-      {viewMode === "focus" && moneyS3Recommended ? (
-        <Link
-          href={getLocalizedAppHref("/workspaces/money-s3", requestLocale)}
-          className="flex items-start gap-4 rounded-lg border border-primary/24 bg-primary/4 p-4 transition-colors hover:bg-primary/8"
-        >
-          <BookCheck className="mt-0.5 h-5 w-5 shrink-0 text-primary" aria-hidden="true" />
-          <div className="flex-1">
-            <p className="text-sm font-medium">Money S3 / S4 (Seyfor) — compliance workspace</p>
-            <p className="mt-0.5 text-xs text-foreground/60">
-              {copy.workspaceCallouts.workspaceDescription.replace("{platform}", "Money S3")}
-            </p>
-            {moneyS3CompletionPct !== null ? (
-              <p className="mt-1.5 text-xs font-medium text-primary">
-                {copy.workspaceCallouts.workspaceCompletion.replace(
-                  "{progress}",
-                  String(Math.round(moneyS3CompletionPct * 100)),
-                )}
-              </p>
-            ) : null}
-          </div>
-          <ArrowRight className="mt-0.5 h-4 w-4 shrink-0 text-primary" aria-hidden="true" />
-        </Link>
-      ) : null}
-
-      {viewMode === "focus" && abraFlexiRecommended ? (
-        <Link
-          href={getLocalizedAppHref("/workspaces/abra-flexi", requestLocale)}
-          className="flex items-start gap-4 rounded-lg border border-primary/24 bg-primary/4 p-4 transition-colors hover:bg-primary/8"
-        >
-          <BookCheck className="mt-0.5 h-5 w-5 shrink-0 text-primary" aria-hidden="true" />
-          <div className="flex-1">
-            <p className="text-sm font-medium">ABRA Flexi — compliance workspace</p>
-            <p className="mt-0.5 text-xs text-foreground/60">
-              {copy.workspaceCallouts.workspaceDescription.replace("{platform}", "ABRA Flexi")}
-            </p>
-            {abraFlexiCompletionPct !== null ? (
-              <p className="mt-1.5 text-xs font-medium text-primary">
-                {copy.workspaceCallouts.workspaceCompletion.replace(
-                  "{progress}",
-                  String(Math.round(abraFlexiCompletionPct * 100)),
-                )}
-              </p>
-            ) : null}
-          </div>
-          <ArrowRight className="mt-0.5 h-4 w-4 shrink-0 text-primary" aria-hidden="true" />
-        </Link>
-      ) : null}
+      ))}
 
       <section className="space-y-4">
         <div className="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">

@@ -438,6 +438,51 @@
         "missing": "If you do not have proof, mark the gap. Splnit should show what is missing — not pretend the control is complete."
       }
     },
+    "activation": {
+      "eyebrow": "Next action",
+      "fallbackTarget": "priority gap",
+      "manualFallbackCta": "Manual upload path",
+      "rankedGapsTitle": "Ranked gaps",
+      "rankedGapsBody": "{count} priority items are available from intake and current evidence.",
+      "noRankedGaps": "No ranked gap is available yet. Finish intake or review the full control focus.",
+      "stages": {
+        "complete_intake": {
+          "title": "Complete intake",
+          "body": "Finish intake to derive ranked gaps and the first evidence path.",
+          "cta": "Start intake"
+        },
+        "connect_recommended_integration": {
+          "title": "Connect {target}",
+          "body": "Start with {target}; it can create the first automated evidence for the highest-priority gaps.",
+          "cta": "Connect integration"
+        },
+        "open_recommended_workspace": {
+          "title": "Open {target}",
+          "body": "Use the {target} workspace to review the first system-specific controls and evidence.",
+          "cta": "Open workspace"
+        },
+        "upload_first_evidence": {
+          "title": "Add first evidence for {target}",
+          "body": "Upload a screenshot, export, document, or note for the first ranked gap. If proof is missing, mark the gap honestly.",
+          "cta": "Add evidence"
+        },
+        "review_first_gap": {
+          "title": "Review {target}",
+          "body": "The first evidence-backed gap needs human review before it changes the readiness story.",
+          "cta": "Review gap"
+        },
+        "active_monitoring": {
+          "title": "Continue priority controls",
+          "body": "The first activation loop is running. Keep working through the ranked controls and evidence.",
+          "cta": "Continue controls"
+        },
+        "review_ranked_gaps": {
+          "title": "Review ranked gaps",
+          "body": "No single next evidence target is available yet. Review the ranked control focus and choose the first honest gap.",
+          "cta": "Review controls"
+        }
+      }
+    },
     "statusLabels": {
       "fail": "Needs correction",
       "manualReview": "Needs review",
@@ -1427,6 +1472,47 @@
       "loadMore": "Load 5 more",
       "demoMode": "Demo mode: sample data without a signed-in organisation",
       "emptyFocus": "Intake has not produced priority gaps for this filter yet. Switch to All or adjust the filter."
+    },
+    "activationCallout": {
+      "eyebrow": "Current next action",
+      "fallbackTarget": "priority control",
+      "stages": {
+        "complete_intake": {
+          "title": "Complete intake before working controls",
+          "body": "The controls focus is more useful after intake derives ranked gaps.",
+          "cta": "Start intake"
+        },
+        "connect_recommended_integration": {
+          "title": "Connect {target} before evidence work",
+          "body": "The recommended source should match the dashboard and onboarding CTA.",
+          "cta": "Open integration"
+        },
+        "open_recommended_workspace": {
+          "title": "Open {target}",
+          "body": "Use the recommended workspace before changing individual controls.",
+          "cta": "Open workspace"
+        },
+        "upload_first_evidence": {
+          "title": "Add first evidence for {target}",
+          "body": "Attach an honest proof item or mark the missing evidence for the top ranked control.",
+          "cta": "Open control"
+        },
+        "review_first_gap": {
+          "title": "Review {target}",
+          "body": "Evidence exists; review the first gap before treating it as resolved.",
+          "cta": "Review control"
+        },
+        "active_monitoring": {
+          "title": "Continue ranked controls",
+          "body": "The activation loop has started. Continue through the focused controls list.",
+          "cta": "Continue"
+        },
+        "review_ranked_gaps": {
+          "title": "Review ranked controls",
+          "body": "Choose the first honest gap from the focused control list.",
+          "cta": "Review focus"
+        }
+      }
     },
     "detail": {
       "statusTitle": "Control status",

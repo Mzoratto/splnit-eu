@@ -25,7 +25,7 @@ import {
   saveToolsStep,
 } from "@/app/(app)/onboarding/actions";
 import { normalizeLocale } from "@/i18n/routing";
-import { getPrimaryActivationRecommendation } from "@/lib/activation/recommendations";
+import { deriveActivationNextAction } from "@/lib/activation/next-action";
 import { getFrameworkDisplayName } from "@/lib/frameworks/localization";
 import type { FrameworkSeed } from "@/lib/frameworks/registry";
 import { INTAKE_QUESTIONS, type IntakeQuestionKey } from "@/lib/onboarding/intake-questions";
@@ -510,14 +510,30 @@ export function OnboardingWizard({
   const intakeStepNumber = intakeSectionIndex + 1;
   const intakeProgress = Math.round((intakeStepNumber / businessRealitySections.length) * 100);
   const intakeMinutesRemaining = Math.max(1, businessRealitySections.length - intakeSectionIndex);
-  const recommendedActivation = getPrimaryActivationRecommendation({
-    accountingPlatform: state.intake.accountingPlatform,
-    fallbackConnector: true,
-    selectedTools: state.selectedTools,
-    workspaceRecommendations: derivedScope.workspaceRecommendations,
-  });
-  const recommendedIntegration = recommendedActivation?.label ?? "Microsoft 365";
-  const recommendedIntegrationHref = recommendedActivation?.href ?? "/integrations/microsoft365";
+  const activationNextAction = useMemo(
+    () =>
+      deriveActivationNextAction({
+        accountingPlatform: state.intake.accountingPlatform,
+        hasIntakeProfile: true,
+        priorityControls: derivedScope.priorityControlKeys.map((key) => ({
+          evidenceCount: 0,
+          key,
+          status: "fail",
+        })),
+        selectedTools: state.selectedTools,
+        workspaceRecommendations: derivedScope.workspaceRecommendations,
+      }),
+    [derivedScope.priorityControlKeys, derivedScope.workspaceRecommendations, state.intake.accountingPlatform, state.selectedTools],
+  );
+  const recommendedIntegration = activationNextAction.recommendation?.label ?? activationNextAction.title;
+  const recommendedIntegrationHref = activationNextAction.recommendation?.href ?? activationNextAction.href;
+  const recommendedIntegrationBody = activationNextAction.recommendation?.reason ?? activationNextAction.description;
+  const applicableControlCountLabel = derivedScope.applicableControlKeys.length > 0
+    ? String(derivedScope.applicableControlKeys.length)
+    : "—";
+  const priorityControlCountLabel = derivedScope.priorityControlKeys.length > 0
+    ? String(derivedScope.priorityControlKeys.length)
+    : "—";
 
   return (
     <section className="space-y-6">
@@ -971,11 +987,11 @@ export function OnboardingWizard({
                 </p>
                 <div className="mt-5 grid gap-3 sm:grid-cols-3">
                   <div className="rounded-md border border-border bg-surface p-3 text-center">
-                    <p className="font-mono text-2xl font-semibold text-primary">{derivedScope.applicableControlKeys.length || 28}</p>
+                    <p className="font-mono text-2xl font-semibold text-primary">{applicableControlCountLabel}</p>
                     <p className="mt-1 text-xs text-foreground/58">Kontrol v rozsahu</p>
                   </div>
                   <div className="rounded-md border border-status-warn/30 bg-status-warn/8 p-3 text-center">
-                    <p className="font-mono text-2xl font-semibold text-status-warn">{derivedScope.priorityControlKeys.length || 18}</p>
+                    <p className="font-mono text-2xl font-semibold text-status-warn">{priorityControlCountLabel}</p>
                     <p className="mt-1 text-xs text-foreground/58">Prioritních mezer</p>
                   </div>
                   <div className="rounded-md border border-border bg-surface p-3 text-center">
@@ -1207,7 +1223,7 @@ export function OnboardingWizard({
             <div className="rounded-lg border border-border bg-background p-5">
               <p className="text-lg font-semibold">{recommendedIntegration}</p>
               <p className="mt-2 text-sm leading-6 text-foreground/64">
-                {t("integration.body")}
+                {recommendedIntegrationBody}
               </p>
               <p className="mt-2 text-sm leading-6 text-foreground/58">
                 {t("integration.optional")}
@@ -1265,11 +1281,11 @@ export function OnboardingWizard({
           </div>
           <div className="mt-6 grid gap-3 sm:grid-cols-3">
             <div className="rounded-md border border-border bg-background p-3 text-center">
-              <p className="font-mono text-2xl font-semibold text-primary">{derivedScope.applicableControlKeys.length || 28}</p>
+              <p className="font-mono text-2xl font-semibold text-primary">{applicableControlCountLabel}</p>
               <p className="mt-1 text-xs text-foreground/58">Kontrol v rozsahu</p>
             </div>
             <div className="rounded-md border border-status-warn/30 bg-status-warn/8 p-3 text-center">
-              <p className="font-mono text-2xl font-semibold text-status-warn">{derivedScope.priorityControlKeys.length || 18}</p>
+              <p className="font-mono text-2xl font-semibold text-status-warn">{priorityControlCountLabel}</p>
               <p className="mt-1 text-xs text-foreground/58">Prioritní mezery</p>
             </div>
             <div className="rounded-md border border-border bg-background p-3 text-center">

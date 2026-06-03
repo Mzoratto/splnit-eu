@@ -438,6 +438,51 @@
         "missing": "Se non hai una prova, segna il gap. Splnit deve mostrare cosa manca, non fingere che il controllo sia completo."
       }
     },
+    "activation": {
+      "eyebrow": "Prossima azione",
+      "fallbackTarget": "gap prioritario",
+      "manualFallbackCta": "Percorso prova manuale",
+      "rankedGapsTitle": "Gap ordinati",
+      "rankedGapsBody": "{count} elementi prioritari sono disponibili da intake ed evidenze correnti.",
+      "noRankedGaps": "Nessun gap ordinato è ancora disponibile. Completate l'intake o rivedete il focus controlli.",
+      "stages": {
+        "complete_intake": {
+          "title": "Completate l'intake",
+          "body": "Completate l'intake per derivare gap ordinati e il primo percorso di evidenza.",
+          "cta": "Avvia intake"
+        },
+        "connect_recommended_integration": {
+          "title": "Collegate {target}",
+          "body": "Iniziate da {target}; può creare le prime evidenze automatiche per i gap più importanti.",
+          "cta": "Collega integrazione"
+        },
+        "open_recommended_workspace": {
+          "title": "Aprite {target}",
+          "body": "Usate il workspace {target} per rivedere i primi controlli ed evidenze specifici del sistema.",
+          "cta": "Apri workspace"
+        },
+        "upload_first_evidence": {
+          "title": "Aggiungete la prima evidenza per {target}",
+          "body": "Caricate screenshot, export, documento o nota per il primo gap ordinato. Se manca la prova, segnate il gap in modo onesto.",
+          "cta": "Aggiungi evidenza"
+        },
+        "review_first_gap": {
+          "title": "Rivedete {target}",
+          "body": "Il primo gap con evidenza richiede revisione umana prima di modificare la storia di preparazione.",
+          "cta": "Rivedi gap"
+        },
+        "active_monitoring": {
+          "title": "Continuate i controlli prioritari",
+          "body": "Il primo loop di attivazione è in corso. Continuate sui controlli ordinati e sulle evidenze.",
+          "cta": "Continua controlli"
+        },
+        "review_ranked_gaps": {
+          "title": "Rivedete i gap ordinati",
+          "body": "Non è ancora disponibile un singolo target di evidenza. Rivedete il focus controlli e scegliete il primo gap onesto.",
+          "cta": "Rivedi controlli"
+        }
+      }
+    },
     "statusLabels": {
       "fail": "Da correggere",
       "manualReview": "Richiede revisione",
@@ -1427,6 +1472,47 @@
       "loadMore": "Carica altri 5",
       "demoMode": "Modalità demo: dati di esempio senza organizzazione autenticata",
       "emptyFocus": "L’intake non ha ancora prodotto gap prioritari per questo filtro. Passate a Tutti oppure modificate il filtro."
+    },
+    "activationCallout": {
+      "eyebrow": "Prossima azione attuale",
+      "fallbackTarget": "controllo prioritario",
+      "stages": {
+        "complete_intake": {
+          "title": "Completate l'intake prima dei controlli",
+          "body": "Il focus controlli è più utile dopo l'intake che deriva i gap ordinati.",
+          "cta": "Avvia intake"
+        },
+        "connect_recommended_integration": {
+          "title": "Collegate {target} prima delle evidenze",
+          "body": "La fonte consigliata deve corrispondere a dashboard e onboarding CTA.",
+          "cta": "Apri integrazione"
+        },
+        "open_recommended_workspace": {
+          "title": "Aprite {target}",
+          "body": "Usate il workspace consigliato prima di modificare singoli controlli.",
+          "cta": "Apri workspace"
+        },
+        "upload_first_evidence": {
+          "title": "Aggiungete la prima evidenza per {target}",
+          "body": "Allegate una prova onesta oppure segnate l'evidenza mancante per il controllo più prioritario.",
+          "cta": "Apri controllo"
+        },
+        "review_first_gap": {
+          "title": "Rivedete {target}",
+          "body": "L'evidenza esiste; rivedete il primo gap prima di trattarlo come risolto.",
+          "cta": "Rivedi controllo"
+        },
+        "active_monitoring": {
+          "title": "Continuate i controlli ordinati",
+          "body": "Il loop di attivazione è iniziato. Continuate nella lista controlli focus.",
+          "cta": "Continua"
+        },
+        "review_ranked_gaps": {
+          "title": "Rivedete i controlli ordinati",
+          "body": "Scegliete il primo gap onesto dalla lista controlli focus.",
+          "cta": "Rivedi focus"
+        }
+      }
     },
     "detail": {
       "statusTitle": "Stato controllo",
