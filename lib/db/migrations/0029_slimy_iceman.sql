@@ -1,0 +1,4 @@
+ALTER TABLE "remediation_tasks" ADD CONSTRAINT "remediation_tasks_source_type_check_v2" CHECK ("remediation_tasks"."source_type" IN ('workspace_evidence_stale', 'workspace_gap', 'helios_csv_change', 'workspace_review_due', 'connector_gap', 'connector_blocked', 'manual_evidence_review_due')) NOT VALID;--> statement-breakpoint
+ALTER TABLE "remediation_tasks" VALIDATE CONSTRAINT "remediation_tasks_source_type_check_v2";--> statement-breakpoint
+ALTER TABLE "remediation_tasks" DROP CONSTRAINT "remediation_tasks_source_type_check";--> statement-breakpoint
+ALTER TABLE "remediation_tasks" RENAME CONSTRAINT "remediation_tasks_source_type_check_v2" TO "remediation_tasks_source_type_check";

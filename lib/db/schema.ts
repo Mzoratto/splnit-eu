@@ -721,7 +721,10 @@ export type RemediationTaskSourceType =
   | "workspace_evidence_stale"
   | "workspace_gap"
   | "helios_csv_change"
-  | "workspace_review_due";
+  | "workspace_review_due"
+  | "connector_gap"
+  | "connector_blocked"
+  | "manual_evidence_review_due";
 
 export type RemediationTaskStatus = "open" | "in_progress" | "resolved" | "dismissed";
 export type RemediationTaskSeverity = "low" | "medium" | "high";
@@ -767,7 +770,7 @@ export const remediationTasks = pgTable(
     index("idx_remediation_tasks_org_control").on(table.clerkOrgId, table.controlKey),
     check(
       "remediation_tasks_source_type_check",
-      sql`${table.sourceType} IN ('workspace_evidence_stale', 'workspace_gap', 'helios_csv_change', 'workspace_review_due')`,
+      sql`${table.sourceType} IN ('workspace_evidence_stale', 'workspace_gap', 'helios_csv_change', 'workspace_review_due', 'connector_gap', 'connector_blocked', 'manual_evidence_review_due')`,
     ),
     check(
       "remediation_tasks_status_check",

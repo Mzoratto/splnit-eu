@@ -204,6 +204,13 @@
       "when": 1780319613513,
       "tag": "0028_great_wasp",
       "breakpoints": true
+    },
+    {
+      "idx": 29,
+      "version": "7",
+      "when": 1780486573586,
+      "tag": "0029_slimy_iceman",
+      "breakpoints": true
     }
   ]
 }

@@ -22,6 +22,13 @@ export type UpsertRemediationTaskInput = {
   title: string;
 };
 
+/**
+ * Remediation tasks are a live view of the current actionable state, not an
+ * append-only audit log. Re-running the same source finding must update the
+ * existing unique source row and reopen it if a previous pass had resolved it.
+ * When the underlying finding later passes, callers should mark the matching
+ * row `resolved` and retain it for history rather than deleting it.
+ */
 export async function upsertRemediationTask(input: UpsertRemediationTaskInput) {
   const db = getDb();
   const now = new Date();
