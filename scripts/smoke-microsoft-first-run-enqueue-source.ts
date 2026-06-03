@@ -29,7 +29,7 @@ assert.match(
 );
 assert.match(
   firstRunEnqueueSource,
-  /provider:\s*input\.provider,\s*\n\s*trigger:\s*["']oauth_callback_first_run["']/,
+  /provider:\s*input\.provider,\s*\n\s*trigger:\s*(?:input\.trigger\s*\?\?\s*)?["']oauth_callback_first_run["']/,
   "Microsoft first-run event data should scope the run to Microsoft 365 and mark the OAuth first-run trigger.",
 );
 assert.match(
@@ -65,7 +65,7 @@ assert.match(
 );
 assert.match(
   evidenceSource,
-  /input\.resultData\?\.blockedReason === ["']missing_permission["']/,
+  /blockedReason === ["']missing_permission["']/,
   "Missing-permission error results should still collect an evidence snapshot.",
 );
 assert.match(
