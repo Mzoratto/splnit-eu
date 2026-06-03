@@ -63,6 +63,31 @@ assert.equal(
   "integration execution errors are not control evidence",
 );
 
+assert.equal(
+  shouldCollectAutomatedEvidence({
+    lastEvidenceAt: null,
+    now,
+    previousStatus: null,
+    resultData: { blockedReason: "collection_failed" },
+    resultStatus: "error",
+  }),
+  false,
+  "generic execution errors are not control evidence unless the runner explicitly opts in",
+);
+
+assert.equal(
+  shouldCollectAutomatedEvidence({
+    allowErrorEvidence: true,
+    lastEvidenceAt: null,
+    now,
+    previousStatus: null,
+    resultData: { blockedReason: "collection_failed" },
+    resultStatus: "error",
+  }),
+  true,
+  "explicit adapter error results should collect failed evidence when the runner opts in",
+);
+
 const snapshot = buildAutomatedEvidenceSnapshot({
   checkLogic: "check_mfa_enabled",
   citations: [

@@ -130,12 +130,16 @@ async function main() {
     .where(eq(remediationTasks.clerkOrgId, clerkOrgId));
   assert.equal(tasks.length, 2, "stale processing should be idempotent across reruns.");
   assert.ok(
-    tasks.some((task) => task.sourceKey === `helios:stale:${stalePass.evidenceId}`),
-    "stale pass evidence should get a remediation task.",
+    tasks.every((task) => task.sourceType === "manual_evidence_review_due"),
+    "stale manual workspace evidence should create review-due tasks, not upload-time tasks.",
   );
   assert.ok(
-    tasks.some((task) => task.sourceKey === `helios:stale:${staleGap.evidenceId}`),
-    "stale gap evidence should get a remediation task.",
+    tasks.some((task) => task.sourceKey === `manual-evidence-review:${stalePass.evidenceId}`),
+    "stale pass evidence should get a manual review-due task.",
+  );
+  assert.ok(
+    tasks.some((task) => task.sourceKey === `manual-evidence-review:${staleGap.evidenceId}`),
+    "stale gap evidence should get a manual review-due task.",
   );
 
   const [passStatus] = await db

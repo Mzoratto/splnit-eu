@@ -2,6 +2,7 @@ import { and, eq } from "drizzle-orm";
 import { recordActivationEvent } from "@/lib/activation/events";
 import { getDb } from "@/lib/db";
 import {
+  controls,
   integrationRuns,
   integrations,
   orgControlStatuses,
@@ -9,6 +10,7 @@ import {
   tests,
 } from "@/lib/db/schema";
 import { recalculateFrameworkScore } from "@/lib/controls/scorer";
+import { syncConnectorRemediationForEvidence } from "@/lib/evidence/remediation";
 import {
   createAutomatedEvidenceForIntegrationRun,
   shouldCollectAutomatedEvidence,
@@ -140,8 +142,17 @@ export async function runTestsForOrg(
     }
 
     const relevantTests = await db
-      .select()
+      .select({
+        checkLogic: tests.checkLogic,
+        controlId: tests.controlId,
+        controlKey: controls.key,
+        id: tests.id,
+        isActive: tests.isActive,
+        name: tests.name,
+        passCriteria: tests.passCriteria,
+      })
       .from(tests)
+      .innerJoin(controls, eq(controls.id, tests.controlId))
       .where(
         and(
           eq(tests.integrationType, integration.provider),
@@ -193,6 +204,7 @@ export async function runTestsForOrg(
           }
 
           const shouldCreateEvidence = shouldCollectAutomatedEvidence({
+            allowErrorEvidence: true,
             lastEvidenceAt: currentStatus?.lastEvidenceAt ?? null,
             now,
             previousStatus: currentStatus?.status ?? null,
@@ -201,12 +213,25 @@ export async function runTestsForOrg(
           });
 
           if (shouldCreateEvidence) {
-            await createAutomatedEvidenceForIntegrationRun({
+            const evidenceResult = await createAutomatedEvidenceForIntegrationRun({
               checkLogic: test.checkLogic,
               clerkOrgId,
               controlId: test.controlId,
               failureReason: result.failureReason,
               integrationRunId,
+              passCriteria: test.passCriteria,
+              provider: integration.provider,
+              resultData: result.data,
+              status: result.status,
+              testName: test.name,
+            });
+            await syncConnectorRemediationForEvidence({
+              checkLogic: test.checkLogic,
+              clerkOrgId,
+              controlId: test.controlId,
+              controlKey: test.controlKey,
+              evidenceId: evidenceResult.evidenceId,
+              failureReason: result.failureReason ?? null,
               passCriteria: test.passCriteria,
               provider: integration.provider,
               resultData: result.data,
@@ -295,12 +320,25 @@ export async function runTestsForOrg(
             integrationRunId &&
             shouldCreateErrorEvidence
           ) {
-            await createAutomatedEvidenceForIntegrationRun({
+            const evidenceResult = await createAutomatedEvidenceForIntegrationRun({
               checkLogic: test.checkLogic,
               clerkOrgId,
               controlId: test.controlId,
               failureReason: errorResult.failureReason,
               integrationRunId,
+              passCriteria: test.passCriteria,
+              provider: integration.provider,
+              resultData,
+              status: errorResult.status,
+              testName: test.name,
+            });
+            await syncConnectorRemediationForEvidence({
+              checkLogic: test.checkLogic,
+              clerkOrgId,
+              controlId: test.controlId,
+              controlKey: test.controlKey,
+              evidenceId: evidenceResult.evidenceId,
+              failureReason: errorResult.failureReason,
               passCriteria: test.passCriteria,
               provider: integration.provider,
               resultData,

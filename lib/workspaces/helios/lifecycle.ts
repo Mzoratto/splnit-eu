@@ -6,6 +6,10 @@ import {
   getRemediationTaskBySource,
   upsertRemediationTask,
 } from "@/lib/db/queries/remediation-tasks";
+import {
+  getManualEvidenceReviewDueSourceKey,
+  upsertManualEvidenceReviewDueTask,
+} from "@/lib/evidence/remediation";
 import { heliosWorkspace } from "@/lib/workspaces/helios";
 import type { WorkspaceControl } from "@/lib/workspaces/types";
 
@@ -222,36 +226,61 @@ export async function processHeliosWorkspaceEvidenceLifecycle(
     }
 
     staleEvidence += 1;
-    const sourceKey = `helios:stale:${row.evidenceId}`;
+    const isManualReviewEvidence =
+      row.source === "manual" ||
+      row.type === "attestation_answers" ||
+      row.type === "helios_csv_import";
+    const sourceType = isManualReviewEvidence
+      ? "manual_evidence_review_due"
+      : "workspace_evidence_stale";
+    const sourceKey = isManualReviewEvidence
+      ? getManualEvidenceReviewDueSourceKey(row.evidenceId)
+      : `helios:stale:${row.evidenceId}`;
     const existingTask = await getRemediationTaskBySource({
       clerkOrgId: row.clerkOrgId,
       controlId: row.controlId,
       sourceKey,
-      sourceType: "workspace_evidence_stale",
+      sourceType,
     });
-    const task = await upsertRemediationTask({
-      clerkOrgId: row.clerkOrgId,
-      controlId: row.controlId,
-      controlKey: row.controlKey,
-      description: `Latest Helios workspace evidence was collected on ${row.collectedAt?.toISOString().slice(0, 10) ?? "an unknown date"}. Re-attest this control or upload updated customer-reported evidence before relying on it.`,
-      dueDate: dateOnly(now),
-      frameworkRefs: frameworkRefsForControl(control),
-      metadata: {
-        collectedAt: row.collectedAt?.toISOString() ?? null,
+    let taskId: string;
+    if (isManualReviewEvidence) {
+      const task = await upsertManualEvidenceReviewDueTask({
+        clerkOrgId: row.clerkOrgId,
+        collectedAt: row.collectedAt,
+        controlId: row.controlId,
+        controlKey: row.controlKey,
+        dueDate: dateOnly(now),
         evidenceId: row.evidenceId,
         evidenceType: row.type,
-        expiresAt: freshness.expires_at?.toISOString() ?? null,
-        platformId: "helios",
-        provenance: row.source === "imported" ? "customer_reported_import" : "manual_attestation",
-        staleDays: freshness.staleDays,
-        ttlDays: getHeliosEvidenceTtlDays(row.controlKey),
-      },
-      severity: control.nukibPriority === "high" ? "high" : "medium",
-      sourceKey,
-      sourceType: "workspace_evidence_stale",
-      title: `Helios evidence is stale — ${row.controlKey}`,
-    });
-    tasksUpserted += task ? 1 : 0;
+        reason: "recertification_window_elapsed",
+      });
+      taskId = task.taskId;
+    } else {
+      const task = await upsertRemediationTask({
+        clerkOrgId: row.clerkOrgId,
+        controlId: row.controlId,
+        controlKey: row.controlKey,
+        description: `Latest Helios workspace evidence was collected on ${row.collectedAt?.toISOString().slice(0, 10) ?? "an unknown date"}. Re-attest this control or upload updated customer-reported evidence before relying on it.`,
+        dueDate: dateOnly(now),
+        frameworkRefs: frameworkRefsForControl(control),
+        metadata: {
+          collectedAt: row.collectedAt?.toISOString() ?? null,
+          evidenceId: row.evidenceId,
+          evidenceType: row.type,
+          expiresAt: freshness.expires_at?.toISOString() ?? null,
+          platformId: "helios",
+          provenance: row.source === "imported" ? "customer_reported_import" : "manual_attestation",
+          staleDays: freshness.staleDays,
+          ttlDays: getHeliosEvidenceTtlDays(row.controlKey),
+        },
+        severity: control.nukibPriority === "high" ? "high" : "medium",
+        sourceKey,
+        sourceType: "workspace_evidence_stale",
+        title: `Helios evidence is stale — ${row.controlKey}`,
+      });
+      taskId = task.id;
+    }
+    tasksUpserted += 1;
 
     if (row.status === "pass" || row.status === "manual_review") {
       await db
@@ -280,7 +309,7 @@ export async function processHeliosWorkspaceEvidenceLifecycle(
           controlKey: row.controlKey,
           platformId: "helios",
           staleDays: freshness.staleDays,
-          taskId: task.id,
+          taskId,
         },
       });
     }

@@ -52,9 +52,30 @@ export function shouldCollectAutomatedEvidence(input: {
   previousStatus: string | null;
   resultData?: Record<string, unknown>;
   resultStatus: TestStatus;
+  allowErrorEvidence?: boolean;
 }) {
   if (input.resultStatus === "error") {
-    return input.resultData?.blockedReason === "missing_permission";
+    const blockedReason = input.resultData?.blockedReason;
+    const canCollectErrorEvidence =
+      blockedReason === "missing_permission" ||
+      (input.allowErrorEvidence === true && typeof blockedReason === "string");
+
+    if (!canCollectErrorEvidence) {
+      return false;
+    }
+
+    if (!input.lastEvidenceAt) {
+      return true;
+    }
+
+    if (input.previousStatus && input.previousStatus !== input.resultStatus) {
+      return true;
+    }
+
+    return (
+      input.now.getTime() - input.lastEvidenceAt.getTime() >=
+      AUTOMATED_EVIDENCE_REFRESH_MS
+    );
   }
 
   if (!input.lastEvidenceAt) {

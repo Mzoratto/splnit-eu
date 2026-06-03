@@ -74,6 +74,8 @@
     "smoke:compliance-report": "tsx scripts/smoke-compliance-report.ts",
     "smoke:helios-workspace-config": "tsx scripts/smoke-helios-workspace-config.ts",
     "smoke:remediation-tasks": "tsx scripts/smoke-remediation-tasks.ts",
+    "smoke:evidence-remediation": "tsx scripts/smoke-evidence-remediation.ts",
+    "smoke:integration-runner-remediation": "tsx scripts/smoke-integration-runner-remediation.ts",
     "smoke:helios-evidence-lifecycle": "tsx scripts/smoke-helios-evidence-lifecycle.ts",
     "smoke:helios-gap-remediation": "tsx scripts/smoke-helios-gap-remediation.ts",
     "smoke:helios-evidence-provenance": "tsx scripts/smoke-helios-evidence-provenance.ts",
