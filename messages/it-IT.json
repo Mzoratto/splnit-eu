@@ -10,6 +10,11 @@
       "team": "Team"
     },
     "dashboard": "Dashboard",
+    "dashboardBadge": {
+      "linkLabel": "Dashboard, {count} aggiornamenti normativi non letti",
+      "title": "Cosa significa {count}",
+      "body": "È il numero di aggiornamenti normativi rilevanti non letti degli ultimi 30 giorni, in base al piano e ai framework selezionati. Non è il numero di controlli o gap."
+    },
     "frameworks": "Framework",
     "controls": "Controlli",
     "evidence": "Evidenze",

@@ -169,6 +169,7 @@
     "smoke:t4f-legal-public-proof": "tsx scripts/smoke-t4f-legal-public-proof.ts",
     "smoke:sentry-scrubbing": "tsx scripts/smoke-sentry-scrubbing.ts",
     "smoke:security-csp": "tsx scripts/smoke-security-csp.ts",
+    "smoke:dashboard-nav-badge-help": "tsx scripts/smoke-dashboard-nav-badge-help.ts",
     "smoke:t4i-performance-security-observability": "tsx scripts/smoke-t4i-performance-security-observability.ts",
     "smoke:t4h-frontend-a11y-source": "tsx scripts/smoke-t4h-frontend-a11y-source.ts"
   },

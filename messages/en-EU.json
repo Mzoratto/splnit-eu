@@ -10,6 +10,11 @@
       "team": "Team"
     },
     "dashboard": "Dashboard",
+    "dashboardBadge": {
+      "linkLabel": "Dashboard, {count} unread regulation updates",
+      "title": "What the {count} means",
+      "body": "This is the number of unread relevant regulation updates from the last 30 days, matched to your plan and selected frameworks. It is not a control count or gap count."
+    },
     "frameworks": "Frameworks",
     "controls": "Controls",
     "evidence": "Evidence",

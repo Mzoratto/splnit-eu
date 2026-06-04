@@ -69,14 +69,41 @@ function isActivePath(pathname: string, href: string) {
   return pathname === href || pathname.startsWith(`${href}/`);
 }
 
-function Badge({ count }: { count: number }) {
+function formatBadgeCount(count: number) {
+  return count > 99 ? "99+" : String(count);
+}
+
+function DashboardBadge({
+  body,
+  count,
+  title,
+}: {
+  body: string;
+  count: number;
+  title: string;
+}) {
   if (count <= 0) {
     return null;
   }
 
   return (
-    <span className="ml-auto rounded-sm bg-danger px-2 py-0.5 text-[10px] font-medium text-white">
-      {count > 99 ? "99+" : count}
+    <span className="relative ml-auto">
+      <span
+        aria-hidden="true"
+        className="rounded-sm bg-danger px-2 py-0.5 text-[10px] font-medium text-white"
+      >
+        {formatBadgeCount(count)}
+      </span>
+      <span
+        id="dashboard-regulation-count-help"
+        role="tooltip"
+        className="pointer-events-none absolute left-full top-1/2 z-20 ml-3 w-64 -translate-y-1/2 rounded-lg border border-white/10 bg-slate-950/95 p-3 text-left text-xs font-normal leading-relaxed text-slate-100 opacity-0 shadow-xl shadow-black/20 transition-opacity group-hover:opacity-100 group-focus-within:opacity-100"
+      >
+        <span className="block text-[11px] font-semibold uppercase tracking-wide text-slate-300">
+          {title}
+        </span>
+        <span className="mt-1 block text-slate-300">{body}</span>
+      </span>
     </span>
   );
 }
@@ -108,6 +135,7 @@ export function Sidebar({
 }) {
   const pathname = usePathname();
   const t = useTranslations("navigation");
+  const dashboardBadgeHelpId = "dashboard-regulation-count-help";
 
   return (
     <aside className="fixed inset-y-0 left-0 hidden w-[var(--app-sidebar-width)] border-r border-white/10 bg-[var(--color-brand-900)] text-white lg:flex lg:flex-col">
@@ -125,26 +153,38 @@ export function Sidebar({
               {group.items.map((item) => {
                 const active = isActivePath(pathname, item.href);
                 const locked = isPreIntake && Boolean(item.lockedUntilIntake);
+                const hasDashboardBadge = item.href === "/dashboard" && regulationUpdateCount > 0;
+                const dashboardBadgeCount = formatBadgeCount(regulationUpdateCount);
 
                 return (
                   <Link
                     key={item.href}
                     href={locked ? "#" : item.href}
+                    aria-describedby={hasDashboardBadge ? dashboardBadgeHelpId : undefined}
                     aria-disabled={locked}
+                    aria-label={
+                      hasDashboardBadge
+                        ? t("dashboardBadge.linkLabel", { count: dashboardBadgeCount })
+                        : undefined
+                    }
                     title={locked ? t("lockedUntilIntake") : undefined}
                     tabIndex={locked ? -1 : undefined}
-                    className={`flex min-h-10 items-center gap-2.5 rounded-lg px-3 py-2 text-[13px] transition-colors ${
+                    className={`group relative flex min-h-10 items-center gap-2.5 rounded-lg px-3 py-2 text-[13px] transition-colors ${
                       locked
                         ? "pointer-events-none cursor-not-allowed text-slate-500 opacity-50"
                         : active
                         ? "bg-blue-600 font-semibold text-white shadow-sm shadow-blue-950/30"
                         : "text-slate-300 hover:bg-white/10 hover:text-white"
                     }`}
-                    >
+                  >
                     <item.icon className="h-4 w-4" aria-hidden="true" strokeWidth={1.5} />
                     {t(item.labelKey)}
                     {item.href === "/dashboard" ? (
-                      <Badge count={regulationUpdateCount} />
+                      <DashboardBadge
+                        body={t("dashboardBadge.body")}
+                        count={regulationUpdateCount}
+                        title={t("dashboardBadge.title", { count: dashboardBadgeCount })}
+                      />
                     ) : null}
                   </Link>
                 );
@@ -257,12 +297,19 @@ export function MobileTabBar({
         {mobileNavigation.map((item) => {
           const active = isActivePath(pathname, item.href);
           const locked = isPreIntake && Boolean(item.lockedUntilIntake);
+          const hasDashboardBadge = item.href === "/dashboard" && regulationUpdateCount > 0;
+          const dashboardBadgeCount = formatBadgeCount(regulationUpdateCount);
 
           return (
             <Link
               key={item.href}
               href={locked ? "#" : item.href}
               aria-disabled={locked}
+              aria-label={
+                hasDashboardBadge
+                  ? t("dashboardBadge.linkLabel", { count: dashboardBadgeCount })
+                  : undefined
+              }
               tabIndex={locked ? -1 : undefined}
               className={`flex min-h-12 min-w-0 flex-col items-center justify-center gap-1 rounded-md px-1 text-[11px] ${
                 locked
@@ -274,8 +321,8 @@ export function MobileTabBar({
             >
               <span className="relative">
                 <item.icon className="h-4 w-4" aria-hidden="true" strokeWidth={1.5} />
-                {item.href === "/dashboard" && regulationUpdateCount > 0 ? (
-                  <span className="absolute -right-2 -top-2 h-2 w-2 rounded-full bg-danger" />
+                {hasDashboardBadge ? (
+                  <span aria-hidden="true" className="absolute -right-2 -top-2 h-2 w-2 rounded-full bg-danger" />
                 ) : null}
               </span>
               <span className="max-w-full truncate">{t(item.labelKey)}</span>

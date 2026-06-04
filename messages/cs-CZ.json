@@ -10,6 +10,11 @@
       "team": "Tým"
     },
     "dashboard": "Dashboard",
+    "dashboardBadge": {
+      "linkLabel": "Dashboard, {count} nepřečtených aktualizací předpisů",
+      "title": "Co znamená číslo {count}",
+      "body": "Je to počet nepřečtených relevantních aktualizací předpisů za posledních 30 dní podle vašeho plánu a vybraných frameworků. Není to počet kontrol ani mezer."
+    },
     "frameworks": "Frameworky",
     "controls": "Kontroly",
     "evidence": "Evidence",
