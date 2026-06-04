@@ -13,6 +13,7 @@ const scriptSources = [
   "https://*.clerk.accounts.dev",
   "https://*.clerk.com",
   "https://clerk.splnit.eu",
+  "https://challenges.cloudflare.com",
 ];
 
 const clerkSources = [
@@ -32,7 +33,7 @@ const contentSecurityPolicy = [
   "img-src 'self' data: blob: https:",
   "font-src 'self' data:",
   `connect-src 'self' https://vitals.vercel-insights.com https://*.ingest.sentry.io https://api.stripe.com ${clerkSources.join(" ")} https://api.clerk.com https://*.posthog.com`,
-  `frame-src 'self' https://js.stripe.com https://hooks.stripe.com ${clerkSources.join(" ")}`,
+  `frame-src 'self' https://js.stripe.com https://hooks.stripe.com https://challenges.cloudflare.com ${clerkSources.join(" ")}`,
   "worker-src 'self' blob:",
   "upgrade-insecure-requests",
 ].join("; ");
