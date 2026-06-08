@@ -75,6 +75,16 @@ export type SubscriptionStatus =
   | "past_due"
   | "canceled"
   | "incomplete";
+export type AssetCategory =
+  | "software"
+  | "hardware"
+  | "network"
+  | "service"
+  | "location"
+  | "data";
+export type AssetTier = "primary" | "supporting";
+export type CiaLevel = "low" | "medium" | "high";
+export type DiscoveryReviewStatus = "proposed" | "confirmed" | "dismissed";
 
 export interface BrandingConfig {
   logoUrl: string | null;
@@ -541,6 +551,121 @@ export const integrationRuns = pgTable(
   ],
 );
 
+export const assets = pgTable(
+  "assets",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    clerkOrgId: text("clerk_org_id")
+      .notNull()
+      .references(() => organisations.clerkOrgId, { onDelete: "cascade" }),
+    name: text("name").notNull(),
+    category: text("category").$type<AssetCategory>().notNull(),
+    tier: text("tier").$type<AssetTier>().notNull().default("supporting"),
+    confidentiality: text("confidentiality").$type<CiaLevel>().notNull().default("low"),
+    integrity: text("integrity").$type<CiaLevel>().notNull().default("low"),
+    availability: text("availability").$type<CiaLevel>().notNull().default("low"),
+    owner: text("owner"),
+    source: text("source").notNull().default("manual"),
+    sourceProvider: text("source_provider"),
+    externalKey: text("external_key"),
+    metadata: jsonb("metadata").$type<Record<string, unknown>>().notNull().default({}),
+    createdAt: timestamp("created_at", { withTimezone: true }).defaultNow(),
+    updatedAt: timestamp("updated_at", { withTimezone: true }).defaultNow(),
+  },
+  (table) => [
+    unique("assets_org_external_key_unique").on(table.clerkOrgId, table.externalKey),
+    index("idx_assets_org").on(table.clerkOrgId),
+    index("idx_assets_org_category").on(table.clerkOrgId, table.category),
+    check(
+      "assets_category_check",
+      sql`${table.category} IN ('software', 'hardware', 'network', 'service', 'location', 'data')`,
+    ),
+    check("assets_tier_check", sql`${table.tier} IN ('primary', 'supporting')`),
+    check(
+      "assets_confidentiality_check",
+      sql`${table.confidentiality} IN ('low', 'medium', 'high')`,
+    ),
+    check("assets_integrity_check", sql`${table.integrity} IN ('low', 'medium', 'high')`),
+    check(
+      "assets_availability_check",
+      sql`${table.availability} IN ('low', 'medium', 'high')`,
+    ),
+  ],
+);
+
+export const discoveryRuns = pgTable(
+  "discovery_runs",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    clerkOrgId: text("clerk_org_id")
+      .notNull()
+      .references(() => organisations.clerkOrgId, { onDelete: "cascade" }),
+    integrationId: uuid("integration_id")
+      .notNull()
+      .references(() => integrations.id, { onDelete: "cascade" }),
+    provider: text("provider").notNull(),
+    status: text("status").notNull().default("running"),
+    startedAt: timestamp("started_at", { withTimezone: true }).notNull().defaultNow(),
+    finishedAt: timestamp("finished_at", { withTimezone: true }),
+    assetsProposed: integer("assets_proposed").notNull().default(0),
+    vendorsProposed: integer("vendors_proposed").notNull().default(0),
+    warnings: jsonb("warnings").$type<string[]>().notNull().default([]),
+  },
+  (table) => [
+    index("idx_discovery_runs_org_started").on(table.clerkOrgId, table.startedAt),
+    index("idx_discovery_runs_integration").on(table.integrationId),
+    check(
+      "discovery_runs_status_check",
+      sql`${table.status} IN ('running', 'complete', 'error')`,
+    ),
+  ],
+);
+
+export const discoveredAssets = pgTable(
+  "discovered_assets",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    clerkOrgId: text("clerk_org_id")
+      .notNull()
+      .references(() => organisations.clerkOrgId, { onDelete: "cascade" }),
+    discoveryRunId: uuid("discovery_run_id")
+      .notNull()
+      .references(() => discoveryRuns.id, { onDelete: "cascade" }),
+    externalKey: text("external_key").notNull(),
+    provider: text("provider").notNull(),
+    name: text("name").notNull(),
+    category: text("category").$type<AssetCategory>().notNull(),
+    tier: text("tier").$type<AssetTier>().notNull(),
+    suggestedCia: jsonb("suggested_cia")
+      .$type<{ confidentiality: CiaLevel; integrity: CiaLevel; availability: CiaLevel }>()
+      .notNull(),
+    rationale: text("rationale").notNull(),
+    suggestedOwner: text("suggested_owner").notNull().default(""),
+    metadata: jsonb("metadata").$type<Record<string, unknown>>().notNull().default({}),
+    reviewStatus: text("review_status")
+      .$type<DiscoveryReviewStatus>()
+      .notNull()
+      .default("proposed"),
+    linkedAssetId: uuid("linked_asset_id").references(() => assets.id, {
+      onDelete: "set null",
+    }),
+    firstSeenAt: timestamp("first_seen_at", { withTimezone: true }).notNull().defaultNow(),
+    lastSeenAt: timestamp("last_seen_at", { withTimezone: true }).notNull().defaultNow(),
+  },
+  (table) => [
+    unique("discovered_assets_org_external_key_unique").on(
+      table.clerkOrgId,
+      table.externalKey,
+    ),
+    index("idx_discovered_assets_org_status").on(table.clerkOrgId, table.reviewStatus),
+    index("idx_discovered_assets_run").on(table.discoveryRunId),
+    check(
+      "discovered_assets_review_status_check",
+      sql`${table.reviewStatus} IN ('proposed', 'confirmed', 'dismissed')`,
+    ),
+  ],
+);
+
 export const evidence = pgTable("evidence", {
   id: uuid("id").primaryKey().defaultRandom(),
   clerkOrgId: text("clerk_org_id")
@@ -650,20 +775,78 @@ export const policyControls = pgTable(
   (table) => [unique().on(table.policyId, table.controlId)],
 );
 
-export const vendors = pgTable("vendors", {
-  id: uuid("id").primaryKey().defaultRandom(),
-  clerkOrgId: text("clerk_org_id")
-    .notNull()
-    .references(() => organisations.clerkOrgId, { onDelete: "cascade" }),
-  name: text("name").notNull(),
-  website: text("website"),
-  category: text("category"),
-  riskTier: text("risk_tier"),
-  status: text("status").notNull().default("pending"),
-  lastAssessedAt: date("last_assessed_at"),
-  nextReviewAt: date("next_review_at"),
-  createdAt: timestamp("created_at", { withTimezone: true }).defaultNow(),
-});
+export const vendors = pgTable(
+  "vendors",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    clerkOrgId: text("clerk_org_id")
+      .notNull()
+      .references(() => organisations.clerkOrgId, { onDelete: "cascade" }),
+    name: text("name").notNull(),
+    website: text("website"),
+    category: text("category"),
+    ico: text("ico"),
+    supplyType: text("supply_type"),
+    riskTier: text("risk_tier"),
+    status: text("status").notNull().default("pending"),
+    source: text("source").notNull().default("manual"),
+    sourceProvider: text("source_provider"),
+    externalKey: text("external_key"),
+    lastAssessedAt: date("last_assessed_at"),
+    nextReviewAt: date("next_review_at"),
+    createdAt: timestamp("created_at", { withTimezone: true }).defaultNow(),
+  },
+  (table) => [
+    unique("vendors_org_external_key_unique").on(table.clerkOrgId, table.externalKey),
+    index("idx_vendors_org_source_provider").on(table.clerkOrgId, table.sourceProvider),
+  ],
+);
+
+export const discoveredVendors = pgTable(
+  "discovered_vendors",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    clerkOrgId: text("clerk_org_id")
+      .notNull()
+      .references(() => organisations.clerkOrgId, { onDelete: "cascade" }),
+    discoveryRunId: uuid("discovery_run_id")
+      .notNull()
+      .references(() => discoveryRuns.id, { onDelete: "cascade" }),
+    externalKey: text("external_key").notNull(),
+    provider: text("provider").notNull(),
+    name: text("name").notNull(),
+    ico: text("ico"),
+    supplyType: text("supply_type").notNull(),
+    suggestedCriticality: text("suggested_criticality").notNull(),
+    rationale: text("rationale").notNull(),
+    metadata: jsonb("metadata").$type<Record<string, unknown>>().notNull().default({}),
+    reviewStatus: text("review_status")
+      .$type<DiscoveryReviewStatus>()
+      .notNull()
+      .default("proposed"),
+    linkedVendorId: uuid("linked_vendor_id").references(() => vendors.id, {
+      onDelete: "set null",
+    }),
+    firstSeenAt: timestamp("first_seen_at", { withTimezone: true }).notNull().defaultNow(),
+    lastSeenAt: timestamp("last_seen_at", { withTimezone: true }).notNull().defaultNow(),
+  },
+  (table) => [
+    unique("discovered_vendors_org_external_key_unique").on(
+      table.clerkOrgId,
+      table.externalKey,
+    ),
+    index("idx_discovered_vendors_org_status").on(table.clerkOrgId, table.reviewStatus),
+    index("idx_discovered_vendors_run").on(table.discoveryRunId),
+    check(
+      "discovered_vendors_review_status_check",
+      sql`${table.reviewStatus} IN ('proposed', 'confirmed', 'dismissed')`,
+    ),
+    check(
+      "discovered_vendors_criticality_check",
+      sql`${table.suggestedCriticality} IN ('standard', 'high', 'critical')`,
+    ),
+  ],
+);
 
 export const vendorAssessments = pgTable("vendor_assessments", {
   id: uuid("id").primaryKey().defaultRandom(),
@@ -1130,6 +1313,7 @@ export type Control = typeof controls.$inferSelect;
 export type Test = typeof tests.$inferSelect;
 export type Integration = typeof integrations.$inferSelect;
 export type IntegrationRun = typeof integrationRuns.$inferSelect;
+export type Asset = typeof assets.$inferSelect;
 export type Evidence = typeof evidence.$inferSelect;
 export type EmployeeTrainingRecord = typeof employeeTrainingRecords.$inferSelect;
 export type FeatureFlag = typeof featureFlags.$inferSelect;

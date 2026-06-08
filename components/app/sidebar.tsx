@@ -22,6 +22,7 @@ import {
   Plug,
   ScrollText,
   Settings,
+  Sparkles,
   Users,
 } from "lucide-react";
 import type { PlanKey } from "@/lib/stripe/plans";
@@ -40,6 +41,7 @@ const navigation = [
   {
     items: [
       { href: "/integrations", labelKey: "integrations", icon: Plug, lockedUntilIntake: true },
+      { href: "/discovery", labelKey: "discovery", icon: Sparkles, lockedUntilIntake: true },
       { href: "/policies", labelKey: "policies", icon: ScrollText, lockedUntilIntake: true },
       { href: "/vendors", labelKey: "vendors", icon: Boxes, lockedUntilIntake: true },
       { href: "/questionnaires", labelKey: "questionnaires", icon: FileQuestion, lockedUntilIntake: true },

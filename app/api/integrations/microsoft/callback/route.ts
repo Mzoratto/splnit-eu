@@ -7,6 +7,7 @@ import { encryptSecret } from "@/lib/crypto";
 import { getDb } from "@/lib/db";
 import { createAuditLog } from "@/lib/db/queries/audit-logs";
 import { upsertIntegrationConnection } from "@/lib/db/queries/integrations";
+import { runPostConnectDiscovery } from "@/lib/discovery/post-connect";
 import { controls, evidence } from "@/lib/db/schema";
 import { enqueueIntegrationFirstRun } from "@/lib/integrations/first-run-enqueue";
 import { exchangeMicrosoftCode } from "@/lib/integrations/microsoft365/oauth";
@@ -194,6 +195,16 @@ export async function GET(request: Request) {
       },
       name: "EvidenceCollectionQueued",
     });
+  }
+  try {
+    await runPostConnectDiscovery({
+      clerkOrgId: session.orgId,
+      integrationId: integration.id,
+      provider: "microsoft365",
+      userId: session.userId,
+    });
+  } catch {
+    // Discovery is best-effort after OAuth; never fail the connector redirect.
   }
 
   return NextResponse.redirect(new URL("/integrations/microsoft365", url.origin));

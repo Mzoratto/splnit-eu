@@ -1,6 +1,7 @@
 import { serve } from "inngest/next";
 import { accessReviewReminders } from "@/inngest/access-review-reminders";
 import { evidenceExpiryAlerts } from "@/inngest/evidence-expiry-alerts";
+import { discoveryRescan } from "@/inngest/discovery-rescan";
 import { inngest } from "@/inngest/client";
 import { policyReviewReminders } from "@/inngest/policy-review-reminders";
 import { regulationUpdates } from "@/inngest/regulation-updates";
@@ -11,6 +12,7 @@ export const { GET, POST, PUT } = serve({
   client: inngest,
   functions: [
     accessReviewReminders,
+    discoveryRescan,
     evidenceExpiryAlerts,
     policyReviewReminders,
     regulationUpdates,

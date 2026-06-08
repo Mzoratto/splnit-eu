@@ -5,6 +5,7 @@ import { revalidatePath } from "next/cache";
 import { z } from "zod";
 import { recordActivationEvent } from "@/lib/activation/events";
 import { createAuditLog } from "@/lib/db/queries/audit-logs";
+import { runPostConnectDiscovery } from "@/lib/discovery/post-connect";
 import { disconnectIntegrationConnection } from "@/lib/db/queries/integrations";
 import { enqueueIntegrationFirstRun } from "@/lib/integrations/first-run-enqueue";
 import { acquireIntegrationRunLock } from "@/lib/integrations/locks";
@@ -220,6 +221,17 @@ async function validateAndStoreCredential(input: {
           trigger: firstRunTrigger,
         },
       });
+    }
+
+    try {
+      await runPostConnectDiscovery({
+        clerkOrgId: input.clerkOrgId,
+        integrationId: integration.id,
+        provider: input.credential.platform,
+        userId: input.userId,
+      });
+    } catch {
+      // Discovery is best-effort after a successful connection; never fail the connector save.
     }
 
     revalidateConnectorPaths(input.credential.platform);
