@@ -102,8 +102,23 @@ async function createPendingMicrosoftEvidence(input: {
 
 export async function GET(request: Request) {
   const url = new URL(request.url);
+  const microsoftError = url.searchParams.get("error");
+  const microsoftErrorDescription = url.searchParams.get("error_description");
   const code = url.searchParams.get("code");
   const state = url.searchParams.get("state");
+
+  if (microsoftError) {
+    const redirectUrl = new URL("/integrations/microsoft365", url.origin);
+    redirectUrl.searchParams.set("oauth_error", "microsoft_oauth_failed");
+    redirectUrl.searchParams.set("provider_error", microsoftError);
+    if (microsoftErrorDescription) {
+      redirectUrl.searchParams.set(
+        "provider_error_description",
+        microsoftErrorDescription,
+      );
+    }
+    return NextResponse.redirect(redirectUrl);
+  }
 
   if (!code || !state) {
     return NextResponse.json({ error: "Missing code or state" }, { status: 400 });

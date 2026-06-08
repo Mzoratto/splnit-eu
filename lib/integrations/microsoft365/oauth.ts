@@ -1,6 +1,6 @@
 import { createOAuthState } from "@/lib/integrations/oauth-state";
 
-const TENANT_ID = "common";
+const TENANT_ID = "organizations";
 const SCOPES = [
   "User.Read.All",
   "UserAuthenticationMethod.Read.All",
@@ -18,6 +18,7 @@ export function getMicrosoft365AuthUrl(clerkOrgId: string, redirectUri: string) 
     scope: `offline_access ${SCOPES}`,
     state: createOAuthState(clerkOrgId, "microsoft365"),
     response_mode: "query",
+    prompt: "select_account",
   });
 
   return `https://login.microsoftonline.com/${TENANT_ID}/oauth2/v2.0/authorize?${params}`;

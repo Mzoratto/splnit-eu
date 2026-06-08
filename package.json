@@ -46,6 +46,7 @@
     "smoke:activation-event-sanitizer": "tsx scripts/smoke-activation-event-sanitizer.ts",
     "smoke:sanitizer-rejection": "tsx scripts/smoke-sanitizer-rejection.ts",
     "smoke:microsoft365-permission-failures": "tsx scripts/smoke-microsoft365-permission-failures.ts",
+    "smoke:microsoft-oauth-flow-source": "tsx scripts/smoke-microsoft-oauth-flow-source.ts",
     "smoke:hetzner-checks": "tsx scripts/smoke-hetzner-checks.ts",
     "smoke:aws-checks": "tsx scripts/smoke-aws-checks.ts",
     "smoke:ovhcloud-checks": "tsx scripts/smoke-ovhcloud-checks.ts",
