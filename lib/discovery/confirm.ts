@@ -220,48 +220,37 @@ export async function confirmDiscoveredVendor(input: {
   };
 }): Promise<{ vendorId: string }> {
   const db = getDb();
-  const draftRows = await db
-    .select()
-    .from(discoveredVendors)
-    .where(
-      and(
-        eq(discoveredVendors.clerkOrgId, input.clerkOrgId),
-        eq(discoveredVendors.id, input.discoveredVendorId),
-      ),
-    )
-    .limit(1);
-  const draft = draftRows[0] ?? null;
+  const result = await db.transaction(async (tx) => {
+    const draftRows = await tx
+      .select()
+      .from(discoveredVendors)
+      .where(
+        and(
+          eq(discoveredVendors.clerkOrgId, input.clerkOrgId),
+          eq(discoveredVendors.id, input.discoveredVendorId),
+        ),
+      )
+      .limit(1);
+    const draft = draftRows[0] ?? null;
 
-  if (!draft) {
-    throw new Error("Discovered supplier not found.");
-  }
+    if (!draft) {
+      throw new Error("Discovered supplier not found.");
+    }
 
-  if (draft.linkedVendorId) {
-    return { vendorId: draft.linkedVendorId };
-  }
+    if (draft.linkedVendorId) {
+      return { vendorId: draft.linkedVendorId };
+    }
 
-  if (draft.reviewStatus === "dismissed") {
-    throw new Error("Dismissed discoveries cannot be confirmed.");
-  }
+    if (draft.reviewStatus === "dismissed") {
+      throw new Error("Dismissed discoveries cannot be confirmed.");
+    }
 
-  const vendorRows = await db
-    .insert(vendors)
-    .values({
-      category: draft.supplyType,
-      clerkOrgId: input.clerkOrgId,
-      externalKey: draft.externalKey,
-      ico: draft.ico,
-      name: input.overrides?.name ?? draft.name,
-      riskTier: input.overrides?.riskTier ?? riskTierFromCriticality(draft.suggestedCriticality),
-      source: "auto_discovery",
-      sourceProvider: draft.provider,
-      status: "pending",
-      supplyType: draft.supplyType,
-    })
-    .onConflictDoUpdate({
-      target: [vendors.clerkOrgId, vendors.externalKey],
-      set: {
+    const vendorRows = await tx
+      .insert(vendors)
+      .values({
         category: draft.supplyType,
+        clerkOrgId: input.clerkOrgId,
+        externalKey: draft.externalKey,
         ico: draft.ico,
         name: input.overrides?.name ?? draft.name,
         riskTier: input.overrides?.riskTier ?? riskTierFromCriticality(draft.suggestedCriticality),
@@ -269,29 +258,44 @@ export async function confirmDiscoveredVendor(input: {
         sourceProvider: draft.provider,
         status: "pending",
         supplyType: draft.supplyType,
-      },
-    })
-    .returning({ id: vendors.id });
-  const vendorId = vendorRows[0]?.id;
+      })
+      .onConflictDoUpdate({
+        target: [vendors.clerkOrgId, vendors.externalKey],
+        set: {
+          category: draft.supplyType,
+          ico: draft.ico,
+          name: input.overrides?.name ?? draft.name,
+          riskTier: input.overrides?.riskTier ?? riskTierFromCriticality(draft.suggestedCriticality),
+          source: "auto_discovery",
+          sourceProvider: draft.provider,
+          status: "pending",
+          supplyType: draft.supplyType,
+        },
+      })
+      .returning({ id: vendors.id });
+    const vendorId = vendorRows[0]?.id;
 
-  if (!vendorId) {
-    throw new Error("Failed to create supplier.");
-  }
+    if (!vendorId) {
+      throw new Error("Failed to create supplier.");
+    }
 
-  await db
-    .update(discoveredVendors)
-    .set({
-      linkedVendorId: vendorId,
-      reviewStatus: "confirmed",
-    })
-    .where(
-      and(
-        eq(discoveredVendors.clerkOrgId, input.clerkOrgId),
-        eq(discoveredVendors.id, input.discoveredVendorId),
-      ),
-    );
+    await tx
+      .update(discoveredVendors)
+      .set({
+        linkedVendorId: vendorId,
+        reviewStatus: "confirmed",
+      })
+      .where(
+        and(
+          eq(discoveredVendors.clerkOrgId, input.clerkOrgId),
+          eq(discoveredVendors.id, input.discoveredVendorId),
+        ),
+      );
 
-  return { vendorId };
+    return { vendorId };
+  });
+
+  return result;
 }
 
 export async function dismissDiscoveredItem(input: {

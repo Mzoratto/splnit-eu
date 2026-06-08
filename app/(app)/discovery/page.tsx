@@ -7,6 +7,7 @@ import {
   type ProposedVendor,
 } from "@/components/discovery/discovery-review";
 import { listProposedDiscoveryItemsForOrg } from "@/lib/db/queries/discovery";
+import { isDiscoveryEnabledForOrg } from "@/lib/discovery/flags";
 import type { CiaLevel } from "@/lib/db/schema";
 import {
   confirmDiscoveredAssetAction,
@@ -37,6 +38,18 @@ export default async function DiscoveryPage() {
           eyebrow="Auto-discovery"
           title="Draft your register from connected systems"
           subtitle="Sign in with an active organisation to review discovered assets and suppliers."
+        />
+      </div>
+    );
+  }
+
+  if (!isDiscoveryEnabledForOrg(session.orgId)) {
+    return (
+      <div className="space-y-6">
+        <PageHeader
+          eyebrow="Auto-discovery"
+          title="Auto-discovery is not enabled yet"
+          subtitle="This rollout is gated while migrations and live connector smokes are completed."
         />
       </div>
     );

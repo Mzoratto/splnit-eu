@@ -6,6 +6,7 @@ const files = {
   microsoft365: "lib/discovery/providers/microsoft365.ts",
   abraFlexi: "lib/discovery/providers/abra-flexi.ts",
   registry: "lib/discovery/registry.ts",
+  flags: "lib/discovery/flags.ts",
   route: "app/api/discovery/run/route.ts",
   schema: "lib/db/schema.ts",
   inngestRoute: "app/api/inngest/route.ts",
@@ -32,6 +33,7 @@ assert.match(confirm, /assessment_result:\s*"pass"/, "asset confirmation is an e
 assert.match(confirm, /human_confirmed_auto_discovery_draft/, "evidence snapshot preserves the draft-vs-confirmed boundary");
 assert.match(confirm, /\.transaction\(/, "asset confirmation is transaction-safe across draft, evidence, and status updates");
 assert.match(confirm, /tx\.insert\(evidence\)/, "asset evidence insert happens inside the confirmation transaction");
+assert.match(confirm, /confirmDiscoveredVendor[\s\S]*\.transaction\(/, "supplier confirmation is transaction-safe across vendor upsert and draft link updates");
 
 const microsoft365 = read(files.microsoft365);
 assert.doesNotMatch(microsoft365, /Wire graphClientFor|throw new Error\(\s*"Wire/, "Microsoft discovery adapter is wired, not a throw stub");
@@ -52,8 +54,14 @@ const route = read(files.route);
 assert.match(route, /z\.object/, "discovery route validates request body");
 assert.match(route, /request\.text\(\)/, "discovery route distinguishes empty body from malformed JSON");
 assert.match(route, /JSON\.parse/, "discovery route explicitly parses non-empty JSON before side effects");
+assert.match(route, /isDiscoveryEnabledForOrg/, "discovery route is gated behind the server-side rollout flag");
 assert.match(route, /auth\(\)/, "discovery route is scoped to the active Clerk organisation");
 assert.doesNotMatch(route, /err instanceof Error \? err\.message/, "route does not expose raw internal error text to users");
+
+const flags = read(files.flags);
+assert.match(flags, /SPLNIT_DISCOVERY_ENABLED/, "global discovery rollout flag exists");
+assert.match(flags, /SPLNIT_DISCOVERY_ALLOWED_ORG_IDS/, "dark-launch org allowlist exists");
+assert.match(flags, /SPLNIT_DISCOVERY_ABRA_FLEXI_ENABLED/, "ABRA discovery can stay off while M365 is validated");
 
 assert.match(read(files.registry), /microsoft365|abra-flexi/, "discovery registry includes the first two providers");
 assert.match(read(files.inngestRoute), /discoveryRescan/, "weekly discovery rescan is served by Inngest");

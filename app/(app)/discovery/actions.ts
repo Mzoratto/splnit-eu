@@ -7,6 +7,7 @@ import {
   confirmDiscoveredVendor,
   dismissDiscoveredItem,
 } from "@/lib/discovery/confirm";
+import { assertDiscoveryEnabledForOrg } from "@/lib/discovery/flags";
 import { discoverForOrg } from "@/lib/discovery/runner";
 
 function requireSession() {
@@ -24,12 +25,14 @@ function requireSession() {
 
 export async function runDiscoveryAction() {
   const { orgId } = await requireSession();
+  assertDiscoveryEnabledForOrg(orgId);
   await discoverForOrg(orgId);
   revalidatePath("/discovery");
 }
 
 export async function confirmDiscoveredAssetAction(id: string) {
   const { orgId, userId } = await requireSession();
+  assertDiscoveryEnabledForOrg(orgId);
   await confirmDiscoveredAsset({
     clerkOrgId: orgId,
     discoveredAssetId: id,
@@ -41,6 +44,7 @@ export async function confirmDiscoveredAssetAction(id: string) {
 
 export async function confirmDiscoveredVendorAction(id: string) {
   const { orgId } = await requireSession();
+  assertDiscoveryEnabledForOrg(orgId);
   await confirmDiscoveredVendor({
     clerkOrgId: orgId,
     discoveredVendorId: id,
@@ -54,6 +58,7 @@ export async function dismissDiscoveredItemAction(
   id: string,
 ) {
   const { orgId } = await requireSession();
+  assertDiscoveryEnabledForOrg(orgId);
   await dismissDiscoveredItem({
     clerkOrgId: orgId,
     id,

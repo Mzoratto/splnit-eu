@@ -7,6 +7,10 @@ import {
   integrations,
 } from "@/lib/db/schema";
 import { acquireIntegrationRunLock } from "@/lib/integrations/locks";
+import {
+  isDiscoveryEnabledForOrg,
+  isDiscoveryProviderEnabled,
+} from "./flags";
 import { getDiscoveryAdapter } from "./registry";
 import type { DiscoveredAsset, DiscoveredVendor } from "./types";
 
@@ -30,6 +34,10 @@ export async function discoverForOrg(
   clerkOrgId: string,
   options: DiscoverOrgOptions = {},
 ): Promise<DiscoverOrgSummary[]> {
+  if (!isDiscoveryEnabledForOrg(clerkOrgId)) {
+    return [];
+  }
+
   const db = getDb();
   const connected = await db
     .select()
@@ -48,7 +56,7 @@ export async function discoverForOrg(
     }
 
     const adapter = getDiscoveryAdapter(integration.provider);
-    if (!adapter) {
+    if (!adapter || !isDiscoveryProviderEnabled(integration.provider)) {
       summaries.push({
         assetsProposed: 0,
         integrationId: integration.id,
@@ -58,7 +66,7 @@ export async function discoverForOrg(
         provider: integration.provider,
         skipped: true,
         vendorsProposed: 0,
-        warnings: [],
+        warnings: !adapter ? [] : ["Discovery is disabled for this provider."],
       });
       continue;
     }

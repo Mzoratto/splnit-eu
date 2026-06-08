@@ -1,5 +1,6 @@
 import { inngest } from "@/inngest/client";
 import { listOrgsWithDiscoveryCapableIntegrations } from "@/lib/db/queries/discovery";
+import { isDiscoveryEnabledForOrg } from "@/lib/discovery/flags";
 import { discoverForOrg } from "@/lib/discovery/runner";
 
 export const discoveryRescan = inngest.createFunction(
@@ -9,9 +10,10 @@ export const discoveryRescan = inngest.createFunction(
     triggers: { cron: "0 6 * * 1" },
   },
   async ({ step }) => {
-    const orgs = await step.run("load-discovery-orgs", () =>
-      listOrgsWithDiscoveryCapableIntegrations(),
-    );
+    const orgs = await step.run("load-discovery-orgs", async () => {
+      const candidates = await listOrgsWithDiscoveryCapableIntegrations();
+      return candidates.filter((orgId) => isDiscoveryEnabledForOrg(orgId));
+    });
     let driftAssets = 0;
     let driftVendors = 0;
 

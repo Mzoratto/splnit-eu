@@ -1,6 +1,10 @@
 import { auth } from "@clerk/nextjs/server";
 import { NextResponse } from "next/server";
 import { z } from "zod";
+import {
+  isDiscoveryEnabledForOrg,
+  isDiscoveryProviderEnabled,
+} from "@/lib/discovery/flags";
 import { discoverForOrg } from "@/lib/discovery/runner";
 import { discoveryCapableProviders } from "@/lib/discovery/registry";
 
@@ -13,6 +17,10 @@ export async function POST(request: Request) {
 
   if (!session.orgId) {
     return NextResponse.json({ error: "Unauthorized." }, { status: 401 });
+  }
+
+  if (!isDiscoveryEnabledForOrg(session.orgId)) {
+    return NextResponse.json({ error: "Discovery is not enabled." }, { status: 404 });
   }
 
   let body: unknown = undefined;
@@ -33,6 +41,13 @@ export async function POST(request: Request) {
     return NextResponse.json(
       { error: "Invalid discovery request." },
       { status: 400 },
+    );
+  }
+
+  if (parsed.data?.provider && !isDiscoveryProviderEnabled(parsed.data.provider)) {
+    return NextResponse.json(
+      { error: "Discovery is not enabled for this provider." },
+      { status: 404 },
     );
   }
 

@@ -1,4 +1,8 @@
 import { createAuditLog } from "@/lib/db/queries/audit-logs";
+import {
+  isDiscoveryEnabledForOrg,
+  isDiscoveryProviderEnabled,
+} from "@/lib/discovery/flags";
 import { discoverForOrg } from "@/lib/discovery/runner";
 import { isDiscoveryCapableProvider } from "@/lib/discovery/registry";
 import type { IntegrationProvider } from "@/lib/integrations/types";
@@ -10,6 +14,13 @@ export async function runPostConnectDiscovery(input: {
   userId?: string | null;
 }) {
   if (!isDiscoveryCapableProvider(input.provider)) {
+    return { attempted: false as const };
+  }
+
+  if (
+    !isDiscoveryEnabledForOrg(input.clerkOrgId)
+    || !isDiscoveryProviderEnabled(input.provider)
+  ) {
     return { attempted: false as const };
   }
 

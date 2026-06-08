@@ -39,6 +39,8 @@ npm run db:generate
 
 For database-backed work, set `DATABASE_URL` in `.env.local` before running migrations, seeds, or knowledge-import scripts.
 
+Auto-discovery is dark-launch gated. Keep `SPLNIT_DISCOVERY_ENABLED` unset/false until the target database has migration `0030_wooden_true_believers.sql` applied and verified. To smoke only a known org before open rollout, set `SPLNIT_DISCOVERY_ALLOWED_ORG_IDS` to a comma-separated Clerk org allowlist. Microsoft 365 discovery is enabled when the global/org gate is open; ABRA Flexi discovery stays off unless `SPLNIT_DISCOVERY_ABRA_FLEXI_ENABLED=true` is set after the ERP data-shape smoke validates supplier/IČO/spend fields.
+
 Production Drizzle migrations must use a direct, unpooled database connection. Connection poolers such as PgBouncer do not support the DDL transactions that migrations need. When running `npx drizzle-kit migrate` against production, use the production `DATABASE_URL_UNPOOLED` value as `DATABASE_URL`.
 
 ## Project Shape
