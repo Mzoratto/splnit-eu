@@ -833,7 +833,20 @@
         "reconnect": "Ricollega",
         "connect": "Collega Microsoft 365",
         "tokenExpires": "Token scade",
-        "testsBody": "Mappato su controlli NIS2, ISO 27001 e GDPR."
+        "testsBody": "Mappato su controlli NIS2, ISO 27001 e GDPR.",
+        "discoveryHandoff": {
+          "draftsTitle": "Hai {count} bozze Microsoft 365 da rivedere",
+          "draftsBody": "Auto-discovery ha preparato {assets} asset e {vendors} fornitori. Rivedili prima che influiscano su registro e prove. Questo è separato dalla sincronizzazione dei vecchi test automatici, quindi “ultima sincronizzazione” può restare vuota.",
+          "zeroTitle": "Niente da rivedere ora",
+          "zeroBody": "Microsoft 365 è collegato e discovery è stata eseguita, ma non abbiamo trovato nuovi asset, fornitori o app rischiose in attesa di conferma.",
+          "errorTitle": "Impossibile caricare il risultato discovery",
+          "errorBody": "Il connettore è attivo, ma Splnit non riesce a mostrare il conteggio delle bozze in questo momento. Puoi continuare e aggiornare più tardi.",
+          "statsAssets": "Asset",
+          "statsSuppliers": "Fornitori",
+          "reviewCta": "Rivedi bozze",
+          "boundaryTitle": "Nulla cambia senza conferma.",
+          "boundaryBody": "Le bozze restano in staging; righe del registro e prove vengono create solo dopo la tua decisione."
+        }
       }
     }
   },
@@ -2170,51 +2183,141 @@
     "rows": [
       {
         "feature": "Integrazioni ERP ceche (Pohoda, Money S3, Helios, ABRA Flexi)",
-        "splnit": { "status": "yes", "text": "Workspace per ERP cechi" },
-        "regfor": { "status": "notPublic", "text": "Non documentato pubblicamente per questi ERP" },
-        "cybreg": { "status": "notPublic", "text": "Non documentato pubblicamente per questi ERP" },
-        "vantaDrata": { "status": "notPublic", "text": "Connettori ERP cechi non elencati pubblicamente" },
-        "manual": { "status": "manual", "text": "Export/import manuale" }
+        "splnit": {
+          "status": "yes",
+          "text": "Workspace per ERP cechi"
+        },
+        "regfor": {
+          "status": "notPublic",
+          "text": "Non documentato pubblicamente per questi ERP"
+        },
+        "cybreg": {
+          "status": "notPublic",
+          "text": "Non documentato pubblicamente per questi ERP"
+        },
+        "vantaDrata": {
+          "status": "notPublic",
+          "text": "Connettori ERP cechi non elencati pubblicamente"
+        },
+        "manual": {
+          "status": "manual",
+          "text": "Export/import manuale"
+        }
       },
       {
         "feature": "Output NIS2 ceco per il decreto n. 410/2025 Coll.",
-        "splnit": { "status": "yes", "text": "Output mappati a 410/2025 Coll." },
-        "regfor": { "status": "partial", "text": "NIS2/ZKB pubblico; export 410 non verificato" },
-        "cybreg": { "status": "partial", "text": "ZKB/NIS2 pubblico; export 410 non verificato" },
-        "vantaDrata": { "status": "notPublic", "text": "Framework generici, non output ceco 410" },
-        "manual": { "status": "manual", "text": "Dipende dal template o consulente" }
+        "splnit": {
+          "status": "yes",
+          "text": "Output mappati a 410/2025 Coll."
+        },
+        "regfor": {
+          "status": "partial",
+          "text": "NIS2/ZKB pubblico; export 410 non verificato"
+        },
+        "cybreg": {
+          "status": "partial",
+          "text": "ZKB/NIS2 pubblico; export 410 non verificato"
+        },
+        "vantaDrata": {
+          "status": "notPublic",
+          "text": "Framework generici, non output ceco 410"
+        },
+        "manual": {
+          "status": "manual",
+          "text": "Dipende dal template o consulente"
+        }
       },
       {
         "feature": "Prezzi self-service SMB in CZK",
-        "splnit": { "status": "yes", "text": "0 Kč, 490 Kč/mese, 1.990 Kč/mese" },
-        "regfor": { "status": "notPublic", "text": "Prezzi CZK self-service pubblici non trovati" },
-        "cybreg": { "status": "notPublic", "text": "Prezzi CZK self-service pubblici non trovati" },
-        "vantaDrata": { "status": "notPublic", "text": "Di solito su preventivo" },
-        "manual": { "status": "partial", "text": "Costo strumento basso, tempo interno alto" }
+        "splnit": {
+          "status": "yes",
+          "text": "0 Kč, 490 Kč/mese, 1.990 Kč/mese"
+        },
+        "regfor": {
+          "status": "notPublic",
+          "text": "Prezzi CZK self-service pubblici non trovati"
+        },
+        "cybreg": {
+          "status": "notPublic",
+          "text": "Prezzi CZK self-service pubblici non trovati"
+        },
+        "vantaDrata": {
+          "status": "notPublic",
+          "text": "Di solito su preventivo"
+        },
+        "manual": {
+          "status": "partial",
+          "text": "Costo strumento basso, tempo interno alto"
+        }
       },
       {
         "feature": "Portale MSP/Agency per organizzazioni clienti",
-        "splnit": { "status": "yes", "text": "Modello Agency, organizzazioni clienti e inviti" },
-        "regfor": { "status": "notPublic", "text": "Non documentato pubblicamente" },
-        "cybreg": { "status": "notPublic", "text": "Non documentato pubblicamente" },
-        "vantaDrata": { "status": "notPublic", "text": "Portale clienti MSP ceco non verificato" },
-        "manual": { "status": "manual", "text": "Cartelle e fogli separati per cliente" }
+        "splnit": {
+          "status": "yes",
+          "text": "Modello Agency, organizzazioni clienti e inviti"
+        },
+        "regfor": {
+          "status": "notPublic",
+          "text": "Non documentato pubblicamente"
+        },
+        "cybreg": {
+          "status": "notPublic",
+          "text": "Non documentato pubblicamente"
+        },
+        "vantaDrata": {
+          "status": "notPublic",
+          "text": "Portale clienti MSP ceco non verificato"
+        },
+        "manual": {
+          "status": "manual",
+          "text": "Cartelle e fogli separati per cliente"
+        }
       },
       {
         "feature": "Raccolta automatizzata di evidenze",
-        "splnit": { "status": "yes", "text": "Connettori, controlli e archivio evidenze" },
-        "regfor": { "status": "partial", "text": "Task/rischi pubblici; evidenze da connettori non verificate" },
-        "cybreg": { "status": "partial", "text": "Automazione processi pubblica; evidenze da connettori non verificate" },
-        "vantaDrata": { "status": "yes", "text": "Ampia automazione evidenze cloud/SaaS" },
-        "manual": { "status": "manual", "text": "Screenshot e file manuali" }
+        "splnit": {
+          "status": "yes",
+          "text": "Connettori, controlli e archivio evidenze"
+        },
+        "regfor": {
+          "status": "partial",
+          "text": "Task/rischi pubblici; evidenze da connettori non verificate"
+        },
+        "cybreg": {
+          "status": "partial",
+          "text": "Automazione processi pubblica; evidenze da connettori non verificate"
+        },
+        "vantaDrata": {
+          "status": "yes",
+          "text": "Ampia automazione evidenze cloud/SaaS"
+        },
+        "manual": {
+          "status": "manual",
+          "text": "Screenshot e file manuali"
+        }
       },
       {
         "feature": "Template gratuiti senza registrazione",
-        "splnit": { "status": "yes", "text": "Template DOCX/XLSX in un pacchetto pubblico" },
-        "regfor": { "status": "notPublic", "text": "Non documentato pubblicamente" },
-        "cybreg": { "status": "notPublic", "text": "Non documentato pubblicamente" },
-        "vantaDrata": { "status": "notPublic", "text": "Pacchetto template ceco pubblico non verificato" },
-        "manual": { "status": "manual", "text": "Template propri senza manutenzione" }
+        "splnit": {
+          "status": "yes",
+          "text": "Template DOCX/XLSX in un pacchetto pubblico"
+        },
+        "regfor": {
+          "status": "notPublic",
+          "text": "Non documentato pubblicamente"
+        },
+        "cybreg": {
+          "status": "notPublic",
+          "text": "Non documentato pubblicamente"
+        },
+        "vantaDrata": {
+          "status": "notPublic",
+          "text": "Pacchetto template ceco pubblico non verificato"
+        },
+        "manual": {
+          "status": "manual",
+          "text": "Template propri senza manutenzione"
+        }
       }
     ]
   },
@@ -2754,5 +2857,119 @@
     },
     "reason": "Motivo: {reason}.",
     "preservedPass": "L’ultimo risultato confermato resta superato mentre la raccolta è bloccata."
+  },
+  "discovery": {
+    "page": {
+      "eyebrow": "Auto-discovery",
+      "signedOutTitle": "Prepara una bozza del registro dai sistemi collegati",
+      "signedOutSubtitle": "Accedi con uno spazio di lavoro attivo per rivedere asset e fornitori rilevati.",
+      "disabledTitle": "Auto-discovery non è ancora abilitata",
+      "disabledSubtitle": "Il rollout resta controllato finché migrazioni e smoke test live dei connettori non sono completati.",
+      "title": "Rivedi la bozza del registro asset e fornitori",
+      "subtitle": "Splnit.eu legge i sistemi collegati in un’area di staging. Solo le righe confermate diventano voci reali del registro; quelle scartate restano fuori dalle prove di readiness.",
+      "runDiscovery": "Esegui discovery"
+    },
+    "review": {
+      "draftNotice": {
+        "title": "Solo bozze — resti tu in controllo.",
+        "body": "I sistemi collegati possono proporre asset e fornitori, ma solo la tua conferma crea righe del registro e prove."
+      },
+      "cia": {
+        "title": "Come leggere C/I/A",
+        "body": "C/I/A è una stima rapida dell’impatto per un asset. Non è una conclusione legale; conferma il valore in base a quanto l’asset è importante per operatività e prove verso i clienti.",
+        "confidentiality": "Riservatezza",
+        "integrity": "Integrità",
+        "availability": "Disponibilità",
+        "levelsTitle": "Livello di impatto",
+        "levels": {
+          "high": "alto",
+          "medium": "medio",
+          "low": "basso"
+        },
+        "levelDescriptions": {
+          "high": "impatto rilevante su clienti, dati o operatività",
+          "medium": "importante, ma con perimetro limitato",
+          "low": "di supporto o facilmente sostituibile"
+        }
+      },
+      "nextSteps": {
+        "title": "Cosa fare ora",
+        "body": "Inizia dagli elementi che riconosci. Confermare crea una riga reale del registro, scartare rimuove la proposta e gli elementi incerti possono restare in sospeso.",
+        "confirmTitle": "Conferma gli elementi riconosciuti",
+        "confirmBody": "Usalo quando nome, proprietario e impatto sono coerenti con il tuo workspace.",
+        "dismissTitle": "Scarta rumore o duplicati",
+        "dismissBody": "Usalo per rumore tecnico, app interne non rilevanti o proposte che non devono entrare nel registro.",
+        "leaveTitle": "Lascia in bozza gli elementi incerti",
+        "leaveBody": "Niente diventa prova di registro finché non lo confermi. Puoi tornare più tardi."
+      },
+      "metrics": {
+        "assetsWaiting": "Asset da rivedere",
+        "suppliersWaiting": "Fornitori da rivedere",
+        "evidenceBoundary": "Limite delle prove",
+        "evidenceBoundaryValue": "Conferma umana"
+      },
+      "tabs": {
+        "assets": "Asset",
+        "suppliers": "Fornitori"
+      },
+      "actions": {
+        "confirm": "Conferma",
+        "dismiss": "Scarta"
+      },
+      "empty": {
+        "assets": "Nessun asset proposto è in attesa di revisione.",
+        "vendors": "Nessun fornitore proposto è in attesa di revisione."
+      },
+      "labels": {
+        "primary": "Primario",
+        "via": "tramite",
+        "suggestedOwner": "proprietario suggerito",
+        "ico": "IČO",
+        "suggestedFrom": "Suggerito da",
+        "category": {
+          "software": "software",
+          "hardware": "hardware",
+          "network": "rete",
+          "service": "servizio",
+          "location": "sede",
+          "data": "dati"
+        },
+        "tier": {
+          "primary": "primario",
+          "supporting": "di supporto"
+        },
+        "provider": {
+          "microsoft365": "Microsoft 365",
+          "abra-flexi": "ABRA Flexi"
+        },
+        "criticality": {
+          "critical": "critico",
+          "high": "alto",
+          "standard": "standard"
+        },
+        "supplyType": {
+          "SaaS application with tenant data access": "applicazione SaaS con accesso ai dati del tenant"
+        },
+        "namePrefixes": {
+          "privilegedAccount": "Account privilegiato",
+          "connectedApp": "App collegata",
+          "microsoftTenant": "Tenant Microsoft 365",
+          "standardUsers": "Account utente standard ({count})"
+        },
+        "assetReasons": {
+          "handlesSensitiveData": "tratta dati personali o finanziari",
+          "privilegedAccessScope": "ha un perimetro di accesso privilegiato",
+          "privilegedProductionIntegrity": "modifiche privilegiate incidono sull’integrità della produzione",
+          "productionSystem": "sistema di produzione",
+          "outageDependents": "un’interruzione impatterebbe circa {count} account o servizi dipendenti",
+          "productionSystemWithDependents": "sistema di produzione con dipendenze attive",
+          "internetFacing": "esposto a internet, quindi l’impatto minimo aumenta",
+          "noElevatingSignals": "Nessun segnale di impatto elevato trovato; valore predefinito basso. Conferma manualmente."
+        },
+        "vendorRationales": {
+          "thirdPartyApp": "Applicazione di terze parti con accesso al tenant Microsoft 365; rivedila come possibile fornitore o responsabile del trattamento."
+        }
+      }
+    }
   }
 }

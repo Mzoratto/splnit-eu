@@ -833,7 +833,20 @@
         "reconnect": "Znovu připojit",
         "connect": "Připojit Microsoft 365",
         "tokenExpires": "Token expiruje",
-        "testsBody": "Mapované na NIS2, ISO 27001 a GDPR kontroly."
+        "testsBody": "Mapované na NIS2, ISO 27001 a GDPR kontroly.",
+        "discoveryHandoff": {
+          "draftsTitle": "Máte {count} návrhů z Microsoft 365 k revizi",
+          "draftsBody": "Auto-discovery připravilo {assets} aktiv a {vendors} dodavatelů. Zkontrolujte je dřív, než se promítnou do registru a důkazů. Tento stav je oddělený od starších automatických testů, takže „poslední synchronizace“ může být stále prázdná.",
+          "zeroTitle": "Teď není co revidovat",
+          "zeroBody": "Microsoft 365 je připojený a discovery běželo, ale nenašli jsme nová aktiva, dodavatele ani rizikové aplikace čekající na potvrzení.",
+          "errorTitle": "Discovery výsledek se nepodařilo načíst",
+          "errorBody": "Konektor je aktivní, ale Splnit teď neumí zobrazit počet návrhů. Můžete pokračovat a zkusit stránku později obnovit.",
+          "statsAssets": "Aktiva",
+          "statsSuppliers": "Dodavatelé",
+          "reviewCta": "Zkontrolovat návrhy",
+          "boundaryTitle": "Bez potvrzení se nic nemění.",
+          "boundaryBody": "Návrhy zůstávají ve stagingu; registr a důkazy vzniknou až po vašem rozhodnutí."
+        }
       }
     }
   },
@@ -2170,51 +2183,141 @@
     "rows": [
       {
         "feature": "České ERP integrace (Pohoda, Money S3, Helios, ABRA Flexi)",
-        "splnit": { "status": "yes", "text": "Pracovní prostory pro české ERP" },
-        "regfor": { "status": "notPublic", "text": "Veřejně nedoloženo pro tyto ERP" },
-        "cybreg": { "status": "notPublic", "text": "Veřejně nedoloženo pro tyto ERP" },
-        "vantaDrata": { "status": "notPublic", "text": "České ERP konektory nejsou veřejně uvedené" },
-        "manual": { "status": "manual", "text": "Ruční export/import" }
+        "splnit": {
+          "status": "yes",
+          "text": "Pracovní prostory pro české ERP"
+        },
+        "regfor": {
+          "status": "notPublic",
+          "text": "Veřejně nedoloženo pro tyto ERP"
+        },
+        "cybreg": {
+          "status": "notPublic",
+          "text": "Veřejně nedoloženo pro tyto ERP"
+        },
+        "vantaDrata": {
+          "status": "notPublic",
+          "text": "České ERP konektory nejsou veřejně uvedené"
+        },
+        "manual": {
+          "status": "manual",
+          "text": "Ruční export/import"
+        }
       },
       {
         "feature": "Český NIS2 výstup podle vyhlášky č. 410/2025 Sb.",
-        "splnit": { "status": "yes", "text": "Výstupy mapované na 410/2025 Sb." },
-        "regfor": { "status": "partial", "text": "NIS2/ZKB veřejně, export 410 nedoložen" },
-        "cybreg": { "status": "partial", "text": "ZKB/NIS2 veřejně, export 410 nedoložen" },
-        "vantaDrata": { "status": "notPublic", "text": "Obecné frameworky, ne český 410 výstup" },
-        "manual": { "status": "manual", "text": "Podle vlastní šablony nebo poradce" }
+        "splnit": {
+          "status": "yes",
+          "text": "Výstupy mapované na 410/2025 Sb."
+        },
+        "regfor": {
+          "status": "partial",
+          "text": "NIS2/ZKB veřejně, export 410 nedoložen"
+        },
+        "cybreg": {
+          "status": "partial",
+          "text": "ZKB/NIS2 veřejně, export 410 nedoložen"
+        },
+        "vantaDrata": {
+          "status": "notPublic",
+          "text": "Obecné frameworky, ne český 410 výstup"
+        },
+        "manual": {
+          "status": "manual",
+          "text": "Podle vlastní šablony nebo poradce"
+        }
       },
       {
         "feature": "SMB self-serve ceník v Kč",
-        "splnit": { "status": "yes", "text": "0 Kč, 490 Kč/měsíc, 1 990 Kč/měsíc" },
-        "regfor": { "status": "notPublic", "text": "Veřejný CZK self-serve ceník nenalezen" },
-        "cybreg": { "status": "notPublic", "text": "Veřejný CZK self-serve ceník nenalezen" },
-        "vantaDrata": { "status": "notPublic", "text": "Typicky nabídka na míru" },
-        "manual": { "status": "partial", "text": "Nízký náklad nástroje, vysoký interní čas" }
+        "splnit": {
+          "status": "yes",
+          "text": "0 Kč, 490 Kč/měsíc, 1 990 Kč/měsíc"
+        },
+        "regfor": {
+          "status": "notPublic",
+          "text": "Veřejný CZK self-serve ceník nenalezen"
+        },
+        "cybreg": {
+          "status": "notPublic",
+          "text": "Veřejný CZK self-serve ceník nenalezen"
+        },
+        "vantaDrata": {
+          "status": "notPublic",
+          "text": "Typicky nabídka na míru"
+        },
+        "manual": {
+          "status": "partial",
+          "text": "Nízký náklad nástroje, vysoký interní čas"
+        }
       },
       {
         "feature": "MSP/Agency portál pro klientské organizace",
-        "splnit": { "status": "yes", "text": "Agency model, klientské organizace a pozvánky" },
-        "regfor": { "status": "notPublic", "text": "Veřejně nedoloženo" },
-        "cybreg": { "status": "notPublic", "text": "Veřejně nedoloženo" },
-        "vantaDrata": { "status": "notPublic", "text": "Český MSP klientský portál nedoložen" },
-        "manual": { "status": "manual", "text": "Oddělené složky a tabulky pro každého klienta" }
+        "splnit": {
+          "status": "yes",
+          "text": "Agency model, klientské organizace a pozvánky"
+        },
+        "regfor": {
+          "status": "notPublic",
+          "text": "Veřejně nedoloženo"
+        },
+        "cybreg": {
+          "status": "notPublic",
+          "text": "Veřejně nedoloženo"
+        },
+        "vantaDrata": {
+          "status": "notPublic",
+          "text": "Český MSP klientský portál nedoložen"
+        },
+        "manual": {
+          "status": "manual",
+          "text": "Oddělené složky a tabulky pro každého klienta"
+        }
       },
       {
         "feature": "Automatizovaný sběr důkazů",
-        "splnit": { "status": "yes", "text": "Konektory, kontroly a archiv evidence" },
-        "regfor": { "status": "partial", "text": "Veřejně popsané úkoly/rizika; konektorová evidence nedoložena" },
-        "cybreg": { "status": "partial", "text": "Veřejně popsaná procesní automatizace; konektorová evidence nedoložena" },
-        "vantaDrata": { "status": "yes", "text": "Široká cloud/SaaS evidence automatizace" },
-        "manual": { "status": "manual", "text": "Screenshoty a soubory ručně" }
+        "splnit": {
+          "status": "yes",
+          "text": "Konektory, kontroly a archiv evidence"
+        },
+        "regfor": {
+          "status": "partial",
+          "text": "Veřejně popsané úkoly/rizika; konektorová evidence nedoložena"
+        },
+        "cybreg": {
+          "status": "partial",
+          "text": "Veřejně popsaná procesní automatizace; konektorová evidence nedoložena"
+        },
+        "vantaDrata": {
+          "status": "yes",
+          "text": "Široká cloud/SaaS evidence automatizace"
+        },
+        "manual": {
+          "status": "manual",
+          "text": "Screenshoty a soubory ručně"
+        }
       },
       {
         "feature": "Bezplatné šablony bez registrace",
-        "splnit": { "status": "yes", "text": "DOCX/XLSX šablony ve veřejném balíku" },
-        "regfor": { "status": "notPublic", "text": "Veřejně nedoloženo" },
-        "cybreg": { "status": "notPublic", "text": "Veřejně nedoloženo" },
-        "vantaDrata": { "status": "notPublic", "text": "Veřejný CZ balík šablon nedoložen" },
-        "manual": { "status": "manual", "text": "Vlastní šablony bez údržby" }
+        "splnit": {
+          "status": "yes",
+          "text": "DOCX/XLSX šablony ve veřejném balíku"
+        },
+        "regfor": {
+          "status": "notPublic",
+          "text": "Veřejně nedoloženo"
+        },
+        "cybreg": {
+          "status": "notPublic",
+          "text": "Veřejně nedoloženo"
+        },
+        "vantaDrata": {
+          "status": "notPublic",
+          "text": "Veřejný CZ balík šablon nedoložen"
+        },
+        "manual": {
+          "status": "manual",
+          "text": "Vlastní šablony bez údržby"
+        }
       }
     ]
   },
@@ -2754,5 +2857,119 @@
     },
     "reason": "Důvod: {reason}.",
     "preservedPass": "Poslední potvrzený výsledek stále prochází, i když je sběr blokovaný."
+  },
+  "discovery": {
+    "page": {
+      "eyebrow": "Auto-discovery",
+      "signedOutTitle": "Návrh registru z připojených systémů",
+      "signedOutSubtitle": "Přihlaste se s aktivním pracovním prostorem a zkontrolujte navržená aktiva a dodavatele.",
+      "disabledTitle": "Auto-discovery zatím není zapnuté",
+      "disabledSubtitle": "Rollout je řízený, dokud nejsou ověřené migrace a živé smoke testy konektorů.",
+      "title": "Zkontrolujte návrh registru aktiv a dodavatelů",
+      "subtitle": "Splnit.eu načítá připojené systémy do staging oblasti. Teprve potvrzené řádky se stanou položkami registru; odmítnuté řádky se nepoužijí jako důkaz.",
+      "runDiscovery": "Spustit discovery"
+    },
+    "review": {
+      "draftNotice": {
+        "title": "Jen návrhy — vy držíte kontrolu.",
+        "body": "Připojené systémy mohou navrhnout aktiva a dodavatele, ale registr a důkazy vzniknou až po vašem potvrzení."
+      },
+      "cia": {
+        "title": "Jak číst C/I/A",
+        "body": "C/I/A je rychlý odhad dopadu pro aktivum. Nejde o právní závěr; hodnotu potvrďte podle toho, jak důležité je aktivum pro váš provoz a zákaznické důkazy.",
+        "confidentiality": "Důvěrnost",
+        "integrity": "Integrita",
+        "availability": "Dostupnost",
+        "levelsTitle": "Úroveň dopadu",
+        "levels": {
+          "high": "vysoká",
+          "medium": "střední",
+          "low": "nízká"
+        },
+        "levelDescriptions": {
+          "high": "výrazný dopad na zákazníky, data nebo provoz",
+          "medium": "důležité, ale s omezeným dosahem",
+          "low": "podpůrné nebo snadno nahraditelné"
+        }
+      },
+      "nextSteps": {
+        "title": "Co udělat teď",
+        "body": "Začněte položkami, které poznáváte. Potvrzení vytvoří skutečný řádek registru, odmítnutí návrh vyřadí a nejasné položky mohou zůstat čekat.",
+        "confirmTitle": "Potvrdit známé položky",
+        "confirmBody": "Použijte, když název, vlastník a dopad dávají smysl pro váš pracovní prostor.",
+        "dismissTitle": "Odmítnout šum nebo duplicity",
+        "dismissBody": "Použijte pro technický šum, interní aplikace bez relevance nebo návrhy, které do registru nepatří.",
+        "leaveTitle": "Nejasné položky nechte jako návrh",
+        "leaveBody": "Dokud řádek nepotvrdíte, nevzniká registr ani důkaz. Můžete se vrátit později."
+      },
+      "metrics": {
+        "assetsWaiting": "Aktiva čekající na revizi",
+        "suppliersWaiting": "Dodavatelé čekající na revizi",
+        "evidenceBoundary": "Hranice důkazů",
+        "evidenceBoundaryValue": "Potvrzuje člověk"
+      },
+      "tabs": {
+        "assets": "Aktiva",
+        "suppliers": "Dodavatelé"
+      },
+      "actions": {
+        "confirm": "Potvrdit",
+        "dismiss": "Odmítnout"
+      },
+      "empty": {
+        "assets": "Žádná navržená aktiva nečekají na revizi.",
+        "vendors": "Žádní navržení dodavatelé nečekají na revizi."
+      },
+      "labels": {
+        "primary": "Primární",
+        "via": "přes",
+        "suggestedOwner": "navržený vlastník",
+        "ico": "IČO",
+        "suggestedFrom": "Navrženo podle",
+        "category": {
+          "software": "software",
+          "hardware": "hardware",
+          "network": "síť",
+          "service": "služba",
+          "location": "lokalita",
+          "data": "data"
+        },
+        "tier": {
+          "primary": "primární",
+          "supporting": "podpůrné"
+        },
+        "provider": {
+          "microsoft365": "Microsoft 365",
+          "abra-flexi": "ABRA Flexi"
+        },
+        "criticality": {
+          "critical": "kritický",
+          "high": "vysoký",
+          "standard": "standardní"
+        },
+        "supplyType": {
+          "SaaS application with tenant data access": "SaaS aplikace s přístupem k tenantovým datům"
+        },
+        "namePrefixes": {
+          "privilegedAccount": "Privilegovaný účet",
+          "connectedApp": "Připojená aplikace",
+          "microsoftTenant": "Microsoft 365 tenant",
+          "standardUsers": "Standardní uživatelské účty ({count})"
+        },
+        "assetReasons": {
+          "handlesSensitiveData": "zpracovává osobní nebo finanční data",
+          "privilegedAccessScope": "má privilegovaný rozsah přístupu",
+          "privilegedProductionIntegrity": "privilegované změny ovlivňují integritu produkce",
+          "productionSystem": "produkční systém",
+          "outageDependents": "výpadek by ovlivnil přibližně {count} závislých účtů nebo služeb",
+          "productionSystemWithDependents": "produkční systém s aktivními závislostmi",
+          "internetFacing": "dostupné z internetu, proto má vyšší minimální dopad",
+          "noElevatingSignals": "Nenašli jsme signály pro vyšší dopad; výchozí hodnota je nízká. Potvrďte ručně."
+        },
+        "vendorRationales": {
+          "thirdPartyApp": "Aplikace třetí strany má přístup k Microsoft 365 tenantovi; zkontrolujte ji jako možného dodavatele nebo zpracovatele dat."
+        }
+      }
+    }
   }
 }

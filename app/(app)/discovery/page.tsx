@@ -1,4 +1,5 @@
 import { auth } from "@clerk/nextjs/server";
+import { getLocale } from "next-intl/server";
 import { RefreshCw } from "lucide-react";
 import { PageHeader } from "@/components/app/page-header";
 import {
@@ -6,7 +7,10 @@ import {
   type ProposedAsset,
   type ProposedVendor,
 } from "@/components/discovery/discovery-review";
+import { getMessagesForLocale } from "@/i18n/messages";
+import { normalizeLocale } from "@/i18n/routing";
 import { listProposedDiscoveryItemsForOrg } from "@/lib/db/queries/discovery";
+import { getOrganisationByClerkOrgId } from "@/lib/db/queries/organisations";
 import { isDiscoveryEnabledForOrg } from "@/lib/discovery/flags";
 import type { CiaLevel } from "@/lib/db/schema";
 import {
@@ -29,15 +33,21 @@ function asCia(value: unknown): ProposedAsset["suggestedCia"] {
 }
 
 export default async function DiscoveryPage() {
+  const requestLocale = normalizeLocale(await getLocale()) ?? "cs-CZ";
   const session = await auth();
+  const organisation = session.orgId
+    ? await getOrganisationByClerkOrgId(session.orgId).catch(() => null)
+    : null;
+  const locale = normalizeLocale(organisation?.locale) ?? requestLocale;
+  const copy = getMessagesForLocale(locale).discovery;
 
   if (!session.orgId) {
     return (
       <div className="space-y-6">
         <PageHeader
-          eyebrow="Auto-discovery"
-          title="Draft your register from connected systems"
-          subtitle="Sign in with an active organisation to review discovered assets and suppliers."
+          eyebrow={copy.page.eyebrow}
+          title={copy.page.signedOutTitle}
+          subtitle={copy.page.signedOutSubtitle}
         />
       </div>
     );
@@ -47,9 +57,9 @@ export default async function DiscoveryPage() {
     return (
       <div className="space-y-6">
         <PageHeader
-          eyebrow="Auto-discovery"
-          title="Auto-discovery is not enabled yet"
-          subtitle="This rollout is gated while migrations and live connector smokes are completed."
+          eyebrow={copy.page.eyebrow}
+          title={copy.page.disabledTitle}
+          subtitle={copy.page.disabledSubtitle}
         />
       </div>
     );
@@ -89,17 +99,18 @@ export default async function DiscoveryPage() {
           <form action={runDiscoveryAction}>
             <button type="submit" className="btn btn-primary inline-flex items-center gap-2">
               <RefreshCw className="h-4 w-4" aria-hidden="true" />
-              Run discovery
+              {copy.page.runDiscovery}
             </button>
           </form>
         }
-        eyebrow="Auto-discovery"
-        title="Review your draft asset and supplier register"
-        subtitle="Splnit.eu reads connected systems into a staging area. Confirmed rows become real register entries; dismissed rows stay out of compliance evidence."
+        eyebrow={copy.page.eyebrow}
+        title={copy.page.title}
+        subtitle={copy.page.subtitle}
       />
 
       <DiscoveryReview
         assets={assets}
+        copy={copy.review}
         onConfirmAsset={confirmDiscoveredAssetAction}
         onConfirmVendor={confirmDiscoveredVendorAction}
         onDismiss={dismissDiscoveredItemAction}
