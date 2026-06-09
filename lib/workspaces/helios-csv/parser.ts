@@ -6,7 +6,9 @@ import type {
   HeliosCsvRecord,
   HeliosIntegrationRecord,
   HeliosIntegrationType,
+  HeliosPayableRecord,
   HeliosRoleRecord,
+  HeliosSupplierRecord,
   HeliosUserRecord,
   UnknownMetadata,
 } from "@/lib/workspaces/helios-csv/types";
@@ -29,7 +31,14 @@ const REQUIRED_COLUMNS: Record<HeliosCsvFileKind, readonly string[]> = {
     "network_restricted",
     "credentials_rotated_at",
   ],
+  payables: [
+    "invoice_id",
+    "supplier_id",
+    "invoice_date",
+    "total_payable_czk",
+  ],
   roles: ["role", "module", "permission", "business_owner"],
+  suppliers: ["supplier_id", "name", "ico", "dic", "supplier_flag"],
   users: [
     "username",
     "display_name",
@@ -102,6 +111,23 @@ function parseDate(value: string): string | null | false {
   const timestamp = Date.parse(trimmed);
   if (Number.isNaN(timestamp)) return false;
   return trimmed;
+}
+
+function parseNumber(value: string): number | null {
+  const normalized = value.trim().replaceAll(" ", "").replace(",", ".");
+  if (!normalized) return null;
+  const parsed = Number(normalized);
+  return Number.isFinite(parsed) ? parsed : null;
+}
+
+function normalizeIco(value: string) {
+  const digits = value.replace(/\D/g, "");
+  return digits || null;
+}
+
+function emptyToNull(value: string) {
+  const trimmed = value.trim();
+  return trimmed ? trimmed : null;
 }
 
 function read(row: Record<string, string>, column: string) {
@@ -198,6 +224,44 @@ function parseRecord(kind: HeliosCsvFileKind, row: Record<string, string>, rowNu
       sourceFileKind: "backups",
       unknownMetadata: metadata,
     } satisfies HeliosBackupRecord;
+  }
+
+  if (kind === "suppliers") {
+    if (!validateRequiredStrings(row, ["supplier_id", "name"], rowNumber, errors)) return null;
+    const supplierFlag = parseBoolean(read(row, "supplier_flag"));
+    if (supplierFlag === null) {
+      errors.push({ code: "invalid_value", message: `Malformed suppliers row ${rowNumber}.`, row: rowNumber });
+      return null;
+    }
+    return {
+      dic: emptyToNull(read(row, "dic")),
+      ico: normalizeIco(read(row, "ico")),
+      name: read(row, "name"),
+      rowNumber,
+      sourceFileKind: "suppliers",
+      supplierFlag,
+      supplierId: read(row, "supplier_id"),
+      unknownMetadata: metadata,
+    } satisfies HeliosSupplierRecord;
+  }
+
+  if (kind === "payables") {
+    if (!validateRequiredStrings(row, ["invoice_id", "supplier_id"], rowNumber, errors)) return null;
+    const invoiceDate = parseDate(read(row, "invoice_date"));
+    const totalPayableCzk = parseNumber(read(row, "total_payable_czk"));
+    if (!invoiceDate || totalPayableCzk === null) {
+      errors.push({ code: "invalid_value", message: `Malformed payables row ${rowNumber}.`, row: rowNumber });
+      return null;
+    }
+    return {
+      invoiceDate,
+      invoiceId: read(row, "invoice_id"),
+      rowNumber,
+      sourceFileKind: "payables",
+      supplierId: read(row, "supplier_id"),
+      totalPayableCzk,
+      unknownMetadata: metadata,
+    } satisfies HeliosPayableRecord;
   }
 
   if (!validateRequiredStrings(row, ["name", "type", "protocol", "auth_type"], rowNumber, errors)) return null;

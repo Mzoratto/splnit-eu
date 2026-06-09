@@ -1,4 +1,10 @@
-export type HeliosCsvFileKind = "users" | "roles" | "backups" | "integrations";
+export type HeliosCsvFileKind =
+  | "users"
+  | "roles"
+  | "backups"
+  | "integrations"
+  | "suppliers"
+  | "payables";
 
 export type HeliosCsvParseError = {
   code:
@@ -61,11 +67,30 @@ export type HeliosIntegrationRecord = HeliosCsvBaseRecord & {
   credentialsRotatedAt: string | null;
 };
 
+export type HeliosSupplierRecord = HeliosCsvBaseRecord & {
+  sourceFileKind: "suppliers";
+  supplierId: string;
+  name: string;
+  ico: string | null;
+  dic: string | null;
+  supplierFlag: boolean;
+};
+
+export type HeliosPayableRecord = HeliosCsvBaseRecord & {
+  sourceFileKind: "payables";
+  invoiceId: string;
+  supplierId: string;
+  invoiceDate: string;
+  totalPayableCzk: number;
+};
+
 export type HeliosCsvRecord =
   | HeliosUserRecord
   | HeliosRoleRecord
   | HeliosBackupRecord
-  | HeliosIntegrationRecord;
+  | HeliosIntegrationRecord
+  | HeliosSupplierRecord
+  | HeliosPayableRecord;
 
 export type HeliosCsvParseResult = {
   errors: HeliosCsvParseError[];

@@ -1,0 +1,5 @@
+supplier_id,name,ico,dic,supplier_flag
+SUP-001,Atlas Components s.r.o.,12345678,CZ12345678,true
+SUP-002,Bezpecne Stroje a.s.,87654321,CZ87654321,true
+SUP-003,Office Snacks Praha,11223344,CZ11223344,true
+SUP-004,Customer Only spol. s r.o.,55667788,CZ55667788,false
