@@ -1,10 +1,10 @@
-import { decryptSecret } from "@/lib/crypto";
 import type { Integration } from "@/lib/db/schema";
 import {
   checkFirewallPresent,
   checkServerStatus,
   checkSnapshotRecency,
 } from "@/lib/connectors/hetzner/checks";
+import { getHetznerApiKey } from "@/lib/integrations/hetzner/client";
 import type { HetznerCheckResult } from "@/lib/workspaces/hetzner-checks";
 import type { IntegrationAdapter, TestResult } from "../types";
 
@@ -50,14 +50,6 @@ function checkResultToTestResult(
   };
 }
 
-function getApiKey(integration: Integration) {
-  if (!integration.accessTokenEnc) {
-    throw new Error("Hetzner Cloud API key is missing.");
-  }
-
-  return decryptSecret(integration.accessTokenEnc, integration.clerkOrgId);
-}
-
 function getServerId(integration: Integration) {
   const config = asRecord(integration.config);
   const serverId = config.serverId;
@@ -69,7 +61,7 @@ async function runHetznerCheck(
   checkLogic: string,
   integration: Integration,
 ): Promise<TestResult> {
-  const apiKey = getApiKey(integration);
+  const apiKey = getHetznerApiKey(integration);
 
   switch (checkLogic) {
     case "hetzner_server_running": {

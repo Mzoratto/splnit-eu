@@ -1,4 +1,3 @@
-import { createHash } from "node:crypto";
 import {
   mapHttpStatusToHealthCheck,
   registerConnectorHealthProbe,
@@ -8,91 +7,16 @@ import type {
   HealthCheckResult,
   StoredConnectorCredential,
 } from "@/lib/connectors/api-key-base/types";
+import {
+  createOvhcloudClient,
+  type OvhcloudClientDeps,
+  type OVHcloudKeys,
+} from "@/lib/integrations/ovhcloud/client";
 import type { OVHcloudCheckResult } from "@/lib/workspaces/ovhcloud-checks";
 
-const OVHCLOUD_API_BASE_URL = "https://api.ovh.com/1.0";
-const DEFAULT_TIMEOUT_MS = 10_000;
+export type { OVHcloudKeys } from "@/lib/integrations/ovhcloud/client";
 
-export interface OVHcloudKeys {
-  appKey: string;
-  appSecret: string;
-  consumerKey: string;
-}
-
-type OVHcloudFetch = typeof fetch;
-
-type CheckDeps = {
-  fetch?: OVHcloudFetch;
-  now?: () => number;
-  signal?: AbortSignal;
-};
-
-function withTimeout(signal?: AbortSignal) {
-  if (signal) {
-    return {
-      cleanup: () => {},
-      signal,
-    };
-  }
-
-  const controller = new AbortController();
-  const timeout = setTimeout(() => controller.abort(), DEFAULT_TIMEOUT_MS);
-
-  return {
-    cleanup: () => clearTimeout(timeout),
-    signal: controller.signal,
-  };
-}
-
-function createSignature(input: {
-  body: string;
-  keys: OVHcloudKeys;
-  method: string;
-  timestamp: string;
-  url: string;
-}) {
-  const payload = [
-    input.keys.appSecret,
-    input.keys.consumerKey,
-    input.method,
-    input.url,
-    input.body,
-    input.timestamp,
-  ].join("+");
-
-  return `$1$${createHash("sha1").update(payload).digest("hex")}`;
-}
-
-async function ovhcloudGet(
-  keys: OVHcloudKeys,
-  path: string,
-  deps: CheckDeps = {},
-) {
-  const url = `${OVHCLOUD_API_BASE_URL}${path}`;
-  const timestamp = String(Math.floor((deps.now?.() ?? Date.now()) / 1000));
-  const signature = createSignature({
-    body: "",
-    keys,
-    method: "GET",
-    timestamp,
-    url,
-  });
-  const timeout = withTimeout(deps.signal);
-
-  try {
-    return await (deps.fetch ?? fetch)(url, {
-      headers: {
-        "x-ovh-application": keys.appKey,
-        "x-ovh-consumer": keys.consumerKey,
-        "x-ovh-signature": signature,
-        "x-ovh-timestamp": timestamp,
-      },
-      signal: timeout.signal,
-    });
-  } finally {
-    timeout.cleanup();
-  }
-}
+type CheckDeps = OvhcloudClientDeps;
 
 async function getJson(response: Response): Promise<unknown> {
   try {
@@ -126,10 +50,10 @@ export async function ovhcloudHealthProbe(input: {
     const path = serviceName
       ? `/dedicated/server/${encodeURIComponent(serviceName)}`
       : "/dedicated/server";
-    const response = await ovhcloudGet(keys, path, {
+    const response = await createOvhcloudClient(keys, {
       fetch: deps.fetch,
       signal: input.signal ?? deps.signal,
-    });
+    }).get(path);
 
     return mapHttpStatusToHealthCheck(response.status);
   } catch {
@@ -152,10 +76,8 @@ export async function checkServerStatus(
   deps: CheckDeps = {},
 ): Promise<OVHcloudCheckResult> {
   try {
-    const response = await ovhcloudGet(
-      keys,
+    const response = await createOvhcloudClient(keys, deps).get(
       `/dedicated/server/${encodeURIComponent(serviceName)}`,
-      deps,
     );
 
     if (!response.ok) {
@@ -184,10 +106,8 @@ export async function checkFirewallEnabled(
   deps: CheckDeps = {},
 ): Promise<OVHcloudCheckResult> {
   try {
-    const response = await ovhcloudGet(
-      keys,
+    const response = await createOvhcloudClient(keys, deps).get(
       `/dedicated/server/${encodeURIComponent(serviceName)}/firewall`,
-      deps,
     );
 
     if (!response.ok) {
@@ -216,10 +136,8 @@ export async function checkBackupPresent(
   deps: CheckDeps = {},
 ): Promise<OVHcloudCheckResult> {
   try {
-    const response = await ovhcloudGet(
-      keys,
+    const response = await createOvhcloudClient(keys, deps).get(
       `/dedicated/server/${encodeURIComponent(serviceName)}/backupStorage`,
-      deps,
     );
 
     if (response.status === 404) {

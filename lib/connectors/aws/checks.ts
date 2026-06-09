@@ -1,26 +1,20 @@
 import {
   DescribeTrailsCommand,
   GetTrailStatusCommand,
-  CloudTrailClient,
   type DescribeTrailsCommandOutput,
   type GetTrailStatusCommandOutput,
 } from "@aws-sdk/client-cloudtrail";
 import {
   DescribeInstancesCommand,
   DescribeSecurityGroupsCommand,
-  EC2Client,
   type DescribeInstancesCommandOutput,
   type DescribeSecurityGroupsCommandOutput,
 } from "@aws-sdk/client-ec2";
 import {
   ListObjectsV2Command,
-  S3Client,
-  type ListObjectsV2CommandOutput,
 } from "@aws-sdk/client-s3";
 import {
   GetCallerIdentityCommand,
-  STSClient,
-  type GetCallerIdentityCommandOutput,
 } from "@aws-sdk/client-sts";
 import { registerConnectorHealthProbe } from "@/lib/connectors/api-key-base/health";
 import type {
@@ -28,45 +22,29 @@ import type {
   HealthCheckResult,
   StoredConnectorCredential,
 } from "@/lib/connectors/api-key-base/types";
+import {
+  createAwsCloudTrailSend,
+  createAwsEc2Send,
+  createAwsS3Send,
+  createAwsStsSend,
+  type AwsCloudTrailSend,
+  type AwsEc2Send,
+  type AwsS3Send,
+  type AwsSendOptions,
+  type AwsStoredCredential,
+  type AwsStsSend,
+} from "@/lib/integrations/aws/client";
 import type { AwsCheckResult } from "@/lib/workspaces/aws-checks";
 
 const AWS_PAGE_SIZE = 1_000;
 const DEFAULT_BACKUP_WINDOW_DAYS = 7;
 
-type AwsCredential = StoredConnectorCredential & { platform: "aws" };
-
-type AwsSendOptions = {
-  abortSignal?: AbortSignal;
-};
-
-type StsSend = (
-  command: GetCallerIdentityCommand,
-  options?: AwsSendOptions,
-) => Promise<GetCallerIdentityCommandOutput>;
-
-type Ec2Command = DescribeInstancesCommand | DescribeSecurityGroupsCommand;
-type Ec2Send = (
-  command: Ec2Command,
-  options?: AwsSendOptions,
-) => Promise<DescribeInstancesCommandOutput | DescribeSecurityGroupsCommandOutput>;
-
-type S3Send = (
-  command: ListObjectsV2Command,
-  options?: AwsSendOptions,
-) => Promise<ListObjectsV2CommandOutput>;
-
-type CloudTrailCommand = DescribeTrailsCommand | GetTrailStatusCommand;
-type CloudTrailSend = (
-  command: CloudTrailCommand,
-  options?: AwsSendOptions,
-) => Promise<DescribeTrailsCommandOutput | GetTrailStatusCommandOutput>;
-
 export type AwsCheckDeps = {
-  cloudTrailSend?: CloudTrailSend;
-  ec2Send?: Ec2Send;
+  cloudTrailSend?: AwsCloudTrailSend;
+  ec2Send?: AwsEc2Send;
   now?: () => number;
-  s3Send?: S3Send;
-  send?: StsSend;
+  s3Send?: AwsS3Send;
+  send?: AwsStsSend;
   signal?: AbortSignal;
 };
 
@@ -137,54 +115,12 @@ export function mapAwsErrorToHealthCheck(error: unknown): HealthCheckResult {
 
 function isAwsCredential(
   credentials: StoredConnectorCredential,
-): credentials is AwsCredential {
+): credentials is AwsStoredCredential {
   return credentials.platform === "aws";
 }
 
-function awsClientConfig(credentials: AwsCredential) {
-  return {
-    credentials: {
-      accessKeyId: credentials.accessKeyId,
-      secretAccessKey: credentials.secretAccessKey,
-    },
-    region: credentials.region,
-  };
-}
-
-function commandOptions(signal?: AbortSignal) {
+function commandOptions(signal?: AbortSignal): AwsSendOptions | undefined {
   return signal ? { abortSignal: signal } : undefined;
-}
-
-function createStsSend(credentials: AwsCredential) {
-  const sts = new STSClient({
-    ...awsClientConfig(credentials),
-  });
-
-  return sts.send.bind(sts) as StsSend;
-}
-
-function createEc2Send(credentials: AwsCredential) {
-  const ec2 = new EC2Client({
-    ...awsClientConfig(credentials),
-  });
-
-  return ec2.send.bind(ec2) as Ec2Send;
-}
-
-function createS3Send(credentials: AwsCredential) {
-  const s3 = new S3Client({
-    ...awsClientConfig(credentials),
-  });
-
-  return s3.send.bind(s3) as S3Send;
-}
-
-function createCloudTrailSend(credentials: AwsCredential) {
-  const cloudTrail = new CloudTrailClient({
-    ...awsClientConfig(credentials),
-  });
-
-  return cloudTrail.send.bind(cloudTrail) as CloudTrailSend;
 }
 
 function createdWithinWindow(
@@ -227,7 +163,7 @@ export async function awsHealthProbe(
   }
 
   try {
-    const send = deps.send ?? createStsSend(input.credentials);
+    const send = deps.send ?? createAwsStsSend(input.credentials);
     await send(new GetCallerIdentityCommand({}), {
       abortSignal: input.signal ?? deps.signal,
     });
@@ -247,7 +183,7 @@ export async function checkEc2Status(
   }
 
   try {
-    const send = deps.ec2Send ?? createEc2Send(credentials);
+    const send = deps.ec2Send ?? createAwsEc2Send(credentials);
     let nextToken: string | undefined;
 
     do {
@@ -284,7 +220,7 @@ export async function checkSecurityGroupPresent(
   }
 
   try {
-    const send = deps.ec2Send ?? createEc2Send(credentials);
+    const send = deps.ec2Send ?? createAwsEc2Send(credentials);
     let nextToken: string | undefined;
 
     do {
@@ -325,7 +261,7 @@ export async function checkS3BackupRecency(
   }
 
   try {
-    const send = deps.s3Send ?? createS3Send(credentials);
+    const send = deps.s3Send ?? createAwsS3Send(credentials);
     const now = deps.now?.() ?? Date.now();
     let continuationToken: string | undefined;
 
@@ -367,7 +303,7 @@ export async function checkCloudTrailEnabled(
   }
 
   try {
-    const send = deps.cloudTrailSend ?? createCloudTrailSend(credentials);
+    const send = deps.cloudTrailSend ?? createAwsCloudTrailSend(credentials);
     const trailsResponse = await send(
       new DescribeTrailsCommand({ includeShadowTrails: true }),
       commandOptions(deps.signal),

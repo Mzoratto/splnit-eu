@@ -1,11 +1,10 @@
-import { decryptSecret } from "@/lib/crypto";
 import type { Integration } from "@/lib/db/schema";
 import {
   checkBackupPresent,
   checkFirewallEnabled,
   checkServerStatus,
-  type OVHcloudKeys,
 } from "@/lib/connectors/ovhcloud/checks";
+import { getOvhcloudKeys } from "@/lib/integrations/ovhcloud/client";
 import type { OVHcloudCheckResult } from "@/lib/workspaces/ovhcloud-checks";
 import type { IntegrationAdapter, TestResult } from "../types";
 
@@ -51,25 +50,6 @@ function checkResultToTestResult(
   };
 }
 
-function getKeys(integration: Integration): OVHcloudKeys {
-  const config = asRecord(integration.config);
-  const consumerKeyEnc = config.consumerKeyEnc;
-
-  if (
-    !integration.accessTokenEnc ||
-    !integration.refreshTokenEnc ||
-    typeof consumerKeyEnc !== "string"
-  ) {
-    throw new Error("OVHcloud API credentials are missing.");
-  }
-
-  return {
-    appKey: decryptSecret(integration.accessTokenEnc, integration.clerkOrgId),
-    appSecret: decryptSecret(integration.refreshTokenEnc, integration.clerkOrgId),
-    consumerKey: decryptSecret(consumerKeyEnc, integration.clerkOrgId),
-  };
-}
-
 function getServiceName(integration: Integration) {
   const config = asRecord(integration.config);
   const serviceName = config.serviceName;
@@ -85,7 +65,7 @@ async function runOVHcloudCheck(
   checkLogic: string,
   integration: Integration,
 ): Promise<TestResult> {
-  const keys = getKeys(integration);
+  const keys = getOvhcloudKeys(integration);
   const serviceName = getServiceName(integration);
 
   switch (checkLogic) {

@@ -7,12 +7,10 @@ import type {
   HealthCheckResult,
   StoredConnectorCredential,
 } from "@/lib/connectors/api-key-base/types";
+import { createHetznerClient, type HetznerClientDeps } from "@/lib/integrations/hetzner/client";
 import type { HetznerCheckResult } from "@/lib/workspaces/hetzner-checks";
 
-const HETZNER_API_BASE_URL = "https://api.hetzner.cloud/v1";
-const DEFAULT_TIMEOUT_MS = 10_000;
-
-type HetznerFetch = typeof fetch;
+const DEFAULT_SNAPSHOT_WINDOW_DAYS = 7;
 
 type HetznerServer = {
   id?: number;
@@ -28,46 +26,7 @@ type HetznerImage = {
   type?: string;
 };
 
-type CheckDeps = {
-  fetch?: HetznerFetch;
-  signal?: AbortSignal;
-};
-
-function withTimeout(signal?: AbortSignal) {
-  if (signal) {
-    return {
-      signal,
-      cleanup: () => {},
-    };
-  }
-
-  const controller = new AbortController();
-  const timeout = setTimeout(() => controller.abort(), DEFAULT_TIMEOUT_MS);
-
-  return {
-    signal: controller.signal,
-    cleanup: () => clearTimeout(timeout),
-  };
-}
-
-async function hetznerGet(
-  apiKey: string,
-  path: string,
-  deps: CheckDeps = {},
-) {
-  const timeout = withTimeout(deps.signal);
-
-  try {
-    return await (deps.fetch ?? fetch)(`${HETZNER_API_BASE_URL}${path}`, {
-      headers: {
-        authorization: `Bearer ${apiKey}`,
-      },
-      signal: timeout.signal,
-    });
-  } finally {
-    timeout.cleanup();
-  }
-}
+type CheckDeps = HetznerClientDeps;
 
 async function getJson(response: Response): Promise<unknown> {
   try {
@@ -110,10 +69,10 @@ export async function hetznerHealthProbe(input: {
   }
 
   try {
-    const response = await hetznerGet(input.credentials.apiKey, "/servers", {
+    const response = await createHetznerClient(input.credentials.apiKey, {
       fetch: deps.fetch,
       signal: input.signal ?? deps.signal,
-    });
+    }).get("/servers");
 
     return mapHttpStatusToHealthCheck(response.status);
   } catch {
@@ -137,7 +96,7 @@ export async function checkServerStatus(
 ): Promise<HetznerCheckResult> {
   try {
     const path = serverId ? `/servers/${encodeURIComponent(serverId)}` : "/servers";
-    const response = await hetznerGet(apiKey, path, deps);
+    const response = await createHetznerClient(apiKey, deps).get(path);
 
     if (!response.ok) {
       return "error";
@@ -167,7 +126,7 @@ export async function checkFirewallPresent(
   deps: CheckDeps = {},
 ): Promise<HetznerCheckResult> {
   try {
-    const response = await hetznerGet(apiKey, "/firewalls", deps);
+    const response = await createHetznerClient(apiKey, deps).get("/firewalls");
 
     if (!response.ok) {
       return "error";
@@ -196,11 +155,11 @@ export async function checkSnapshotRecency(
 ): Promise<HetznerCheckResult>;
 export async function checkSnapshotRecency(
   apiKey: string,
-  windowDays = 7,
+  windowDays = DEFAULT_SNAPSHOT_WINDOW_DAYS,
   deps: CheckDeps = {},
 ): Promise<HetznerCheckResult> {
   try {
-    const response = await hetznerGet(apiKey, "/images?type=snapshot", deps);
+    const response = await createHetznerClient(apiKey, deps).get("/images?type=snapshot");
 
     if (!response.ok) {
       return "error";

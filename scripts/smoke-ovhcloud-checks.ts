@@ -1,4 +1,5 @@
 import assert from "node:assert/strict";
+import { createHash } from "node:crypto";
 import { decryptSecret } from "@/lib/crypto";
 import { encryptedValuesForCredential } from "@/lib/connectors/api-key-base/storage";
 import {
@@ -31,6 +32,9 @@ const credential: StoredConnectorCredential = {
   serviceName: "ns0000000.ip-192-0-2.eu",
 };
 
+const fixedNow = 1_700_000_000_000;
+const fixedTimestamp = "1700000000";
+
 function jsonFetch(status: number, body: unknown): MockFetch {
   return async () =>
     new Response(JSON.stringify(body), {
@@ -39,28 +43,72 @@ function jsonFetch(status: number, body: unknown): MockFetch {
     });
 }
 
+function expectedOvhSignature(url: string) {
+  const payload = [
+    keys.appSecret,
+    keys.consumerKey,
+    "GET",
+    url,
+    "",
+    fixedTimestamp,
+  ].join("+");
+
+  return `$1$${createHash("sha1").update(payload).digest("hex")}`;
+}
+
+function signedJsonFetch(status: number, body: unknown, calls: { headers: Headers; url: string }[]): MockFetch {
+  return async (input, init) => {
+    calls.push({
+      headers: new Headers(init?.headers),
+      url: String(input),
+    });
+
+    return new Response(JSON.stringify(body), {
+      headers: { "content-type": "application/json" },
+      status,
+    });
+  };
+}
+
+function assertSignedGet(calls: { headers: Headers; url: string }[], expectedPath: string) {
+  const expectedUrl = `https://api.ovh.com/1.0${expectedPath}`;
+  const call = calls.at(-1);
+
+  assert.ok(call, `expected signed OVHcloud request for ${expectedPath}`);
+  assert.equal(call.url, expectedUrl);
+  assert.equal(call.headers.get("x-ovh-application"), keys.appKey);
+  assert.equal(call.headers.get("x-ovh-consumer"), keys.consumerKey);
+  assert.equal(call.headers.get("x-ovh-timestamp"), fixedTimestamp);
+  assert.equal(call.headers.get("x-ovh-signature"), expectedOvhSignature(expectedUrl));
+}
+
 async function main() {
+  const firewallCalls: { headers: Headers; url: string }[] = [];
+  const backupCalls: { headers: Headers; url: string }[] = [];
+
   assert.equal(
     await checkServerStatus(keys, "service", {
       fetch: jsonFetch(200, { status: "operational" }),
-      now: () => 1_700_000_000_000,
+      now: () => fixedNow,
     }),
     "pass",
   );
   assert.equal(
     await checkFirewallEnabled(keys, "service", {
-      fetch: jsonFetch(200, { enabled: true }),
-      now: () => 1_700_000_000_000,
+      fetch: signedJsonFetch(200, { enabled: true }, firewallCalls),
+      now: () => fixedNow,
     }),
     "pass",
   );
+  assertSignedGet(firewallCalls, "/dedicated/server/service/firewall");
   assert.equal(
     await checkBackupPresent(keys, "service", {
-      fetch: jsonFetch(200, { ftpBackupName: "backup-storage" }),
-      now: () => 1_700_000_000_000,
+      fetch: signedJsonFetch(200, { ftpBackupName: "backup-storage" }, backupCalls),
+      now: () => fixedNow,
     }),
     "pass",
   );
+  assertSignedGet(backupCalls, "/dedicated/server/service/backupStorage");
 
   assert.equal(
     await ovhcloudHealthProbe(

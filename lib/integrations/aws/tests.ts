@@ -1,4 +1,3 @@
-import { decryptSecret } from "@/lib/crypto";
 import type { Integration } from "@/lib/db/schema";
 import {
   checkCloudTrailEnabled,
@@ -7,22 +6,9 @@ import {
   checkSecurityGroupPresent,
   type AwsCheckDeps,
 } from "@/lib/connectors/aws/checks";
-import type { StoredConnectorCredential } from "@/lib/connectors/api-key-base/types";
+import { getAwsCredential, type AwsStoredCredential } from "@/lib/integrations/aws/client";
 import type { AwsCheckResult } from "@/lib/workspaces/aws-checks";
 import type { IntegrationAdapter, TestResult } from "../types";
-
-type AwsStoredCredential = StoredConnectorCredential & { platform: "aws" };
-
-function asRecord(value: unknown): Record<string, unknown> {
-  return typeof value === "object" && value !== null && !Array.isArray(value)
-    ? value as Record<string, unknown>
-    : {};
-}
-
-function getConfigString(config: Record<string, unknown>, key: string) {
-  const value = config[key];
-  return typeof value === "string" && value.trim() ? value.trim() : null;
-}
 
 function checkResultToTestResult(
   result: AwsCheckResult,
@@ -57,23 +43,6 @@ function checkResultToTestResult(
     failureReason:
       "Automatická kontrola AWS selhala; pro toto opatření se má zobrazit manuální čestné prohlášení.",
     status: "error",
-  };
-}
-
-function getAwsCredential(integration: Integration): AwsStoredCredential {
-  const config = asRecord(integration.config);
-  const region = getConfigString(config, "region");
-
-  if (!integration.accessTokenEnc || !integration.refreshTokenEnc || !region) {
-    throw new Error("AWS IAM access key credentials are missing.");
-  }
-
-  return {
-    accessKeyId: decryptSecret(integration.accessTokenEnc, integration.clerkOrgId),
-    backupBucketName: getConfigString(config, "backupBucketName"),
-    platform: "aws",
-    region,
-    secretAccessKey: decryptSecret(integration.refreshTokenEnc, integration.clerkOrgId),
   };
 }
 
