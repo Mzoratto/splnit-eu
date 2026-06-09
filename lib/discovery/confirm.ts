@@ -2,6 +2,7 @@ import { and, eq } from "drizzle-orm";
 import { createEvidenceState } from "@/lib/activation/evidence-state";
 import { recalculateFrameworkScore } from "@/lib/controls/scorer";
 import { getDb } from "@/lib/db";
+import { createManualEvidence } from "@/lib/db/queries/evidence";
 import {
   assets,
   controls,
@@ -16,6 +17,8 @@ import {
 import type { CiaRating } from "./types";
 
 const DISCOVERY_ASSET_INVENTORY_CONTROL_KEY = "ctrl_asset_inventory";
+const DISCOVERY_VENDOR_SECURITY_CONTROL_KEY = "ctrl_vendor_security_assessment";
+const DISCOVERY_VENDOR_CONFIRMATION_EVIDENCE_TYPE = "auto_discovery_vendor_confirmation";
 
 function riskTierFromCriticality(value: string) {
   if (value === "critical" || value === "high") {
@@ -47,6 +50,39 @@ async function recalculateFrameworkScoresForControl(input: {
       recalculateFrameworkScore(input.clerkOrgId, row.frameworkId),
     ),
   );
+}
+
+async function getControlIdByKey(controlKey: string) {
+  const db = getDb();
+  const controlRows = await db
+    .select({ id: controls.id })
+    .from(controls)
+    .where(eq(controls.key, controlKey))
+    .limit(1);
+
+  return controlRows[0]?.id ?? null;
+}
+
+async function hasVendorControlEvidence(input: {
+  clerkOrgId: string;
+  controlId: string;
+  vendorId: string;
+}) {
+  const db = getDb();
+  const rows = await db
+    .select({ snapshotData: evidence.snapshotData })
+    .from(evidence)
+    .where(
+      and(
+        eq(evidence.clerkOrgId, input.clerkOrgId),
+        eq(evidence.controlId, input.controlId),
+      ),
+    );
+
+  return rows.some((row) => {
+    const snapshotData = row.snapshotData as { vendorId?: unknown } | null;
+    return snapshotData?.vendorId === input.vendorId;
+  });
 }
 
 export async function confirmDiscoveredAsset(input: {
@@ -238,13 +274,24 @@ export async function confirmDiscoveredVendor(input: {
     }
 
     if (draft.linkedVendorId) {
-      return { vendorId: draft.linkedVendorId };
+      return {
+        evidenceInput: {
+          externalKey: draft.externalKey,
+          name: input.overrides?.name ?? draft.name,
+          provider: draft.provider,
+          rationale: draft.rationale,
+          suggestedCriticality: draft.suggestedCriticality,
+          supplyType: draft.supplyType,
+        },
+        vendorId: draft.linkedVendorId,
+      };
     }
 
     if (draft.reviewStatus === "dismissed") {
       throw new Error("Dismissed discoveries cannot be confirmed.");
     }
 
+    const vendorName = input.overrides?.name ?? draft.name;
     const vendorRows = await tx
       .insert(vendors)
       .values({
@@ -252,7 +299,7 @@ export async function confirmDiscoveredVendor(input: {
         clerkOrgId: input.clerkOrgId,
         externalKey: draft.externalKey,
         ico: draft.ico,
-        name: input.overrides?.name ?? draft.name,
+        name: vendorName,
         riskTier: input.overrides?.riskTier ?? riskTierFromCriticality(draft.suggestedCriticality),
         source: "auto_discovery",
         sourceProvider: draft.provider,
@@ -264,7 +311,7 @@ export async function confirmDiscoveredVendor(input: {
         set: {
           category: draft.supplyType,
           ico: draft.ico,
-          name: input.overrides?.name ?? draft.name,
+          name: vendorName,
           riskTier: input.overrides?.riskTier ?? riskTierFromCriticality(draft.suggestedCriticality),
           source: "auto_discovery",
           sourceProvider: draft.provider,
@@ -292,10 +339,60 @@ export async function confirmDiscoveredVendor(input: {
         ),
       );
 
-    return { vendorId };
+    return {
+      evidenceInput: {
+        externalKey: draft.externalKey,
+        name: vendorName,
+        provider: draft.provider,
+        rationale: draft.rationale,
+        suggestedCriticality: draft.suggestedCriticality,
+        supplyType: draft.supplyType,
+      },
+      vendorId,
+    };
   });
 
-  return result;
+  if (!result.evidenceInput) {
+    return { vendorId: result.vendorId };
+  }
+
+  const controlId = await getControlIdByKey(DISCOVERY_VENDOR_SECURITY_CONTROL_KEY);
+
+  if (!controlId) {
+    throw new Error(`Unknown control: ${DISCOVERY_VENDOR_SECURITY_CONTROL_KEY}`);
+  }
+
+  const evidenceExists = await hasVendorControlEvidence({
+    clerkOrgId: input.clerkOrgId,
+    controlId,
+    vendorId: result.vendorId,
+  });
+
+  if (!evidenceExists) {
+    await createManualEvidence({
+      assessmentResult: "manual_review",
+      blobUrl: null,
+      clerkOrgId: input.clerkOrgId,
+      collectedBy: "system:discovery-confirmation",
+      controlKey: DISCOVERY_VENDOR_SECURITY_CONTROL_KEY,
+      description: `Dodavatel "${result.evidenceInput.name}" přidán do registru z ${result.evidenceInput.provider} objevení; čeká na bezpečnostní hodnocení.`,
+      expiresAt: null,
+      fileType: DISCOVERY_VENDOR_CONFIRMATION_EVIDENCE_TYPE,
+      snapshotData: {
+        boundary: "supplier_listed_assessment_pending",
+        discoveredVendorId: input.discoveredVendorId,
+        externalKey: result.evidenceInput.externalKey,
+        provider: result.evidenceInput.provider,
+        rationale: result.evidenceInput.rationale,
+        suggestedCriticality: result.evidenceInput.suggestedCriticality,
+        supplyType: result.evidenceInput.supplyType,
+        vendorId: result.vendorId,
+      },
+      source: "connector",
+    });
+  }
+
+  return { vendorId: result.vendorId };
 }
 
 export async function dismissDiscoveredItem(input: {

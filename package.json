@@ -40,6 +40,7 @@
     "smoke:abra-flexi-checks": "tsx scripts/smoke-abra-flexi-checks.ts",
     "smoke:discovery-cia": "tsx scripts/smoke-discovery-cia.ts",
     "smoke:discovery-source": "tsx scripts/smoke-discovery-source.ts",
+    "smoke:discovery-vendor-confirmation-evidence": "tsx scripts/smoke-discovery-vendor-confirmation-evidence.ts",
     "smoke:controls-focus-activation-status-source": "tsx scripts/smoke-controls-focus-activation-status-source.ts",
     "smoke:microsoft-first-run-enqueue-source": "tsx scripts/smoke-microsoft-first-run-enqueue-source.ts",
     "smoke:activation-events-source": "tsx scripts/smoke-activation-events-source.ts",

@@ -1,6 +1,6 @@
 import { and, desc, eq, inArray } from "drizzle-orm";
 import { createEvidenceState } from "@/lib/activation/evidence-state";
-import type { EvidenceAssessmentResult } from "@/lib/activation/evidence-state";
+import type { EvidenceAssessmentResult, EvidenceSource } from "@/lib/activation/evidence-state";
 import { recalculateFrameworkScore } from "@/lib/controls/scorer";
 import { getDb } from "@/lib/db";
 import {
@@ -99,6 +99,7 @@ export async function createManualEvidence(input: {
   assessmentResult?: EvidenceAssessmentResult;
   expiresAt: string | null;
   fileType: string;
+  source?: Exclude<EvidenceSource, "imported">;
   snapshotData?: Record<string, unknown> | null;
 }) {
   const db = getDb();
@@ -111,7 +112,7 @@ export async function createManualEvidence(input: {
     assessment_result: "manual_review",
     collected_at: new Date(),
     collection_status: "collected",
-    source: "manual",
+    source: input.source ?? "manual",
   });
   if (input.assessmentResult && input.assessmentResult !== "manual_review") {
     manualEvidenceState.assessment_result = input.assessmentResult;
