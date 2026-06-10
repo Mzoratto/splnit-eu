@@ -212,7 +212,7 @@ function formatAutomatedFinding(snapshotData: SnapshotData): string {
     return `Zjištěno ${mfaEnabled} z ${totalUsers} účtů s vícefaktorovým ověřením.`;
   }
 
-  return "Automatická kontrola potvrdila splnění opatření.";
+  return "Automatický podklad byl zaevidován pro toto opatření.";
 }
 
 function formatGapDescription(input: {

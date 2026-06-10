@@ -55,7 +55,7 @@ export interface ReportContext {
   generatedAt: Date;
 }
 
-type EvidenceTone = "pass-api" | "pass-manual" | "gap";
+type EvidenceTone = "pass" | "in-progress" | "gap";
 
 const DEFAULT_NUKIB_BLOCK: NukibControlBlock = {
   blockTitle: "§ Organizační bezpečnost",
@@ -81,10 +81,6 @@ function formatDate(date: Date): string {
   const year = date.getFullYear();
 
   return `${day}.${month}.${year}`;
-}
-
-function formatTime(date: Date): string {
-  return `${String(date.getHours()).padStart(2, "0")}:${String(date.getMinutes()).padStart(2, "0")}`;
 }
 
 function formatCzechList(items: string[]): string {
@@ -125,21 +121,50 @@ export function generateScopeStatement(
 
 export function getVyhlaskaRef(
   rezim: ObligationRegime,
-  sectionName: string,
+  sectionReference?: string | null,
 ): string {
   const cislo = rezim === "vyssi" ? "409" : "410";
+  const normalizedSection = normalizeVyhlaskaSectionRef(sectionReference);
+  const base = `Zákon č. 264/2025 Sb., o kybernetické bezpečnosti; vyhláška č. ${cislo}/2025 Sb.`;
 
-  return `Zákon č. 264/2025 Sb., o kybernetické bezpečnosti; vyhláška č. ${cislo}/2025 Sb., § ${sectionName}`;
+  return normalizedSection ? `${base}, ${normalizedSection}` : base;
 }
 
 function getVyhlaskaNumber(rezim: ObligationRegime): "409" | "410" {
   return rezim === "vyssi" ? "409" : "410";
 }
 
+function normalizeVyhlaskaSectionRef(reference: string | null | undefined): string | null {
+  const trimmed = reference?.trim();
+
+  if (!trimmed) {
+    return null;
+  }
+
+  const sectionRef = trimmed.startsWith("§") ? trimmed : `§ ${trimmed}`;
+
+  return /^§\s*\d+[a-zA-Z]?(?:\b|[\s().,;:–-])/.test(sectionRef)
+    ? sectionRef
+    : null;
+}
+
 function formatFrameworkMapping(mapping: FrameworkMapping): string {
   return mapping.title
     ? `${mapping.reference} — ${mapping.title}`
     : mapping.reference;
+}
+
+function formatZokbMapping(mapping: FrameworkMapping, org: Org): string {
+  const primary = `vyhláška č. ${getVyhlaskaNumber(org.rezimPovinnosti)}/2025 Sb.`;
+  const sectionRef = normalizeVyhlaskaSectionRef(mapping.reference);
+
+  if (!sectionRef) {
+    return primary;
+  }
+
+  return mapping.title
+    ? `${primary}, ${sectionRef} — ${mapping.title}`
+    : `${primary}, ${sectionRef}`;
 }
 
 function formatLegalReference(record: EvidenceRecord, org: Org): string {
@@ -154,11 +179,9 @@ function formatLegalReference(record: EvidenceRecord, org: Org): string {
   ].filter((reference): reference is string => Boolean(reference));
 
   if (zokbMappings.length > 0) {
-    const primary = zokbMappings
-      .map((mapping) =>
-        `vyhláška č. ${getVyhlaskaNumber(org.rezimPovinnosti)}/2025 Sb., ${formatFrameworkMapping(mapping)}`,
-      )
-      .join("; ");
+    const primary = Array.from(
+      new Set(zokbMappings.map((mapping) => formatZokbMapping(mapping, org))),
+    ).join("; ");
     const secondary = nis2References.length > 0
       ? ` (${Array.from(new Set(nis2References)).join("; ")})`
       : "";
@@ -167,7 +190,7 @@ function formatLegalReference(record: EvidenceRecord, org: Org): string {
   }
 
   if (legacyZokb) {
-    const primary = `vyhláška č. ${getVyhlaskaNumber(org.rezimPovinnosti)}/2025 Sb., ${legacyZokb}`;
+    const primary = getVyhlaskaRef(org.rezimPovinnosti, legacyZokb);
     return legacyNis2 ? `${primary} (${legacyNis2})` : primary;
   }
 
@@ -223,33 +246,33 @@ function resolveBranding(ctx: ReportContext) {
 
 function formatSource(record: EvidenceRecord): string {
   if (record.source === "connector" || record.source === "api") {
-    return `source=api (${record.connectorName ?? "Konektor"})`;
+    return `API/konektor: ${record.connectorName ?? "nezadaný konektor"}`;
   }
 
   if (record.source === "manual") {
-    return "source=manual (Sebehodnocení uživatele)";
+    return "Manuální podklad";
   }
 
   if (record.source === "intake") {
-    return "source=intake (Vstupní dotazník)";
+    return "Vstupní dotazník";
   }
 
   return "Importovaný záznam";
 }
 
 function getEvidenceTone(record: EvidenceRecord): EvidenceTone {
+  if (record.assessmentResult === "pass") {
+    return "pass";
+  }
+
   if (
-    record.assessmentResult === "pass" &&
-    (record.source === "connector" || record.source === "api")
+    record.assessmentResult === "gap" ||
+    (record.assessmentResult as string) === "fail"
   ) {
-    return "pass-api";
+    return "gap";
   }
 
-  if (record.assessmentResult === "pass" && record.source === "manual") {
-    return "pass-manual";
-  }
-
-  return "gap";
+  return "in-progress";
 }
 
 function evidenceDate(record: EvidenceRecord): Date {
@@ -260,7 +283,27 @@ function renderDefinitionRow(label: string, value: string): string {
   return `<dt>${escapeHtml(label)}</dt><dd>${value}</dd>`;
 }
 
-function renderEvidenceBlock(record: EvidenceRecord, org: Org): string {
+function formatProgressDescription(record: EvidenceRecord): string {
+  if (record.assessmentResult === "manual_review") {
+    return "Hodnocení probíhá; záznam vyžaduje ruční posouzení.";
+  }
+
+  if (record.assessmentResult === "warning") {
+    return "Hodnocení probíhá; záznam vyžaduje doplňující kontrolu.";
+  }
+
+  if (record.assessmentResult === "not_applicable") {
+    return "Opatření bylo označeno jako mimo aktuální rozsah.";
+  }
+
+  return "Hodnocení probíhá; výsledek zatím nebyl určen.";
+}
+
+function renderEvidenceBlock(
+  record: EvidenceRecord,
+  org: Org,
+  generatedAt: Date,
+): string {
   const tone = getEvidenceTone(record);
   const date = evidenceDate(record);
   const legalRef = formatLegalReference(record, org);
@@ -269,53 +312,76 @@ function renderEvidenceBlock(record: EvidenceRecord, org: Org): string {
     record.recommendation ??
     "Doplňte chybějící důkaz a ověřte splnění opatření odpovědnou osobou.";
 
-  if (tone === "pass-api") {
-    const finding = record.finding ?? "Automatická kontrola potvrdila splnění opatření.";
+  if (tone === "pass") {
+    const isManual = record.source === "manual";
+    const evidenceClass = isManual ? "evidence-pass-manual" : "evidence-pass-api";
+    const label = isManual
+      ? "Doloženo - manuálně posouzený podklad"
+      : "Doloženo - automaticky získaný podklad";
+    const finding = record.finding ?? "Stav je doložen dostupnými podklady.";
+    const status =
+      `Stav k datu generování (${formatDate(generatedAt)}) podle podkladů evidovaných dne ${formatDate(date)}. ${finding}`;
+
+    if (isManual) {
+      const attestation =
+        record.attestationText ?? "Organizace doložila stav opatření manuálně evidovaným podkladem.";
+
+      return `
+        <div class="evidence-block ${evidenceClass}">
+          <div class="block-header">
+            <span class="icon">☐</span>
+            <span class="label">${escapeHtml(label)}</span>
+          </div>
+          <dl>
+            ${renderDefinitionRow("Opatření", escapeHtml(record.controlName))}
+            ${renderDefinitionRow("Zdroj", escapeHtml(source))}
+            ${renderDefinitionRow("Stav", escapeHtml(`${status} ${attestation}`))}
+            ${renderDefinitionRow("Právní ref.", escapeHtml(legalRef))}
+          </dl>
+        </div>`;
+    }
 
     return `
-      <div class="evidence-block evidence-pass-api">
+      <div class="evidence-block ${evidenceClass}">
         <div class="block-header">
           <span class="icon">✓</span>
-          <span class="label">Splněno – Automaticky ověřeno</span>
+          <span class="label">${escapeHtml(label)}</span>
         </div>
         <dl>
           ${renderDefinitionRow("Opatření", escapeHtml(record.controlName))}
           ${renderDefinitionRow("Zdroj", escapeHtml(source))}
-          ${renderDefinitionRow("Stav", `Ověřeno dne ${escapeHtml(formatDate(date))} v ${escapeHtml(formatTime(date))} CEST. ${escapeHtml(finding)}`)}
+          ${renderDefinitionRow("Stav", escapeHtml(status))}
           ${renderDefinitionRow("Právní ref.", escapeHtml(legalRef))}
         </dl>
       </div>`;
   }
 
-  if (tone === "pass-manual") {
-    const attestation =
-      record.attestationText ?? "Organizace deklarovala splnění opatření formou sebehodnocení.";
+  if (tone === "in-progress") {
+    const progressDescription = record.finding ?? formatProgressDescription(record);
 
     return `
-      <div class="evidence-block evidence-pass-manual">
+      <div class="evidence-block evidence-in-progress">
         <div class="block-header">
-          <span class="icon">☐</span>
-          <span class="label">Deklarováno – Manuální čestné prohlášení</span>
+          <span class="icon">i</span>
+          <span class="label">Vyžaduje posouzení - hodnocení probíhá</span>
         </div>
         <dl>
           ${renderDefinitionRow("Opatření", escapeHtml(record.controlName))}
           ${renderDefinitionRow("Zdroj", escapeHtml(source))}
-          ${renderDefinitionRow("Stav", `Deklarováno zástupcem společnosti dne ${escapeHtml(formatDate(date))}. ${escapeHtml(attestation)}`)}
+          ${renderDefinitionRow("Stav", `Stav k datu generování (${escapeHtml(formatDate(generatedAt))}) vyžaduje posouzení. ${escapeHtml(progressDescription)} Podklad byl evidován dne ${escapeHtml(formatDate(date))}.`)}
           ${renderDefinitionRow("Právní ref.", escapeHtml(legalRef))}
         </dl>
       </div>`;
   }
 
   const gapDescription =
-    record.gapDescription ?? record.finding ?? "Opatření není podle dostupných důkazů splněno.";
-  const isMandatoryBreach = record.nukibTier === "mandatory_minimum";
-  const gapClass = isMandatoryBreach ? "evidence-breach" : "evidence-gap";
-  const gapLabel = isMandatoryBreach
-    ? "Nesplněno – Porušení neopominutelného opatření"
-    : "Nesplněno – Identifikovaná mezera";
+    record.gapDescription ??
+    record.finding ??
+    "Dostupné podklady ukazují na mezeru vůči zaznamenanému opatření.";
+  const gapLabel = "Identifikovaná mezera";
 
   return `
-    <div class="evidence-block ${gapClass}">
+    <div class="evidence-block evidence-gap">
       <div class="block-header">
         <span class="icon">!</span>
         <span class="label">${escapeHtml(gapLabel)}</span>
@@ -375,7 +441,7 @@ function renderEvidenceSections(ctx: ReportContext): string {
         .map(
           ([sectionTitle, records]) => `
             <h3>${escapeHtml(sectionTitle)}</h3>
-            ${records.map((record) => renderEvidenceBlock(record, ctx.org)).join("")}`,
+            ${records.map((record) => renderEvidenceBlock(record, ctx.org, ctx.generatedAt)).join("")}`,
         )
         .join("");
 
@@ -540,14 +606,14 @@ function renderStyles(primaryColour = "#0f766e"): string {
         border-color: #6b7280;
       }
 
+      .evidence-in-progress {
+        background: #f8fafc;
+        border-color: #64748b;
+      }
+
       .evidence-gap {
         background: #fffbeb;
         border-color: #b45309;
-      }
-
-      .evidence-breach {
-        background: #fef2f2;
-        border-color: #991b1b;
       }
 
       .block-header {
@@ -566,12 +632,12 @@ function renderStyles(primaryColour = "#0f766e"): string {
         color: #6b7280;
       }
 
-      .evidence-gap .icon {
-        color: #b45309;
+      .evidence-in-progress .icon {
+        color: #64748b;
       }
 
-      .evidence-breach .icon {
-        color: #991b1b;
+      .evidence-gap .icon {
+        color: #b45309;
       }
 
       dl {
@@ -609,9 +675,14 @@ function renderStyles(primaryColour = "#0f766e"): string {
 
 export function renderReportTemplate(ctx: ReportContext): string {
   const total = ctx.evidenceRecords.length;
-  const passed = ctx.evidenceRecords.filter((record) => record.assessmentResult === "pass").length;
-  const gaps = ctx.evidenceRecords.filter((record) => record.assessmentResult === "gap").length;
-  const compliancePct = total > 0 ? Math.round((passed / total) * 100) : 0;
+  const tones = ctx.evidenceRecords.map(getEvidenceTone);
+  const passed = tones.filter((tone) => tone === "pass").length;
+  const gaps = tones.filter((tone) => tone === "gap").length;
+  const inProgress = tones.filter((tone) => tone === "in-progress").length;
+  const evidencePosture = total > 0
+    ? `${Math.round((passed / total) * 100)} % doloženo`
+    : "dosud nehodnoceno";
+  const vyhlaskaNumber = getVyhlaskaNumber(ctx.org.rezimPovinnosti);
   const rezimLabel =
     ctx.org.rezimPovinnosti === "vyssi"
       ? "Vyšší povinnosti (vyhláška č. 409/2025 Sb.)"
@@ -632,7 +703,7 @@ export function renderReportTemplate(ctx: ReportContext): string {
         <section class="cover">
           <div class="logo-row">${branding.logoHtml}</div>
           <h1>Zpráva o hodnocení stavu kybernetické bezpečnosti (NIS2 / ZoKB)</h1>
-          <p class="subtitle">Přehled bezpečnostních opatření dle § 3 odst. 2 vyhl. č. 410/2025 Sb.</p>
+          <p class="subtitle">Přehled bezpečnostních opatření dle vyhlášky č. ${vyhlaskaNumber}/2025 Sb.</p>
 
           <dl class="identity-grid">
             ${renderDefinitionRow("Název společnosti", escapeHtml(ctx.org.name))}
@@ -652,15 +723,19 @@ export function renderReportTemplate(ctx: ReportContext): string {
         <table class="summary-table">
           <tbody>
             <tr>
-              <th>Celková shoda</th>
-              <td>${escapeHtml(compliancePct)} %</td>
+              <th>Stav doložených opatření</th>
+              <td>${escapeHtml(evidencePosture)}</td>
             </tr>
             <tr>
-              <th>Počet splněných opatření</th>
+              <th>Počet doložených opatření</th>
               <td>${escapeHtml(passed)}</td>
             </tr>
             <tr>
-              <th>Počet kritických mezer</th>
+              <th>Počet opatření k posouzení</th>
+              <td>${escapeHtml(inProgress)}</td>
+            </tr>
+            <tr>
+              <th>Počet identifikovaných mezer</th>
               <td>${escapeHtml(gaps)}</td>
             </tr>
           </tbody>

@@ -179,6 +179,22 @@ function fixtureEvidence(): EvidenceRecord[] {
         recommendation: "Jmenujte odpovědnou osobu a doložte aktuální školení.",
         source: "manual",
       },
+      {
+        assessmentResult: "manual_review",
+        assessedAt: generatedAt,
+        collectedAt: generatedAt,
+        controlId: "ctrl_vendor_security_assessment",
+        controlKey: "ctrl_vendor_security_assessment",
+        controlName: "Bezpečnostní hodnocení dodavatelů",
+        evidenceId: "ev_vendor_assessment_manual_review",
+        finding: "Hodnocení dodavatelů bylo založeno, ale čeká na posouzení.",
+        nukibBlock: {
+          blockTitle: "§ Organizační bezpečnost",
+          sectionTitle: "Řízení dodavatelů",
+        },
+        nukibTier: "mandatory_minimum",
+        source: "manual",
+      },
     ];
   }
 
@@ -189,6 +205,43 @@ function fixtureContext(rezimPovinnosti: "nizsi" | "vyssi"): ReportContext {
     generatedAt,
     org: fixtureOrg(rezimPovinnosti),
     workspaceNames: ["Pohoda EKO"],
+  };
+}
+
+function manualReviewOnlyContext(): ReportContext {
+  return {
+    connectorNames: [],
+    evidenceRecords: [
+      {
+        assessmentResult: "manual_review",
+        assessedAt: generatedAt,
+        collectedAt: generatedAt,
+        controlId: "ctrl_manual_review_only",
+        controlKey: "ctrl_manual_review_only",
+        controlName: "Bezpečnostní hodnocení dodavatelů",
+        evidenceId: "ev_manual_review_only",
+        finding: "Dodavatelské hodnocení čeká na ruční posouzení.",
+        nukibBlock: {
+          blockTitle: "§ Organizační bezpečnost",
+          sectionTitle: "Řízení rizik",
+        },
+        nukibTier: "mandatory_minimum",
+        source: "manual",
+      },
+    ],
+    generatedAt,
+    org: fixtureOrg("nizsi"),
+    workspaceNames: [],
+  };
+}
+
+function emptyContext(): ReportContext {
+  return {
+    connectorNames: [],
+    evidenceRecords: [],
+    generatedAt,
+    org: fixtureOrg("nizsi"),
+    workspaceNames: [],
   };
 }
 
@@ -319,22 +372,23 @@ function assertHtml(html: string) {
   assert.match(html, /Datum vygenerování/, "HTML contains Czech generated date label.");
   assert.match(html, /Verze dokumentu/, "HTML contains Czech document version label.");
   assert.match(html, /Režim povinností/, "HTML contains Czech obligation regime label.");
-  assert.match(html, /Celková shoda/, "HTML contains Czech compliance summary label.");
-  assert.match(html, /Počet splněných opatření/, "HTML contains Czech passed controls label.");
-  assert.match(html, /Počet kritických mezer/, "HTML contains Czech gap count label.");
+  assert.match(html, /Stav doložených opatření/, "HTML contains honest evidence posture label.");
+  assert.match(html, /Počet doložených opatření/, "HTML contains Czech evidenced controls label.");
+  assert.match(html, /Počet identifikovaných mezer/, "HTML contains Czech gap count label.");
+  assert.match(html, /Počet opatření k posouzení/, "HTML contains Czech in-progress count label.");
   assert.match(html, /Zdroj/, "HTML contains Czech source label.");
   assert.match(html, /Stav/, "HTML contains Czech status label.");
   assert.match(html, /Právní ref\./, "HTML contains Czech legal reference label.");
   assert.match(
     html,
-    /Přehled bezpečnostních opatření dle § 3 odst\. 2 vyhl\. č\. 410\/2025 Sb\./,
+    /Přehled bezpečnostních opatření dle vyhlášky č\. 410\/2025 Sb\./,
     "HTML contains NÚKIB přehled subtitle.",
   );
   assert.match(html, /Doporučení/, "HTML contains Czech recommendation label.");
   assert.match(html, /evidence-pass-api/, "HTML contains green block class.");
   assert.match(
     html,
-    /source=api \(Konektor Hetzner Cloud\)/,
+    /API\/konektor: Konektor Hetzner Cloud/,
     "HTML contains Czech Hetzner connector source label.",
   );
   assert.match(
@@ -344,16 +398,37 @@ function assertHtml(html: string) {
   );
   assert.match(html, /evidence-pass-manual/, "HTML contains grey block class.");
   assert.match(html, /evidence-gap/, "HTML contains amber block class.");
-  assert.match(html, /evidence-breach/, "HTML contains red mandatory breach class.");
+  assert.match(html, /evidence-in-progress/, "HTML contains neutral in-progress block class.");
   assert.match(
     html,
     /vyhláška č\. 410\/2025 Sb\., § 6 — Řízení kontinuity činností \(Article 21\(2\)\(c\)\)/,
     "HTML renders ZoKB reference before NIS2 reference.",
   );
-  assert.match(html, /Splněno/, "HTML contains Czech pass status.");
-  assert.match(html, /Deklarováno/, "HTML contains Czech manual declaration status.");
-  assert.match(html, /Nesplněno/, "HTML contains Czech gap status.");
-  assert.doesNotMatch(html, /Source:|Status:|Legal ref:/, "HTML contains no English labels.");
+  assert.match(html, /Doloženo/, "HTML contains Czech evidenced status.");
+  assert.match(html, /Vyžaduje posouzení/, "HTML contains Czech in-progress status.");
+  assert.match(html, /Identifikovaná mezera/, "HTML contains Czech gap status.");
+  assert.doesNotMatch(html, /Source:|Status:|Legal ref:|source=/, "HTML contains no English or code-like labels.");
+  assert.doesNotMatch(html, /CEST/, "HTML does not hardcode the CEST timezone.");
+  assert.doesNotMatch(
+    html,
+    /Automatická kontrola potvrdila splnění opatření|Automaticky ověřeno/,
+    "HTML avoids certification-like automated verification wording.",
+  );
+}
+
+function renderedGapCount(html: string): number {
+  return (html.match(/<div class="evidence-block evidence-gap">/g) ?? []).length;
+}
+
+function assertSummaryCount(html: string, label: string, expected: number | string) {
+  const escapedLabel = label.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+  const escapedExpected = String(expected).replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+
+  assert.match(
+    html,
+    new RegExp(`<th>${escapedLabel}</th>\\s*<td>${escapedExpected}</td>`),
+    `Summary row "${label}" should equal ${expected}.`,
+  );
 }
 
 async function main() {
@@ -367,6 +442,8 @@ async function main() {
 
     const nizsiHtml = renderReportTemplate(fixtureContext("nizsi"));
     const vyssiHtml = renderReportTemplate(fixtureContext("vyssi"));
+    const manualReviewOnlyHtml = renderReportTemplate(manualReviewOnlyContext());
+    const emptyHtml = renderReportTemplate(emptyContext());
     const agencyBrandedHtml = renderReportTemplate({
       ...fixtureContext("nizsi"),
       agencyBranding: {
@@ -421,8 +498,54 @@ async function main() {
     );
     assert.match(
       vyssiHtml,
-      /vyhláška č\. 409\/2025 Sb\./,
-      "HTML contains higher-obligation vyhláška reference.",
+      /Přehled bezpečnostních opatření dle vyhlášky č\. 409\/2025 Sb\./,
+      "HTML subtitle contains higher-obligation vyhláška reference.",
+    );
+    assert.doesNotMatch(
+      vyssiHtml,
+      /Přehled bezpečnostních opatření dle vyhlášky č\. 410\/2025 Sb\./,
+      "Higher-obligation subtitle must not cite the lower-obligation decree.",
+    );
+    assert.match(
+      manualReviewOnlyHtml,
+      /Vyžaduje posouzení|hodnocení probíhá/,
+      "Manual-review-only report renders in-progress wording.",
+    );
+    assert.doesNotMatch(
+      manualReviewOnlyHtml,
+      /Porušení|Nesplněno|evidence-breach/,
+      "Manual-review-only report never renders breach or violation wording.",
+    );
+    assert.doesNotMatch(
+      manualReviewOnlyHtml,
+      /§ Řízení rizik/,
+      "Fallback legal references do not print section titles as section numbers.",
+    );
+    assert.equal(
+      renderedGapCount(manualReviewOnlyHtml),
+      0,
+      "Manual-review-only report renders zero gap blocks.",
+    );
+    assertSummaryCount(manualReviewOnlyHtml, "Počet identifikovaných mezer", 0);
+    assert.match(
+      emptyHtml,
+      /dosud nehodnoceno/,
+      "Empty report renders not-yet-assessed instead of a percentage.",
+    );
+    assert.doesNotMatch(
+      emptyHtml,
+      /<td>0 %<\/td>/,
+      "Empty report never renders 0% as an evidence posture.",
+    );
+    assert.equal(
+      renderedGapCount(nizsiHtml),
+      2,
+      "Mixed report renders only explicit gap/fail evidence as gap blocks.",
+    );
+    assertSummaryCount(
+      nizsiHtml,
+      "Počet identifikovaných mezer",
+      renderedGapCount(nizsiHtml),
     );
 
     assert.equal(
