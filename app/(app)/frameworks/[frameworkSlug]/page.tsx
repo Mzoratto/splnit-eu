@@ -1,4 +1,5 @@
 import Link from "next/link";
+import * as Sentry from "@sentry/nextjs";
 import { auth } from "@clerk/nextjs/server";
 import { getLocale } from "next-intl/server";
 import { notFound } from "next/navigation";
@@ -22,6 +23,7 @@ import { TemplateSection } from "@/components/templates/template-section";
 import { getMessagesForLocale } from "@/i18n/messages";
 import { normalizeLocale, type Locale } from "@/i18n/routing";
 import { getControlDisplayTitle } from "@/lib/controls/localization";
+import { calculateWeightedControlScore } from "@/lib/controls/scorer";
 import { CONTROL_LIBRARY } from "@/lib/controls/library";
 import { hasDatabaseUrl } from "@/lib/db";
 import { getFrameworkDetail } from "@/lib/db/queries/framework-assessment";
@@ -145,27 +147,7 @@ function getFallbackControls(frameworkSlug: string): FrameworkControl[] {
 }
 
 function calculateScore(controls: FrameworkControl[]) {
-  const relevantControls = controls.filter(
-    (control) => control.status !== "not_applicable",
-  );
-
-  if (relevantControls.length === 0) {
-    return 100;
-  }
-
-  const total = relevantControls.reduce((sum, control) => {
-    if (control.status === "pass") {
-      return sum + 1;
-    }
-
-    if (control.status === "manual_review" || control.status === "warning") {
-      return sum + 0.5;
-    }
-
-    return sum;
-  }, 0);
-
-  return Math.round((total / relevantControls.length) * 100);
+  return calculateWeightedControlScore(controls.map((control) => control.status));
 }
 
 async function loadFrameworkData(frameworkSlug: string) {
@@ -198,7 +180,9 @@ async function loadFrameworkData(frameworkSlug: string) {
       organisationLocale: organisation?.locale ?? null,
       smartDocumentsEnabled,
     };
-  } catch {
+  } catch (error) {
+    Sentry.captureException(error);
+    console.error("framework detail: loadFrameworkData failed", error);
     return null;
   }
 }

@@ -1,4 +1,5 @@
 import Link from "next/link";
+import * as Sentry from "@sentry/nextjs";
 import { auth, currentUser } from "@clerk/nextjs/server";
 import { getLocale } from "next-intl/server";
 import {
@@ -100,7 +101,10 @@ async function loadDashboardData() {
 
   try {
     return await getDashboardData(session.orgId);
-  } catch {
+  } catch (error) {
+    // Surface the failure — otherwise a DB outage silently degrades to demo data.
+    Sentry.captureException(error);
+    console.error("dashboard: getDashboardData failed", error);
     return null;
   }
 }

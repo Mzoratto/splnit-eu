@@ -1,4 +1,5 @@
 import Link from "next/link";
+import * as Sentry from "@sentry/nextjs";
 import { auth } from "@clerk/nextjs/server";
 import { getLocale } from "next-intl/server";
 import { ArrowRight, BookCheck, CircleHelp } from "lucide-react";
@@ -189,53 +190,28 @@ async function loadControlsIndexData() {
     const moneyS3Recommended = workspaceRecommendations.some((r) => r.platformKey === "money_s3");
     const abraFlexiRecommended = workspaceRecommendations.some((r) => r.platformKey === "abra-flexi");
 
-    let pohodaCompletionPct: number | null = null;
-    if (pohodaRecommended) {
-      try {
-        const progress = await getWorkspaceProgress(session.orgId, pohodaWorkspace);
-        if (progress.completedControls > 0) {
-          pohodaCompletionPct = progress.overallCompletionPct;
-        }
-      } catch {
-        // workspace progress unavailable — show card without percentage
+    // Progress lookups are independent — run them in parallel. On failure,
+    // show the workspace card without a percentage.
+    const orgId = session.orgId;
+    const loadCompletionPct = async (recommended: boolean, workspace: Parameters<typeof getWorkspaceProgress>[1]) => {
+      if (!recommended) {
+        return null;
       }
-    }
+      try {
+        const progress = await getWorkspaceProgress(orgId, workspace);
+        return progress.completedControls > 0 ? progress.overallCompletionPct : null;
+      } catch {
+        return null;
+      }
+    };
 
-    let heliosCompletionPct: number | null = null;
-    if (heliosRecommended) {
-      try {
-        const progress = await getWorkspaceProgress(session.orgId, heliosWorkspace);
-        if (progress.completedControls > 0) {
-          heliosCompletionPct = progress.overallCompletionPct;
-        }
-      } catch {
-        // workspace progress unavailable — show card without percentage
-      }
-    }
-
-    let moneyS3CompletionPct: number | null = null;
-    if (moneyS3Recommended) {
-      try {
-        const progress = await getWorkspaceProgress(session.orgId, moneyS3Workspace);
-        if (progress.completedControls > 0) {
-          moneyS3CompletionPct = progress.overallCompletionPct;
-        }
-      } catch {
-        // workspace progress unavailable — show card without percentage
-      }
-    }
-
-    let abraFlexiCompletionPct: number | null = null;
-    if (abraFlexiRecommended) {
-      try {
-        const progress = await getWorkspaceProgress(session.orgId, abraFlexiWorkspace);
-        if (progress.completedControls > 0) {
-          abraFlexiCompletionPct = progress.overallCompletionPct;
-        }
-      } catch {
-        // workspace progress unavailable — show card without percentage
-      }
-    }
+    const [pohodaCompletionPct, heliosCompletionPct, moneyS3CompletionPct, abraFlexiCompletionPct] =
+      await Promise.all([
+        loadCompletionPct(pohodaRecommended, pohodaWorkspace),
+        loadCompletionPct(heliosRecommended, heliosWorkspace),
+        loadCompletionPct(moneyS3Recommended, moneyS3Workspace),
+        loadCompletionPct(abraFlexiRecommended, abraFlexiWorkspace),
+      ]);
 
     return {
       controls,
@@ -258,7 +234,9 @@ async function loadControlsIndexData() {
         : [],
       workspaceRecommendations,
     };
-  } catch {
+  } catch (error) {
+    Sentry.captureException(error);
+    console.error("controls: loadControlsIndexData failed", error);
     return demoData;
   }
 }

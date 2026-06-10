@@ -701,7 +701,18 @@ export const evidence = pgTable("evidence", {
   description: text("description"),
   collectedBy: text("collected_by"),
   collectedAt: timestamp("collected_at", { withTimezone: true }).defaultNow(),
-});
+},
+  (table) => [
+    check(
+      "evidence_assessment_result_check",
+      sql`${table.assessmentResult} IN ('pass', 'gap', 'warning', 'manual_review', 'not_applicable', 'unknown')`,
+    ),
+    check(
+      "evidence_collection_status_check",
+      sql`${table.collectionStatus} IN ('collected', 'blocked', 'pending', 'failed')`,
+    ),
+  ],
+);
 
 export const generatedArtifacts = pgTable(
   "generated_artifacts",
@@ -731,7 +742,9 @@ export const orgControlStatuses = pgTable(
   "org_control_statuses",
   {
     id: uuid("id").primaryKey().defaultRandom(),
-    clerkOrgId: text("clerk_org_id").notNull(),
+    clerkOrgId: text("clerk_org_id")
+      .notNull()
+      .references(() => organisations.clerkOrgId, { onDelete: "cascade" }),
     controlId: uuid("control_id")
       .notNull()
       .references(() => controls.id),
@@ -742,7 +755,13 @@ export const orgControlStatuses = pgTable(
     notes: text("notes"),
     updatedAt: timestamp("updated_at", { withTimezone: true }).defaultNow(),
   },
-  (table) => [unique().on(table.clerkOrgId, table.controlId)],
+  (table) => [
+    unique().on(table.clerkOrgId, table.controlId),
+    check(
+      "org_control_statuses_status_check",
+      sql`${table.status} IN ('unknown', 'pass', 'fail', 'warning', 'error', 'manual_review', 'not_applicable', 'out_of_scope')`,
+    ),
+  ],
 );
 
 export const policies = pgTable("policies", {

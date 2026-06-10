@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { z } from "zod";
+import { enforceIpRateLimit, getClientIp } from "@/lib/http/rate-limit";
 
 const newsletterSchema = z.object({
   email: z.string().email().max(254),
@@ -7,6 +8,20 @@ const newsletterSchema = z.object({
 });
 
 export async function POST(request: Request) {
+  const { allowed } = await enforceIpRateLimit({
+    ip: getClientIp(request.headers),
+    limit: 10,
+    scope: "newsletter",
+    windowSeconds: 600,
+  });
+
+  if (!allowed) {
+    return NextResponse.json(
+      { error: "Too many requests. Try again later." },
+      { status: 429 },
+    );
+  }
+
   let payload: unknown;
 
   try {

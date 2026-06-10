@@ -1,8 +1,10 @@
 "use server";
 
+import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 import { z } from "zod";
 import { createTrustCenterRequest } from "@/lib/db/queries/trust-center";
+import { enforceIpRateLimit, getClientIp } from "@/lib/http/rate-limit";
 import { sendTrustCenterRequestEmail } from "@/lib/trust-center/notifications";
 
 const requestSchema = z.object({
@@ -23,6 +25,17 @@ export async function requestTrustCenterAccessAction(
   orgSlug: string,
   formData: FormData,
 ) {
+  const { allowed } = await enforceIpRateLimit({
+    ip: getClientIp(await headers()),
+    limit: 5,
+    scope: "trust-center-request",
+    windowSeconds: 600,
+  });
+
+  if (!allowed) {
+    throw new Error("Too many requests. Try again later.");
+  }
+
   const parsed = requestSchema.parse({
     company: getStringValue(formData, "company"),
     email: getStringValue(formData, "email"),

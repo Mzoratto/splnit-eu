@@ -1,4 +1,5 @@
 import Link from "next/link";
+import * as Sentry from "@sentry/nextjs";
 import { auth } from "@clerk/nextjs/server";
 import { getLocale } from "next-intl/server";
 import { ArrowRight, FileText, Plus, ShieldAlert } from "lucide-react";
@@ -46,8 +47,16 @@ async function loadVendors() {
   }
 
   const [organisation, vendors, smartDocumentsEnabled] = await Promise.all([
-    getOrganisationByClerkOrgId(session.orgId).catch(() => null),
-    listVendorsForOrg(session.orgId).catch(() => null),
+    getOrganisationByClerkOrgId(session.orgId).catch((error) => {
+      Sentry.captureException(error);
+      console.error("vendors: getOrganisationByClerkOrgId failed", error);
+      return null;
+    }),
+    listVendorsForOrg(session.orgId).catch((error) => {
+      Sentry.captureException(error);
+      console.error("vendors: listVendorsForOrg failed", error);
+      return null;
+    }),
     isFeatureEnabled(session.orgId, FLAGS.SMART_DOCUMENT_GENERATION),
   ]);
 

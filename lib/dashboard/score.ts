@@ -1,3 +1,5 @@
+import { calculateWeightedControlScore } from "@/lib/controls/scorer";
+
 export function calculateComplianceScore(input: {
   frameworkScores: { score: number | null }[];
   statusRows: { status: string }[];
@@ -13,14 +15,8 @@ export function calculateComplianceScore(input: {
     );
   }
 
-  const relevantRows = input.statusRows.filter(
-    (row) => row.status !== "not_applicable" && row.status !== "out_of_scope",
+  return calculateWeightedControlScore(
+    input.statusRows.map((row) => row.status),
+    { emptyScore: 0 },
   );
-
-  if (relevantRows.length === 0) {
-    return 0;
-  }
-
-  const passing = relevantRows.filter((row) => row.status === "pass").length;
-  return Math.round((passing / relevantRows.length) * 100);
 }

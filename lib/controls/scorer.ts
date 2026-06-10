@@ -6,11 +6,39 @@ import {
   orgFrameworks,
 } from "@/lib/db/schema";
 
+/**
+ * Canonical control score weighting: manual_review and warning count as
+ * half-compliant. Used by the persisted framework scorer, the dashboard
+ * fallback score, and the framework detail fallback — keep in sync via
+ * calculateWeightedControlScore, do not reimplement.
+ */
 const PASSING_WEIGHT: Record<string, number> = {
   manual_review: 0.5,
   pass: 1,
   warning: 0.5,
 };
+
+const EXCLUDED_STATUSES = new Set(["not_applicable", "out_of_scope"]);
+
+export function calculateWeightedControlScore(
+  statuses: Array<string | null | undefined>,
+  options: { emptyScore?: number } = {},
+): number {
+  const applicable = statuses.filter(
+    (status) => !EXCLUDED_STATUSES.has(status ?? "unknown"),
+  );
+
+  if (applicable.length === 0) {
+    return options.emptyScore ?? 100;
+  }
+
+  const weightedPassing = applicable.reduce(
+    (total, status) => total + (PASSING_WEIGHT[status ?? "unknown"] ?? 0),
+    0,
+  );
+
+  return Math.round((weightedPassing / applicable.length) * 100);
+}
 
 export async function recalculateFrameworkScore(
   clerkOrgId: string,
@@ -41,30 +69,9 @@ export async function recalculateFrameworkScore(
     statuses.map((status) => [status.controlId, status.status] as const),
   );
 
-  const applicableMappings = mappings.filter(
-    (mapping) => statusMap.get(mapping.controlId) !== "not_applicable",
+  const score = calculateWeightedControlScore(
+    mappings.map((mapping) => statusMap.get(mapping.controlId) ?? "unknown"),
   );
-
-  if (applicableMappings.length === 0) {
-    await db
-      .update(orgFrameworks)
-      .set({ score: 100 })
-      .where(
-        and(
-          eq(orgFrameworks.clerkOrgId, clerkOrgId),
-          eq(orgFrameworks.frameworkId, frameworkId),
-        ),
-      );
-
-    return 100;
-  }
-
-  const weightedPassing = applicableMappings.reduce((total, mapping) => {
-    const status = statusMap.get(mapping.controlId) ?? "unknown";
-    return total + (PASSING_WEIGHT[status] ?? 0);
-  }, 0);
-
-  const score = Math.round((weightedPassing / applicableMappings.length) * 100);
 
   await db
     .update(orgFrameworks)
