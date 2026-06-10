@@ -1397,17 +1397,23 @@
     "assessment": {
       "title": "Valutazione in 12 domande",
       "save": "Salva valutazione",
+      "selectPlaceholder": "Scegli una risposta",
+      "noApplicableFindings": "nessun rilievo applicabile",
       "answers": {
         "yes": "Sì",
         "partial": "Parziale",
-        "no": "No"
+        "no": "No",
+        "not_applicable": "Non applicabile"
+      },
+      "questionNotes": {
+        "data_processing": "Questa risposta descrive l'esposizione intrinseca legata al trattamento dei dati. Non indica, da sola, una carenza di maturità."
       },
       "questions": {
         "security_owner": "Il fornitore ha un responsabile sicurezza nominato?",
         "iso_certification": "Il fornitore ha ISO 27001, SOC 2 o un audit equivalente?",
         "data_processing": "Il fornitore tratta dati personali o sensibili?",
         "subprocessors": "Il fornitore fornisce l'elenco dei sub-responsabili?",
-        "incident_notice": "Il contratto richiede la notifica degli incidenti entro 24 ore?",
+        "incident_notice": "Il contratto richiede la notifica degli incidenti di sicurezza al cliente?",
         "access_control": "Il fornitore usa MFA e revisioni accessi regolari?",
         "encryption": "Il fornitore cifra i dati in transito e a riposo?",
         "backup_recovery": "Il fornitore testa backup e disaster recovery?",
@@ -1455,7 +1461,8 @@
   },
   "vendorAssessmentPage": {
     "eyebrow": "Valutazione fornitore",
-    "requestDescription": "{organisation} richiede la compilazione di un questionario di sicurezza supply chain.",
+    "requestDescription": "{organisation} richiede la compilazione di un questionario di sicurezza del fornitore.",
+    "context": "Il questionario supporta la valutazione dei rischi di sicurezza dei fornitori in ambito NIS2. Il richiedente è {organisation}; le risposte sono usate per una valutazione interna e non sono pubbliche.",
     "submitted": "Il questionario è stato inviato.",
     "submit": "Invia valutazione"
   },

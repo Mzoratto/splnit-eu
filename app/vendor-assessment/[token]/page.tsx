@@ -107,6 +107,11 @@ export default async function VendorAssessmentPage({
               organisation: data.organisation.name,
             })}
           </p>
+          <p className="mt-3 text-sm text-foreground/64">
+            {formatMessage(pageCopy.context, {
+              organisation: data.organisation.name,
+            })}
+          </p>
           {query.submitted === "1" ? (
             <p className="mt-4 inline-flex rounded-md bg-emerald-50 px-3 py-2 text-sm text-emerald-800">
               {pageCopy.submitted}
@@ -122,26 +127,43 @@ export default async function VendorAssessmentPage({
             <label
               key={question.id}
               className="grid gap-2 rounded-md border border-border p-3 text-sm md:grid-cols-[1fr_180px]"
-              >
+            >
+              <span>
                 <span>
                   {index + 1}.{" "}
                   {assessmentCopy.questions[
                     question.id as keyof typeof assessmentCopy.questions
                   ] ?? question.id}
                 </span>
-                <select
-                  name={question.id}
-                  defaultValue="partial"
-                  className="rounded-md border border-border bg-background px-3 py-2"
-                >
-                  {VENDOR_ANSWER_VALUES.map((value) => (
-                    <option key={value} value={value}>
-                      {assessmentCopy.answers[value]}
-                    </option>
-                  ))}
-                </select>
-              </label>
-            ))}
+                {assessmentCopy.questionNotes[
+                  question.id as keyof typeof assessmentCopy.questionNotes
+                ] ? (
+                  <span className="mt-1 block text-xs text-foreground/58">
+                    {
+                      assessmentCopy.questionNotes[
+                        question.id as keyof typeof assessmentCopy.questionNotes
+                      ]
+                    }
+                  </span>
+                ) : null}
+              </span>
+              <select
+                name={question.id}
+                defaultValue=""
+                required
+                className="rounded-md border border-border bg-background px-3 py-2"
+              >
+                <option value="" disabled>
+                  {assessmentCopy.selectPlaceholder}
+                </option>
+                {VENDOR_ANSWER_VALUES.map((value) => (
+                  <option key={value} value={value}>
+                    {assessmentCopy.answers[value]}
+                  </option>
+                ))}
+              </select>
+            </label>
+          ))}
           <button
             type="submit"
             className="inline-flex items-center gap-2 rounded-md bg-primary px-4 py-3 text-sm font-medium text-primary-foreground"

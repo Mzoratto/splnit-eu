@@ -9,6 +9,7 @@ import { getOrganisationByClerkOrgId } from "@/lib/db/queries/organisations";
 import { getVendorDetail } from "@/lib/db/queries/vendors";
 import {
   VENDOR_ASSESSMENT_QUESTIONS,
+  VENDOR_ANSWER_VALUES,
 } from "@/lib/vendors/questions";
 import {
   saveVendorAssessmentAction,
@@ -72,7 +73,10 @@ function getAnswer(
   key: string,
 ) {
   const value = answers?.[key];
-  return typeof value === "string" ? value : "partial";
+  return typeof value === "string" &&
+    (VENDOR_ANSWER_VALUES as readonly string[]).includes(value)
+    ? value
+    : "";
 }
 
 function getDeliveryValue(
@@ -185,20 +189,37 @@ export default async function VendorDetailPage({
                 className="grid gap-2 rounded-md border border-border p-3 text-sm md:grid-cols-[1fr_180px]"
               >
                 <span>
-                  {index + 1}.{" "}
-                  {copy.assessment.questions[
-                    question.id as keyof typeof copy.assessment.questions
-                  ] ?? question.id}
+                  <span>
+                    {index + 1}.{" "}
+                    {copy.assessment.questions[
+                      question.id as keyof typeof copy.assessment.questions
+                    ] ?? question.id}
+                  </span>
+                  {copy.assessment.questionNotes[
+                    question.id as keyof typeof copy.assessment.questionNotes
+                  ] ? (
+                    <span className="mt-1 block text-xs text-foreground/58">
+                      {
+                        copy.assessment.questionNotes[
+                          question.id as keyof typeof copy.assessment.questionNotes
+                        ]
+                      }
+                    </span>
+                  ) : null}
                 </span>
                 <select
                   name={question.id}
                   defaultValue={getAnswer(latestAssessment?.answers, question.id)}
+                  required
                   disabled={!canMutate}
                   className="rounded-md border border-border bg-background px-3 py-2"
                 >
-                  {Object.entries(copy.assessment.answers).map(([value, label]) => (
+                  <option value="" disabled>
+                    {copy.assessment.selectPlaceholder}
+                  </option>
+                  {VENDOR_ANSWER_VALUES.map((value) => (
                     <option key={value} value={value}>
-                      {label}
+                      {copy.assessment.answers[value]}
                     </option>
                   ))}
                 </select>
@@ -292,7 +313,10 @@ export default async function VendorDetailPage({
                 detail.assessments.map((assessment) => (
                   <div key={assessment.id} className="p-5">
                     <p className="font-medium">
-                      {assessment.score ?? "-"}% · {assessment.status}
+                      {assessment.score === null
+                        ? copy.assessment.noApplicableFindings
+                        : `${assessment.score}%`}{" "}
+                      · {assessment.status}
                     </p>
                     <p className="mt-1 text-sm text-foreground/58">
                       {formatDate(assessment.assessedAt, locale, copy.noDate)}

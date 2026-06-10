@@ -13,7 +13,10 @@ import {
   updateVendorQuestionnaireDelivery,
 } from "@/lib/db/queries/vendors";
 import { createVendorAssessmentToken } from "@/lib/vendors/access";
-import { VENDOR_ASSESSMENT_QUESTIONS } from "@/lib/vendors/questions";
+import {
+  requireVendorAssessmentAnswers,
+  VENDOR_ASSESSMENT_QUESTIONS,
+} from "@/lib/vendors/questions";
 import { sendVendorQuestionnaireEmail } from "@/lib/vendors/notifications";
 import {
   getVendorQuestionnaireDeliveryMetadata,
@@ -76,12 +79,13 @@ export async function saveVendorAssessmentAction(
   formData: FormData,
 ) {
   const session = await requireActiveSession();
-  const answers = Object.fromEntries(
+  const rawAnswers = Object.fromEntries(
     VENDOR_ASSESSMENT_QUESTIONS.map((question) => [
       question.id,
       getStringValue(formData, question.id),
     ]),
   );
+  const answers = requireVendorAssessmentAnswers(rawAnswers);
 
   await saveVendorAssessment({
     answers,

@@ -3,6 +3,7 @@ import { getDb } from "@/lib/db";
 import { organisations, vendorAssessments, vendors } from "@/lib/db/schema";
 import {
   getVendorRiskTier,
+  requireVendorAssessmentAnswers,
   scoreVendorAnswers,
 } from "@/lib/vendors/questions";
 
@@ -109,7 +110,7 @@ export async function saveVendorAssessment(input: {
 }) {
   const db = getDb();
   const vendorRows = await db
-    .select({ id: vendors.id })
+    .select({ id: vendors.id, riskTier: vendors.riskTier })
     .from(vendors)
     .where(
       and(
@@ -123,8 +124,9 @@ export async function saveVendorAssessment(input: {
     throw new Error("Vendor not found.");
   }
 
-  const score = scoreVendorAnswers(input.answers);
-  const riskTier = getVendorRiskTier(score);
+  const answers = requireVendorAssessmentAnswers(input.answers);
+  const score = scoreVendorAnswers(answers);
+  const riskTier = score === null ? vendorRows[0].riskTier : getVendorRiskTier(score);
   const assessedAt = new Date();
   const nextReviewAt = new Date(assessedAt);
   nextReviewAt.setUTCMonth(nextReviewAt.getUTCMonth() + 12);
@@ -132,7 +134,7 @@ export async function saveVendorAssessment(input: {
   const [assessment] = await db
     .insert(vendorAssessments)
     .values({
-      answers: input.answers,
+      answers,
       assessedAt,
       assessedBy: input.assessedBy ?? null,
       clerkOrgId: input.clerkOrgId,
@@ -309,8 +311,9 @@ export async function submitVendorAssessmentByToken(input: {
 
   const data = result.data;
 
-  const score = scoreVendorAnswers(input.answers);
-  const riskTier = getVendorRiskTier(score);
+  const answers = requireVendorAssessmentAnswers(input.answers);
+  const score = scoreVendorAnswers(answers);
+  const riskTier = score === null ? data.vendor.riskTier : getVendorRiskTier(score);
   const assessedAt = new Date();
   const nextReviewAt = new Date(assessedAt);
   nextReviewAt.setUTCMonth(nextReviewAt.getUTCMonth() + 12);
@@ -319,7 +322,7 @@ export async function submitVendorAssessmentByToken(input: {
   const [assessment] = await db
     .update(vendorAssessments)
     .set({
-      answers: input.answers,
+      answers,
       assessedAt,
       assessedBy: "vendor_reported_manual_review",
       score,

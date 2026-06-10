@@ -249,6 +249,22 @@ export async function generateVendorReportXLSX(input: {
     { critical: 0, high: 0, low: 0, medium: 0 },
   );
 
+  function formatVendorAssessmentScore(row: VendorReportRow) {
+    const latestAssessment = row.latestAssessment;
+
+    if (!latestAssessment) {
+      return "Nehodnoceno";
+    }
+
+    if (latestAssessment.score == null) {
+      return ["completed", "submitted"].includes(latestAssessment.status)
+        ? "Bez relevantních zjištění"
+        : "Nehodnoceno";
+    }
+
+    return `${latestAssessment.score}/100`;
+  }
+
   return workbookBuffer([
     {
       name: "Metadata",
@@ -282,9 +298,7 @@ export async function generateVendorReportXLSX(input: {
           row.category ?? "",
           mapVendorRiskTier(row.riskTier),
           mapVendorStatus(row.status),
-          row.latestAssessment?.score == null
-            ? "Nehodnoceno"
-            : `${row.latestAssessment.score}/100`,
+          formatVendorAssessmentScore(row),
           formatDate(row.latestAssessment?.assessedAt ?? row.lastAssessedAt),
           formatDate(row.nextReviewAt),
         ]),

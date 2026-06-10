@@ -223,6 +223,12 @@
       "status": "required",
       "rationale": "Static/source-only or pure helper smoke; safe to run without production DB/Blob/Stripe/email credentials."
     },
+    "smoke:vendor-questionnaire-honesty": {
+      "command": "tsx scripts/smoke-vendor-questionnaire-honesty.ts",
+      "safetyClass": "db_local_only",
+      "status": "required",
+      "rationale": "Uses DATABASE_URL to verify supplier assessment persistence and token submission; must run only against a local/disposable database."
+    },
     "smoke:seo": {
       "command": "tsx scripts/smoke-seo.ts",
       "safetyClass": "source_only",

@@ -1397,17 +1397,23 @@
     "assessment": {
       "title": "12-question assessment",
       "save": "Save assessment",
+      "selectPlaceholder": "Choose an answer",
+      "noApplicableFindings": "no applicable findings",
       "answers": {
         "yes": "Yes",
         "partial": "Partial",
-        "no": "No"
+        "no": "No",
+        "not_applicable": "Not applicable"
+      },
+      "questionNotes": {
+        "data_processing": "This answer captures inherent data-processing exposure. It is not, by itself, a maturity failure."
       },
       "questions": {
         "security_owner": "Does the vendor have a named security owner?",
         "iso_certification": "Does the vendor have ISO 27001, SOC 2, or an equivalent audit?",
         "data_processing": "Does the vendor process personal or sensitive data?",
         "subprocessors": "Does the vendor provide a sub-processor list?",
-        "incident_notice": "Does the contract require incident notification within 24 hours?",
+        "incident_notice": "Does the contract require security incident notification to the customer?",
         "access_control": "Does the vendor use MFA and regular access reviews?",
         "encryption": "Does the vendor encrypt data in transit and at rest?",
         "backup_recovery": "Does the vendor test backups and disaster recovery?",
@@ -1455,7 +1461,8 @@
   },
   "vendorAssessmentPage": {
     "eyebrow": "Vendor assessment",
-    "requestDescription": "{organisation} requests completion of a supply-chain security questionnaire.",
+    "requestDescription": "{organisation} requests completion of a vendor security questionnaire.",
+    "context": "This questionnaire supports NIS2 supplier-security risk review. The requester is {organisation}; responses are used for internal assessment and are not public.",
     "submitted": "The questionnaire has been submitted.",
     "submit": "Submit assessment"
   },

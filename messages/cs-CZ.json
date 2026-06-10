@@ -1397,17 +1397,23 @@
     "assessment": {
       "title": "Hodnocení (12 otázek)",
       "save": "Uložit hodnocení",
+      "selectPlaceholder": "Vyberte odpověď",
+      "noApplicableFindings": "bez relevantních zjištění",
       "answers": {
         "yes": "Ano",
         "partial": "Částečně",
-        "no": "Ne"
+        "no": "Ne",
+        "not_applicable": "Nerelevantní"
+      },
+      "questionNotes": {
+        "data_processing": "Tato odpověď popisuje inherentní riziko zpracování dat. Neznamená sama o sobě selhání bezpečnostní zralosti."
       },
       "questions": {
         "security_owner": "Má dodavatel určeného vlastníka bezpečnosti?",
         "iso_certification": "Má dodavatel ISO 27001, SOC 2 nebo ekvivalentní audit?",
         "data_processing": "Zpracovává dodavatel osobní nebo citlivá data?",
         "subprocessors": "Dokládá dodavatel seznam subdodavatelů?",
-        "incident_notice": "Má smluvní povinnost hlásit incidenty do 24 hodin?",
+        "incident_notice": "Má smluvní povinnost oznamovat bezpečnostní incidenty zákazníkovi?",
         "access_control": "Používá MFA a pravidelné revize přístupů?",
         "encryption": "Šifruje data při přenosu i v klidu?",
         "backup_recovery": "Testuje zálohy a disaster recovery?",
@@ -1455,7 +1461,8 @@
   },
   "vendorAssessmentPage": {
     "eyebrow": "Hodnocení dodavatele",
-    "requestDescription": "{organisation} žádá o vyplnění supply-chain bezpečnostního dotazníku.",
+    "requestDescription": "{organisation} žádá o vyplnění bezpečnostního dotazníku dodavatele.",
+    "context": "Dotazník slouží k posouzení bezpečnostních rizik dodavatelů v rámci NIS2. Žadatelem je {organisation}; odpovědi se používají pro interní posouzení a nejsou veřejné.",
     "submitted": "Dotazník byl odeslán.",
     "submit": "Odeslat hodnocení"
   },

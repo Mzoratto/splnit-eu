@@ -5,6 +5,8 @@ type AlertEmailCopy = {
     accessReviewReminder: string;
     trustCenterAccessExpiry: string;
     vendorQuestionnaire: string;
+    vendorQuestionnaireReason: string;
+    vendorQuestionnaireUnexpected: string;
   };
   labels: {
     approval: string;
@@ -42,6 +44,10 @@ const alertEmailCopy = {
       trustCenterAccessExpiry: "Přístup je platný 24 hodin.",
       vendorQuestionnaire:
         "Prosíme o vyplnění bezpečnostního dotazníku pro hodnocení rizik dodavatelského řetězce.",
+      vendorQuestionnaireReason:
+        "Tento e-mail dostáváte, protože uvedená organizace požádala o bezpečnostní hodnocení dodavatele.",
+      vendorQuestionnaireUnexpected:
+        "Pokud zprávu nečekáte, ověřte si ji u svého kontaktu v uvedené organizaci.",
     },
     labels: {
       approval: "Schválení",
@@ -77,6 +83,10 @@ const alertEmailCopy = {
       trustCenterAccessExpiry: "Access is valid for 24 hours.",
       vendorQuestionnaire:
         "Please complete the security questionnaire for the supply-chain risk review.",
+      vendorQuestionnaireReason:
+        "You are receiving this email because the listed organisation requested a vendor security assessment.",
+      vendorQuestionnaireUnexpected:
+        "If you were not expecting this message, verify it with your contact at the listed organisation.",
     },
     labels: {
       approval: "Approval",
@@ -112,6 +122,10 @@ const alertEmailCopy = {
       trustCenterAccessExpiry: "L'accesso è valido per 24 ore.",
       vendorQuestionnaire:
         "Ti chiediamo di compilare il questionario di sicurezza per la revisione del rischio della catena di fornitura.",
+      vendorQuestionnaireReason:
+        "Ricevi questa email perché l'organizzazione indicata ha richiesto una valutazione di sicurezza del fornitore.",
+      vendorQuestionnaireUnexpected:
+        "Se non aspettavi questo messaggio, verificalo con il tuo contatto presso l'organizzazione indicata.",
     },
     labels: {
       approval: "Approvazione",
@@ -297,9 +311,11 @@ export function vendorQuestionnaireText(input: {
   const copy = getAlertEmailCopy(input.locale);
 
   return [
-    `${copy.labels.organisation}: ${input.organisationName}`,
+    `${copy.labels.requester}: ${input.organisationName}`,
     `${copy.labels.vendor}: ${input.vendorName}`,
+    copy.bodies.vendorQuestionnaireReason,
     copy.bodies.vendorQuestionnaire,
+    copy.bodies.vendorQuestionnaireUnexpected,
     `${copy.labels.link}: ${input.assessmentUrl}`,
   ].join("\n");
 }
