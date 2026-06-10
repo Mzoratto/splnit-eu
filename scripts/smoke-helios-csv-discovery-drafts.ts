@@ -80,6 +80,11 @@ async function main() {
   assert.equal(atlas.provider, "helios", "Helios CSV drafts carry the future provider string");
   assert.equal(atlas.supplyType, "Supplier (from Helios CSV export)");
   assert.equal(atlas.suggestedCriticality, "critical", "spend over CZK 1m is critical");
+  assert.equal(
+    atlas.metadata.contactEmail,
+    undefined,
+    "current Helios supplier fixture does not provide a contact email column.",
+  );
   assert.match(atlas.rationale, /2 invoices/);
   assert.match(atlas.rationale, /1\s*100\s*000/);
 
@@ -91,6 +96,24 @@ async function main() {
   assert.ok(snacks, "supplier without in-window spend still maps from supplier list");
   assert.equal(snacks.suggestedCriticality, "standard", "out-of-window spend is ignored for current criticality");
   assert.match(snacks.rationale, /Listed as a supplier/);
+
+  const suppliersWithEmail = parseHeliosCsv(
+    "suppliers",
+    [
+      "supplier_id,name,ico,dic,supplier_flag,contact_email",
+      "SUP-E,Email Supplier s.r.o.,12340001,CZ12340001,true,security@example.test",
+    ].join("\n"),
+  );
+  assert.equal(suppliersWithEmail.ok, true, "optional contact_email column should not break Helios supplier parsing");
+  const vendorsWithEmail = mapHeliosCsvToVendorDrafts({
+    now,
+    supplierRecords: suppliersWithEmail.records,
+  });
+  assert.equal(
+    vendorsWithEmail[0]?.metadata.contactEmail,
+    "security@example.test",
+    "Helios supplier drafts should carry contact email when the export provides it.",
+  );
 
   const store = new MemoryDraftStore();
   const first = await stageHeliosCsvVendorDrafts({

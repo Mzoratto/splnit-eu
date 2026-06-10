@@ -1430,6 +1430,7 @@
       "deliveryStatusLabel": "Consegna email",
       "deliveryTo": "Destinatario",
       "deliveryUpdated": "Aggiornato",
+      "needsContactEmail": "L'invio automatico attende l'email di contatto del fornitore. Inserisci l'email qui sotto e invia il questionario manualmente.",
       "deliveryStatuses": {
         "sent": "inviato",
         "skipped": "saltato — token creato, email non inviata",
@@ -1452,10 +1453,12 @@
       "questionnaire_sent": "questionario inviato",
       "questionnaire_delivery_skipped": "email questionario saltata",
       "questionnaire_delivery_failed": "email questionario fallita",
+      "needs_contact_email": "email di contatto mancante",
       "completed": "completato",
       "sent": "inviato",
       "email_skipped": "email saltata",
       "email_failed": "email fallita",
+      "expired": "scaduto",
       "submitted": "inviato"
     }
   },

@@ -242,6 +242,11 @@ export default async function VendorDetailPage({
               <Mail className="h-5 w-5 text-primary" aria-hidden="true" />
               <h2 className="text-lg font-semibold">{copy.questionnaire.title}</h2>
             </div>
+            {detail.vendor.status === "needs_contact_email" ? (
+              <p className="mt-3 rounded-md border border-amber-200 bg-amber-50 px-3 py-2 text-sm text-amber-900">
+                {copy.questionnaire.needsContactEmail}
+              </p>
+            ) : null}
             <form
               action={sendVendorQuestionnaireAction.bind(null, detail.vendor.id)}
               className="mt-5 space-y-4"

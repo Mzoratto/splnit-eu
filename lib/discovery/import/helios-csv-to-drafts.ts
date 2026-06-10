@@ -6,6 +6,7 @@ import {
   integrations,
 } from "@/lib/db/schema";
 import type { DiscoveredVendor } from "@/lib/discovery/types";
+import { normalizeContactEmail } from "@/lib/vendors/contact-email";
 import { parseHeliosCsv } from "@/lib/workspaces/helios-csv/parser";
 import type {
   HeliosCsvRecord,
@@ -139,6 +140,15 @@ function stableExternalKey(supplier: HeliosSupplierRecord) {
   return `helios-csv:vendor:${supplier.ico ?? encodeURIComponent(supplier.supplierId)}`;
 }
 
+function supplierContactEmail(supplier: HeliosSupplierRecord) {
+  return (
+    normalizeContactEmail(supplier.unknownMetadata.contact_email) ??
+    normalizeContactEmail(supplier.unknownMetadata.email) ??
+    normalizeContactEmail(supplier.unknownMetadata.e_mail) ??
+    normalizeContactEmail(supplier.unknownMetadata.kontakt_email)
+  );
+}
+
 export function mapHeliosCsvToVendorDrafts(input: {
   now?: Date;
   payableRecords?: HeliosCsvRecord[];
@@ -159,10 +169,12 @@ export function mapHeliosCsvToVendorDrafts(input: {
 
     const spend = spendBySupplier.get(supplier.supplierId);
     const externalKey = stableExternalKey(supplier);
+    const contactEmail = supplierContactEmail(supplier);
     const vendor: DiscoveredVendor = {
       externalKey,
       ico: supplier.ico,
       metadata: {
+        ...(contactEmail ? { contactEmail } : {}),
         dic: supplier.dic,
         invoiceCount: spend?.invoiceCount ?? null,
         supplierId: supplier.supplierId,

@@ -45,6 +45,16 @@ assert.doesNotMatch(abraFlexi, /Wire flexiClientFor|throw new Error\(\s*"Wire/, 
 assert.match(abraFlexi, /buildAbraFlexiUrl/, "ABRA discovery adapter reuses the existing ABRA URL builder");
 assert.match(abraFlexi, /createAbraFlexiBasicAuthHeader/, "ABRA discovery adapter reuses the existing auth header builder");
 assert.match(abraFlexi, /validateAbraBaseUrl/, "ABRA discovery adapter reuses the existing HTTPS/public-IP URL guard before authenticated fetches");
+assert.match(
+  abraFlexi,
+  /custom:id,nazev,ic,dic,dodavatel,email/,
+  "ABRA supplier discovery requests contact email from the address book when the ERP exposes it.",
+);
+assert.match(
+  abraFlexi,
+  /contactEmail/,
+  "ABRA supplier discovery carries contact email in draft metadata when present.",
+);
 assert.ok(
   abraFlexi.indexOf("await validateAbraBaseUrl") < abraFlexi.indexOf("authorization: createAbraFlexiBasicAuthHeader"),
   "ABRA URL guard is wired before credentials are sent",

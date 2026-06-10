@@ -19,6 +19,7 @@ import {
   organisations,
   orgControlStatuses,
   orgFrameworks,
+  vendorAssessments,
   vendors,
 } from "@/lib/db/schema";
 import { ISO27001_ANNEX_A_MAPPINGS } from "@/lib/frameworks/iso27001-annex-a";
@@ -359,7 +360,25 @@ async function main() {
       .where(and(eq(vendors.clerkOrgId, clerkOrgId), eq(vendors.id, firstConfirmation.vendorId)))
       .limit(1);
     assert.equal(vendorRow?.id, firstConfirmation.vendorId, "confirming a discovered vendor must create or link a vendor register row.");
-    assert.equal(vendorRow.status, "pending", "mere vendor confirmation keeps the supplier pending assessment.");
+    assert.equal(
+      vendorRow.status,
+      "needs_contact_email",
+      "high/critical vendor confirmation without a contact email must surface the contact-email gap before assessment.",
+    );
+    const firstAssessmentRows = await getDb()
+      .select({ id: vendorAssessments.id })
+      .from(vendorAssessments)
+      .where(
+        and(
+          eq(vendorAssessments.clerkOrgId, clerkOrgId),
+          eq(vendorAssessments.vendorId, firstConfirmation.vendorId),
+        ),
+      );
+    assert.equal(
+      firstAssessmentRows.length,
+      0,
+      "vendor confirmation without contact email must not fabricate or send an assessment request.",
+    );
 
     const evidenceRows = await readVendorEvidence(vendorControlId);
     assert.equal(evidenceRows.length, 1, "vendor confirmation must create one evidence row.");

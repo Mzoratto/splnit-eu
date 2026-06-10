@@ -66,6 +66,7 @@
     "smoke:vendor-questionnaire-delivery-status": "tsx scripts/smoke-vendor-questionnaire-delivery-status.ts",
     "smoke:vendor-questionnaire-honesty": "tsx scripts/smoke-vendor-questionnaire-honesty.ts",
     "smoke:vendor-assessment-coverage": "tsx scripts/smoke-vendor-assessment-coverage.ts",
+    "smoke:vendor-questionnaire-autosend": "tsx scripts/smoke-vendor-questionnaire-autosend.ts",
     "smoke:seo": "tsx scripts/smoke-seo.ts",
     "smoke:copy-hygiene": "tsx scripts/smoke-copy-hygiene.ts",
     "smoke:demo-routes": "tsx scripts/smoke-demo-routes.ts",

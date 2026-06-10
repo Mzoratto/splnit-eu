@@ -1430,6 +1430,7 @@
       "deliveryStatusLabel": "Email delivery",
       "deliveryTo": "Recipient",
       "deliveryUpdated": "Updated",
+      "needsContactEmail": "Automatic sending is waiting for the vendor contact email. Enter the email below and send the questionnaire manually.",
       "deliveryStatuses": {
         "sent": "sent",
         "skipped": "skipped — token created, email not sent",
@@ -1452,10 +1453,12 @@
       "questionnaire_sent": "questionnaire sent",
       "questionnaire_delivery_skipped": "questionnaire email skipped",
       "questionnaire_delivery_failed": "questionnaire email failed",
+      "needs_contact_email": "contact email needed",
       "completed": "completed",
       "sent": "sent",
       "email_skipped": "email skipped",
       "email_failed": "email failed",
+      "expired": "expired",
       "submitted": "submitted"
     }
   },

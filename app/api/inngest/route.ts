@@ -6,6 +6,7 @@ import { inngest } from "@/inngest/client";
 import { policyReviewReminders } from "@/inngest/policy-review-reminders";
 import { regulationUpdates } from "@/inngest/regulation-updates";
 import { runIntegrationTests } from "@/inngest/run-integration-tests";
+import { vendorAssessmentReminder } from "@/inngest/vendor-assessment-reminder";
 import { workspaceEvidenceLifecycle } from "@/inngest/workspace-evidence-lifecycle";
 
 export const { GET, POST, PUT } = serve({
@@ -17,6 +18,7 @@ export const { GET, POST, PUT } = serve({
     policyReviewReminders,
     regulationUpdates,
     runIntegrationTests,
+    vendorAssessmentReminder,
     workspaceEvidenceLifecycle,
   ],
 });

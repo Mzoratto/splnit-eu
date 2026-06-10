@@ -11,12 +11,14 @@ import type {
   DiscoveryResult,
   DiscoveredVendor,
 } from "@/lib/discovery/types";
+import { normalizeContactEmail } from "@/lib/vendors/contact-email";
 
 const DEFAULT_TIMEOUT_MS = 10_000;
 
 type FlexiAddress = Record<string, unknown> & {
   dic?: string;
   dodavatel?: boolean | string;
+  email?: string;
   id?: number | string;
   ic?: string;
   nazev?: string;
@@ -224,7 +226,7 @@ export const abraFlexiDiscoveryAdapter: DiscoveryAdapter = {
 
     try {
       const response = await abraFlexiGet(credentials, "/adresar.json", {
-        detail: "custom:id,nazev,ic,dic,dodavatel",
+        detail: "custom:id,nazev,ic,dic,dodavatel,email",
         limit: 500,
       });
 
@@ -258,11 +260,13 @@ export const abraFlexiDiscoveryAdapter: DiscoveryAdapter = {
         const id = stringValue(address.id) ?? stringValue(address.ic) ?? stringValue(address.nazev);
         const name = stringValue(address.nazev) ?? `ABRA Flexi supplier ${id ?? "unknown"}`;
         const spend = id ? spendByPartner.get(id) : undefined;
+        const contactEmail = normalizeContactEmail(address.email);
 
         return {
           externalKey: `abra-flexi:vendor:${id ?? name}`,
           ico: stringValue(address.ic),
           metadata: {
+            ...(contactEmail ? { contactEmail } : {}),
             dic: stringValue(address.dic),
             invoiceCount: spend?.invoiceCount ?? null,
             totalPayableCzk: spend?.totalPayable ?? null,

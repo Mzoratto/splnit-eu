@@ -1430,6 +1430,7 @@
       "deliveryStatusLabel": "Doručení e-mailu",
       "deliveryTo": "Příjemce",
       "deliveryUpdated": "Aktualizováno",
+      "needsContactEmail": "Automatické odeslání čeká na kontaktní e-mail dodavatele. Zadejte e-mail níže a odešlete dotazník ručně.",
       "deliveryStatuses": {
         "sent": "odesláno",
         "skipped": "přeskočeno — token vytvořen, e-mail neodeslán",
@@ -1452,10 +1453,12 @@
       "questionnaire_sent": "dotazník odeslán",
       "questionnaire_delivery_skipped": "e-mail dotazníku přeskočen",
       "questionnaire_delivery_failed": "e-mail dotazníku selhal",
+      "needs_contact_email": "chybí kontaktní e-mail",
       "completed": "dokončeno",
       "sent": "odesláno",
       "email_skipped": "e-mail přeskočen",
       "email_failed": "e-mail selhal",
+      "expired": "vypršelo",
       "submitted": "odesláno"
     }
   },

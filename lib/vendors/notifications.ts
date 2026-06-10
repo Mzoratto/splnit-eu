@@ -4,13 +4,49 @@ import {
   vendorQuestionnaireText,
 } from "@/lib/email/templates/alerts";
 
-export async function sendVendorQuestionnaireEmail(input: {
+export type VendorQuestionnaireEmailInput = {
   assessmentUrl: string;
   locale?: string | null;
   organisationName: string;
   to: string;
   vendorName: string;
-}): Promise<{ emailsSent: number; failed: string | null; skipped: string | null }> {
+};
+
+export type VendorQuestionnaireEmailResult = {
+  emailsSent: number;
+  failed: string | null;
+  skipped: string | null;
+};
+
+type VendorQuestionnaireEmailTransport = (
+  input: VendorQuestionnaireEmailInput,
+) => Promise<VendorQuestionnaireEmailResult>;
+
+let vendorQuestionnaireEmailTransportForTesting:
+  | VendorQuestionnaireEmailTransport
+  | null = null;
+
+export function setVendorQuestionnaireEmailTransportForTesting(
+  transport: VendorQuestionnaireEmailTransport | null,
+) {
+  if (process.env.NODE_ENV === "production") {
+    throw new Error("Test email transport cannot be set in production.");
+  }
+
+  vendorQuestionnaireEmailTransportForTesting = transport;
+}
+
+export function canSendVendorQuestionnaireEmail() {
+  return hasResendConfig() || vendorQuestionnaireEmailTransportForTesting !== null;
+}
+
+export async function sendVendorQuestionnaireEmail(
+  input: VendorQuestionnaireEmailInput,
+): Promise<VendorQuestionnaireEmailResult> {
+  if (vendorQuestionnaireEmailTransportForTesting) {
+    return vendorQuestionnaireEmailTransportForTesting(input);
+  }
+
   if (!hasResendConfig()) {
     return {
       emailsSent: 0,

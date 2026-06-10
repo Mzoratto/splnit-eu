@@ -14,6 +14,8 @@ import {
   orgFrameworks,
   vendors,
 } from "@/lib/db/schema";
+import { getContactEmailFromMetadata } from "@/lib/vendors/contact-email";
+import { maybeAutoSendVendorQuestionnaireForConfirmedVendor } from "@/lib/vendors/questionnaire-send";
 import type { CiaRating } from "./types";
 
 const DISCOVERY_ASSET_INVENTORY_CONTROL_KEY = "ctrl_asset_inventory";
@@ -275,6 +277,7 @@ export async function confirmDiscoveredVendor(input: {
 
     if (draft.linkedVendorId) {
       return {
+        autoSendInput: null,
         evidenceInput: {
           externalKey: draft.externalKey,
           name: input.overrides?.name ?? draft.name,
@@ -292,6 +295,8 @@ export async function confirmDiscoveredVendor(input: {
     }
 
     const vendorName = input.overrides?.name ?? draft.name;
+    const riskTier = input.overrides?.riskTier ?? riskTierFromCriticality(draft.suggestedCriticality);
+    const contactEmail = getContactEmailFromMetadata(draft.metadata);
     const vendorRows = await tx
       .insert(vendors)
       .values({
@@ -300,7 +305,7 @@ export async function confirmDiscoveredVendor(input: {
         externalKey: draft.externalKey,
         ico: draft.ico,
         name: vendorName,
-        riskTier: input.overrides?.riskTier ?? riskTierFromCriticality(draft.suggestedCriticality),
+        riskTier,
         source: "auto_discovery",
         sourceProvider: draft.provider,
         status: "pending",
@@ -312,7 +317,7 @@ export async function confirmDiscoveredVendor(input: {
           category: draft.supplyType,
           ico: draft.ico,
           name: vendorName,
-          riskTier: input.overrides?.riskTier ?? riskTierFromCriticality(draft.suggestedCriticality),
+          riskTier,
           source: "auto_discovery",
           sourceProvider: draft.provider,
           status: "pending",
@@ -340,6 +345,10 @@ export async function confirmDiscoveredVendor(input: {
       );
 
     return {
+      autoSendInput: {
+        contactEmail,
+        riskTier,
+      },
       evidenceInput: {
         externalKey: draft.externalKey,
         name: vendorName,
@@ -389,6 +398,15 @@ export async function confirmDiscoveredVendor(input: {
         vendorId: result.vendorId,
       },
       source: "connector",
+    });
+  }
+
+  if (result.autoSendInput) {
+    await maybeAutoSendVendorQuestionnaireForConfirmedVendor({
+      clerkOrgId: input.clerkOrgId,
+      contactEmail: result.autoSendInput.contactEmail,
+      riskTier: result.autoSendInput.riskTier,
+      vendorId: result.vendorId,
     });
   }
 
