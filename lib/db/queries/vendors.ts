@@ -6,6 +6,7 @@ import {
   requireVendorAssessmentAnswers,
   scoreVendorAnswers,
 } from "@/lib/vendors/questions";
+import { recalculateVendorAssessmentControl } from "@/lib/vendors/assessment-coverage";
 
 const VENDOR_ASSESSMENT_EXPIRY_DAYS = 30;
 
@@ -159,6 +160,8 @@ export async function saveVendorAssessment(input: {
         eq(vendors.id, input.vendorId),
       ),
     );
+
+  await recalculateVendorAssessmentControl(input.clerkOrgId);
 
   return assessment;
 }
@@ -351,4 +354,6 @@ export async function submitVendorAssessmentByToken(input: {
       status: "assessed",
     })
     .where(eq(vendors.id, data.vendor.id));
+
+  await recalculateVendorAssessmentControl(data.assessment.clerkOrgId);
 }

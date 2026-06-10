@@ -43,7 +43,7 @@ export type EvidenceArchiveFile = {
   type: string;
 };
 
-function manualEvidenceStatusPropagationEnabled() {
+export function manualEvidenceStatusPropagationEnabled() {
   const value = process.env.SPLNIT_MANUAL_EVIDENCE_STATUS_PROPAGATION?.trim().toLowerCase();
   return value !== "disabled" && value !== "false" && value !== "0";
 }
@@ -56,7 +56,7 @@ function mapManualEvidenceResultToControlStatus(result: EvidenceAssessmentResult
   return result;
 }
 
-async function recalculateFrameworkScoresForControl(input: {
+export async function recalculateFrameworkScoresForControl(input: {
   clerkOrgId: string;
   controlId: string;
 }) {

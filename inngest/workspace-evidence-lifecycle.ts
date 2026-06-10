@@ -1,4 +1,4 @@
-import { processHeliosWorkspaceEvidenceLifecycle } from "@/lib/workspaces/helios/lifecycle";
+import { processWorkspaceEvidenceLifecycle } from "@/lib/workspaces/lifecycle";
 import { inngest } from "./client";
 
 export const workspaceEvidenceLifecycle = inngest.createFunction(
@@ -8,6 +8,6 @@ export const workspaceEvidenceLifecycle = inngest.createFunction(
     triggers: { cron: "0 7 * * *" },
   },
   async () => {
-    return processHeliosWorkspaceEvidenceLifecycle();
+    return processWorkspaceEvidenceLifecycle();
   },
 );

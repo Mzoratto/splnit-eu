@@ -229,6 +229,12 @@
       "status": "required",
       "rationale": "Uses DATABASE_URL to verify supplier assessment persistence and token submission; must run only against a local/disposable database."
     },
+    "smoke:vendor-assessment-coverage": {
+      "command": "tsx scripts/smoke-vendor-assessment-coverage.ts",
+      "safetyClass": "db_local_only",
+      "status": "required",
+      "rationale": "Uses DATABASE_URL to verify supplier assessment coverage evidence and framework scoring; must run only against a local/disposable database."
+    },
     "smoke:seo": {
       "command": "tsx scripts/smoke-seo.ts",
       "safetyClass": "source_only",
