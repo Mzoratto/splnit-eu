@@ -214,8 +214,8 @@ function manualReviewOnlyContext(): ReportContext {
     evidenceRecords: [
       {
         assessmentResult: "manual_review",
-        assessedAt: generatedAt,
-        collectedAt: generatedAt,
+        assessedAt: null,
+        collectedAt: null,
         controlId: "ctrl_manual_review_only",
         controlKey: "ctrl_manual_review_only",
         controlName: "Bezpečnostní hodnocení dodavatelů",
@@ -518,8 +518,18 @@ async function main() {
     );
     assert.doesNotMatch(
       manualReviewOnlyHtml,
-      /§ Řízení rizik/,
+    /§ Řízení rizik/,
       "Fallback legal references do not print section titles as section numbers.",
+    );
+    assert.match(
+      manualReviewOnlyHtml,
+      /Datum podkladu není evidováno/,
+      "Manual-review rows without timestamps render missing-date copy.",
+    );
+    assert.doesNotMatch(
+      manualReviewOnlyHtml,
+      /01\.01\.1970/,
+      "Manual-review rows without timestamps never render epoch fallback dates.",
     );
     assert.equal(
       renderedGapCount(manualReviewOnlyHtml),

@@ -275,8 +275,20 @@ function getEvidenceTone(record: EvidenceRecord): EvidenceTone {
   return "in-progress";
 }
 
-function evidenceDate(record: EvidenceRecord): Date {
-  return record.assessedAt ?? record.collectedAt ?? new Date(0);
+function evidenceDate(record: EvidenceRecord): Date | null {
+  return record.assessedAt ?? record.collectedAt ?? null;
+}
+
+function formatEvidenceDateContext(date: Date | null): string {
+  return date
+    ? `podle podkladů evidovaných dne ${formatDate(date)}`
+    : "podle podkladů bez evidovaného data";
+}
+
+function formatEvidenceRecordedSentence(date: Date | null): string {
+  return date
+    ? `Podklad byl evidován dne ${formatDate(date)}.`
+    : "Datum podkladu není evidováno.";
 }
 
 function renderDefinitionRow(label: string, value: string): string {
@@ -320,7 +332,7 @@ function renderEvidenceBlock(
       : "Doloženo - automaticky získaný podklad";
     const finding = record.finding ?? "Stav je doložen dostupnými podklady.";
     const status =
-      `Stav k datu generování (${formatDate(generatedAt)}) podle podkladů evidovaných dne ${formatDate(date)}. ${finding}`;
+      `Stav k datu generování (${formatDate(generatedAt)}) ${formatEvidenceDateContext(date)}. ${finding}`;
 
     if (isManual) {
       const attestation =
@@ -368,7 +380,7 @@ function renderEvidenceBlock(
         <dl>
           ${renderDefinitionRow("Opatření", escapeHtml(record.controlName))}
           ${renderDefinitionRow("Zdroj", escapeHtml(source))}
-          ${renderDefinitionRow("Stav", `Stav k datu generování (${escapeHtml(formatDate(generatedAt))}) vyžaduje posouzení. ${escapeHtml(progressDescription)} Podklad byl evidován dne ${escapeHtml(formatDate(date))}.`)}
+          ${renderDefinitionRow("Stav", `Stav k datu generování (${escapeHtml(formatDate(generatedAt))}) vyžaduje posouzení. ${escapeHtml(progressDescription)} ${escapeHtml(formatEvidenceRecordedSentence(date))}`)}
           ${renderDefinitionRow("Právní ref.", escapeHtml(legalRef))}
         </dl>
       </div>`;
