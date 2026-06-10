@@ -9,7 +9,7 @@ export const clerkLightAppearance = {
     colorSuccess: "#059669",
     colorText: "#18181b",
     colorTextSecondary: "#52525b",
-    fontFamily: '"DM Sans", system-ui, sans-serif',
+    fontFamily: '"Inter", system-ui, -apple-system, sans-serif',
   },
   elements: {
     card: {
@@ -74,7 +74,7 @@ export const clerkDarkAppearance = {
     colorSuccess: "#10b981",
     colorText: "#fafafa",
     colorTextSecondary: "#a1a1aa",
-    fontFamily: '"DM Sans", system-ui, sans-serif',
+    fontFamily: '"Inter", system-ui, -apple-system, sans-serif',
   },
   elements: {
     card: {

@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { Bell, Search, X } from "lucide-react";
+import { Search, X } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { OrgSwitcher } from "@/components/app/org-switcher";
 import { MobileTabBar, Sidebar } from "@/components/app/sidebar";
@@ -70,13 +70,6 @@ export function AppShell({
             >
               {t("trustCenter")}
             </Link>
-            <button
-              type="button"
-              className="btn btn-ghost h-11 w-11 px-0"
-              aria-label={t("notifications")}
-            >
-              <Bell className="h-4 w-4" aria-hidden="true" strokeWidth={1.5} />
-            </button>
             <ThemeToggle />
             <UserMenu enabled={clerkEnabled} />
           </div>

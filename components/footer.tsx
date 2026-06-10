@@ -176,16 +176,28 @@ export function Footer() {
               © {currentYear} Splnit · Všechna práva vyhrazena
             </p>
             <div className="flex flex-wrap items-center justify-center gap-5 text-xs text-white/50">
-              <Link href="/soukromi" className="transition-colors hover:text-white">
+              <Link
+                href={getLocalizedMarketingPath("/soukromi", locale)}
+                className="transition-colors hover:text-white"
+              >
                 {t("privacy")}
               </Link>
-              <Link href="/podminky" className="transition-colors hover:text-white">
+              <Link
+                href={getLocalizedMarketingPath("/podminky", locale)}
+                className="transition-colors hover:text-white"
+              >
                 {t("terms")}
               </Link>
-              <Link href="/cookies" className="transition-colors hover:text-white">
+              <Link
+                href={getLocalizedMarketingPath("/cookies", locale)}
+                className="transition-colors hover:text-white"
+              >
                 Cookies
               </Link>
-              <Link href="/dpa" className="transition-colors hover:text-white">
+              <Link
+                href={getLocalizedMarketingPath("/dpa", locale)}
+                className="transition-colors hover:text-white"
+              >
                 DPA
               </Link>
               <div className="h-3 w-px bg-white/15" />

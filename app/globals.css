@@ -232,6 +232,13 @@ body {
   transform: scale(0.98);
 }
 
+.btn:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+  box-shadow: none;
+  transform: none;
+}
+
 .btn-primary {
   background: var(--accent);
   color: var(--text-on-accent);
@@ -352,8 +359,8 @@ body {
 }
 
 .status-pill--fail {
-  background: #fef9c3;
-  border-color: #fde68a;
+  background: var(--status-fail-subtle);
+  border-color: var(--status-fail-border);
   color: var(--status-fail);
 }
 
