@@ -10,29 +10,14 @@ import {
 
 import { AnimatedScoreRing } from "@/components/app/animated-score-ring";
 import { PageHeader } from "@/components/app/page-header";
-import { StatusPill, type StatusPillTone } from "@/components/app/status-pill";
+import { StatusPill } from "@/components/app/status-pill";
+import { getStatusTone as statusTone } from "@/lib/utils/status-tone";
 import {
   DEMO_ORG,
   DEMO_PRIORITY_GAPS,
   DEMO_SCORE,
   type DemoControlStatus,
 } from "@/lib/demo/data";
-
-function statusTone(status: DemoControlStatus): StatusPillTone {
-  if (status === "pass") {
-    return "pass";
-  }
-
-  if (status === "fail") {
-    return "fail";
-  }
-
-  if (status === "gap") {
-    return "warn";
-  }
-
-  return "neutral";
-}
 
 function statusLabel(status: DemoControlStatus) {
   const labels: Record<DemoControlStatus, string> = {

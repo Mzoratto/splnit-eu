@@ -379,7 +379,7 @@ export default async function EvidencePage({
                         })}
                       />
                       {item.collectionStatus === "pending" || item.assessmentResult === "manual_review" ? (
-                        <span className="rounded-sm border border-amber-200 bg-amber-50 px-2 py-1 text-xs font-medium text-amber-900">
+                        <span className="rounded-sm border border-[var(--status-warn-border)] bg-[var(--status-warn-subtle)] px-2 py-1 text-xs font-medium text-[var(--status-warn)]">
                           {copy.records.aiDraftHumanReview}
                         </span>
                       ) : null}

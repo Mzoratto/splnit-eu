@@ -31,7 +31,7 @@ export function DemoSidebar() {
 
   return (
     <>
-      <aside className="hidden border-r border-slate-800 bg-slate-900 text-white lg:fixed lg:bottom-0 lg:left-0 lg:top-[148px] lg:block lg:w-[220px]">
+      <aside className="hidden border-r border-white/10 bg-[var(--color-brand-900)] text-white lg:fixed lg:bottom-0 lg:left-0 lg:top-[148px] lg:block lg:w-[220px]">
         <Link
           href="/"
           className="flex h-16 items-center gap-3 border-b border-white/10 px-5 text-sm font-bold transition-colors hover:text-white"
@@ -42,13 +42,13 @@ export function DemoSidebar() {
         </Link>
         <div className="border-b border-white/10 px-5 py-4">
           <p className="truncate text-sm font-semibold">{DEMO_ORG.name}</p>
-          <p className="mt-1 text-xs text-slate-400">
+          <p className="mt-1 text-xs text-white/55">
             {DEMO_ORG.sector} · {DEMO_ORG.employees} zaměstnanců
           </p>
         </div>
         <nav className="grid gap-5 p-4 text-sm" aria-label="Demo navigace">
           <div>
-            <p className="px-3 pb-2 pt-2 text-[11px] font-semibold text-slate-500">
+            <p className="px-3 pb-2 pt-2 text-[11px] font-semibold text-white/45">
               Demo profil
             </p>
             <div className="grid gap-1">
@@ -61,8 +61,8 @@ export function DemoSidebar() {
                     href={item.href}
                     className={`flex min-h-10 items-center gap-2.5 rounded-lg px-3 py-2 text-[13px] transition-colors ${
                       active
-                        ? "bg-blue-600 font-semibold text-white"
-                        : "text-slate-300 hover:bg-white/10 hover:text-white"
+                        ? "bg-[var(--color-brand-600)] font-semibold text-white"
+                        : "text-white/70 hover:bg-white/10 hover:text-white"
                     }`}
                   >
                     <item.icon className="h-4 w-4" aria-hidden="true" strokeWidth={1.5} />
@@ -93,7 +93,7 @@ export function DemoSidebar() {
                 href={item.href}
                 className={`inline-flex min-h-11 shrink-0 items-center gap-1.5 rounded-lg px-3 py-2 text-xs font-semibold ${
                   active
-                    ? "bg-blue-600 text-white"
+                    ? "bg-[var(--color-brand-600)] text-white"
                     : "border border-border bg-background text-foreground/68"
                 }`}
               >

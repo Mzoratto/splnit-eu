@@ -20,6 +20,7 @@ import { AnimatedScoreRing } from "@/components/app/animated-score-ring";
 import { ActivationStatus, deriveActivationStatusState } from "@/components/activation/activation-status";
 import { DataModeNotice } from "@/components/app/data-mode-notice";
 import { StatusPill, type StatusPillTone } from "@/components/app/status-pill";
+import { getStatusTone as statusTone } from "@/lib/utils/status-tone";
 import { ComplianceReportButton } from "@/components/export/compliance-report-button";
 import { markRegulationUpdateReadAction } from "@/app/(app)/dashboard/actions";
 import { getMessagesForLocale } from "@/i18n/messages";
@@ -121,37 +122,6 @@ async function loadUserName() {
   }
 }
 
-function statusTone(status: string | null | undefined, score?: number | null): StatusPillTone {
-  if (status === "pass" || status === "completed" || status === "connected") {
-    return "pass";
-  }
-
-  if (status === "fail" || status === "error" || status === "critical") {
-    return "fail";
-  }
-
-  if (
-    status === "manual_review" ||
-    status === "warning" ||
-    status === "setup" ||
-    status === "in_progress" ||
-    status === "connecting"
-  ) {
-    return "warn";
-  }
-
-  if (typeof score === "number") {
-    if (score >= 80) {
-      return "pass";
-    }
-    if (score >= 60) {
-      return "warn";
-    }
-    return "fail";
-  }
-
-  return "neutral";
-}
 
 function frameworkStatusLabel(score: number | null | undefined) {
   if (typeof score !== "number") {

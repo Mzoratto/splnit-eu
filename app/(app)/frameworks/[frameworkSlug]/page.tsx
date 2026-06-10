@@ -15,7 +15,8 @@ import { generateGapReportAction } from "@/app/(app)/frameworks/[frameworkSlug]/
 import { AnimatedScoreRing } from "@/components/app/animated-score-ring";
 import { DataModeNotice } from "@/components/app/data-mode-notice";
 import { PageHeader } from "@/components/app/page-header";
-import { StatusPill, type StatusPillTone } from "@/components/app/status-pill";
+import { StatusPill } from "@/components/app/status-pill";
+import { getStatusTone } from "@/lib/utils/status-tone";
 import { DocumentDownloadButton } from "@/components/documents/document-download-button";
 import { TemplateSection } from "@/components/templates/template-section";
 import { getMessagesForLocale } from "@/i18n/messages";
@@ -72,21 +73,6 @@ const statusLabels: Record<string, string> = {
 
 type FrameworksCopy = ReturnType<typeof getMessagesForLocale>["frameworks"];
 
-function getStatusTone(status: string | null): StatusPillTone {
-  if (status === "pass" || status === "not_applicable") {
-    return "pass";
-  }
-
-  if (status === "fail") {
-    return "fail";
-  }
-
-  if (status === "manual_review" || status === "warning") {
-    return "warn";
-  }
-
-  return "neutral";
-}
 
 function getControlTitle(control: FrameworkControl, locale: Locale) {
   return getControlDisplayTitle(control, locale);

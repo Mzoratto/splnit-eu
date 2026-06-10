@@ -175,7 +175,7 @@ export default async function HomePage() {
                   {t("secondaryCta")}
                 </Link>
               </div>
-              <p className="text-sm font-medium text-foreground/50">
+              <p className="text-sm font-medium text-foreground/62">
                 {t("trustLine")}
               </p>
             </div>
@@ -184,7 +184,7 @@ export default async function HomePage() {
             </div>
 
             <div className="fade-up mt-20 text-center">
-              <p className="mb-6 text-xs font-bold uppercase tracking-normal text-foreground/38">
+              <p className="mb-6 text-xs font-bold uppercase tracking-normal text-foreground/62">
                 {t("partnerTag")}
               </p>
               <div className="mx-auto grid max-w-5xl gap-3 sm:grid-cols-2 lg:grid-cols-7">

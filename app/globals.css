@@ -116,9 +116,9 @@ body {
   align-items: center;
   gap: 6px;
   border-radius: 9999px;
-  border: 1px solid #bfdbfe;
-  background: #eff6ff;
-  color: #2563eb;
+  border: 1px solid var(--accent-border);
+  background: var(--accent-subtle);
+  color: var(--accent);
   padding: 4px 12px;
   font-size: 12px;
   font-weight: 700;

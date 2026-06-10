@@ -5,6 +5,7 @@ import { ArrowRight, ClipboardCheck } from "lucide-react";
 import { DataModeNotice } from "@/components/app/data-mode-notice";
 import { PageHeader } from "@/components/app/page-header";
 import { StatusPill, type StatusPillTone } from "@/components/app/status-pill";
+import { getStatusTone } from "@/lib/utils/status-tone";
 import { getMessagesForLocale } from "@/i18n/messages";
 import { normalizeLocale, type Locale } from "@/i18n/routing";
 import { hasDatabaseUrl } from "@/lib/db";
@@ -51,24 +52,7 @@ async function loadFrameworkIndexData() {
 }
 
 function statusTone(status: string | null, score: number | null): StatusPillTone {
-  if (status === "completed") {
-    return "pass";
-  }
-
-  if (status === "setup" || status === "in_progress") {
-    return "warn";
-  }
-
-  if (typeof score === "number") {
-    if (score >= 80) {
-      return "pass";
-    }
-    if (score >= 60) {
-      return "warn";
-    }
-  }
-
-  return "neutral";
+  return getStatusTone(status, score, { lowScoreTone: "neutral" });
 }
 
 function statusLabel(status: string | null) {

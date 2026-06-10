@@ -4,7 +4,8 @@ import { getLocale } from "next-intl/server";
 import { ArrowRight, BookCheck, CircleHelp } from "lucide-react";
 import { ActivationStatus, deriveActivationStatusState } from "@/components/activation/activation-status";
 import { PageHeader } from "@/components/app/page-header";
-import { StatusPill, type StatusPillTone } from "@/components/app/status-pill";
+import { StatusPill } from "@/components/app/status-pill";
+import { getStatusTone } from "@/lib/utils/status-tone";
 import { ComplianceReportButton } from "@/components/export/compliance-report-button";
 import { getMessagesForLocale } from "@/i18n/messages";
 import { normalizeLocale, type Locale } from "@/i18n/routing";
@@ -266,21 +267,6 @@ function getCategoryLabel(category: string, copy: ControlsCopy) {
   return copy.categories[category as keyof typeof copy.categories] ?? category;
 }
 
-function getStatusTone(status: string | null): StatusPillTone {
-  if (status === "pass" || status === "not_applicable") {
-    return "pass";
-  }
-
-  if (status === "fail") {
-    return "fail";
-  }
-
-  if (status === "manual_review" || status === "warning") {
-    return "warn";
-  }
-
-  return "neutral";
-}
 
 function getStatusLabel(status: string | null, copy: ControlsCopy) {
   if (!status) {

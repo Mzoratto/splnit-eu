@@ -2,7 +2,8 @@ import Link from "next/link";
 import { ArrowRight, Download } from "lucide-react";
 
 import { PageHeader } from "@/components/app/page-header";
-import { StatusPill, type StatusPillTone } from "@/components/app/status-pill";
+import { StatusPill } from "@/components/app/status-pill";
+import { getStatusTone as statusTone } from "@/lib/utils/status-tone";
 import {
   DEMO_CONTROLS,
   DEMO_SCORE,
@@ -36,22 +37,6 @@ function filterControls(controls: DemoControl[], filter: ControlsFilter) {
   }
 
   return controls;
-}
-
-function statusTone(status: DemoControlStatus): StatusPillTone {
-  if (status === "pass") {
-    return "pass";
-  }
-
-  if (status === "fail") {
-    return "fail";
-  }
-
-  if (status === "gap") {
-    return "warn";
-  }
-
-  return "neutral";
 }
 
 function statusLabel(status: DemoControlStatus) {

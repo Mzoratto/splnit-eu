@@ -113,7 +113,7 @@ export default async function VendorAssessmentPage({
             })}
           </p>
           {query.submitted === "1" ? (
-            <p className="mt-4 inline-flex rounded-md bg-emerald-50 px-3 py-2 text-sm text-emerald-800">
+            <p className="mt-4 inline-flex rounded-md border border-[var(--status-pass-border)] bg-[var(--status-pass-subtle)] px-3 py-2 text-sm text-[var(--status-pass)]">
               {pageCopy.submitted}
             </p>
           ) : null}

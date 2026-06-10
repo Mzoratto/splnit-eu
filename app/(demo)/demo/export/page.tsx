@@ -2,29 +2,14 @@ import Link from "next/link";
 import { ArrowRight, FileText } from "lucide-react";
 
 import { LogoMark } from "@/components/brand/logo-mark";
-import { StatusPill, type StatusPillTone } from "@/components/app/status-pill";
+import { StatusPill } from "@/components/app/status-pill";
+import { getStatusTone as statusTone } from "@/lib/utils/status-tone";
 import {
   DEMO_CONTROLS,
   DEMO_EXPORT,
   DEMO_ORG,
   type DemoControlStatus,
 } from "@/lib/demo/data";
-
-function statusTone(status: DemoControlStatus): StatusPillTone {
-  if (status === "pass") {
-    return "pass";
-  }
-
-  if (status === "fail") {
-    return "fail";
-  }
-
-  if (status === "gap") {
-    return "warn";
-  }
-
-  return "neutral";
-}
 
 function statusLabel(status: DemoControlStatus) {
   const labels: Record<DemoControlStatus, string> = {
@@ -69,7 +54,7 @@ export default function DemoExportPage() {
 
           <div className="pt-10">
             <div className="flex items-start gap-3">
-              <span className="grid h-10 w-10 place-items-center rounded-md bg-teal-700 text-white">
+              <span className="grid h-10 w-10 place-items-center rounded-md bg-[var(--accent)] text-white">
                 <FileText className="h-5 w-5" aria-hidden="true" strokeWidth={1.7} />
               </span>
               <div>
@@ -155,7 +140,7 @@ export default function DemoExportPage() {
                   </p>
                   <Link
                     href="/sign-up?ref=demo"
-                    className="mt-4 inline-flex items-center gap-2 rounded-md bg-teal-700 px-4 py-2.5 text-sm font-medium text-white hover:bg-teal-800"
+                    className="mt-4 inline-flex items-center gap-2 rounded-md bg-[var(--accent)] px-4 py-2.5 text-sm font-medium text-white hover:bg-[var(--accent-hover)]"
                     data-demo-cta="export-blur"
                   >
                     Vytvořit účet zdarma

@@ -437,7 +437,7 @@ function RowActions({
 function EmptyState({ text }: { text: string }) {
   return (
     <li className="rounded-xl border border-dashed border-border bg-surface-muted p-8 text-center text-sm text-foreground/58">
-      <CheckCircle2 className="mx-auto h-8 w-8 text-emerald-600" aria-hidden="true" />
+      <CheckCircle2 className="mx-auto h-8 w-8 text-[var(--status-pass)]" aria-hidden="true" />
       <p className="mt-2 font-medium">{text}</p>
     </li>
   );
