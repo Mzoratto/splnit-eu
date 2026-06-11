@@ -134,7 +134,7 @@ export default async function HomePage() {
                 </span>
               </div>
 
-              <h1 className="mb-6 max-w-3xl text-5xl font-bold leading-[1.02] tracking-normal text-foreground md:text-[72px]">
+              <h1 className="mb-6 max-w-3xl text-balance text-5xl font-bold leading-[1.02] tracking-tight text-foreground md:text-[72px]">
                 <span className="block">
                   {t("titleLine1")}
                 </span>
@@ -549,7 +549,7 @@ function FinalCta({
         }}
       />
       <div className="scroll-animate relative z-10 mx-auto max-w-3xl px-5 text-center">
-        <h2 className="mb-5 text-4xl font-bold leading-[1.05] tracking-normal text-foreground md:text-5xl">
+        <h2 className="mb-5 text-balance text-4xl font-bold leading-[1.05] tracking-tight text-foreground md:text-5xl">
           {title}
         </h2>
         <p className="mx-auto mb-10 max-w-xl text-base leading-relaxed text-foreground/62">

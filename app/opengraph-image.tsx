@@ -29,7 +29,7 @@ export default function Image() {
           style={{
             border: "1px solid #d4d4d8",
             borderRadius: 28,
-            boxShadow: "0 32px 90px rgba(37, 99, 235, 0.16)",
+            boxShadow: "0 32px 90px rgba(38, 131, 70, 0.16)",
             display: "flex",
             flexDirection: "column",
             gap: 34,
@@ -37,7 +37,21 @@ export default function Image() {
             width: "100%",
           }}
         >
-          <div style={{ color: "#2563eb", fontSize: 34, fontWeight: 700 }}>
+          <div
+            style={{
+              alignItems: "center",
+              color: "#268346",
+              display: "flex",
+              fontSize: 34,
+              fontWeight: 700,
+              gap: 14,
+            }}
+          >
+            <svg width="40" height="40" viewBox="0 0 40 40">
+              <rect x="6" y="22" width="7" height="14" rx="1.5" fill="#1e3a6e" />
+              <rect x="16.5" y="14" width="7" height="22" rx="1.5" fill="#1e3a6e" />
+              <rect x="27" y="6" width="7" height="30" rx="1.5" fill="#3daa5c" />
+            </svg>
             Splnit.eu
           </div>
           <div
@@ -52,7 +66,7 @@ export default function Image() {
             }}
           >
             <span>EU compliance.</span>
-            <span style={{ color: "#71717a" }}>Automatically verified.</span>
+            <span style={{ color: "#268346" }}>Automatically verified.</span>
           </div>
           <div
             style={{

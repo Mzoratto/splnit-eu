@@ -36,7 +36,7 @@ export default async function Image({
         <div style={{ display: "flex", flexDirection: "column", gap: 18 }}>
           <div
             style={{
-              color: trustCenter?.accentColor ?? "#1d4ed8",
+              color: trustCenter?.accentColor ?? "#268346",
               fontSize: 28,
               fontWeight: 700,
             }}
