@@ -3046,6 +3046,43 @@
       "title": "Vyhláška č. 410/2025 Sb. (VBO-N)",
       "description": "Baseline 47 opatření pro režim nižších povinností podle manuálu NÚKIB. Přehled pokrytí a mezer vůči vašim kontrolám.",
       "open": "Otevřít pokrytí"
-    }
+    },
+    "prehled": {
+      "eyebrow": "§ 3 odst. 2 vyhl. č. 410/2025 Sb.",
+      "title": "Přehled bezpečnostních opatření",
+      "subtitle": "Zákonný přehled zavedených, plánovaných a nezavedených opatření. Aktualizace a přezkum nejméně jednou ročně; verze uchovávejte nejméně 4 roky.",
+      "staleBanner": "Poslední verze přehledu je starší než 11 měsíců. Vyhláška vyžaduje přezkum nejméně jednou ročně — zkontrolujte stavy a vygenerujte novou verzi.",
+      "versionsTitle": "Verze dokumentu",
+      "versionsFilled": "Vyplněno {filled} z {total} opatření",
+      "generate": "Vygenerovat novou verzi (PDF)",
+      "download": "Stáhnout",
+      "noVersions": "Zatím nebyla vygenerována žádná verze.",
+      "tierNeopominutelne": "Neopominutelná opatření",
+      "tierVyhodnotitelne": "Vyhodnotitelná opatření",
+      "neopominutelneNote": "Neopominutelná opatření nelze označit jako nezavedená — liší se pouze mírou zavedení.",
+      "entryForm": {
+        "selectStatus": "Vyberte stav",
+        "statuses": {
+          "zavedeno": "Zavedeno",
+          "planovano": "Plánováno",
+          "nezavedeno": "Nezavedeno"
+        },
+        "priorities": {
+          "vysoka": "Vysoká",
+          "stredni": "Střední",
+          "nizka": "Nízká"
+        },
+        "fields": {
+          "implementationNote": "Popis zavedení",
+          "plannedDate": "Termín",
+          "priority": "Priorita",
+          "responsiblePerson": "Odpovědná osoba",
+          "justification": "Odůvodnění"
+        },
+        "save": "Uložit",
+        "saved": "Uloženo"
+      }
+    },
+    "openPrehled": "Přehled bezpečnostních opatření"
   }
 }

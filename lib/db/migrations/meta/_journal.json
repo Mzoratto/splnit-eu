@@ -239,6 +239,13 @@
       "when": 1781201882685,
       "tag": "0033_misty_patch",
       "breakpoints": true
+    },
+    {
+      "idx": 34,
+      "version": "7",
+      "when": 1781203047551,
+      "tag": "0034_rapid_ronan",
+      "breakpoints": true
     }
   ]
 }

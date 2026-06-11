@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { notFound } from "next/navigation";
 import { auth } from "@clerk/nextjs/server";
 import { getLocale } from "next-intl/server";
@@ -107,6 +108,11 @@ export default async function VboNCoveragePage() {
         eyebrow={copy.eyebrow}
         title={copy.title}
         subtitle={copy.subtitle}
+        actions={
+          <Link href="/regulations/vbo-n/prehled" className="btn btn-primary">
+            {copy.openPrehled}
+          </Link>
+        }
       />
 
       <div className="grid gap-4 sm:grid-cols-3">

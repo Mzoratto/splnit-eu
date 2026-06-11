@@ -1343,3 +1343,47 @@ export type RemediationTask = typeof remediationTasks.$inferSelect;
 export type MappingReviewQueueItem = typeof mappingReviewQueue.$inferSelect;
 export type MappingPromotionAudit = typeof mappingPromotionAudit.$inferSelect;
 export type AuditLog = typeof auditLogs.$inferSelect;
+
+// --- VBO-N: Přehled bezpečnostních opatření (§ 3 odst. 2 vyhl. č. 410/2025 Sb.) ---
+
+export const prehledEntries = pgTable(
+  "prehled_entries",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    clerkOrgId: text("clerk_org_id")
+      .notNull()
+      .references(() => organisations.clerkOrgId, { onDelete: "cascade" }),
+    baselineId: text("baseline_id").notNull(),
+    status: text("status").notNull(),
+    implementationNote: text("implementation_note"),
+    plannedDate: date("planned_date"),
+    priority: text("priority"),
+    responsiblePerson: text("responsible_person"),
+    justification: text("justification"),
+    updatedAt: timestamp("updated_at", { withTimezone: true }).defaultNow(),
+  },
+  (table) => [
+    unique().on(table.clerkOrgId, table.baselineId),
+    check(
+      "prehled_entries_status_check",
+      sql`${table.status} IN ('zavedeno', 'planovano', 'nezavedeno')`,
+    ),
+  ],
+);
+
+// Generated exports are immutable: rows are insert-only and the PDF is
+// served from the stored blob, never re-rendered (byte-identical downloads).
+export const prehledVersions = pgTable("prehled_versions", {
+  id: uuid("id").primaryKey().defaultRandom(),
+  clerkOrgId: text("clerk_org_id")
+    .notNull()
+    .references(() => organisations.clerkOrgId, { onDelete: "cascade" }),
+  versionNumber: integer("version_number").notNull(),
+  createdAt: timestamp("created_at", { withTimezone: true }).defaultNow().notNull(),
+  createdBy: text("created_by"),
+  blobUrl: text("blob_url").notNull(),
+  snapshot: jsonb("snapshot").notNull(),
+});
+
+export type PrehledEntry = typeof prehledEntries.$inferSelect;
+export type PrehledVersion = typeof prehledVersions.$inferSelect;
