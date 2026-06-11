@@ -26,13 +26,23 @@ async function loadFrameworkIndexData() {
     Boolean(process.env.CLERK_SECRET_KEY);
 
   if (!clerkConfigured || !hasDatabaseUrl()) {
-    return { enrolledFrameworks: [], mode: "unavailable" as const, organisationLocale: null };
+    return {
+      enrolledFrameworks: [],
+      mode: "unavailable" as const,
+      organisationLocale: null,
+      rezimPovinnosti: null,
+    };
   }
 
   const session = await auth();
 
   if (!session.orgId) {
-    return { enrolledFrameworks: [], mode: "unavailable" as const, organisationLocale: null };
+    return {
+      enrolledFrameworks: [],
+      mode: "unavailable" as const,
+      organisationLocale: null,
+      rezimPovinnosti: null,
+    };
   }
 
   try {
@@ -45,9 +55,15 @@ async function loadFrameworkIndexData() {
       enrolledFrameworks,
       mode: "live" as const,
       organisationLocale: organisation?.locale ?? null,
+      rezimPovinnosti: organisation?.rezimPovinnosti ?? null,
     };
   } catch {
-    return { enrolledFrameworks: [], mode: "unavailable" as const, organisationLocale: null };
+    return {
+      enrolledFrameworks: [],
+      mode: "unavailable" as const,
+      organisationLocale: null,
+      rezimPovinnosti: null,
+    };
   }
 }
 
@@ -126,11 +142,12 @@ function FrameworkCard({
 
 export default async function FrameworksPage() {
   const requestLocale = normalizeLocale(await getLocale()) ?? "cs-CZ";
-  const { enrolledFrameworks, mode, organisationLocale } =
+  const { enrolledFrameworks, mode, organisationLocale, rezimPovinnosti } =
     await loadFrameworkIndexData();
   const locale = normalizeLocale(organisationLocale) ?? requestLocale;
   const messages = getMessagesForLocale(locale);
   const copy = messages.frameworks;
+  const vboNCard = rezimPovinnosti === "nizsi" ? messages.vboN.frameworksCard : null;
   const enrolledSlugs = new Set(enrolledFrameworks.map((framework) => framework.slug));
   const availableFrameworks = FRAMEWORK_LIBRARY.filter(
     (framework) => !enrolledSlugs.has(framework.slug),
@@ -152,6 +169,29 @@ export default async function FrameworksPage() {
       />
 
       {notice ? <DataModeNotice body={notice.body} title={notice.title} /> : null}
+
+      {vboNCard ? (
+        <article className="card interactive-card">
+          <div className="flex items-start justify-between gap-4">
+            <div>
+              <p className="text-sm text-foreground/58">{vboNCard.regulator}</p>
+              <h2 className="mt-1 text-lg font-medium">{vboNCard.title}</h2>
+            </div>
+            <ClipboardCheck
+              className="h-5 w-5 text-primary"
+              aria-hidden="true"
+              strokeWidth={1.5}
+            />
+          </div>
+          <p className="mt-3 text-sm leading-6 text-foreground/64">
+            {vboNCard.description}
+          </p>
+          <Link href="/regulations/vbo-n" className="btn btn-primary mt-5">
+            {vboNCard.open}
+            <ArrowRight className="h-4 w-4" aria-hidden="true" strokeWidth={1.5} />
+          </Link>
+        </article>
+      ) : null}
 
       <section className="space-y-4">
         <div>

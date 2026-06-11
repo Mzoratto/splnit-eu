@@ -3017,5 +3017,35 @@
         }
       }
     }
+  },
+  "vboN": {
+    "eyebrow": "Vyhláška č. 410/2025 Sb.",
+    "title": "NÚKIB baseline — režim nižších povinností",
+    "subtitle": "Pokrytí 47 doporučených opatření z manuálu NÚKIB pro poskytovatele regulovaných služeb v režimu nižších povinností. Výstup je návrh dle požadavků vyhlášky, ne právní stanovisko.",
+    "coverage": {
+      "covered": "Pokryto",
+      "partial": "Částečně",
+      "missing": "Chybí"
+    },
+    "tiers": {
+      "neopominutelne": {
+        "title": "Neopominutelná opatření",
+        "badge": "vždy vyžadováno"
+      },
+      "vyhodnotitelne": {
+        "title": "Vyhodnotitelná opatření",
+        "badge": "posuzované"
+      }
+    },
+    "gapsTitle": "Nepokrytá opatření",
+    "gapsSubtitle": "Tato opatření zatím nemají namapovanou žádnou kontrolu. Doporučená opatření doplňte ručně nebo počkejte na připravované moduly.",
+    "mappedControlsLabel": "Mapované kontroly",
+    "sourceNote": "Zdroj:",
+    "frameworksCard": {
+      "regulator": "NÚKIB",
+      "title": "Vyhláška č. 410/2025 Sb. (VBO-N)",
+      "description": "Baseline 47 opatření pro režim nižších povinností podle manuálu NÚKIB. Přehled pokrytí a mezer vůči vašim kontrolám.",
+      "open": "Otevřít pokrytí"
+    }
   }
 }
