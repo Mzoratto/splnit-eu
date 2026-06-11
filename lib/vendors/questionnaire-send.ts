@@ -10,6 +10,7 @@ import {
 } from "@/lib/db/schema";
 import { getAppUrl } from "@/lib/env";
 import { createVendorAssessmentToken } from "@/lib/vendors/access";
+import { getVendorTemplateForRegime } from "@/lib/vendors/questions";
 import { normalizeContactEmail } from "@/lib/vendors/contact-email";
 import {
   getVendorQuestionnaireDeliveryMetadata,
@@ -251,8 +252,16 @@ export async function sendVendorQuestionnaireForVendor(input: {
     throw new Error("A valid vendor contact email is required.");
   }
 
+  const db = getDb();
+  const [organisation] = await db
+    .select({ rezimPovinnosti: organisations.rezimPovinnosti })
+    .from(organisations)
+    .where(eq(organisations.clerkOrgId, input.clerkOrgId))
+    .limit(1);
+
   const assessment = await createVendorQuestionnaire({
     clerkOrgId: input.clerkOrgId,
+    template: getVendorTemplateForRegime(organisation?.rezimPovinnosti),
     vendorEmail,
     vendorId: input.vendorId,
   });

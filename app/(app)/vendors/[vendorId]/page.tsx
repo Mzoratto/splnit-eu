@@ -8,6 +8,8 @@ import { hasDatabaseUrl } from "@/lib/db";
 import { getOrganisationByClerkOrgId } from "@/lib/db/queries/organisations";
 import { getVendorDetail } from "@/lib/db/queries/vendors";
 import {
+  getVendorQuestionSet,
+  normalizeVendorQuestionnaireTemplate,
   VENDOR_ASSESSMENT_QUESTIONS,
   VENDOR_ANSWER_VALUES,
 } from "@/lib/vendors/questions";
@@ -141,6 +143,15 @@ export default async function VendorDetailPage({
     "deliveryMessage",
   );
   const latestDeliveryTo = getDeliveryValue(latestQuestionnaire?.answers, "deliveryTo");
+  const latestSubmittedQuestionnaire =
+    detail.assessments.find(
+      (assessment) =>
+        assessment.status === "submitted" &&
+        normalizeVendorQuestionnaireTemplate(assessment.template) !== "basic",
+    ) ?? null;
+  const submittedTemplate = latestSubmittedQuestionnaire
+    ? normalizeVendorQuestionnaireTemplate(latestSubmittedQuestionnaire.template)
+    : null;
   const latestDeliveryUpdatedAt = getDeliveryValue(
     latestQuestionnaire?.answers,
     "deliveryUpdatedAt",
@@ -337,6 +348,58 @@ export default async function VendorDetailPage({
           </article>
         </section>
       </div>
+
+      {latestSubmittedQuestionnaire && submittedTemplate ? (
+        <section className="rounded-lg border border-border bg-surface p-5">
+          <div className="flex flex-wrap items-center justify-between gap-2">
+            <h2 className="text-lg font-semibold">
+              {copy.assessment.submittedTitle}
+            </h2>
+            <span className="mono rounded-full border border-[var(--accent-border)] bg-[var(--accent-subtle)] px-3 py-1 text-xs text-[var(--accent)]">
+              {copy.assessment.templates[submittedTemplate]}
+            </span>
+          </div>
+          <p className="mt-1 text-sm text-foreground/58">
+            {formatDate(latestSubmittedQuestionnaire.assessedAt, locale, copy.noDate)}
+            {latestSubmittedQuestionnaire.score !== null
+              ? ` · ${latestSubmittedQuestionnaire.score}%`
+              : ""}
+          </p>
+          <div className="mt-4 divide-y divide-border">
+            {getVendorQuestionSet(submittedTemplate).map((question) => {
+              const answer = getAnswer(
+                latestSubmittedQuestionnaire.answers,
+                question.id,
+              );
+
+              return (
+                <div
+                  key={question.id}
+                  className="grid gap-1 py-3 text-sm md:grid-cols-[1fr_160px] md:items-center"
+                >
+                  <span>
+                    {copy.assessment.questions[
+                      question.id as keyof typeof copy.assessment.questions
+                    ] ?? question.id}
+                    {question.legalReference ? (
+                      <span className="mono mt-0.5 block text-xs text-foreground/48">
+                        {question.legalReference}
+                      </span>
+                    ) : null}
+                  </span>
+                  <span className="font-medium md:text-right">
+                    {answer
+                      ? copy.assessment.answers[
+                          answer as keyof typeof copy.assessment.answers
+                        ]
+                      : copy.emptyValue}
+                  </span>
+                </div>
+              );
+            })}
+          </div>
+        </section>
+      ) : null}
     </section>
   );
 }

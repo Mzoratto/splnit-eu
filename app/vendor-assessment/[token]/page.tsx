@@ -7,8 +7,9 @@ import { normalizeLocale } from "@/i18n/routing";
 import { hasDatabaseUrl } from "@/lib/db";
 import { getVendorAssessmentByToken } from "@/lib/db/queries/vendors";
 import {
+  getVendorQuestionSet,
+  normalizeVendorQuestionnaireTemplate,
   VENDOR_ANSWER_VALUES,
-  VENDOR_ASSESSMENT_QUESTIONS,
 } from "@/lib/vendors/questions";
 import { submitVendorAssessmentAction } from "./actions";
 
@@ -88,6 +89,8 @@ export default async function VendorAssessmentPage({
   const copy = getMessagesForLocale(locale);
   const pageCopy = copy.vendorAssessmentPage;
   const assessmentCopy = copy.vendorsPage.assessment;
+  const template = normalizeVendorQuestionnaireTemplate(data.assessment.template);
+  const questions = getVendorQuestionSet(template);
 
   return (
     <main className="min-h-screen bg-background px-5 py-10 text-foreground">
@@ -123,7 +126,7 @@ export default async function VendorAssessmentPage({
           action={submitVendorAssessmentAction.bind(null, token)}
           className="space-y-4 rounded-lg border border-border bg-surface p-5"
         >
-          {VENDOR_ASSESSMENT_QUESTIONS.map((question, index) => (
+          {questions.map((question, index) => (
             <label
               key={question.id}
               className="grid gap-2 rounded-md border border-border p-3 text-sm md:grid-cols-[1fr_180px]"
@@ -135,6 +138,11 @@ export default async function VendorAssessmentPage({
                     question.id as keyof typeof assessmentCopy.questions
                   ] ?? question.id}
                 </span>
+                {question.legalReference ? (
+                  <span className="mono mt-1 block text-xs text-foreground/48">
+                    {question.legalReference}
+                  </span>
+                ) : null}
                 {assessmentCopy.questionNotes[
                   question.id as keyof typeof assessmentCopy.questionNotes
                 ] ? (

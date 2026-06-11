@@ -1,0 +1,1 @@
+ALTER TABLE "vendor_assessments" ADD COLUMN "template" text DEFAULT 'basic' NOT NULL;

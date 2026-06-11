@@ -3,8 +3,10 @@ import { getDb } from "@/lib/db";
 import { organisations, vendorAssessments, vendors } from "@/lib/db/schema";
 import {
   getVendorRiskTier,
+  normalizeVendorQuestionnaireTemplate,
   requireVendorAssessmentAnswers,
   scoreVendorAnswers,
+  type VendorQuestionnaireTemplate,
 } from "@/lib/vendors/questions";
 import { recalculateVendorAssessmentControl } from "@/lib/vendors/assessment-coverage";
 
@@ -168,6 +170,7 @@ export async function saveVendorAssessment(input: {
 
 export async function createVendorQuestionnaire(input: {
   clerkOrgId: string;
+  template?: VendorQuestionnaireTemplate;
   vendorEmail: string;
   vendorId: string;
 }) {
@@ -194,6 +197,7 @@ export async function createVendorQuestionnaire(input: {
       clerkOrgId: input.clerkOrgId,
       expiresAt: getVendorAssessmentExpiryDate(),
       status: "sent",
+      template: input.template ?? "basic",
       vendorId: input.vendorId,
     })
     .returning();
@@ -314,8 +318,9 @@ export async function submitVendorAssessmentByToken(input: {
 
   const data = result.data;
 
-  const answers = requireVendorAssessmentAnswers(input.answers);
-  const score = scoreVendorAnswers(answers);
+  const template = normalizeVendorQuestionnaireTemplate(data.assessment.template);
+  const answers = requireVendorAssessmentAnswers(input.answers, template);
+  const score = scoreVendorAnswers(answers, template);
   const riskTier = score === null ? data.vendor.riskTier : getVendorRiskTier(score);
   const assessedAt = new Date();
   const nextReviewAt = new Date(assessedAt);

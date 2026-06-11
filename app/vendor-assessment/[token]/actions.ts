@@ -4,10 +4,7 @@ import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 import { submitVendorAssessmentByToken } from "@/lib/db/queries/vendors";
 import { enforceIpRateLimit, getClientIp } from "@/lib/http/rate-limit";
-import {
-  requireVendorAssessmentAnswers,
-  VENDOR_ASSESSMENT_QUESTIONS,
-} from "@/lib/vendors/questions";
+import { getAllVendorQuestionIds } from "@/lib/vendors/questions";
 
 function getStringValue(formData: FormData, key: string) {
   const value = formData.get(key);
@@ -29,16 +26,17 @@ export async function submitVendorAssessmentAction(
     throw new Error("Too many requests. Try again later.");
   }
 
+  // Collect every known question id present in the form; template-aware
+  // validation happens inside submitVendorAssessmentByToken against the
+  // template stored on the assessment.
   const rawAnswers = Object.fromEntries(
-    VENDOR_ASSESSMENT_QUESTIONS.map((question) => [
-      question.id,
-      getStringValue(formData, question.id),
-    ]),
+    getAllVendorQuestionIds()
+      .map((id) => [id, getStringValue(formData, id)] as const)
+      .filter(([, value]) => value !== ""),
   );
-  const answers = requireVendorAssessmentAnswers(rawAnswers);
 
   await submitVendorAssessmentByToken({
-    answers,
+    answers: rawAnswers,
     token,
   });
 

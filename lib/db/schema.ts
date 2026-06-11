@@ -873,6 +873,7 @@ export const vendorAssessments = pgTable("vendor_assessments", {
     .notNull()
     .references(() => vendors.id, { onDelete: "cascade" }),
   clerkOrgId: text("clerk_org_id").notNull(),
+  template: text("template").notNull().default("basic"),
   answers: jsonb("answers").$type<Record<string, unknown>>().default({}),
   score: integer("score"),
   status: text("status").notNull().default("draft"),
