@@ -6,6 +6,7 @@ import { ArrowLeft, MessageSquareText, ShieldCheck } from "lucide-react";
 import { WorkspaceRenderer } from "@/components/workspaces/workspace-renderer";
 import { getMessagesForLocale } from "@/i18n/messages";
 import { normalizeLocale } from "@/i18n/routing";
+import { ManagedClientNotFoundError } from "@/lib/agency/errors";
 import { getControlDisplayTitle } from "@/lib/controls/localization";
 import { calculateComplianceScore } from "@/lib/dashboard/score";
 import {
@@ -79,8 +80,12 @@ export default async function AgencyClientPage({ params }: PageProps) {
       agencyId: membership.agency.id,
       orgId,
     });
-  } catch {
-    notFound();
+  } catch (error) {
+    if (error instanceof ManagedClientNotFoundError) {
+      notFound();
+    }
+
+    throw error;
   }
 
   const [dashboard, comments, workspaceProgress] = await Promise.all([

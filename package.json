@@ -12,6 +12,8 @@
     "start": "next start",
     "lint": "eslint",
     "typecheck": "tsc --noEmit",
+    "test:unit": "vitest run",
+    "test:unit:watch": "vitest",
     "test:e2e": "npm run test:e2e:public && npm run test:e2e:local-demo",
     "test:e2e:public": "E2E_SUITE=public playwright test --project=public-chromium --project=public-mobile",
     "test:e2e:local-demo": "E2E_SUITE=local-demo ENABLE_LOCAL_DEMO_DATA=true playwright test --project=local-demo-chromium --project=local-demo-mobile",
@@ -240,7 +242,8 @@
     "eslint-config-next": "^15.5.18",
     "tailwindcss": "^4",
     "tsx": "^4.22.3",
-    "typescript": "^5.9.3"
+    "typescript": "^5.9.3",
+    "vitest": "^4.1.8"
   },
   "engines": {
     "node": ">=22.13 <23",

@@ -6,6 +6,7 @@ import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { z } from "zod";
 import { deleteBlobUrlsAfterFailedSave } from "@/lib/blob/cleanup";
+import { AgencyAccessError } from "@/lib/agency/errors";
 import { selectAgencyInvite } from "@/lib/agency/invite-selection";
 import {
   getAgencyClientInviteByToken,
@@ -75,7 +76,17 @@ async function requireAgencySession() {
     redirect("/sign-in");
   }
 
-  const membership = await requireAgencyConsultant(session.userId);
+  let membership: Awaited<ReturnType<typeof requireAgencyConsultant>>;
+
+  try {
+    membership = await requireAgencyConsultant(session.userId);
+  } catch (error) {
+    if (error instanceof AgencyAccessError) {
+      redirect("/agency/signup");
+    }
+
+    throw error;
+  }
 
   return {
     agency: membership.agency,

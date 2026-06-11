@@ -1,5 +1,6 @@
 import { createHash, randomBytes } from "node:crypto";
 import { and, count, desc, eq, inArray, or } from "drizzle-orm";
+import { AgencyAccessError, ManagedClientNotFoundError } from "@/lib/agency/errors";
 import { calculateComplianceScore } from "@/lib/dashboard/score";
 import { getDb } from "@/lib/db";
 import {
@@ -197,7 +198,7 @@ export async function requireAgencyConsultant(userId: string) {
   const membership = await getAgencyForUser(userId);
 
   if (!membership) {
-    throw new Error("Agency consultant membership required.");
+    throw new AgencyAccessError();
   }
 
   return membership;
@@ -226,7 +227,7 @@ export async function requireManagedClient(input: {
   const relationship = rows[0] ?? null;
 
   if (!relationship) {
-    throw new Error("Managed client organisation required.");
+    throw new ManagedClientNotFoundError();
   }
 
   return relationship;

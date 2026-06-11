@@ -21,6 +21,25 @@ export async function listConnectedIntegrations(clerkOrgId: string) {
     );
 }
 
+export async function getIntegrationById(input: {
+  clerkOrgId: string;
+  integrationId: string;
+}) {
+  const db = getDb();
+  const rows = await db
+    .select()
+    .from(integrations)
+    .where(
+      and(
+        eq(integrations.id, input.integrationId),
+        eq(integrations.clerkOrgId, input.clerkOrgId),
+      ),
+    )
+    .limit(1);
+
+  return rows[0] ?? null;
+}
+
 export async function listActiveIntegrationTargets() {
   const db = getDb();
 

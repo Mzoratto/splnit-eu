@@ -2,6 +2,7 @@ import { getRedis, hasRedisConfig } from "@/lib/redis/client";
 
 const LOCK_TTL_SECONDS = 55 * 60;
 const FIRST_RUN_ENQUEUE_LOCK_TTL_SECONDS = 24 * 60 * 60;
+const TOKEN_REFRESH_LOCK_TTL_SECONDS = 60;
 
 async function acquireRedisLock(input: {
   key: string;
@@ -47,5 +48,15 @@ export async function acquireIntegrationFirstRunEnqueueLock(input: {
   return acquireRedisLock({
     key: `integration-first-run-enqueue:${input.clerkOrgId}:${input.provider}`,
     ttlSeconds: FIRST_RUN_ENQUEUE_LOCK_TTL_SECONDS,
+  });
+}
+
+export async function acquireMicrosoftTokenRefreshLock(input: {
+  clerkOrgId: string;
+  integrationId: string;
+}) {
+  return acquireRedisLock({
+    key: `m365-token-refresh:${input.clerkOrgId}:${input.integrationId}`,
+    ttlSeconds: TOKEN_REFRESH_LOCK_TTL_SECONDS,
   });
 }

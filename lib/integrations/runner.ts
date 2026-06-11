@@ -1,3 +1,4 @@
+import * as Sentry from "@sentry/nextjs";
 import { and, eq } from "drizzle-orm";
 import { recordActivationEvent } from "@/lib/activation/events";
 import { getDb } from "@/lib/db";
@@ -212,6 +213,8 @@ export async function runTestsForOrg(
             resultStatus: result.status,
           });
 
+          let evidenceId: string | null = null;
+
           if (shouldCreateEvidence) {
             const evidenceResult = await createAutomatedEvidenceForIntegrationRun({
               checkLogic: test.checkLogic,
@@ -225,19 +228,7 @@ export async function runTestsForOrg(
               status: result.status,
               testName: test.name,
             });
-            await syncConnectorRemediationForEvidence({
-              checkLogic: test.checkLogic,
-              clerkOrgId,
-              controlId: test.controlId,
-              controlKey: test.controlKey,
-              evidenceId: evidenceResult.evidenceId,
-              failureReason: result.failureReason ?? null,
-              passCriteria: test.passCriteria,
-              provider: integration.provider,
-              resultData: result.data,
-              status: result.status,
-              testName: test.name,
-            });
+            evidenceId = evidenceResult.evidenceId;
             evidenceCreated += 1;
           }
 
@@ -275,110 +266,179 @@ export async function runTestsForOrg(
               target: [orgControlStatuses.clerkOrgId, orgControlStatuses.controlId],
               set: statusUpdate,
             });
-          if (currentStatus?.status !== result.status) {
-            await recordActivationEvent({
-              clerkOrgId,
-              entityId: test.controlId,
-              entityType: "assessment",
-              metadata: {
-                controlId: test.controlId,
-                nextStatus: result.status,
-                previousStatus: currentStatus?.status ?? null,
-                source: "automated_evidence",
-              },
-              name: "AssessmentChanged",
-            });
-          }
-          testsRun += 1;
-        } catch (error) {
-          errors += 1;
-          const now = new Date();
-          const errorResult = buildCollectionErrorResult(error, integration.provider);
-          const resultData = errorResult.resultData;
-          const insertedRuns = await db
-            .insert(integrationRuns)
-            .values({
-              integrationId: integration.id,
-              testId: test.id,
-              clerkOrgId,
-              status: errorResult.status,
-              resultData,
-              failureReason: errorResult.failureReason,
-            })
-            .returning({ id: integrationRuns.id });
-          const integrationRunId = insertedRuns[0]?.id;
-          const shouldCreateErrorEvidence = shouldCollectAutomatedEvidence({
-            lastEvidenceAt: null,
-            now,
-            previousStatus: null,
-            resultData,
-            resultStatus: errorResult.status,
-          });
 
-          if (
-            integration.provider === "microsoft365" &&
-            integrationRunId &&
-            shouldCreateErrorEvidence
-          ) {
-            const evidenceResult = await createAutomatedEvidenceForIntegrationRun({
-              checkLogic: test.checkLogic,
-              clerkOrgId,
-              controlId: test.controlId,
-              failureReason: errorResult.failureReason,
-              integrationRunId,
-              passCriteria: test.passCriteria,
-              provider: integration.provider,
-              resultData,
-              status: errorResult.status,
-              testName: test.name,
-            });
-            await syncConnectorRemediationForEvidence({
-              checkLogic: test.checkLogic,
-              clerkOrgId,
-              controlId: test.controlId,
-              controlKey: test.controlKey,
-              evidenceId: evidenceResult.evidenceId,
-              failureReason: errorResult.failureReason,
-              passCriteria: test.passCriteria,
-              provider: integration.provider,
-              resultData,
-              status: errorResult.status,
-              testName: test.name,
-            });
-            evidenceCreated += 1;
-
-            await db
-              .insert(orgControlStatuses)
-              .values({
+          // Evidence and control status are the core records and were written
+          // above. neon-http has no interactive transactions, so the follow-up
+          // writes (remediation task, activation event) are best-effort — a
+          // failure there must not invalidate the test result or be recorded
+          // as a collection error.
+          if (evidenceId) {
+            try {
+              await syncConnectorRemediationForEvidence({
+                checkLogic: test.checkLogic,
                 clerkOrgId,
                 controlId: test.controlId,
-                lastEvidenceAt: now,
-                lastTestedAt: now,
-                status: errorResult.status,
-              })
-              .onConflictDoUpdate({
-                target: [orgControlStatuses.clerkOrgId, orgControlStatuses.controlId],
-                set: {
-                  lastEvidenceAt: now,
-                  lastTestedAt: now,
-                  status: errorResult.status,
-                  updatedAt: now,
-                },
+                controlKey: test.controlKey,
+                evidenceId,
+                failureReason: result.failureReason ?? null,
+                passCriteria: test.passCriteria,
+                provider: integration.provider,
+                resultData: result.data,
+                status: result.status,
+                testName: test.name,
               });
-            if (currentStatus?.status !== errorResult.status) {
+            } catch (error) {
+              console.error(
+                `Failed to sync remediation for evidence ${evidenceId}`,
+                error,
+              );
+              Sentry.captureException(error);
+            }
+          }
+
+          if (currentStatus?.status !== result.status) {
+            try {
               await recordActivationEvent({
                 clerkOrgId,
                 entityId: test.controlId,
                 entityType: "assessment",
                 metadata: {
                   controlId: test.controlId,
-                  nextStatus: errorResult.status,
+                  nextStatus: result.status,
                   previousStatus: currentStatus?.status ?? null,
                   source: "automated_evidence",
                 },
                 name: "AssessmentChanged",
               });
+            } catch (error) {
+              console.error(
+                `Failed to record assessment change for control ${test.controlId}`,
+                error,
+              );
+              Sentry.captureException(error);
             }
+          }
+          testsRun += 1;
+        } catch (error) {
+          errors += 1;
+
+          // Best-effort recovery: persist the failed run and, for Microsoft
+          // 365, blocked-evidence records. If recovery itself fails (e.g. the
+          // database is unreachable), capture and continue so one broken test
+          // does not abort the rest of the provider run.
+          try {
+            const now = new Date();
+            const errorResult = buildCollectionErrorResult(error, integration.provider);
+            const resultData = errorResult.resultData;
+            const insertedRuns = await db
+              .insert(integrationRuns)
+              .values({
+                integrationId: integration.id,
+                testId: test.id,
+                clerkOrgId,
+                status: errorResult.status,
+                resultData,
+                failureReason: errorResult.failureReason,
+              })
+              .returning({ id: integrationRuns.id });
+            const integrationRunId = insertedRuns[0]?.id;
+            const shouldCreateErrorEvidence = shouldCollectAutomatedEvidence({
+              lastEvidenceAt: null,
+              now,
+              previousStatus: null,
+              resultData,
+              resultStatus: errorResult.status,
+            });
+
+            if (
+              integration.provider === "microsoft365" &&
+              integrationRunId &&
+              shouldCreateErrorEvidence
+            ) {
+              const evidenceResult = await createAutomatedEvidenceForIntegrationRun({
+                checkLogic: test.checkLogic,
+                clerkOrgId,
+                controlId: test.controlId,
+                failureReason: errorResult.failureReason,
+                integrationRunId,
+                passCriteria: test.passCriteria,
+                provider: integration.provider,
+                resultData,
+                status: errorResult.status,
+                testName: test.name,
+              });
+              evidenceCreated += 1;
+
+              await db
+                .insert(orgControlStatuses)
+                .values({
+                  clerkOrgId,
+                  controlId: test.controlId,
+                  lastEvidenceAt: now,
+                  lastTestedAt: now,
+                  status: errorResult.status,
+                })
+                .onConflictDoUpdate({
+                  target: [orgControlStatuses.clerkOrgId, orgControlStatuses.controlId],
+                  set: {
+                    lastEvidenceAt: now,
+                    lastTestedAt: now,
+                    status: errorResult.status,
+                    updatedAt: now,
+                  },
+                });
+
+              try {
+                await syncConnectorRemediationForEvidence({
+                  checkLogic: test.checkLogic,
+                  clerkOrgId,
+                  controlId: test.controlId,
+                  controlKey: test.controlKey,
+                  evidenceId: evidenceResult.evidenceId,
+                  failureReason: errorResult.failureReason,
+                  passCriteria: test.passCriteria,
+                  provider: integration.provider,
+                  resultData,
+                  status: errorResult.status,
+                  testName: test.name,
+                });
+              } catch (remediationError) {
+                console.error(
+                  `Failed to sync remediation for evidence ${evidenceResult.evidenceId}`,
+                  remediationError,
+                );
+                Sentry.captureException(remediationError);
+              }
+
+              if (currentStatus?.status !== errorResult.status) {
+                try {
+                  await recordActivationEvent({
+                    clerkOrgId,
+                    entityId: test.controlId,
+                    entityType: "assessment",
+                    metadata: {
+                      controlId: test.controlId,
+                      nextStatus: errorResult.status,
+                      previousStatus: currentStatus?.status ?? null,
+                      source: "automated_evidence",
+                    },
+                    name: "AssessmentChanged",
+                  });
+                } catch (eventError) {
+                  console.error(
+                    `Failed to record assessment change for control ${test.controlId}`,
+                    eventError,
+                  );
+                  Sentry.captureException(eventError);
+                }
+              }
+            }
+          } catch (recoveryError) {
+            console.error(
+              `Failed to persist error result for test ${test.id}`,
+              recoveryError,
+            );
+            Sentry.captureException(recoveryError);
           }
         }
       }
