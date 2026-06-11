@@ -253,7 +253,7 @@ export function DiscoveryReview({
                   <div className="flex flex-wrap items-center gap-2">
                     <h2 className="font-semibold text-foreground">{localizeAssetName(asset.name, copy)}</h2>
                     {asset.tier === "primary" ? (
-                      <span className="inline-flex items-center gap-1 rounded-full bg-blue-50 px-2 py-0.5 text-xs font-medium text-blue-800">
+                      <span className="inline-flex items-center gap-1 rounded-full bg-[var(--color-green-050)] px-2 py-0.5 text-xs font-medium text-[var(--color-green-800)]">
                         <ShieldAlert className="h-3 w-3" aria-hidden="true" />
                         {copy.labels.primary}
                       </span>

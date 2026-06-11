@@ -7,7 +7,18 @@
   --color-brand-400: #5b8dd9;
   --color-brand-100: #e8eff9;
   --color-brand-050: #f3f7fd;
+
+  /* Splnit green — identity/action color derived from the logo green.
+     green-700 is the darkest step that keeps AA contrast with white text. */
   --color-logo-green: #3daa5c;
+  --color-green-900: #10391f;
+  --color-green-800: #1d6635;
+  --color-green-700: #268346;
+  --color-green-600: #2f9e51;
+  --color-green-400: #6fcb8d;
+  --color-green-200: #bbe7cb;
+  --color-green-100: #dcf2e3;
+  --color-green-050: #f0faf4;
 
   --color-pass: #16a34a;
   --color-pass-bg: #dcfce7;
@@ -19,7 +30,7 @@
   --color-surface: #ffffff;
   --color-surface-2: #f8fafc;
   --color-border: #e2e8f0;
-  --color-border-active: var(--color-brand-700);
+  --color-border-active: var(--color-green-700);
   --color-text-primary: #0f172a;
   --color-text-muted: #64748b;
   --color-text-inverse: #ffffff;
@@ -39,14 +50,14 @@
   --bg-muted: #e2e8f0;
   --bg-input: #ffffff;
   --bg-hover: rgba(15, 23, 42, 0.04);
-  --bg-active: rgba(37, 99, 235, 0.08);
+  --bg-active: rgba(38, 131, 70, 0.08);
   --bg-modal-overlay: rgba(15, 23, 42, 0.4);
 
-  --accent: var(--color-brand-700);
-  --accent-hover: var(--color-brand-600);
-  --accent-pressed: var(--color-brand-800);
-  --accent-subtle: var(--color-brand-100);
-  --accent-border: var(--color-brand-400);
+  --accent: var(--color-green-700);
+  --accent-hover: var(--color-green-600);
+  --accent-pressed: var(--color-green-800);
+  --accent-subtle: var(--color-green-100);
+  --accent-border: var(--color-green-400);
 
   --status-pass: var(--color-pass);
   --status-pass-subtle: var(--color-pass-bg);
@@ -91,11 +102,11 @@
   --bg-active: rgba(255, 255, 255, 0.08);
   --bg-modal-overlay: rgba(0, 0, 0, 0.7);
 
-  --accent: #3b82f6;
-  --accent-hover: #60a5fa;
-  --accent-pressed: #2563eb;
-  --accent-subtle: rgba(59, 130, 246, 0.12);
-  --accent-border: rgba(59, 130, 246, 0.3);
+  --accent: #4ade80;
+  --accent-hover: #6ee7a7;
+  --accent-pressed: #34c469;
+  --accent-subtle: rgba(74, 222, 128, 0.12);
+  --accent-border: rgba(74, 222, 128, 0.3);
 
   --status-pass: #10b981;
   --status-pass-subtle: rgba(16, 185, 129, 0.12);
@@ -121,7 +132,8 @@
   --text-secondary: #a1a1aa;
   --text-tertiary: #71717a;
   --text-muted: #52525b;
-  --text-on-accent: #ffffff;
+  /* Dark-theme accent is a light green, so accent surfaces need dark text. */
+  --text-on-accent: #07270f;
 
   --border-subtle: rgba(255, 255, 255, 0.06);
   --border-default: rgba(255, 255, 255, 0.1);
@@ -145,7 +157,7 @@
   --shadow-lg: 0 12px 40px 0 rgb(15 31 61 / 0.14);
   --shadow-modal: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
 
-  --ring-accent: 0 0 0 3px rgba(29, 78, 216, 0.18);
+  --ring-accent: 0 0 0 3px rgba(38, 131, 70, 0.18);
   --ring-pass: 0 0 0 3px rgba(5, 150, 105, 0.18);
   --ring-fail: 0 0 0 3px rgba(220, 38, 38, 0.18);
 
@@ -211,5 +223,5 @@
   --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.4);
   --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.4);
   --shadow-modal: 0 20px 25px -5px rgba(0, 0, 0, 0.5);
-  --ring-accent: 0 0 0 3px rgba(59, 130, 246, 0.3);
+  --ring-accent: 0 0 0 3px rgba(74, 222, 128, 0.3);
 }

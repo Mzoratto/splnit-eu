@@ -175,7 +175,7 @@ export function Sidebar({
                       locked
                         ? "pointer-events-none cursor-not-allowed text-slate-500 opacity-50"
                         : active
-                        ? "bg-blue-600 font-semibold text-white shadow-sm shadow-blue-950/30"
+                        ? "bg-[var(--color-green-700)] font-semibold text-white shadow-sm shadow-black/30"
                         : "text-slate-300 hover:bg-white/10 hover:text-white"
                     }`}
                   >
@@ -197,7 +197,7 @@ export function Sidebar({
       </nav>
       <div className="border-t border-white/10 p-4">
         <div className="flex min-w-0 items-center gap-3 rounded-lg px-2 py-2 text-left">
-          <span className="grid h-10 w-10 shrink-0 place-items-center rounded-full bg-blue-600 text-sm font-bold text-white">
+          <span className="grid h-10 w-10 shrink-0 place-items-center rounded-full bg-[var(--color-green-700)] text-sm font-bold text-white">
             {organisationName.slice(0, 1).toUpperCase()}
           </span>
           <Link href="/settings/organisation" className="min-w-0 flex-1">

@@ -31,7 +31,9 @@ export function PageHeader({
           <p className="mb-2 text-xs font-medium text-foreground/48">{breadcrumb}</p>
         ) : null}
         {eyebrow ? (
-          <p className="text-sm font-semibold text-primary">{eyebrow}</p>
+          <p className="mono text-xs font-semibold uppercase tracking-[0.08em] text-primary">
+            {eyebrow}
+          </p>
         ) : null}
         <h1 className="mt-2 text-[24px] font-bold tracking-normal sm:text-[28px]">
           {title}

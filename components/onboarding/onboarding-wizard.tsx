@@ -1046,7 +1046,7 @@ export function OnboardingWizard({
                   onClick={() => dispatch({ type: "tool", key: tool.key })}
                   className={`min-h-20 rounded-md border p-3 text-left text-sm ${
                     selected
-                      ? "border-primary bg-blue-50 text-primary"
+                      ? "border-primary bg-[var(--color-green-050)] text-primary"
                       : "border-border bg-background hover:bg-surface-muted"
                   }`}
                 >

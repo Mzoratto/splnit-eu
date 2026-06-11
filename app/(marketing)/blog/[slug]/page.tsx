@@ -130,7 +130,7 @@ export default async function BlogPostPage({
                 {pageCopy.allArticles}
               </Link>
               <div className="flex flex-wrap items-center gap-2">
-                <span className="rounded-full border border-blue-100 bg-blue-50 px-3 py-1 text-xs font-semibold text-blue-700">
+                <span className="rounded-full border border-[var(--color-green-100)] bg-[var(--color-green-050)] px-3 py-1 text-xs font-semibold text-[var(--accent)]">
                   {post.category}
                 </span>
                 <span className="rounded-full border border-border bg-white px-3 py-1 text-xs font-semibold text-foreground/62">
@@ -269,14 +269,14 @@ export default async function BlogPostPage({
                     </p>
                     <Link
                       href={getLocalizedMarketingPath(post.regulationHref, locale)}
-                      className="mt-2 inline-flex text-sm font-medium text-blue-700 hover:text-blue-800"
+                      className="mt-2 inline-flex text-sm font-medium text-[var(--accent)] hover:text-[var(--color-green-800)]"
                     >
                       {pageCopy.relatedRegulationOpen}: {post.category} →
                     </Link>
                   </div>
                 ) : null}
 
-                <div className="rounded-lg border border-blue-100 bg-blue-50/60 p-8">
+                <div className="rounded-lg border border-[var(--color-green-100)] bg-[var(--color-green-050)] p-8">
                   <h2 className="text-2xl font-bold tracking-normal text-foreground">
                     {post.ctaTitle ?? pageCopy.articleCtaTitle}
                   </h2>

@@ -63,7 +63,7 @@ export default async function BlogPage() {
                     <div className="h-28 border-b border-border bg-surface-muted" />
                     <div className="flex flex-1 flex-col p-7">
                       <div className="mb-5 flex items-center justify-between gap-3">
-                        <span className="rounded-full border border-blue-100 bg-blue-50 px-3 py-1 text-xs font-semibold text-blue-700">
+                        <span className="rounded-full border border-[var(--color-green-100)] bg-[var(--color-green-050)] px-3 py-1 text-xs font-semibold text-[var(--accent)]">
                           {post.category}
                         </span>
                         <span className="text-xs font-medium text-foreground/42">

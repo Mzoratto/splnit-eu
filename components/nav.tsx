@@ -33,7 +33,7 @@ export function Nav() {
     internalPathname === "/early-access" ||
     internalPathname.startsWith("/early-access/");
   const ctaClassName =
-    "flex min-h-11 items-center gap-1.5 rounded-lg bg-[var(--color-brand-700)] px-5 py-2.5 text-sm font-semibold text-white shadow-[var(--shadow-sm)] transition-colors duration-[var(--duration-base)] hover:bg-[var(--color-brand-600)] focus-visible:ring-2 focus-visible:ring-[var(--color-brand-400)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--color-brand-800)]";
+    "flex min-h-11 items-center gap-1.5 rounded-lg bg-[var(--accent)] px-5 py-2.5 text-sm font-semibold text-white shadow-[var(--shadow-sm)] transition-colors duration-[var(--duration-base)] hover:bg-[var(--accent-hover)] focus-visible:ring-2 focus-visible:ring-[var(--accent-border)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--color-brand-800)]";
   const ctaContent = (
     <>
       {t("cta")}

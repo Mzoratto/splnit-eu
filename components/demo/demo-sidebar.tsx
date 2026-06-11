@@ -61,7 +61,7 @@ export function DemoSidebar() {
                     href={item.href}
                     className={`flex min-h-10 items-center gap-2.5 rounded-lg px-3 py-2 text-[13px] transition-colors ${
                       active
-                        ? "bg-[var(--color-brand-600)] font-semibold text-white"
+                        ? "bg-[var(--color-green-700)] font-semibold text-white"
                         : "text-white/70 hover:bg-white/10 hover:text-white"
                     }`}
                   >
@@ -93,7 +93,7 @@ export function DemoSidebar() {
                 href={item.href}
                 className={`inline-flex min-h-11 shrink-0 items-center gap-1.5 rounded-lg px-3 py-2 text-xs font-semibold ${
                   active
-                    ? "bg-[var(--color-brand-600)] text-white"
+                    ? "bg-[var(--color-green-700)] text-white"
                     : "border border-border bg-background text-foreground/68"
                 }`}
               >

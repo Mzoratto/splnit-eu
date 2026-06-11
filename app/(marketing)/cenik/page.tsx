@@ -73,7 +73,7 @@ export default async function PricingPage() {
         <section className="px-5 py-12">
           <div className="mx-auto max-w-5xl rounded-lg bg-slate-900 p-8 text-white md:flex md:items-center md:justify-between md:gap-8">
             <div className="flex items-start gap-4">
-              <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-white/10 text-blue-300">
+              <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-white/10 text-[var(--color-green-400)]">
                 <Icon
                   icon="solar:users-group-rounded-linear"
                   className="text-2xl"
@@ -91,7 +91,7 @@ export default async function PricingPage() {
               <p className="mono text-3xl font-semibold">{t("partnerPrice")}</p>
               <Link
                 href={getLocalizedMarketingPath("/agency/signup", locale)}
-                className="mt-3 inline-flex text-sm font-medium text-blue-300 hover:text-blue-200"
+                className="mt-3 inline-flex text-sm font-medium text-[var(--color-green-400)] hover:text-[var(--color-green-200)]"
               >
                 {t("partnerCta")}
               </Link>

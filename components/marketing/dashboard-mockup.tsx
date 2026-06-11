@@ -164,7 +164,7 @@ export function DashboardMockup({ locale = "cs-CZ" }: { locale?: Locale }) {
                   key={label}
                   className={`sidebar-item flex cursor-pointer items-center gap-2.5 rounded-lg px-2.5 py-2 text-xs font-medium transition-colors ${
                     index === 0
-                      ? "bg-blue-600 text-white"
+                      ? "bg-[var(--color-green-700)] text-white"
                       : "text-slate-300 hover:bg-white/10"
                   }`}
                 >
@@ -294,10 +294,10 @@ export function DashboardMockup({ locale = "cs-CZ" }: { locale?: Locale }) {
                         {t.checkRun}
                       </p>
                     </div>
-                    <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-blue-50">
+                    <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-[var(--color-green-050)]">
                       <Icon
                         icon="solar:bolt-circle-linear"
-                        className="text-sm text-blue-600"
+                        className="text-sm text-[var(--color-green-700)]"
                         aria-hidden="true"
                       />
                     </div>
@@ -332,7 +332,7 @@ export function DashboardMockup({ locale = "cs-CZ" }: { locale?: Locale }) {
                     </p>
                   </div>
                   <div
-                    className="relative flex h-5 w-9 shrink-0 cursor-pointer items-center rounded-full bg-blue-600 shadow-inner"
+                    className="relative flex h-5 w-9 shrink-0 cursor-pointer items-center rounded-full bg-[var(--color-green-700)] shadow-inner"
                     id="mock-toggle"
                   >
                     <div

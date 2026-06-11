@@ -171,7 +171,7 @@ export function PricingCta({
       data-attr={planKey === "sme" ? PRICING_CTA_FLAG : undefined}
       className={
         featured
-          ? "block rounded-full bg-blue-600 py-2.5 text-center text-sm font-medium text-white transition-colors hover:bg-blue-500"
+          ? "block rounded-full bg-[var(--accent)] py-2.5 text-center text-sm font-medium text-white transition-colors hover:bg-[var(--accent-hover)]"
           : "block rounded-full border border-zinc-200 bg-white py-2.5 text-center text-sm font-medium text-zinc-800 shadow-sm transition-colors hover:bg-zinc-50"
       }
     >

@@ -48,10 +48,10 @@ export function StickyCta() {
           : "pointer-events-none translate-y-8 opacity-0"
       }`}
     >
-      <div className="rounded-full bg-[var(--color-brand-400)] p-px shadow-xl shadow-[rgb(15_31_61_/_0.18)]">
+      <div className="rounded-full bg-[var(--accent-border)] p-px shadow-xl shadow-[rgb(15_31_61_/_0.18)]">
         <Link
           href="/early-access"
-          className="flex items-center gap-2 rounded-full bg-[var(--color-brand-700)] px-5 py-2.5 text-sm font-medium text-white transition-colors hover:bg-[var(--color-brand-600)]"
+          className="flex items-center gap-2 rounded-full bg-[var(--accent)] px-5 py-2.5 text-sm font-medium text-white transition-colors hover:bg-[var(--accent-hover)]"
         >
           <Icon
             icon="solar:shield-keyhole-linear"

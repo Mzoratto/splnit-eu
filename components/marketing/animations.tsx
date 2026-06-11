@@ -9,13 +9,13 @@ export function MarketingAnimations() {
     const sidebarItems = document.querySelectorAll<HTMLElement>(".sidebar-item");
     let currentSidebar = 0;
     const sidebarStateClasses = [
-      "bg-blue-600",
-      "bg-blue-50",
+      "bg-[var(--color-green-700)]",
+      "bg-[var(--color-green-050)]",
       "text-white",
       "text-slate-900",
       "text-slate-300",
       "text-zinc-500",
-      "text-blue-700",
+      "text-[var(--color-green-700)]",
     ];
 
     const renderSidebarState = () => {
@@ -23,12 +23,12 @@ export function MarketingAnimations() {
         item.classList.remove(...sidebarStateClasses);
 
         if (index === 0) {
-          item.classList.add("bg-blue-600", "text-white");
+          item.classList.add("bg-[var(--color-green-700)]", "text-white");
           return;
         }
 
         if (index === currentSidebar) {
-          item.classList.add("bg-blue-50", "text-slate-900");
+          item.classList.add("bg-[var(--color-green-050)]", "text-slate-900");
           return;
         }
 

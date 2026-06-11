@@ -75,7 +75,7 @@ export default async function AboutPage() {
               <div className="mt-8 flex flex-col gap-3 sm:flex-row">
                 <Link
                   href={getLocalizedMarketingPath("/early-access", locale)}
-                  className="inline-flex justify-center rounded-full bg-blue-600 px-7 py-3 text-sm font-medium text-white transition-colors hover:bg-blue-500"
+                  className="inline-flex justify-center rounded-full bg-[var(--accent)] px-7 py-3 text-sm font-medium text-white transition-colors hover:bg-[var(--accent-hover)]"
                 >
                   {t("primaryCta")}
                 </Link>

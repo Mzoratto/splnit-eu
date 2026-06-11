@@ -67,7 +67,7 @@ export default async function PartnersPage() {
             </div>
 
             <aside className="rounded-lg border border-border bg-slate-900 p-6 text-white shadow-sm">
-              <p className="text-sm font-medium text-blue-200">{PLANS.agency.name}</p>
+              <p className="text-sm font-medium text-[var(--color-green-200)]">{PLANS.agency.name}</p>
               <p className="mt-3 font-mono text-4xl font-semibold">
                 {PLANS.agency.displayPrice}
               </p>

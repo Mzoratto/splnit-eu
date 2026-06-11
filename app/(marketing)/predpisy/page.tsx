@@ -90,7 +90,7 @@ export default async function RegulationsPage() {
                 >
                   <div className="flex h-full flex-col rounded-[21px] bg-white p-7">
                     <div className="mb-5 flex items-start justify-between gap-4">
-                      <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-blue-50 text-blue-600">
+                      <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-[var(--color-green-050)] text-[var(--accent)]">
                         <Icon
                           icon={framework.icon}
                           className="text-2xl"
@@ -116,7 +116,7 @@ export default async function RegulationsPage() {
                       <span className="rounded-full bg-zinc-100 px-2.5 py-1 text-[11px] font-medium text-zinc-600">
                         {t(`cards.${framework.slug}.regulator`)}
                       </span>
-                      <span className="rounded-full bg-blue-50 px-2.5 py-1 text-[11px] font-medium text-blue-700">
+                      <span className="rounded-full bg-[var(--color-green-050)] px-2.5 py-1 text-[11px] font-medium text-[var(--accent)]">
                         {t(`cards.${framework.slug}.deadline`)}
                       </span>
                     </div>
@@ -129,7 +129,7 @@ export default async function RegulationsPage() {
                           `/predpisy/${framework.slug}`,
                           locale,
                         )}
-                        className="mt-6 inline-flex text-sm font-medium text-blue-600 hover:text-blue-700"
+                        className="mt-6 inline-flex text-sm font-medium text-[var(--accent)] hover:text-[var(--accent-pressed)]"
                       >
                         {t("learnMore")}
                       </Link>
@@ -148,7 +148,7 @@ export default async function RegulationsPage() {
         <section className="bg-zinc-950 py-24">
           <div className="mx-auto max-w-7xl px-5">
             <div className="mb-12 text-center">
-              <span className="section-tag mb-5 border-blue-500/30 bg-blue-500/10 text-blue-300">
+              <span className="section-tag mb-5 border-[rgba(61,170,92,0.35)] bg-[rgba(61,170,92,0.12)] text-[var(--color-green-400)]">
                 {t("timelineTag")}
               </span>
               <h2 className="text-4xl font-semibold tracking-[-0.04em] text-white">
@@ -162,10 +162,10 @@ export default async function RegulationsPage() {
                   key={`${item.date}-${item.title}`}
                   className="relative rounded-2xl border border-zinc-800 bg-zinc-900 p-5"
                 >
-                  <div className="mb-5 flex h-10 w-10 items-center justify-center rounded-full bg-blue-600 text-white">
+                  <div className="mb-5 flex h-10 w-10 items-center justify-center rounded-full bg-[var(--accent)] text-white">
                     <Icon icon={item.icon} aria-hidden="true" />
                   </div>
-                  <p className="mono text-xs text-blue-300">
+                  <p className="mono text-xs text-[var(--color-green-400)]">
                     {timelineItems[index]?.date ?? item.date}
                   </p>
                   <h3 className="mt-2 text-sm font-semibold leading-6 text-white">

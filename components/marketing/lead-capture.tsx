@@ -179,7 +179,7 @@ export function LeadCapture({
                       onClick={() => chooseCompanySize(size.value)}
                       className={`min-h-10 rounded-md px-3 text-sm font-semibold transition-all duration-[var(--duration-base)] ${
                         active
-                          ? "bg-[var(--color-brand-700)] text-white shadow-[var(--shadow-sm)]"
+                          ? "bg-[var(--accent)] text-white shadow-[var(--shadow-sm)]"
                           : "text-foreground/62 hover:bg-white hover:text-foreground"
                       }`}
                     >
@@ -206,8 +206,8 @@ export function LeadCapture({
                       onClick={() => toggleIndustry(industry)}
                       className={`flex min-h-10 items-center justify-between rounded-lg border px-3 text-sm font-semibold transition-all duration-[var(--duration-base)] ${
                         active
-                          ? "border-[var(--color-brand-700)] bg-[var(--color-brand-100)] text-[var(--color-brand-700)]"
-                          : "border-[var(--color-border)] bg-white text-foreground/62 hover:border-[var(--color-brand-400)] hover:text-foreground"
+                          ? "border-[var(--accent)] bg-[var(--accent-subtle)] text-[var(--accent)]"
+                          : "border-[var(--color-border)] bg-white text-foreground/62 hover:border-[var(--accent-border)] hover:text-foreground"
                       }`}
                     >
                       {t(`industries.${industry}`)}

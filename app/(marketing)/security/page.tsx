@@ -338,7 +338,7 @@ export default async function SecurityPage() {
             <div className="mt-8 flex flex-wrap gap-3">
               <Link
                 href="/trust/splnit"
-                className="inline-flex items-center gap-2 rounded-lg bg-blue-600 px-5 py-3 text-sm font-medium text-white transition-colors hover:bg-blue-500"
+                className="inline-flex items-center gap-2 rounded-lg bg-[var(--accent)] px-5 py-3 text-sm font-medium text-white transition-colors hover:bg-[var(--accent-hover)]"
               >
                 {page.links.trust}
                 <Icon icon="solar:arrow-right-linear" aria-hidden="true" />
@@ -434,7 +434,7 @@ export default async function SecurityPage() {
         <section className="border-t border-zinc-200/50 px-5 py-16">
           <div className="mx-auto max-w-4xl rounded-lg border border-zinc-200 bg-zinc-50 p-8">
             <div className="flex items-start gap-4">
-              <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-lg bg-blue-50 text-blue-600">
+              <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-lg bg-[var(--color-green-050)] text-[var(--accent)]">
                 <Icon icon="solar:letter-linear" className="text-2xl" aria-hidden="true" />
               </div>
               <div>
@@ -445,14 +445,14 @@ export default async function SecurityPage() {
                   {page.contactsBody}
                 </p>
                 <div className="mt-5 flex flex-wrap gap-3 text-sm">
-                  <Link className="font-medium text-blue-600" href="mailto:security@splnit.eu">
+                  <Link className="font-medium text-[var(--accent)]" href="mailto:security@splnit.eu">
                     security@splnit.eu
                   </Link>
-                  <Link className="font-medium text-blue-600" href="mailto:privacy@splnit.eu">
+                  <Link className="font-medium text-[var(--accent)]" href="mailto:privacy@splnit.eu">
                     privacy@splnit.eu
                   </Link>
                   <Link
-                    className="font-medium text-blue-600"
+                    className="font-medium text-[var(--accent)]"
                     href={getLocalizedMarketingPath("/soukromi", locale)}
                   >
                     {page.links.privacy}

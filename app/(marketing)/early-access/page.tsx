@@ -74,7 +74,7 @@ export default async function EarlyAccessPage() {
               <div className="mt-8 flex flex-col gap-3 sm:flex-row">
                 <Link
                   href="mailto:hello@splnit.eu?subject=Design%20partner%20Splnit.eu"
-                  className="inline-flex justify-center rounded-full bg-blue-600 px-7 py-3 text-sm font-medium text-white transition-colors hover:bg-blue-500"
+                  className="inline-flex justify-center rounded-full bg-[var(--accent)] px-7 py-3 text-sm font-medium text-white transition-colors hover:bg-[var(--accent-hover)]"
                 >
                   {t("primaryCta")}
                 </Link>
@@ -108,8 +108,8 @@ export default async function EarlyAccessPage() {
 
         <section className="border-t border-zinc-200/50 bg-white py-20">
           <div className="mx-auto grid max-w-7xl gap-8 px-5 md:grid-cols-2">
-            <div className="rounded-[24px] border border-blue-100 bg-blue-50/40 p-8">
-              <div className="mb-5 flex h-11 w-11 items-center justify-center rounded-xl bg-blue-600 text-white">
+            <div className="rounded-[24px] border border-[var(--color-green-100)] bg-[var(--color-green-050)] p-8">
+              <div className="mb-5 flex h-11 w-11 items-center justify-center rounded-xl bg-[var(--accent)] text-white">
                 <Icon icon="solar:check-circle-linear" className="text-2xl" />
               </div>
               <h2 className="text-2xl font-semibold text-zinc-900">
@@ -140,7 +140,7 @@ export default async function EarlyAccessPage() {
                   <li key={key} className="flex gap-3">
                     <Icon
                       icon="solar:arrow-right-linear"
-                      className="mt-0.5 shrink-0 text-lg text-blue-600"
+                      className="mt-0.5 shrink-0 text-lg text-[var(--accent)]"
                     />
                     <span>{t(`asks.${key}`)}</span>
                   </li>
@@ -165,7 +165,7 @@ export default async function EarlyAccessPage() {
               {weekKeys.map((key) => (
                 <article key={key} className="rounded-[22px] p-px grad-border">
                   <div className="h-full rounded-[21px] bg-white p-7">
-                    <p className="text-sm font-medium text-blue-600">
+                    <p className="text-sm font-medium text-[var(--accent)]">
                       {t(`weeks.${key}Title`)}
                     </p>
                     <h3 className="mt-3 text-lg font-semibold text-zinc-900">

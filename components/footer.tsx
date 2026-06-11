@@ -82,7 +82,7 @@ export function Footer() {
                   <button
                     type="submit"
                     disabled={status === "loading"}
-                    className="min-h-10 shrink-0 rounded-lg bg-[var(--color-brand-700)] px-4 py-2 text-xs font-semibold text-white transition-colors hover:bg-[var(--color-brand-600)] disabled:cursor-not-allowed disabled:opacity-60"
+                    className="min-h-10 shrink-0 rounded-lg bg-[var(--accent)] px-4 py-2 text-xs font-semibold text-white transition-colors hover:bg-[var(--accent-hover)] disabled:cursor-not-allowed disabled:opacity-60"
                   >
                     {status === "loading"
                       ? t("newsletterLoading")

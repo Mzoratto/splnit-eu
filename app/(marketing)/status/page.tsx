@@ -173,7 +173,7 @@ export default async function StatusPage() {
           </div>
           <div className="mx-auto mt-8 max-w-6xl">
             <Link
-              className="inline-flex items-center gap-2 rounded-lg bg-blue-600 px-5 py-3 text-sm font-medium text-white transition-colors hover:bg-blue-500"
+              className="inline-flex items-center gap-2 rounded-lg bg-[var(--accent)] px-5 py-3 text-sm font-medium text-white transition-colors hover:bg-[var(--accent-hover)]"
               href="mailto:hello@splnit.eu?subject=Splnit.eu%20status%20issue"
             >
               {page.contact}
@@ -199,7 +199,7 @@ function StatusCard({
 }) {
   return (
     <article className="rounded-lg border border-zinc-200 bg-white p-7">
-      <div className="mb-5 flex h-11 w-11 items-center justify-center rounded-lg bg-blue-50 text-blue-600">
+      <div className="mb-5 flex h-11 w-11 items-center justify-center rounded-lg bg-[var(--color-green-050)] text-[var(--accent)]">
         <Icon icon={icon} className="text-2xl" aria-hidden="true" />
       </div>
       <h2 className="text-lg font-semibold text-zinc-900">{title}</h2>

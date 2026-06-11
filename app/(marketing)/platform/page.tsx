@@ -62,16 +62,16 @@ export default async function PlatformPage() {
                   className="scroll-animate"
                 >
                   <div className="mb-5 flex items-center">
-                    <div className="z-10 flex h-11 w-11 items-center justify-center rounded-full bg-blue-600 text-sm font-semibold text-white shadow-md shadow-blue-200">
+                    <div className="z-10 flex h-11 w-11 items-center justify-center rounded-full bg-[var(--accent)] text-sm font-semibold text-white shadow-md shadow-green-200">
                       {index + 1}
                     </div>
                     {index < copy.steps.length - 1 ? (
-                      <div className="mx-3 hidden h-px flex-1 bg-gradient-to-r from-blue-100 via-blue-300 to-blue-100 md:block" />
+                      <div className="mx-3 hidden h-px flex-1 bg-gradient-to-r from-green-100 via-blue-300 to-green-100 md:block" />
                     ) : null}
                   </div>
                   <div className="rounded-[22px] p-px grad-border">
                     <div className="h-full rounded-[21px] bg-white p-7">
-                      <div className="mb-5 flex h-11 w-11 items-center justify-center rounded-xl bg-blue-50 text-blue-600">
+                      <div className="mb-5 flex h-11 w-11 items-center justify-center rounded-xl bg-[var(--color-green-050)] text-[var(--accent)]">
                         <Icon icon={step.icon} className="text-2xl" aria-hidden="true" />
                       </div>
                       <h2 className="mb-2 text-lg font-semibold text-zinc-900">
@@ -157,7 +157,7 @@ export default async function PlatformPage() {
                   <li key={item} className="flex items-start gap-3">
                     <Icon
                       icon="solar:check-circle-linear"
-                      className="mt-0.5 shrink-0 text-xl text-blue-600"
+                      className="mt-0.5 shrink-0 text-xl text-[var(--accent)]"
                       aria-hidden="true"
                     />
                     <span className="text-sm text-zinc-700">{item}</span>
@@ -170,7 +170,7 @@ export default async function PlatformPage() {
 
         <section className="bg-zinc-950 py-24">
           <div className="mx-auto max-w-5xl px-5 text-center">
-            <span className="section-tag mb-5 border-blue-500/30 bg-blue-500/10 text-blue-300">
+            <span className="section-tag mb-5 border-[rgba(61,170,92,0.35)] bg-[rgba(61,170,92,0.12)] text-[var(--color-green-400)]">
               {copy.crossMapping.tag}
             </span>
             <h2 className="text-4xl font-semibold tracking-[-0.04em] text-white md:text-5xl">
@@ -180,7 +180,7 @@ export default async function PlatformPage() {
               {copy.crossMapping.body}
             </p>
             <div className="mono mx-auto mt-10 max-w-3xl rounded-2xl border border-zinc-800 bg-zinc-900 p-5 text-left text-sm text-zinc-300">
-              <p className="text-blue-300">ctrl_mfa_all_users</p>
+              <p className="text-[var(--color-green-400)]">ctrl_mfa_all_users</p>
               {copy.crossMapping.references.map((reference, index) => (
                 <p
                   key={reference}
@@ -215,7 +215,7 @@ export default async function PlatformPage() {
               {copy.evidence.cards.map((item) => (
                 <article key={item.title} className="rounded-[22px] p-px grad-border">
                   <div className="h-full rounded-[21px] bg-white p-7">
-                    <div className="mb-5 flex h-11 w-11 items-center justify-center rounded-xl bg-blue-50 text-blue-600">
+                    <div className="mb-5 flex h-11 w-11 items-center justify-center rounded-xl bg-[var(--color-green-050)] text-[var(--accent)]">
                       <Icon icon={item.icon} className="text-2xl" aria-hidden="true" />
                     </div>
                     <h3 className="mb-2 text-lg font-semibold text-zinc-900">
@@ -246,7 +246,7 @@ export default async function PlatformPage() {
 
         <section id="trust-center" className="border-t border-zinc-200/50 bg-white py-20">
           <div className="mx-auto max-w-4xl px-5">
-            <div className="rounded-[2rem] border border-blue-100 bg-blue-50/40 p-8 md:p-12">
+            <div className="rounded-[2rem] border border-[var(--color-green-100)] bg-[var(--color-green-050)] p-8 md:p-12">
               <h3 className="text-3xl font-semibold tracking-[-0.03em] text-zinc-900">
                 {copy.trustCenter.title}
               </h3>
@@ -257,7 +257,7 @@ export default async function PlatformPage() {
                 {copy.trustCenter.extraSections.map((item) => (
                   <div
                     key={item.title}
-                    className="rounded-2xl border border-blue-100 bg-white p-5"
+                    className="rounded-2xl border border-[var(--color-green-100)] bg-white p-5"
                   >
                     <h4 className="text-base font-semibold text-zinc-900">
                       {item.title}
@@ -268,7 +268,7 @@ export default async function PlatformPage() {
                   </div>
                 ))}
               </div>
-              <div className="mono mt-6 w-fit rounded-full border border-blue-100 bg-white px-4 py-2 text-xs text-blue-700">
+              <div className="mono mt-6 w-fit rounded-full border border-[var(--color-green-100)] bg-white px-4 py-2 text-xs text-[var(--accent)]">
                 splnit.eu/trust/demo
               </div>
               <div className="mt-6 flex flex-wrap gap-2">
@@ -287,7 +287,7 @@ export default async function PlatformPage() {
               </div>
               <Link
                 href="/trust/demo"
-                className="mt-8 inline-flex text-sm font-medium text-blue-600 hover:text-blue-700"
+                className="mt-8 inline-flex text-sm font-medium text-[var(--accent)] hover:text-[var(--accent-pressed)]"
               >
                 {copy.trustCenter.cta}
               </Link>

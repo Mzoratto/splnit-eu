@@ -77,12 +77,12 @@ export default async function RegulationDetailPage({
           <div className="mx-auto max-w-5xl">
             <Link
               href={getLocalizedMarketingPath("/predpisy", locale)}
-              className="mb-8 inline-flex text-sm font-medium text-blue-600 hover:text-blue-700"
+              className="mb-8 inline-flex text-sm font-medium text-[var(--accent)] hover:text-[var(--accent-pressed)]"
             >
               {t("backLink")}
             </Link>
             <div className="flex flex-wrap items-center gap-2">
-              <span className="rounded-full border border-blue-100 bg-blue-50 px-3 py-1 text-xs font-medium text-blue-700">
+              <span className="rounded-full border border-[var(--color-green-100)] bg-[var(--color-green-050)] px-3 py-1 text-xs font-medium text-[var(--accent)]">
                 {framework.regulator}
               </span>
               <span className="rounded-full border border-zinc-200 bg-white px-3 py-1 text-xs font-medium text-zinc-600">
@@ -117,7 +117,7 @@ export default async function RegulationDetailPage({
                 >
                   <Icon
                     icon="solar:check-circle-linear"
-                    className="mt-0.5 shrink-0 text-xl text-blue-600"
+                    className="mt-0.5 shrink-0 text-xl text-[var(--accent)]"
                     aria-hidden="true"
                   />
                   {item}
@@ -142,7 +142,7 @@ export default async function RegulationDetailPage({
                   className="rounded-[22px] p-px grad-border"
                 >
                   <div className="h-full rounded-[21px] bg-white p-6">
-                    <p className="mono mb-3 text-xs text-blue-600">
+                    <p className="mono mb-3 text-xs text-[var(--accent)]">
                       {obligation.reference}
                     </p>
                     <h3 className="text-lg font-semibold text-zinc-900">
@@ -203,7 +203,7 @@ export default async function RegulationDetailPage({
               {framework.splnitHelps.map((item) => (
                 <article key={item.title} className="rounded-[22px] p-px grad-border">
                   <div className="h-full rounded-[21px] bg-white p-7">
-                    <div className="mb-5 flex h-11 w-11 items-center justify-center rounded-xl bg-blue-50 text-blue-600">
+                    <div className="mb-5 flex h-11 w-11 items-center justify-center rounded-xl bg-[var(--color-green-050)] text-[var(--accent)]">
                       <Icon icon={item.icon} className="text-2xl" aria-hidden="true" />
                     </div>
                     <h3 className="text-lg font-semibold text-zinc-900">
@@ -218,7 +218,7 @@ export default async function RegulationDetailPage({
             </div>
             <Link
               href={getLocalizedMarketingPath("/platform", locale)}
-              className="mt-8 inline-flex rounded-full bg-blue-600 px-6 py-2.5 text-sm font-medium text-white transition-colors hover:bg-blue-500"
+              className="mt-8 inline-flex rounded-full bg-[var(--accent)] px-6 py-2.5 text-sm font-medium text-white transition-colors hover:bg-[var(--accent-hover)]"
             >
               {t("platformCta")}
             </Link>
@@ -237,9 +237,9 @@ export default async function RegulationDetailPage({
                   <Link
                     key={related.slug}
                     href={getLocalizedMarketingPath(`/predpisy/${related.slug}`, locale)}
-                    className="rounded-2xl border border-zinc-100 bg-zinc-50 p-5 transition-colors hover:border-blue-200 hover:bg-blue-50/40"
+                    className="rounded-2xl border border-zinc-100 bg-zinc-50 p-5 transition-colors hover:border-[var(--color-green-200)] hover:bg-[var(--color-green-050)]"
                   >
-                    <span className="text-sm font-semibold text-blue-700">
+                    <span className="text-sm font-semibold text-[var(--accent)]">
                       {related.name} →
                     </span>
                     <p className="mt-2 text-sm leading-6 text-zinc-600">
@@ -264,9 +264,9 @@ export default async function RegulationDetailPage({
                   <Link
                     key={article.slug}
                     href={getLocalizedMarketingPath(`/blog/${article.slug}`, locale)}
-                    className="rounded-2xl border border-zinc-100 bg-zinc-50 p-5 transition-colors hover:border-blue-200 hover:bg-blue-50/40"
+                    className="rounded-2xl border border-zinc-100 bg-zinc-50 p-5 transition-colors hover:border-[var(--color-green-200)] hover:bg-[var(--color-green-050)]"
                   >
-                    <span className="text-sm font-semibold text-blue-700">
+                    <span className="text-sm font-semibold text-[var(--accent)]">
                       {article.title} →
                     </span>
                     <p className="mt-2 text-sm leading-6 text-zinc-600">

@@ -21,8 +21,8 @@ export function RegulationSelector() {
           type="button"
           className={`rounded-full border px-4 py-2 text-sm font-medium transition-colors ${
             active === label
-              ? "border-blue-600 bg-blue-600 text-white"
-              : "border-zinc-200 bg-white text-zinc-600 hover:border-blue-200"
+              ? "border-[var(--accent)] bg-[var(--accent)] text-white"
+              : "border-zinc-200 bg-white text-zinc-600 hover:border-[var(--color-green-200)]"
           }`}
           onClick={() => select(label)}
         >

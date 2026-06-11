@@ -127,8 +127,8 @@ export default async function HomePage() {
           <div className="relative z-10 mx-auto max-w-7xl px-5">
             <div className="grid items-center gap-12 lg:grid-cols-[minmax(0,1fr)_minmax(440px,0.86fr)] xl:grid-cols-[minmax(0,0.9fr)_minmax(600px,1fr)]">
               <div>
-                <div className="mb-8 inline-flex items-center gap-2 rounded-full border border-blue-100 bg-blue-50/80 px-3.5 py-1.5 text-blue-700">
-                <span className="pulse-dot h-1.5 w-1.5 rounded-full bg-blue-500" />
+                <div className="mb-8 inline-flex items-center gap-2 rounded-full border border-[var(--accent-border)] bg-[var(--color-green-050)] px-3.5 py-1.5 text-[var(--accent)]">
+                <span className="pulse-dot h-1.5 w-1.5 rounded-full bg-[var(--color-logo-green)]" />
                 <span className="text-xs font-bold">
                   {t("badge")}
                 </span>
@@ -153,7 +153,7 @@ export default async function HomePage() {
                 <div>
                   <Link
                     href={getLocalizedMarketingPath("/early-access", locale)}
-                    className="flex min-h-14 items-center justify-center gap-2 rounded-lg bg-[var(--color-brand-700)] px-8 py-3 font-semibold text-white shadow-[var(--shadow-sm)] transition-colors duration-[var(--duration-base)] hover:bg-[var(--color-brand-600)] focus-visible:ring-2 focus-visible:ring-[var(--color-brand-400)] focus-visible:ring-offset-2"
+                    className="flex min-h-14 items-center justify-center gap-2 rounded-lg bg-[var(--accent)] px-8 py-3 font-semibold text-white shadow-[var(--shadow-sm)] transition-colors duration-[var(--duration-base)] hover:bg-[var(--accent-hover)] focus-visible:ring-2 focus-visible:ring-[var(--accent-border)] focus-visible:ring-offset-2"
                   >
                     {t("primaryCta")}
                     <Icon
@@ -273,7 +273,7 @@ export default async function HomePage() {
                   className="scroll-animate group rounded-lg border border-border bg-white shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-lg"
                 >
                   <div className="flex h-full flex-col rounded-lg bg-white p-7">
-                    <div className="mb-5 flex h-11 w-11 items-center justify-center rounded-lg bg-blue-50 text-blue-600 transition-colors group-hover:bg-blue-100">
+                    <div className="mb-5 flex h-11 w-11 items-center justify-center rounded-lg bg-[var(--color-green-050)] text-[var(--accent)] transition-colors group-hover:bg-[var(--color-green-100)]">
                       <Icon icon={feature.icon} className="text-2xl" aria-hidden="true" />
                     </div>
                     <h3 className="mb-2.5 text-base font-semibold text-foreground">
@@ -285,7 +285,7 @@ export default async function HomePage() {
                     {feature.href ? (
                       <Link
                         href={feature.href}
-                        className="mt-5 inline-flex text-sm font-medium text-blue-600 hover:text-blue-700"
+                        className="mt-5 inline-flex text-sm font-medium text-[var(--accent)] hover:text-[var(--accent-pressed)]"
                       >
                         {t(`features.${feature.key}Link`)}
                       </Link>

@@ -112,7 +112,7 @@ export default async function Nis2ScopePage() {
             <div className="mt-8 flex flex-col gap-3 sm:flex-row">
               <a
                 href="#scope-check"
-                className="inline-flex justify-center rounded-md bg-blue-600 px-5 py-3 text-sm font-medium text-white transition-colors hover:bg-blue-500"
+                className="inline-flex justify-center rounded-md bg-[var(--accent)] px-5 py-3 text-sm font-medium text-white transition-colors hover:bg-[var(--accent-hover)]"
               >
                 {page.primaryCta}
               </a>
@@ -140,7 +140,7 @@ export default async function Nis2ScopePage() {
                 <li key={source} className="flex gap-2">
                   <Icon
                     icon="solar:document-text-linear"
-                    className="mt-0.5 shrink-0 text-lg text-blue-600"
+                    className="mt-0.5 shrink-0 text-lg text-[var(--accent)]"
                     aria-hidden="true"
                   />
                   <span>{source}</span>
@@ -150,19 +150,19 @@ export default async function Nis2ScopePage() {
             <div className="mt-5 flex flex-wrap gap-3">
               <a
                 href="https://www.gazzettaufficiale.it/eli/id/2024/10/01/24G00155/SG"
-                className="text-sm font-medium text-blue-600 hover:text-blue-500"
+                className="text-sm font-medium text-[var(--accent)] hover:text-[var(--accent)]"
               >
                 Gazzetta Ufficiale
               </a>
               <a
                 href="https://eur-lex.europa.eu/legal-content/EN/TXT/?uri=CELEX:32022L2555"
-                className="text-sm font-medium text-blue-600 hover:text-blue-500"
+                className="text-sm font-medium text-[var(--accent)] hover:text-[var(--accent)]"
               >
                 EUR-Lex NIS2
               </a>
               <a
                 href="mailto:hello@splnit.eu?subject=NIS2%20scoping%20Splnit.eu"
-                className="text-sm font-medium text-blue-600 hover:text-blue-500"
+                className="text-sm font-medium text-[var(--accent)] hover:text-[var(--accent)]"
               >
                 {page.secondaryCta}
               </a>

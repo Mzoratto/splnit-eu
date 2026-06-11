@@ -75,7 +75,7 @@ export function PricingCards() {
             <div className="flex h-full flex-col rounded-lg bg-white p-7">
               {plan.featured ? (
                 <div className="absolute left-1/2 top-0 -translate-x-1/2 -translate-y-1/2">
-                  <span className="rounded-full bg-primary px-3 py-1 text-[10px] font-bold text-white shadow-md shadow-blue-200">
+                  <span className="rounded-full bg-primary px-3 py-1 text-[10px] font-bold text-white shadow-md shadow-green-200">
                     {t("featured")}
                   </span>
                 </div>
@@ -141,7 +141,7 @@ export function PricingCards() {
               key={plan.key}
               className={`plan-card relative rounded-lg border bg-white shadow-sm ${
                 plan.featured
-                  ? "border-primary shadow-xl shadow-blue-100"
+                  ? "border-primary shadow-xl shadow-green-100"
                   : "border-border"
               }`}
             >
