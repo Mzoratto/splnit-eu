@@ -2,8 +2,8 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { getLocale } from "next-intl/server";
 import { Icon } from "@/components/marketing/local-icon";
-import { LeadCapture } from "@/components/marketing/lead-capture";
 import { MarketingShell } from "@/components/marketing/marketing-shell";
+import { Nis2ReadinessCheck } from "@/components/marketing/nis2-readiness-check";
 import { CollectionPageJsonLd } from "@/components/marketing/structured-data";
 import { getLocalizedMarketingPath } from "@/i18n/marketing-paths";
 import { normalizeLocale, type Locale } from "@/i18n/routing";
@@ -22,55 +22,55 @@ type PageCopy = {
 
 const copy: Record<Locale, PageCopy> = {
   "cs-CZ": {
-    eyebrow: "Bezplatný regulatorní profil",
+    eyebrow: "Bezplatný NIS2 check",
     lead:
-      "Vyberte velikost a odvětví firmy. Kalkulátor ukáže, které oblasti EU compliance stojí za první posouzení: NIS2, GDPR, EU AI Act, ISO 27001 nebo CSRD.",
+      "Dvě minuty, 12 otázek podle oblastí vyhlášky č. 410/2025 Sb. Zjistíte, zda pravděpodobně spadáte pod nový kybernetický zákon (264/2025 Sb.), a uvidíte připravenost po jednotlivých oblastech — hned a bez registrace.",
     metadata: {
       description:
-        "Bezplatný přehled pro české firmy: koho se týká NIS2, kdy řešit GDPR povinnosti SME a jak začít s EU compliance bez registrace.",
+        "Bezplatný check pro české firmy: spadáte pod nový kybernetický zákon (NIS2)? 12 otázek podle vyhlášky č. 410/2025 Sb., výsledek hned a bez registrace.",
       locale: "cs_CZ",
-      title: "Které EU předpisy mohou být relevantní? Bezplatný přehled | Splnit.eu",
+      title: "Spadáte pod NIS2? Bezplatný check podle vyhlášky 410/2025 | Splnit.eu",
     },
     noteBody:
-      "Výsledek je orientační triáž, ne právní stanovisko. U NIS2 vždy ověřte konkrétní regulovanou službu, velikost organizace a český režim podle ZoKB.",
+      "Výsledek je orientační triáž, ne právní stanovisko. U NIS2 vždy ověřte konkrétní regulovanou službu v oficiální kalkulačce NÚKIB a velikost organizace včetně propojených podniků.",
     noteTitle: "Jak výsledek číst",
-    primaryCta: "Spustit kalkulátor",
+    primaryCta: "Spustit check",
     secondaryCta: "Otevřít přehled předpisů",
-    title: "Které EU předpisy se vás mohou týkat?",
+    title: "Spadáte pod nový kybernetický zákon? A jak jste připraveni?",
   },
   "en-EU": {
-    eyebrow: "Free regulatory profile",
+    eyebrow: "Free NIS2 check",
     lead:
-      "Select company size and sector. The checker highlights which EU compliance areas deserve a first review: NIS2, GDPR, the EU AI Act, ISO 27001, or CSRD.",
+      "Two minutes, 12 questions following the areas of Czech Decree No. 410/2025 Coll. See whether the new Czech cybersecurity act (264/2025 Coll.) likely applies and your readiness per area — immediately, no registration.",
     metadata: {
       description:
-        "Free overview for EU SMBs: who may fall under NIS2, when GDPR duties matter, and how to start EU compliance without registration.",
+        "Free check for companies in Czechia: does the new cybersecurity act (NIS2) apply? 12 questions per Decree No. 410/2025 Coll., instant open results.",
       locale: "en_EU",
-      title: "Which EU rules may apply to you? Free checker | Splnit.eu",
+      title: "Does Czech NIS2 apply to you? Free readiness check | Splnit.eu",
     },
     noteBody:
-      "The result is indicative triage, not legal advice. For NIS2, always verify the concrete regulated service, organisation size, and local transposition.",
+      "The result is indicative triage, not legal advice. Always verify the concrete regulated service in NÚKIB's official calculator and your organisation size including linked enterprises.",
     noteTitle: "How to read the result",
-    primaryCta: "Start checker",
+    primaryCta: "Start the check",
     secondaryCta: "Open regulation overview",
-    title: "Which EU rules may apply to your company?",
+    title: "Does the new Czech cybersecurity act apply — and how ready are you?",
   },
   "it-IT": {
-    eyebrow: "Profilo normativo gratuito",
+    eyebrow: "Check NIS2 gratuito",
     lead:
-      "Selezionate dimensione e settore dell'azienda. Il calcolatore evidenzia quali aree compliance UE meritano una prima verifica: NIS2, GDPR, EU AI Act, ISO 27001 o CSRD.",
+      "Due minuti, 12 domande secondo le aree del decreto ceco n. 410/2025. Scoprite se la nuova legge ceca sulla cybersicurezza (264/2025) probabilmente vi riguarda e la vostra preparazione per area — subito, senza registrazione.",
     metadata: {
       description:
-        "Panoramica gratuita per PMI europee: quando NIS2 può applicarsi, quando contano gli obblighi GDPR e come iniziare senza registrazione.",
+        "Check gratuito per aziende attive in Cechia: la nuova legge sulla cybersicurezza (NIS2) vi riguarda? 12 domande secondo il decreto n. 410/2025, risultato immediato.",
       locale: "it_IT",
-      title: "Quali norme UE possono riguardarvi? Calcolatore gratuito | Splnit.eu",
+      title: "La NIS2 ceca vi riguarda? Check gratuito | Splnit.eu",
     },
     noteBody:
-      "Il risultato è una triage indicativa, non consulenza legale. Per NIS2 verificate sempre il servizio regolato concreto, la dimensione dell'organizzazione e la trasposizione locale.",
+      "Il risultato è una triage indicativa, non consulenza legale. Verificate sempre il servizio regolato concreto nel calcolatore ufficiale NÚKIB e la dimensione incluse le imprese collegate.",
     noteTitle: "Come leggere il risultato",
-    primaryCta: "Avvia il calcolatore",
+    primaryCta: "Avvia il check",
     secondaryCta: "Apri panoramica normative",
-    title: "Quali norme UE possono riguardare la vostra azienda?",
+    title: "La nuova legge ceca sulla cybersicurezza vi riguarda — e quanto siete pronti?",
   },
 };
 
@@ -131,7 +131,7 @@ export default async function Nis2CalculatorPage() {
 
         <section id="checker" className="bg-background px-5 py-20">
           <div className="mx-auto max-w-4xl">
-            <LeadCapture source="nis2 calculator" />
+            <Nis2ReadinessCheck />
           </div>
         </section>
 
