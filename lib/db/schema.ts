@@ -309,6 +309,7 @@ export const controls = pgTable("controls", {
   testType: text("test_type"),
   requiresEvidence: boolean("requires_evidence").notNull().default(true),
   isAutomated: boolean("is_automated").notNull().default(false),
+  baselineRefs: jsonb("baseline_refs").$type<string[]>().notNull().default([]),
 });
 
 export const frameworkControls = pgTable(

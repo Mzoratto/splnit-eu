@@ -1,0 +1,1 @@
+ALTER TABLE "controls" ADD COLUMN "baseline_refs" jsonb DEFAULT '[]'::jsonb NOT NULL;

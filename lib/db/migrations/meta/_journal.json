@@ -232,6 +232,13 @@
       "when": 1781183522692,
       "tag": "0032_same_shinko_yamashiro",
       "breakpoints": true
+    },
+    {
+      "idx": 33,
+      "version": "7",
+      "when": 1781201882685,
+      "tag": "0033_misty_patch",
+      "breakpoints": true
     }
   ]
 }

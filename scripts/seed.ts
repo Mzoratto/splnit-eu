@@ -128,6 +128,7 @@ async function seedControls() {
         testType: control.testType,
         requiresEvidence: control.requiresEvidence,
         isAutomated: control.isAutomated,
+        baselineRefs: control.baselineRefs ?? [],
       })
       .onConflictDoUpdate({
         target: controls.key,
@@ -139,6 +140,7 @@ async function seedControls() {
           testType: control.testType,
           requiresEvidence: control.requiresEvidence,
           isAutomated: control.isAutomated,
+          baselineRefs: control.baselineRefs ?? [],
         },
       })
       .returning({ id: controls.id, key: controls.key });

@@ -1,4 +1,5 @@
 import { HELIOS_CONTROL_SEEDS } from "@/lib/workspaces/control-seeds";
+import { getBaselineRefsForControl } from "@/lib/regulations/vbo-n/mapping";
 import { NIS2_EVIDENCE_REQUIREMENTS_BY_CONTROL } from "./evidence-requirements";
 
 export type FrameworkSlug = "nis2" | "ai-act" | "gdpr" | "iso27001" | "csrd";
@@ -27,6 +28,13 @@ export type ControlSeed = {
   testType: "automated" | "manual" | "hybrid";
   requiresEvidence: boolean;
   isAutomated: boolean;
+  /**
+   * VBO-N baseline IDs (e.g. "N-4-01") this control maps to. Populated from
+   * the human-reviewed mapping in lib/regulations/vbo-n/mapping.ts — do not
+   * set by hand here. Distinct from workspace `officialBaselineRefs`
+   * (§-citations of the NÚKIB overview import).
+   */
+  baselineRefs?: string[];
   frameworkMappings: {
     frameworkSlug: FrameworkSlug;
     articleRef: string;
@@ -1422,12 +1430,18 @@ function withNis2EvidenceRequirements(control: ControlSeed): ControlSeed {
   };
 }
 
+function withBaselineRefs(control: ControlSeed): ControlSeed {
+  const baselineRefs = getBaselineRefsForControl(control.key);
+
+  return baselineRefs.length ? { ...control, baselineRefs } : control;
+}
+
 export const CONTROL_LIBRARY: ControlSeed[] = [
   ...BASE_CONTROL_LIBRARY.map(withNis2EvidenceRequirements),
   ...ISO27001_EXTENSION_CONTROLS,
   ...CSRD_DATA_POINT_CONTROLS,
   ...HELIOS_CONTROL_SEEDS.map(withNis2EvidenceRequirements),
-];
+].map(withBaselineRefs);
 
 export function getControlMappingsForFramework(frameworkSlug: FrameworkSlug) {
   return CONTROL_LIBRARY.flatMap((control) =>
