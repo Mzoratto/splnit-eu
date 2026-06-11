@@ -2,7 +2,10 @@ import { auth } from "@clerk/nextjs/server";
 import { NextResponse } from "next/server";
 import { hasDatabaseUrl } from "@/lib/db";
 import { getOrganisationByClerkOrgId } from "@/lib/db/queries/organisations";
-import { getOrgStatusesByControlKey } from "@/lib/db/queries/vbo-n";
+import {
+  getOrgStatusesByControlKey,
+  getVboNRecordOverrides,
+} from "@/lib/db/queries/vbo-n";
 import {
   computeVboNCoverage,
   summarizeVboNCoverage,
@@ -27,8 +30,11 @@ export async function GET() {
     return NextResponse.json({ error: "Not available." }, { status: 404 });
   }
 
-  const statusesByControlKey = await getOrgStatusesByControlKey(session.orgId);
-  const items = computeVboNCoverage({ statusesByControlKey });
+  const [statusesByControlKey, recordOverrides] = await Promise.all([
+    getOrgStatusesByControlKey(session.orgId),
+    getVboNRecordOverrides(session.orgId),
+  ]);
+  const items = computeVboNCoverage({ recordOverrides, statusesByControlKey });
 
   return NextResponse.json({
     items,

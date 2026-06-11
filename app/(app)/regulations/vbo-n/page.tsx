@@ -7,7 +7,10 @@ import { getMessagesForLocale } from "@/i18n/messages";
 import { normalizeLocale } from "@/i18n/routing";
 import { hasDatabaseUrl } from "@/lib/db";
 import { getOrganisationByClerkOrgId } from "@/lib/db/queries/organisations";
-import { getOrgStatusesByControlKey } from "@/lib/db/queries/vbo-n";
+import {
+  getOrgStatusesByControlKey,
+  getVboNRecordOverrides,
+} from "@/lib/db/queries/vbo-n";
 import {
   computeVboNCoverage,
   groupVboNCoverage,
@@ -51,8 +54,11 @@ async function loadCoverage() {
     return null;
   }
 
-  const statusesByControlKey = await getOrgStatusesByControlKey(session.orgId);
-  const items = computeVboNCoverage({ statusesByControlKey });
+  const [statusesByControlKey, recordOverrides] = await Promise.all([
+    getOrgStatusesByControlKey(session.orgId),
+    getVboNRecordOverrides(session.orgId),
+  ]);
+  const items = computeVboNCoverage({ recordOverrides, statusesByControlKey });
 
   return { items, organisationLocale: organisation.locale ?? null };
 }
@@ -109,9 +115,14 @@ export default async function VboNCoveragePage() {
         title={copy.title}
         subtitle={copy.subtitle}
         actions={
-          <Link href="/regulations/vbo-n/prehled" className="btn btn-primary">
-            {copy.openPrehled}
-          </Link>
+          <>
+            <Link href="/regulations/vbo-n/vedeni" className="btn btn-secondary">
+              {copy.openVedeni}
+            </Link>
+            <Link href="/regulations/vbo-n/prehled" className="btn btn-primary">
+              {copy.openPrehled}
+            </Link>
+          </>
         }
       />
 

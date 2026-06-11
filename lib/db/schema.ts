@@ -1387,3 +1387,59 @@ export const prehledVersions = pgTable("prehled_versions", {
 
 export type PrehledEntry = typeof prehledEntries.$inferSelect;
 export type PrehledVersion = typeof prehledVersions.$inferSelect;
+
+// --- VBO-N: Vrcholné vedení (§ 4 vyhl. č. 410/2025 Sb.) ---
+
+export const vboResponsiblePersons = pgTable("vbo_responsible_persons", {
+  id: uuid("id").primaryKey().defaultRandom(),
+  clerkOrgId: text("clerk_org_id")
+    .notNull()
+    .references(() => organisations.clerkOrgId, { onDelete: "cascade" }),
+  name: text("name").notNull(),
+  designatedOn: date("designated_on").notNull(),
+  authorityDocUrl: text("authority_doc_url"),
+  qualificationNote: text("qualification_note"),
+  qualificationFileUrl: text("qualification_file_url"),
+  createdAt: timestamp("created_at", { withTimezone: true }).defaultNow().notNull(),
+});
+
+export const vboManagementTrainings = pgTable("vbo_management_trainings", {
+  id: uuid("id").primaryKey().defaultRandom(),
+  clerkOrgId: text("clerk_org_id")
+    .notNull()
+    .references(() => organisations.clerkOrgId, { onDelete: "cascade" }),
+  memberName: text("member_name").notNull(),
+  memberRole: text("member_role"),
+  initialTrainingOn: date("initial_training_on"),
+  lastRegularTrainingOn: date("last_regular_training_on"),
+  trainingSource: text("training_source"),
+  createdAt: timestamp("created_at", { withTimezone: true }).defaultNow().notNull(),
+  updatedAt: timestamp("updated_at", { withTimezone: true }).defaultNow(),
+});
+
+export const vboRecoveryPriorities = pgTable("vbo_recovery_priorities", {
+  id: uuid("id").primaryKey().defaultRandom(),
+  clerkOrgId: text("clerk_org_id")
+    .notNull()
+    .references(() => organisations.clerkOrgId, { onDelete: "cascade" }),
+  assetName: text("asset_name").notNull(),
+  sortOrder: integer("sort_order").notNull().default(0),
+  note: text("note"),
+  createdAt: timestamp("created_at", { withTimezone: true }).defaultNow().notNull(),
+});
+
+// Single approval date for the recovery-priority list ("schváleno vedením dne").
+export const vboRecoveryApprovals = pgTable("vbo_recovery_approvals", {
+  id: uuid("id").primaryKey().defaultRandom(),
+  clerkOrgId: text("clerk_org_id")
+    .notNull()
+    .unique()
+    .references(() => organisations.clerkOrgId, { onDelete: "cascade" }),
+  approvedOn: date("approved_on").notNull(),
+  updatedAt: timestamp("updated_at", { withTimezone: true }).defaultNow(),
+});
+
+export type VboResponsiblePerson = typeof vboResponsiblePersons.$inferSelect;
+export type VboManagementTraining = typeof vboManagementTrainings.$inferSelect;
+export type VboRecoveryPriority = typeof vboRecoveryPriorities.$inferSelect;
+export type VboRecoveryApproval = typeof vboRecoveryApprovals.$inferSelect;

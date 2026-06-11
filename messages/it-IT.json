@@ -3083,6 +3083,51 @@
         "saved": "Uloženo"
       }
     },
-    "openPrehled": "Přehled bezpečnostních opatření"
+    "openPrehled": "Přehled bezpečnostních opatření",
+    "vedeni": {
+      "eyebrow": "§ 4 vyhl. č. 410/2025 Sb.",
+      "title": "Vrcholné vedení",
+      "subtitle": "Evidence pověřené osoby, školení vrcholného vedení a priorit obnovy. Vyplněné záznamy se automaticky promítají do pokrytí opatření N-4-01, N-4-02 a N-4-06.",
+      "noDate": "—",
+      "add": "Přidat",
+      "remove": "Odebrat",
+      "backToCoverage": "Zpět na pokrytí VBO-N",
+      "staleTrainingBanner": "Pravidelné školení starší než 12 měsíců: {names}. Naplánujte obnovu školení.",
+      "person": {
+        "title": "Pověřená osoba kybernetické bezpečnosti",
+        "name": "Jméno",
+        "designatedOn": "Datum určení",
+        "authorityDocUrl": "Odkaz na dokument ukotvující pravomoci",
+        "authorityFile": "Nebo nahrát dokument pravomocí",
+        "qualificationNote": "Doklad odborné způsobilosti (školení / certifikace / praxe)",
+        "qualificationFile": "Příloha k odborné způsobilosti (volitelné)",
+        "qualification": "Způsobilost",
+        "empty": "Zatím není určena žádná pověřená osoba."
+      },
+      "training": {
+        "title": "Školení vrcholného vedení",
+        "nukibNote": "Bezplatné kurzy NÚKIB:",
+        "memberName": "Jméno člena vedení",
+        "memberRole": "Funkce",
+        "initialOn": "Vstupní školení",
+        "lastRegularOn": "Poslední pravidelné školení",
+        "source": "Zdroj",
+        "sourcePlaceholder": "Zdroj školení (např. osveta.nukib.gov.cz)",
+        "updateDates": "Uložit data",
+        "staleBadge": "školení > 12 měsíců",
+        "empty": "Zatím nejsou evidována žádná školení."
+      },
+      "recovery": {
+        "title": "Priority obnovy primárních aktiv",
+        "order": "Pořadí",
+        "assetName": "Název aktiva",
+        "note": "Poznámka",
+        "approvedOn": "Schváleno vedením dne",
+        "saveApproval": "Uložit schválení",
+        "approvedLabel": "Schváleno",
+        "empty": "Zatím nejsou stanoveny žádné priority obnovy."
+      }
+    },
+    "openVedeni": "Vrcholné vedení"
   }
 }
