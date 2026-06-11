@@ -4,6 +4,7 @@ import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 import { z } from "zod";
 import { createTrustCenterRequest } from "@/lib/db/queries/trust-center";
+import { getAppUrl } from "@/lib/env";
 import { enforceIpRateLimit, getClientIp } from "@/lib/http/rate-limit";
 import { sendTrustCenterRequestEmail } from "@/lib/trust-center/notifications";
 
@@ -15,10 +16,6 @@ const requestSchema = z.object({
 function getStringValue(formData: FormData, key: string) {
   const value = formData.get(key);
   return typeof value === "string" ? value : "";
-}
-
-function getAppUrl() {
-  return process.env.NEXT_PUBLIC_APP_URL ?? "http://localhost:3000";
 }
 
 export async function requestTrustCenterAccessAction(

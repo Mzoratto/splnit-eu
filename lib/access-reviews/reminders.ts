@@ -5,10 +5,7 @@ import {
   accessReviewReminderSubject,
   accessReviewReminderText,
 } from "@/lib/email/templates/alerts";
-
-function getAppUrl() {
-  return process.env.NEXT_PUBLIC_APP_URL ?? "http://localhost:3000";
-}
+import { getAppUrl } from "@/lib/env";
 
 export async function sendAccessReviewReminders() {
   if (!hasDatabaseUrl()) {

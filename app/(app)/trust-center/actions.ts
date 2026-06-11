@@ -5,6 +5,7 @@ import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { z } from "zod";
 import { getOrganisationByClerkOrgId } from "@/lib/db/queries/organisations";
+import { getAppUrl } from "@/lib/env";
 import {
   approveTrustCenterRequest,
   createTrustCenterClient,
@@ -59,10 +60,6 @@ const clientAccessSchema = z.object({
 function getStringValue(formData: FormData, key: string) {
   const value = formData.get(key);
   return typeof value === "string" ? value : "";
-}
-
-function getAppUrl() {
-  return process.env.NEXT_PUBLIC_APP_URL ?? "http://localhost:3000";
 }
 
 function getTrustCenterShareUrl(subdomain: string, accessToken: string) {

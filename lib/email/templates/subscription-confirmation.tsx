@@ -8,6 +8,7 @@ import {
   Preview,
   Text,
 } from "@react-email/components";
+import { getAppUrl } from "@/lib/env";
 
 export type SubscriptionConfirmationProps = {
   orgName: string;
@@ -20,7 +21,7 @@ export function subscriptionConfirmationSubject() {
 }
 
 function billingUrl() {
-  return `${process.env.NEXT_PUBLIC_APP_URL ?? "https://splnit.eu"}/settings/billing`;
+  return `${getAppUrl()}/settings/billing`;
 }
 
 function planLabel(plan: "sme" | "agency") {

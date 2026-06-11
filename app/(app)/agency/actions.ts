@@ -8,6 +8,7 @@ import { z } from "zod";
 import { deleteBlobUrlsAfterFailedSave } from "@/lib/blob/cleanup";
 import { AgencyAccessError } from "@/lib/agency/errors";
 import { selectAgencyInvite } from "@/lib/agency/invite-selection";
+import { getAppUrl } from "@/lib/env";
 import {
   getAgencyClientInviteByToken,
   consumeAgencyClientInvite,
@@ -223,7 +224,7 @@ export async function recordAgencyConsultantInviteAction(formData: FormData) {
       email: parsed.email,
       role: parsed.role,
     });
-    const appUrl = process.env.NEXT_PUBLIC_APP_URL ?? "https://splnit.eu";
+    const appUrl = getAppUrl();
 
     await sendConsultantInvite(parsed.email, {
       acceptUrl: `${appUrl}/agency-client-invites/${invite.token}`,

@@ -1,11 +1,8 @@
 import { auth } from "@clerk/nextjs/server";
 import { NextResponse } from "next/server";
 import { recordActivationEvent } from "@/lib/activation/events";
+import { getAppUrl } from "@/lib/env";
 import { getMicrosoft365AuthUrl } from "@/lib/integrations/microsoft365/oauth";
-
-function getAppUrl() {
-  return process.env.NEXT_PUBLIC_APP_URL ?? "http://localhost:3000";
-}
 
 function hasMicrosoftOAuthConfig() {
   return Boolean(process.env.MICROSOFT_CLIENT_ID && process.env.MICROSOFT_CLIENT_SECRET);

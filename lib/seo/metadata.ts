@@ -1,10 +1,9 @@
 import type { Metadata } from "next";
 import { getLocalizedMarketingPath } from "@/i18n/marketing-paths";
 import { locales, type Locale } from "@/i18n/routing";
+import { getAppUrl } from "@/lib/env";
 
-export const siteUrl = (
-  process.env.NEXT_PUBLIC_APP_URL || "https://splnit.eu"
-).replace(/\/$/, "");
+export const siteUrl = getAppUrl();
 
 export const defaultOgImage = {
   alt: "Splnit.eu compliance automation dashboard",

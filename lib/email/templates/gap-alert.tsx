@@ -8,6 +8,7 @@ import {
   Preview,
   Text,
 } from "@react-email/components";
+import { getAppUrl } from "@/lib/env";
 
 export type GapAlertProps = {
   controlKey: string;
@@ -21,7 +22,7 @@ export function gapAlertSubject(props: GapAlertProps) {
 }
 
 function controlUrl(controlKey: string) {
-  return `${process.env.NEXT_PUBLIC_APP_URL ?? "https://splnit.eu"}/controls/${controlKey}`;
+  return `${getAppUrl()}/controls/${controlKey}`;
 }
 
 export function plainText(props: GapAlertProps) {

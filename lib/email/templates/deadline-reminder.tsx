@@ -9,6 +9,7 @@ import {
   Section,
   Text,
 } from "@react-email/components";
+import { getAppUrl } from "@/lib/env";
 
 export type DeadlineReminderProps = {
   controlsAtRisk: Array<{ reference: string; title: string }>;
@@ -21,7 +22,7 @@ export function deadlineReminderSubject(props: DeadlineReminderProps) {
 }
 
 function controlsUrl() {
-  return `${process.env.NEXT_PUBLIC_APP_URL ?? "https://splnit.eu"}/controls`;
+  return `${getAppUrl()}/controls`;
 }
 
 export function plainText(props: DeadlineReminderProps) {

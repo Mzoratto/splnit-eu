@@ -8,6 +8,7 @@ import {
   vendorAssessments,
   vendors,
 } from "@/lib/db/schema";
+import { getAppUrl } from "@/lib/env";
 import { createVendorAssessmentToken } from "@/lib/vendors/access";
 import { normalizeContactEmail } from "@/lib/vendors/contact-email";
 import {
@@ -39,10 +40,6 @@ type DeliveryContext = {
   organisation: typeof organisations.$inferSelect | null;
   vendor: typeof vendors.$inferSelect;
 };
-
-function getAppUrl() {
-  return process.env.NEXT_PUBLIC_APP_URL ?? "http://localhost:3000";
-}
 
 function asRecord(value: unknown): Record<string, unknown> {
   return value && typeof value === "object" && !Array.isArray(value)

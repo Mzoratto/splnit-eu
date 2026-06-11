@@ -7,8 +7,9 @@ import {
   orgControlStatuses,
   orgFrameworks,
 } from "@/lib/db/schema";
+import { getAppUrl } from "@/lib/env";
 
-const APP_URL = process.env.NEXT_PUBLIC_APP_URL ?? "https://splnit.eu";
+const APP_URL = getAppUrl();
 
 function hasLoopsDigestConfig() {
   return Boolean(

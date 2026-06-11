@@ -27,9 +27,7 @@ import {
 } from "@/lib/stripe/subscriptions";
 import type { SubscriptionStatus } from "@/lib/db/schema";
 
-export function getAppUrl() {
-  return process.env.NEXT_PUBLIC_APP_URL ?? "http://localhost:3000";
-}
+export { getAppUrl } from "@/lib/env";
 
 export function getObjectId(value: string | { id: string } | null) {
   if (!value) {

@@ -6,6 +6,7 @@ import { getLocale, getMessages } from "next-intl/server";
 import { CookieConsent } from "@/components/cookie-consent";
 import { RegisterServiceWorker } from "@/components/pwa/register-service-worker";
 import { normalizeLocale, type Locale } from "@/i18n/routing";
+import { getAppUrl } from "@/lib/env";
 import {
   cookieConsentName,
   type CookieConsentValue,
@@ -102,9 +103,7 @@ export async function generateMetadata(): Promise<Metadata> {
       ],
     },
     manifest: "/manifest.webmanifest",
-    metadataBase: new URL(
-      process.env.NEXT_PUBLIC_APP_URL || "https://splnit.eu",
-    ),
+    metadataBase: new URL(getAppUrl()),
     openGraph: {
       description: copy.description,
       images: [

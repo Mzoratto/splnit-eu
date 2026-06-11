@@ -11,6 +11,7 @@ import { getProposedDiscoveryCountsForOrg } from "@/lib/db/queries/discovery";
 import { getIntegrationDetail } from "@/lib/db/queries/integrations";
 import { getOrganisationByClerkOrgId } from "@/lib/db/queries/organisations";
 import { isDiscoveryEnabledForOrg, isDiscoveryProviderEnabled } from "@/lib/discovery/flags";
+import { getAppUrl } from "@/lib/env";
 import { MICROSOFT365_TEST_DEFINITIONS } from "@/lib/integrations/microsoft365/test-definitions";
 import { disconnectIntegrationAction } from "../actions";
 
@@ -27,10 +28,6 @@ function formatDate(
     dateStyle: "medium",
     timeStyle: "short",
   }).format(new Date(value));
-}
-
-function getAppUrl() {
-  return process.env.NEXT_PUBLIC_APP_URL ?? "http://localhost:3000";
 }
 
 function statusMeta(
