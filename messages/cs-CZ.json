@@ -44,7 +44,20 @@
     "dismissFreePlanBanner": "Skrýt upozornění tarifu zdarma",
     "switchToLight": "Přepnout na světlý režim",
     "switchToDark": "Přepnout na tmavý režim",
-    "demoUser": "Demo uživatel"
+    "demoUser": "Demo uživatel",
+    "searchPanel": {
+      "placeholder": "Hledat kontroly, dodavatele, incidenty…",
+      "empty": "Nic nenalezeno.",
+      "hint": "Zadejte alespoň 2 znaky.",
+      "close": "Zavřít",
+      "categories": {
+        "controls": "Kontroly",
+        "vendors": "Dodavatelé",
+        "incidents": "Incidenty",
+        "risks": "Rizika",
+        "policies": "Politiky"
+      }
+    }
   },
   "appError": {
     "eyebrow": "Chyba aplikace",
@@ -608,7 +621,8 @@
     "actions": {
       "file": "Soubor",
       "control": "Kontrola"
-    }
+    },
+    "validUntilLabel": "Platnost do"
   },
   "frameworks": {
     "descriptions": {

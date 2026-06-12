@@ -245,7 +245,7 @@ export default async function EvidencePage({
       !filters.framework ||
       row.frameworks.some((framework) => framework.frameworkSlug === filters.framework);
     const statusMatch = !filters.status || status === filters.status;
-    const daysUntilExpiry = getDaysUntil(null);
+    const daysUntilExpiry = getDaysUntil(row.validUntil ?? null);
     const expiryMatch =
       !filters.expiry ||
       (filters.expiry === "expired" && daysUntilExpiry !== null && daysUntilExpiry < 0) ||
@@ -387,6 +387,24 @@ export default async function EvidencePage({
                     <p className="mt-2 text-sm text-foreground/58">
                       {controlTitle} · {item.type} ·{" "}
                       {formatDate(item.collectedAt, locale, copy.noDate)}
+                      {item.validUntil ? (
+                        <>
+                          {" "}
+                          ·{" "}
+                          <span
+                            className={
+                              (getDaysUntil(item.validUntil) ?? 0) < 0
+                                ? "text-[var(--status-fail)]"
+                                : (getDaysUntil(item.validUntil) ?? 31) <= 30
+                                  ? "text-[var(--status-warn)]"
+                                  : undefined
+                            }
+                          >
+                            {copy.validUntilLabel}:{" "}
+                            {formatDate(item.validUntil, locale, copy.noDate)}
+                          </span>
+                        </>
+                      ) : null}
                     </p>
                     <div className="mt-3 flex flex-wrap gap-2">
                       {item.frameworks.map((framework) => (

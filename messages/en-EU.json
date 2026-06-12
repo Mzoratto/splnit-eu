@@ -44,7 +44,20 @@
     "dismissFreePlanBanner": "Dismiss free plan notice",
     "switchToLight": "Switch to light mode",
     "switchToDark": "Switch to dark mode",
-    "demoUser": "Demo user"
+    "demoUser": "Demo user",
+    "searchPanel": {
+      "placeholder": "Search controls, vendors, incidents…",
+      "empty": "No results found.",
+      "hint": "Type at least 2 characters.",
+      "close": "Close",
+      "categories": {
+        "controls": "Controls",
+        "vendors": "Vendors",
+        "incidents": "Incidents",
+        "risks": "Risks",
+        "policies": "Policies"
+      }
+    }
   },
   "appError": {
     "eyebrow": "Application error",
@@ -608,7 +621,8 @@
     "actions": {
       "file": "File",
       "control": "Control"
-    }
+    },
+    "validUntilLabel": "Valid until"
   },
   "frameworks": {
     "descriptions": {

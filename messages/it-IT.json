@@ -44,7 +44,20 @@
     "dismissFreePlanBanner": "Nascondi avviso piano Free",
     "switchToLight": "Passa alla modalità chiara",
     "switchToDark": "Passa alla modalità scura",
-    "demoUser": "Utente demo"
+    "demoUser": "Utente demo",
+    "searchPanel": {
+      "placeholder": "Cerca controlli, fornitori, incidenti…",
+      "empty": "Nessun risultato.",
+      "hint": "Digita almeno 2 caratteri.",
+      "close": "Chiudi",
+      "categories": {
+        "controls": "Controlli",
+        "vendors": "Fornitori",
+        "incidents": "Incidenti",
+        "risks": "Rischi",
+        "policies": "Politiche"
+      }
+    }
   },
   "appError": {
     "eyebrow": "Errore applicazione",
@@ -608,7 +621,8 @@
     "actions": {
       "file": "File",
       "control": "Controllo"
-    }
+    },
+    "validUntilLabel": "Valido fino al"
   },
   "frameworks": {
     "descriptions": {

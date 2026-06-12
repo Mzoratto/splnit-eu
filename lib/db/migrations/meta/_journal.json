@@ -253,6 +253,13 @@
       "when": 1781203583071,
       "tag": "0035_loud_beast",
       "breakpoints": true
+    },
+    {
+      "idx": 36,
+      "version": "7",
+      "when": 1781267745533,
+      "tag": "0036_crazy_shiver_man",
+      "breakpoints": true
     }
   ]
 }

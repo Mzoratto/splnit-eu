@@ -1,4 +1,4 @@
-import { and, desc, eq, inArray } from "drizzle-orm";
+import { and, desc, eq, gte, inArray, isNotNull, lte } from "drizzle-orm";
 import { createEvidenceState } from "@/lib/activation/evidence-state";
 import type { EvidenceAssessmentResult, EvidenceSource } from "@/lib/activation/evidence-state";
 import { recalculateFrameworkScore } from "@/lib/controls/scorer";
@@ -10,6 +10,8 @@ import {
   frameworks,
   orgControlStatuses,
   orgFrameworks,
+  organisations,
+  profiles,
 } from "@/lib/db/schema";
 
 export type EvidenceMetadataExportRow = {
@@ -144,6 +146,7 @@ export async function createManualEvidence(input: {
       snapshotData: input.snapshotData ?? null,
       source: manualEvidenceState.source,
       type: input.fileType,
+      validUntil: input.expiresAt ?? null,
     })
     .returning({ id: evidence.id });
   const evidenceId = insertedRows[0]?.id;
@@ -284,6 +287,7 @@ export async function listEvidenceVault(clerkOrgId: string) {
       source: evidence.source,
       status: orgControlStatuses.status,
       type: evidence.type,
+      validUntil: evidence.validUntil,
     })
     .from(evidence)
     .innerJoin(controls, eq(evidence.controlId, controls.id))
@@ -470,13 +474,130 @@ export type EvidenceExpiryAlert = {
   locale: string;
   organisationName: string;
   recipients: string[];
+  /** Alert window this evidence currently qualifies for (days before expiry). */
+  stage: 30 | 7;
 };
 
+/**
+ * Evidence rows entering an expiry-alert window. Window-based rather than
+ * exact-date matching so a skipped cron day cannot permanently miss an
+ * alert; `expiry_alert_stage` persists which window was already sent.
+ */
 export async function listExpiringEvidenceAlerts(
-  targetDates: string[],
+  now: Date = new Date(),
 ): Promise<EvidenceExpiryAlert[]> {
-  if (targetDates.length === 0) {
+  const db = getDb();
+  const horizon = new Date(now);
+  horizon.setUTCDate(horizon.getUTCDate() + 30);
+  const today = now.toISOString().slice(0, 10);
+  const horizonDate = horizon.toISOString().slice(0, 10);
+
+  const rows = await db
+    .select({
+      clerkOrgId: evidence.clerkOrgId,
+      controlTitle: controls.titleCs,
+      currentStage: evidence.expiryAlertStage,
+      evidenceId: evidence.id,
+      locale: organisations.locale,
+      organisationName: organisations.name,
+      validUntil: evidence.validUntil,
+    })
+    .from(evidence)
+    .innerJoin(controls, eq(evidence.controlId, controls.id))
+    .innerJoin(organisations, eq(evidence.clerkOrgId, organisations.clerkOrgId))
+    .where(
+      and(
+        isNotNull(evidence.validUntil),
+        gte(evidence.validUntil, today),
+        lte(evidence.validUntil, horizonDate),
+      ),
+    );
+
+  const candidates = rows.flatMap((row) => {
+    if (!row.validUntil) {
+      return [];
+    }
+
+    const stage = computeEvidenceExpiryStage(row.validUntil, row.currentStage, now);
+
+    return stage === null ? [] : [{ ...row, stage }];
+  });
+
+  if (candidates.length === 0) {
     return [];
   }
-  return [];
+
+  const orgIds = [...new Set(candidates.map((candidate) => candidate.clerkOrgId))];
+  const recipientRows = await db
+    .select({ clerkOrgId: profiles.clerkOrgId, email: profiles.email })
+    .from(profiles)
+    .where(inArray(profiles.clerkOrgId, orgIds));
+  const recipientsByOrg = new Map<string, string[]>();
+
+  for (const recipient of recipientRows) {
+    if (!recipient.email?.trim()) {
+      continue;
+    }
+
+    const existing = recipientsByOrg.get(recipient.clerkOrgId) ?? [];
+
+    if (!existing.includes(recipient.email)) {
+      existing.push(recipient.email);
+    }
+
+    recipientsByOrg.set(recipient.clerkOrgId, existing);
+  }
+
+  return candidates
+    .map((candidate) => ({
+      controlTitle: candidate.controlTitle,
+      evidenceId: candidate.evidenceId,
+      expiresAt: candidate.validUntil as string,
+      locale: candidate.locale,
+      organisationName: candidate.organisationName,
+      recipients: recipientsByOrg.get(candidate.clerkOrgId) ?? [],
+      stage: candidate.stage,
+    }))
+    .filter((alert) => alert.recipients.length > 0);
+}
+
+/**
+ * Which alert window (if any) the evidence should fire now, given the last
+ * stage already sent. Stages only progress forward: null -> 30 -> 7.
+ */
+export function computeEvidenceExpiryStage(
+  validUntil: string,
+  currentStage: number | null,
+  now: Date = new Date(),
+): 30 | 7 | null {
+  const msPerDay = 86_400_000;
+  const daysLeft = Math.ceil(
+    (new Date(validUntil).getTime() - now.getTime()) / msPerDay,
+  );
+
+  if (daysLeft < 0) {
+    return null;
+  }
+
+  if (daysLeft <= 7 && currentStage !== 7) {
+    return 7;
+  }
+
+  if (daysLeft <= 30 && currentStage === null) {
+    return 30;
+  }
+
+  return null;
+}
+
+export async function markEvidenceExpiryAlertSent(input: {
+  evidenceId: string;
+  stage: 30 | 7;
+}): Promise<void> {
+  const db = getDb();
+
+  await db
+    .update(evidence)
+    .set({ expiryAlertStage: input.stage })
+    .where(eq(evidence.id, input.evidenceId));
 }

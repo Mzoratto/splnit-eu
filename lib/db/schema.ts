@@ -700,6 +700,11 @@ export const evidence = pgTable("evidence", {
   blobUrl: text("blob_url"),
   snapshotData: jsonb("snapshot_data").$type<Record<string, unknown>>(),
   description: text("description"),
+  // Expiry persistence: validUntil drives vault filtering and expiry alerts;
+  // expiryAlertStage records the last alert window sent (30 or 7 days) so the
+  // cron never re-sends the same stage for the same evidence.
+  validUntil: date("valid_until"),
+  expiryAlertStage: integer("expiry_alert_stage"),
   collectedBy: text("collected_by"),
   collectedAt: timestamp("collected_at", { withTimezone: true }).defaultNow(),
 },
