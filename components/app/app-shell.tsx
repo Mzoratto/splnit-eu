@@ -2,8 +2,9 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { Search, X } from "lucide-react";
+import { X } from "lucide-react";
 import { useTranslations } from "next-intl";
+import { GlobalSearch } from "@/components/app/global-search";
 import { OrgSwitcher } from "@/components/app/org-switcher";
 import { MobileTabBar, Sidebar } from "@/components/app/sidebar";
 import { ThemeToggle } from "@/components/app/theme-toggle";
@@ -54,15 +55,22 @@ export function AppShell({
               <OrgSwitcher enabled={clerkEnabled} />
             </div>
           </div>
-          <button
-            type="button"
-            disabled
-            title={t("search")}
-            className="mx-4 hidden h-11 w-full max-w-md cursor-not-allowed items-center gap-2 rounded-lg border border-border bg-background px-4 text-left text-sm text-foreground/52 opacity-75 lg:flex"
-          >
-            <Search className="h-4 w-4" aria-hidden="true" strokeWidth={1.5} />
-            <span>{t("search")}</span>
-          </button>
+          <GlobalSearch
+            copy={{
+              categories: {
+                controls: t("searchPanel.categories.controls"),
+                incidents: t("searchPanel.categories.incidents"),
+                policies: t("searchPanel.categories.policies"),
+                risks: t("searchPanel.categories.risks"),
+                vendors: t("searchPanel.categories.vendors"),
+              },
+              close: t("searchPanel.close"),
+              empty: t("searchPanel.empty"),
+              hint: t("searchPanel.hint"),
+              placeholder: t("searchPanel.placeholder"),
+              trigger: t("search"),
+            }}
+          />
           <div className="flex items-center gap-2">
             <Link
               href={trustCenterHref}
