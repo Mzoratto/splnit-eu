@@ -9,6 +9,7 @@ import {
   FileArchive,
   Home,
   LayoutDashboard,
+  ShieldCheck,
 } from "lucide-react";
 
 import { LogoMark } from "@/components/brand/logo-mark";
@@ -17,6 +18,7 @@ import { DEMO_ORG } from "@/lib/demo/data";
 const demoNavigation = [
   { href: "/demo", label: "Dashboard", icon: LayoutDashboard },
   { href: "/demo/controls", label: "Kontroly", icon: BookOpenCheck },
+  { href: "/demo/vbo-n", label: "VBO-N (410/2025)", icon: ShieldCheck },
   { href: "/demo/workspaces/pohoda", label: "Pohoda", icon: Building2 },
   { href: "/demo/workspaces/hetzner", label: "Hetzner", icon: Cloud },
   { href: "/demo/export", label: "Export", icon: FileArchive },
