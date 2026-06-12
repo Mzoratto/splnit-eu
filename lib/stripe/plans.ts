@@ -1,17 +1,28 @@
+/**
+ * Founding pricing: the first customers pay the founding price, locked for
+ * 12 months; list prices are shown struck-through. Flip this to false (and
+ * point the Stripe env price IDs at the list-price Prices) to end the
+ * founding period — no other code changes needed.
+ */
+export const FOUNDING_PRICING_ACTIVE = true;
+
 export const PLANS = {
   free: {
     displayPrice: "0 Kč",
+    foundingPrice: null,
     limits: { clients: 0, frameworks: 1, integrations: 1, users: 1 },
     name: "Free",
   },
   sme: {
-    displayPrice: "490 Kč/měsíc",
+    displayPrice: "1 990 Kč/měsíc",
+    foundingPrice: "1 490 Kč/měsíc",
     envPriceId: "STRIPE_SME_PRICE_ID",
     limits: { clients: 1, frameworks: 999, integrations: 999, users: 25 },
     name: "SME",
   },
   agency: {
-    displayPrice: "1 990 Kč/měsíc",
+    displayPrice: "5 990 Kč/měsíc",
+    foundingPrice: "4 990 Kč/měsíc",
     envPriceId: "STRIPE_AGENCY_PRICE_ID",
     limits: { clients: 20, frameworks: 999, integrations: 999, users: 999 },
     name: "Agency",
@@ -19,6 +30,17 @@ export const PLANS = {
 } as const;
 
 export type PlanKey = keyof typeof PLANS;
+
+/** The price a new customer actually pays right now. */
+export function getActiveDisplayPrice(plan: PlanKey): string {
+  const definition = PLANS[plan];
+
+  if (FOUNDING_PRICING_ACTIVE && definition.foundingPrice) {
+    return definition.foundingPrice;
+  }
+
+  return definition.displayPrice;
+}
 export const BILLABLE_PLANS = ["sme", "agency"] as const;
 export type BillablePlanKey = (typeof BILLABLE_PLANS)[number];
 

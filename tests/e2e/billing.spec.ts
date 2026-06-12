@@ -10,23 +10,23 @@ type BillingExpectations = {
 
 const billingCopy = {
   cs: {
-    agencyPrice: "1 990 Kč/měsíc",
+    agencyPrice: "4 990 Kč/měsíc",
     choosePlan: "Vyberte plán",
-    smePrice: "490 Kč/měsíc",
+    smePrice: "1 490 Kč/měsíc",
     subscribe: "Předplatit",
     subscription: "Předplatné",
   },
   en: {
-    agencyPrice: "1 990 Kč/month",
+    agencyPrice: "4 990 Kč/month",
     choosePlan: "Choose a plan",
-    smePrice: "490 Kč/month",
+    smePrice: "1 490 Kč/month",
     subscribe: "Subscribe",
     subscription: "Subscription",
   },
   it: {
-    agencyPrice: "1 990 Kč/mese",
+    agencyPrice: "4 990 Kč/mese",
     choosePlan: "Scegli un piano",
-    smePrice: "490 Kč/mese",
+    smePrice: "1 490 Kč/mese",
     subscribe: "Abbonati",
     subscription: "Abbonamento",
   },

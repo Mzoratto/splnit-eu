@@ -23,20 +23,26 @@ const planPrices: Record<
   Locale,
   {
     currency: string;
+    /** Founding price — what new customers pay now, locked 12 months. */
     monthly: [number, number, number];
+    /** List price — shown struck-through while founding pricing is active. */
+    listMonthly: [number, number, number];
   }
 > = {
   "cs-CZ": {
     currency: "CZK",
-    monthly: [0, 490, 1990],
+    listMonthly: [0, 1990, 5990],
+    monthly: [0, 1490, 4990],
   },
   "en-EU": {
     currency: "CZK",
-    monthly: [0, 490, 1990],
+    listMonthly: [0, 1990, 5990],
+    monthly: [0, 1490, 4990],
   },
   "it-IT": {
     currency: "CZK",
-    monthly: [0, 490, 1990],
+    listMonthly: [0, 1990, 5990],
+    monthly: [0, 1490, 4990],
   },
 };
 
@@ -88,14 +94,28 @@ export function PricingCards() {
                 >
                   {planName}
                 </p>
-                <div className="flex items-baseline gap-1">
+                <div className="flex flex-wrap items-baseline gap-x-2 gap-y-1">
                   <span className="text-4xl font-bold tracking-normal text-foreground transition-opacity">
                     {formatPlanPrice(price, locale, priceSet.currency)}
                   </span>
                   <span className="text-sm text-foreground/45">
                     {t("monthlySuffix")}
                   </span>
+                  {priceSet.listMonthly[index] > price ? (
+                    <span className="text-sm text-foreground/42 line-through">
+                      {formatPlanPrice(
+                        priceSet.listMonthly[index],
+                        locale,
+                        priceSet.currency,
+                      )}
+                    </span>
+                  ) : null}
                 </div>
+                {priceSet.listMonthly[index] > price ? (
+                  <p className="mt-1 text-xs font-medium text-[var(--accent)]">
+                    {t("foundingNote")}
+                  </p>
+                ) : null}
                 <p className="mt-2 text-xs text-foreground/58">
                   {t(`${planKey}.description`)}
                 </p>

@@ -110,7 +110,7 @@
     "plans": {
       "sme": {
         "name": "SME",
-        "price": "490 Kč/měsíc",
+        "price": "1 490 Kč/měsíc",
         "description": "Plný compliance workspace pro jednu organizaci.",
         "features": [
           "Ověřené konektory podle dostupnosti a oprávnění",
@@ -120,7 +120,7 @@
       },
       "agency": {
         "name": "Agency",
-        "price": "1 990 Kč/měsíc",
+        "price": "4 990 Kč/měsíc",
         "description": "Konzultantský portál pro správu klientských organizací.",
         "features": [
           "Vše v plánu SME",
@@ -2077,7 +2077,7 @@
     "footnote": "Účtování přes Stripe · Měsíční předplatné · Změny plánu v aplikaci",
     "partnerTitle": "Potřebujete klientský portál?",
     "partnerBody": "Plán Agency přidává klientské pracovní prostory, white-label výstupy a správu konzultantů.",
-    "partnerPrice": "1 990 Kč/měsíc",
+    "partnerPrice": "4 990 Kč/měsíc",
     "partnerCta": "Spustit Agency →",
     "comparisonTag": "Srovnání funkcí",
     "comparisonTitle": "Vyberte podle hloubky automatizace.",
@@ -2139,7 +2139,8 @@
           "Neomezený počet konzultantů",
           "Klientské pozvánky a komentáře"
         ]
-      }
+      },
+      "foundingNote": "Zaváděcí cena pro první zákazníky — garantovaná 12 měsíců."
     },
     "comparison": {
       "feature": "Funkce",
@@ -2291,7 +2292,7 @@
         "feature": "SMB self-serve ceník v Kč",
         "splnit": {
           "status": "yes",
-          "text": "0 Kč, 490 Kč/měsíc, 1 990 Kč/měsíc"
+          "text": "0 Kč, 1 490 Kč/měsíc, 4 990 Kč/měsíc (zaváděcí ceny; běžně 1 990 / 5 990 Kč)"
         },
         "regfor": {
           "status": "notPublic",

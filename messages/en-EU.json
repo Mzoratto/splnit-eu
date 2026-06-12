@@ -110,7 +110,7 @@
     "plans": {
       "sme": {
         "name": "SME",
-        "price": "490 Kč/month",
+        "price": "1 490 Kč/month",
         "description": "Full compliance workspace for one organisation.",
         "features": [
           "Verified connectors according to availability and permissions",
@@ -120,7 +120,7 @@
       },
       "agency": {
         "name": "Agency",
-        "price": "1 990 Kč/month",
+        "price": "4 990 Kč/month",
         "description": "Agency portal for managing client organisations.",
         "features": [
           "Everything in SME",
@@ -2139,7 +2139,8 @@
           "Unlimited consultant seats",
           "Client invites and comments"
         ]
-      }
+      },
+      "foundingNote": "Founding price for early customers — locked for 12 months."
     },
     "comparison": {
       "feature": "Feature",

@@ -7,7 +7,7 @@ import { CollectionPageJsonLd } from "@/components/marketing/structured-data";
 import { getLocalizedMarketingPath } from "@/i18n/marketing-paths";
 import { normalizeLocale } from "@/i18n/routing";
 import { createMarketingMetadata } from "@/lib/seo/metadata";
-import { PLANS } from "@/lib/stripe/plans";
+import { getActiveDisplayPrice, PLANS } from "@/lib/stripe/plans";
 
 export async function generateMetadata(): Promise<Metadata> {
   const locale = normalizeLocale(await getLocale()) ?? "cs-CZ";
@@ -69,7 +69,7 @@ export default async function PartnersPage() {
             <aside className="rounded-lg border border-border bg-slate-900 p-6 text-white shadow-sm">
               <p className="text-sm font-medium text-[var(--color-green-200)]">{PLANS.agency.name}</p>
               <p className="mt-3 font-mono text-4xl font-semibold">
-                {PLANS.agency.displayPrice}
+                {getActiveDisplayPrice("agency")}
               </p>
               <p className="mt-4 text-sm leading-6 text-slate-300">
                 {t("planSummary", { clients: PLANS.agency.limits.clients })}

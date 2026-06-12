@@ -110,7 +110,7 @@
     "plans": {
       "sme": {
         "name": "SME",
-        "price": "490 Kč/mese",
+        "price": "1 490 Kč/mese",
         "description": "Workspace compliance completo per una organizzazione.",
         "features": [
           "Connettori verificati in base a disponibilità e permessi",
@@ -120,7 +120,7 @@
       },
       "agency": {
         "name": "Agency",
-        "price": "1 990 Kč/mese",
+        "price": "4 990 Kč/mese",
         "description": "Portale consulente per gestire organizzazioni cliente.",
         "features": [
           "Tutto il piano SME",
@@ -2139,7 +2139,8 @@
           "Posti consulente illimitati",
           "Inviti cliente e commenti"
         ]
-      }
+      },
+      "foundingNote": "Prezzo di lancio per i primi clienti — bloccato per 12 mesi."
     },
     "comparison": {
       "feature": "Funzione",
