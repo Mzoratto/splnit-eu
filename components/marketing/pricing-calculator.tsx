@@ -161,21 +161,6 @@ export function PricingCalculator() {
             ) : null}
           </div>
 
-          {/* Real, growing saving vs. one SME plan per managed entity. */}
-          {estimate.agencySavingsMonthly && estimate.agencySavingsMonthly > 0 ? (
-            <div className="mt-3 rounded-lg border border-[var(--status-pass-border)] bg-[var(--status-pass-subtle)] px-3 py-2.5 text-sm">
-              <div className="flex items-center justify-between gap-3">
-                <span className="leading-5 text-[var(--status-pass)]">
-                  {t("vsSeparate", { count })}
-                </span>
-                <span className="mono shrink-0 font-bold text-[var(--status-pass)]">
-                  {formatCzk(estimate.agencySavingsMonthly, locale)}
-                  <span className="font-normal"> {t("perMonthSuffix")}</span>
-                </span>
-              </div>
-            </div>
-          ) : null}
-
           <div className="mt-3 space-y-2.5 text-sm">
             {estimate.foundingActive && estimate.listMonthlyTotal ? (
               <div className="flex items-center justify-between rounded-lg border border-[var(--status-pass-border)] bg-[var(--status-pass-subtle)] px-3 py-2">

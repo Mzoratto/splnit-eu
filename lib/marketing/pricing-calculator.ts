@@ -26,18 +26,6 @@ export type CalculatorEstimate = {
   annualSavings: number;
   /** True when the Agency founding discount is the active price. */
   foundingActive: boolean;
-  /**
-   * CZK/month to run each IČO on its own single-entity SME plan instead
-   * (SME price × count). The Agency flat rate is compared against this to
-   * show what an agency saves by not paying per entity. Null when not on the
-   * Agency band (SME single-IČO or custom).
-   */
-  separateSmeMonthly: number | null;
-  /**
-   * CZK/month saved by the flat Agency plan vs. one SME plan per IČO
-   * (≥ 0; 0 when the flat plan is not yet cheaper). Null off the Agency band.
-   */
-  agencySavingsMonthly: number | null;
 };
 
 function clampIco(count: number): number {
@@ -65,8 +53,6 @@ export function computeCalculatorEstimate(
   let monthlyTotal: number | null;
   let listMonthlyTotal: number | null;
   let foundingActive = false;
-  let separateSmeMonthly: number | null = null;
-  let agencySavingsMonthly: number | null = null;
 
   if (count === 1) {
     plan = "sme";
@@ -78,13 +64,8 @@ export function computeCalculatorEstimate(
     listMonthlyTotal = PLANS.agency.listCzkMonthly;
     foundingActive =
       FOUNDING_PRICING_ACTIVE && PLANS.agency.priceCzkMonthly < PLANS.agency.listCzkMonthly;
-    // What it would cost to run each managed IČO on its own SME plan; the
-    // flat Agency price is compared against this to show the agency saving.
-    separateSmeMonthly = PLANS.sme.priceCzkMonthly * count;
-    agencySavingsMonthly = Math.max(0, separateSmeMonthly - monthlyTotal);
   } else {
     return {
-      agencySavingsMonthly: null,
       annualSavings: 0,
       foundingActive: false,
       intervalTotal: null,
@@ -92,7 +73,6 @@ export function computeCalculatorEstimate(
       monthlyTotal: null,
       perIcoMonthly: null,
       plan: "custom",
-      separateSmeMonthly: null,
     };
   }
 
@@ -102,7 +82,6 @@ export function computeCalculatorEstimate(
   const perIcoMonthly = Math.round(monthlyTotal / count);
 
   return {
-    agencySavingsMonthly,
     annualSavings,
     foundingActive,
     intervalTotal,
@@ -110,6 +89,5 @@ export function computeCalculatorEstimate(
     monthlyTotal,
     perIcoMonthly,
     plan,
-    separateSmeMonthly,
   };
 }
