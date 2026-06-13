@@ -5,6 +5,7 @@ import { useMemo, useState } from "react";
 import { ArrowRight, Minus, Plus } from "lucide-react";
 import { useLocale, useTranslations } from "next-intl";
 import {
+  AGENCY_MAX_CLIENTS,
   CALCULATOR_MAX_ICO,
   CALCULATOR_MIN_ICO,
   computeCalculatorEstimate,
@@ -21,8 +22,8 @@ export function PricingCalculator() {
   const t = useTranslations("pricingCalculator");
   const locale = normalizeLocale(useLocale()) ?? "cs-CZ";
   const [interval, setInterval] = useState<BillingInterval>("monthly");
-  // Open at a count where the flat-rate value is already visible (per-IČO is
-  // well below the SME price and the vs-separate saving is positive).
+  // Open mid-Agency-band so the recommender lands on the multi-IČO plan and
+  // the effective per-IČO figure is already well below the single-IČO price.
   const [count, setCount] = useState(8);
 
   const estimate = useMemo(
@@ -142,26 +143,40 @@ export function PricingCalculator() {
         </div>
       ) : (
         <>
-          <div className="flex items-center justify-between text-sm">
-            <span className="text-foreground/62">{t("recommendedPlan")}</span>
-            <span className="font-semibold text-foreground">{planName}</span>
+          {/* Recommendation: which plan fits this count, and what it costs. */}
+          <div className="flex items-center justify-between">
+            <span className="text-sm text-foreground/62">{t("recommendedPlan")}</span>
+            <span className="rounded-full bg-[var(--accent-subtle)] px-3 py-1 text-sm font-semibold text-[var(--accent)]">
+              {planName}
+            </span>
           </div>
 
-          {/* Hero: effective price per IČO — the number the slider drives. */}
-          <div className="mt-5 rounded-xl bg-[var(--accent-subtle)] px-4 py-5 text-center">
-            <p className="text-xs font-semibold uppercase tracking-wide text-[var(--accent)]">
-              {t("perIcoHero")}
-            </p>
-            <p className="mono mt-1 text-5xl font-bold text-[var(--accent)]">
-              {formatCzk(estimate.perIcoMonthly ?? 0, locale)}
-            </p>
-            <p className="mt-1 text-xs text-foreground/62">{t("perIcoUnit")}</p>
-            {estimate.plan === "agency" ? (
-              <p className="mt-3 text-xs leading-5 text-foreground/62">{t("flatRateNote")}</p>
-            ) : null}
+          <p className="mt-3 text-sm leading-6 text-foreground/62">
+            {estimate.plan === "agency"
+              ? t("agencyFor", { max: AGENCY_MAX_CLIENTS })
+              : t("smeFor")}
+          </p>
+
+          <div className="mt-4 flex items-end justify-between">
+            <span className="text-sm font-semibold text-foreground">
+              {interval === "yearly" ? t("totalYear") : t("totalMonth")}
+            </span>
+            <span className="mono text-4xl font-bold text-[var(--accent)]">
+              {formatCzk(estimate.intervalTotal ?? 0, locale)}
+            </span>
           </div>
 
-          <div className="mt-3 space-y-2.5 text-sm">
+          {/* Agency is one flat fee for up to 20 IČO → effective per-IČO cost. */}
+          {estimate.plan === "agency" ? (
+            <p className="mt-1.5 text-right text-xs text-foreground/62">
+              {t("perIcoLine", {
+                max: AGENCY_MAX_CLIENTS,
+                price: formatCzk(estimate.perIcoMonthly ?? 0, locale),
+              })}
+            </p>
+          ) : null}
+
+          <div className="mt-4 space-y-2.5 text-sm">
             {estimate.foundingActive && estimate.listMonthlyTotal ? (
               <div className="flex items-center justify-between rounded-lg border border-[var(--status-pass-border)] bg-[var(--status-pass-subtle)] px-3 py-2">
                 <span className="font-semibold text-[var(--status-pass)]">
@@ -184,17 +199,6 @@ export function PricingCalculator() {
                 </span>
               </div>
             ) : null}
-          </div>
-
-          <div className="my-5 border-t border-border" />
-
-          <div className="flex items-end justify-between">
-            <span className="text-sm font-semibold text-foreground">
-              {interval === "yearly" ? t("totalYear") : t("totalMonth")}
-            </span>
-            <span className="mono text-4xl font-bold text-[var(--accent)]">
-              {formatCzk(estimate.intervalTotal ?? 0, locale)}
-            </span>
           </div>
 
           <Link
