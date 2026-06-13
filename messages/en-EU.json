@@ -2219,9 +2219,9 @@
       "cancelDataQuestion": "What happens to my data after cancellation?",
       "cancelDataAnswer": "You have 30 days to export all data. After that, it is permanently deleted."
     },
-    "calculatorTag": "Price calculator",
-    "calculatorTitle": "Estimate your price",
-    "calculatorSubtitle": "Pick how many IČO you manage. One IČO fits the SME plan; for 2–20 clients the flat Agency plan applies — the more IČO, the lower the price per entity."
+    "over20Title": "Managing more than 20 IČO?",
+    "over20Body": "For agencies and larger portfolios we'll prepare a solution tailored to your needs. Just get in touch.",
+    "over20Cta": "Get in touch"
   },
   "compare": {
     "metadata": {
@@ -3155,33 +3155,5 @@
       }
     },
     "openVedeni": "Vrcholné vedení"
-  },
-  "pricingCalculator": {
-    "monthly": "Monthly",
-    "yearly": "Yearly",
-    "yearlyBadge": "2 months free",
-    "icoLabel": "How many IČO do you manage?",
-    "icoCount": "{count} IČO",
-    "decrease": "Decrease count",
-    "increase": "Increase count",
-    "recommendedPlan": "Recommended plan",
-    "planSme": "SME",
-    "planAgency": "Agency",
-    "planCustom": "Custom",
-    "perIco": "Price per IČO",
-    "perMonthSuffix": "/ mo",
-    "perYearSuffix": "/ yr",
-    "smeFor": "For a single company managing its own compliance (1 IČO).",
-    "agencyFor": "For managing up to {max} client IČO from one account.",
-    "perIcoLine": "≈ {price} per IČO · flat rate up to {max} IČO",
-    "founding": "Founding price (Agency)",
-    "yearlySaving": "Yearly saving",
-    "totalMonth": "Total / month",
-    "totalYear": "Total / year",
-    "customTitle": "More than 20 IČO?",
-    "customBody": "For managing more than 20 entities we'll prepare a custom quote.",
-    "customCta": "Get in touch",
-    "cta": "Get access",
-    "disclaimer": "Indicative estimate, not a binding offer. The final price is shown at checkout."
   }
 }

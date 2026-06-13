@@ -3,7 +3,6 @@ import Link from "next/link";
 import { getLocale, getTranslations } from "next-intl/server";
 import { Icon } from "@/components/marketing/local-icon";
 import { MarketingShell } from "@/components/marketing/marketing-shell";
-import { PricingCalculator } from "@/components/marketing/pricing-calculator";
 import {
   ComparisonTable,
   FaqAccordion,
@@ -71,18 +70,20 @@ export default async function PricingPage() {
           </div>
         </section>
 
-        <section className="border-t border-border bg-surface-muted px-5 py-16">
-          <div className="mx-auto max-w-3xl text-center">
-            <span className="section-tag mb-5">{t("calculatorTag")}</span>
-            <h2 className="text-3xl font-bold tracking-normal text-foreground md:text-4xl">
-              {t("calculatorTitle")}
+        <section className="border-t border-border bg-surface-muted px-5 py-14">
+          <div className="mx-auto max-w-2xl text-center">
+            <h2 className="text-2xl font-semibold tracking-normal text-foreground">
+              {t("over20Title")}
             </h2>
-            <p className="mx-auto mt-4 max-w-2xl text-base leading-relaxed text-foreground/62">
-              {t("calculatorSubtitle")}
+            <p className="mx-auto mt-3 max-w-xl text-base leading-7 text-foreground/62">
+              {t("over20Body")}
             </p>
-          </div>
-          <div className="mt-10">
-            <PricingCalculator />
+            <Link
+              href={getLocalizedMarketingPath("/early-access", locale)}
+              className="btn btn-primary mt-6"
+            >
+              {t("over20Cta")}
+            </Link>
           </div>
         </section>
 

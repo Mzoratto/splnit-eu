@@ -520,39 +520,3 @@ body {
     transition-duration: 0.001ms !important;
   }
 }
-
-/* Pricing calculator range slider — green accent on the brand tokens. */
-.pricing-range {
-  -webkit-appearance: none;
-  appearance: none;
-  height: 6px;
-  border-radius: var(--r-full);
-  background: var(--bg-muted);
-  outline: none;
-}
-
-.pricing-range::-webkit-slider-thumb {
-  -webkit-appearance: none;
-  appearance: none;
-  height: 20px;
-  width: 20px;
-  border-radius: 50%;
-  background: var(--accent);
-  border: 2px solid var(--surface);
-  box-shadow: var(--shadow-sm);
-  cursor: pointer;
-}
-
-.pricing-range::-moz-range-thumb {
-  height: 18px;
-  width: 18px;
-  border-radius: 50%;
-  background: var(--accent);
-  border: 2px solid var(--surface);
-  box-shadow: var(--shadow-sm);
-  cursor: pointer;
-}
-
-.pricing-range:focus-visible {
-  box-shadow: var(--ring-accent);
-}
