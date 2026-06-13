@@ -2210,7 +2210,10 @@
       "discountAnswer": "Yes. Contact hello@splnit.eu for special terms.",
       "cancelDataQuestion": "What happens to my data after cancellation?",
       "cancelDataAnswer": "You have 30 days to export all data. After that, it is permanently deleted."
-    }
+    },
+    "calculatorTag": "Price calculator",
+    "calculatorTitle": "Estimate your price",
+    "calculatorSubtitle": "Pick how many IČO you manage. One IČO fits the SME plan; for 2–20 clients the flat Agency plan applies — the more IČO, the lower the price per entity."
   },
   "compare": {
     "metadata": {
@@ -3144,5 +3147,30 @@
       }
     },
     "openVedeni": "Vrcholné vedení"
+  },
+  "pricingCalculator": {
+    "monthly": "Monthly",
+    "yearly": "Yearly",
+    "yearlyBadge": "2 months free",
+    "icoLabel": "How many IČO do you manage?",
+    "icoCount": "{count} IČO",
+    "decrease": "Decrease count",
+    "increase": "Increase count",
+    "recommendedPlan": "Recommended plan",
+    "planSme": "SME",
+    "planAgency": "Agency",
+    "planCustom": "Custom",
+    "perIco": "Price per IČO",
+    "perMonthSuffix": "/ mo",
+    "perYearSuffix": "/ yr",
+    "founding": "Founding price (Agency)",
+    "yearlySaving": "Yearly saving",
+    "totalMonth": "Total / month",
+    "totalYear": "Total / year",
+    "customTitle": "More than 20 IČO?",
+    "customBody": "For managing more than 20 entities we'll prepare a custom quote.",
+    "customCta": "Get in touch",
+    "cta": "Get access",
+    "disclaimer": "Indicative estimate, not a binding offer. The final price is shown at checkout."
   }
 }

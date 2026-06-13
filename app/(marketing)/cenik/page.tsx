@@ -3,6 +3,7 @@ import Link from "next/link";
 import { getLocale, getTranslations } from "next-intl/server";
 import { Icon } from "@/components/marketing/local-icon";
 import { MarketingShell } from "@/components/marketing/marketing-shell";
+import { PricingCalculator } from "@/components/marketing/pricing-calculator";
 import {
   ComparisonTable,
   FaqAccordion,
@@ -67,6 +68,21 @@ export default async function PricingPage() {
             <p className="mt-6 text-xs text-zinc-400">
               {t("footnote")}
             </p>
+          </div>
+        </section>
+
+        <section className="border-t border-border bg-surface-muted px-5 py-16">
+          <div className="mx-auto max-w-3xl text-center">
+            <span className="section-tag mb-5">{t("calculatorTag")}</span>
+            <h2 className="text-3xl font-bold tracking-normal text-foreground md:text-4xl">
+              {t("calculatorTitle")}
+            </h2>
+            <p className="mx-auto mt-4 max-w-2xl text-base leading-relaxed text-foreground/62">
+              {t("calculatorSubtitle")}
+            </p>
+          </div>
+          <div className="mt-10">
+            <PricingCalculator />
           </div>
         </section>
 

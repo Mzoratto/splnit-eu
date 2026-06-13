@@ -2210,7 +2210,10 @@
       "discountAnswer": "Sì. Scrivete a hello@splnit.eu per condizioni dedicate.",
       "cancelDataQuestion": "Cosa succede ai dati dopo la cancellazione?",
       "cancelDataAnswer": "Avete 30 giorni per esportare tutti i dati. Poi vengono eliminati definitivamente."
-    }
+    },
+    "calculatorTag": "Calcolatore prezzi",
+    "calculatorTitle": "Stima il tuo prezzo",
+    "calculatorSubtitle": "Scegli quanti IČO gestisci. Un IČO si adatta al piano SME; per 2–20 clienti vale il piano Agency a prezzo fisso — più IČO, minore il prezzo per soggetto."
   },
   "compare": {
     "metadata": {
@@ -3144,5 +3147,30 @@
       }
     },
     "openVedeni": "Vrcholné vedení"
+  },
+  "pricingCalculator": {
+    "monthly": "Mensile",
+    "yearly": "Annuale",
+    "yearlyBadge": "2 mesi gratis",
+    "icoLabel": "Quanti IČO gestisci?",
+    "icoCount": "{count} IČO",
+    "decrease": "Riduci",
+    "increase": "Aumenta",
+    "recommendedPlan": "Piano consigliato",
+    "planSme": "SME",
+    "planAgency": "Agency",
+    "planCustom": "Su misura",
+    "perIco": "Prezzo per IČO",
+    "perMonthSuffix": "/ mese",
+    "perYearSuffix": "/ anno",
+    "founding": "Prezzo di lancio (Agency)",
+    "yearlySaving": "Risparmio annuale",
+    "totalMonth": "Totale / mese",
+    "totalYear": "Totale / anno",
+    "customTitle": "Più di 20 IČO?",
+    "customBody": "Per più di 20 soggetti prepariamo un'offerta su misura.",
+    "customCta": "Contattaci",
+    "cta": "Ottieni l'accesso",
+    "disclaimer": "Stima indicativa, non vincolante. Il prezzo finale è mostrato al checkout."
   }
 }

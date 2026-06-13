@@ -2210,7 +2210,10 @@
       "discountAnswer": "Ano. Kontaktujte nás na hello@splnit.eu pro speciální podmínky.",
       "cancelDataQuestion": "Co se stane s mými daty po zrušení?",
       "cancelDataAnswer": "Máte 30 dní na export veškerých dat. Poté jsou trvale smazána."
-    }
+    },
+    "calculatorTag": "Kalkulačka ceny",
+    "calculatorTitle": "Spočítejte si cenu",
+    "calculatorSubtitle": "Vyberte počet IČO, která spravujete. Pro jedno IČO se hodí plán SME, pro 2–20 klientů je Agency za pevnou cenu — čím více IČO, tím nižší cena za jedno."
   },
   "compare": {
     "metadata": {
@@ -3144,5 +3147,30 @@
       }
     },
     "openVedeni": "Vrcholné vedení"
+  },
+  "pricingCalculator": {
+    "monthly": "Měsíčně",
+    "yearly": "Ročně",
+    "yearlyBadge": "2 měsíce zdarma",
+    "icoLabel": "Kolik IČO spravujete?",
+    "icoCount": "{count} IČO",
+    "decrease": "Snížit počet",
+    "increase": "Zvýšit počet",
+    "recommendedPlan": "Doporučený plán",
+    "planSme": "SME",
+    "planAgency": "Agency",
+    "planCustom": "Na míru",
+    "perIco": "Cena za 1 IČO",
+    "perMonthSuffix": "/ měs",
+    "perYearSuffix": "/ rok",
+    "founding": "Zaváděcí cena (Agency)",
+    "yearlySaving": "Úspora při roční platbě",
+    "totalMonth": "Celkem / měsíc",
+    "totalYear": "Celkem / rok",
+    "customTitle": "Více než 20 IČO?",
+    "customBody": "Pro správu více než 20 subjektů připravíme nabídku na míru.",
+    "customCta": "Ozvěte se nám",
+    "cta": "Získat přístup",
+    "disclaimer": "Orientační kalkulace, není závaznou nabídkou. Konečnou cenu uvidíte při objednávce."
   }
 }

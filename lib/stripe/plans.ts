@@ -6,16 +6,27 @@
  */
 export const FOUNDING_PRICING_ACTIVE = true;
 
+/**
+ * Annual billing is charged as N months (2 months free). Single source for
+ * the calculator and any future annual checkout.
+ */
+export const ANNUAL_MONTHS_CHARGED = 10;
+
 export const PLANS = {
   free: {
     displayPrice: "0 Kč",
     foundingPrice: null,
+    priceCzkMonthly: 0,
+    listCzkMonthly: 0,
     limits: { clients: 0, frameworks: 1, integrations: 1, users: 1 },
     name: "Free",
   },
   sme: {
     displayPrice: "1 990 Kč/měsíc",
     foundingPrice: null,
+    // priceCzkMonthly = what a customer pays now; listCzkMonthly = list price.
+    priceCzkMonthly: 1990,
+    listCzkMonthly: 1990,
     envPriceId: "STRIPE_SME_PRICE_ID",
     limits: { clients: 1, frameworks: 999, integrations: 999, users: 25 },
     name: "SME",
@@ -23,6 +34,8 @@ export const PLANS = {
   agency: {
     displayPrice: "5 990 Kč/měsíc",
     foundingPrice: "4 990 Kč/měsíc",
+    priceCzkMonthly: 4990,
+    listCzkMonthly: 5990,
     envPriceId: "STRIPE_AGENCY_PRICE_ID",
     limits: { clients: 20, frameworks: 999, integrations: 999, users: 999 },
     name: "Agency",
