@@ -110,7 +110,7 @@
     "plans": {
       "sme": {
         "name": "SME",
-        "price": "1 490 Kč/měsíc",
+        "price": "1 990 Kč/měsíc",
         "description": "Plný compliance workspace pro jednu organizaci.",
         "features": [
           "Ověřené konektory podle dostupnosti a oprávnění",
@@ -2292,7 +2292,7 @@
         "feature": "SMB self-serve ceník v Kč",
         "splnit": {
           "status": "yes",
-          "text": "0 Kč, 1 490 Kč/měsíc, 4 990 Kč/měsíc (zaváděcí ceny; běžně 1 990 / 5 990 Kč)"
+          "text": "0 Kč, 1 990 Kč/měsíc, 4 990 Kč/měsíc (Agency zaváděcí cena; běžně 5 990 Kč)"
         },
         "regfor": {
           "status": "notPublic",

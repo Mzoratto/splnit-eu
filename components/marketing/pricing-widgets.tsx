@@ -32,17 +32,17 @@ const planPrices: Record<
   "cs-CZ": {
     currency: "CZK",
     listMonthly: [0, 1990, 5990],
-    monthly: [0, 1490, 4990],
+    monthly: [0, 1990, 4990],
   },
   "en-EU": {
     currency: "CZK",
     listMonthly: [0, 1990, 5990],
-    monthly: [0, 1490, 4990],
+    monthly: [0, 1990, 4990],
   },
   "it-IT": {
     currency: "CZK",
     listMonthly: [0, 1990, 5990],
-    monthly: [0, 1490, 4990],
+    monthly: [0, 1990, 4990],
   },
 };
 

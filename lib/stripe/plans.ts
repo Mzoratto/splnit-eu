@@ -15,7 +15,7 @@ export const PLANS = {
   },
   sme: {
     displayPrice: "1 990 Kč/měsíc",
-    foundingPrice: "1 490 Kč/měsíc",
+    foundingPrice: null,
     envPriceId: "STRIPE_SME_PRICE_ID",
     limits: { clients: 1, frameworks: 999, integrations: 999, users: 25 },
     name: "SME",

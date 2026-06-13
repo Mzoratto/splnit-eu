@@ -10,7 +10,7 @@ test.describe("Marketing pricing", () => {
       page.getByRole("heading", { name: "Potřebujete klientský portál?" }),
     ).toBeVisible();
     await expect(
-      page.getByRole("article").filter({ hasText: "SME" }).getByText("1 490 Kč"),
+      page.getByRole("article").filter({ hasText: "SME" }).getByText("1 990 Kč"),
     ).toBeVisible();
     await expect(
       page.getByRole("article").filter({ hasText: "Agency" }).getByText("4 990 Kč"),

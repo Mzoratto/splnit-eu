@@ -110,7 +110,7 @@
     "plans": {
       "sme": {
         "name": "SME",
-        "price": "1 490 Kč/mese",
+        "price": "1 990 Kč/mese",
         "description": "Workspace compliance completo per una organizzazione.",
         "features": [
           "Connettori verificati in base a disponibilità e permessi",
@@ -2292,7 +2292,7 @@
         "feature": "Prezzi self-service SMB in CZK",
         "splnit": {
           "status": "yes",
-          "text": "0 Kč, 490 Kč/mese, 1.990 Kč/mese"
+          "text": "0 Kč, 1 990 Kč/mese, 4 990 Kč/mese"
         },
         "regfor": {
           "status": "notPublic",
