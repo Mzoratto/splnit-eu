@@ -130,7 +130,15 @@
         ]
       }
     },
-    "billingUnavailable": "Checkout e portale cliente sono disabilitati in questo ambiente finché chiavi Stripe e Price ID non sono configurati."
+    "billingUnavailable": "Checkout e portale cliente sono disabilitati in questo ambiente finché chiavi Stripe e Price ID non sono configurati.",
+    "interval": {
+      "monthly": "Mensile",
+      "yearly": "Annuale",
+      "yearlyBadge": "2 mesi gratis",
+      "perMonth": "/ mese",
+      "perYear": "/ anno",
+      "listPrefix": "listino"
+    }
   },
   "frameworkWizard": {
     "error": "Non è stato possibile salvare la valutazione.",

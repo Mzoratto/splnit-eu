@@ -130,7 +130,15 @@
         ]
       }
     },
-    "billingUnavailable": "Checkout a zákaznický portál jsou v tomto prostředí vypnuté, dokud nejsou nastavené Stripe klíče a Price ID."
+    "billingUnavailable": "Checkout a zákaznický portál jsou v tomto prostředí vypnuté, dokud nejsou nastavené Stripe klíče a Price ID.",
+    "interval": {
+      "monthly": "Měsíčně",
+      "yearly": "Ročně",
+      "yearlyBadge": "2 měsíce zdarma",
+      "perMonth": "/ měsíc",
+      "perYear": "/ rok",
+      "listPrefix": "běžně"
+    }
   },
   "frameworkWizard": {
     "error": "Vyhodnocení se nepodařilo uložit.",

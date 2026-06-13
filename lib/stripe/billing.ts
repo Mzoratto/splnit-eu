@@ -16,6 +16,7 @@ import {
   isBillablePlanKey,
   normalizePlanKey,
   type BillablePlanKey,
+  type BillingInterval,
   type PlanKey,
 } from "@/lib/stripe/plans";
 import {
@@ -94,8 +95,11 @@ export async function getOrCreateStripeCustomer(input: {
   return customer.id;
 }
 
-export function getCheckoutPriceId(plan: BillablePlanKey) {
-  return getPriceIdForPlan(plan);
+export function getCheckoutPriceId(
+  plan: BillablePlanKey,
+  interval: BillingInterval = "monthly",
+) {
+  return getPriceIdForPlan(plan, interval);
 }
 
 function getSubscriptionPlan(subscription: Stripe.Subscription): BillablePlanKey {

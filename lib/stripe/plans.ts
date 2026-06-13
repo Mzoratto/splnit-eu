@@ -28,6 +28,7 @@ export const PLANS = {
     priceCzkMonthly: 1990,
     listCzkMonthly: 1990,
     envPriceId: "STRIPE_SME_PRICE_ID",
+    envPriceIdAnnual: "STRIPE_SME_ANNUAL_PRICE_ID",
     limits: { clients: 1, frameworks: 999, integrations: 999, users: 25 },
     name: "SME",
   },
@@ -37,10 +38,29 @@ export const PLANS = {
     priceCzkMonthly: 4990,
     listCzkMonthly: 5990,
     envPriceId: "STRIPE_AGENCY_PRICE_ID",
+    envPriceIdAnnual: "STRIPE_AGENCY_ANNUAL_PRICE_ID",
     limits: { clients: 20, frameworks: 999, integrations: 999, users: 999 },
     name: "Agency",
   },
 } as const;
+
+export type BillingInterval = "monthly" | "yearly";
+
+/**
+ * Annual price = the active monthly price × months charged (2 months free),
+ * derived so it can never drift from the monthly source. The matching Stripe
+ * annual Price must equal this amount.
+ */
+export function getAnnualPriceCzk(plan: BillablePlanKey): number {
+  return PLANS[plan].priceCzkMonthly * ANNUAL_MONTHS_CHARGED;
+}
+
+/** True only when both annual Stripe price IDs are configured. */
+export function isAnnualBillingConfigured(): boolean {
+  return BILLABLE_PLANS.every((plan) =>
+    Boolean(process.env[PLANS[plan].envPriceIdAnnual]?.trim()),
+  );
+}
 
 export type PlanKey = keyof typeof PLANS;
 
@@ -140,24 +160,32 @@ export function requirePlan(
   }
 }
 
-export function getPriceIdForPlan(plan: BillablePlanKey) {
-  const envKey = PLANS[plan].envPriceId;
+export function getPriceIdForPlan(
+  plan: BillablePlanKey,
+  interval: BillingInterval = "monthly",
+) {
+  const envKey =
+    interval === "yearly" ? PLANS[plan].envPriceIdAnnual : PLANS[plan].envPriceId;
   const priceId = process.env[envKey]?.trim();
 
   if (!priceId) {
-    throw new Error(`${envKey} is required for ${plan} checkout.`);
+    throw new Error(`${envKey} is required for ${plan} ${interval} checkout.`);
   }
 
   return priceId;
 }
 
+/** Resolves a Stripe price ID back to its plan, across both intervals. */
 export function getPlanFromPriceId(priceId: string | null | undefined) {
   if (!priceId) {
     return null;
   }
 
   for (const plan of BILLABLE_PLANS) {
-    if (process.env[PLANS[plan].envPriceId]?.trim() === priceId) {
+    const monthly = process.env[PLANS[plan].envPriceId]?.trim();
+    const annual = process.env[PLANS[plan].envPriceIdAnnual]?.trim();
+
+    if (priceId === monthly || priceId === annual) {
       return plan;
     }
   }

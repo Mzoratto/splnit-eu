@@ -10,7 +10,7 @@ import {
   getPrimaryEmail,
 } from "@/lib/stripe/billing";
 import { getStripe } from "@/lib/stripe/client";
-import { type BillablePlanKey } from "@/lib/stripe/plans";
+import { type BillablePlanKey, type BillingInterval } from "@/lib/stripe/plans";
 import {
   buildCheckoutSessionCreateParams,
   buildPortalSessionCreateParams,
@@ -40,12 +40,14 @@ function metadataValues(input: CheckoutMetadata) {
 
 export async function createCheckoutSessionForPlan(input: {
   cancelPath?: string;
+  interval?: BillingInterval;
   metadata?: CheckoutMetadata;
   plan: BillablePlanKey;
   successPath?: string;
 }): Promise<never> {
   const session = requireActiveOrganisation(await auth());
-  const priceId = getCheckoutPriceId(input.plan);
+  const interval: BillingInterval = input.interval === "yearly" ? "yearly" : "monthly";
+  const priceId = getCheckoutPriceId(input.plan, interval);
   const customerId = await getOrCreateStripeCustomer({
     clerkOrgId: session.orgId,
     clerkUserId: session.userId,
@@ -58,6 +60,7 @@ export async function createCheckoutSessionForPlan(input: {
     clerkOrgId: session.orgId,
     clerkUserId: session.userId,
     customerEmail,
+    interval,
     plan: input.plan,
     ...(input.metadata ?? {}),
   });
@@ -79,8 +82,11 @@ export async function createCheckoutSessionForPlan(input: {
   redirect(checkoutSession.url);
 }
 
-export async function createCheckoutSession(plan: BillablePlanKey): Promise<never> {
-  return createCheckoutSessionForPlan({ plan });
+export async function createCheckoutSession(
+  plan: BillablePlanKey,
+  interval: BillingInterval = "monthly",
+): Promise<never> {
+  return createCheckoutSessionForPlan({ interval, plan });
 }
 
 export async function createPortalSession(): Promise<never> {

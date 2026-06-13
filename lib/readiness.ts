@@ -50,6 +50,14 @@ const requiredChecks: EnvCheck[] = [
     ],
   },
   {
+    // Annual self-serve checkout is optional: when both annual price IDs are
+    // set the billing page shows the monthly/yearly toggle; otherwise it
+    // silently stays monthly-only.
+    level: "recommended",
+    name: "billingAnnual",
+    variables: ["STRIPE_SME_ANNUAL_PRICE_ID", "STRIPE_AGENCY_ANNUAL_PRICE_ID"],
+  },
+  {
     level: "required",
     name: "encryption",
     variables: ["ENCRYPTION_KEY"],

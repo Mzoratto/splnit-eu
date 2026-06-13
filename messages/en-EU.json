@@ -130,7 +130,15 @@
         ]
       }
     },
-    "billingUnavailable": "Checkout and customer portal are disabled in this environment until Stripe keys and Price IDs are configured."
+    "billingUnavailable": "Checkout and customer portal are disabled in this environment until Stripe keys and Price IDs are configured.",
+    "interval": {
+      "monthly": "Monthly",
+      "yearly": "Yearly",
+      "yearlyBadge": "2 months free",
+      "perMonth": "/ month",
+      "perYear": "/ year",
+      "listPrefix": "list"
+    }
   },
   "frameworkWizard": {
     "error": "The assessment could not be saved.",

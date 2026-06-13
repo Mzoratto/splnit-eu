@@ -9,9 +9,13 @@ import {
 } from "@/lib/db/queries/agencies";
 import { getOrganisationByClerkOrgId } from "@/lib/db/queries/organisations";
 import { hasStripeBillingConfig } from "@/lib/stripe/client";
+import { BillingPlanSelector } from "@/components/app/billing-plan-selector";
 import {
   BILLABLE_PLANS,
+  getAnnualPriceCzk,
+  isAnnualBillingConfigured,
   normalizePlanKey,
+  PLANS,
   type BillablePlanKey,
   type PlanKey,
 } from "@/lib/stripe/plans";
@@ -19,10 +23,7 @@ import {
   getSubscriptionForOrg,
   isActiveSubscriptionStatus,
 } from "@/lib/stripe/subscriptions";
-import {
-  createCheckoutSession,
-  createPortalSession,
-} from "./actions";
+import { createPortalSession } from "./actions";
 
 export const dynamic = "force-dynamic";
 
@@ -207,45 +208,30 @@ export default async function BillingSettingsPage({ searchParams }: PageProps) {
       ) : (
         <div>
           <h2 className="text-lg font-semibold">{copy.choosePlan}</h2>
-          <div className="mt-4 grid gap-4 lg:grid-cols-2">
-            {BILLABLE_PLANS.map((plan) => (
-              <article
-                key={plan}
-                className="flex min-h-[340px] flex-col rounded-lg border border-border bg-white p-5 shadow-xs"
-              >
-                <div>
-                  <h3 className="text-xl font-semibold">{planCopy[plan].name}</h3>
-                  <p className="mt-3 font-mono text-3xl font-semibold text-primary">
-                    {planCopy[plan].price}
-                  </p>
-                  <p className="mt-4 text-sm leading-6 text-foreground/64">
-                    {planCopy[plan].description}
-                  </p>
-                </div>
-
-                <ul className="mt-6 grid gap-2 text-sm text-foreground/70">
-                  {planCopy[plan].features.map((feature) => (
-                    <li key={feature} className="flex gap-2">
-                      <ShieldCheck
-                        className="mt-0.5 h-4 w-4 shrink-0 text-primary"
-                        aria-hidden="true"
-                      />
-                      <span>{feature}</span>
-                    </li>
-                  ))}
-                </ul>
-
-                <form className="mt-auto pt-6" action={createCheckoutSession.bind(null, plan)}>
-                  <button
-                    type="submit"
-                    disabled={!canManageBilling}
-                    className="btn btn-primary w-full min-h-11 disabled:cursor-not-allowed disabled:opacity-45"
-                  >
-                    {copy.subscribe}
-                  </button>
-                </form>
-              </article>
-            ))}
+          <div className="mt-4">
+            <BillingPlanSelector
+              annualEnabled={isAnnualBillingConfigured()}
+              canManage={canManageBilling}
+              locale={locale}
+              copy={{
+                listPrefix: copy.interval.listPrefix,
+                monthly: copy.interval.monthly,
+                perMonth: copy.interval.perMonth,
+                perYear: copy.interval.perYear,
+                subscribe: copy.subscribe,
+                yearly: copy.interval.yearly,
+                yearlyBadge: copy.interval.yearlyBadge,
+              }}
+              plans={BILLABLE_PLANS.map((plan) => ({
+                annualCzk: getAnnualPriceCzk(plan),
+                description: planCopy[plan].description,
+                features: planCopy[plan].features,
+                key: plan,
+                listMonthlyCzk: PLANS[plan].listCzkMonthly,
+                monthlyCzk: PLANS[plan].priceCzkMonthly,
+                name: planCopy[plan].name,
+              }))}
+            />
           </div>
         </div>
       )}
