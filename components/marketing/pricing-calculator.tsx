@@ -21,7 +21,9 @@ export function PricingCalculator() {
   const t = useTranslations("pricingCalculator");
   const locale = normalizeLocale(useLocale()) ?? "cs-CZ";
   const [interval, setInterval] = useState<BillingInterval>("monthly");
-  const [count, setCount] = useState(2);
+  // Open at a count where the flat-rate value is already visible (per-IČO is
+  // well below the SME price and the vs-separate saving is positive).
+  const [count, setCount] = useState(8);
 
   const estimate = useMemo(
     () => computeCalculatorEstimate(count, interval),
@@ -140,18 +142,41 @@ export function PricingCalculator() {
         </div>
       ) : (
         <>
-          <div className="space-y-2.5 text-sm">
-            <div className="flex items-center justify-between">
-              <span className="text-foreground/62">{t("recommendedPlan")}</span>
-              <span className="font-semibold text-foreground">{planName}</span>
+          <div className="flex items-center justify-between text-sm">
+            <span className="text-foreground/62">{t("recommendedPlan")}</span>
+            <span className="font-semibold text-foreground">{planName}</span>
+          </div>
+
+          {/* Hero: effective price per IČO — the number the slider drives. */}
+          <div className="mt-5 rounded-xl bg-[var(--accent-subtle)] px-4 py-5 text-center">
+            <p className="text-xs font-semibold uppercase tracking-wide text-[var(--accent)]">
+              {t("perIcoHero")}
+            </p>
+            <p className="mono mt-1 text-5xl font-bold text-[var(--accent)]">
+              {formatCzk(estimate.perIcoMonthly ?? 0, locale)}
+            </p>
+            <p className="mt-1 text-xs text-foreground/62">{t("perIcoUnit")}</p>
+            {estimate.plan === "agency" ? (
+              <p className="mt-3 text-xs leading-5 text-foreground/62">{t("flatRateNote")}</p>
+            ) : null}
+          </div>
+
+          {/* Real, growing saving vs. one SME plan per managed entity. */}
+          {estimate.agencySavingsMonthly && estimate.agencySavingsMonthly > 0 ? (
+            <div className="mt-3 rounded-lg border border-[var(--status-pass-border)] bg-[var(--status-pass-subtle)] px-3 py-2.5 text-sm">
+              <div className="flex items-center justify-between gap-3">
+                <span className="leading-5 text-[var(--status-pass)]">
+                  {t("vsSeparate", { count })}
+                </span>
+                <span className="mono shrink-0 font-bold text-[var(--status-pass)]">
+                  {formatCzk(estimate.agencySavingsMonthly, locale)}
+                  <span className="font-normal"> {t("perMonthSuffix")}</span>
+                </span>
+              </div>
             </div>
-            <div className="flex items-center justify-between">
-              <span className="text-foreground/62">{t("perIco")}</span>
-              <span className="mono font-semibold text-foreground">
-                {formatCzk(estimate.perIcoMonthly ?? 0, locale)}
-                <span className="font-normal text-foreground/48"> {t("perMonthSuffix")}</span>
-              </span>
-            </div>
+          ) : null}
+
+          <div className="mt-3 space-y-2.5 text-sm">
             {estimate.foundingActive && estimate.listMonthlyTotal ? (
               <div className="flex items-center justify-between rounded-lg border border-[var(--status-pass-border)] bg-[var(--status-pass-subtle)] px-3 py-2">
                 <span className="font-semibold text-[var(--status-pass)]">

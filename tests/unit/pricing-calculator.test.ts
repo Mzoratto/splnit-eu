@@ -35,6 +35,34 @@ describe("pricing calculator estimate", () => {
     expect(twenty).toBe(Math.round(PLANS.agency.priceCzkMonthly / 20));
   });
 
+  it("computes a growing saving vs one SME plan per IČO on Agency", () => {
+    const at5 = computeCalculatorEstimate(5, "monthly");
+    const at20 = computeCalculatorEstimate(20, "monthly");
+
+    expect(at5.separateSmeMonthly).toBe(PLANS.sme.priceCzkMonthly * 5);
+    expect(at5.agencySavingsMonthly).toBe(
+      PLANS.sme.priceCzkMonthly * 5 - PLANS.agency.priceCzkMonthly,
+    );
+    // The flat rate saves more as the managed count rises.
+    expect(at20.agencySavingsMonthly ?? 0).toBeGreaterThan(at5.agencySavingsMonthly ?? 0);
+  });
+
+  it("never reports a negative saving when the flat rate is not yet cheaper", () => {
+    // At 2 IČO, two SME plans (3 980) cost less than the flat Agency rate.
+    const e = computeCalculatorEstimate(2, "monthly");
+    expect(e.agencySavingsMonthly).toBe(0);
+  });
+
+  it("leaves the SME-comparison fields null off the Agency band", () => {
+    const sme = computeCalculatorEstimate(1, "monthly");
+    expect(sme.separateSmeMonthly).toBeNull();
+    expect(sme.agencySavingsMonthly).toBeNull();
+
+    const custom = computeCalculatorEstimate(AGENCY_MAX_CLIENTS + 1, "monthly");
+    expect(custom.separateSmeMonthly).toBeNull();
+    expect(custom.agencySavingsMonthly).toBeNull();
+  });
+
   it("flags founding pricing as a real discount on Agency", () => {
     const e = computeCalculatorEstimate(5, "monthly");
     expect(e.foundingActive).toBe(true);
